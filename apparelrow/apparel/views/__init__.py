@@ -19,6 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.i18n import set_language
 from django.views.decorators.http import require_POST
+from django.views.generic.base import RedirectView
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
@@ -33,7 +34,7 @@ from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Opt
 from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
-from apparelrow.apparel.utils import get_paged_result, get_gender_from_cookie, CountPopularity, vendor_buy_url, get_product_alternative, get_top_looks_in_network, get_featured_activity_today
+from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity
 
 from apparelrow.activity_feed.views import user_feed
@@ -45,6 +46,22 @@ logger = logging.getLogger(__name__)
 
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 12
+
+
+class BrandRedirectView(RedirectView):
+
+    permanent = False
+    query_string = True
+
+    def get_redirect_url(self, slug=None, gender=None):
+        if slug is not None:
+            if gender is not None:
+                return '%s?gender=%s' % (reverse('brand-likes', args=(slug,)), gender)
+
+            return reverse('brand-likes', args=(slug,))
+
+        return reverse('brand-likes')
+
 
 #
 # Sitemap
@@ -484,9 +501,7 @@ def look_list(request, search=None, contains=None, gender=None):
         4) If contains-argument is set displays all looks that contains the product.
 
     """
-    if not gender:
-        gender = get_gender_from_cookie(request)
-
+    gender = select_from_multi_gender(request, 'look', gender)
     gender_list = {'A': ['W', 'M', 'U'],
                    'M': ['M', 'U'],
                    'W': ['W', 'U']}
@@ -511,19 +526,17 @@ def look_list(request, search=None, contains=None, gender=None):
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page'))
 
     if request.is_ajax():
-        response = render_to_response('apparel/fragments/look_list.html', {
-                    'current_page': paged_result,
-                }, context_instance=RequestContext(request))
-    else:
-        response = render_to_response('apparel/look_list.html', {
-                    'query': request.GET.get('q'),
-                    'paginator': paged_result.paginator,
-                    'current_page': paged_result,
-                    'next': request.get_full_path(),
-                    'APPAREL_GENDER': gender
-                }, context_instance=RequestContext(request))
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-    return response
+        return render(request, 'apparel/fragments/look_list.html', {
+            'current_page': paged_result,
+        })
+
+    return render(request, 'apparel/look_list.html', {
+        'query': request.GET.get('q'),
+        'paginator': paged_result.paginator,
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'gender': gender,
+    })
 
 
 def look_detail(request, slug):
@@ -633,9 +646,7 @@ def user_list(request, gender=None, brand=False):
     """
     Displays a list of profiles
     """
-    if not gender:
-        gender = get_gender_from_cookie(request)
-
+    gender = select_from_multi_gender(request, 'user', gender)
     gender_list = {'A': ['W', 'M', 'U'],
                    'M': ['M', 'U'],
                    'W': ['W', 'U']}
@@ -668,44 +679,20 @@ def user_list(request, gender=None, brand=False):
     paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
 
     if request.is_ajax():
-        response = render_to_response('apparel/fragments/user_list.html', {
-                    'current_page': paged_result,
-                    'extra_parameter': extra_parameter,
-            }, context_instance=RequestContext(request))
-    else:
-        response = render_to_response('apparel/user_list.html', {
-                'current_page': paged_result,
-                'next': request.get_full_path(),
-                'alphabet': string.lowercase,
-                'selected_alphabet': alphabet,
-                'APPAREL_GENDER': gender,
-                'is_brand': brand,
-                'extra_parameter': extra_parameter,
-            }, context_instance=RequestContext(request))
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-    return response
+        return render(request, 'apparel/fragments/user_list.html', {
+            'current_page': paged_result,
+            'extra_parameter': extra_parameter,
+        })
 
-
-def gender(request, *args, **kwargs):#view=None, gender=None):
-    """
-    Display gender selection front page, also handle change from one gender to the other.
-    """
-    gender = kwargs.get('gender')
-    view = kwargs.get('view')
-
-    if gender is not None:
-        response = HttpResponseRedirect(request.GET.get('next', '/'))
-        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-        return response
-
-    if view is None:
-        return HttpResponseNotFound()
-
-    gender_cookie = get_gender_from_cookie(request)
-    if gender_cookie == 'M':
-        return HttpResponseRedirect('%s?%s' % (reverse('%s-men' % (view,), args=args), request.GET.urlencode()))
-
-    return HttpResponseRedirect('%s?%s' % (reverse('%s-women' % (view,), args=args), request.GET.urlencode()))
+    return render(request, 'apparel/user_list.html', {
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'alphabet': string.lowercase,
+        'selected_alphabet': alphabet,
+        'is_brand': brand,
+        'extra_parameter': extra_parameter,
+        'gender': gender
+    })
 
 
 #
@@ -719,8 +706,7 @@ def index(request, gender=None):
     if request.path != '/':
         return HttpResponseRedirect('/')
 
-    response = render(request, 'apparel/index.html', {'APPAREL_GENDER': gender, 'featured': get_featured_activity_today()})
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value='A', max_age=365 * 24 * 60 * 60)
+    response = render(request, 'apparel/index.html', {'featured': get_featured_activity_today()})
 
     return response
 

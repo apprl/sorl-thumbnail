@@ -5,6 +5,7 @@ from django.views.generic import TemplateView, RedirectView
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
+from apparelrow.apparel.views import BrandRedirectView
 
 urlpatterns = patterns('',
     # Index
@@ -22,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^all/$', RedirectView.as_view(url='/')),
 
     # Shop
-    url(r'^shop/$', 'apparelrow.apparel.views.gender', {'view': 'shop'}, name='shop'),
+    url(r'^shop/$', 'apparelrow.apparel.browse.browse_products', name='shop'),
     url(r'^shop/men/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^shop/women/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
 
@@ -85,10 +86,10 @@ urlpatterns = patterns('',
     url(r'^brands/women/$', 'apparelrow.apparel.views.user_list', {'gender': 'W', 'brand': True}, name='brand-list-women'),
 
     # Brand profile
-    url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.apparel.views.gender', {'view': 'brand-likes'}, name='brand-likes'),
-    url(r'^brand/(?:([^\/]+?)/)?men/$', 'apparelrow.profile.views.likes', {'gender': 'M'}, name='brand-likes-men'),
-    url(r'^brand/(?:([^\/]+?)/)?women/$', 'apparelrow.profile.views.likes', {'gender': 'W'}, name='brand-likes-women'),
-    url(r'^brand/(?:([^\/]+?)/)?updates/$', RedirectView.as_view(url=reverse_lazy('brand-likes')), name='redirect-brand-updates'),
+    url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.profile.views.likes', name='brand-likes'),
+    url(r'^brand/(?P<slug>[\w-]+)/men/$', BrandRedirectView.as_view(), {'gender': 'M'}, name='brand-likes-men'),
+    url(r'^brand/(?P<slug>[\w-]+)/women/$', BrandRedirectView.as_view(), {'gender': 'W'}, name='brand-likes-women'),
+    url(r'^brand/(?P<slug>[\w-]+)/updates/$', BrandRedirectView.as_view(), name='redirect-brand-updates'),
     url(r'^brand/(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='brand-looks'),
     url(r'^brand/(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='brand-followers'),
     url(r'^brand/(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='brand-following'),

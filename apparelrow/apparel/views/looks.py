@@ -28,7 +28,7 @@ from sorl.thumbnail import get_thumbnail
 from apparelrow.profile.utils import get_facebook_user
 
 from apparelrow.apparel.signals import look_saved
-from apparelrow.apparel.utils import JSONResponse, set_query_parameter, currency_exchange
+from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
 from apparelrow.apparel.views import _product_like
 from apparelrow.apparel.search import ApparelSearch
@@ -215,9 +215,12 @@ def editor(request, component=None, slug=None):
     if component is None:
         raise Http404()
 
+    gender = select_from_multi_gender(request, 'shop', None)
+
     return render(request, 'apparel/look_editor.html', {'component': component,
                                                         'object': look,
-                                                        'has_liked': has_liked})
+                                                        'has_liked': has_liked,
+                                                        'gender': gender})
 
 
 def publish(request, slug):

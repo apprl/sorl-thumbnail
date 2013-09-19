@@ -19,7 +19,7 @@ from django.db.models.loading import get_model
 from django.utils import translation
 
 from apparelrow.apparel.models import Product, ProductLike, Look
-from apparelrow.apparel.utils import get_gender_from_cookie
+from apparelrow.apparel.utils import select_from_multi_gender
 from apparelrow.apparel.tasks import product_popularity, empty_embed_shop_cache
 from sorl.thumbnail import get_thumbnail
 
@@ -453,15 +453,10 @@ def search(request, gender=None):
     """
     Search page
     """
-    if not gender:
-        gender = get_gender_from_cookie(request)
-
+    gender = select_from_multi_gender(request, 'shop', gender)
     query = request.GET.get('q', '')
 
-    response = render(request, 'search.html', {'q': query, 'APPAREL_GENDER': gender})
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-
-    return response
+    return render(request, 'search.html', {'q': query, 'gender': gender})
 
 
 def search_view(request, model_name):
@@ -482,7 +477,7 @@ def search_view(request, model_name):
     # Gender field
     gender = request.REQUEST.get('gender')
     if not gender:
-        gender = get_gender_from_cookie(request)
+        gender = select_from_multi_gender(request, 'shop', None)
 
     if not gender or gender == 'A':
         gender_field = 'gender:(U OR M OR W)'

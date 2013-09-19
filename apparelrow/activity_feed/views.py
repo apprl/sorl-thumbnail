@@ -17,7 +17,7 @@ from django.core.urlresolvers import reverse
 import redis
 
 from apparelrow.apparel.models import Product, Look
-from apparelrow.apparel.utils import get_top_looks_in_network, get_top_products_in_network, get_gender_from_cookie, get_featured_activity_today
+from apparelrow.apparel.utils import get_featured_activity_today, select_from_multi_gender
 
 from apparelrow.activity_feed.models import Activity, ActivityFeed
 from apparelrow.activity_feed.tasks import get_feed_key
@@ -119,8 +119,7 @@ class ActivityFeedRender(object):
 
 @login_required
 def user_feed(request, gender=None):
-    if not gender:
-        gender = get_gender_from_cookie(request)
+    gender = select_from_multi_gender(request, 'feed', gender)
 
     htmlset = ActivityFeedRender(request, gender, request.user).run()
     paginator = Paginator(htmlset, 12)
@@ -139,12 +138,9 @@ def user_feed(request, gender=None):
             'current_page': paged_result
         })
 
-    response = render(request, 'activity_feed/feed_list.html', {
-            'featured': get_featured_activity_today(),
-            'current_page': paged_result,
-            'next': request.get_full_path(),
-            'APPAREL_GENDER': gender,
-        })
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-
-    return response
+    return render(request, 'activity_feed/feed_list.html', {
+        'featured': get_featured_activity_today(),
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'gender': gender,
+    })

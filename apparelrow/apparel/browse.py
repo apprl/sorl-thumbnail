@@ -4,8 +4,7 @@ import os.path
 import decimal
 import json
 
-from django.http import HttpResponse
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.shortcuts import render
@@ -30,7 +29,7 @@ from apparelrow.apparel.models import Brand
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
-from apparelrow.apparel.utils import get_pagination_page
+from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
 
 from apparelrow.profile.models import Follow
 
@@ -129,6 +128,13 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
     return query_arguments
 
 def browse_products(request, template='apparel/browse.html', gender=None, user_gender=None, user_id=None, language=None, **kwargs):
+    if gender is None and user_gender is None:
+        gender = select_from_multi_gender(request, 'shop', None)
+        if gender == 'M':
+            return HttpResponseRedirect('%s?%s' % (reverse('shop-men'), request.GET.urlencode()))
+        else:
+            return HttpResponseRedirect('%s?%s' % (reverse('shop-women'), request.GET.urlencode()))
+
     if not language:
         language = get_language()
     translation.activate(language)

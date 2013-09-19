@@ -4,7 +4,7 @@
 {% block 'extra-scripts' %}
 <script type="text/javascript">
     $(document).ready(function() {
-            ApparelSearch.search(null, '{{ q }}', '{{ APPAREL_GENDER }}');
+            ApparelSearch.search(null, '{{ q }}', '{{ gender }}');
     });
 </script>
 {% endblock 'extra-scripts' %}
@@ -19,7 +19,7 @@
         <div class="body-header-col-right">
             <ul class="list-inline">
                 <li>
-                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Only men’s" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men’s" %}{% elif gender == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{% url 'search' %}?q={{ q }}">{% trans "Show all" %}</a></li>
                         <li><a href="{% url 'search-men' %}?q={{ q }}">{% trans "Only men’s" %}</a></li>

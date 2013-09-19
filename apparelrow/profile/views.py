@@ -19,7 +19,7 @@ from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 
-from apparelrow.apparel.utils import get_paged_result, get_gender_from_cookie, JSONResponse, get_gender_url
+from apparelrow.apparel.utils import get_paged_result, JSONResponse
 from apparelrow.apparel.tasks import facebook_push_graph
 from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
@@ -47,7 +47,6 @@ def get_profile_sidebar_info(request, profile):
     info = {'products': 0, 'following': 0}
 
     if profile.is_brand:
-        gender = get_gender_from_cookie(request)
         info['products'] = get_model('apparel', 'Product').valid_objects.filter(manufacturer=profile.brand_id).order_by('-date_added').count()
     else:
         info['products'] = get_model('apparel', 'Product').published_objects.filter(likes__user=profile, likes__active=True).count()
@@ -83,18 +82,14 @@ def save_description(request):
 
 @get_current_user
 @avatar_change
-def likes(request, profile, form, page=0, gender=None):
+def likes(request, profile, form, page=0):
     """
     Displays the profile likes page.
     """
-    if not gender:
-        gender = get_gender_from_cookie(request)
-
     content = {
         'next': request.get_full_path(),
         'profile': profile,
         'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
-        'APPAREL_GENDER': gender
     }
     content.update(form)
     content.update(get_profile_sidebar_info(request, profile))
@@ -103,17 +98,14 @@ def likes(request, profile, form, page=0, gender=None):
     if profile.is_brand:
         is_brand = profile.brand_id
 
-    response = browse_products(request,
-                               template='profile/likes.html',
-                               user_gender='A',
-                               language=None,
-                               user_id=profile.pk,
-                               disable_availability=not is_brand,
-                               is_brand=is_brand,
-                               **content)
-
-    response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=gender, max_age=365 * 24 * 60 * 60)
-    return response
+    return browse_products(request,
+                           template='profile/likes.html',
+                           user_gender='A',
+                           language=None,
+                           user_id=profile.pk,
+                           disable_availability=not is_brand,
+                           is_brand=is_brand,
+                           **content)
 
 
 @get_current_user
@@ -374,8 +366,6 @@ def login_flow_complete(request):
     request.user.save()
 
     return render(request, 'profile/login_flow_complete.html')
-
-    #return HttpResponseRedirect('%s?first=1' % (get_gender_url(request.user.gender, 'index'),))
 
 
 #

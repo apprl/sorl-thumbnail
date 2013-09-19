@@ -19,7 +19,7 @@
     <script type="text/javascript">
         var product_popup_url = '{% url "product-popup" %}';
         var look_popup_url = '{% url "look-popup" %}';
-        var browse_url = '{% gender_url APPAREL_GENDER 'shop' %}';
+        var browse_url = '{% multi_gender_url request 'shop' 'shop' %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         {% if request.user.is_authenticated %}
         var userID = {{ request.user.pk }};
@@ -31,7 +31,6 @@
             'follow_profile': {% if user.is_authenticated and user.fb_share_follow_profile %}true{% else %}false{% endif %},
             'create_look': {% if user.is_authenticated and user.fb_share_create_look %}true{% else %}false{% endif %}
         };
-        var selected_gender = '{{ APPAREL_GENDER }}';
         var facebook_scope = '{{ FACEBOOK_SCOPE }}';
 
         window.fbAsyncInit = function() {
@@ -111,7 +110,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% gender_url APPAREL_GENDER 'index' %}">
+                <a class="navbar-brand" href="{% multi_gender_url request 'feed' 'index' %}">
                     <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Apprl">
                 </a>
             </div>
@@ -119,7 +118,7 @@
             <div class="navbar-collapse collapse navbar-responsive-collapse">
                 {% block custom_navigation %}{% endblock %}
 
-                <form action="{% gender_url APPAREL_GENDER 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
+                <form action="{% multi_gender_url request 'shop' 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
                     <div class="form-group">
                         <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
                     </div>
@@ -151,15 +150,15 @@
 
                 <ul class="nav navbar-nav navbar-nav-main">
                     {% if request.user.is_authenticated %}
-                    <li class="visible-xs"><a href="{% url 'index' %}"><span>{% trans "Your APPRL" %}</span></a></li>
+                    <li class="visible-xs"><a href="{% multi_gender_url request 'feed' 'index' %}"><span>{% trans "Your APPRL" %}</span></a></li>
                     {% endif %}
-                    <li class="{% selected_url request "/shop" "/products" %}"><a href="{% gender_url APPAREL_GENDER 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
-                    <li class="{% selected_url request "/looks" %}"><a href="{% gender_url APPAREL_GENDER 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
+                    <li class="{% selected_url request "/shop" "/products" %}"><a href="{% multi_gender_url request 'shop' 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
+                    <li class="{% selected_url request "/looks" %}"><a href="{% multi_gender_url request 'look' 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
                     <li class="dropdown {% selected_url request "/brands" "/users" %}">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'user-list' %}"><span>{% trans "Follow" %} <b class="caret"></b></span></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{% multi_gender_url request 'user' 'user-list' %}"><span>{% trans "Follow" %} <b class="caret"></b></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'user-list' %}">{% trans "Members" %}</a></li>
-                            <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
+                            <li><a href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></li>
+                            <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -191,8 +190,8 @@
                             <li><h4>{% trans "Shop" %}</h4></li>
                             <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
                             <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
-                            <li><a href="{% gender_url APPAREL_GENDER 'look-list' %}">{% trans "Looks" %}</a></li>
-                            <li><a href="{% gender_url APPAREL_GENDER 'brand-list' %}">{% trans "Brands" %}</a></li>
+                            <li><a href="{% multi_gender_url request 'look' 'look-list' %}">{% trans "Looks" %}</a></li>
+                            <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
                         </ul>
                         <ul class="list-unstyled col-xs-6">
                             <li><h4>{% trans "Language" %}</h4></li>

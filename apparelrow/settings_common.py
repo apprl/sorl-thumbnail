@@ -157,7 +157,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "apparelrow.context_processors.exposed_settings",
     "apparelrow.context_processors.next_redirects",
-    "apparelrow.context_processors.gender",
     "apparelrow.context_processors.currency",
 )
 

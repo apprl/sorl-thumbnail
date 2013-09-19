@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
-from apparelrow.apparel.utils import JSONResponse, set_query_parameter, get_gender_from_cookie, currency_exchange
+from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 from apparelrow.apparel.utils import vendor_buy_url
 
 
@@ -154,7 +154,7 @@ class ProductList(View):
     def get(self, request, *args, **kwargs):
         language = get_language()
         currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
-        gender = request.GET.get('gender', get_gender_from_cookie(request))
+        gender = request.GET.get('gender', select_from_multi_gender(request, 'shop', None))
         facet_fields = request.GET.get('facet', '').split(',')
 
         try:

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n apparel_extras %}
 
-{% block extra-title %}{% if APPAREL_GENDER == 'M' %}{% trans "Looks Men" %}{% else %}{% trans "Looks Women" %}{% endif %} | {% endblock %}
+{% block extra-title %}{% if gender == 'M' %}{% trans "Looks Men" %}{% elif gender == 'W' %}{% trans "Looks Women" %}{% else %}{% trans "Looks" %}{% endif %} | {% endblock %}
 
 {% block body-classes %}look-list-page{% endblock %}
 {% block body %}
@@ -14,7 +14,7 @@
             <ul class="list-inline">
                 <li>{% include 'apparel/fragments/create_look_button.html' with request=request only %}</li>
                 <li>
-                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if APPAREL_GENDER == 'M' %}{% trans "Only men’s" %}{% elif APPAREL_GENDER == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men’s" %}{% elif gender == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{% url 'look-list' %}">{% trans "Show all" %}</a></li>
                         <li><a href="{% url 'look-list-men' %}">{% trans "Only men’s" %}</a></li>

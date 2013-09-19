@@ -261,24 +261,24 @@ def get_gender_url(gender, named_url):
     return reverse(named_url)
 
 
-def select_from_multi_gender(request, gender_key, gender=None):
+def select_from_multi_gender(request, gender_key, gender=None, default=None):
+    """
+    This utility function has two use cases, it either returns a gender from
+    the multi gender cookie based on the gender_key or it sets a gender if the
+    gender parameter is not None.
+    """
     if gender is None:
-        gender = request.app_multi_gender.get(gender_key, 'A')
+        gender = request.app_multi_gender.get(gender_key, None)
+        if gender is None:
+            user_default = 'A'
+            if request.user and request.user.is_authenticated() and request.user.gender:
+                user_default = request.user.gender
+
+            request.app_multi_gender[gender_key] = gender = default or user_default
     else:
         request.app_multi_gender[gender_key] = gender
 
     return gender
-
-
-def get_gender_from_cookie(request):
-    """
-    Get gender from cookie in a safe way.
-    """
-    cookie_value = request.COOKIES.get(settings.APPAREL_GENDER_COOKIE, '')
-    if cookie_value in ['M', 'W']:
-        return cookie_value
-
-    return 'W'
 
 
 def get_paged_result(queryset, per_page, page_num):

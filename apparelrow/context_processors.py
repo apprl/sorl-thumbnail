@@ -5,8 +5,6 @@ from django.core.cache import cache
 from django.db.models import get_model
 from django.utils.translation import get_language
 
-from apparelrow.apparel.utils import get_gender_from_cookie
-
 def exposed_settings(request):
     current_site = Site.objects.get_current()
     return {
@@ -33,9 +31,6 @@ def next_redirects(request):
         return {
             'next' : request.path
         }
-
-def gender(request):
-    return {'APPAREL_GENDER': get_gender_from_cookie(request)}
 
 def currency(request):
     rates = cache.get(django_settings.APPAREL_RATES_CACHE_KEY)
