@@ -810,6 +810,16 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
     box-shadow: none;
     -webkit-box-shadow: none;
     margin-bottom: 30px;
+    &.feed-verb-agg_product {
+        .panel-heading > p {
+            white-space: normal;
+        }
+        .panel-body {
+            .btn {
+                margin-top: 10px;
+            }
+        }
+    }
     .panel-heading {
         background-color: #ffffff;
         border: 0;
@@ -819,6 +829,7 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            min-height: 40px;
             max-width: 260px;
             margin-left: auto;
             margin-right: auto;
@@ -829,8 +840,11 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
     }
     .panel-body {
         min-height: 414px;
-        padding-top: 0;
-        padding-bottom: 0;
+        padding: 0;
+        img {
+            margin-left: auto;
+            margin-right: auto;
+        }
     }
 }
 

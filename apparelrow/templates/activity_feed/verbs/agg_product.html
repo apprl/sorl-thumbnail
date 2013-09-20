@@ -1,0 +1,27 @@
+{% extends 'activity_feed/verbs/base.html' %}
+{% load i18n cache thumbnail %}
+
+{% block activity_header %}
+    {% if object.object_count <= 1 %}
+    <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "added" %}</span>
+    {% else %}
+    <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "added" %} {{ object.object_count }} {% if object.gender == 'W' %}{% trans "new women's products" %}{% else %}{% trans "new men's products" %}{% endif %}</span>
+    {% endif %}
+{% endblock %}
+
+{% block activity_content %}
+    {% if object.object_count <= 1 %}
+    {% cache CACHE_TIMEOUT product_medium object.object_id LANGUAGE_CODE %}
+    {% include 'apparel/fragments/product_medium.html' with object=object.activity_object %}
+    {% endcache %}
+    {% else %}
+    {% cache CACHE_TIMEOUT product_medium_agg object.object_id LANGUAGE_CODE %}
+    <a href="{{ object.activity_object.manufacturer.user.get_absolute_url }}">
+        {% thumbnail object.activity_object.product_image "280x320" keep_size=True crop=False format='PNG' as im %}
+        <img class="product-image img-responsive" src="{{ im.url }}" alt="{{ object.activity_object.manufacturer.name }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+    </a>
+    <a class="btn btn-primary btn-block" href="{{ object.activity_object.manufacturer.user.get_absolute_url }}">{% trans "See all new products »" %}</a>
+    {% endcache %}
+    {% endif %}
+{% endblock %}

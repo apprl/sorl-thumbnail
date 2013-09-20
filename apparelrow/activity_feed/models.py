@@ -95,6 +95,7 @@ class Activity(models.Model):
     active = models.BooleanField(default=True)
     is_available = models.BooleanField(default=True)
     featured_date = models.DateField(null=True, blank=True)
+    object_count = models.PositiveIntegerField(default=1)
 
     objects = ActivityManager()
 

@@ -103,7 +103,7 @@ class ActivityFeedRender(object):
         self.gender_list = {'A': ['W', 'M', 'U'],
                             'M': ['M', 'U'],
                             'W': ['W', 'U']}
-        self.verbs = ['like_look', 'like_product', 'add_product', 'create']
+        self.verbs = ['like_look', 'like_product', 'agg_product', 'create']
 
     def run(self):
         user_ids = self.user.following.filter(active=True).values('user_follow')
