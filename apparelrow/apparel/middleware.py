@@ -23,7 +23,10 @@ class GenderMiddleware(object):
         try:
             request.app_multi_gender = json.loads(cookie_value)
         except:
-            request.app_multi_gender = {'feed': 'A', 'look': 'A', 'user': 'A', 'shop': 'A'}
+            shop_default = 'A'
+            if hasattr(request, 'user') and request.user and request.user.is_authenticated() and request.user.gender:
+                shop_default = request.user.gender
+            request.app_multi_gender = {'feed': 'A', 'look': 'A', 'user': 'A', 'shop': shop_default}
 
     def process_response(self, request, response):
         if hasattr(request, 'app_multi_gender'):
