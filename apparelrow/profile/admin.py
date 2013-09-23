@@ -32,7 +32,10 @@ class CustomUserChangeForm(UserChangeForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         try:
-            get_user_model()._default_manager.get(email=email)
+            if self.instance and hasattr(self.instance, 'pk'):
+                get_user_model()._default_manager.exclude(pk=self.instance.pk).get(email=email)
+            else:
+                get_user_model()._default_manager.get(email=email)
         except get_user_model().DoesNotExist:
             return email
         except get_user_model().MultipleObjectsReturned:
@@ -58,17 +61,6 @@ class CustomUserCreationForm(UserCreationForm):
             pass
 
         raise forms.ValidationError(self.error_messages['duplicate_username'])
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        try:
-            get_user_model()._default_manager.get(email=email)
-        except get_user_model().DoesNotExist:
-            return email
-        except get_user_model().MultipleObjectsReturned:
-            pass
-
-        raise forms.ValidationError(_('A user with that e-mail already exists.'))
 
 
 class CustomUserAdmin(UserAdmin):
