@@ -91,7 +91,7 @@ class CustomUserAdmin(UserAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         readonly_fields = list(self.readonly_fields)
-        if obj.is_referral_parent_valid():
+        if obj and obj.is_referral_parent_valid():
             readonly_fields.extend(['referral_partner'])
         return readonly_fields
 
