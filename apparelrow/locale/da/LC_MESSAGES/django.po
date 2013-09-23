@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-20 13:44+0200\n"
+"POT-Creation-Date: 2013-09-23 15:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -426,7 +426,7 @@ msgstr ""
 msgid "Shared to your Facebook timeline!"
 msgstr ""
 
-#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:153
+#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:159
 msgid "E-mail address"
 msgstr ""
 
@@ -586,44 +586,48 @@ msgid ""
 "example: \"svart,night,coal\""
 msgstr ""
 
-#: profile/admin.py:61
+#: profile/admin.py:41 profile/admin.py:71 profile/forms.py:156
+msgid "A user with that e-mail already exists."
+msgstr ""
+
+#: profile/admin.py:87
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:64 templates/base.html:215
+#: profile/admin.py:90 templates/base.html:215
 #: templates/profile/base_settings.html:20
 #: templates/profile/base_settings.html:23
 #: templates/profile/settings_facebook.html:5
 msgid "Facebook"
 msgstr ""
 
-#: profile/admin.py:67
+#: profile/admin.py:93
 msgid "Brand"
 msgstr "Brand"
 
-#: profile/admin.py:68 templates/dashboard/body_header.html:4
+#: profile/admin.py:94 templates/dashboard/body_header.html:4
 #: templates/dashboard/info.html:5 templates/dashboard/publisher.html:5
 #: templates/profile/base_settings.html:21
 #: templates/profile/settings_publisher.html:28
 msgid "Publisher"
 msgstr ""
 
-#: profile/admin.py:75
+#: profile/admin.py:101
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:76 templates/base.html:145
+#: profile/admin.py:102 templates/base.html:145
 #: templates/dashboard/body_header.html:12
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
 msgid "Settings"
 msgstr ""
 
-#: profile/admin.py:86
+#: profile/admin.py:112
 msgid "Important dates"
 msgstr ""
 
-#: profile/admin.py:87
+#: profile/admin.py:113
 msgid "Permissions"
 msgstr ""
 
@@ -716,11 +720,7 @@ msgstr ""
 msgid "Enter the same password as above, for verification."
 msgstr ""
 
-#: profile/forms.py:150
-msgid "A user with that e-mail already exists."
-msgstr ""
-
-#: profile/forms.py:160
+#: profile/forms.py:166
 msgid "E-mail does not exist or account is already confirmed."
 msgstr ""
 
@@ -3105,6 +3105,12 @@ msgstr ""
 
 #: templates/registration/fragments/registration.html:6
 msgid "or sign up with e-mail"
+msgstr ""
+
+#: templates/registration/fragments/registration.html:11
+#, python-format
+msgid ""
+"<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
 
 #~ msgid "Back to Top"

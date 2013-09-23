@@ -6,3 +6,6 @@
 <br><p><a class="underline" href="{% url 'auth_register_email' %}">{% trans "or sign up with e-mail" %}</a>.</p>
 {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
 <p class="privacy">{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
+<br><br>
+{% url 'auth_login' as login_url %}
+<p>{% blocktrans with login_url=login_url %}<a href="{{login_url}}">If you're already a member, login here »</a></p>{% endblocktrans %}
