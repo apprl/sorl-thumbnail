@@ -8,6 +8,25 @@ from apparelrow.profile.utils import slugify_unique
 
 FB_GENDER_MAP = { 'male': 'M', 'female': 'W' }
 
+
+class UsernameAndEmailBackend(ModelBackend):
+    def authenticate(self, username=None, password=None, **kwargs):
+        UserModel = get_user_model()
+        if username and '@' in username:
+            try:
+                user = UserModel._default_manager.get(email=username)
+                if user.check_password(password):
+                    return user
+            except UserModel.DoesNotExist:
+                pass
+            except UserModel.MultipleObjectsReturned:
+                pass
+
+        return super(UsernameAndEmailBackend, self).authenticate(username=username,
+                                                                 password=password,
+                                                                 **kwargs)
+
+
 class FacebookProfileBackend(ModelBackend):
     """
     Authenticate a facebook user and autopopulate facebook data into the

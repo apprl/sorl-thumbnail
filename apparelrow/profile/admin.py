@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
@@ -28,6 +29,17 @@ class CustomUserChangeForm(UserChangeForm):
         """
         return self.cleaned_data.get('facebook_user_id') or None
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            get_user_model()._default_manager.get(email=email)
+        except get_user_model().DoesNotExist:
+            return email
+        except get_user_model().MultipleObjectsReturned:
+            pass
+
+        raise forms.ValidationError(_('A user with that e-mail already exists.'))
+
 
 class CustomUserCreationForm(UserCreationForm):
     """
@@ -42,7 +54,21 @@ class CustomUserCreationForm(UserCreationForm):
             get_user_model().objects.get(username=username)
         except get_user_model().DoesNotExist:
             return username
+        except get_user_model().MultipleObjectsReturned:
+            pass
+
         raise forms.ValidationError(self.error_messages['duplicate_username'])
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            get_user_model()._default_manager.get(email=email)
+        except get_user_model().DoesNotExist:
+            return email
+        except get_user_model().MultipleObjectsReturned:
+            pass
+
+        raise forms.ValidationError(_('A user with that e-mail already exists.'))
 
 
 class CustomUserAdmin(UserAdmin):

@@ -178,6 +178,7 @@ MIDDLEWARE_CLASSES = (
 
 AUTHENTICATION_BACKENDS = (
     'apparelrow.profile.auth.FacebookProfileBackend',
+    'apparelrow.profile.auth.UsernameAndEmailBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
