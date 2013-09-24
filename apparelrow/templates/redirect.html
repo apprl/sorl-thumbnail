@@ -29,40 +29,31 @@
             ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
+
+        {% if store %}
+        ga('send', 'event', '{{ page }}', 'BuyReferral', '{{ store }} - {{ slug }}', {{ price }});
+        _gaq.push(['_trackEvent', '{{ page }}', 'BuyReferral', '{{ store }} - {{ slug }}', {{ price }}]);
+        var data = {csrfmiddlewaretoken: '{{ csrf_token }}',
+                    referer: '{{ request.META.HTTP_REFERER }}',
+                    sid: '{{ sid }}',
+                    page: '{{ page }}'};
+        jQuery.post('{% url "product-track" id page sid %}', data);
+        setTimeout(function() {
+            window.location.replace('{{ redirect_url|safe }}');
+        }, 1300);
+        {% endif %}
     </script>
-    <style>
-        a { color: #000000;text-decoration:none; }
-    </style>
 </head>
 <body>
     <div style="position:fixed;top:42%;left:50%;width:400px;margin-left:-200px;height:140px;margin-top:-70px;text-align:center;font-family:'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;">
         <div style="width:100%;background-color:#000000;margin:0;height:40px;line-height:40px;"><img style="vertical-align:middle;" src="{% static "images/small_logo.png" %}" alt="Apprl"></div>
         <div style="width:100%;border:1px solid #eee;height:100px;line-height:100px;box-sizing:border-box;font-weight:bold;">
             {% if store %}
-            <a href="{{ redirect_url }}">{% blocktrans %}Redirecting you to {{store}}{% endblocktrans %}</a> <img style="padding-left:10px;" src="{% static "images/loading_white.gif" %}">
+            <a style="color:#000000;text-decoration:none;" href="{{ redirect_url }}">{% blocktrans %}Redirecting you to {{store}}{% endblocktrans %}</a> <img style="padding-left:10px;" src="{% static "images/loading_white.gif" %}">
             {% else %}
             {% trans "The product URL is no longer valid." %}
             {% endif %}
         </div>
     </div>
-    {% if store %}
-    <script type="text/javascript">
-        function track() {
-            {% if page == 'Ext-Link' or page == 'Ext-Shop' %}
-            _gaq.push(['_trackEvent', '{{ page }}', 'BuyReferral', '{{ store }} - {{ slug }}', {{ price }}]);
-            {% endif %}
-            var data = {csrfmiddlewaretoken: '{{ csrf_token }}',
-                        referer: '{{ request.META.HTTP_REFERER }}',
-                        sid: '{{ sid }}',
-                        page: '{{ page }}'};
-            jQuery.post('{% url "product-track" id page sid %}', data);
-            setTimeout(redirect, 1000);
-        }
-        function redirect() {
-            window.location.replace('{{ redirect_url|safe }}');
-        }
-        window.onload = track;
-    </script>
-    {% endif %}
 </body>
 </html>

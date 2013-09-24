@@ -86,14 +86,6 @@ $(document).ready(function() {
         }
     }
 
-    // Track buy clicks
-    $(document).on('click', 'body.search-page a.btn-buy', trackEvent('Search', 'BuyReferral'))
-               .on('click', 'body.product-detail-page a.btn-buy', trackEvent('Product', 'BuyReferral'))
-               .on('click', 'body.shop a.btn-buy', trackEvent('Shop', 'BuyReferral'))
-               .on('click', 'body.profile-page a.btn-buy', trackEvent('Profile', 'BuyReferral'))
-               .on('click', 'body.feed-list-page a.btn-buy', trackEvent('Feed', 'BuyReferral'))
-               .on('click', '.popover-product a.btn-buy', trackEvent('Look', 'BuyReferral'));
-
     // Track likes
     $(document).on('click', 'body.product-detail-page .btn-product-like', trackEvent('Product', 'ProductLike'))
                .on('click', 'body.shop .btn-product-like', trackEvent('Shop', 'ProductLike'))
