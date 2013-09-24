@@ -134,7 +134,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
             return HttpResponseRedirect('%s?%s' % (reverse('shop-men'), request.GET.urlencode()))
         else:
             return HttpResponseRedirect('%s?%s' % (reverse('shop-women'), request.GET.urlencode()))
-    else:
+    elif user_gender is None:
         gender = select_from_multi_gender(request, 'shop', gender)
 
     if not language:

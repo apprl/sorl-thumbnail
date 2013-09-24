@@ -100,6 +100,7 @@ def likes(request, profile, form, page=0):
 
     return browse_products(request,
                            template='profile/likes.html',
+                           gender=request.GET.get('gender', 'A'),
                            user_gender='A',
                            language=None,
                            user_id=profile.pk,
