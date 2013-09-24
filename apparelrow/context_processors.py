@@ -11,6 +11,8 @@ def exposed_settings(request):
         'CACHE_TIMEOUT': django_settings.CACHES.get('default', {}).get('TIMEOUT', 60),
         'GOOGLE_ANALYTICS_ACCOUNT': django_settings.GOOGLE_ANALYTICS_ACCOUNT,
         'GOOGLE_ANALYTICS_DOMAIN': django_settings.GOOGLE_ANALYTICS_DOMAIN,
+        'GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT': django_settings.GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT,
+        'GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN': 'none' if django_settings.DEBUG else current_site.domain,
         'LANGUAGES_DISPLAY': django_settings.LANGUAGES_DISPLAY,
         'SHORT_LANGUAGES_DISPLAY': django_settings.SHORT_LANGUAGES_DISPLAY,
         'SHORT_LANGUAGES_LIST_DISPLAY': django_settings.SHORT_LANGUAGES_LIST_DISPLAY,
