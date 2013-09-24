@@ -136,7 +136,7 @@ urlpatterns = patterns('',
     url(r'^users/women/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-women'),
 
     # Jobs
-    url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
+    url(r'^jobs/$', RedirectView.as_view(url=reverse_lazy('index')), name='jobs'),
 
     # Mailchimp - email
     url(r'^admin/csv/users/$', 'apparelrow.apparel.email.admin_user_list_csv'),

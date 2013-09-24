@@ -714,16 +714,6 @@ def index(request, gender=None):
 def about(request):
     return render_to_response('apparel/about.html', {}, context_instance=RequestContext(request))
 
-def jobs(request):
-    # Set language to user's browser language for gender select view
-    language = translation.get_language_from_request(request)
-    translation.activate(language)
-    request.LANGUAGE_CODE = translation.get_language()
-    image = BackgroundImage.objects.get_random_image()
-
-    return render_to_response('apparel/jobs.html', {
-            'image': str(image)
-        }, context_instance=RequestContext(request))
 
 #
 # Contest Stylesearch
