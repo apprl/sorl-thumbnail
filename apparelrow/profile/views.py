@@ -537,7 +537,7 @@ def facebook_login(request):
         uid = request.POST.get('uid', '')
         disable_flow = request.POST.get('disable_flow', False)
 
-        user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token)
+        user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token, request=request)
         if user and user.is_active:
             auth.login(request, user)
             if request.is_ajax():
