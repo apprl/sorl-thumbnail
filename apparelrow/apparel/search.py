@@ -558,7 +558,7 @@ def search_view(request, model_name):
 
     # Return object list based on model name
     if model_name == 'product':
-        object_list = [o.template for o in paged_result.object_list if o]
+        object_list = [o.template.replace('/Shop/0/', '/Search/0/') for o in paged_result.object_list if o]
     elif model_name == 'look':
         object_list = [o.template for o in paged_result.object_list if o]
     elif model_name == 'user':

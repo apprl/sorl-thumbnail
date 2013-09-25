@@ -4,6 +4,24 @@
 {% block full-title %}Apprl - Social Shopping | {% trans "Apparel, shoes, bags & accessories from the best online stores selected by bloggers & brands" %}{% endblock %}
 {% block meta_description %}{% trans "Discover fashion from the world's best stores selected by bloggers, your friends & other stylemakers." %}{% endblock %}
 
+{% block 'extra-scripts' %}
+<script type="text/javascript">
+    $(function() {
+        $('.feed-list .feed-verb-like_product').each(function(i, element) {
+            var feed_user_id = $(element).data('user-id');
+            var buy_button = $(element).find('.btn-product-buy');
+            if (buy_button.length > 0) {
+                var buy_url = buy_button.attr('href');
+                if(typeof buy_url != 'undefined') {
+                    buy_url = buy_url.replace('Shop/0/', 'Feed/' + feed_user_id + '/');
+                    $('.hover .btn-product-buy', element).attr('href', buy_url);
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+
 {% block body-classes %}feed-list-page{% endblock body-classes %}
 {% block full-body %}
 

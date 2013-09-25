@@ -1,5 +1,5 @@
 {% load i18n cache %}
-<div class="feed-item panel feed-verb-{{ object.verb }}">
+<div class="feed-item panel feed-verb-{{ object.verb }}" data-user-id="{{ object.user_id }}">
 
     {% cache CACHE_TIMEOUT activity_header object.id LANGUAGE_CODE %}
     <div class="panel-heading">
