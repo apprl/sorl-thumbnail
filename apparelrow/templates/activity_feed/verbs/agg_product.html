@@ -2,7 +2,7 @@
 {% load i18n cache thumbnail %}
 
 {% block activity_header %}
-    <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "added" %}</span>
+    <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "added" %}</span> {{ object.object_count }} {% if object.gender == 'W' %}{% trans "new women's products" %}{% else %}{% trans "new men's products" %}{% endif %}
 {% endblock %}
 
 {% block activity_content %}
@@ -21,7 +21,6 @@
             </a>
         </div>
         <div class="caption">
-            <p>{{ object.object_count }} {% if object.gender == 'W' %}{% trans "new women's products" %}{% else %}{% trans "new men's products" %}{% endif %}</p>
         </div>
     </div>
     {% endcache %}
