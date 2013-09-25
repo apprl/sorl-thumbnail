@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 {% load i18n apparel_extras %}
 
+
+{% block 'extra-scripts' %}
+<script type="text/javascript">
+    $(function() {
+        ga('send', 'event', 'Signup', 'FollowBrandsPage');
+        _gaq.push(['_trackEvent', 'Signup', 'FollowBrandsPage']);
+    });
+</script>
+{% endblock %}
+
 {% block custom_navigation %}
 <ul class="nav navbar-nav navbar-right">
-    <li><a href="{{ next_url }}">{% trans "Continue to APPRL" %}</a></li>
+    <li><a class="btn-login-flow-continue" href="{{ next_url }}">{% trans "Continue to APPRL" %}</a></li>
 </ul>
 {% endblock %}
 
@@ -24,6 +34,6 @@
 
     {% include 'apparel/fragments/user_list.html' %}
 
-    <a class="btn btn-primary btn-lg btn-block" href="{{ next_url }}">{% trans "Continue to APPRL" %}</a>
+    <a class="btn btn-primary btn-lg btn-block btn-login-flow-continue" href="{{ next_url }}">{% trans "Continue to APPRL" %}</a>
 
 {% endblock %}

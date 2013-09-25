@@ -25,7 +25,7 @@ register = Library()
 
 
 @register.inclusion_tag('apparel/tags/facebook_button.html', takes_context=True)
-def facebook_button(context, text=None, next=None, connect=False, disable_flow=False):
+def facebook_button(context, text=None, next=None, connect=False, disable_flow=False, extra_class=None):
     """
     Facebook button templatetag.
 
@@ -39,7 +39,7 @@ def facebook_button(context, text=None, next=None, connect=False, disable_flow=F
     else:
         text = _(text)
 
-    return dict(next=next, text=text, connect=connect, disable_flow=disable_flow, request=context['request'])
+    return dict(next=next, text=text, connect=connect, disable_flow=disable_flow, extra_class=extra_class, request=context['request'])
 
 @register.filter
 def category_descendants_id(category, include_self=True):

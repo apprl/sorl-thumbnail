@@ -99,6 +99,15 @@ $(document).ready(function() {
         }
     }
 
+    function trackSignup(category, action) {
+        return function() {
+            ga('send', 'event', category, action);
+            _gaq.push(['_trackEvent', category, action]);
+
+            return true;
+        }
+    }
+
     // Track likes
     $(document).on('click', 'body.product-detail-page .btn-product-like', trackEvent('Product', 'ProductLike'))
                .on('click', 'body.shop .btn-product-like', trackEvent('Shop', 'ProductLike'))
@@ -121,6 +130,12 @@ $(document).ready(function() {
                .on('click', 'body.profile-page .btn-create-shop', trackEmbed('Shop', 'ClickEmbedButton'))
                .on('click', '#modal_embed_shop .modal-body .btn', trackEmbed('Shop', 'GetEmbedCode'))
                .on('click', 'body.product-detail-page .btn-short-link', trackEmbed('Product', 'ClickGetLinkButton'));
+
+    $(document).on('click', '.btn-get-access', trackSignup('Signup', 'ClickSignup'))
+               .on('click', '.btn-signup-email', trackSignup('Signup', 'ClickEmailSignup'))
+               .on('click', '.btn-facebok-signup', trackSignup('Signup', 'ClickFacebookSignup'))
+               .on('click', 'body.registration-email .btn-email-signup', trackSignup('Signup', 'ClickEmailSignupSubmit'))
+               .on('click', 'body.profile-welcome .btn-login-flow-continue', trackSignup('Signup', 'FollowBrandsPageCompleted'));
 
 
     // Comments posting
