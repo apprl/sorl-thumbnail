@@ -88,21 +88,39 @@ $(document).ready(function() {
         }
     }
 
+    function trackEmbed(category, action) {
+        return function() {
+            var slug = $(this).data('slug');
+
+            ga('send', 'event', category, action, slug);
+            _gaq.push(['_trackEvent', category, action, slug]);
+
+            return true;
+        }
+    }
+
     // Track likes
     $(document).on('click', 'body.product-detail-page .btn-product-like', trackEvent('Product', 'ProductLike'))
                .on('click', 'body.shop .btn-product-like', trackEvent('Shop', 'ProductLike'))
-               .on('click', 'body.profile-page .btn-product-like', trackEvent('Profile', 'ProductLike'));
-               .on('click', 'body.search-page .btn-product-like', trackEvent('Search', 'ProductLike'));
+               .on('click', 'body.profile-page .btn-product-like', trackEvent('Profile', 'ProductLike'))
+               .on('click', 'body.search-page .btn-product-like', trackEvent('Search', 'ProductLike'))
                .on('click', 'body.index .btn-product-like, body.feed-list-page .btn-product-like', trackEvent('Feed', 'ProductLike'));
 
     $(document).on('click', 'body.look-detail-page .btn-look-like', trackEvent('Look', 'LookLike'))
                .on('click', 'body.look-list-page .btn-look-like', trackEvent('Looks', 'LookLike'))
-               .on('click', 'body.profile-page .btn-look-like', trackEvent('Profile', 'LookLike'));
-               .on('click', 'body.search-page .btn-look-like', trackEvent('Search', 'LookLike'));
+               .on('click', 'body.profile-page .btn-look-like', trackEvent('Profile', 'LookLike'))
+               .on('click', 'body.search-page .btn-look-like', trackEvent('Search', 'LookLike'))
                .on('click', 'body.index .btn-look-like, body.feed-list-page .btn-look-like', trackEvent('Feed', 'LookLike'));
 
     // Track invites
     $(document).on('click', '.navbar .facebook-invite', trackInviteEvent('Menu'));
+
+    // Track embed and short link
+    $(document).on('click', 'body.look-detail-page .btn-embed', trackEmbed('Look', 'ClickEmbedButton'))
+               .on('click', '#modal_embed_look .modal-body .btn', trackEmbed('Look', 'GetEmbedCode'))
+               .on('click', 'body.profile-page .btn-create-shop', trackEmbed('Shop', 'ClickEmbedButton'))
+               .on('click', '#modal_embed_shop .modal-body .btn', trackEmbed('Shop', 'GetEmbedCode'))
+               .on('click', 'body.product-detail-page .btn-short-link', trackEmbed('Product', 'ClickGetLinkButton'));
 
 
     // Comments posting

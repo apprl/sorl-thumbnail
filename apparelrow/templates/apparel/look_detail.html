@@ -245,7 +245,7 @@
                         <p class="created">{% trans "Created" %} {{ object.created|since }}</p>
 
                         {% if request.user == object.user %}
-                        <a href="{% url 'dialog-look-embed' object.slug %}" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
+                        <a href="{% url 'dialog-look-embed' object.slug %}" class="btn btn-primary btn-block btn-embed" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
                         {% endif %}
 
                         {% include 'apparel/fragments/share.html' %}
