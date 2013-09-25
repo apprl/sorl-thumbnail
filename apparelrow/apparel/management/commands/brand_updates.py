@@ -41,6 +41,8 @@ class Command(BaseCommand):
                     product_count['M'] += 1
                     product_count['W'] += 1
 
+                product.save()
+
                 activity, created = Activity.objects.get_or_create(user=brand.user,
                                                                    verb='add_product',
                                                                    content_type=content_type,
