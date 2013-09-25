@@ -19,8 +19,9 @@ from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 
-from apparelrow.apparel.utils import get_paged_result, JSONResponse
-from apparelrow.apparel.tasks import facebook_push_graph
+from apparelrow.apparel.utils import get_paged_result, JSONResponse, get_ga_cookie_cid
+from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
+
 from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
@@ -465,6 +466,9 @@ def register_activate(request, key):
         user.is_active = True
         user.confirmation_key = None
         user.save()
+
+        # Send google analytics event
+        google_analytics_event.delay(get_ga_cookie_cid(request), 'Member', 'Signup', user.slug)
 
         # Send welcome email
         send_welcome_mail(user)

@@ -519,6 +519,7 @@ CELERY_ROUTES = ({
     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
     'apparel.facebook_push_graph': {'queue': 'standard'},
     'apparel.facebook_pull_graph': {'queue': 'standard'},
+    'apparelrow.apparel.tasks.google_analytics_event': {'queue': 'standard'},
     'apparelrow.apparel.tasks.empty_embed_shop_cache': {'queue': 'standard'},
     'apparelrow.apparel.tasks.empty_embed_look_cache': {'queue': 'standard'},
     'apparelrow.apparel.tasks.look_popularity': {'queue': 'background'},

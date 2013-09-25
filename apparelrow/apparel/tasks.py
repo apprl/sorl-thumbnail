@@ -33,8 +33,15 @@ from celery.task import task, periodic_task, PeriodicTask
 from celery.schedules import crontab
 import requests
 
+from apparelrow.apparel.utils import send_google_analytics_event
 
 logger = logging.getLogger('apparel.tasks')
+
+
+@task(name='apparelrow.apparel.tasks.google_analytics_event', max_retries=1, ignore_result=True)
+def google_analytics_event(cid, category, action, label=None, value=None):
+    send_google_analytics_event(cid, category, action, label, value)
+
 
 @task(name='apparelrow.apparel.tasks.empty_embed_shop_cache', max_retries=5, ignore_result=True)
 def empty_embed_shop_cache(embed_shop_id):

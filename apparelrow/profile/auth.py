@@ -6,6 +6,9 @@ import facebook
 from apparelrow.profile.notifications import process_facebook_friends
 from apparelrow.profile.utils import slugify_unique
 
+from apparelrow.apparel.utils import get_ga_cookie_cid
+from apparelrow.apparel.tasks import google_analytics_event
+
 FB_GENDER_MAP = { 'male': 'M', 'female': 'W' }
 
 
@@ -33,7 +36,7 @@ class FacebookProfileBackend(ModelBackend):
     user's profile.
 
     """
-    def authenticate(self, fb_uid=None, fb_graphtoken=None):
+    def authenticate(self, fb_uid=None, fb_graphtoken=None, request=None):
         """
         If we receive a facebook uid then the cookie has already been
         validated.
@@ -57,6 +60,7 @@ class FacebookProfileBackend(ModelBackend):
 
             user, created = get_user_model().objects.get_or_create(facebook_user_id=fb_uid, defaults=defaults)
             if created:
+                google_analytics_event.delay(get_ga_cookie_cid(request), 'Member', 'Signup', user.slug)
                 process_facebook_friends.delay(user, fb_graphtoken)
 
             if user.gender is None:

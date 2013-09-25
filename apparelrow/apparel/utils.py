@@ -3,6 +3,9 @@ import json
 import decimal
 import datetime
 import itertools
+import urllib
+import httplib
+import uuid
 
 from django.conf import settings
 from django.core.cache import cache
@@ -15,6 +18,38 @@ from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+
+
+def get_ga_cookie_cid(request=None):
+    if request:
+        cookie = request.COOKIES.get('_ga')
+        if cookie:
+            cookie_split = cookie.rsplit('.', 2)
+            if len(cookie_split) == 3:
+                return '%s.%s' % (cookie_split[1], cookie_split[2])
+
+    return str(uuid.uuid4())
+
+
+def send_google_analytics_event(cid, category, action, label=None, value=None):
+    params = {
+        'v': 1,
+        'tid': settings.GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT,
+        'cid': cid,
+        't': 'event',
+        'ec': category,
+        'ea': action
+    }
+
+    if label:
+        params['el'] = label
+
+    if value:
+        params['ev'] = value
+
+    params = urllib.urlencode(params)
+    connection = httplib.HTTPConnection('www.google-analytics.com')
+    connection.request('POST', '/collect', params)
 
 
 def roundrobin(*iterables):
