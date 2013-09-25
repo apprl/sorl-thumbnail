@@ -28,6 +28,7 @@ jQuery(document).ready(function() {
                 vendor = el.attr('data-vendor'),
                 price = parseInt(el.attr('data-price'), 10);
 
+            ga('send', 'event', category, action, sid + ' - ' + vendor + ' - ' + slug, price);
             _gaq.push(['_trackEvent', category, action, sid + ' - ' + vendor + ' - ' + slug, price]);
 
             return true;

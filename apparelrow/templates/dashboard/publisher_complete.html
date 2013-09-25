@@ -27,6 +27,7 @@
     </div>
 </div>
 <script type="text/javascript">
+  ga('send', 'event', '{{ analytics_identifier }}', 'Signup', '{{ request.session.index_complete_info }}');
   var _gaq = _gaq || [];
   _gaq.push(['_trackEvent', '{{ analytics_identifier }}', 'Signup', '{{ request.session.index_complete_info }}']);
 </script>

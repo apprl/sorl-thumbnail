@@ -487,6 +487,7 @@ ApparelActivity = {
                 category = data.autoShare.split('_').pop();
             }
 
+            ga('send', 'event', category, 'FB ' + data.action, data.url);
             _gaq.push(['_trackEvent', category, 'FB ' + data.action, data.url]);
         }
     }
@@ -657,6 +658,7 @@ ApparelSearch = {
                 });
 
                 var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
+                ga('send', 'event', 'Search', name, opts.query['q'], response.paginator.count)
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
                 var h3 = $('h3.' + opts.selector.substring(1)).text(

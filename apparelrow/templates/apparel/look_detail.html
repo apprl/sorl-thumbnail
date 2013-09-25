@@ -126,7 +126,8 @@
 
         {% if look_created %}
         try {
-            _gaq.push(['_trackEvent', 'Look', 'Create', '{{ object.title }}']);
+            ga('send', 'event', 'Look', 'Create', '{{ object.slug }}');
+            _gaq.push(['_trackEvent', 'Look', 'Create', '{{ object.slug }}']);
         } catch(err){}
         {% endif %}
 
