@@ -138,11 +138,15 @@ urlpatterns = patterns('',
     # Jobs
     url(r'^jobs/$', RedirectView.as_view(url=reverse_lazy('index')), name='jobs'),
 
+    # Extra admin
+
     # Mailchimp - email
     url(r'^admin/csv/users/$', 'apparelrow.apparel.email.admin_user_list_csv'),
     url(r'^admin/mail/weekly/$', 'apparelrow.apparel.email.generate_weekly_mail'),
     url(r'^admin/mailchimp/webhook/$', 'apparelrow.apparel.email.mailchimp_webhook'),
     url(r'^admin/mail/custom/$', 'apparelrow.apparel.views.custom_email.admin', name='custom-email-admin'),
+
+    url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard'),
 )
 
 
