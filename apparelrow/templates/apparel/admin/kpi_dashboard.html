@@ -17,47 +17,47 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>{% if is_month %}{% trans "Selected month" %}{% else %}{% trans "Selected week" %}{% endif %}<br>({{ col1_week_start|date }}, {{ col1_week_end|date }})</th>
+                        <th>{% if is_month %}{% trans "Selected month" %}{% else %}{% trans "Selected week" %}{% endif %}<br>{{ col1_week_start|date }} - {{ col1_week_end|date }}</th>
                         <th>{% trans "Change %" %}</th>
-                        <th>{% if is_month %}{% trans "Last month" %}{% else %}{% trans "Last week" %}{% endif %}<br>({{ col3_week_start|date }}, {{ col3_week_end|date }})</th>
+                        <th>{% if is_month %}{% trans "Last month" %}{% else %}{% trans "Last week" %}{% endif %}<br>{{ col3_week_start|date }} - {{ col3_week_end|date }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><strong>{% trans "Sales generated (€)" %}</strong></td>
-                        <td>{{ col1_total_sale }}</td>
+                        <td>€{{ col1_total_sale }}</td>
                         <td>{{ col2_total_sale|floatformat:2 }}</td>
-                        <td>{{ col3_total_sale }}</td>
+                        <td>€{{ col3_total_sale }}</td>
                     </tr>
                     <tr>
                         <td>{% trans " - APPRL" %}</td>
-                        <td>{{ col1_apprl_sale }}</td>
+                        <td>€{{ col1_apprl_sale }}</td>
                         <td>{{ col2_apprl_sale|floatformat:2 }}</td>
-                        <td>{{ col3_apprl_sale }}</td>
+                        <td>€{{ col3_apprl_sale }}</td>
                     </tr>
                     <tr>
                         <td>{% trans " - Publisher" %}</td>
-                        <td>{{ col1_publisher_sale }}</td>
+                        <td>€{{ col1_publisher_sale }}</td>
                         <td>{{ col2_publisher_sale|floatformat:2 }}</td>
-                        <td>{{ col3_publisher_sale }}</td>
+                        <td>€{{ col3_publisher_sale }}</td>
                     </tr>
                     <tr>
                         <td><strong>{% trans "Commission (€)" %}</strong></td>
-                        <td>{{ col1_total_commission }}</td>
+                        <td>€{{ col1_total_commission }}</td>
                         <td>{{ col2_total_commission|floatformat:2 }}</td>
-                        <td>{{ col3_total_commission }}</td>
+                        <td>€{{ col3_total_commission }}</td>
                     </tr>
                     <tr>
                         <td>{% trans " - APPRL" %}</td>
-                        <td>{{ col1_apprl_commission }}</td>
+                        <td>€{{ col1_apprl_commission }}</td>
                         <td>{{ col2_apprl_commission|floatformat:2 }}</td>
-                        <td>{{ col3_apprl_commission }}</td>
+                        <td>€{{ col3_apprl_commission }}</td>
                     </tr>
                     <tr>
                         <td>{% trans " - Publisher" %}</td>
-                        <td>{{ col1_publisher_commission }}</td>
+                        <td>€{{ col1_publisher_commission }}</td>
                         <td>{{ col2_publisher_commission|floatformat:2 }}</td>
-                        <td>{{ col3_publisher_commission }}</td>
+                        <td>€{{ col3_publisher_commission }}</td>
                     </tr>
 
                     <tr>
@@ -73,16 +73,22 @@
                         <td>{{ col3_sales }}</td>
                     </tr>
                     <tr>
+                        <td>{% trans "Conversion rate" %}</td>
+                        <td>{{ col1_conversion_rate|floatformat:2 }}%</td>
+                        <td>{{ col2_conversion_rate|floatformat:2 }}</td>
+                        <td>{{ col3_conversion_rate|floatformat:2 }}%</td>
+                    </tr>
+                    <tr>
                         <td>{% trans "Average commission rate" %}</td>
-                        <td>{{ col1_avg_commission|floatformat:2 }}</td>
+                        <td>{{ col1_avg_commission|floatformat:2 }}%</td>
                         <td>{{ col2_avg_commission|floatformat:2 }}</td>
-                        <td>{{ col3_avg_commission|floatformat:2 }}</td>
+                        <td>{{ col3_avg_commission|floatformat:2 }}%</td>
                     </tr>
                     <tr>
                         <td>{% trans "Average sale value" %}</td>
-                        <td>{{ col1_avg_sale|floatformat:2 }}</td>
+                        <td>€{{ col1_avg_sale|floatformat:2 }}</td>
                         <td>{{ col2_avg_sale|floatformat:2 }}</td>
-                        <td>{{ col3_avg_sale|floatformat:2 }}</td>
+                        <td>€{{ col3_avg_sale|floatformat:2 }}</td>
                     </tr>
                     <tr>
                         <td>{% trans "Active publishers" %}</td>
