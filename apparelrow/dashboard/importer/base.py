@@ -78,7 +78,6 @@ class BaseImporter:
 
     def calculate_cut(self, data, instance):
         if 'user_id' in data and data['user_id']:
-            print data
             logger.debug('Running calculate cut for user id: %s' % (data['user_id'],))
 
             user, cut, referral_cut = get_cuts_for_user_and_vendor(data['user_id'], data['vendor'])
@@ -109,7 +108,6 @@ class BaseImporter:
                 temp_data['commission'] = temp_data['commission'] * decimal.Decimal('0.95')
 
             instance, created = get_model('dashboard', 'Sale').objects.get_or_create(original_sale_id=temp_data['original_sale_id'], defaults=temp_data)
-            print 'to many times', created
             if created:
                 logger.debug('Created referral sale object: %s' % (instance,))
 
