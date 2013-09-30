@@ -123,22 +123,24 @@ $(document).ready(function() {
         return false;
     });
 
-    $(document).on('click', '#product-gender a', function(e) {
-        var x = $('.navbar-nav-main > li > a[href^="/shop"]');
-        var y = $('.navbar .navbar-form[action^="/search"]');
-        var gender = $(this).data('gender');
-        if (gender == 'M') {
-            x.attr('href', x.attr('href').replace('women', 'men'));
-            y.attr('action', y.attr('action').replace('women', 'men'));
-        } else if (gender == 'W') {
-            x.attr('href', x.attr('href').replace('men', 'women'));
-            y.attr('action', y.attr('action').replace('men', 'women'));
-        }
-        $('#product-gender a').removeClass('selected');
-        var href = $(this).addClass('selected').attr('href');
-        filter({}, null, href);
-        return false;
-    });
+    if (!!(window.history && history.pushState)) {
+        $(document).on('click', '#product-gender a', function(e) {
+            var x = $('.navbar-nav-main > li > a[href^="/shop"]');
+            var y = $('.navbar .navbar-form[action^="/search"]');
+            var gender = $(this).data('gender');
+            if (gender == 'M') {
+                x.attr('href', x.attr('href').replace('women', 'men'));
+                y.attr('action', y.attr('action').replace('women', 'men'));
+            } else if (gender == 'W') {
+                x.attr('href', x.attr('href').replace('men', 'women'));
+                y.attr('action', y.attr('action').replace('men', 'women'));
+            }
+            $('#product-gender a').removeClass('selected');
+            var href = $(this).addClass('selected').attr('href');
+            filter({}, null, href);
+            return false;
+        });
+    }
 
     // Click handler for manufacturer option-popup
     jQuery(document).on('click', '#available-manufacturers a', function(e) {
