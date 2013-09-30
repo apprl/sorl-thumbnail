@@ -4,6 +4,9 @@
 {% block extra-title %}{% trans "Shop" %} | {% endblock %}
 
 {% block extra-styles %}
+    {% if request.GET %}
+    <meta name="robots" content="noindex, follow">
+    {% endif %}
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
 {% endblock extra-styles %}
 

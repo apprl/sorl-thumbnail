@@ -3,6 +3,13 @@
 
 {% block extra-title %}{{ profile.display_name }} | {% endblock %}
 
+{% block extra-styles %}
+    {% if request.GET %}
+    <meta name="robots" content="noindex, follow">
+    {% endif %}
+    {{ block.super }}
+{% endblock %}
+
 {% block pre-extra-scripts %}
 <script type="text/javascript">
     var profile_shop_user_id = {{ profile.pk }};
