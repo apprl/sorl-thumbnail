@@ -79,6 +79,17 @@ $(document).ready(function() {
         }
     }
 
+    function trackLookLikeEvent(category) {
+        return function() {
+            var slug = $(this).data('slug');
+
+            ga('send', 'event', category, 'LookLike', slug);
+            _gaq.push(['_trackEvent', category, 'LookLike', slug]);
+
+            return true;
+        }
+    }
+
     function trackInviteEvent(category) {
         return function() {
             ga('send', 'event', category, 'InviteFriends');
@@ -115,11 +126,11 @@ $(document).ready(function() {
                .on('click', 'body.search-page .btn-product-like', trackEvent('Search', 'ProductLike'))
                .on('click', 'body.index .btn-product-like, body.feed-list-page .btn-product-like', trackEvent('Feed', 'ProductLike'));
 
-    $(document).on('click', 'body.look-detail-page .btn-look-like', trackEvent('Look', 'LookLike'))
-               .on('click', 'body.look-list-page .btn-look-like', trackEvent('Looks', 'LookLike'))
-               .on('click', 'body.profile-page .btn-look-like', trackEvent('Profile', 'LookLike'))
-               .on('click', 'body.search-page .btn-look-like', trackEvent('Search', 'LookLike'))
-               .on('click', 'body.index .btn-look-like, body.feed-list-page .btn-look-like', trackEvent('Feed', 'LookLike'));
+    $(document).on('click', 'body.look-detail-page .btn-look-like', trackLookLikeEvent('Look'))
+               .on('click', 'body.look-list-page .btn-look-like', trackLookLikeEvent('Looks'))
+               .on('click', 'body.profile-page .btn-look-like', trackLookLikeEvent('Profile'))
+               .on('click', 'body.search-page .btn-look-like', trackLookLikeEvent('Search'))
+               .on('click', 'body.index .btn-look-like, body.feed-list-page .btn-look-like', trackLookLikeEvent('Feed'));
 
     // Track invites
     $(document).on('click', '.navbar .facebook-invite', trackInviteEvent('Menu'));
