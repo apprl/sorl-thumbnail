@@ -66,14 +66,16 @@ $(document).ready(function() {
     // Track custom events
     function trackEvent(category, action) {
         return function() {
-            var el = $(this),
-                sid = el.attr('data-sid'),
-                slug = el.attr('data-slug'),
-                vendor = el.attr('data-vendor'),
-                price = parseInt(el.attr('data-price'), 10);
+            var el = $(this);
+            if (!el.hasClass('liked')) {
+                var sid = el.attr('data-sid'),
+                    slug = el.attr('data-slug'),
+                    vendor = el.attr('data-vendor'),
+                    price = parseInt(el.attr('data-price'), 10);
 
-            ga('send', 'event', category, action, vendor + ' - ' + slug, price);
-            _gaq.push(['_trackEvent', category, action, vendor + ' - ' + slug, price]);
+                ga('send', 'event', category, action, vendor + ' - ' + slug, price);
+                _gaq.push(['_trackEvent', category, action, vendor + ' - ' + slug, price]);
+            }
 
             return true;
         }
@@ -81,10 +83,13 @@ $(document).ready(function() {
 
     function trackLookLikeEvent(category) {
         return function() {
-            var slug = $(this).data('slug');
+            var el = $(this);
+            if (!el.hasClass('liked')) {
+                var slug = el.data('slug');
 
-            ga('send', 'event', category, 'LookLike', slug);
-            _gaq.push(['_trackEvent', category, 'LookLike', slug]);
+                ga('send', 'event', category, 'LookLike', slug);
+                _gaq.push(['_trackEvent', category, 'LookLike', slug]);
+            }
 
             return true;
         }
