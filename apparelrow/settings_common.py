@@ -52,6 +52,9 @@ LOCALE_PATHS = (
     os.path.join(PROJECT_ROOT, 'locale'),
 )
 
+LOCALEURL_USE_ACCEPT_LANGUAGE = True
+LOCALEURL_USE_SESSION = True
+
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'sv'
@@ -162,7 +165,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    'localeurl.middleware.LocaleURLMiddleware',
+    #'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -213,6 +217,7 @@ INSTALLED_APPS = (
     'static_sitemaps',
     'djrill',
     'crispy_forms',
+    'localeurl',
 
     # Internal
     'advertiser',

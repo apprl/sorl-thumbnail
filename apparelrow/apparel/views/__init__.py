@@ -17,12 +17,13 @@ from django.template.defaultfilters import floatformat
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.views.i18n import set_language
 from django.views.decorators.http import require_POST
 from django.views.generic.base import RedirectView
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
+
+from localeurl.views import change_locale
 
 from apparelrow.profile.models import Follow
 from apparelrow.profile.utils import get_facebook_user
@@ -743,12 +744,12 @@ def contest_stylesearch_charts(request):
 
 
 def apparel_set_language(request):
-    language = request.POST.get('language', translation.get_language())
-    if request.user.is_authenticated():
+    language = request.POST.get('locale', translation.get_language())
+    if request.user.is_authenticated() and request.user.language != language:
         request.user.language = language
         request.user.save()
 
-    return set_language(request)
+    return change_locale(request)
 
 
 def facebook_friends_widget(request):

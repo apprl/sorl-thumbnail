@@ -249,11 +249,11 @@
         </div>
     </footer>
 
-    <form action="{% url 'apparelrow.apparel.views.apparel_set_language' %}" method="post" id="languageform">
+    <form id="languageform" method="post" action="{% url 'change_language_view' %}">
         {% csrf_token %}
-        <select name="language">
-            {% for language in LANGUAGES_DISPLAY %}
-            <option value="{{ language.0 }}">{% trans language.1 %}</option>
+        <select name="locale">
+            {% for lang in LANGUAGES_DISPLAY %}
+            <option value="{{ lang.0 }}">{{ lang.1 }}</option>
             {% endfor %}
         </select>
     </form>
