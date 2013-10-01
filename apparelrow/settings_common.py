@@ -52,8 +52,14 @@ LOCALE_PATHS = (
     os.path.join(PROJECT_ROOT, 'locale'),
 )
 
+# Locale url plugin
 LOCALEURL_USE_ACCEPT_LANGUAGE = True
 LOCALEURL_USE_SESSION = True
+LOCALE_INDEPENDENT_PATHS = (
+    r'^/backend/',
+    r'^/products/[\d]+/(like|unlike)',
+    r'^/looks/[\w-]+?/(like|unlike)',
+)
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -173,6 +179,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'apparelrow.apparel.middleware.UpdateLocaleSessionMiddleware',
     'apparelrow.profile.middleware.ImpersonateMiddleware',
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',

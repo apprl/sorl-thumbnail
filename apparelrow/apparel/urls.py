@@ -41,7 +41,7 @@ urlpatterns = patterns('',
     url(r'^search/$', 'apparelrow.apparel.search.search', {'gender': 'A'}, name='search'),
     url(r'^search/men/$', 'apparelrow.apparel.search.search', {'gender': 'M'}, name='search-men'),
     url(r'^search/women/$', 'apparelrow.apparel.search.search', {'gender': 'W'}, name='search-women'),
-    (r'^search/(?P<model_name>\w+)/', 'apparelrow.apparel.search.search_view'),
+    url(r'^backend/search/(?P<model_name>\w+)/', 'apparelrow.apparel.search.search_view'),
 
     # Notifications
     url(r'^notification/like_product/$', 'apparelrow.apparel.views.notification_like_product', name='notification-like-product'),
@@ -69,7 +69,6 @@ urlpatterns = patterns('',
     url(r'^products/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.product_detail', name='product-detail'),
     url(r'^products/(?P<slug>[\w-]+)/short/$', 'apparelrow.apparel.views.product_generate_short_link', name='product-generate-short-link'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparelrow.apparel.views.look_list', name='product-look-list'),
-    url(r'^products/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.product_like', name='product-like'),
 
     # Track product
     url(r'^redirect/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.product_redirect', name='product-redirect'),

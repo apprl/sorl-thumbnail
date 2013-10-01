@@ -1,4 +1,4 @@
-{% load i18n l10n apparel_extras compressed login_bar cache %}
+{% load i18n l10n apparel_extras compressed login_bar cache localeurl_tags %}
 {% load static from staticfiles %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
@@ -197,10 +197,10 @@
                         <ul class="list-unstyled col-xs-6">
                             <li><h4>{% trans "Language" %}</h4></li>
                             <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'django.views.i18n.set_language' %}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
                                 <ul id="language-dropdown" class="dropdown-menu">
                                     {% for language in LANGUAGES_DISPLAY %}
-                                    <li><a data-language="{{ language.0 }}" href="#">{% trans language.1 %}</a></li>
+                                    <li><a data-language="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">{% trans language.1 %}</a></li>
                                     {% endfor %}
                                 </ul>
                             </li>
@@ -248,15 +248,6 @@
             </div>
         </div>
     </footer>
-
-    <form id="languageform" method="post" action="{% url 'change_language_view' %}">
-        {% csrf_token %}
-        <select name="locale">
-            {% for lang in LANGUAGES_DISPLAY %}
-            <option value="{{ lang.0 }}">{{ lang.1 }}</option>
-            {% endfor %}
-        </select>
-    </form>
 
     {% include 'apparel/fragments/dialog_like_product.html' with request=request csrf_token=csrf_token next=next only %}
     {% include 'apparel/fragments/dialog_like_look.html' with request=request csrf_token=csrf_token next=next only %}

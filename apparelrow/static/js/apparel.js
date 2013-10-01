@@ -56,13 +56,6 @@ $(document).ready(function() {
     if(!'console' in window)
         window.console = { log: function() {} };
 
-    // Language dropdown submit form
-    $(document).on('click', '#language-dropdown li', function() {
-        $('#languageform select').val($('a', this).data('language'));
-        $('#languageform').submit();
-        return false;
-    });
-
     // Track custom events
     function trackEvent(category, action) {
         return function() {
@@ -690,7 +683,7 @@ ApparelSearch = {
          */
         jQuery.ajax({
             type: 'POST',
-            url: '/search/' + opts.model + '/',
+            url: '/backend/search/' + opts.model + '/',
             dataType: 'json',
             data: opts.query,
             complete: function(request, status) {
