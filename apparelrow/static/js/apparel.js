@@ -149,9 +149,32 @@ $(document).ready(function() {
 
     $(document).on('click', '.btn-get-access', trackSignup('Signup', 'ClickSignup'))
                .on('click', '.btn-signup-email', trackSignup('Signup', 'ClickEmailSignup'))
-               .on('click', '.btn-facebok-signup', trackSignup('Signup', 'ClickFacebookSignup'))
                .on('click', 'body.registration-email .btn-email-signup', trackSignup('Signup', 'ClickEmailSignupSubmit'))
                .on('click', 'body.profile-welcome .btn-login-flow-continue', trackSignup('Signup', 'FollowBrandsPageCompleted'));
+
+
+    // Facebook button sign in
+    $(document).on('click', '.btn-facebook', function(e) {
+        e.preventDefault();
+
+        var el = $(this),
+            form = el.parents('form:first');
+
+        if (el.hasClass('btn-facebook-signup')) {
+            trackSignup('Signup', 'ClickFacebookSignup');
+        } else if (el.hasClass('btn-facebook-login')) {
+            trackSignup('Signup', 'ClickFacebookLogin');
+        }
+
+        function handleResponse(response){
+            if (response.authResponse) {
+                $('input[name="access_token"]', form).val(response.authResponse.accessToken);
+                $('input[name="uid"]', form).val(response.authResponse.userID);
+                form.submit();
+            }
+        }
+        FB.login(handleResponse, {scope: facebook_scope});
+    });
 
 
     // Comments posting

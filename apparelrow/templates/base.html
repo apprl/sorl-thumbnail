@@ -60,17 +60,6 @@
                 }
             }, {scope: facebook_scope});
         };
-
-        function facebookConnect(form){
-            function handleResponse(response){
-                if (response.authResponse) {
-                    jQuery('input[name="access_token"]', form).val(response.authResponse.accessToken);
-                    jQuery('input[name="uid"]', form).val(response.authResponse.userID);
-                    form.submit();
-                }
-            }
-            FB.login(handleResponse, {scope: '{{ FACEBOOK_SCOPE }}'});
-        };
     </script>
     {% block 'extra-scripts' %}
     {% endblock 'extra-scripts' %}
