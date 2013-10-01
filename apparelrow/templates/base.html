@@ -119,7 +119,7 @@
             <div class="navbar-collapse collapse navbar-responsive-collapse">
                 {% block custom_navigation %}{% endblock %}
 
-                <form action="{% multi_gender_url request 'shop' 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
+                <form data-search="true" action="{% multi_gender_url request 'shop' 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
                     <div class="form-group">
                         <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
                     </div>
@@ -153,7 +153,7 @@
                     {% if request.user.is_authenticated %}
                     <li class="visible-xs"><a href="{% multi_gender_url request 'feed' 'index' %}"><span>{% trans "Your APPRL" %}</span></a></li>
                     {% endif %}
-                    <li class="{% selected_url request "/shop" "/products" %}"><a href="{% multi_gender_url request 'shop' 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
+                    <li class="{% selected_url request "/shop" "/products" %}"><a data-shop="true" href="{% multi_gender_url request 'shop' 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
                     <li class="{% selected_url request "/looks" %}"><a href="{% multi_gender_url request 'look' 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
                     <li class="dropdown {% selected_url request "/brands" "/users" %}">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{% multi_gender_url request 'user' 'user-list' %}"><span>{% trans "Follow" %} <b class="caret"></b></span></a>
