@@ -491,9 +491,9 @@ ApparelActivity = {
      * Queue a notification.
      */
     notification: function(action, object, id) {
-        jQuery('<div>').load('/notification/' + action + '_' + object + '/?id=' + id, function() {
-            jQuery(this).sticky();
-        });
+        //jQuery('<div>').load('/notification/' + action + '_' + object + '/?id=' + id, function() {
+            //jQuery(this).sticky();
+        //});
     },
 
     /**
