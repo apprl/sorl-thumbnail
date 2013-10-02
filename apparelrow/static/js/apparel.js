@@ -44,12 +44,6 @@ function increase_counts(counts, new_count) {
     });
 }
 
-/**
- * Creates a modal dialog with yes/no as alternatives.
- */
-window.create_modal_dialog = function(header, messages, yes_action, no_action) {
-    // TODO: replace this on looks and look_detail
-};
 
 $(document).ready(function() {
     // Define an empty console.log if it's not available

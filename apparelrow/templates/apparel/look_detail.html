@@ -61,69 +61,6 @@
             }
         });
 
-        jQuery('#look-header .btn-delete').click(function(event) {
-            var title = jQuery(this).attr('title');
-            var href = jQuery(this).attr('href');
-            create_modal_dialog(
-                '{% trans "Are you sure?" %}',
-                ['{% trans "Do you really want to delete look" %} <span class="bold">' + title + '</span>?'],
-                function (modal_dialog) { location.href = href; },
-                function (modal_dialog) { modal_dialog.close(); }
-            );
-            event.preventDefault();
-        });
-
-        $('#look-header')
-            .on('click', '.btn-publish', function(e) {
-                var $this = $(this);
-                var text = $this.text();
-                var href = $this.attr('href');
-                var new_text = $this.data('text');
-                var new_href = $this.data('href');
-                create_modal_dialog(
-                    '{% trans "Publish look" %}',
-                    ['{% trans "Do you want to publish this look?" %}'],
-                    function (modal_dialog) {
-                        $.ajax({url: href,
-                                success: function(data) {
-                                    $this.data('text', text);
-                                    $this.data('href', href);
-                                    $this.text(new_text).attr('href', new_href).addClass('btn-unpublish').removeClass('btn-publish');
-                                    if(share_settings['create_look'] === false) {
-                                        ApparelActivity.notification('create', 'look', {{ object.id }});
-                                    }
-                                },
-                                complete: function() { modal_dialog.close(); }
-                            });
-                    },
-                    function (modal_dialog) { modal_dialog.close(); }
-                );
-                return false;
-            })
-            .on('click', '.btn-unpublish', function(e) {
-                var $this = $(this);
-                var text = $this.text();
-                var href = $this.attr('href');
-                var new_text = $this.data('text');
-                var new_href = $this.data('href');
-                create_modal_dialog(
-                    '{% trans "Unpublish look?" %}',
-                    ['{% trans "Are you sure you want to unpublish this look so that no one can see it?" %}'],
-                    function (modal_dialog) {
-                        $.ajax({url: href,
-                            success: function(data) {
-                                    $this.data('text', text);
-                                    $this.data('href', href);
-                                    $this.text(new_text).attr('href', new_href).addClass('btn-publish').removeClass('btn-unpublish');
-                                },
-                                complete: function() { modal_dialog.close(); }
-                            });
-                    },
-                    function (modal_dialog) { modal_dialog.close(); }
-                );
-                return false;
-            });
-
         {% if look_created %}
         try {
             ga('send', 'event', 'Look', 'Create', '{{ object.slug }}');
@@ -153,12 +90,12 @@
         <div class="body-header">
             <div class="body-header-col-full">
                 <div class="float-container">
-                <h1>{{ object.title }}{% if not object.published %} ({% trans "Draft" %}){% endif %}</h1>
-                {% if request.user.is_authenticated %}
-                <a class="btn btn-primary btn-look-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span>{% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
-                {% else %}
-                <a class="btn btn-primary" data-toggle="modal" href="#" data-target="#modal_like_look"><span>{% trans "Like" %}</span> <span class="glyphicon glyphicon-heart"></span></a>
-                {% endif %}
+                    <h1>{{ object.title }} <span class="draft-text{% if object.published %} published{% endif %}">({% trans "Draft" %})</span></h1>
+                    {% if request.user.is_authenticated %}
+                    <a class="btn btn-primary btn-look-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span>{% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+                    {% else %}
+                    <a class="btn btn-primary" data-toggle="modal" href="#" data-target="#modal_like_look"><span>{% trans "Like" %}</span> <span class="glyphicon glyphicon-heart"></span></a>
+                    {% endif %}
                 </div>
                 <h2>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></h2>
             </div>
@@ -168,15 +105,11 @@
             <div class="col-md-6">
 
                 <div class="look-main-content">
-                    {% if object.user != request.user %}
-                    {% else %}
+                    {% if request.user.is_authenticated and request.user == object.user %}
                     <a class="btn btn-edit" href="{% url 'look-editor' object.slug %}">{% trans "Edit" %}</a>
-                    <a class="btn btn-delete" title="{{ object.title }}" href="{% url 'look-delete' object.slug %}">{% trans "Delete" %}</a>
-                    {% if object.published %}
-                    <a class="btn btn-unpublish" data-href="{% url 'look-publish' object.slug %}" data-text="{% trans "Publish" %}" title="{{ object.title }}" href="{% url 'look-unpublish' object.slug %}">{% trans "Unpublish" %}</a>
-                    {% else %}
-                    <a class="btn btn-publish" data-href="{% url 'look-unpublish' object.slug %}" data-text="{% trans "Unpublish" %}" title="{{ object.title }}" href="{% url 'look-publish' object.slug %}">{% trans "Publish" %}</a>
-                    {% endif %}
+                    <a class="btn btn-delete" data-toggle="modal" href="#" data-target="#modal_look_delete_{{ object.id }}">{% trans "Delete" %}</a>
+                    <a class="btn btn-unpublish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_unpublish_{{ object.id }}">{% trans "Unpublish" %}</a>
+                    <a class="btn btn-publish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_publish_{{ object.id }}">{% trans "Publish" %}</a>
                     {% endif %}
 
                     {% cache CACHE_TIMEOUT look_detail_content object.id LANGUAGE_CODE %}
@@ -225,7 +158,6 @@
 
                 <div class="row">
                     <div class="col-lg-6">
-
 
                         {% cache CACHE_TIMEOUT look_detail object.id LANGUAGE_CODE %}
                         <h3>{% trans "Look details" %}</h3>
@@ -291,5 +223,9 @@
             </div>
         </div>
     </div>
+
+    {% include 'apparel/modal_look_delete.html' with look=object only %}
+    {% include 'apparel/modal_look_publish.html' with look=object only %}
+    {% include 'apparel/modal_look_unpublish.html' with look=object only %}
 
 {% endblock %}

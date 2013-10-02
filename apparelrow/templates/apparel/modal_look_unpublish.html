@@ -1,0 +1,25 @@
+{% extends 'dialog_base.html' %}
+{% load i18n %}
+
+{% block modal_id %}modal_look_unpublish_{{ look.id }}{% endblock %}
+{% block modal_title %}{% trans "Unpublish look?" %}{% endblock %}
+{% block modal_content %}
+<p>{% trans "Are you sure you want to unpublish this look so that no one can see it?" %}</p>
+{% endblock %}
+{% block modal_footer %}
+<p>
+    <a class="btn btn-success btn-unpublish-look" href="#">{% trans "Yes" %}</a>
+    <a class="btn btn-danger" data-dismiss="modal" href="#">{% trans "No" %}</a>
+</p>
+<script type="text/javascript">
+    $(function() {
+        $('#modal_look_unpublish_{{ look.id }} .btn-unpublish-look').on('click', function() {
+            $.post('{% url "look-unpublish" look.slug %}', function() {
+                $('#modal_look_unpublish_{{ look.id }}').modal('hide');
+                $('.look-main-content .btn-publish, .look-main-content .btn-unpublish, .body-header .draft-text').removeClass('published');
+            });
+            return false;
+        });
+    });
+</script>
+{% endblock %}
