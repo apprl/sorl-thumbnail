@@ -729,7 +729,7 @@ ApparelSearch = {
                         break;
 
                     case '#search-result-looks':
-                        href_attr = '/looks/search/?' + ApparelSearch.format_query(opts.query);
+                        href_attr = looks_search_url + '?' + ApparelSearch.format_query(opts.query);
                         var a_tag = $('<a>').attr('href', href_attr).text(h3.text());
                         h3.html(a_tag);
                         break;

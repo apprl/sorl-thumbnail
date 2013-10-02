@@ -24,7 +24,9 @@
     <script type="text/javascript">
         var product_popup_url = '{% url "product-popup" %}';
         var look_popup_url = '{% url "look-popup" %}';
-        var browse_url = '{% multi_gender_url request 'shop' 'shop' %}';
+        var browse_url = '{% multi_gender_url request "shop" "shop" %}';
+        var looks_search_url = '{% url "search-look-list" %}';
+        var look_api_base_url = '{% url "look_list" %}';
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         {% if request.user.is_authenticated %}
         var userID = {{ request.user.pk }};
