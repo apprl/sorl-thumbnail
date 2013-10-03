@@ -704,12 +704,7 @@ def index(request, gender=None):
     if request.user.is_authenticated():
         return user_feed(request, gender=gender)
 
-    if request.path != '/':
-        return HttpResponseRedirect('/')
-
-    response = render(request, 'apparel/index.html', {'featured': get_featured_activity_today()})
-
-    return response
+    return render(request, 'apparel/index.html', {'featured': get_featured_activity_today()})
 
 
 def about(request):

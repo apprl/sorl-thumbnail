@@ -60,6 +60,7 @@ LOCALE_INDEPENDENT_PATHS = (
     r'^/products/[\d]+/(like|unlike)',
     r'^/looks/[\w-]+?/(like|unlike)',
     r'^/sitemap',
+    r'^/embed',
 )
 
 # Language code for this installation. All choices can be found here:
