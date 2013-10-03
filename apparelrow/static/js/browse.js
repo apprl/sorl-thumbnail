@@ -693,7 +693,7 @@ function updateTranslations() {
 
 function renderProducts(products) {
     $('#product-list > .product-list').empty();
-    $('#product-count span').text(products.browse_text);
+    $('#product-list > h3').text(products.browse_text);
 
     renderPage(products);
 
