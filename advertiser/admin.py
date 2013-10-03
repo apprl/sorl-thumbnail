@@ -1,9 +1,11 @@
 from django import forms
 from django.http import HttpResponseRedirect
 from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
 from django.core import urlresolvers
 from django.core.exceptions import ValidationError
 from django.db.models import Sum
+from django.utils.translation import ugettext_lazy as _
 
 from advertiser.models import Store, StoreHistory, StoreInvoice, Product, Transaction, Cookie
 from advertiser.utils import calculate_balance, get_transactions
@@ -77,9 +79,39 @@ class ProductInline(admin.StackedInline):
     extra = 0
 
 
+class ValidListFilter(SimpleListFilter):
+    title = _('apprl transaction')
+    parameter_name = 'valid'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('all', _('All')),
+            (None, _('yes')),
+            ('no', _('no')),
+        )
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup,
+                'query_string': cl.get_query_string({
+                    self.parameter_name: lookup,
+                }, []),
+                'display': title,
+            }
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes' or self.value() == None:
+            return queryset.filter(status__in=[Transaction.ACCEPTED, Transaction.REJECTED, Transaction.PENDING])
+        elif self.value() == 'no':
+            return queryset.filter(status__in=[Transaction.INVALID, Transaction.TOO_OLD])
+        else:
+            return queryset
+
+
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('pk', 'store_id', 'order_value', 'commission', 'cookie_date', 'created', 'modified', 'status', 'automatic_accept', 'is_paid')
-    list_filter = ('status', 'store_id')
+    list_filter = ('status', 'store_id', ValidListFilter)
     inlines = (ProductInline,)
     readonly_fields = ('invoice', 'automatic_accept', 'created', 'modified', 'cookie_date', 'ip_address',
                        'status_date', 'store_id', 'original_currency', 'original_commission', 'original_order_value', 'order_id')
