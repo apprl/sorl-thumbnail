@@ -1840,7 +1840,7 @@ msgstr "Filtrera produkter"
 
 #: templates/apparel/product_list.html:6
 msgid "Reset all"
-msgstr "Återställ"
+msgstr "Nollställ"
 
 #: templates/apparel/store.html:11
 msgid "APPRL FOR ONLINE STORES"
