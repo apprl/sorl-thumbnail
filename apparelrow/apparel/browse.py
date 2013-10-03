@@ -213,7 +213,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
 
     brand_search = request.GET.get('brand_search', None)
     if brand_search:
-        query_arguments['f.manufacturer.facet.prefix'] = brand_search
+        query_arguments['f.manufacturer.facet.prefix'] = brand_search.lower()
 
     brand_search_page = int(request.GET.get('brand_search_page', 0))
     if brand_search_page:
