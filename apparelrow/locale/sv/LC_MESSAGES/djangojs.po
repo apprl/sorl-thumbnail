@@ -31,32 +31,32 @@ msgstr "Köp"
 #: static/js/apparel.js:838
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
-msgstr[0] "%(count)s träff bland produkter"
-msgstr[1] "%(count)s träffar bland produkter"
+msgstr[0] "Hittade %(count)s produkt"
+msgstr[1] "Hittade %(count)s produkter"
 
 #: static/js/apparel.js:839
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
-msgstr[0] "%(count)s träff bland looks"
-msgstr[1] "%(count)s träffar bland looks"
+msgstr[0] "Hittad %(count)s look"
+msgstr[1] "Hittad %(count)s looks"
 
 #: static/js/apparel.js:840
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
-msgstr[0] "%(count)s träff bland varumärken"
-msgstr[1] "%(count)s träffar bland varumärken"
+msgstr[0] "Hittade %(count)s varumärk"
+msgstr[1] "Hittade %(count)s varumärken"
 
 #: static/js/apparel.js:841
 msgid "Found %(count)s matching member"
 msgid_plural "Found %(count)s matching members"
-msgstr[0] "%(count)s träff bland medlemmar"
-msgstr[1] "%(count)s träffar bland medlemmar"
+msgstr[0] "Hittade %(count)s medlem"
+msgstr[1] "Hittade %(count)s medlemmar"
 
 #: static/js/apparel.js:842
 msgid "Found %(count)s matching store"
 msgid_plural "Found %(count)s matching stores"
-msgstr[0] "%(count)s träff bland butiker"
-msgstr[1] "%(count)s träffar bland butiker"
+msgstr[0] "Hittade %(count)s butik"
+msgstr[1] "Hittade %(count)s butiker"
 
 #: static/js/apparel.js:843
 msgid "Show %(count)s product"
