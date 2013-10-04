@@ -290,9 +290,10 @@ $(document).ready(function() {
     });
 
     // Product hover, works with medium
-    $(document).on('mouseenter', '.product-medium', function() {
-        var element = $(this);
-        var product_id = getElementId(element);
+    $(document).on('mouseenter', '.product-medium > .product-image-container', function() {
+        var element = $(this),
+            product_id = getElementId(element.parent());
+
         if(!element.data('load_data')) {
             element.find('.buy').text(gettext('Buy'));
             like_element = element.find('.btn-product-like');
@@ -302,31 +303,21 @@ $(document).ready(function() {
                 } else {
                     unlikeElement(like_element);
                 }
-                // TODO: might display comments / likes later
-                //if(json[0].likes > 0) {
-                    //element.find('.likes').show().text(json[0].likes);
-                //} else {
-                    //element.find('.likes').hide();
-                //}
-                //if(json[0].comments > 0) {
-                    //element.find('.comments').show().text(json[0].comments);
-                //} else {
-                    //element.find('.comments').hide();
-                //}
             });
         }
         element.data('load_data', true);
         element.find('.hover').show();
         element.find('.product-image').css({opacity: 0.3});
-    }).on('mouseleave', '.product-medium', function() {
-        $(this).css({opacity: 1}).find('.hover').hide();
+    }).on('mouseleave', '.product-medium > .product-image-container', function() {
+        $(this).find('.hover').hide();
         $('.product-image').css({opacity: 1});
     });
 
     // Look hover, works with medium
-    $(document).on('mouseenter', '.look-medium', function() {
-        var element = $(this);
-        var look_id = getElementId(element);
+    $(document).on('mouseenter', '.look-medium > .look-image-container', function() {
+        var element = $(this),
+            look_id = getElementId(element.parent());
+
         if(!element.data('load_data')) {
             like_element = element.find('.btn-look-like');
             $.getJSON(look_popup_url + '?id=' + look_id, function(json) {
@@ -340,8 +331,8 @@ $(document).ready(function() {
         element.data('load_data', true);
         element.find('.hover').show();
         element.find('.look-image').css({opacity: 0.3});
-    }).on('mouseleave', '.look-medium', function() {
-        $(this).css({opacity: 1}).find('.hover').hide();
+    }).on('mouseleave', '.look-medium > .look-image-container', function() {
+        $(this).find('.hover').hide();
         $('.look-image').css({opacity: 1});
     });
 

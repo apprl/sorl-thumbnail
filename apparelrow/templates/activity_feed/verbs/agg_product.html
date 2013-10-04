@@ -14,11 +14,11 @@
                 <img class="product-image img-responsive" src="{{ im.url }}" alt="{{ object.activity_object.manufacturer.name }}" width="{{ im.width }}" height="{{ im.height }}">
                 {% endthumbnail %}
             </a>
-        </div>
-        <div class="hover">
-            <a class="btn btn-primary btn-block" href="{{ object.activity_object.manufacturer.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}">
-                {% blocktrans with brand=object.activity_object.manufacturer %}See the latest from {{brand}}{% endblocktrans %}
-            </a>
+            <div class="hover">
+                <a class="btn btn-primary btn-block" href="{{ object.activity_object.manufacturer.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}">
+                    {% blocktrans with brand=object.activity_object.manufacturer %}See the latest from {{brand}}{% endblocktrans %}
+                </a>
+            </div>
         </div>
         <div class="caption">
         </div>
