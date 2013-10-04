@@ -1,5 +1,4 @@
 import uuid
-import HTMLParser
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -15,7 +14,6 @@ from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _, ugettext
-from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 
@@ -63,13 +61,8 @@ def save_description(request):
     """
     Save user description and return a parsed version for display.
     """
-    html_parser = HTMLParser.HTMLParser()
-
     description = request.POST.get('description', '')
-    description = description.replace('<br>', '\n')
-    description = description.replace('<br/>', '\n')
-    description = description.replace('<br />', '\n')
-    description = html_parser.unescape(strip_tags(description).strip())
+    description = description.replace(u'\xa0', ' ').strip()
 
     request.user.about = description
     request.user.save()
