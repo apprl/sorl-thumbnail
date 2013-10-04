@@ -288,7 +288,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
                                 }
 
     if request.GET.get('q', None):
-        browse_text = '%s \'%s\', %s' % (_('Showing'), request.GET.get('q'), browse_text)
+        browse_text = '%s \'%s\', %s' % (_('Search result for'), request.GET.get('q'), browse_text)
 
     result.update(browse_text=browse_text)
 
