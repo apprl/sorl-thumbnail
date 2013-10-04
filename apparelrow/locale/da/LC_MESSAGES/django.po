@@ -565,7 +565,6 @@ msgid "Number of products created or updated"
 msgstr ""
 
 #: importer/models.py:121 templates/apparel/look_editor.html:193
-#: templates/profile/fragments/product_likes.html:15
 msgid "Info"
 msgstr ""
 
@@ -845,15 +844,15 @@ msgstr ""
 msgid "Welcome to Apprl %(name)s"
 msgstr ""
 
-#: profile/views.py:202
+#: profile/views.py:195
 msgid "Password was updated"
 msgstr ""
 
-#: profile/views.py:204
+#: profile/views.py:197
 msgid "Password was added"
 msgstr ""
 
-#: profile/views.py:404
+#: profile/views.py:397
 msgid "Nearly created your membership..."
 msgstr ""
 
@@ -1128,7 +1127,7 @@ msgstr ""
 msgid "new men's products"
 msgstr "%(count)s produkt"
 
-#: templates/activity_feed/verbs/agg_product.html:20
+#: templates/activity_feed/verbs/agg_product.html:19
 #, python-format
 msgid "See the latest from %(brand)s"
 msgstr ""
@@ -1201,6 +1200,7 @@ msgstr ""
 #: templates/apparel/look_editor.html:119
 #: templates/apparel/look_editor.html:134
 #: templates/profile/base_profile.html:41
+#: templates/profile/base_profile.html:62
 msgid "Cancel"
 msgstr ""
 
@@ -1411,7 +1411,7 @@ msgstr ""
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:100
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
 #: templates/apparel/product_detail.html:4
-#: templates/apparel/fragments/look_medium.html:22
+#: templates/apparel/fragments/look_medium.html:24
 msgid "by"
 msgstr ""
 
@@ -1482,23 +1482,23 @@ msgstr ""
 
 #: templates/apparel/look_detail.html:95
 #: templates/apparel/product_detail.html:39
-#: templates/apparel/fragments/look_medium.html:17
-#: templates/apparel/fragments/product_medium.html:13
+#: templates/apparel/fragments/look_medium.html:18
+#: templates/apparel/fragments/product_medium.html:12
 msgid "Liked"
 msgstr ""
 
 #: templates/apparel/look_detail.html:95
 #: templates/apparel/product_detail.html:39
-#: templates/apparel/fragments/look_medium.html:17
-#: templates/apparel/fragments/product_medium.html:13
+#: templates/apparel/fragments/look_medium.html:18
+#: templates/apparel/fragments/product_medium.html:12
 msgid "Unlike"
 msgstr ""
 
 #: templates/apparel/look_detail.html:95 templates/apparel/look_detail.html:97
 #: templates/apparel/product_detail.html:39
 #: templates/apparel/product_detail.html:41
-#: templates/apparel/fragments/look_medium.html:17
-#: templates/apparel/fragments/product_medium.html:13
+#: templates/apparel/fragments/look_medium.html:18
+#: templates/apparel/fragments/product_medium.html:12
 msgid "Like"
 msgstr ""
 
@@ -1739,15 +1739,13 @@ msgstr ""
 #: templates/apparel/product_detail.html:122
 #: templates/apparel/fragments/look_embed_tooltip.html:27
 #: templates/apparel/fragments/look_product_tooltip.html:25
-#: templates/profile/fragments/product_likes.html:17
 msgid "Sold out"
 msgstr "Udsolgt"
 
 #: templates/apparel/product_detail.html:119
 #: templates/apparel/fragments/look_embed_tooltip.html:25
 #: templates/apparel/fragments/look_product_tooltip.html:23
-#: templates/apparel/fragments/product_medium.html:15
-#: templates/profile/fragments/product_likes.html:19
+#: templates/apparel/fragments/product_medium.html:14
 msgid "Buy"
 msgstr "Køb"
 
@@ -2608,29 +2606,37 @@ msgstr ""
 msgid "Add your description by clicking here."
 msgstr ""
 
-#: templates/profile/base_profile.html:66
-#: templates/profile/base_profile.html:70
+#: templates/profile/base_profile.html:61
+msgid "Save description"
+msgstr ""
+
+#: templates/profile/base_profile.html:64
+msgid "Change description"
+msgstr ""
+
+#: templates/profile/base_profile.html:78
+#: templates/profile/base_profile.html:82
 #, python-format
 msgid "%(product_count)s Item"
 msgid_plural "%(product_count)s Items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/profile/base_profile.html:76
+#: templates/profile/base_profile.html:88
 #, fuzzy, python-format
 msgid "%(look_count)s Look"
 msgid_plural "%(look_count)s Looks"
 msgstr[0] "%(count)s produkt"
 msgstr[1] "%(count)s produkter"
 
-#: templates/profile/base_profile.html:81
+#: templates/profile/base_profile.html:93
 #, fuzzy, python-format
 msgid "%(followers_count)s Follower"
 msgid_plural "%(followers_count)s Followers"
 msgstr[0] "%(count)s produkt"
 msgstr[1] "%(count)s produkter"
 
-#: templates/profile/base_profile.html:86
+#: templates/profile/base_profile.html:98
 #, fuzzy, python-format
 msgid "%(following_count)s Following"
 msgid_plural "%(following_count)s Following"
@@ -3055,6 +3061,10 @@ msgstr ""
 
 #: templates/registration/login.html:21
 msgid "or:"
+msgstr ""
+
+#: templates/registration/login.html:27 templates/registration/login.html:28
+msgid "Username / E-mail address"
 msgstr ""
 
 #: templates/registration/login.html:36

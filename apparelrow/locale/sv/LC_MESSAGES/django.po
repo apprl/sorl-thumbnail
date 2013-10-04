@@ -564,7 +564,6 @@ msgid "Number of products created or updated"
 msgstr "Antal skapade eller uppdaterade produkter"
 
 #: importer/models.py:121 templates/apparel/look_editor.html:193
-#: templates/profile/fragments/product_likes.html:15
 msgid "Info"
 msgstr ""
 
@@ -846,15 +845,15 @@ msgstr "Postadress"
 msgid "Welcome to Apprl %(name)s"
 msgstr "Välkommen till Apprl %(name)s"
 
-#: profile/views.py:202
+#: profile/views.py:195
 msgid "Password was updated"
 msgstr "Lösenordet är uppdaterat"
 
-#: profile/views.py:204
+#: profile/views.py:197
 msgid "Password was added"
 msgstr "Lösenordet är tillagt"
 
-#: profile/views.py:404
+#: profile/views.py:397
 msgid "Nearly created your membership..."
 msgstr "Ditt medlemskap är nästan klart..."
 
@@ -1136,7 +1135,7 @@ msgstr "nya damprodukter"
 msgid "new men's products"
 msgstr "nya herrprodukter"
 
-#: templates/activity_feed/verbs/agg_product.html:20
+#: templates/activity_feed/verbs/agg_product.html:19
 #, python-format
 msgid "See the latest from %(brand)s"
 msgstr "Se det senaste från %(brand)s"
@@ -1209,6 +1208,7 @@ msgstr "Tid"
 #: templates/apparel/look_editor.html:119
 #: templates/apparel/look_editor.html:134
 #: templates/profile/base_profile.html:41
+#: templates/profile/base_profile.html:62
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -1441,7 +1441,7 @@ msgstr "SE VINNAREN PÅ VÅR FACEBOOKSIDA"
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:100
 #: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
 #: templates/apparel/product_detail.html:4
-#: templates/apparel/fragments/look_medium.html:22
+#: templates/apparel/fragments/look_medium.html:24
 msgid "by"
 msgstr "av"
 
@@ -1516,23 +1516,23 @@ msgstr "Utkast"
 
 #: templates/apparel/look_detail.html:95
 #: templates/apparel/product_detail.html:39
-#: templates/apparel/fragments/look_medium.html:17
-#: templates/apparel/fragments/product_medium.html:13
+#: templates/apparel/fragments/look_medium.html:18
+#: templates/apparel/fragments/product_medium.html:12
 msgid "Liked"
 msgstr "Gillar"
 
 #: templates/apparel/look_detail.html:95
 #: templates/apparel/product_detail.html:39
-#: templates/apparel/fragments/look_medium.html:17
-#: templates/apparel/fragments/product_medium.html:13
+#: templates/apparel/fragments/look_medium.html:18
+#: templates/apparel/fragments/product_medium.html:12
 msgid "Unlike"
 msgstr "Sluta gilla"
 
 #: templates/apparel/look_detail.html:95 templates/apparel/look_detail.html:97
 #: templates/apparel/product_detail.html:39
 #: templates/apparel/product_detail.html:41
-#: templates/apparel/fragments/look_medium.html:17
-#: templates/apparel/fragments/product_medium.html:13
+#: templates/apparel/fragments/look_medium.html:18
+#: templates/apparel/fragments/product_medium.html:12
 msgid "Like"
 msgstr "Gilla"
 
@@ -1779,15 +1779,13 @@ msgstr ""
 #: templates/apparel/product_detail.html:122
 #: templates/apparel/fragments/look_embed_tooltip.html:27
 #: templates/apparel/fragments/look_product_tooltip.html:25
-#: templates/profile/fragments/product_likes.html:17
 msgid "Sold out"
 msgstr "Slut"
 
 #: templates/apparel/product_detail.html:119
 #: templates/apparel/fragments/look_embed_tooltip.html:25
 #: templates/apparel/fragments/look_product_tooltip.html:23
-#: templates/apparel/fragments/product_medium.html:15
-#: templates/profile/fragments/product_likes.html:19
+#: templates/apparel/fragments/product_medium.html:14
 msgid "Buy"
 msgstr "Köp"
 
@@ -2720,29 +2718,39 @@ msgstr "Skapa en shop till din site"
 msgid "Add your description by clicking here."
 msgstr "Lägg till en beskrivning om dig "
 
-#: templates/profile/base_profile.html:66
-#: templates/profile/base_profile.html:70
+#: templates/profile/base_profile.html:61
+#, fuzzy
+msgid "Save description"
+msgstr "Beskrivning"
+
+#: templates/profile/base_profile.html:64
+#, fuzzy
+msgid "Change description"
+msgstr "Beskrivning"
+
+#: templates/profile/base_profile.html:78
+#: templates/profile/base_profile.html:82
 #, python-format
 msgid "%(product_count)s Item"
 msgid_plural "%(product_count)s Items"
 msgstr[0] "%(product_count)s Produkt"
 msgstr[1] "%(product_count)s Produkter"
 
-#: templates/profile/base_profile.html:76
+#: templates/profile/base_profile.html:88
 #, python-format
 msgid "%(look_count)s Look"
 msgid_plural "%(look_count)s Looks"
 msgstr[0] "%(look_count)s Look"
 msgstr[1] "%(look_count)s Looks"
 
-#: templates/profile/base_profile.html:81
+#: templates/profile/base_profile.html:93
 #, python-format
 msgid "%(followers_count)s Follower"
 msgid_plural "%(followers_count)s Followers"
 msgstr[0] "%(followers_count)s Följare"
 msgstr[1] "%(followers_count)s Följare"
 
-#: templates/profile/base_profile.html:86
+#: templates/profile/base_profile.html:98
 #, python-format
 msgid "%(following_count)s Following"
 msgid_plural "%(following_count)s Following"
@@ -3206,6 +3214,10 @@ msgstr "Logga in"
 #: templates/registration/login.html:21
 msgid "or:"
 msgstr "eller:"
+
+#: templates/registration/login.html:27 templates/registration/login.html:28
+msgid "Username / E-mail address"
+msgstr "Användarnamn / E-mailadress"
 
 #: templates/registration/login.html:36
 msgid "Your username and password did not match. Please try again."
