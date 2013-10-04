@@ -1,6 +1,6 @@
 window.App.Models.Look = Backbone.Model.extend({
 
-    urlRoot: '/look/',
+    urlRoot: look_api_base_url,
 
     localStorage: new Store('edit_look'),
 

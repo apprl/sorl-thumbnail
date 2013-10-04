@@ -8,13 +8,26 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse, resolve
 from django.db.models import get_model
 from django.http import HttpResponseRedirect
-from django.utils import timezone
+from django.utils import timezone, translation
 
 
 REFERRAL_COOKIE_NAME = 'aid_cookie'
 REFERRAL_COOKIE_DAYS = 30
 
 logger = logging.getLogger('apparelrow.apparel.middleware')
+
+
+class UpdateLocaleSessionMiddleware(object):
+    def process_request(self, request):
+        try:
+            language = request.LANGUAGE_CODE
+        except AttributeError:
+            language = translation.get_language()
+
+        request.session['django_language'] = language
+        if hasattr(request, 'user') and request.user.is_authenticated() and request.user.language != language:
+            request.user.language = language
+            request.user.save()
 
 
 class GenderMiddleware(object):

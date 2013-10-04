@@ -352,20 +352,21 @@ def get_language_text(language_code):
 
 @register.simple_tag
 def selected_url(request, *args):
+    path = request.path[3:]
     for pattern in args:
         if pattern == '/':
-            if request.path.startswith('/men') or request.path.startswith('/women'):
+            if path.startswith('/men') or path.startswith('/women'):
                 return 'selected active'
-            elif request.path == pattern:
+            elif path == pattern:
                 return 'selected active'
         elif pattern == '/profile':
             slug = '--------------------------------------'
             if request.user.is_authenticated():
                 slug = request.user.slug
-            if not request.path.startswith('/profile/%s' % (slug,)) and not request.path.startswith('/profile/settings') and request.path.startswith(pattern):
+            if not path.startswith('/profile/%s' % (slug,)) and not path.startswith('/profile/settings') and path.startswith(pattern):
                 return 'selected active'
         else:
-            if request.path.startswith(pattern):
+            if path.startswith(pattern):
                 return 'selected active'
 
     return ''

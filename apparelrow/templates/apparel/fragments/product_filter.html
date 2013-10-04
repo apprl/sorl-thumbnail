@@ -14,10 +14,10 @@
             <div class="panel-body" id="product-gender">
                 <ul id="product-gender" class="list-unstyled">
                     {% if user_gender == 'A' %}
-                    <li class="all"><a{% if not gender or gender == 'A' %} class="selected"{% endif %} data-gender="A" href="/shop/">{% trans "Show everything" %}</a></li>
+                    <li class="all"><a{% if not gender or gender == 'A' %} class="selected"{% endif %} data-gender="A" href="{% url 'shop' %}">{% trans "Show everything" %}</a></li>
                     {% endif %}
-                    <li class="women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} data-gender="W" href="/shop/women/">{% trans "Womens" %}</a></li>
-                    <li class="men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} data-gender="M" href="/shop/men/">{% trans "Mens" %}</a></li>
+                    <li class="women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} data-gender="W" href="{% url 'shop-women' %}">{% trans "Womens" %}</a></li>
+                    <li class="men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} data-gender="M" href="{% url 'shop-men' %}">{% trans "Mens" %}</a></li>
                 </ul>
             </div>
         </div>

@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     (r'^profile/', include('apparelrow.profile.urls')),
 
     (r'^comments/', include('django.contrib.comments.urls')),
-    (r'^i18n/setlang/$', 'apparelrow.apparel.views.apparel_set_language'), # override builtin set_language
+    url(r'^i18n/setlang/$', 'apparelrow.apparel.views.apparel_set_language', name='change_language_view'), # override builtin set_language
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^admin/', include(admin.site.urls)),
     (r'^newsletter/', include('apparelrow.newsletter.urls')),

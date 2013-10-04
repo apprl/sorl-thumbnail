@@ -52,6 +52,18 @@ LOCALE_PATHS = (
     os.path.join(PROJECT_ROOT, 'locale'),
 )
 
+# Locale url plugin
+LOCALEURL_USE_ACCEPT_LANGUAGE = True
+LOCALEURL_USE_SESSION = True
+LOCALE_INDEPENDENT_PATHS = (
+    r'^/backend/',
+    r'^/products/[\d]+/(like|unlike)',
+    r'^/looks/[\w-]+?/(like|unlike)',
+    r'^/sitemap',
+    r'^/embed',
+    r'^/images/temporary/',
+)
+
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'sv'
@@ -162,13 +174,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    'localeurl.middleware.LocaleURLMiddleware',
+    #'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'apparelrow.apparel.middleware.UpdateLocaleSessionMiddleware',
     'apparelrow.profile.middleware.ImpersonateMiddleware',
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
@@ -213,6 +227,7 @@ INSTALLED_APPS = (
     'static_sitemaps',
     'djrill',
     'crispy_forms',
+    'localeurl',
 
     # Internal
     'advertiser',

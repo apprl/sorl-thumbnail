@@ -44,24 +44,11 @@ function increase_counts(counts, new_count) {
     });
 }
 
-/**
- * Creates a modal dialog with yes/no as alternatives.
- */
-window.create_modal_dialog = function(header, messages, yes_action, no_action) {
-    // TODO: replace this on looks and look_detail
-};
 
 $(document).ready(function() {
     // Define an empty console.log if it's not available
     if(!'console' in window)
         window.console = { log: function() {} };
-
-    // Language dropdown submit form
-    $(document).on('click', '#language-dropdown li', function() {
-        $('#languageform select').val($('a', this).data('language'));
-        $('#languageform').submit();
-        return false;
-    });
 
     // Track custom events
     function trackEvent(category, action) {
@@ -491,9 +478,9 @@ ApparelActivity = {
      * Queue a notification.
      */
     notification: function(action, object, id) {
-        jQuery('<div>').load('/notification/' + action + '_' + object + '/?id=' + id, function() {
-            jQuery(this).sticky();
-        });
+        //jQuery('<div>').load('/notification/' + action + '_' + object + '/?id=' + id, function() {
+            //jQuery(this).sticky();
+        //});
     },
 
     /**
@@ -690,7 +677,7 @@ ApparelSearch = {
          */
         jQuery.ajax({
             type: 'POST',
-            url: '/search/' + opts.model + '/',
+            url: '/backend/search/' + opts.model + '/',
             dataType: 'json',
             data: opts.query,
             complete: function(request, status) {
@@ -736,7 +723,7 @@ ApparelSearch = {
                         break;
 
                     case '#search-result-looks':
-                        href_attr = '/looks/search/?' + ApparelSearch.format_query(opts.query);
+                        href_attr = looks_search_url + '?' + ApparelSearch.format_query(opts.query);
                         var a_tag = $('<a>').attr('href', href_attr).text(h3.text());
                         h3.html(a_tag);
                         break;

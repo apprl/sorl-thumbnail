@@ -9,9 +9,9 @@ jQuery(document).ready(function() {
     // Router
     App.Routers.LookEditor = Backbone.Router.extend({
         routes: {
-            'looks/editor/photo/': 'create_photo',
-            'looks/editor/collage/': 'create_collage',
-            'looks/editor/:look_slug/': 'look_editor'
+            ':country/looks/editor/photo/': 'create_photo',
+            ':country/looks/editor/collage/': 'create_collage',
+            ':country/looks/editor/:look_slug/': 'look_editor'
         },
 
         create_photo: function() {

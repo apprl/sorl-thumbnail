@@ -1,10 +1,15 @@
 .look-detail-page {
-    .body-header h2 {
-        .body-header-ul;
-        display: block;
-        margin-top: 10px;
-        a:hover {
-            border: 0;
+    .body-header {
+        .draft-text.published {
+            display: none;
+        }
+        h2 {
+            .body-header-ul;
+            display: block;
+            margin-top: 10px;
+            a:hover {
+                border: 0;
+            }
         }
     }
     // Float like button after look title
@@ -46,6 +51,15 @@
         }
         > p {
             margin-top: 10px;
+        }
+        .btn-publish.published {
+            display: none;
+        }
+        .btn-unpublish {
+            display: none;
+            &.published {
+                display: inline-block;
+            }
         }
     }
 }
