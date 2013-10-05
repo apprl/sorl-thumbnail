@@ -543,14 +543,10 @@ ApparelSearch = {
     hide: function() {
         // Hides search result dialog
         jQuery('#search-result').hide();
-        jQuery('#search').removeClass('expanded');
-        jQuery('#cancel-search').hide();
     },
     show: function() {
         // Shows search result dialog
-        jQuery('#search-result').fadeIn('fast');
-        jQuery('#search').addClass('expanded');
-        jQuery('#cancel-search').show();
+        jQuery('#search-result').show();
     },
     clear: function() {
         // Clears displayed results and cached resultsets and queries
@@ -574,7 +570,7 @@ ApparelSearch = {
             s = $('#search > input').val();
         }
 
-        if(s.length == 0)
+        if(typeof s === 'undefined' || s.length == 0)
             return;
 
         ApparelSearch.clear();
