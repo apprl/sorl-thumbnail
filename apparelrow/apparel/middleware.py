@@ -71,7 +71,7 @@ class InternalReferralMiddleware(object):
 
             # User
             user_id = None
-            if request.user.is_authenticated():
+            if hasattr(request, 'user') and request.user.is_authenticated():
                 user_id = request.user.pk
 
             # Update database
