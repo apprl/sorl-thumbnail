@@ -18,7 +18,7 @@
             {% else %}
             {% facebook_button next=next_url extra_class="btn-facebook-login" %}
             {% endif %}
-            <br><p>{% trans "or:" %}</p>
+            <p>{% trans "or:" %}</p>
 
             <form action="{% url 'auth_login' %}" method="post">
                 {% csrf_token %}
