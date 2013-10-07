@@ -711,7 +711,13 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         height: 494px;
         margin-bottom: 50px;
         border-bottom: 0;
-        .panel-heading { min-height: 150px; max-height: 160px; }
+        .panel-heading {
+            min-height: 150px;
+            max-height: 160px;
+            p {
+                min-height: 0;
+            }
+        }
         .panel-body .hover { bottom: 0; }
         .panel-body .caption { display: none; }
         p {
