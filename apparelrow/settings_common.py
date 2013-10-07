@@ -62,6 +62,7 @@ LOCALE_INDEPENDENT_PATHS = (
     r'^/sitemap',
     r'^/embed',
     r'^/images/temporary/',
+    r'^/a/',
 )
 
 # Language code for this installation. All choices can be found here:

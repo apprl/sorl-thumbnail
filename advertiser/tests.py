@@ -33,9 +33,11 @@ class AdvertiserMixin:
         return response
 
     def checkout(self, *args, **kwargs):
+        disable_check = kwargs.pop('disable_check', False)
         response = self.client.get('%s?%s' % (reverse('advertiser-pixel'),
                                               urllib.urlencode(kwargs)))
-        self.assertEqual(response.status_code, 200)
+        if not disable_check:
+            self.assertEqual(response.status_code, 200)
 
         return response
 
@@ -68,7 +70,7 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         """
         response = self.client.get('%s%s' % (reverse('advertiser-pixel'), '?store_id=mystore&order_id=1234&order_value=1234f&currency=SEK'))
         self.assertContains(response, 'Order value must be a number.', count=1, status_code=400)
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 4)
 
     def test_missing_required_parameters(self):
         """
@@ -86,7 +88,7 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         response = self.client.get('%s?store_id=mystore&order_id=1234&order_value=1234' % (reverse('advertiser-pixel'),))
         self.assertContains(response, 'Missing required parameters.', count=1, status_code=400)
 
-        self.assertEqual(len(mail.outbox), 4)
+        self.assertEqual(len(mail.outbox), 7)
 
         with self.assertRaises(Transaction.DoesNotExist):
             Transaction.objects.get(store_id='mystore', order_id=1234)
@@ -161,9 +163,9 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         products = transaction.products.all()
         self.assertEqual(len(products), 1)
 
-        self.assertEqual(len(mail.outbox), 2)
-        self.assertEqual(mail.outbox[0].subject, 'Advertiser Pixel Warning: length of every product parameter is not consistent')
-        self.assertEqual(mail.outbox[1].subject, 'Advertiser Pixel Warning: order value and individual products value is not equal')
+        self.assertEqual(len(mail.outbox), 5)
+        self.assertEqual(mail.outbox[3].subject, 'Advertiser Pixel Warning: length of every product parameter is not consistent')
+        self.assertEqual(mail.outbox[4].subject, 'Advertiser Pixel Warning: order value and individual products value is not equal')
 
     def test_missing_order_detail_parameter(self):
         self.visit_link('mystore')
@@ -179,8 +181,8 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         products = transaction.products.all()
         self.assertEqual(len(products), 0)
 
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, 'Advertiser Pixel Error: missing one or more product parameters')
+        self.assertEqual(len(mail.outbox), 4)
+        self.assertEqual(mail.outbox[3].subject, 'Advertiser Pixel Error: missing one or more product parameters')
 
     def test_no_store_id_in_database(self):
         self.checkout(store_id='invalid_id', order_id='1234', order_value='1234', currency='SEK')
@@ -198,15 +200,51 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK', sku='BLABLA', quantity='A', price='1234')
         self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK', sku='BLABLA', quantity='1', price='1234ffff')
 
-        self.assertEqual(len(mail.outbox), 2)
-        self.assertEqual(mail.outbox[0].subject, 'Advertiser Pixel Error: could not convert price or quantity')
-        self.assertEqual(mail.outbox[1].subject, 'Advertiser Pixel Error: could not convert price or quantity')
+        self.assertEqual(len(mail.outbox), 5)
+        self.assertEqual(mail.outbox[3].subject, 'Advertiser Pixel Error: could not convert price or quantity')
+        self.assertEqual(mail.outbox[4].subject, 'Advertiser Pixel Error: could not convert price or quantity')
 
 
     def test_optional_parameters_trailing_caret(self):
         self.visit_link('mystore')
         self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK', sku='ProductABC^ProductXYZ^', quantity='1^1^', price='1000^234^')
-        self.assertEqual(len(mail.outbox), 0)
+        self.assertEqual(len(mail.outbox), 3)
+
+    def test_checkout_same_order_id(self):
+        # Checkout conversion pixel
+        self.visit_link('mystore')
+        self.checkout(store_id='mystore', order_id='XYZ 123', order_value='1000', currency='EUR')
+        self.assertEqual(Transaction.objects.count(), 1)
+
+        # Checkout conversion pixel with same order id and unchanged values
+        self.checkout(store_id='mystore', order_id='XYZ 123', order_value='1000', currency='EUR')
+        self.assertEqual(Transaction.objects.count(), 1)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id='XYZ 123')
+        self.assertEqual(transaction.original_order_value, decimal.Decimal('1000'))
+        self.assertEqual(transaction.original_currency, 'EUR')
+        self.assertEqual(transaction.order_value, decimal.Decimal('1000'))
+        self.assertEqual(transaction.currency, 'EUR')
+
+        # Checkout conversion pixel with same order id and changed order value and currency
+        self.checkout(store_id='mystore', order_id='XYZ 123', order_value='10000', currency='SEK')
+        self.assertEqual(Transaction.objects.count(), 1)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id='XYZ 123')
+        self.assertEqual(transaction.original_order_value, decimal.Decimal('10000'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.order_value, decimal.Decimal('1181.60'))
+        self.assertEqual(transaction.currency, 'EUR')
+
+        # Checkout conversion pixel with same order id and invalid order value
+        self.checkout(store_id='mystore', order_id='XYZ 123', order_value='', currency='SEK', disable_check=True)
+        self.assertEqual(Transaction.objects.count(), 1)
+
+        transaction = Transaction.objects.get(store_id='mystore', order_id='XYZ 123')
+        self.assertEqual(transaction.original_order_value, decimal.Decimal('10000'))
+        self.assertEqual(transaction.original_currency, 'SEK')
+        self.assertEqual(transaction.order_value, decimal.Decimal('1181.60'))
+        self.assertEqual(transaction.currency, 'EUR')
 
 
 
@@ -245,7 +283,7 @@ class AdvertiserLinkTest(TransactionTestCase, AdvertiserMixin):
         self.assertContains(response, 'Missing store_id parameter.', count=1, status_code=400)
 
     def test_url_parameter(self):
-        url = '/shop/women/'
+        url = '/sv/shop/women/'
 
         response = self.client.get('%s?store_id=mystore&url=%s' % (reverse('advertiser-link'), url), follow=True)
         self.assertRedirects(response, url, status_code=302, target_status_code=200)

@@ -107,19 +107,26 @@ def pixel(request):
     commission, exchange_rate = exchange_amount(currency, original_currency, commission)
     order_value, _ = exchange_amount(currency, original_currency, order_value, fixed_rate=exchange_rate)
 
-    transaction = Transaction.objects.create(store_id=store_id,
-                                             order_id=order_id,
-                                             ip_address=get_client_ip(request),
-                                             status=status,
-                                             cookie_date=cookie_datetime,
-                                             currency=currency,
-                                             original_currency=original_currency,
-                                             exchange_rate=exchange_rate,
-                                             order_value=order_value,
-                                             commission=commission,
-                                             original_order_value=original_order_value,
-                                             original_commission=original_commission,
-                                             custom=custom)
+    defaults = {
+        'ip_address': get_client_ip(request),
+        'status': status,
+        'cookie_date': cookie_datetime,
+        'currency': currency,
+        'original_currency': original_currency,
+        'exchange_rate': exchange_rate,
+        'order_value': order_value,
+        'commission': commission,
+        'original_order_value': original_order_value,
+        'original_commission': original_commission,
+        'custom': custom
+    }
+
+    transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
+    if not created:
+        for attr, val in defaults.items():
+            if hasattr(transaction, attr):
+                setattr(transaction, attr, val)
+        transaction.save()
 
     # Insert optional product data
     product_sku = request.GET.get('sku')
