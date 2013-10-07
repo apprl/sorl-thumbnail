@@ -163,9 +163,10 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         products = transaction.products.all()
         self.assertEqual(len(products), 1)
 
-        self.assertEqual(len(mail.outbox), 5)
+        self.assertEqual(len(mail.outbox), 4)
         self.assertEqual(mail.outbox[3].subject, 'Advertiser Pixel Warning: length of every product parameter is not consistent')
-        self.assertEqual(mail.outbox[4].subject, 'Advertiser Pixel Warning: order value and individual products value is not equal')
+        # Disabled, see views.py
+        #self.assertEqual(mail.outbox[4].subject, 'Advertiser Pixel Warning: order value and individual products value is not equal')
 
     def test_missing_order_detail_parameter(self):
         self.visit_link('mystore')

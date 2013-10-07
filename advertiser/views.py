@@ -152,9 +152,10 @@ def pixel(request):
             calculated_order_value = decimal.Decimal(sum([x*y for x, y in zip(quantities, prices)]))
             calculated_order_value = calculated_order_value.quantize(decimal.Decimal('0.01'))
 
-            if calculated_order_value != original_order_value:
-                email_body = render_to_string('advertiser/email_default_error.txt', locals())
-                mail_superusers('Advertiser Pixel Warning: order value and individual products value is not equal', email_body)
+            # Disabled sending out this mail because most stores send total order value with shipping costs
+            #if calculated_order_value != original_order_value:
+                #email_body = render_to_string('advertiser/email_default_error.txt', locals())
+                #mail_superusers('Advertiser Pixel Warning: order value and individual products value is not equal', email_body)
 
             for sku, quantity, price in zip(skus, quantities, prices):
                 Product.objects.create(transaction=transaction,
