@@ -9,22 +9,23 @@
 {% endblock body-header %}
 {% block body-classes %}two-columns dashboard dashboard-info{% endblock body-classes %}
 {% block body %}
-<div class="sidebar">
-  <h2>{% trans "Sections" %}</h2>
-    <ul class="list">
-      <li><a href="#blog">{% trans "Grow your blog and gain followers" %}</a></li>
-      <li><a href="#product">{% trans "Make money on product links" %}</a></li>
-      <li><a href="#profile">{% trans "Make money from your profile" %}</a></li>
-      <li><a href="#looks">{% trans "Make money on looks for your site/blog" %}</a></li>
-      <li><a href="#shop">{% trans "Create an APPRL-shop for your site/blog" %}</a></li>
-      <li><a href="#brands">{% trans "Our stores & brands" %}</a></li>
-      <li><a href="#statistics">{% trans "Your statistics" %}</a></li>
-      <li><a href="#questions">{% trans "Questions?" %}</a></li>
-    </ul>
-</div>
-<div id="content" class="content">
-    <h2>{% trans "How it works" %}</h2>
-    <div class="dashboard-content">
+
+<div class="row">
+    <div class="col-sm-3">
+        <ul class="list-group">
+            <li class="list-group-item"><a href="#blog">{% trans "Grow your blog and gain followers" %}</a></li>
+            <li class="list-group-item"><a href="#product">{% trans "Make money on product links" %}</a></li>
+            <li class="list-group-item"><a href="#profile">{% trans "Make money from your profile" %}</a></li>
+            <li class="list-group-item"><a href="#looks">{% trans "Make money on looks for your site/blog" %}</a></li>
+            <li class="list-group-item"><a href="#shop">{% trans "Create an APPRL-shop for your site/blog" %}</a></li>
+            <li class="list-group-item"><a href="#brands">{% trans "Our stores & brands" %}</a></li>
+            <li class="list-group-item"><a href="#statistics">{% trans "Your statistics" %}</a></li>
+            <li class="list-group-item"><a href="#questions">{% trans "Questions?" %}</a></li>
+        </ul>
+    </div>
+    <div class="col-sm-9">
+
+        <h2>{% trans "How it works" %}</h2>
         {% if not request.user.is_partner %}
         <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PUBLISHER HERE" %}</a></p>
         {% endif %}
@@ -84,4 +85,5 @@
 
     </div>
 </div>
+
 {% endblock %}
