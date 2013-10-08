@@ -56,6 +56,7 @@
 
 // Non-bootstrap utility class
 @import "./retina.less";
+@import "./utils.less";
 
 
 //
@@ -1080,20 +1081,7 @@ body.shop, body.profile-likes {
 
     #product-category, #product-gender, #product-sort  {
         li > a {
-            display: inline-block;
-            padding: 2px 0;
-            &:before {
-                margin-right: 5px;
-                display: inline-block;
-                content: '';
-                width: 14px;
-                height: 16px;
-                vertical-align: middle;
-                background: transparent url("../images/circle-dot.png") no-repeat 0px 0px;
-            }
-            &.selected:before {
-                background-position: -14px 0px;
-            }
+            .custom-radiobutton();
         }
         li ul {
             overflow-y: auto;
@@ -1120,21 +1108,8 @@ body.shop, body.profile-likes {
 
     #product-price {
         #discount-price {
-            display: inline-block;
-            padding: 2px 0;
+            .custom-checkbox();
             color: @like-color;
-            &:before {
-                margin-right: 5px;
-                display: inline-block;
-                content: '';
-                width: 14px;
-                height: 16px;
-                vertical-align: middle;
-                background: transparent url("../images/checkbox.png") no-repeat 0px 0px;
-            }
-            &.selected:before {
-                background-position: -14px 0px;
-            }
         }
         #price-min, #price-max {
             padding-bottom: 5px;
@@ -1329,17 +1304,8 @@ body.shop, body.profile-likes {
             padding: 10px 0 0 0;
         }
         #selected-manufacturers li a {
-            display: inline-block;
-            padding: 2px 0;
-            &:before {
-                margin-right: 5px;
-                display: inline-block;
-                content: '';
-                width: 14px;
-                height: 16px;
-                vertical-align: middle;
-                background: transparent url("../images/checkbox.png") no-repeat -14px 0px;
-            }
+            .custom-checkbox();
+            background-position: -14px 0px;
         }
         #available-manufacturers {
             height: 200px;
@@ -1349,38 +1315,12 @@ body.shop, body.profile-likes {
             border-top: 1px solid #d9d9d9;
             border-bottom: 1px solid #d9d9d9;
             li > a {
-                display: inline-block;
-                padding: 2px 0;
-                &:before {
-                    margin-right: 5px;
-                    display: inline-block;
-                    content: '';
-                    width: 14px;
-                    height: 16px;
-                    vertical-align: middle;
-                    background: transparent url("../images/checkbox.png") no-repeat 0px 0px;
-                }
-                &.selected:before {
-                    background-position: -14px 0px;
-                }
+                .custom-checkbox();
             }
         }
     }
     #product-stores ul > li > a {
-        display: inline-block;
-        padding: 2px 0;
-        &:before {
-            margin-right: 5px;
-            display: inline-block;
-            content: '';
-            width: 14px;
-            height: 16px;
-            vertical-align: middle;
-            background: transparent url("../images/checkbox.png") no-repeat 0px 0px;
-        }
-        &.selected:before {
-            background-position: -14px 0px;
-        }
+        .custom-checkbox();
     }
 }
 
