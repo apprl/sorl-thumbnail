@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 08:47+0200\n"
+"POT-Creation-Date: 2013-10-08 10:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1113,20 +1113,25 @@ msgid "Follow members &amp; brands to fill your feed"
 msgstr ""
 
 #: templates/activity_feed/verbs/add_product.html:4
-#: templates/activity_feed/verbs/agg_product.html:5
+#: templates/activity_feed/verbs/agg_product.html:7
 msgid "added"
 msgstr ""
 
-#: templates/activity_feed/verbs/agg_product.html:5
-msgid "new women's products"
-msgstr ""
+#: templates/activity_feed/verbs/agg_product.html:9
+#, fuzzy, python-format
+msgid "%(count)s new women's product"
+msgid_plural "%(count)s new women's products"
+msgstr[0] "%(count)s produkt"
+msgstr[1] "%(count)s produkter"
 
-#: templates/activity_feed/verbs/agg_product.html:5
-#, fuzzy
-msgid "new men's products"
-msgstr "%(count)s produkt"
+#: templates/activity_feed/verbs/agg_product.html:11
+#, fuzzy, python-format
+msgid "%(count)s new men's product"
+msgid_plural "%(count)s new men's products"
+msgstr[0] "%(count)s produkt"
+msgstr[1] "%(count)s produkter"
 
-#: templates/activity_feed/verbs/agg_product.html:19
+#: templates/activity_feed/verbs/agg_product.html:31
 #, python-format
 msgid "See the latest from %(brand)s"
 msgstr ""
@@ -3202,6 +3207,10 @@ msgstr ""
 msgid ""
 "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
+
+#, fuzzy
+#~ msgid "new men's products"
+#~ msgstr "%(count)s produkt"
 
 #, fuzzy
 #~ msgid "See all new products »"

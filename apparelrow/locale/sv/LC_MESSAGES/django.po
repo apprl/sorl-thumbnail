@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 08:47+0200\n"
+"POT-Creation-Date: 2013-10-08 10:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,6 +117,10 @@ msgstr[1] "%(count)s produkter"
 #: apparel/browse.py:291 templates/search.html:17
 msgid "Search result for"
 msgstr "Sökresultat för"
+
+#: apparel/browse.py:291 templates/apparel/look_list.html:32
+msgid "Showing"
+msgstr "Visar"
 
 #: apparel/forms.py:7
 msgid "You have to name your look before your create it."
@@ -1123,19 +1127,25 @@ msgid "Follow members &amp; brands to fill your feed"
 msgstr "Följ medlemmar &amp; varumärken för att fylla ditt nyhetsflöde."
 
 #: templates/activity_feed/verbs/add_product.html:4
-#: templates/activity_feed/verbs/agg_product.html:5
+#: templates/activity_feed/verbs/agg_product.html:7
 msgid "added"
 msgstr "har lagt till"
 
-#: templates/activity_feed/verbs/agg_product.html:5
-msgid "new women's products"
-msgstr "nya damprodukter"
+#: templates/activity_feed/verbs/agg_product.html:9
+#, python-format
+msgid "%(count)s new women's product"
+msgid_plural "%(count)s new women's products"
+msgstr[0] "%(count)s ny damprodukt"
+msgstr[1] "%(count)s nya damprodukter"
 
-#: templates/activity_feed/verbs/agg_product.html:5
-msgid "new men's products"
-msgstr "nya herrprodukter"
+#: templates/activity_feed/verbs/agg_product.html:11
+#, python-format
+msgid "%(count)s new men's product"
+msgid_plural "%(count)s new men's products"
+msgstr[0] "%(count)s ny herrprodukt"
+msgstr[1] "%(count)s nya herrprodukter"
 
-#: templates/activity_feed/verbs/agg_product.html:19
+#: templates/activity_feed/verbs/agg_product.html:31
 #, python-format
 msgid "See the latest from %(brand)s"
 msgstr "Se det senaste från %(brand)s"
@@ -1709,10 +1719,6 @@ msgstr "Looks Herr"
 #: templates/apparel/look_list.html:4
 msgid "Looks Women"
 msgstr "Looks Dam"
-
-#: templates/apparel/look_list.html:33 templates/apparel/look_list.html:35
-msgid "Showing"
-msgstr "Visar"
 
 #: templates/apparel/look_list.html:33 templates/apparel/look_list.html:35
 #, python-format
@@ -3363,6 +3369,24 @@ msgid ""
 "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
 "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
+
+#~ msgid "new men's products"
+#~ msgstr "nya herrprodukter"
+
+#~ msgid "%(counter)s look"
+#~ msgid_plural "%(counter)s looks"
+#~ msgstr[0] "%(counter)s look"
+#~ msgstr[1] "%(counter)s looks"
+
+#~ msgid ""
+#~ "You currently don't follow anyone who has liked any looks, find friends "
+#~ "to follow amoung our members."
+#~ msgstr ""
+#~ "Du följer just nu ingen som gillar någon look, hitta vänner att följa "
+#~ "bland våra medlemmar."
+
+#~ msgid "See all members"
+#~ msgstr "Se alla medlemmar"
 
 #~ msgid "Sections"
 #~ msgstr "Snabblänkar"
