@@ -230,7 +230,7 @@ def product_detail(request, slug):
         is_liked = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
 
     looks_with_product = Look.published_objects.filter(components__product=product).distinct().order_by('-modified')[:2]
-    #looks_with_product_count = Look.published_objects.filter(components__product=product).distinct().count()
+    looks_with_product_count = Look.published_objects.filter(components__product=product).distinct().count()
 
     # Likes
     likes = product.likes.filter(active=True).order_by('modified').select_related('user')
@@ -269,7 +269,7 @@ def product_detail(request, slug):
                 'object': product,
                 'is_liked': is_liked,
                 'looks_with_product': looks_with_product,
-                #'looks_with_product_count': looks_with_product_count,
+                'looks_with_product_count': looks_with_product_count,
                 'object_url': request.build_absolute_uri(),
                 'more_like_this': more_like_this_product(mlt_body, product.gender, 12),
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
