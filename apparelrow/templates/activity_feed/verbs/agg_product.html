@@ -1,21 +1,23 @@
 {% extends 'activity_feed/verbs/base.html' %}
 {% load i18n cache thumbnail %}
 
+{% block activity_header_image_url %}{{ object.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}{% endblock %}
+
 {% block activity_header %}
-    <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "added" %}</span> {{ object.object_count }} {% if object.gender == 'W' %}{% trans "new women's products" %}{% else %}{% trans "new men's products" %}{% endif %}
+    <a href="{{ object.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}">{{ object.user.display_name }}</a> <span class="likes-text">{% trans "added" %}</span> {{ object.object_count }} {% if object.gender == 'W' %}{% trans "new women's products" %}{% else %}{% trans "new men's products" %}{% endif %}
 {% endblock %}
 
 {% block activity_content %}
     {% cache CACHE_TIMEOUT product_medium_agg object.object_id LANGUAGE_CODE %}
     <div class="thumbnail product-medium" id="product-{{ object.activity_object.id }}" data-id="{{ object.activity_object.id }}">
         <div class="product-image-container">
-            <a href="{{ object.activity_object.manufacturer.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}">
+            <a href="{{ object.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}">
                 {% thumbnail object.activity_object.product_image "280x320" keep_size=True crop=False format='PNG' as im %}
                 <img class="product-image img-responsive" src="{{ im.url }}" alt="{{ object.activity_object.manufacturer.name }}" width="{{ im.width }}" height="{{ im.height }}">
                 {% endthumbnail %}
             </a>
             <div class="hover">
-                <a class="btn btn-primary btn-block" href="{{ object.activity_object.manufacturer.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}">
+                <a class="btn btn-primary btn-block" href="{{ object.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}">
                     {% blocktrans with brand=object.activity_object.manufacturer %}See the latest from {{brand}}{% endblocktrans %}
                 </a>
             </div>

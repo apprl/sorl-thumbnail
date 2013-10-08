@@ -3,7 +3,7 @@
 
     {% cache CACHE_TIMEOUT activity_header object.id LANGUAGE_CODE %}
     <div class="panel-heading">
-        <a href="{{ object.user.get_absolute_url }}"><img class="img-circle" src="{{ object.user.avatar }}"></a>
+        <a href="{% block activity_header_image_url %}{{ object.user.get_absolute_url }}{% endblock %}"><img class="img-circle" src="{{ object.user.avatar }}"></a>
         <p>{% block activity_header %}{% endblock %}</p>
     </div>
     {% endcache %}
