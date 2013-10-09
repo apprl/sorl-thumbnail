@@ -690,7 +690,8 @@ ApparelSearch = {
                 ga('send', 'event', 'Search', name, opts.query['q'], response.paginator.count)
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
-                var h3 = $('h3.' + opts.selector.substring(1)).text(
+                var h3 = $('h3.' + opts.selector.substring(1));
+                    h3.find('> span').text(
                     interpolate(
                         ngettext(
                             opts.text.header_singular,
@@ -701,19 +702,18 @@ ApparelSearch = {
                         true
                     )
                 );
+                var h3_a = h3.find('> a');
 
                 var href_attr = '#';
                 switch(opts.selector) {
                     case '#search-result-products':
                         href_attr = browse_url + '?' + ApparelSearch.format_query(opts.query);
-                        var a_tag = $('<a>').attr('href', href_attr).text(h3.text());
-                        h3.html(a_tag);
+                        h3_a.attr('href', href_attr);
                         break;
 
                     case '#search-result-looks':
                         href_attr = looks_search_url + '?' + ApparelSearch.format_query(opts.query);
-                        var a_tag = $('<a>').attr('href', href_attr).text(h3.text());
-                        h3.html(a_tag);
+                        h3_a.attr('href', href_attr);
                         break;
                 }
 
@@ -731,6 +731,7 @@ ApparelSearch = {
 
                 if(response.paginator.count > opts.query['limit']) {
                     abutton.show();
+                    h3_a.show();
                 }
 
                 list.data('last-query', opts.query);
