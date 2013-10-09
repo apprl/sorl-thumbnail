@@ -37,13 +37,13 @@ msgstr[1] "Hittade %(count)s produkter"
 #: static/js/apparel.js:839
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
-msgstr[0] "Hittad %(count)s look"
-msgstr[1] "Hittad %(count)s looks"
+msgstr[0] "Hittade %(count)s look"
+msgstr[1] "Hittade %(count)s looks"
 
 #: static/js/apparel.js:840
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
-msgstr[0] "Hittade %(count)s varumärk"
+msgstr[0] "Hittade %(count)s varumärke"
 msgstr[1] "Hittade %(count)s varumärken"
 
 #: static/js/apparel.js:841
