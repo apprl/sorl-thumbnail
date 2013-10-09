@@ -126,7 +126,12 @@
 
                 <form data-search="true" action="{% multi_gender_url request 'shop' 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
                     <div class="form-group">
-                        <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                            </span>
+                        </div>
                     </div>
                 </form>
 
