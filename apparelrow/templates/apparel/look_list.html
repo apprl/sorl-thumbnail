@@ -28,21 +28,10 @@
     <div class="row">
         <div class="col-lg-12">
             {% url 'search-look-list' as search_url %}
-            {% url 'product-look-list' as product_url %}
-            {% if request.path == product_url %}
-                <h2>{% trans "Showing" %} {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
-            {% elif request.path == search_url %}
-                <h2>{% trans "Showing" %} '{{ query|escape }}', {% blocktrans count paginator.count as counter %}{{ counter }} look{% plural %}{{ counter }} looks{% endblocktrans %}</h2>
+            {% if request.path == search_url %}
+                <h2>{% trans "Showing" %} '{{ query|escape }}'</h2>
             {% endif %}
-
-            {% if not current_page.object_list and request.path == popular_look_list_url %}
-            <div class="empty-content">
-                <p>{% trans "You currently don't follow anyone who has liked any looks, find friends to follow amoung our members." %}</p>
-                <a class="btn btn-upper" href="{% url 'user-list-popular' %}">{% trans "See all members" %}</a>
-            </div>
-            {% else %}
             {% include 'apparel/fragments/look_list.html' %}
-            {% endif %}
         </div>
     </div>
 {% endblock body %}

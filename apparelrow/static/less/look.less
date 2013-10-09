@@ -11,6 +11,10 @@
                 border: 0;
             }
         }
+        .body-header-col-full .btn {
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
     }
     // Float like button after look title
     @media (min-width: @screen-tablet) {
@@ -353,19 +357,7 @@
                         padding: 0;
                     }
                     li > a {
-                        padding: 1px 5px;
-                        &:before {
-                            margin-right: 5px;
-                            display: inline-block;
-                            content: '';
-                            width: 14px;
-                            height: 15px;
-                            vertical-align: middle;
-                            background: transparent url("../images/circle-dot.png") no-repeat 0px 0px;
-                        }
-                        &.selected:before {
-                            background-position: -14px 0px;
-                        }
+                        .custom-radiobutton(1px 5px);
                     }
                 }
             }

@@ -162,7 +162,7 @@
                         {% endif %}
                         {% endcache %}
 
-                        <h3><a href="{% url 'product-look-list' contains=object.slug %}">{% trans "Looks" %}</a></h3>
+                        <h3><a href="{% url 'product-look-list' contains=object.slug %}">{% trans "Looks with this item" %}</a></h3>
                         <ul class="list-unstyled list-looks">
                             {% for look in looks_with_product %}
                             <li class="col-list-look">
@@ -178,6 +178,9 @@
                             </li>
                             {% endfor %}
                         </ul>
+                        {% if looks_with_product_count > 2 %}
+                        <a href="{% url 'product-look-list' contains=object.slug %}" class="btn btn-primary btn-block">{% trans "See all looks" %}</a>
+                        {% endif %}
                         <a href="{% url 'look-create-like' slug=object.slug %}" class="btn btn-primary btn-block">{% trans "Add your look" %}</a>
 
                         {% cache CACHE_TIMEOUT product_detail_likes object.id LANGUAGE_CODE %}

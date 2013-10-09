@@ -32,12 +32,18 @@
 
     <div id="search-result" class="row">
         <div class="wide result-container col-md-4">
-            <h3 class="search-result-products">{% trans "Matching products" %}</h3>
+            <h3 class="search-result-products">
+                <span>{% trans "Matching products" %}</span>
+                <a class="pull-right" style="display:none;" href="#">{% trans "See all »" %}</a>
+            </h3>
             <div class="product-list"><ul class="list-unstyled" id="search-result-products"></ul></div>
             <div class="search-link"><a class="search-result-products btn btn-primary btn-block" href="#" style="display:none;">{% trans "Show all products" %}</a></div>
         </div>
         <div class="result-container col-md-4">
-            <h3 class="search-result-looks">{% trans "Matching looks" %}</h3>
+            <h3 class="search-result-looks">
+                <span>{% trans "Matching looks" %}</span>
+                <a class="pull-right" style="display:none;" href="#">{% trans "See all »" %}</a>
+            </h3>
             <ul id="search-result-looks" class="list-unstyled looks"></ul>
             <div class="search-link"><a class="search-result-looks btn btn-primary btn-block" href="#" style="display:none;">{% trans "Show all looks" %}</a></div>
         </div>

@@ -126,7 +126,12 @@
 
                 <form data-search="true" action="{% multi_gender_url request 'shop' 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
                     <div class="form-group">
-                        <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                            </span>
+                        </div>
                     </div>
                 </form>
 
@@ -165,6 +170,17 @@
                         <ul class="dropdown-menu">
                             <li><a href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></li>
                             <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-nav-language visible-xs">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
+                        <ul id="language-dropdown" class="dropdown-menu">
+                            {% for language in LANGUAGES_DISPLAY %}
+                            <li><a data-language="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">{% trans language.1 %}</a></li>
+                            {% endfor %}
                         </ul>
                     </li>
                 </ul>

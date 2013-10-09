@@ -56,6 +56,7 @@
 
 // Non-bootstrap utility class
 @import "./retina.less";
+@import "./utils.less";
 
 
 //
@@ -109,14 +110,16 @@
 // Facebook button
 .btn-facebook {
     .button-variant(#ffffff, @brand-facebook, @brand-facebook);
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-bottom: 6px;
     .btn-facebook-icon {
         display: inline-block;
-        width: 16px;
-        height: 15px;
-        margin-top: 1px;
-        vertical-align: text-top;
-        background-image: url('../images/facebook-icon.png');
-        background-repeat: no-repeat;
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+        margin-bottom: 4px;
+        .at2x('../images/facebook-icon.png', 24px, 24px);
     }
 }
 
@@ -217,10 +220,13 @@ body {
     }
 }
 
+body.feed-list-page .body-header,
 body.shop .body-header,
 body.discover-list-page .body-header,
 body.product-detail-page .body-header,
 body.look-detail-page .body-header,
+body.look-create-page .body-header,
+body.look-list-page .body-header,
 body.publisher-page .body-header,
 body.publisher-referral-page .body-header,
 body.dashboard-info .body-header {
@@ -231,7 +237,7 @@ body.dashboard-info .body-header {
     .make-row;
     margin-left: 0;
     margin-right: 0;
-    margin-bottom: 0;
+    margin-bottom: 20px;
     margin-top: 20px;
     border-bottom: 3px solid #000000;
     @media (min-width: @grid-float-breakpoint) {
@@ -442,6 +448,31 @@ body.contest .navbar { top: 40px; }
         margin-bottom: 10px;
         box-shadow: none;
         -webkit-box-shadow: none;
+        .form-group {
+            @media screen and (min-width: @grid-float-breakpoint) {
+                width: 270px;
+            }
+            input {
+                width: 235px;
+                border-right: 0;
+                .box-shadow(0 0 0 rgba(0, 0, 0, 0));
+                padding-right: 1px;
+            }
+            .btn {
+                height: 30px;
+                background-color: #ffffff;
+                color: @gray;
+                border-color: @btn-default-border;
+                padding: 4px 10px;
+                border-left: 0;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                .glyphicon {
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+        }
     }
     .navbar-nav > li {
         > a:hover span, &.active > a span {
@@ -711,7 +742,13 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
         height: 494px;
         margin-bottom: 50px;
         border-bottom: 0;
-        .panel-heading { min-height: 150px; max-height: 160px; }
+        .panel-heading {
+            min-height: 150px;
+            max-height: 160px;
+            p {
+                min-height: 0;
+            }
+        }
         .panel-body .hover { bottom: 0; }
         .panel-body .caption { display: none; }
         p {
@@ -1073,20 +1110,7 @@ body.shop, body.profile-likes {
 
     #product-category, #product-gender, #product-sort  {
         li > a {
-            display: inline-block;
-            padding: 2px 0;
-            &:before {
-                margin-right: 5px;
-                display: inline-block;
-                content: '';
-                width: 14px;
-                height: 16px;
-                vertical-align: middle;
-                background: transparent url("../images/circle-dot.png") no-repeat 0px 0px;
-            }
-            &.selected:before {
-                background-position: -14px 0px;
-            }
+            .custom-radiobutton();
         }
         li ul {
             overflow-y: auto;
@@ -1113,21 +1137,8 @@ body.shop, body.profile-likes {
 
     #product-price {
         #discount-price {
-            display: inline-block;
-            padding: 2px 0;
+            .custom-checkbox();
             color: @like-color;
-            &:before {
-                margin-right: 5px;
-                display: inline-block;
-                content: '';
-                width: 14px;
-                height: 16px;
-                vertical-align: middle;
-                background: transparent url("../images/checkbox.png") no-repeat 0px 0px;
-            }
-            &.selected:before {
-                background-position: -14px 0px;
-            }
         }
         #price-min, #price-max {
             padding-bottom: 5px;
@@ -1322,17 +1333,8 @@ body.shop, body.profile-likes {
             padding: 10px 0 0 0;
         }
         #selected-manufacturers li a {
-            display: inline-block;
-            padding: 2px 0;
-            &:before {
-                margin-right: 5px;
-                display: inline-block;
-                content: '';
-                width: 14px;
-                height: 16px;
-                vertical-align: middle;
-                background: transparent url("../images/checkbox.png") no-repeat -14px 0px;
-            }
+            .custom-checkbox();
+            background-position: -14px 0px;
         }
         #available-manufacturers {
             height: 200px;
@@ -1342,38 +1344,12 @@ body.shop, body.profile-likes {
             border-top: 1px solid #d9d9d9;
             border-bottom: 1px solid #d9d9d9;
             li > a {
-                display: inline-block;
-                padding: 2px 0;
-                &:before {
-                    margin-right: 5px;
-                    display: inline-block;
-                    content: '';
-                    width: 14px;
-                    height: 16px;
-                    vertical-align: middle;
-                    background: transparent url("../images/checkbox.png") no-repeat 0px 0px;
-                }
-                &.selected:before {
-                    background-position: -14px 0px;
-                }
+                .custom-checkbox();
             }
         }
     }
     #product-stores ul > li > a {
-        display: inline-block;
-        padding: 2px 0;
-        &:before {
-            margin-right: 5px;
-            display: inline-block;
-            content: '';
-            width: 14px;
-            height: 16px;
-            vertical-align: middle;
-            background: transparent url("../images/checkbox.png") no-repeat 0px 0px;
-        }
-        &.selected:before {
-            background-position: -14px 0px;
-        }
+        .custom-checkbox();
     }
 }
 

@@ -23,8 +23,9 @@ window.infiniteScroll = function infiniteScroll(callback) {
     }
 
     // Keep track of the first auto-scroll
-    $window.data('first-scroll', true);
-    $window.data('dont-scroll', false);
+    // Do not infinite scroll without a click
+    $window.data('first-scroll', false);
+    $window.data('dont-scroll', true);
 
     $window.on('scroll', function() {
         if($window.data('dont-scroll')) {
@@ -34,7 +35,7 @@ window.infiniteScroll = function infiniteScroll(callback) {
         var offset = $window.scrollTop(),
             height = $window.height();
 
-        if(!loading && bottomDistance() < 2 * height && offset > lastOffset) {
+        if(!loading && bottomDistance() < 2.5 * height && offset > lastOffset) {
             if($window.data('first-scroll')) {
                 // Just auto-scroll one page until user clicks "load more"
                 $window.data('dont-scroll', true);
