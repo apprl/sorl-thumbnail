@@ -41,7 +41,7 @@ location @fallback_embed {
 }
 
 # Proxy /admin requests to our WSGI server for admin page
-location /admin {
+location ~ "^/([a-zA-Z]{2})/admin" {
     proxy_read_timeout 1800;
     proxy_pass http://gunicorn_admin;
     proxy_set_header Host $host;
