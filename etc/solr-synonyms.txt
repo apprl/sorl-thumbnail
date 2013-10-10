@@ -1,0 +1,242 @@
+# -------- FÄRGER & MÖNSTER ----------------
+
+dotted, polka dot, prickig, prickiga
+
+checkers, checker, checked, rutig, rutiga, rutigt
+
+striped, randig, stripe, randiga, randigt
+
+orange, oranga, orangea
+mörkorange, mörk orange, mörk orangea, dark orange
+ljusorange, ljus orange, ljus orangea, light orange
+
+pink, rosa, cerise, ceris, cerisa, rose
+mörkrosa, dark pink, mörk rosa
+ljusrosa, light pink, ljus rosa
+
+gold,guld,oro, guldfärgad, guldfärgade, guldig, guldiga
+
+silver, silver, silverfärgad, silverfärgade
+
+blue, blå, blåa, blått
+mörkblå, mörk blå, mörkblåa, mörkblått, dark blue
+ljusblå, ljusblåa, ljusblått, ljus blå, ljus blåa, ljus blått, light blue
+
+green, grön, gröna, grönt
+ljusgrön, light green, ljus grön, ljusgröna, ljusgrönt, ljus gröna, ljus grönt
+mörkgrön, mörkgrönt, mörkgröna, mörk grön, mörk grönt, mörk gröna, dark green
+
+yellow, gul, gult, gula
+ljusgul, ljusgult, ljusgula, ljus gul, ljus gult, ljus gula, light yellow, bright yellow
+mörkgul, mörkgult, mörkgula, yellow, mörk gul, mörk gult, mörk gula, dark yellow
+
+red, röd, röda, rött
+mörkröd, mörkröda, mörkrött, mörk röd, mörk röda, mörk rött, dark red
+ljusröd, ljusröda, ljusrött, ljus röd, ljus röda, ljus rött, light red
+
+brown, brun, brunt, bruna
+mörkbrun, mörkbrunt, mörkbruna, dark brown, mörk brun, mörk brunt, mörk bruna
+light brown, ljusbrun, ljusbruna, ljusbrunt, ljus brun, ljus bruna, ljus brunt
+
+beige, beiget, beiga, begie
+
+white, vita, vitt, vit
+
+grey, grå, gråa, grått
+dark grey, mörkgrå, mörkgrått, mörkgråa, mörk grå, mörk grått, mörk gråa
+light grey, ljusgrå, ljusgrått, ljusgråa, ljus grå, ljus grått, ljus gråa
+
+black, svart, svarta
+
+# fler synonymer kolla
+# http://en.wikipedia.org/wiki/Category:Shades_of_color
+# http://en.wikipedia.org/wiki/List_of_colors
+
+
+# ---------- ADJEKTIV ------------
+
+
+
+# ---------- MATERIAL ------------
+
+wool, ull
+corduroy, manchester
+
+# ---------- KATEGORIER ------------
+
+# WOMAN
+
+accessories, accessoarer, accesoarer, acessoarer, assessoarer, assesoarer, accesoar, acessoar, assessoar, assesoar, accessoar, accessory
+scarves & wraps, halsdukar & scarfs, halsduk, halsdukar, scarf, skarf, wrap, wraps, scarves, scarf, foulard
+belts, skärp, bälten, bälte, belt
+bow ties, flugor, bow tie, bowtie, fluga
+credit card holder, kreditkortshållare, credit card, card holder, kreditkort, kredit kort, kredit kort hållare, kredit kort fodral, kreditkortsfodral, kortfodral
+document holder, dokumenthållare, document, document case, document folder, document bag, dokument, dokumentfodral, dokumentväska
+gloves, handskar, glove, handske, hanske, hanskar
+hair accessories, håraccessoarer, hair, hår
+hats & beanies, Hattar & mössor, hat, hats, beanie, hatt, mössa, hattar, mössor
+key holders, nyckelringar, key holder, key ring, keyring, keyholder, nyckel ring, nyckelring
+umbrellas, paraplyn, umbrella, paraply, paraplui
+sunglasses, solglasögon, glasses, glasögon
+watches, klockor, watch, klocka, armbandsur
+
+bags, väskor, bag, väska
+backpack, ryggsäck, back pack, rygg säck
+briefcases, portföljer, briefcase, brief case, portfölj, brief-case, brief-cases
+cross body, messenger, crossbody, cross-body
+handheld, handväskor, handväska
+satchels, satchel
+shoulder bags & totes, axelväskor & totes, shoulder bag, shoulderbag, tote, totes, axelväska, axel väska, axel väskor
+sport & duffel bags, sport- och duffelväskor, sport bag, sportbag, sport bags, sports bag, sports bags, sportsbag, sportsbags, duffel, duffel bag, duffel bags, duffelbag, sportväska, sportväskor, sport väska, sport väskor, sportbag, sport bag, duffelväska, duffelväskor, duffel väska, duffel väskor
+laptop bags, datorväskor, laptopbag, laptopbags, laptop bag, laptopcases, datorväska, dator väska, dator väska, dator
+luggage, resväskor, travel bag, travelbag, travel bags, resväska, res väska, reseväska, reseväskor
+make-up bags, sminkväskor, makeup bags, make-up bags, makeup bag, make-up bag, sminkväska, smink väskor, smink väska, beauty box, beautybox, necessaire, necessär
+wallets & purses, plånböcker & purses, wallets, wallet, purse, purses, plånbok, plånböcker
+
+dresses, klänningar, dress, klänning
+fest, festklänning, festklänningar
+
+leather jackets, läderjackor, leather jacket, leatherjacket, leatherjackets, läderjacka, läder jacka, läder jackor, skinnjacka, skinnjackor, skinn jacka, skinn jackor, skinnpaj
+jackets & coats, jackor & kappor
+jackets, jacket, jackor, jacka
+coats, kappor, rockar, kappa, rock, coat
+blazers, kavajer, blazer, kavaj
+denim jackets, jeansjackor, denim jacket, jeans jackor, jeansjacka, jeans jacka
+
+slim, smala
+straight, raka
+bootcut & flare, bootcut & utsvängda, bootcut, boot cut, flare, utsvängda
+
+jewellery, smycken, smycke, jewelry, jewelery
+bracelets, armband, braclets, bracelet, bracelet, arm band
+brooches & pins, broscher & pins, brooches, brooche, pin, pins, broscher, brosch, broch, brocher, nål
+charms, berlocker, charm, berlock
+earrings, örhängen, ear rings, ear-rings, ear-ring, earring, ear ring, örhänge, ör hänge, ör hängen
+necklaces, halsband, necklace, neck lace, neck laces, hals band
+rings, ringar, ring
+
+jumpers & cardigans, tröjor & koftor
+cardigans & knitwear, koftor & stickat, jumpers, jumper, knitwear, knitted, cardigans, cardigan, koftor, kofta, stickad, stickat
+sweatshirts, tröjor, sweatshirt, sweat shirt, sweat shirts, tröja
+polo, polotröja, polo tröja, turtle neck
+
+jumpsuits, jump suits, jump suit, jumpsuit, one piece, onepiece, one-piece
+
+lingerie & nightwear, underkläder & nattplagg, lingerie, underkläder
+bras & tops, BH & toppar, bra, bras, top, tops, bh
+panties, trosor, panty, trosa
+sleepwear, nattplagg, nightwear
+socks, strumpor, sock, strumpa
+hosiery, strumpbyxor, strump byxa, strumpbyxa, strump byxor
+
+shoes, skor, sko
+ballerinas, ballerina
+boots, boot, kängor, kängor, booties, stövlar, stövletter
+clogs, träskor, trä skor
+flat, flats
+flip-flops, flip flop, flipp flopp, flip flops, flipp flopps, flipflop, flip-flop
+heeled, med klack, klackskor, klack, heel
+sandals, sandaler, sandal
+sneakers, trainers, jympaskor
+wedges, wedge, kilklack, kil klack
+wellies, gummistövlar, gummi stövlar
+
+skirts, kjol, kjolar, skirt
+
+suits & tailoring, kostymer, suits, tailoring, kostym
+
+swimwear, badkläder
+bikinis, bikinis, bikini
+one-pieces, baddräkter, one piece, baddräkt, bad dräkt, bad dräkter, swim suit, swimsuit
+beach clothing, strandkläder, strand, beach
+
+tops, toppar
+bodies, body
+polos, piké, polo, pikétröja
+shirts & blouses, skjortor & blusar
+shirt, shirts, skjorta, skjortor
+blouse, blouses, blus, blusar
+t-shirts, t-shirt, t shirt, t shirts
+tank-tops, linnen, tank tops, tank-top, tank top, linne
+tunics & caftans, tunikor & kaftaner, tunic, tunics, caftan, caftans, tunika, tunikor, kaftan, kaftaner
+vests, västar, vest, väst
+
+trousers & leggings, byxor & leggings, trouser, trousers, legging, leggings, byxor, byxa, underdel, underdelar
+
+
+# MAN
+
+accessories, accessoarer, accesoarer, acessoarer, assessoarer, assesoarer, accesoar, acessoar, assessoar, assesoar, accessoar, accessory
+belts, skärp, bälten, bälte, belt
+bow ties & plastrons, flugor & plastronger, bow ties, bow tie, bow-tie, bow-ties, plastron, plastrons, flugor, fluga, plastrong, plastronger
+credit card holder, kreditkortshållare, credit card, card holder, kreditkort, kredit kort, kredit kort hållare, kredit kort fodral, kreditkortsfodral, kortfodral
+cufflinks, manschettknappar, cuff links, cuff-links, cufflink, cuff link, cuff-link, manschetter, manschett, manschettknapp, manchett, manchettknapp, manchettknappar, manshett, manshettknapp, manshettknappar
+document holder, dokumenthållare, document, document case, document folder, document bag, dokument, dokumentfodral, dokumentväska
+gloves, handskar, glove, handske, hanske, hanskar
+hats & beanies, Hattar & mössor, hat, hats, beanie, cap, caps, hatt, mössa, hattar, mössor, kepsar, keps
+key holders, nyckelringar, key holder, key ring, keyring, keyholder, nyckel ring, nyckelring
+pocket chains, kedjor, chain, chains, kedja
+pocket squares, näsdukar, handkerchief, handkerchiefs, pocket square, näsduk, näs duk, näs dukar,  scarves, halsdukar & scarfs, halsduk, halsdukar, scarf, skarf, scarves, scarf, foulard
+sunglasses, solglasögon, glasses, glasögon
+suspenders, hängslen
+tie clips, sliphållare, slipsnål, tie-clip, tie-clips, tie clip, slips nål, slips hållare
+ties, slipsar, tie, slips
+wallets, plånböcker, wallet, plånbok, plånböcker
+watches, klockor, watch, klocka, armbandsur
+
+bags, väskor
+backpack, ryggsäck, back pack, rygg säck
+briefcases, portföljer, briefcase, brief case, portfölj, brief-case, brief-cases
+cross body, messenger, crossbody, cross-body
+toiletry bags, necessär, toiletry bag, toilet bag, necessärer, necessaire
+laptop bags, datorväskor, laptopbag, laptopbags, laptop bag, laptopcases, datorväska, dator väska, dator väska, dator
+luggage, resväskor, travel bag, travelbag, travel bags, resväska, res väska, reseväska, reseväskor
+sport & duffel bags, sport- och duffelväskor, sport bag, sportbag, sport bags, sports bag, sports bags, sportsbag, sportsbags, duffel, duffel bag, duffel bags, duffelbag, sportväska, sportväskor, sport väska, sport väskor, sportbag, sport bag, duffelväska, duffelväskor, duffel väska, duffel väskor
+
+Jackets & coats, jackor & rockar
+jackets, jacket, jackor, jacka
+coats, rockar, coat, rock, kappa, kappor
+leather jackets, läderjackor, leather jacket, läderjacka, läder jackor, läder jacka
+denim jackets, jeansjackor, denim jacket, denim-jackets, denim-jackets, jeansjacka, jeans jacka, jeans jackor
+
+jewellery, smycken, smycke, jewelry, jewelery
+bracelets, armband, braclets, bracelet, bracelet, arm band
+earrings, örhängen, ear rings, ear-rings, ear-ring, earring, ear ring, örhänge, ör hänge, ör hängen
+neck chain, halsband, necklaces, necklace, neck lace, neck laces, hals band
+
+rings, ringar, ring
+
+jumpers & cardigans, tröjor & koftor
+cardigans & knitwear, koftor & stickat, jumpers, jumper, knitwear, knitted, cardigans, cardigan, koftor, kofta, stickad, stickat
+sweatshirts, tröjor, sweatshirt, sweat shirt, sweat shirts, tröja, luvtröja, luvtröjor
+polo, polotröja, polo tröja, turtle neck
+
+underwear & nightwear, underkläder & nattplagg, underkläder
+briefs, kalsonger, kalsong
+sleepwear, nattplagg, pyjamas, pjamas
+socks, strumpor, sock, strumpa
+
+shirts, shirt, skjorta, skjortor
+
+shoes, skor
+boat shoes, seglarskor, seglar skor
+boots, kängor
+flip-flops, flip flop, flipp flopp, flip flops, flipp flopps, flipflop, flip-flop
+sandals, sandaler, sandal
+smart shoes, finskor, lågskor, fin skor, låg skor
+sneakers, trainers, jympaskor
+clogs, träskor, trä skor
+wellies, gummistövlar, gummi stövlar
+
+suits & tailoring, kostymer & kavajer
+suits, kostymer, suit, kostym
+blazers, kavajer, blazer, kavaj
+
+swimwear, badkläder, swim wear, badshorts, bad kläder, bad shorts, surfshorts, surf shorts
+
+trousers & chinos, byxor & chinos, trousers, chinos, trouser, byxor, brallor
+
+t-shirts, polos & tank tops, T-shirts, piké och linnen
+t-shirts, t-shirt, t shirt, tshirt, t shirts, tshirts
+polo shirts, piké, polo shirt, polo, pikétröja, pike, piketröja, pike tröja, pikétröja
+tank tops, linnen, tank-tops, tank top, tank-top, linne

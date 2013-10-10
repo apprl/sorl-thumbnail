@@ -4,6 +4,7 @@ import re
 import os.path
 from fabric.api import *
 from fabric.contrib.files import upload_template
+from fabtools.require.files import file as require_file
 from os import environ
 
 # globals
@@ -12,8 +13,6 @@ env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'mysql' # mysql or postgresql
 
 env.solr_url = 'http://apache.mirrors.spacedump.net/lucene/solr/4.5.0/solr-4.5.0.tgz'
-env.solr_tgz = os.path.basename(env.solr_url)
-env.solr_dir = re.sub(r'\.tgz$', '', env.solr_tgz)
 
 # environments
 
@@ -99,7 +98,7 @@ def setup_data_server():
     sudo('mkdir -p %(path)s; chown %(user)s:%(group)s %(path)s;' % env, pty=True)
 
     install_solr()
-    update_config_solr(restart=False)
+    deploy_solr()
     start_solr()
 
 
@@ -450,14 +449,20 @@ def manage_py(command):
 #
 
 def install_solr():
-    if os.path.exists(env.solr_tgz):
-        puts('{0} already exists'.format(env.solr_tgz))
-    else:
-        local('wget {0}'.format(env.solr_url))
+    solr_tgz = os.path.basename(env.solr_url)
+    solr_dirname, _ = os.path.splitext(solr_tgz)
 
-    put(env.solr_tgz, os.path.join(env.path, env.solr_tgz))
+    require_file(url=env.solr_url, path=os.path.join(env.path, solr_tgz))
+
     with cd(env.path):
-        run('tar xf {0}'.format(env.solr_tgz))
+        currency_path = os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
+        with settings(warn_only=True):
+            run('cp {0} currency.xml.bak'.format(currency_path))
+        run('tar xf {0}'.format(solr_tgz))
+        run('rsync -a --remove-source-files {0}/ solr'.format(solr_dirname))
+        run('rm -r {0}'.format(solr_dirname))
+        with settings(warn_only=True):
+            run('mv currency.xml.bak {0}'.format(currency_path))
 
     copy_upstart_solr()
 
@@ -465,7 +470,7 @@ def install_solr():
 def copy_upstart_solr():
     context = {'user': env.user,
                'group': env.user,
-               'path': os.path.join(env.path, env.solr_dir, 'example')}
+               'path': os.path.join(env.path, 'solr', 'example')}
     upload_template(filename='etc/solr.upstart', destination='/etc/init/solr.conf', context=context, use_sudo=True, use_jinja=True)
 
 
@@ -488,11 +493,13 @@ def stop_solr():
     sudo('service solr stop')
 
 
-def update_config_solr(restart=True):
-    put('etc/solr-solrconfig.xml', os.path.join(env.path, env.solr_dir, 'example', 'solr', 'collection1', 'conf', 'solrconfig.xml'))
-    put('etc/solr-schema.xml', os.path.join(env.path, env.solr_dir, 'example', 'solr', 'collection1', 'conf', 'schema.xml'))
-    put('etc/solr.properties', os.path.join(env.path, env.solr_dir, 'example', 'solr', 'collection1', 'core.properties'))
-    copy_upstart_solr()
+def deploy_solr(restart=False):
+    put('etc/solr-solrconfig.xml', os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'conf', 'solrconfig.xml'))
+    put('etc/solr-schema.xml', os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'conf', 'schema.xml'))
+    put('etc/solr-synonyms.txt', os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'conf', 'synonyms.txt'))
+    put('etc/solr.properties', os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'core.properties'))
+
+    run('wget -O - http://localhost:8983/solr/admin/cores?action=RELOAD')
 
     if restart:
         restart_solr()

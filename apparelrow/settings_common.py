@@ -447,7 +447,12 @@ GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT = 'UA-21990268-2'
 GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN = 'apprl.com'
 
 # SOLR COMMON
-SOLR_RELOAD_URL = 'http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1'
+#SOLR_HOSTNAME = 'data1.apprl.com'
+SOLR_HOSTNAME = '146.185.137.189'
+SOLR_SSH_STRING = 'deploy@{0}'.format(SOLR_HOSTNAME)
+SOLR_BASE_DIR = os.path.join('/home', 'deploy', 'apparelrow', 'solr')
+SOLR_CONFIG_FILE_CURRENCY = os.path.join(SOLR_BASE_DIR, 'example', 'solr', 'collection1', 'conf', 'currency.xml')
+SOLR_RELOAD_URL = 'http://{0}:8983/solr/admin/cores?action=RELOAD&core=collection1'.format(SOLR_HOSTNAME)
 
 # DASHBOARD
 APPAREL_DASHBOARD_CUT_DEFAULT = '0.67'

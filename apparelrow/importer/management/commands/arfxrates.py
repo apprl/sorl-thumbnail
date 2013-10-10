@@ -3,6 +3,7 @@ import datetime
 import sys
 import urllib2
 import logging
+import subprocess
 from optparse import make_option
 from xml.etree import ElementTree
 from xml.etree.cElementTree import Element, SubElement
@@ -165,6 +166,14 @@ class Command(BaseCommand):
 
         rough_string = ElementTree.tostring(root_element, 'utf-8')
         reparsed = minidom.parseString(rough_string)
+
+        p = subprocess.Popen(['ssh', settings.SOLR_SSH_STRING, 'cat - > {0}'.format(settings.SOLR_CONFIG_FILE_CURRENCY)], stdin=subprocess.PIPE)
+        p.stdin.write(reparsed.toprettyxml(indent='  '))
+        p.stdin.close()
+        p.wait()
+        if p.returncode != 0:
+            raise Exception('Could not find path to file: {0}'.format(settings.SOLR_CONFIG_FILE_CURRENCY))
+
         with open(settings.SOLR_CURRENCY_FILE, 'w') as f:
             f.write(reparsed.toprettyxml(indent='  '))
 
