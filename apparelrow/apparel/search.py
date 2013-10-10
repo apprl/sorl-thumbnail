@@ -47,7 +47,7 @@ def more_like_this_product(body, gender, limit):
     kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit}
     kwargs['stream.body'] = body
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     result = connection.more_like_this('', mlt_fields, **kwargs)
     return result
 
@@ -78,7 +78,7 @@ def more_alternatives(product, limit):
     #kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (product_gender,)],
               #'rows': limit}
     #mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
-    #connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    #connection = Solr(settings.SOLR_URL)
     #result = connection.more_like_this('id:apparel.product.%s' % (product_id,), mlt_fields, **kwargs)
     #return result
 
@@ -122,7 +122,7 @@ class ApparelSearch(object):
     def _get_results(self, update=False):
         if self._result is None or update:
             if self.connection is None:
-                self.connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+                self.connection = Solr(settings.SOLR_URL)
             self._result = self.connection.search(self.query_string, **self.data)
             self._result.docs = [ResultContainer(**element) for element in self._result.docs]
 
@@ -158,7 +158,7 @@ class ApparelSearch(object):
         return self._get_results()[k]
 
 def clean_index(app_label=None, module_name=None):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
 
     if app_label and module_name:
         connection.delete(q=('django_ct:%s.%s' % (app_label, module_name)))
@@ -182,7 +182,7 @@ def product_save(instance, **kwargs):
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
-        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        connection = Solr(settings.SOLR_URL)
 
     document, boost = get_product_document(instance)
 
@@ -198,7 +198,7 @@ def product_save(instance, **kwargs):
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_delete')
 def product_delete(instance, **kwargs):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
 @receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
@@ -211,7 +211,7 @@ def product_like_delete(instance, **kwargs):
     product_save(instance.product)
 
 def rebuild_product_index():
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     product_count = 0
 
     for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False,
@@ -353,18 +353,18 @@ def look_save(instance, **kwargs):
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
-        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        connection = Solr(settings.SOLR_URL)
 
     document, boost = get_look_document(instance)
     connection.add([document], commit=False, boost=boost, commitWithin=False)
 
 @receiver(post_delete, sender=Look, dispatch_uid='look_delete')
 def look_delete(instance, **kwargs):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
 def rebuild_look_index():
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     look_count = 0
     for look in get_model('apparel', 'Look').objects.iterator():
         look_save(look, solr=connection)
@@ -401,7 +401,7 @@ def search_index_user_save(instance, **kwargs):
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
-        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        connection = Solr(settings.SOLR_URL)
 
     if not instance.is_brand:
         document, boost = get_profile_document(instance)
@@ -409,11 +409,11 @@ def search_index_user_save(instance, **kwargs):
 
 @receiver(post_delete, sender=get_user_model(), dispatch_uid='search_index_user_delete')
 def search_index_user_delete(instance, **kwargs):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
 def rebuild_user_index():
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     user_count = 0
     for user in get_user_model().objects.filter(is_brand=False).iterator():
         search_index_user_save(user, solr=connection)

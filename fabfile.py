@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import with_statement # needed for python 2.5
+import re
+import os.path
 from fabric.api import *
 from fabric.contrib.files import upload_template
 from os import environ
@@ -10,12 +11,17 @@ env.project_name = 'apparelrow' # no spaces!
 env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'mysql' # mysql or postgresql
 
+env.solr_url = 'http://apache.mirrors.spacedump.net/lucene/solr/4.5.0/solr-4.5.0.tgz'
+env.solr_tgz = os.path.basename(env.solr_url)
+env.solr_dir = re.sub(r'\.tgz$', '', env.solr_tgz)
+
 # environments
 
 def localhost():
     "Use the local virtual server"
     env.hosts = ['localhost']
-    env.user = 'linus'
+    env.user = 'tote'
+    env.group = env.user
     env.path = '/home/%(user)s/development/projects/%(project_name)s' % env
 
 def demo():
@@ -50,6 +56,12 @@ def prod_db():
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
 
+def production_data():
+    env.hosts = ['146.185.137.189']
+    env.user = 'deploy'
+    env.group = env.user
+    env.path = '/home/%(user)s/%(project_name)s' % env
+
 def staging():
     env.hosts = ['ec2-176-34-85-220.eu-west-1.compute.amazonaws.com']
     env.hostname = 'staging1'
@@ -71,6 +83,25 @@ def staging():
 def test():
     "Run the test suite and bail out if it fails"
     local("cd %(path)s; python manage.py test" % env)
+
+
+def setup_data_server():
+    """
+    Setup a data server with both Apache Solr and PostgreSQL.
+    """
+    require('hosts', provided_by=[production_data])
+    require('path')
+
+    sudo('apt-get update')
+    sudo('apt-get install -y openjdk-6-jre-headless')
+    #sudo('apt-get install -y postgresql-9.1 postgresql-client-9.1 postgresql-common postgresql-contrib-9.1')
+
+    sudo('mkdir -p %(path)s; chown %(user)s:%(group)s %(path)s;' % env, pty=True)
+
+    install_solr()
+    update_config_solr(restart=False)
+    start_solr()
+
 
 def setup_db():
     """
@@ -385,10 +416,6 @@ def restart_gunicorn():
     with cd(env.path):
         sudo('./bin/gunicorn-server', pty=False, user=env.run_user)
 
-def restart_solr():
-    with settings(warn_only=True):
-        sudo('restart solr', pty=False)
-
 def restart_celeryd():
     sudo('/etc/init.d/celeryd restart', pty=False)
 
@@ -416,3 +443,56 @@ def manage_py(command):
     env.manage_py_command = command
     with cd('%(path)s/releases/current/%(project_name)s' % env):
         sudo('%(path)s/bin/python ../manage.py %(manage_py_command)s' % env, pty=True, user=env.run_user)
+
+
+#
+# Solr commands
+#
+
+def install_solr():
+    if os.path.exists(env.solr_tgz):
+        puts('{0} already exists'.format(env.solr_tgz))
+    else:
+        local('wget {0}'.format(env.solr_url))
+
+    put(env.solr_tgz, os.path.join(env.path, env.solr_tgz))
+    with cd(env.path):
+        run('tar xf {0}'.format(env.solr_tgz))
+
+    copy_upstart_solr()
+
+
+def copy_upstart_solr():
+    context = {'user': env.user,
+               'group': env.user,
+               'path': os.path.join(env.path, env.solr_dir, 'example')}
+    upload_template(filename='etc/solr.upstart', destination='/etc/init/solr.conf', context=context, use_sudo=True, use_jinja=True)
+
+
+def status_solr():
+    sudo('service solr status')
+    run('wget -O - http://localhost:8983/solr/admin/cores?action=STATUS')
+
+
+def restart_solr():
+    with settings(warn_only=True):
+        sudo('service solr restart')
+
+
+def start_solr():
+    if not 'running' in sudo('service solr status'):
+        sudo('service solr start')
+
+
+def stop_solr():
+    sudo('service solr stop')
+
+
+def update_config_solr(restart=True):
+    put('etc/solr-solrconfig.xml', os.path.join(env.path, env.solr_dir, 'example', 'solr', 'collection1', 'conf', 'solrconfig.xml'))
+    put('etc/solr-schema.xml', os.path.join(env.path, env.solr_dir, 'example', 'solr', 'collection1', 'conf', 'schema.xml'))
+    put('etc/solr.properties', os.path.join(env.path, env.solr_dir, 'example', 'solr', 'collection1', 'core.properties'))
+    copy_upstart_solr()
+
+    if restart:
+        restart_solr()
