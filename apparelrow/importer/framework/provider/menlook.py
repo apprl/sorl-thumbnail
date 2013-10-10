@@ -44,7 +44,7 @@ class MenlookMapper(DataMapper):
 
     def get_image_url(self):
         image_url = self.record.get('image link', '')
-        image_url = image_url.replace('?sw=460', '')
+        image_url = image_url.split('?', 1)[0]
         return  [(image_url, self.IMAGE_MEDIUM)]
 
     def get_price(self):
