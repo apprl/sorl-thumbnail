@@ -538,6 +538,7 @@ class API(object):
         except TypeError, AttributeError:
             raise IncompleteDataSet('image-url', '[%s] is not a string' % (smart_str(url),))
 
+        ext = ext.split('?', 1)[0]
         brand_name = self.manufacturer or self.dataset['product']['manufacturer']
 
         return '%s/%s/%s/%s__%s%s' % (
