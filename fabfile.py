@@ -56,7 +56,7 @@ def prod_db():
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
 
 def production_data():
-    env.hosts = ['146.185.137.189']
+    env.hosts = ['data1.apprl.com']
     env.user = 'deploy'
     env.group = env.user
     env.path = '/home/%(user)s/%(project_name)s' % env

@@ -452,7 +452,8 @@ SOLR_HOSTNAME = '146.185.137.189'
 SOLR_SSH_STRING = 'deploy@{0}'.format(SOLR_HOSTNAME)
 SOLR_BASE_DIR = os.path.join('/home', 'deploy', 'apparelrow', 'solr')
 SOLR_CONFIG_FILE_CURRENCY = os.path.join(SOLR_BASE_DIR, 'example', 'solr', 'collection1', 'conf', 'currency.xml')
-SOLR_RELOAD_URL = 'http://{0}:8983/solr/admin/cores?action=RELOAD&core=collection1'.format(SOLR_HOSTNAME)
+#SOLR_RELOAD_URL = 'http://{0}:8983/solr/admin/cores?action=RELOAD&core=collection1'.format(SOLR_HOSTNAME)
+SOLR_RELOAD_URL = 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=collection1'.format(SOLR_HOSTNAME)
 
 # DASHBOARD
 APPAREL_DASHBOARD_CUT_DEFAULT = '0.67'
