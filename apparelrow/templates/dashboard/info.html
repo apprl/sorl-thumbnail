@@ -25,7 +25,6 @@
     </div>
     <div class="col-sm-9">
 
-        <h2>{% trans "How it works" %}</h2>
         {% if not request.user.is_partner %}
         <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PUBLISHER HERE" %}</a></p>
         {% endif %}
@@ -68,15 +67,15 @@
         <p>{% trans "It’s super easy to create an APPRL-shop for your blog/site. Just click the “CREATE A SHOP ON YOUR SITE”-button on your profile page and follow instructions to choose the width, height and language for your shop." %}</p>
         <img class="img-responsive" src="{% static "images/dashboard_create_shop_"|add:LANGUAGE_CODE|add:".png" %}">
         <p>{% trans "You may then embed your store on your site, for example by creating a new page on your blog. You will make money on every person that clicks and buys a product from your shop." %}</p>
-        <img class="img-responsive" style="width: 691px;" src="{% static "images/dashboard_shop_"|add:LANGUAGE_CODE|add:".png" %}">
+        <img class="img-responsive" src="{% static "images/dashboard_shop_"|add:LANGUAGE_CODE|add:".png" %}">
 
         <h4 id="brands">{% trans "Our stores & brands" %}</h4>
         <p>{% trans "You’ll find all the products from leading international online retailers & brands at Apprl, for you to link to, create looks from and share." %}<br><a href="mailto:info@apprl.com?subject={% trans "I would like to suggest a store/brand..." %}">{% trans "If you’re missing a store let us know!" %}</a></p>
-        <img class="img-responsive" src="{% static "images/dashboard_stores.png" %}">
+        <img class="img-responsive" src="{% static "images/dashboard_stores_"|add:LANGUAGE_CODE|add:".png" %}">
 
         <h4 id="statistics">{% trans "Your statistics" %}</h4>
         <p>{% trans "You will be able to follow how much you’re making day by day." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_statistics.png" %}">
+        <img class="img-responsive" src="{% static "images/dashboard_statistics_"|add:LANGUAGE_CODE|add:".png" %}">
 
         {% if not request.user.is_partner %}
         <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PUBLISHER HERE" %}</a></p>
