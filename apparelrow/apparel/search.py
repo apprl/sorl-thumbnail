@@ -283,13 +283,7 @@ def get_product_document(instance):
         category_ids, category_en_names, category_sv_names = zip(*category_data)
         category_names = ' '.join(category_en_names + category_sv_names)
 
-        user_likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', flat=True))
-
-        likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', 'modified'))
-        user_likes = [x[0] for x in likes]
-
         has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
-
         template_browse = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks})
         template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
 
@@ -340,8 +334,9 @@ def get_product_document(instance):
         # Dates
         document['created'] = instance.date_added
 
-        # Users
-        document['user_likes'] = user_likes
+        # Users and likes
+        likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', 'modified'))
+        document['user_likes'] = [x[0] for x in likes]
         for x in likes:
             document['%s_uld' % (x[0],)] = x[1]
 
