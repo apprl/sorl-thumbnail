@@ -2,6 +2,7 @@ import json
 import decimal
 import logging
 import re
+import collections
 
 from django.conf import settings
 from django.shortcuts import render
@@ -157,8 +158,8 @@ class ApparelSearch(object):
 
         return self._get_results()[k]
 
-def clean_index(app_label=None, module_name=None):
-    connection = Solr(settings.SOLR_URL)
+def clean_index(app_label=None, module_name=None, url=None):
+    connection = Solr(url or settings.SOLR_URL)
 
     if app_label and module_name:
         connection.delete(q=('django_ct:%s.%s' % (app_label, module_name)))
@@ -210,19 +211,34 @@ def product_like_save(instance, **kwargs):
 def product_like_delete(instance, **kwargs):
     product_save(instance.product)
 
-def rebuild_product_index():
-    connection = Solr(settings.SOLR_URL)
-    product_count = 0
 
-    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False,
-                                                                  likes__active=True) \
-                                                          .order_by('-modified'):
-        product_save(product, solr=connection)
-        product_count = product_count + 1
+def rebuild_product_index(url=None):
+    connection = Solr(url or settings.SOLR_URL)
+    product_count = 0
+    product_buffer = collections.deque()
+
+    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified').iterator():
+        document, boost = get_product_document(product)
+        if document is not None and document['published']:
+            product_buffer.append(document)
+            if len(product_buffer) == 100:
+                connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
+                product_buffer.clear()
 
     for product in get_model('apparel', 'Product').valid_objects.iterator():
-        product_save(product, solr=connection)
-        product_count = product_count + 1
+        document, boost = get_product_document(product)
+        if document is not None and document['published']:
+            product_buffer.append(document)
+            if len(product_buffer) == 100:
+                connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
+                product_buffer.clear()
+
+            product_count = product_count + 1
+        else:
+            connection.delete(id='%s.%s.%s' % (product._meta.app_label, product._meta.module_name, product.pk), commit=False)
+
+    connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
+    connection.commit()
 
     return product_count
 
@@ -363,14 +379,26 @@ def look_delete(instance, **kwargs):
     connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
-def rebuild_look_index():
-    connection = Solr(settings.SOLR_URL)
+
+def rebuild_look_index(url=None):
+    connection = Solr(url or settings.SOLR_URL)
     look_count = 0
+    look_buffer = collections.deque()
+
     for look in get_model('apparel', 'Look').objects.iterator():
-        look_save(look, solr=connection)
+        document, boost = get_look_document(look)
+        look_buffer.append(document)
+        if len(look_buffer) == 100:
+            connection.add(list(look_buffer), commit=False, boost=boost, commitWithin=False)
+            look_buffer.clear()
+
         look_count = look_count + 1
 
+    connection.add(list(look_buffer), commit=False, boost=boost, commitWithin=False)
+    connection.commit()
+
     return look_count
+
 
 def get_look_document(instance):
     boost = {}
@@ -412,12 +440,22 @@ def search_index_user_delete(instance, **kwargs):
     connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
-def rebuild_user_index():
-    connection = Solr(settings.SOLR_URL)
+def rebuild_user_index(url=None):
+    connection = Solr(url or settings.SOLR_URL)
     user_count = 0
+    user_buffer = collections.deque()
+
     for user in get_user_model().objects.filter(is_brand=False).iterator():
-        search_index_user_save(user, solr=connection)
+        document, boost = get_profile_document(user)
+        user_buffer.append(document)
+        if len(user_buffer) == 100:
+            connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
+            user_buffer.clear()
+
         user_count = user_count + 1
+
+    connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
+    connection.commit()
 
     return user_count
 
