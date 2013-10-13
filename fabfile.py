@@ -3,7 +3,7 @@
 import re
 import os.path
 from fabric.api import *
-from fabric.contrib.files import upload_template
+from fabric.contrib.files import upload_template, exists
 from fabtools.require.files import file as require_file
 from os import environ
 
@@ -301,10 +301,6 @@ def copy_solr():
         sudo('chown --silent -R %(run_user)s:%(run_group)s ./solr' % env, pty=True)
         sudo('touch ./solr/solr/collection1/conf/synonyms.txt', user=env.run_user, pty=True)
 
-    # Make sure currency.xml is created for solr
-    with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
-        sudo('%(path)s/bin/python ../manage.py arfxrates --no_update --solr' % env, pty=True, user=env.run_user)
-
 def copy_config():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
@@ -498,7 +494,7 @@ def stop_solr():
     sudo('service solr stop')
 
 
-def deploy_solr(restart=False):
+def deploy_solr():
     require('solr_path')
 
     put('etc/solr-solrconfig.xml', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'solrconfig.xml'))
@@ -506,8 +502,9 @@ def deploy_solr(restart=False):
     put('etc/solr-synonyms.txt', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'synonyms.txt'))
     put('etc/solr.properties', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'core.properties'))
 
-    with settings(warn_only=True):
-        run('wget -O - http://localhost:8983/solr/admin/cores?action=RELOAD')
+    currency_path = os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'currency.xml')
+    if not exists(currency_path):
+        put('etc/solr-currency.xml', currency_path)
 
-    if restart:
-        restart_solr()
+    if not 'running' in run('service solr status'):
+        run('wget -O - http://localhost:8983/solr/admin/cores?action=RELOAD')
