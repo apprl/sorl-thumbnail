@@ -19,5 +19,5 @@ setgid {{ group }}
 
 script
     cd {{ path }}
-    exec java -jar start.jar
+    exec java -jar {{ path }}/start.jar
 end script

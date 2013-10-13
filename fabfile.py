@@ -317,7 +317,6 @@ def copy_config():
     sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
     upload_template('etc/availability.cron', '/etc/cron.weekly/availability', context=env, use_sudo=True)
     sudo('chmod a+x /etc/cron.weekly/availability', pty=True)
-    upload_template('etc/solr.conf.init', '/etc/init/solr.conf', context=env, use_sudo=True)
     upload_template('etc/celeryd.default', '/etc/default/celeryd', context=env, use_sudo=True)
     sudo('update-rc.d celeryd defaults', pty=True)
     upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
