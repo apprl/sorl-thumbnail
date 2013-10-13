@@ -470,7 +470,7 @@ def copy_upstart_solr():
 
 
 def status_solr():
-    sudo('service solr status')
+    run('service solr status')
     run('wget -O - http://localhost:8983/solr/admin/cores?action=STATUS')
 
 
@@ -480,7 +480,7 @@ def restart_solr():
 
 
 def start_solr():
-    if not 'running' in sudo('service solr status'):
+    if not 'running' in run('service solr status'):
         sudo('service solr start')
 
 
