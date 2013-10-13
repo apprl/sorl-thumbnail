@@ -455,9 +455,18 @@ def install_solr():
     require_file(url=env.solr_url, path=os.path.join(env.solr_path, solr_tgz))
 
     with cd(env.solr_path):
+        currency_path = os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
+        currency_path_exists = False
+        if exists(currency_path):
+            run('cp {0} currency.xml.bak'.format(currency_path))
+            currency_path_exists = True
+
         run('tar xf {0}'.format(solr_tgz))
         run('rsync -a --remove-source-files {0}/ solr'.format(solr_dirname))
         run('rm -r {0}'.format(solr_dirname))
+
+        if currency_path_exists:
+            run('mv currency.xml.bak {0}'.format(currency_path))
 
     copy_upstart_solr()
 
@@ -496,7 +505,7 @@ def deploy_solr():
     put('etc/solr-synonyms.txt', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'synonyms.txt'))
     put('etc/solr.properties', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'core.properties'))
 
-    currency_path = os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'currency.xml')
+    currency_path = os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
     if not exists(currency_path):
         put('etc/solr-currency.xml', currency_path)
 
