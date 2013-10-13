@@ -30,13 +30,14 @@ APPAREL_DECOMPRESS_UTILS = {
 CACHE_MIDDLEWARE_KEY_PREFIX = 'ar'
 CACHE_MIDDLEWARE_SECONDS = 120
 
-SOLR_URL = 'http://127.0.0.1:8983/solr'
-#SOLR_CURRENCY_LOCAL = False
-#SOLR_SSH_STRING = 'deploy@data1.apprl.com'
-#SOLR_CURRENCY_FILE = os.path.join('/home', 'deploy', 'solr', 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
-SOLR_CONF_DIRECTORY = os.path.join(PROJECT_ROOT, '..', '..', '..', 'solr', 'solr', 'collection1', 'conf')
-SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
-SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')
+SOLR_URL = 'http://data1.apprl.com'
+SOLR_CURRENCY_LOCAL = False
+SOLR_SSH_STRING = 'deploy@data1.apprl.com'
+SOLR_CURRENCY_FILE = os.path.join('/home', 'deploy', 'solr', 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
+#SOLR_URL = 'http://127.0.0.1:8983/solr'
+#SOLR_CONF_DIRECTORY = os.path.join(PROJECT_ROOT, '..', '..', '..', 'solr', 'solr', 'collection1', 'conf')
+#SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
+#SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')
 
 BROKER_URL = "redis://localhost:6380/0"
 CELERY_RESULT_BACKEND = "redis"
