@@ -689,6 +689,11 @@ function updateTranslations() {
     var $productList = $('#product-list');
     $productList.find('.looks').text(gettext('See looks »'));
     $productList.find('.sold-out').text(gettext('SOLD OUT'));
+    $productList.find('a[href^="/en"]').each(function(i, element) {
+        var element = $(element),
+            href = element.attr('href');
+        element.attr('href', href.replace('en', language_code));
+    });
 }
 
 function renderProducts(products) {
