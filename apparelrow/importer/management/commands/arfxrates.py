@@ -171,7 +171,7 @@ class Command(BaseCommand):
             with open(settings.SOLR_CURRENCY_FILE, 'w') as f:
                 f.write(reparsed.toprettyxml(indent='  '))
         else:
-            p = subprocess.Popen(['ssh', settings.SOLR_SSH_STRING, 'cat - > {0}'.format(settings.SOLR_CURRENCY_FILE)], stdin=subprocess.PIPE)
+            p = subprocess.Popen(['ssh', '-o', 'UserKnownHostsFile=/home/deploy/www-data-ssh/known_hosts', '-i', '/home/deploy/www-data-ssh/id_rsa', settings.SOLR_SSH_STRING, 'cat - > {0}'.format(settings.SOLR_CURRENCY_FILE)], stdin=subprocess.PIPE)
             p.stdin.write(reparsed.toprettyxml(indent='  '))
             p.stdin.close()
             p.wait()
