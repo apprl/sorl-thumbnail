@@ -45,7 +45,7 @@ class ResultContainer:
         self.__dict__.update(entries)
 
 def more_like_this_product(body, gender, limit):
-    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit}
+    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
     connection = Solr(settings.SOLR_URL)
@@ -56,7 +56,7 @@ def more_alternatives(product, limit):
     colors_pk = list(map(str, product.colors_pk))
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(translation.get_language(), settings.APPAREL_BASE_CURRENCY)
     query_arguments = {'rows': limit, 'start': 0,
-                       'fl': 'template_mlt',
+                       'fl': 'image_small,slug',
                        'sort': 'price asc, popularity desc, created desc'}
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
     query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
@@ -285,7 +285,6 @@ def get_product_document(instance):
 
         has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
         template_browse = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks})
-        template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
 
         document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
         document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
@@ -314,7 +313,6 @@ def get_product_document(instance):
 
         # Templates and stored fields
         document['template'] = template_browse
-        document['template_mlt'] = template_mlt
         document['slug'] = instance.slug
         document['stored_price'] = '%s,%s' % (stored_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['stored_discount'] = '%s,%s' % (stored_discount.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)

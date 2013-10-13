@@ -131,7 +131,7 @@
 
     <!-- Stored templates and fields -->
     <field name="template" type="string" indexed="false" stored="true" multiValued="false"/>
-    <field name="template_mlt" type="string" indexed="false" stored="true" multiValued="false"/>
+    <field name="template_mlt" type="string" indexed="false" stored="true" multiValued="false"/> <!-- TODO: remove later -->
     <field name="stored_price" type="currency" indexed="false" stored="true" multiValued="false"/>
     <field name="stored_discount" type="currency" indexed="false" stored="true" multiValued="false"/>
     <field name="slug" type="string" indexed="false" stored="true" multiValued="false"/>
