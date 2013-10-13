@@ -12,7 +12,8 @@ env.project_name = 'apparelrow' # no spaces!
 env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'mysql' # mysql or postgresql
 
-env.solr_url = 'http://apache.mirrors.spacedump.net/lucene/solr/4.5.0/solr-4.5.0.tgz'
+#env.solr_url = 'http://apache.mirrors.spacedump.net/lucene/solr/4.5.0/solr-4.5.0.tgz'
+env.solr_url = 'http://apache.cs.uu.nl/dist/lucene/solr/4.5.0/solr-4.5.0.tgz'
 
 # environments
 
@@ -59,7 +60,8 @@ def production_data():
     env.hosts = ['data1.apprl.com']
     env.user = 'deploy'
     env.group = env.user
-    env.path = '/home/%(user)s/%(project_name)s' % env
+    env.path = '/home/{user}/{project_name}'.format(**env)
+    env.solr_path = '/home/{user}/solr'.format(**env)
 
 def staging():
     env.hosts = ['ec2-176-34-85-220.eu-west-1.compute.amazonaws.com']
@@ -69,6 +71,7 @@ def staging():
     env.run_user = 'www-data'
     env.run_group = env.run_user
     env.path = '/mnt/%(project_name)s' % env
+    env.solr_path = '/mnt/solr'
     env.settings = 'staging'
     env.db_client_host = 'localhost'
     env.datadir = '/mnt/mysql'
@@ -88,14 +91,16 @@ def setup_data_server():
     """
     Setup a data server with both Apache Solr and PostgreSQL.
     """
-    require('hosts', provided_by=[production_data])
+    require('hosts', provided_by=[production_data, staging])
     require('path')
+    require('solr_path')
 
     sudo('apt-get update')
     sudo('apt-get install -y openjdk-6-jre-headless')
     #sudo('apt-get install -y postgresql-9.1 postgresql-client-9.1 postgresql-common postgresql-contrib-9.1')
 
-    sudo('mkdir -p %(path)s; chown %(user)s:%(group)s %(path)s;' % env, pty=True)
+    run('mkdir -p {path}'.format(**env))
+    run('mkdir -p {solr_path}'.format(**env))
 
     install_solr()
     deploy_solr()
@@ -452,10 +457,10 @@ def install_solr():
     solr_tgz = os.path.basename(env.solr_url)
     solr_dirname, _ = os.path.splitext(solr_tgz)
 
-    require_file(url=env.solr_url, path=os.path.join(env.path, solr_tgz))
+    require_file(url=env.solr_url, path=os.path.join(env.solr_path, solr_tgz))
 
-    with cd(env.path):
-        currency_path = os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
+    with cd(env.solr_path):
+        currency_path = os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
         with settings(warn_only=True):
             run('cp {0} currency.xml.bak'.format(currency_path))
         run('tar xf {0}'.format(solr_tgz))
@@ -470,7 +475,7 @@ def install_solr():
 def copy_upstart_solr():
     context = {'user': env.user,
                'group': env.user,
-               'path': os.path.join(env.path, 'solr', 'example')}
+               'path': os.path.join(env.solr_path, 'solr', 'example')}
     upload_template(filename='etc/solr.upstart', destination='/etc/init/solr.conf', context=context, use_sudo=True, use_jinja=True)
 
 
@@ -494,12 +499,15 @@ def stop_solr():
 
 
 def deploy_solr(restart=False):
-    put('etc/solr-solrconfig.xml', os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'conf', 'solrconfig.xml'))
-    put('etc/solr-schema.xml', os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'conf', 'schema.xml'))
-    put('etc/solr-synonyms.txt', os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'conf', 'synonyms.txt'))
-    put('etc/solr.properties', os.path.join(env.path, 'solr', 'example', 'solr', 'collection1', 'core.properties'))
+    require('solr_path')
 
-    run('wget -O - http://localhost:8983/solr/admin/cores?action=RELOAD')
+    put('etc/solr-solrconfig.xml', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'solrconfig.xml'))
+    put('etc/solr-schema.xml', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'schema.xml'))
+    put('etc/solr-synonyms.txt', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'synonyms.txt'))
+    put('etc/solr.properties', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'core.properties'))
+
+    with settings(warn_only=True):
+        run('wget -O - http://localhost:8983/solr/admin/cores?action=RELOAD')
 
     if restart:
         restart_solr()
