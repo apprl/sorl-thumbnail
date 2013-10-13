@@ -39,7 +39,7 @@ FACEBOOK_SECRET_KEY = '0e53ad32bdd85a49bb972fa2f6985908'
 #CACHE_MIDDLEWARE_SECONDS = 120
 
 SOLR_URL = 'http://127.0.0.1:8983/solr'
-SOLR_COMMIT_WITHIN = '60000'
+SOLR_RELOAD_URL = 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=collection1'
 SOLR_CONF_DIRECTORY = os.path.join(PROJECT_ROOT, '..', 'solr', 'solr', 'collection1', 'conf')
 SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
 SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')
