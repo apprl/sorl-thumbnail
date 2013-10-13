@@ -218,7 +218,7 @@ def rebuild_product_index(url=None):
     product_buffer = collections.deque()
 
     for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified').iterator():
-        document, boost = get_product_document(product)
+        document, boost = get_product_document(product, rebuild=True)
         if document is not None and document['published']:
             product_buffer.append(document)
             if len(product_buffer) == 100:
@@ -226,7 +226,7 @@ def rebuild_product_index(url=None):
                 product_buffer.clear()
 
     for product in get_model('apparel', 'Product').valid_objects.iterator():
-        document, boost = get_product_document(product)
+        document, boost = get_product_document(product, rebuild=True)
         if document is not None and document['published']:
             product_buffer.append(document)
             if len(product_buffer) == 100:
@@ -242,7 +242,7 @@ def rebuild_product_index(url=None):
 
     return product_count
 
-def get_product_document(instance):
+def get_product_document(instance, rebuild=False):
     document = {
         'id': '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk),
         'django_ct': '%s.%s' % (instance._meta.app_label, instance._meta.module_name),
@@ -306,7 +306,10 @@ def get_product_document(instance):
 
         # Filters
         document['gender'] = instance.gender
-        document['popularity'] = product_popularity(instance)
+        if rebuild:
+            document['popularity'] = instance.popularity
+        else:
+            document['popularity'] = product_popularity(instance)
         document['availability'] = availability
         document['discount'] = discount
         document['published'] = instance.published
