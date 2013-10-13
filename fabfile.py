@@ -455,14 +455,9 @@ def install_solr():
     require_file(url=env.solr_url, path=os.path.join(env.solr_path, solr_tgz))
 
     with cd(env.solr_path):
-        currency_path = os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
-        with settings(warn_only=True):
-            run('cp {0} currency.xml.bak'.format(currency_path))
         run('tar xf {0}'.format(solr_tgz))
         run('rsync -a --remove-source-files {0}/ solr'.format(solr_dirname))
         run('rm -r {0}'.format(solr_dirname))
-        with settings(warn_only=True):
-            run('mv currency.xml.bak {0}'.format(currency_path))
 
     copy_upstart_solr()
 
