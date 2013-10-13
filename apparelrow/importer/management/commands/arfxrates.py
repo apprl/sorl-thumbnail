@@ -171,12 +171,12 @@ class Command(BaseCommand):
             with open(settings.SOLR_CURRENCY_FILE, 'w') as f:
                 f.write(reparsed.toprettyxml(indent='  '))
         else:
-            p = subprocess.Popen(['ssh', settings.SOLR_CURRENCY_SSH_STRING, 'cat - > {0}'.format(settings.SOLR_CURRENCY_FILE)], stdin=subprocess.PIPE)
+            p = subprocess.Popen(['ssh', settings.SOLR_SSH_STRING, 'cat - > {0}'.format(settings.SOLR_CURRENCY_FILE)], stdin=subprocess.PIPE)
             p.stdin.write(reparsed.toprettyxml(indent='  '))
             p.stdin.close()
             p.wait()
             if p.returncode != 0:
-                raise Exception('Could not find path to file {0} on {1}'.format(settings.SOLR_CURRENCY_FILE, settings.SOLR_CURRENCY_SSH_STRING))
+                raise Exception('Could not find path to file {0} on {1}'.format(settings.SOLR_CURRENCY_FILE, settings.SOLR_SSH_STRING))
 
 
         # This try is required because solr might not be running during a
