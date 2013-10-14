@@ -296,6 +296,7 @@ PIPELINE_JS = {
                              'js/vendor/jquery-ui-1.9.2.custom.js',
                              'js/vendor/add2home.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
+                             'js/vendor/detect-mobile.js',
                              'bootstrap/js/transition.js',
                              'bootstrap/js/alert.js',
                              'bootstrap/js/modal.js',

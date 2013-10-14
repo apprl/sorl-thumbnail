@@ -55,7 +55,7 @@
             });
         }
         window.login_function = function(callback) {
-            if ('standalone' in navigator && navigator.standalone) {
+            if (isMobileDevice()) {
                 window.location = 'https://m.facebook.com/dialog/oauth?client_id={{ FACEBOOK_APP_ID }}&response_type=code&redirect_uri={{ FACEBOOK_REDIRECT_URI }}&scope={{ FACEBOOK_SCOPE }}';
             } else {
                 FB.login(function(response) {
