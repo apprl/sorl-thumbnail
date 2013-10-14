@@ -1,5 +1,6 @@
 from django.template import Library
 from django.core.urlresolvers import reverse
+from django.utils.formats import number_format
 
 from apparelrow.apparel.utils import generate_sid
 
@@ -22,3 +23,11 @@ def buy_url(product_id, vendor, target_user_id=0, page='Default'):
 @register.simple_tag
 def get_sid(product_id, target_user_id=0, page='Default'):
     return generate_sid(product_id, target_user_id, page)
+
+
+@register.filter(is_safe=True)
+def custom_intcomma(value):
+    if value:
+        return number_format(value, use_l10n=False, force_grouping=True)
+    else:
+        return ''

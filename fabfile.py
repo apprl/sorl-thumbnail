@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import with_statement # needed for python 2.5
+import re
+import os.path
 from fabric.api import *
-from fabric.contrib.files import upload_template
+from fabric.contrib.files import upload_template, exists
+from fabtools.require.files import file as require_file
 from os import environ
 
 # globals
@@ -10,12 +12,16 @@ env.project_name = 'apparelrow' # no spaces!
 env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'mysql' # mysql or postgresql
 
+#env.solr_url = 'http://apache.mirrors.spacedump.net/lucene/solr/4.5.0/solr-4.5.0.tgz'
+env.solr_url = 'http://apache.cs.uu.nl/dist/lucene/solr/4.5.0/solr-4.5.0.tgz'
+
 # environments
 
 def localhost():
     "Use the local virtual server"
     env.hosts = ['localhost']
-    env.user = 'linus'
+    env.user = 'tote'
+    env.group = env.user
     env.path = '/home/%(user)s/development/projects/%(project_name)s' % env
 
 def demo():
@@ -50,6 +56,13 @@ def prod_db():
     env.datadir = '/mnt/mysql'
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
 
+def production_data():
+    env.hosts = ['data1.apprl.com']
+    env.user = 'deploy'
+    env.group = env.user
+    env.path = '/home/{user}/{project_name}'.format(**env)
+    env.solr_path = '/home/{user}/solr'.format(**env)
+
 def staging():
     env.hosts = ['ec2-176-34-85-220.eu-west-1.compute.amazonaws.com']
     env.hostname = 'staging1'
@@ -58,6 +71,7 @@ def staging():
     env.run_user = 'www-data'
     env.run_group = env.run_user
     env.path = '/mnt/%(project_name)s' % env
+    env.solr_path = '/mnt/solr'
     env.settings = 'staging'
     env.db_client_host = 'localhost'
     env.datadir = '/mnt/mysql'
@@ -71,6 +85,27 @@ def staging():
 def test():
     "Run the test suite and bail out if it fails"
     local("cd %(path)s; python manage.py test" % env)
+
+
+def setup_data_server():
+    """
+    Setup a data server with both Apache Solr and PostgreSQL.
+    """
+    require('hosts', provided_by=[production_data, staging])
+    require('path')
+    require('solr_path')
+
+    sudo('apt-get update')
+    sudo('apt-get install -y openjdk-6-jre-headless')
+    #sudo('apt-get install -y postgresql-9.1 postgresql-client-9.1 postgresql-common postgresql-contrib-9.1')
+
+    run('mkdir -p {path}'.format(**env))
+    run('mkdir -p {solr_path}'.format(**env))
+
+    install_solr()
+    deploy_solr()
+    start_solr()
+
 
 def setup_db():
     """
@@ -266,10 +301,6 @@ def copy_solr():
         sudo('chown --silent -R %(run_user)s:%(run_group)s ./solr' % env, pty=True)
         sudo('touch ./solr/solr/collection1/conf/synonyms.txt', user=env.run_user, pty=True)
 
-    # Make sure currency.xml is created for solr
-    with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
-        sudo('%(path)s/bin/python ../manage.py arfxrates --no_update --solr' % env, pty=True, user=env.run_user)
-
 def copy_config():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
@@ -286,7 +317,6 @@ def copy_config():
     sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
     upload_template('etc/availability.cron', '/etc/cron.weekly/availability', context=env, use_sudo=True)
     sudo('chmod a+x /etc/cron.weekly/availability', pty=True)
-    upload_template('etc/solr.conf.init', '/etc/init/solr.conf', context=env, use_sudo=True)
     upload_template('etc/celeryd.default', '/etc/default/celeryd', context=env, use_sudo=True)
     sudo('update-rc.d celeryd defaults', pty=True)
     upload_template('etc/redis.init', '/etc/init/redis.conf', context=env, use_sudo=True)
@@ -385,10 +415,6 @@ def restart_gunicorn():
     with cd(env.path):
         sudo('./bin/gunicorn-server', pty=False, user=env.run_user)
 
-def restart_solr():
-    with settings(warn_only=True):
-        sudo('restart solr', pty=False)
-
 def restart_celeryd():
     sudo('/etc/init.d/celeryd restart', pty=False)
 
@@ -416,3 +442,65 @@ def manage_py(command):
     env.manage_py_command = command
     with cd('%(path)s/releases/current/%(project_name)s' % env):
         sudo('%(path)s/bin/python ../manage.py %(manage_py_command)s' % env, pty=True, user=env.run_user)
+
+
+#
+# Solr commands
+#
+
+def install_solr():
+    solr_tgz = os.path.basename(env.solr_url)
+    solr_dirname, _ = os.path.splitext(solr_tgz)
+
+    require_file(url=env.solr_url, path=os.path.join(env.solr_path, solr_tgz))
+
+    with cd(env.solr_path):
+        run('tar xf {0}'.format(solr_tgz))
+        run('rsync -a --remove-source-files {0}/ solr'.format(solr_dirname))
+        run('rm -r {0}'.format(solr_dirname))
+        # Only update currency.xml to our default version on setup
+        put('etc/solr-currency.xml', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml'))
+
+    copy_upstart_solr()
+
+
+def copy_upstart_solr():
+    context = {'user': env.user,
+               'group': env.user,
+               'path': os.path.join(env.solr_path, 'solr', 'example')}
+    upload_template(filename='etc/solr.upstart', destination='/etc/init/solr.conf', context=context, use_sudo=True, use_jinja=True)
+
+
+def status_solr():
+    run('service solr status')
+    run('wget -O - http://localhost:8983/solr/admin/cores?action=STATUS')
+
+
+def restart_solr():
+    with settings(warn_only=True):
+        sudo('service solr restart')
+
+
+def start_solr():
+    if not 'running' in run('service solr status'):
+        sudo('service solr start')
+
+
+def stop_solr():
+    sudo('service solr stop')
+
+
+def deploy_solr():
+    require('solr_path')
+
+    put('etc/solr-solrconfig.xml', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'solrconfig.xml'))
+    put('etc/solr-schema.xml', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'schema.xml'))
+    put('etc/solr-synonyms.txt', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'synonyms.txt'))
+    put('etc/solr.properties', os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'core.properties'))
+
+    currency_path = os.path.join(env.solr_path, 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
+    if not exists(currency_path):
+        put('etc/solr-currency.xml', currency_path)
+
+    if not 'running' in run('service solr status'):
+        run('wget -O - http://localhost:8983/solr/admin/cores?action=RELOAD')

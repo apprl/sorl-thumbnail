@@ -34,7 +34,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         counter = 0
         bad_counter = 0
-        solr_connection = pysolr.Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        solr_connection = pysolr.Solr(settings.SOLR_URL)
 
         self.email = False
         if options['email']:

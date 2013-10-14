@@ -2,6 +2,7 @@ import json
 import decimal
 import logging
 import re
+import collections
 
 from django.conf import settings
 from django.shortcuts import render
@@ -44,10 +45,10 @@ class ResultContainer:
         self.__dict__.update(entries)
 
 def more_like_this_product(body, gender, limit):
-    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit}
+    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     result = connection.more_like_this('', mlt_fields, **kwargs)
     return result
 
@@ -55,7 +56,7 @@ def more_alternatives(product, limit):
     colors_pk = list(map(str, product.colors_pk))
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(translation.get_language(), settings.APPAREL_BASE_CURRENCY)
     query_arguments = {'rows': limit, 'start': 0,
-                       'fl': 'template_mlt',
+                       'fl': 'image_small,slug',
                        'sort': 'price asc, popularity desc, created desc'}
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
     query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
@@ -78,7 +79,7 @@ def more_alternatives(product, limit):
     #kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (product_gender,)],
               #'rows': limit}
     #mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
-    #connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    #connection = Solr(settings.SOLR_URL)
     #result = connection.more_like_this('id:apparel.product.%s' % (product_id,), mlt_fields, **kwargs)
     #return result
 
@@ -122,7 +123,7 @@ class ApparelSearch(object):
     def _get_results(self, update=False):
         if self._result is None or update:
             if self.connection is None:
-                self.connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+                self.connection = Solr(settings.SOLR_URL)
             self._result = self.connection.search(self.query_string, **self.data)
             self._result.docs = [ResultContainer(**element) for element in self._result.docs]
 
@@ -157,8 +158,8 @@ class ApparelSearch(object):
 
         return self._get_results()[k]
 
-def clean_index(app_label=None, module_name=None):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+def clean_index(app_label=None, module_name=None, url=None):
+    connection = Solr(url or settings.SOLR_URL)
 
     if app_label and module_name:
         connection.delete(q=('django_ct:%s.%s' % (app_label, module_name)))
@@ -182,7 +183,7 @@ def product_save(instance, **kwargs):
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
-        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        connection = Solr(settings.SOLR_URL)
 
     document, boost = get_product_document(instance)
 
@@ -198,7 +199,7 @@ def product_save(instance, **kwargs):
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_delete')
 def product_delete(instance, **kwargs):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
 @receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
@@ -210,23 +211,38 @@ def product_like_save(instance, **kwargs):
 def product_like_delete(instance, **kwargs):
     product_save(instance.product)
 
-def rebuild_product_index():
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
-    product_count = 0
 
-    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False,
-                                                                  likes__active=True) \
-                                                          .order_by('-modified'):
-        product_save(product, solr=connection)
-        product_count = product_count + 1
+def rebuild_product_index(url=None):
+    connection = Solr(url or settings.SOLR_URL)
+    product_count = 0
+    product_buffer = collections.deque()
+
+    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified').iterator():
+        document, boost = get_product_document(product, rebuild=True)
+        if document is not None and document['published']:
+            product_buffer.append(document)
+            if len(product_buffer) == 100:
+                connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
+                product_buffer.clear()
 
     for product in get_model('apparel', 'Product').valid_objects.iterator():
-        product_save(product, solr=connection)
-        product_count = product_count + 1
+        document, boost = get_product_document(product, rebuild=True)
+        if document is not None and document['published']:
+            product_buffer.append(document)
+            if len(product_buffer) == 100:
+                connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
+                product_buffer.clear()
+
+            product_count = product_count + 1
+        else:
+            connection.delete(id='%s.%s.%s' % (product._meta.app_label, product._meta.module_name, product.pk), commit=False)
+
+    connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
+    connection.commit()
 
     return product_count
 
-def get_product_document(instance):
+def get_product_document(instance, rebuild=False):
     document = {
         'id': '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk),
         'django_ct': '%s.%s' % (instance._meta.app_label, instance._meta.module_name),
@@ -267,15 +283,8 @@ def get_product_document(instance):
         category_ids, category_en_names, category_sv_names = zip(*category_data)
         category_names = ' '.join(category_en_names + category_sv_names)
 
-        user_likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', flat=True))
-
-        likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', 'modified'))
-        user_likes = [x[0] for x in likes]
-
         has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
-
         template_browse = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks})
-        template_mlt = render_to_string('apparel/fragments/product_small_no_price.html', {'object': instance})
 
         document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
         document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
@@ -297,14 +306,16 @@ def get_product_document(instance):
 
         # Filters
         document['gender'] = instance.gender
-        document['popularity'] = product_popularity(instance)
+        if rebuild:
+            document['popularity'] = instance.popularity
+        else:
+            document['popularity'] = product_popularity(instance)
         document['availability'] = availability
         document['discount'] = discount
         document['published'] = instance.published
 
         # Templates and stored fields
         document['template'] = template_browse
-        document['template_mlt'] = template_mlt
         document['slug'] = instance.slug
         document['stored_price'] = '%s,%s' % (stored_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['stored_discount'] = '%s,%s' % (stored_discount.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
@@ -324,8 +335,9 @@ def get_product_document(instance):
         # Dates
         document['created'] = instance.date_added
 
-        # Users
-        document['user_likes'] = user_likes
+        # Users and likes
+        likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', 'modified'))
+        document['user_likes'] = [x[0] for x in likes]
         for x in likes:
             document['%s_uld' % (x[0],)] = x[1]
 
@@ -353,24 +365,36 @@ def look_save(instance, **kwargs):
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
-        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        connection = Solr(settings.SOLR_URL)
 
     document, boost = get_look_document(instance)
     connection.add([document], commit=False, boost=boost, commitWithin=False)
 
 @receiver(post_delete, sender=Look, dispatch_uid='look_delete')
 def look_delete(instance, **kwargs):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
-def rebuild_look_index():
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+
+def rebuild_look_index(url=None):
+    connection = Solr(url or settings.SOLR_URL)
     look_count = 0
+    look_buffer = collections.deque()
+
     for look in get_model('apparel', 'Look').objects.iterator():
-        look_save(look, solr=connection)
+        document, boost = get_look_document(look)
+        look_buffer.append(document)
+        if len(look_buffer) == 100:
+            connection.add(list(look_buffer), commit=False, boost=boost, commitWithin=False)
+            look_buffer.clear()
+
         look_count = look_count + 1
 
+    connection.add(list(look_buffer), commit=False, boost=boost, commitWithin=False)
+    connection.commit()
+
     return look_count
+
 
 def get_look_document(instance):
     boost = {}
@@ -401,7 +425,7 @@ def search_index_user_save(instance, **kwargs):
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
-        connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+        connection = Solr(settings.SOLR_URL)
 
     if not instance.is_brand:
         document, boost = get_profile_document(instance)
@@ -409,15 +433,25 @@ def search_index_user_save(instance, **kwargs):
 
 @receiver(post_delete, sender=get_user_model(), dispatch_uid='search_index_user_delete')
 def search_index_user_delete(instance, **kwargs):
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+    connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
-def rebuild_user_index():
-    connection = Solr(getattr(settings, 'SOLR_URL', 'http://127.0.0.1:8983/solr/'))
+def rebuild_user_index(url=None):
+    connection = Solr(url or settings.SOLR_URL)
     user_count = 0
+    user_buffer = collections.deque()
+
     for user in get_user_model().objects.filter(is_brand=False).iterator():
-        search_index_user_save(user, solr=connection)
+        document, boost = get_profile_document(user)
+        user_buffer.append(document)
+        if len(user_buffer) == 100:
+            connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
+            user_buffer.clear()
+
         user_count = user_count + 1
+
+    connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
+    connection.commit()
 
     return user_count
 

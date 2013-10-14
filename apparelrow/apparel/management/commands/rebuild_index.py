@@ -21,6 +21,12 @@ class Command(BaseCommand):
             default=False,
             help='Operate only on this model'
         ),
+        make_option('--host',
+            action='store',
+            dest='host',
+            default=None,
+            help='Rebuild solr on this host'
+        ),
     )
 
     def handle(self, *args, **options):
@@ -36,22 +42,29 @@ class Command(BaseCommand):
             'user': 'profile',
         }
 
+        url = None
+        host = options.get('host')
+        if host:
+            url = 'http://{0}:8983/solr'.format(host)
+
         if options['model']:
             if options['model'] not in rebuild_map:
                 return 'INCORRECT MODEL'
 
             if options['clean_rebuild']:
-                clean_index(app_label_map[options['model']], options['model'])
+                clean_index(app_label_map[options['model']], options['model'], url=url)
 
-            rebuild_count = rebuild_map[options['model']]()
+            rebuild_count = rebuild_map[options['model']](url=url)
             print 'Reindex %s %ss' % (rebuild_count, options['model'])
         else:
             if options['clean_rebuild']:
-                clean_index()
+                clean_index(url=url)
 
-            product_count = rebuild_product_index()
+            product_count = rebuild_product_index(url=url)
             print 'Reindexed %s products' % (product_count,)
-            look_count = rebuild_look_index()
+
+            look_count = rebuild_look_index(url=url)
             print 'Reindexed %s looks' % (look_count,)
-            user_count = rebuild_user_index()
+
+            user_count = rebuild_user_index(url=url)
             print 'Reindexed %s users' % (user_count,)

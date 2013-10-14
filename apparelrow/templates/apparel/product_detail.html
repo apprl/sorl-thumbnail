@@ -208,25 +208,25 @@
                         <a href="{{ alternative_url }}">{% trans "See all »" %}</a>
                     </div>
                     <div id="more-alternatives">
-                        <!--<a class="prev">{% trans "Previous" %}</a>-->
                         <ul>
                             {% for product in alternative %}
-                            {{ product.template_mlt|safe }}
+                            <li>
+                                <a href="{% url 'product-detail' slug=product.slug %}"><img src="{{ product.image_small }}"></a>
+                            </li>
                             {% endfor %}
                         </ul>
-                        <!--<a class="next">{% trans "Next" %}</a>-->
                     </div>
                     {% endif %}
                     {% if more_like_this %}
                     <h3>{% trans "You may also like" %}</h3>
                     <div id="more-like-this">
-                        <!--<a class="prev">{% trans "Previous" %}</a>-->
                         <ul>
                             {% for product in more_like_this %}
-                            {{ product.template_mlt|safe }}
+                            <li>
+                                <a href="{% url 'product-detail' slug=product.slug %}"><img src="{{ product.image_small }}"></a>
+                            </li>
                             {% endfor %}
                         </ul>
-                        <!--<a class="next">{% trans "Next" %}</a>-->
                     </div>
                     {% endif %}
                 </div>

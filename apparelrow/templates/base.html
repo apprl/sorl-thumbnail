@@ -25,6 +25,7 @@
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
     <script type="text/javascript">
+        var language_code = '{{ LANGUAGE_CODE }}';
         var product_popup_url = '{% url "product-popup" %}';
         var look_popup_url = '{% url "look-popup" %}';
         var browse_url = '{% multi_gender_url request "shop" "shop" %}';
