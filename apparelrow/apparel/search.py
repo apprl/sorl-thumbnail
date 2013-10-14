@@ -283,9 +283,6 @@ def get_product_document(instance, rebuild=False):
         category_ids, category_en_names, category_sv_names = zip(*category_data)
         category_names = ' '.join(category_en_names + category_sv_names)
 
-        has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
-        template_browse = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks})
-
         document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
         document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)
         document['django_id'] = instance.pk
@@ -314,8 +311,19 @@ def get_product_document(instance, rebuild=False):
         document['discount'] = discount
         document['published'] = instance.published
 
-        # Templates and stored fields
-        document['template'] = template_browse
+        # Templates
+        has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
+        #document['template'] = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks, 'LANGUAGE_CODE': translation.get_language()})
+        cur_language = translation.get_language()
+        try:
+            for language, _ in settings.LANGUAGES_DISPLAY:
+                if language != cur_language:
+                    translation.activate(language)
+                document['{0}_template'.format(language)] = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks, 'LANGUAGE_CODE': language})
+        finally:
+            translation.activate(cur_language)
+
+        # Stored fields
         document['slug'] = instance.slug
         document['stored_price'] = '%s,%s' % (stored_price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['stored_discount'] = '%s,%s' % (stored_discount.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
@@ -535,6 +543,7 @@ def search_view(request, model_name):
         arguments['fq'].append('published:true')
         arguments['fq'].append(gender_field)
         arguments['qf'] = PRODUCT_SEARCH_FIELDS
+        arguments['fl'] = 'template:{0}_template'.format(translation.get_language())
     elif model_name == 'look':
         arguments['qf'] = ['text']
         arguments['fq'].append(gender_field)

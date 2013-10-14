@@ -63,7 +63,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
     """
     Set query arguments that are common for every browse page access.
     """
-    query_arguments['fl'] = 'template'
+    query_arguments['fl'] = 'template:{0}_template'.format(translation.get_language())
 
     query_arguments['facet'] = 'on'
     query_arguments['facet.limit'] = -1

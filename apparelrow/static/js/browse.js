@@ -28,9 +28,6 @@ $(document).ready(function() {
         }
     });
 
-    // Translate
-    updateTranslations();
-
     // Currency conversion
     currencyConversion(jQuery('#product-list').find('.price, .discount-price'));
 
@@ -685,17 +682,6 @@ function updateEmbeddedProducts($list) {
     }
 }
 
-function updateTranslations() {
-    var $productList = $('#product-list');
-    $productList.find('.looks').text(gettext('See looks »'));
-    $productList.find('.sold-out').text(gettext('SOLD OUT'));
-    $productList.find('a[href^="/en"]').each(function(i, element) {
-        var element = $(element),
-            href = element.attr('href');
-        element.attr('href', href.replace('en', language_code));
-    });
-}
-
 function renderProducts(products) {
     $('#product-list > .product-list').empty();
     $('#product-list > h3').text(products.browse_text);
@@ -711,7 +697,6 @@ function renderProducts(products) {
     }
 
     filterCriteria(products);
-    updateTranslations();
 
     resetInfiniteScroll();
 }

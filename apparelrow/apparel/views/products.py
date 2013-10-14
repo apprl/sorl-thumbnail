@@ -104,7 +104,7 @@ class ProductList(View):
         """
         Set query arguments that are common for every browse page access.
         """
-        query_arguments['fl'] = 'template'
+        query_arguments['fl'] = 'template:{0}_template'.format(get_language())
 
         query_arguments['facet'] = 'on'
         query_arguments['facet.limit'] = -1

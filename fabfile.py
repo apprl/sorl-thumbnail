@@ -22,7 +22,8 @@ def localhost():
     env.hosts = ['localhost']
     env.user = 'tote'
     env.group = env.user
-    env.path = '/home/%(user)s/development/projects/%(project_name)s' % env
+    env.path = '/home/tote/coding/apparelrow/apparelrow'
+    env.solr_path = '/home/tote/coding/apparelrow/solr/'
 
 def demo():
     "Use the actual webserver"
@@ -502,5 +503,5 @@ def deploy_solr():
     if not exists(currency_path):
         put('etc/solr-currency.xml', currency_path)
 
-    if not 'running' in run('service solr status'):
+    if 'running' in run('service solr status'):
         run('wget -O - http://localhost:8983/solr/admin/cores?action=RELOAD')
