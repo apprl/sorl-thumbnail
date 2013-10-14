@@ -1,4 +1,5 @@
 import uuid
+import urlparse
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -16,6 +17,8 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
+
+import requests
 
 from apparelrow.apparel.utils import get_paged_result, JSONResponse, get_ga_cookie_cid
 from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
@@ -490,9 +493,7 @@ def _get_next(request):
     Returns a url to redirect to after the login
     """
     if 'next' in request.session:
-        next = request.session['next']
-        del request.session['next']
-        return next
+        return request.session.pop('next')
     elif 'next' in request.GET:
         return request.GET.get('next')
     elif 'next' in request.POST:
@@ -524,28 +525,65 @@ def flow(request):
     return HttpResponseRedirect(_get_next(request))
 
 
+def facebook_redirect_login(request):
+    if request.GET.get('code'):
+        facebook_token_uri = 'https://graph.facebook.com/oauth/access_token?client_id={app_id}&redirect_uri={redirect_uri}&client_secret={app_secret}&code={code_parameter}'
+        response = requests.get(facebook_token_uri.format(app_id=settings.FACEBOOK_APP_ID,
+                                                          redirect_uri=request.build_absolute_uri(reverse('auth_facebook_login')),
+                                                          app_secret=settings.FACEBOOK_SECRET_KEY,
+                                                          code_parameter=request.GET.get('code')))
+        if response.status_code == 200:
+            query_dict = urlparse.parse_qs(response.text)
+            access_token = query_dict.get('access_token')[0]
+
+            facebook_debug_token_uri = 'https://graph.facebook.com/debug_token?input_token={access_token}&access_token={app_access_token}'
+            response = requests.get(facebook_debug_token_uri.format(access_token=access_token,
+                                                                    app_access_token=settings.FACEBOOK_APP_ACCESS_TOKEN))
+            if response.status_code == 200:
+                response_json = response.json()
+                user = auth.authenticate(fb_uid=response_json['data']['user_id'], fb_graphtoken=access_token, request=request)
+                if user and user.is_active:
+                    auth.login(request, user)
+
+                    return _login_flow(request, user)
+    elif request.GET.get('error_reason'):
+        if request.GET.get('error_reason') == 'user_denied' and request.GET.get('error') == 'access_denied':
+            return HttpResponseRedirect('{0}?error=user_denied'.format(reverse('auth_login')))
+
+        return HttpResponseRedirect('{0}?error=1'.format(reverse('auth_login')))
+
+    return HttpResponseRedirect('/')
+
+
 def facebook_login(request):
     if request.POST:
         access_token = request.POST.get('access_token', '')
         uid = request.POST.get('uid', '')
-        disable_flow = request.POST.get('disable_flow', False)
 
         user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token, request=request)
         if user and user.is_active:
             auth.login(request, user)
-            if request.is_ajax():
-                return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
 
-            if user.login_flow != 'complete' and not disable_flow:
-                response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
-                response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
-                return response
-            elif user.login_flow != 'complete' and disable_flow:
-                follow_featured_auto(request)
-
-            return HttpResponseRedirect(_get_next(request))
+            return _login_flow(request, user)
 
     return HttpResponseRedirect('/')
+
+
+def _login_flow(request, user):
+    if request.is_ajax():
+        return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
+
+    disable_flow = request.POST.get('disable_flow', False)
+
+    if user.login_flow != 'complete' and not disable_flow:
+        response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
+        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
+        return response
+    elif user.login_flow != 'complete' and disable_flow:
+        follow_featured_auto(request)
+
+    return HttpResponseRedirect(_get_next(request))
+
 
 @login_required
 def facebook_connect(request):

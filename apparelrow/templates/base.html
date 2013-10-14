@@ -55,16 +55,20 @@
             });
         }
         window.login_function = function(callback) {
-            FB.login(function(response) {
-                if(response.authResponse) {
-                    data = {uid: response.authResponse.userID, access_token: response.authResponse.accessToken};
-                    $.post('/facebook/login', data, function(response) {
-                        if(response) {
-                            callback(response.next);
-                        }
-                    });
-                }
-            }, {scope: facebook_scope});
+            if ('standalone' in navigator && navigator.standalone) {
+                window.location = 'https://m.facebook.com/dialog/oauth?client_id={{ FACEBOOK_APP_ID }}&response_type=code&redirect_uri={{ FACEBOOK_REDIRECT_URI }}&scope={{ FACEBOOK_SCOPE }}';
+            } else {
+                FB.login(function(response) {
+                    if(response.authResponse) {
+                        data = {uid: response.authResponse.userID, access_token: response.authResponse.accessToken};
+                        $.post('/facebook/login', data, function(response) {
+                            if(response) {
+                                callback(response.next);
+                            }
+                        });
+                    }
+                }, {scope: facebook_scope});
+            }
         };
     </script>
     {% block 'extra-scripts' %}
