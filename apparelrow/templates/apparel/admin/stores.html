@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body-classes %}admin-dashboard-stores-page{% endblock body-classes %}
+{% block body %}
+
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Admin dashboard" %}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <h2>Displaying: {{ date_start|date }} - {{ date_end|date }}</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{% trans "Advertiser" %}</th>
+                        <th>{% trans "Clicks" %}</th>
+                        <th>{% trans "Sales" %}</th>
+                        <th>{% trans "Sales value" %}</th>
+                        <th>{% trans "Commission" %}</th>
+                        <th>{% trans "Actual comm." %}</th>
+                        <th>{% trans "Conversion" %}</th>
+                        <th>{% trans "EPC" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for affiliate, affiliate_data in affiliates.items %}
+                    {% for vendor in affiliate_data.vendors %}
+                    <tr>
+                        <td>{{ vendor.vendor_object.name }}</td>
+                        <td>{{ vendor.clicks }}</td>
+                        <td>{{ vendor.sales }}</td>
+                        <td>€{{ vendor.sales_sum }}</td>
+                        <td>€{{ vendor.commission }}</td>
+                        <td>{{ vendor.actual_commission|floatformat:2 }}%</td>
+                        <td>{{ vendor.conversion|floatformat:2 }}%</td>
+                        <td>€{{ vendor.epc }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td style="text-transform:uppercase;padding-bottom:50px;"><strong>{{ affiliate }} average</strong></td>
+                        <td><strong>{{ affiliate_data.clicks }}</strong></td>
+                        <td><strong>{{ affiliate_data.sales }}</strong></td>
+                        <td><strong>€{{ affiliate_data.sales_sum }}</strong></td>
+                        <td><strong>€{{ affiliate_data.commission }}</strong></td>
+                        <td><strong>{{ affiliate_data.actual_commission|floatformat:2 }}%</strong></td>
+                        <td><strong>{{ affiliate_data.conversion|floatformat:2 }}%</strong></td>
+                        <td><strong>€{{ affiliate_data.epc }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
