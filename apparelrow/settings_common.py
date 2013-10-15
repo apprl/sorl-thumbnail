@@ -68,7 +68,7 @@ LOCALE_INDEPENDENT_PATHS = (
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'sv'
+LANGUAGE_CODE = 'en'
 LANGUAGES = (
     ('en', gettext(u'English (€)')),
     ('sv', gettext(u'Swedish (SEK)')),
