@@ -21,6 +21,9 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^a/', include('advertiser.urls')),
 
+    # Alias for store signup with analytics campaign for Ad
+    url(r'^addstore/$', RedirectView.as_view(url='http://apprl.com/en/store?utm_source=AddStore&utm_medium=AddStore&utm_campaign=signupAddStore')),
+
     url(r'^i/(?P<code>[\w-]+)/$', 'apparelrow.dashboard.views.referral_signup', name='dashboard-referral-signup'),
 
     (r'^profile/', include('apparelrow.profile.urls')),
