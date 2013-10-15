@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 10:33+0200\n"
+"POT-Creation-Date: 2013-10-15 08:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,35 +17,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings_common.py:71 settings_common.py:77
+#: settings_common.py:73 settings_common.py:79
 msgid "English (€)"
 msgstr ""
 
-#: settings_common.py:72 settings_common.py:78
+#: settings_common.py:74 settings_common.py:80
 msgid "Swedish (SEK)"
 msgstr "Svenska (SEK)"
 
-#: settings_common.py:73
+#: settings_common.py:75
 msgid "Danish (DKK)"
 msgstr ""
 
-#: settings_common.py:74
+#: settings_common.py:76
 msgid "Norwegian (NOK)"
 msgstr ""
 
-#: settings_common.py:81 settings_common.py:87
+#: settings_common.py:83 settings_common.py:89
 msgid "Eng (€)"
 msgstr ""
 
-#: settings_common.py:82 settings_common.py:88
+#: settings_common.py:84 settings_common.py:90
 msgid "Swe (SEK)"
 msgstr ""
 
-#: settings_common.py:83
+#: settings_common.py:85
 msgid "Dnk (DKK)"
 msgstr ""
 
-#: settings_common.py:84
+#: settings_common.py:86
 msgid "Nor (NOK)"
 msgstr ""
 
@@ -609,7 +609,7 @@ msgstr ""
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:82 templates/base.html:232
+#: profile/admin.py:82 templates/base.html:242
 #: templates/profile/base_settings.html:20
 #: templates/profile/base_settings.html:23
 #: templates/profile/settings_facebook.html:5
@@ -631,7 +631,7 @@ msgstr ""
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:94 templates/base.html:151
+#: profile/admin.py:94 templates/base.html:161
 #: templates/dashboard/body_header.html:12
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
@@ -759,7 +759,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: profile/models.py:50 templates/base.html:216
+#: profile/models.py:50 templates/base.html:226
 #: templates/apparel/dialog_look_embed.html:22
 #: templates/profile/dialog_embed_shop.html:29
 msgid "Language"
@@ -842,15 +842,15 @@ msgstr ""
 msgid "Welcome to Apprl %(name)s"
 msgstr ""
 
-#: profile/views.py:195
+#: profile/views.py:198
 msgid "Password was updated"
 msgstr ""
 
-#: profile/views.py:197
+#: profile/views.py:200
 msgid "Password was added"
 msgstr ""
 
-#: profile/views.py:397
+#: profile/views.py:400
 msgid "Nearly created your membership..."
 msgstr ""
 
@@ -882,68 +882,68 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
-#: templates/base.html:115
+#: templates/base.html:120
 msgid "Toggle navigation"
 msgstr ""
 
-#: templates/base.html:130
+#: templates/base.html:136
 msgid "Search for products, members & brands"
 msgstr ""
 
-#: templates/base.html:136
+#: templates/base.html:146
 msgid "Get started"
 msgstr ""
 
-#: templates/base.html:137 templates/apparel/tags/login_bar.html:11
+#: templates/base.html:147 templates/apparel/tags/login_bar.html:11
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr ""
 
-#: templates/base.html:142
+#: templates/base.html:152
 msgid "Your profile"
 msgstr ""
 
-#: templates/base.html:144 templates/dashboard/body_header.html:6
-#: templates/dashboard/info.html:22 templates/dashboard/info.html.py:77
+#: templates/base.html:154 templates/dashboard/body_header.html:6
+#: templates/dashboard/info.html:22 templates/dashboard/info.html.py:76
 msgid "Your statistics"
 msgstr ""
 
-#: templates/base.html:147 templates/advertiser/store_admin.html:4
+#: templates/base.html:157 templates/advertiser/store_admin.html:4
 #: templates/advertiser/store_admin.html:43
 msgid "Your store"
 msgstr ""
 
-#: templates/base.html:149
+#: templates/base.html:159
 msgid "+ Invite friends"
 msgstr ""
 
-#: templates/base.html:150
+#: templates/base.html:160
 #: templates/apparel/fragments/create_look_button.html:3
 #: templates/apparel/fragments/create_look_button.html:5
 msgid "+ Create look"
 msgstr ""
 
-#: templates/base.html:152
+#: templates/base.html:162
 msgid "Log out"
 msgstr ""
 
-#: templates/base.html:160 templates/activity_feed/feed_list.html:49
+#: templates/base.html:170 templates/activity_feed/feed_list.html:49
 msgid "Your APPRL"
 msgstr ""
 
-#: templates/base.html:162 templates/base.html.py:209
+#: templates/base.html:172 templates/base.html.py:219
 #: templates/apparel/browse.html:4 templates/apparel/browse.html.py:27
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:163 templates/base.html.py:212
+#: templates/base.html:173 templates/base.html.py:222
 #: templates/apparel/look_detail.html:4 templates/apparel/look_editor.html:5
 #: templates/apparel/look_list.html:4 templates/apparel/look_list.html:11
 #: templates/profile/looks.html:4
 msgid "Looks"
 msgstr ""
 
-#: templates/base.html:165 templates/activity_feed/verbs/follow.html:14
+#: templates/base.html:175 templates/activity_feed/verbs/follow.html:14
 #: templates/apparel/user_list.html:4 templates/apparel/user_list.html:22
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
@@ -954,61 +954,61 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
-#: templates/base.html:167 templates/apparel/user_list.html:24
+#: templates/base.html:177 templates/apparel/user_list.html:24
 msgid "Members"
 msgstr ""
 
-#: templates/base.html:168 templates/base.html.py:213
+#: templates/base.html:178 templates/base.html.py:223
 #: templates/apparel/user_list.html:25
 #: templates/apparel/fragments/product_filter.html:122
 msgid "Brands"
 msgstr ""
 
-#: templates/base.html:210 templates/apparel/look_editor.html:46
+#: templates/base.html:220 templates/apparel/look_editor.html:46
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:211 templates/apparel/look_editor.html:47
+#: templates/base.html:221 templates/apparel/look_editor.html:47
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:231
+#: templates/base.html:241
 msgid "Follow us"
 msgstr ""
 
-#: templates/base.html:233
+#: templates/base.html:243
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:234
+#: templates/base.html:244
 msgid "E-mail newsletter"
 msgstr ""
 
-#: templates/base.html:237
+#: templates/base.html:247
 msgid "Apprl"
 msgstr ""
 
-#: templates/base.html:238
+#: templates/base.html:248
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:239
+#: templates/base.html:249
 msgid "Privacy & Terms"
 msgstr ""
 
-#: templates/base.html:240 templates/flatpages/default.html:25
+#: templates/base.html:250 templates/flatpages/default.html:25
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:241
+#: templates/base.html:251
 msgid "Bloggers"
 msgstr ""
 
-#: templates/base.html:242 templates/apparel/fragments/product_filter.html:146
+#: templates/base.html:252 templates/apparel/fragments/product_filter.html:146
 msgid "Stores"
 msgstr ""
 
-#: templates/base.html:254
+#: templates/base.html:264
 #, fuzzy
 msgid "Sweden"
 msgstr "Svenska"
@@ -1051,31 +1051,36 @@ msgstr ""
 msgid "Show all"
 msgstr ""
 
-#: templates/search.html:35
+#: templates/search.html:36
 msgid "Matching products"
 msgstr ""
 
-#: templates/search.html:37
-msgid "Show all products"
+#: templates/search.html:37 templates/search.html.py:45
+#: templates/apparel/product_detail.html:208
+msgid "See all »"
 msgstr ""
 
 #: templates/search.html:40
+msgid "Show all products"
+msgstr ""
+
+#: templates/search.html:44
 msgid "Matching looks"
 msgstr ""
 
-#: templates/search.html:42
+#: templates/search.html:48
 msgid "Show all looks"
 msgstr ""
 
-#: templates/search.html:45
+#: templates/search.html:51
 msgid "Matching brands"
 msgstr ""
 
-#: templates/search.html:48
+#: templates/search.html:54
 msgid "Matching stores"
 msgstr ""
 
-#: templates/search.html:51
+#: templates/search.html:57
 msgid "Matching members"
 msgstr ""
 
@@ -1424,8 +1429,8 @@ msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:11
 msgid ""
-"It's easy to embed a look on your blog/site.  Enter your preferred format "
-"below and paste the embed-code (In HTML-mode) into your blog/site."
+"It's easy to embed a look on your blog/site. Enter your preferred format "
+"below, copy and paste the embed-code (In HTML-mode) into your blog/site."
 msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:15
@@ -1441,12 +1446,12 @@ msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:32
 #: templates/profile/dialog_embed_shop.html:58
-msgid "Get embed code"
+msgid "Show embed code"
 msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:35
 #: templates/profile/dialog_embed_shop.html:61
-msgid "Embed code"
+msgid "Copy and paste this code (in HTML-mode) into your site/blog"
 msgstr ""
 
 #: templates/apparel/index.html:18
@@ -1677,25 +1682,8 @@ msgstr ""
 msgid "Looks Women"
 msgstr ""
 
-#: templates/apparel/look_list.html:33 templates/apparel/look_list.html:35
+#: templates/apparel/look_list.html:32
 msgid "Showing"
-msgstr ""
-
-#: templates/apparel/look_list.html:33 templates/apparel/look_list.html:35
-#, python-format
-msgid "%(counter)s look"
-msgid_plural "%(counter)s looks"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/apparel/look_list.html:40
-msgid ""
-"You currently don't follow anyone who has liked any looks, find friends to "
-"follow amoung our members."
-msgstr ""
-
-#: templates/apparel/look_list.html:41
-msgid "See all members"
 msgstr ""
 
 #: templates/apparel/modal_look_delete.html:5
@@ -1783,20 +1771,6 @@ msgstr ""
 
 #: templates/apparel/product_detail.html:207
 msgid "Similar"
-msgstr ""
-
-#: templates/apparel/product_detail.html:208
-msgid "See all »"
-msgstr ""
-
-#: templates/apparel/product_detail.html:211
-#: templates/apparel/product_detail.html:223
-msgid "Previous"
-msgstr ""
-
-#: templates/apparel/product_detail.html:217
-#: templates/apparel/product_detail.html:229
-msgid "Next"
 msgstr ""
 
 #: templates/apparel/product_detail.html:221
@@ -2107,7 +2081,7 @@ msgid "Always share when you ♥ a product"
 msgstr ""
 
 #: templates/apparel/tags/login_bar.html:12
-#: templates/registration/login.html:42
+#: templates/registration/login.html:48
 #: templates/registration/registration_email.html:73
 msgid "Sign up"
 msgstr ""
@@ -2210,7 +2184,7 @@ msgstr ""
 msgid "Become a publisher"
 msgstr ""
 
-#: templates/dashboard/body_header.html:7 templates/dashboard/info.html:28
+#: templates/dashboard/body_header.html:7
 msgid "How it works"
 msgstr ""
 
@@ -2240,27 +2214,27 @@ msgstr ""
 msgid "Apply for an invitation:"
 msgstr ""
 
-#: templates/dashboard/info.html:16 templates/dashboard/info.html.py:36
+#: templates/dashboard/info.html:16 templates/dashboard/info.html.py:35
 msgid "Grow your blog and gain followers"
 msgstr ""
 
-#: templates/dashboard/info.html:17 templates/dashboard/info.html.py:50
+#: templates/dashboard/info.html:17 templates/dashboard/info.html.py:49
 msgid "Make money on product links"
 msgstr ""
 
-#: templates/dashboard/info.html:18 templates/dashboard/info.html.py:54
+#: templates/dashboard/info.html:18 templates/dashboard/info.html.py:53
 msgid "Make money from your profile"
 msgstr ""
 
-#: templates/dashboard/info.html:19 templates/dashboard/info.html.py:58
+#: templates/dashboard/info.html:19 templates/dashboard/info.html.py:57
 msgid "Make money on looks for your site/blog"
 msgstr ""
 
-#: templates/dashboard/info.html:20 templates/dashboard/info.html.py:67
+#: templates/dashboard/info.html:20 templates/dashboard/info.html.py:66
 msgid "Create an APPRL-shop for your site/blog"
 msgstr ""
 
-#: templates/dashboard/info.html:21 templates/dashboard/info.html.py:73
+#: templates/dashboard/info.html:21 templates/dashboard/info.html.py:72
 msgid "Our stores & brands"
 msgstr ""
 
@@ -2268,15 +2242,15 @@ msgstr ""
 msgid "Questions?"
 msgstr ""
 
-#: templates/dashboard/info.html:30 templates/dashboard/info.html.py:82
+#: templates/dashboard/info.html:29 templates/dashboard/info.html.py:81
 msgid "APPLY TO BECOME A PUBLISHER HERE"
 msgstr ""
 
-#: templates/dashboard/info.html:32 templates/dashboard/info.html.py:84
+#: templates/dashboard/info.html:31 templates/dashboard/info.html.py:83
 msgid "Questions? Let us know on"
 msgstr ""
 
-#: templates/dashboard/info.html:34
+#: templates/dashboard/info.html:33
 msgid ""
 "As a fashion blogger you can apply to our publisher program. As a publisher "
 "you make money when linking to Apprl products. If someone buys a product "
@@ -2285,77 +2259,77 @@ msgid ""
 "your readers."
 msgstr ""
 
-#: templates/dashboard/info.html:37
+#: templates/dashboard/info.html:36
 msgid ""
 "Every time you “like” a product on Apprl.com, we show that the product is "
 "selected by you with a link back to your blog/site."
 msgstr ""
 
-#: templates/dashboard/info.html:39
+#: templates/dashboard/info.html:38
 msgid ""
 "By getting followers on Apprl, more people will discover your blog/site. You "
 "can promote your Apprl profile by putting one of these badges on your blog/"
 "site and linking them to your profile:"
 msgstr ""
 
-#: templates/dashboard/info.html:51
+#: templates/dashboard/info.html:50
 msgid ""
 "The easiest way to start making money is to simply link to our products. As "
 "a publisher just click the “Get product link”-button and share the link on "
 "your blog, Facebook page or elsewhere."
 msgstr ""
 
-#: templates/dashboard/info.html:55
+#: templates/dashboard/info.html:54
 msgid ""
 "All products that you “like” on Apprl.com ends up on your profile page. "
 "Every time someone clicks and buys a product – you make money."
 msgstr ""
 
-#: templates/dashboard/info.html:59
+#: templates/dashboard/info.html:58
 msgid "On Apprl you can create two types of looks: Tagged photos & collages."
 msgstr ""
 
-#: templates/dashboard/info.html:62
+#: templates/dashboard/info.html:61
 msgid ""
 "To put a look on your blog/site, just click the “EMBED ON YOUR BLOG / SITE”-"
 "button and follow instructions to choose the width & language of your look."
 msgstr ""
 
-#: templates/dashboard/info.html:65
+#: templates/dashboard/info.html:64
 msgid ""
 "As a publisher you will now make money on every person that clicks and buys "
 "a product from your look."
 msgstr ""
 
-#: templates/dashboard/info.html:68
+#: templates/dashboard/info.html:67
 msgid ""
 "It’s super easy to create an APPRL-shop for your blog/site. Just click the "
 "“CREATE A SHOP ON YOUR SITE”-button on your profile page and follow "
 "instructions to choose the width, height and language for your shop."
 msgstr ""
 
-#: templates/dashboard/info.html:70
+#: templates/dashboard/info.html:69
 msgid ""
 "You may then embed your store on your site, for example by creating a new "
 "page on your blog. You will make money on every person that clicks and buys "
 "a product from your shop."
 msgstr ""
 
-#: templates/dashboard/info.html:74
+#: templates/dashboard/info.html:73
 msgid ""
 "You’ll find all the products from leading international online retailers & "
 "brands at Apprl, for you to link to, create looks from and share."
 msgstr ""
 
-#: templates/dashboard/info.html:74
+#: templates/dashboard/info.html:73
 msgid "I would like to suggest a store/brand..."
 msgstr ""
 
-#: templates/dashboard/info.html:74
+#: templates/dashboard/info.html:73
 msgid "If you’re missing a store let us know!"
 msgstr ""
 
-#: templates/dashboard/info.html:78
+#: templates/dashboard/info.html:77
 msgid "You will be able to follow how much you’re making day by day."
 msgstr ""
 
@@ -2696,9 +2670,9 @@ msgstr ""
 
 #: templates/profile/dialog_embed_shop.html:11
 msgid ""
-"It's easy to create a shop for your site/blog that includes all the products "
-"that you like on Apprl. Enter your preferred format below and paste the "
-"embed-code (in HTML-mode) into your site."
+"It's easy to create an Apprl shop for your site/blog that includes all the "
+"products that you like on Apprl. Enter your preferred format below, then "
+"copy and paste the embed-code (in HTML-mode) into your site/blog."
 msgstr ""
 
 #: templates/profile/dialog_embed_shop.html:22
@@ -3059,23 +3033,31 @@ msgstr ""
 msgid "%(brand_name)s %(product_name)s has been further reduced"
 msgstr ""
 
-#: templates/registration/login.html:9 templates/registration/login.html:38
+#: templates/registration/login.html:9 templates/registration/login.html:44
 msgid "Login"
 msgstr ""
 
-#: templates/registration/login.html:21
+#: templates/registration/login.html:16
+msgid "User denied Facebook login flow."
+msgstr ""
+
+#: templates/registration/login.html:18
+msgid "Error during login flow. Please try again!"
+msgstr ""
+
+#: templates/registration/login.html:27
 msgid "or:"
 msgstr ""
 
-#: templates/registration/login.html:27 templates/registration/login.html:28
+#: templates/registration/login.html:33 templates/registration/login.html:34
 msgid "Username / E-mail address"
 msgstr ""
 
-#: templates/registration/login.html:36
+#: templates/registration/login.html:42
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
-#: templates/registration/login.html:41
+#: templates/registration/login.html:47
 msgid "Forgot password?"
 msgstr ""
 
