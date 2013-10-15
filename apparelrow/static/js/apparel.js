@@ -160,7 +160,12 @@ $(document).ready(function() {
                 form.submit();
             }
         }
-        FB.login(handleResponse, {scope: facebook_scope});
+
+        if (isMobileDevice()) {
+            window.location = facebook_login_uri;
+        } else {
+            FB.login(handleResponse, {scope: facebook_scope});
+        }
     });
 
 

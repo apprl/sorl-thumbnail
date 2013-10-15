@@ -43,7 +43,7 @@
             'create_look': {% if user.is_authenticated and user.fb_share_create_look %}true{% else %}false{% endif %}
         };
         var facebook_scope = '{{ FACEBOOK_SCOPE }}';
-
+        var facebook_login_uri = 'https://m.facebook.com/dialog/oauth?client_id={{ FACEBOOK_APP_ID }}&response_type=code&redirect_uri={{ FACEBOOK_REDIRECT_URI }}&scope={{ FACEBOOK_SCOPE }}';
         window.fbAsyncInit = function() {
             FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, xfbml: true, channelUrl: '//{{ CURRENT_DOMAIN }}/channel.html'});
             FB.getLoginStatus(function(response) {
@@ -55,20 +55,16 @@
             });
         }
         window.login_function = function(callback) {
-            if (isMobileDevice()) {
-                window.location = 'https://m.facebook.com/dialog/oauth?client_id={{ FACEBOOK_APP_ID }}&response_type=code&redirect_uri={{ FACEBOOK_REDIRECT_URI }}&scope={{ FACEBOOK_SCOPE }}';
-            } else {
-                FB.login(function(response) {
-                    if(response.authResponse) {
-                        data = {uid: response.authResponse.userID, access_token: response.authResponse.accessToken};
-                        $.post('/facebook/login', data, function(response) {
-                            if(response) {
-                                callback(response.next);
-                            }
-                        });
-                    }
-                }, {scope: facebook_scope});
-            }
+            FB.login(function(response) {
+                if(response.authResponse) {
+                    data = {uid: response.authResponse.userID, access_token: response.authResponse.accessToken};
+                    $.post('/facebook/login', data, function(response) {
+                        if(response) {
+                            callback(response.next);
+                        }
+                    });
+                }
+            }, {scope: facebook_scope});
         };
     </script>
     {% block 'extra-scripts' %}
