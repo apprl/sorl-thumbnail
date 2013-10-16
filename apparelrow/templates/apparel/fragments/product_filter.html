@@ -141,6 +141,7 @@
         </div>
     </div>
     {% endif %}
+    {% if request.user.is_partner and not is_embed_shop or request.GET.store %}
     <div class="panel{% if selected_stores %} active{% endif %}">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">{% trans "Stores" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
@@ -158,4 +159,5 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
