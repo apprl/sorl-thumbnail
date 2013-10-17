@@ -50,7 +50,7 @@
                         <td><strong>€{{ commission }}</strong></td>
                         <td><strong>{{ actual_commission|floatformat:2 }}%</strong></td>
                         <td><strong>{{ conversion|floatformat:2 }}%</strong></td>
-                        <td><strong>€{{ epc }}</strong></td>
+                        <td><strong>€{{ epc|floatformat:2 }}</strong></td>
                     </tr>
                     {% for affiliate, affiliate_data in affiliates.items %}
                     {% for vendor in affiliate_data.vendors %}
@@ -62,7 +62,7 @@
                         <td>€{{ vendor.commission }}</td>
                         <td>{{ vendor.actual_commission|floatformat:2 }}%</td>
                         <td>{{ vendor.conversion|floatformat:2 }}%</td>
-                        <td>€{{ vendor.epc }}</td>
+                        <td>€{{ vendor.epc|floatformat:2 }}</td>
                     </tr>
                     {% endfor %}
                     <tr>
@@ -73,7 +73,7 @@
                         <td><strong>€{{ affiliate_data.commission }}</strong></td>
                         <td><strong>{{ affiliate_data.actual_commission|floatformat:2 }}%</strong></td>
                         <td><strong>{{ affiliate_data.conversion|floatformat:2 }}%</strong></td>
-                        <td><strong>€{{ affiliate_data.epc }}</strong></td>
+                        <td><strong>€{{ affiliate_data.epc|floatformat:2 }}</strong></td>
                     </tr>
                     {% endfor %}
                 </tbody>
