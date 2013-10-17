@@ -10,20 +10,48 @@
         <div class="col-sm-12">
 
             <h2>Displaying: {{ date_start|date }} - {{ date_end|date }}</h2>
+            <p>Available query strings:</p>
+            <dl class="dl-horizontal">
+                <dt>is_month=1</dt>
+                <dd>Interval is set to monthly</dd>
+                <dt>is_year=1</dt>
+                <dd>Interval is set to yearly</dd>
+                <dt>date=YYYY-MM-DD</dt>
+                <dd>Date of origin for interval. If date is set to 2013-11-17, the interval is created around that date, example:
+                    <ul>
+                        <li>Week: 2013-11-11 to 2013-11-17</li>
+                        <li>Month: 2013-11-01 to 2013-11-30</li>
+                        <li>Year: 2013-01-01 to 2013-12-31</li>
+                    </ul>
+                </dd>
+                <dt>Example</dt>
+                <dd>"?date=2013-10-17&is_month=1" produces the following interval: 2013-10-01 - 2013-10-31</dd>
+            </dl>
+
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>{% trans "Advertiser" %}</th>
+                        <th>{% trans "Store" %}</th>
                         <th>{% trans "Clicks" %}</th>
                         <th>{% trans "Sales" %}</th>
                         <th>{% trans "Sales value" %}</th>
-                        <th>{% trans "Commission" %}</th>
-                        <th>{% trans "Actual comm." %}</th>
+                        <th>{% trans "Commission value" %}</th>
+                        <th>{% trans "Commission %" %}</th>
                         <th>{% trans "Conversion" %}</th>
                         <th>{% trans "EPC" %}</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td style="text-transform:uppercase;padding-bottom:50px;"><strong>TOTAL</strong></td>
+                        <td><strong>{{ clicks }}</strong></td>
+                        <td><strong>{{ sales }}</strong></td>
+                        <td><strong>€{{ sales_sum }}</strong></td>
+                        <td><strong>€{{ commission }}</strong></td>
+                        <td><strong>{{ actual_commission|floatformat:2 }}%</strong></td>
+                        <td><strong>{{ conversion|floatformat:2 }}%</strong></td>
+                        <td><strong>€{{ epc }}</strong></td>
+                    </tr>
                     {% for affiliate, affiliate_data in affiliates.items %}
                     {% for vendor in affiliate_data.vendors %}
                     <tr>

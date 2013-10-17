@@ -37,17 +37,41 @@ def month_magic(d):
             d.replace(day=end_day, hour=23, minute=59, second=59, microsecond=999999))
 
 
-def get_date_interval(is_month, date, last=False):
-    if not is_month:
-        if last:
-            return week_magic(date - datetime.timedelta(days=7))
+def year_magic(d):
+    return (d.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0),
+            d.replace(month=12, day=31, hour=23, minute=59, second=59, microsecond=999999))
 
-        return week_magic(date)
 
-    if last:
-        return month_magic(date - relativedelta(months=1))
+def get_date_interval(date, is_month=False, is_year=False, previous=False):
+    if is_year:
+        if previous:
+            return year_magic(date - relativedelta(months=12))
+        return year_magic(date)
 
-    return month_magic(date)
+    elif is_month:
+        if previous:
+            return month_magic(date - relativedelta(months=1))
+        return month_magic(date)
+
+    if previous:
+        return week_magic(date - datetime.timedelta(days=7))
+
+    return week_magic(date)
+
+
+
+
+#def get_date_interval(is_month, date, last=False):
+    #if not is_month:
+        #if last:
+            #return week_magic(date - datetime.timedelta(days=7))
+
+        #return week_magic(date)
+
+    #if last:
+        #return month_magic(date - relativedelta(months=1))
+
+    #return month_magic(date)
 
 
 def kpi_dashboard(request):
@@ -59,15 +83,16 @@ def kpi_dashboard(request):
         Sale = get_model('dashboard', 'Sale')
 
         # Date
-        is_month = bool(request.GET.get('month', None))
+        is_month = bool(request.GET.get('is_month', None))
+        is_year = bool(request.GET.get('is_year', None))
         date = request.GET.get('date')
         if date:
             date = datetime.datetime(*[int(x) for x in date.split('-')])
         else:
             date = datetime.datetime.now()
 
-        col1_start, col1_end = get_date_interval(is_month, date, last=False)
-        col3_start, col3_end = get_date_interval(is_month, date, last=True)
+        col1_start, col1_end = get_date_interval(date, is_month=is_month, is_year=is_year, previous=False)
+        col3_start, col3_end = get_date_interval(date, is_month=is_month, is_year=is_year, previous=True)
 
         context = {'is_month': is_month}
 
@@ -162,19 +187,25 @@ def stores(request):
         VendorFeed = get_model('importer', 'VendorFeed')
 
         # Date
-        is_month = bool(request.GET.get('month', True))
+        is_month = bool(request.GET.get('is_month', None))
+        is_year = bool(request.GET.get('is_year', None))
         date = request.GET.get('date')
         if date:
             date = datetime.datetime(*[int(x) for x in date.split('-')])
         else:
             date = datetime.datetime.now()
 
-        date_start, date_end = get_date_interval(is_month, date, last=False)
+        date_start, date_end = get_date_interval(date, is_month=is_month, is_year=is_year)
 
-        context = {'date_start': date_start, 'date_end': date_end}
+        context = {'date_start': date_start,
+                   'date_end': date_end,
+                   'affiliates': {},
+                   'clicks': 0,
+                   'sales': 0,
+                   'sales_sum': 0,
+                   'commission': 0}
 
         # Group vendors by affiliate
-        context['affiliates'] = {}
         for vendor in Vendor.objects.all():
             try:
                 affiliate_name = vendor.vendor_feed.provider_class
@@ -186,6 +217,7 @@ def stores(request):
                 # Clicks
                 vendor_data['clicks'] = decimal.Decimal(ProductStat.objects.filter(vendor=vendor, created__range=(date_start, date_end)).count())
                 context['affiliates'][affiliate_name]['clicks'] += vendor_data['clicks']
+                context['clicks'] += vendor_data['clicks']
 
                 # Sales
                 sales_query = Sale.objects.filter(vendor=vendor, created__range=(date_start, date_end), status__range=(Sale.PENDING, Sale.CONFIRMED), is_promo=False, is_referral_sale=False)
@@ -193,23 +225,29 @@ def stores(request):
                 vendor_data['sales_sum'] = sales_query.aggregate(Sum('converted_amount')).get('converted_amount__sum') or ZERO_DECIMAL
                 context['affiliates'][affiliate_name]['sales'] += vendor_data['sales']
                 context['affiliates'][affiliate_name]['sales_sum'] += vendor_data['sales_sum']
+                context['sales'] += vendor_data['sales']
+                context['sales_sum'] += vendor_data['sales_sum']
 
                 # Commission
                 commission_query = Sale.objects.filter(vendor=vendor, created__range=(date_start, date_end), status__range=(Sale.PENDING, Sale.CONFIRMED), is_promo=False, is_referral_sale=False)
                 vendor_data['commission'] = commission_query.aggregate(Sum('converted_commission')).get('converted_commission__sum') or ZERO_DECIMAL
                 context['affiliates'][affiliate_name]['commission'] += vendor_data['commission']
+                context['commission'] += vendor_data['commission']
 
                 # Actual commission
                 vendor_data['actual_commission'] = vendor_data['commission'] / vendor_data['sales_sum'] * 100
                 context['affiliates'][affiliate_name]['actual_commission'] = context['affiliates'][affiliate_name]['commission'] / context['affiliates'][affiliate_name]['sales_sum'] * 100
+                context['actual_commission'] = context['commission'] / context['sales_sum'] * 100
 
                 # Conversion
                 vendor_data['conversion'] = vendor_data['sales'] / vendor_data['clicks'] * 100
                 context['affiliates'][affiliate_name]['conversion'] = context['affiliates'][affiliate_name]['sales'] / context['affiliates'][affiliate_name]['clicks'] * 100
+                context['conversion'] = context['sales'] / context['clicks'] * 100
 
                 # EPC
                 vendor_data['epc'] = vendor_data['commission'] / vendor_data['clicks']
                 context['affiliates'][affiliate_name]['epc'] = context['affiliates'][affiliate_name]['commission'] / context['affiliates'][affiliate_name]['clicks']
+                context['epc'] = context['commission'] / context['clicks']
 
                 # Set vendor data
                 context['affiliates'][affiliate_name]['vendors'].append(vendor_data)
