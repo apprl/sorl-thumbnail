@@ -1,17 +1,31 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block body-classes %}kpi-dashboard-page{% endblock body-classes %}
+{% block body-classes %}admin-dashboard-kpi-page{% endblock body-classes %}
 {% block body %}
 
-    <div class="body-header">
-        <div class="body-header-col-full">
-            <h1>{% trans "KPI Dashboard" %}</h1>
-        </div>
-    </div>
+    {% include 'apparel/admin/header.html' %}
 
     <div class="row">
         <div class="col-sm-12">
+
+            <p>Available query strings:</p>
+            <dl class="dl-horizontal">
+                <dt>is_month=1</dt>
+                <dd>Interval is set to monthly</dd>
+                <dt>is_year=1</dt>
+                <dd>Interval is set to yearly</dd>
+                <dt>date=YYYY-MM-DD</dt>
+                <dd>Date of origin for interval. If date is set to 2013-11-17, the interval is created around that date, example:
+                    <ul>
+                        <li>Week: 2013-11-11 to 2013-11-17</li>
+                        <li>Month: 2013-11-01 to 2013-11-30</li>
+                        <li>Year: 2013-01-01 to 2013-12-31</li>
+                    </ul>
+                </dd>
+                <dt>Example</dt>
+                <dd>"?date=2013-10-17&is_month=1" produces the following interval: 2013-10-01 - 2013-10-31</dd>
+            </dl>
 
             <table class="table table-striped">
                 <thead>

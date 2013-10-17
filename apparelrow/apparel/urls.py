@@ -148,7 +148,9 @@ urlpatterns = patterns('',
     url(r'^admin/mailchimp/webhook/$', 'apparelrow.apparel.email.mailchimp_webhook'),
     url(r'^admin/mail/custom/$', 'apparelrow.apparel.views.custom_email.admin', name='custom-email-admin'),
 
-    url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard'),
+    url(r'^admin/dashboard/kpi/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard'),
+    url(r'^admin/dashboard/stores/$', 'apparelrow.apparel.views.admin.stores', name='admin-stores'),
+    url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard_'),
 )
 
 
