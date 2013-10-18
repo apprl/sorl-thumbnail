@@ -508,7 +508,6 @@ function filterCriteria(criteria_filter) {
             var this_element = jQuery(this);
             var this_element_id = parseInt(getElementId(this_element), 10);
             if(this_element_id in criteria_filter['categories']) {
-                this_element.find('.category-count').text('(' + criteria_filter['categories'][this_element_id] + ')');
                 this_element.parents('.filtered').removeClass('filtered');
             } else {
                 this_element.parent().addClass('filtered');
