@@ -17,6 +17,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
+from django.db.models import Q
 from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_unicode
@@ -113,17 +114,27 @@ def product_popularity(product):
     return product.popularity
 
 
+@task(name='apparel.email.mailchimp_subscribe_members', run_every=crontab(minute='0', hour='6,18'), max_retries=1, ignore_result=True)
+def mailchimp_subscribe_members():
+    batch = []
+    for user in get_user_model().objects.exclude(Q(email__isnull=True) | Q(email__exact='')).iterator():
+        batch.append({'EMAIL': user.email,
+                      'FNAME': user.first_name,
+                      'LNAME': user.last_name,
+                      'GENDER': user.gender,
+                      'PUBLISHER': int(user.is_partner),
+                      'TOP_PUB': int(user.is_top_partner),
+                      'USERID': user.pk})
+
+    mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
+    mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_MEMBER_LIST, double_optin=False, update_existing=True, batch=batch)
+
+
 @task(name='apparel.email.mailchimp_subscribe', max_retries=5, ignore_result=True)
 def mailchimp_subscribe(user):
     try:
         mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
         mailchimp.listSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST,
-                                email_address=user.email,
-                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.gender},
-                                double_optin=False,
-                                update_existing=True,
-                                send_welcome=False)
-        mailchimp.listSubscribe(id=settings.MAILCHIMP_MEMBER_LIST,
                                 email_address=user.email,
                                 merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.gender},
                                 double_optin=False,
@@ -141,12 +152,6 @@ def mailchimp_unsubscribe(user, delete=False):
                                   delete_member=delete,
                                   send_goodbye=False,
                                   send_notify=False)
-        if delete:
-            mailchimp.listUnsubscribe(id=settings.MAILCHIMP_MEMBER_LIST,
-                                      email_address=user.email,
-                                      delete_member=delete,
-                                      send_goodbye=False,
-                                      send_notify=False)
     except MailSnakeException, e:
         logger.error('Could not unsubscribe user from mailchimp: %s' % (e,))
 

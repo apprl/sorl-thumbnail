@@ -78,6 +78,7 @@ class User(AbstractUser):
 
     # partner
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
+    is_top_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Top partner user'))
     partner_group = models.ForeignKey('dashboard.Group', null=True, blank=True)
 
     # referral partner

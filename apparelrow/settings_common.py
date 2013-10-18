@@ -541,6 +541,7 @@ CELERY_ROUTES = ({
     'profile.views.send_email_confirm_task': {'queue': 'standard'},
     'apparel.email.mailchimp_subscribe': {'queue': 'standard'},
     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
+    'apparel.email.mailchimp_subscribe_members': {'queue': 'standard'},
     'apparel.facebook_push_graph': {'queue': 'standard'},
     'apparel.facebook_pull_graph': {'queue': 'standard'},
     'apparelrow.apparel.tasks.google_analytics_event': {'queue': 'standard'},

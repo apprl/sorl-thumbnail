@@ -50,7 +50,6 @@ def update_subscribers(mailchimp):
                       'LNAME': user.last_name,
                       'GENDER': user.gender})
 
-    mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_MEMBER_LIST, double_optin=False, update_existing=True, batch=batch)
     mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST, double_optin=False, update_existing=True, batch=batch)
 
 
