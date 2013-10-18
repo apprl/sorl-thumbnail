@@ -78,7 +78,7 @@ App.Views.FilterProductCategory = Backbone.View.extend({
         $ul.append(this.make_element(0, gettext('Reset')));
         this.collection.each(_.bind(function(model) {
             if(model.get('parent') == 0) {
-                $ul.append(this.make_element(model.get('id'), model.get('name'), model.get('count')))
+                $ul.append(this.make_element(model.get('id'), model.get('name')))
             }
         }, this));
         this.$el.append($ul);

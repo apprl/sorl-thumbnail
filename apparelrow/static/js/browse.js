@@ -40,7 +40,14 @@ $(document).ready(function() {
     });
 
     // Initially hide level 1 and 2 categories
-    jQuery('#product-category .level-1, #product-category .level-2').hide();
+    $('#product-category .level-1, #product-category .level-2').hide();
+
+    // But show parent and sibling to selected category if there is one
+    $('#product-category .selected').each(function(index, element) {
+        var element = $(element);
+        element.siblings('ul').show();
+        element.parents('ul').show();
+    });
 
     // Full reset button
     jQuery(document).on('click', '#reset, .btn-reset', function() {

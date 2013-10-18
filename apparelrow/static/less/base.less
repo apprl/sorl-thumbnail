@@ -1106,12 +1106,19 @@ body.shop, body.profile-likes {
             li {
               border: none;
             }
-            &.level-1 li {
-                padding-left: 10px;
+            &.level-1 {
+                margin-left: 1px;
+                li {
+                    &:first-child { margin-top: 4px; }
+                    &:last-child { margin-bottom: 4px; }
+                    padding-left: 10px;
+                }
             }
             &.level-2 {
-                margin-left: -10px;
+                margin-left: -8px;
                 li {
+                    &:first-child { margin-top: 4px; }
+                    &:last-child { margin-bottom: 4px; }
                     padding-left: 20px;
                 }
             }
