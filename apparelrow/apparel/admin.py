@@ -180,7 +180,7 @@ admin.site.register(Brand, BrandAdmin)
 #
 
 class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
-    list_display = ('name', 'ancestors', 'on_front_page', 'num_products')
+    list_display = ('name', 'ancestors', 'on_front_page')
     list_filter = ['parent', 'on_front_page']
     actions = ['publish_on_front_page', 'hide_on_front_page']
 
@@ -195,6 +195,7 @@ class CategoryAdmin(TranslationAdmin, MPTTModelAdmin):
     def ancestors(self, category):
         return ' > '.join([c.name for c in category.get_ancestors()])
 
+    # XXX: disabled, too slow with MySQL
     def num_products(self, category):
         p = Product.objects.filter(category=category).count()
 
