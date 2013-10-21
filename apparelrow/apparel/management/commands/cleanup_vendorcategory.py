@@ -22,7 +22,7 @@ class Command(BaseCommand):
         for vc in  VendorCategory.objects.filter(category__isnull=True,
                                                  override_gender__isnull=True,
                                                  default_gender__isnull=True).iterator():
-            if vc.vendor_products.count() == 0 or options['delete_unmapped']:
+            if options['delete_unmapped'] or vc.vendor_products.count() == 0:
                 vc.delete()
                 deleted_count += 1
 
