@@ -1,0 +1,3 @@
+#!/bin/sh
+
+su -s /bin/sh -c ". %(path)s/bin/activate && cd %(path)s/releases/current && ./manage.py clearsessions" %(run_user)s
