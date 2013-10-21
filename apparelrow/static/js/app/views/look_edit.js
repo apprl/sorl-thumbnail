@@ -149,7 +149,7 @@ App.Views.LookEdit = Backbone.View.extend({
             self.add_product_to_component(component, product);
             self.model.components.add(component);
         }
-        image.src = product.get('image_medium');
+        image.src = product.get('image_look');
     },
 
     on_click: function(e) {

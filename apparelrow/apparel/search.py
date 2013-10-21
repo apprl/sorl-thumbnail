@@ -336,6 +336,7 @@ def get_product_document(instance, rebuild=False):
         try:
             document['image_small'] = get_thumbnail(instance.product_image, '112x145', crop=False, format='PNG', transparent=True).url
             document['image_medium'] = get_thumbnail(instance.product_image, '224x291', crop=False, format='PNG', transparent=True).url
+            document['image_xmedium'] = get_thumbnail(instance.product_image, '280x320', keep_size=True, crop=False, format='PNG').url
         except (SyntaxError, IOError):
             logger.exception('Thumbnail Error [PID: %s]' % (instance.pk,))
             return None, 0

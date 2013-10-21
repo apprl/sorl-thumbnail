@@ -199,7 +199,8 @@ class ProductList(View):
                                  'discount_price:stored_discount',
                                  'slug',
                                  'image_small',
-                                 'image_medium',
+                                 'image_look:image_medium',
+                                 'image_medium:image_xmedium',
                                  'discount',
                                  'availability']
 

@@ -293,7 +293,7 @@ def look_instance_to_dict(look):
                     'id': component.product.id,
                     'slug': component.product.slug,
                     'image_small': get_thumbnail(component.product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
-                    'image_medium': get_thumbnail(component.product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                    'image_look': get_thumbnail(component.product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
                     'product_name': component.product.product_name,
                     'brand_name': manufacturer_name
                 }
