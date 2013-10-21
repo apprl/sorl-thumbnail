@@ -254,7 +254,7 @@ def product_detail(request, slug):
 
     # More alternatives
     #alternative = get_product_alternative(product)
-    alternative, alternative_url = more_alternatives(product, 10)
+    alternative, alternative_url = more_alternatives(product, 9)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)
@@ -271,7 +271,7 @@ def product_detail(request, slug):
                 'looks_with_product': looks_with_product,
                 'looks_with_product_count': looks_with_product_count,
                 'object_url': request.build_absolute_uri(),
-                'more_like_this': more_like_this_product(mlt_body, product.gender, 10),
+                'more_like_this': more_like_this_product(mlt_body, product.gender, 9),
                 'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
                 'product_full_image': product_full_image,
                 'product_brand_full_url': product_brand_full_url,
