@@ -40,7 +40,7 @@ class MinimarketMapper(DataMapper):
         return make_advertiser_url(store_id, self.record.get('link'))
 
     def get_category(self):
-        return '%s > %s' % (self.record.get('g:google_product_category'), self.record.get('g:product_type'))
+        return self.record.get('g:product_type')
 
     def get_gender(self):
         return self.map_gender(self.record.get('g:gender', ''))
