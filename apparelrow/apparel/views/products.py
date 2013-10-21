@@ -206,8 +206,13 @@ class ProductList(View):
 
         # Brand name filter
         if 'brand' in request.GET:
-            brand_name = request.GET.get('brand')
-            query_arguments['fq'].append('manufacturer_auto:"%s"' % (brand_name,))
+            query_arguments['fq'].append('manufacturer_auto:"%s"' % (request.GET.get('brand'),))
+
+        if 'category_name' in request.GET:
+            query_arguments['fq'].append('category_names:"%s"' % (request.GET.get('category_name'),))
+
+        if 'color_name' in request.GET:
+            query_arguments['fq'].append('color_names:"%s"' % (request.GET.get('color_name'),))
 
         # Query string
         query_string = request.GET.get('q')
