@@ -138,6 +138,7 @@
     <field name="slug" type="string" indexed="false" stored="true" multiValued="false"/>
     <field name="image_small" type="string" indexed="false" stored="true" multiValued="false"/>
     <field name="image_medium" type="string" indexed="false" stored="true" multiValued="false"/>
+    <field name="image_xmedium" type="string" indexed="false" stored="true" multiValued="false"/>
 
     <!-- Dates -->
     <field name="created" type="date" indexed="true" stored="true" multiValued="false"/>
