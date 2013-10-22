@@ -52,20 +52,6 @@ LOCALE_PATHS = (
     os.path.join(PROJECT_ROOT, 'locale'),
 )
 
-# Locale url plugin
-LOCALEURL_USE_ACCEPT_LANGUAGE = True
-LOCALEURL_USE_SESSION = True
-LOCALE_INDEPENDENT_PATHS = (
-    r'^/backend/',
-    r'^/products/[\d]+/(like|unlike)',
-    r'^/looks/[\w-]+?/(like|unlike)',
-    r'^/sitemap',
-    r'^/embed',
-    r'^/images/temporary/',
-    r'^/a/link',
-    r'^/a/conversion',
-)
-
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en'
@@ -102,6 +88,22 @@ MAX_MIN_CURRENCY = {
     'da': 10000,
     'no': 10000,
 }
+
+# Locale url plugin
+LOCALEURL_USE_ACCEPT_LANGUAGE = True
+LOCALEURL_USE_SESSION = True
+LOCALE_INDEPENDENT_PATHS = (
+    r'^/backend/',
+    r'^/products/[\d]+/(like|unlike)',
+    r'^/looks/[\w-]+?/(like|unlike)',
+    r'^/sitemap',
+    r'^/embed',
+    r'^/images/temporary/',
+    r'^/a/link',
+    r'^/a/conversion',
+)
+LOCALEURL_SUPPORTED_LOCALES = LANGUAGES_DISPLAY
+
 
 
 # Absolute path to the directory that holds media.
