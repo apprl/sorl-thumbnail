@@ -3278,14 +3278,14 @@ msgstr "Ditt användarnamn, om du har glömt det:"
 
 #: templates/registration/password_reset_form.html:8
 msgid "Forgotten your password?"
-msgstr ""
+msgstr "Glömt ditt lösenord?"
 
 #: templates/registration/password_reset_form.html:14
 msgid ""
 "Enter your e-mail address below, and we'll e-mail instructions for setting a "
 "new one."
 msgstr ""
-"Glömt ditt lösenord? Ange ditt lösenord här och vi skickar instruktioner för "
+"Ange din e-mail här och vi skickar instruktioner för "
 "att ange ett nytt!"
 
 #: templates/registration/registration_activation_email.html:6
