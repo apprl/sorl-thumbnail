@@ -36,7 +36,7 @@ from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProduc
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender
-from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity
+from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 
 from apparelrow.activity_feed.views import user_feed
 
@@ -584,6 +584,11 @@ def look_detail(request, slug):
 
     for component in components:
         component.style_embed = component._style(min(694, look.image_width) / float(look.width))
+
+    # Build static image if it is missing
+    if not look.static_image:
+        build_static_look_image(look.pk)
+        look = get_model('apparel', 'Look').objects.get(pk=look.pk)
 
     return render_to_response(
             'apparel/look_detail.html',
