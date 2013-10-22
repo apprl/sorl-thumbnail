@@ -6,7 +6,7 @@
 {% block body-classes %}profile-page profile-looks{% endblock body-classes %}
 {% block content %}
     {% if current_page.object_list %}
-        {% include 'apparel/fragments/look_list.html' %}
+        {% include 'apparel/fragments/look_list.html' with is_profile=True %}
     {% else %}
         <div class="empty">
         {% if profile == request.user %}

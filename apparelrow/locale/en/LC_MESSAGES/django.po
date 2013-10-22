@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-15 08:21+0200\n"
+"POT-Creation-Date: 2013-10-22 11:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,35 +17,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings_common.py:73 settings_common.py:79
+#: settings_common.py:59 settings_common.py:65
 msgid "English (€)"
 msgstr ""
 
-#: settings_common.py:74 settings_common.py:80
+#: settings_common.py:60 settings_common.py:66
 msgid "Swedish (SEK)"
 msgstr "Svenska (SEK)"
 
-#: settings_common.py:75
+#: settings_common.py:61
 msgid "Danish (DKK)"
 msgstr ""
 
-#: settings_common.py:76
+#: settings_common.py:62
 msgid "Norwegian (NOK)"
 msgstr ""
 
-#: settings_common.py:83 settings_common.py:89
+#: settings_common.py:69 settings_common.py:75
 msgid "Eng (€)"
 msgstr ""
 
-#: settings_common.py:84 settings_common.py:90
+#: settings_common.py:70 settings_common.py:76
 msgid "Swe (SEK)"
 msgstr ""
 
-#: settings_common.py:85
+#: settings_common.py:71
 msgid "Dnk (DKK)"
 msgstr ""
 
-#: settings_common.py:86
+#: settings_common.py:72
 msgid "Nor (NOK)"
 msgstr ""
 
@@ -65,22 +65,22 @@ msgstr ""
 #: apparel/models.py:390 apparel/models.py:711 apparel/models.py:920
 #: apparel/models.py:935 apparel/models.py:1132 apparel/models.py:1166
 #: dashboard/models.py:74 dashboard/models.py:98 dashboard/models.py:137
-#: profile/models.py:396 statistics/models.py:68 statistics/models.py:80
+#: profile/models.py:397 statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr ""
 
 #: activity_feed/models.py:94 apparel/models.py:225 apparel/models.py:391
 #: apparel/models.py:458 apparel/models.py:509 apparel/models.py:712
 #: apparel/models.py:936 dashboard/models.py:75 dashboard/models.py:99
-#: profile/models.py:397
+#: profile/models.py:398
 msgid "Time modified"
 msgstr ""
 
-#: apparel/admin.py:262
+#: apparel/admin.py:263
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:267 templates/advertiser/modal_accept.html:20
+#: apparel/admin.py:268 templates/advertiser/modal_accept.html:20
 #: templates/apparel/look_editor.html:87 templates/apparel/look_editor.html:93
 #: templates/apparel/look_editor.html:99
 #: templates/apparel/look_editor.html:105
@@ -90,7 +90,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: apparel/admin.py:268 templates/apparel/look_editor.html:86
+#: apparel/admin.py:269 templates/apparel/look_editor.html:86
 #: templates/apparel/look_editor.html:92 templates/apparel/look_editor.html:98
 #: templates/apparel/look_editor.html:104
 #: templates/apparel/modal_look_delete.html:12
@@ -582,7 +582,7 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: importer/models.py:129 templates/dashboard/admin.html:159
+#: importer/models.py:129 templates/dashboard/admin.html:154
 #: templates/dashboard/publisher.html:202
 msgid "Date"
 msgstr ""
@@ -609,7 +609,7 @@ msgstr ""
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:82 templates/base.html:242
+#: profile/admin.py:82 templates/base.html:238
 #: templates/profile/base_settings.html:20
 #: templates/profile/base_settings.html:23
 #: templates/profile/settings_facebook.html:5
@@ -620,8 +620,9 @@ msgstr ""
 msgid "Brand"
 msgstr ""
 
-#: profile/admin.py:86 templates/dashboard/body_header.html:4
-#: templates/dashboard/info.html:5 templates/dashboard/publisher.html:5
+#: profile/admin.py:86 templates/apparel/admin/header.html:7
+#: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
+#: templates/dashboard/publisher.html:5
 #: templates/profile/base_settings.html:21
 #: templates/profile/settings_publisher.html:28
 msgid "Publisher"
@@ -631,7 +632,7 @@ msgstr ""
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:94 templates/base.html:161
+#: profile/admin.py:94 templates/base.html:157
 #: templates/dashboard/body_header.html:12
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
@@ -759,7 +760,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: profile/models.py:50 templates/base.html:226
+#: profile/models.py:50 templates/base.html:222
 #: templates/apparel/dialog_look_embed.html:22
 #: templates/profile/dialog_embed_shop.html:29
 msgid "Language"
@@ -781,59 +782,63 @@ msgstr ""
 msgid "Partner user"
 msgstr ""
 
-#: profile/models.py:84
+#: profile/models.py:81
+msgid "Top partner user"
+msgstr ""
+
+#: profile/models.py:85
 msgid "Referral partner user"
 msgstr ""
 
-#: profile/models.py:91
+#: profile/models.py:92
 msgid "When someone commented on a product that I have liked"
 msgstr ""
 
-#: profile/models.py:93
+#: profile/models.py:94
 msgid "When someone commented on a product that I have commented on"
 msgstr ""
 
-#: profile/models.py:95
+#: profile/models.py:96
 msgid "When someone commented on a look that I have created"
 msgstr ""
 
-#: profile/models.py:97
+#: profile/models.py:98
 msgid "When someone commented on a look that I have commented on"
 msgstr ""
 
-#: profile/models.py:99
+#: profile/models.py:100
 msgid "When someone likes a look that I have created"
 msgstr ""
 
-#: profile/models.py:101
+#: profile/models.py:102
 msgid "When someone starts to follow me"
 msgstr ""
 
-#: profile/models.py:103
+#: profile/models.py:104
 msgid "When a Facebook friend has joined Apprl"
 msgstr ""
 
-#: profile/models.py:311
+#: profile/models.py:312
 msgid "Partner group must be set to be able to set partner status"
 msgstr ""
 
-#: profile/models.py:320
+#: profile/models.py:321
 msgid "Receive payments as a company"
 msgstr ""
 
-#: profile/models.py:320
+#: profile/models.py:321
 msgid "Receive payments as a private person"
 msgstr ""
 
-#: profile/models.py:324
+#: profile/models.py:325
 msgid "Address"
 msgstr ""
 
-#: profile/models.py:325
+#: profile/models.py:326
 msgid "Postal code"
 msgstr ""
 
-#: profile/models.py:326
+#: profile/models.py:327
 msgid "City"
 msgstr ""
 
@@ -882,68 +887,68 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
-#: templates/base.html:120
+#: templates/base.html:116
 msgid "Toggle navigation"
 msgstr ""
 
-#: templates/base.html:136
+#: templates/base.html:132
 msgid "Search for products, members & brands"
 msgstr ""
 
-#: templates/base.html:146
+#: templates/base.html:142
 msgid "Get started"
 msgstr ""
 
-#: templates/base.html:147 templates/apparel/tags/login_bar.html:11
+#: templates/base.html:143 templates/apparel/tags/login_bar.html:11
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr ""
 
-#: templates/base.html:152
+#: templates/base.html:148
 msgid "Your profile"
 msgstr ""
 
-#: templates/base.html:154 templates/dashboard/body_header.html:6
+#: templates/base.html:150 templates/dashboard/body_header.html:6
 #: templates/dashboard/info.html:22 templates/dashboard/info.html.py:76
 msgid "Your statistics"
 msgstr ""
 
-#: templates/base.html:157 templates/advertiser/store_admin.html:4
+#: templates/base.html:153 templates/advertiser/store_admin.html:4
 #: templates/advertiser/store_admin.html:43
 msgid "Your store"
 msgstr ""
 
-#: templates/base.html:159
+#: templates/base.html:155
 msgid "+ Invite friends"
 msgstr ""
 
-#: templates/base.html:160
+#: templates/base.html:156
 #: templates/apparel/fragments/create_look_button.html:3
 #: templates/apparel/fragments/create_look_button.html:5
 msgid "+ Create look"
 msgstr ""
 
-#: templates/base.html:162
+#: templates/base.html:158
 msgid "Log out"
 msgstr ""
 
-#: templates/base.html:170 templates/activity_feed/feed_list.html:49
+#: templates/base.html:166 templates/activity_feed/feed_list.html:49
 msgid "Your APPRL"
 msgstr ""
 
-#: templates/base.html:172 templates/base.html.py:219
+#: templates/base.html:168 templates/base.html.py:215
 #: templates/apparel/browse.html:4 templates/apparel/browse.html.py:27
 msgid "Shop"
 msgstr ""
 
-#: templates/base.html:173 templates/base.html.py:222
+#: templates/base.html:169 templates/base.html.py:218
 #: templates/apparel/look_detail.html:4 templates/apparel/look_editor.html:5
 #: templates/apparel/look_list.html:4 templates/apparel/look_list.html:11
 #: templates/profile/looks.html:4
 msgid "Looks"
 msgstr ""
 
-#: templates/base.html:175 templates/activity_feed/verbs/follow.html:14
+#: templates/base.html:171 templates/activity_feed/verbs/follow.html:14
 #: templates/apparel/user_list.html:4 templates/apparel/user_list.html:22
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
@@ -954,61 +959,62 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
-#: templates/base.html:177 templates/apparel/user_list.html:24
+#: templates/base.html:173 templates/apparel/user_list.html:24
 msgid "Members"
 msgstr ""
 
-#: templates/base.html:178 templates/base.html.py:223
+#: templates/base.html:174 templates/base.html.py:219
 #: templates/apparel/user_list.html:25
 #: templates/apparel/fragments/product_filter.html:122
 msgid "Brands"
 msgstr ""
 
-#: templates/base.html:220 templates/apparel/look_editor.html:46
+#: templates/base.html:216 templates/apparel/look_editor.html:46
 msgid "Women"
 msgstr ""
 
-#: templates/base.html:221 templates/apparel/look_editor.html:47
+#: templates/base.html:217 templates/apparel/look_editor.html:47
 msgid "Men"
 msgstr ""
 
-#: templates/base.html:241
+#: templates/base.html:237
 msgid "Follow us"
 msgstr ""
 
-#: templates/base.html:243
+#: templates/base.html:239
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:244
+#: templates/base.html:240
 msgid "E-mail newsletter"
 msgstr ""
 
-#: templates/base.html:247
+#: templates/base.html:243
 msgid "Apprl"
 msgstr ""
 
-#: templates/base.html:248
+#: templates/base.html:244
 msgid "Contact"
 msgstr ""
 
-#: templates/base.html:249
+#: templates/base.html:245
 msgid "Privacy & Terms"
 msgstr ""
 
-#: templates/base.html:250 templates/flatpages/default.html:25
+#: templates/base.html:246 templates/flatpages/default.html:25
 msgid "Cookies"
 msgstr ""
 
-#: templates/base.html:251
+#: templates/base.html:247
 msgid "Bloggers"
 msgstr ""
 
-#: templates/base.html:252 templates/apparel/fragments/product_filter.html:146
+#: templates/base.html:248 templates/apparel/admin/header.html:9
+#: templates/apparel/fragments/product_filter.html:147
 msgid "Stores"
 msgstr ""
 
-#: templates/base.html:264
+#: templates/base.html:260
 #, fuzzy
 msgid "Sweden"
 msgstr "Svenska"
@@ -1230,9 +1236,10 @@ msgid "Transactions"
 msgstr ""
 
 #: templates/advertiser/store_admin.html:15
-#: templates/apparel/admin/kpi_dashboard.html:64
-#: templates/dashboard/admin.html:107 templates/dashboard/admin.html.py:164
-#: templates/dashboard/publisher.html:17 templates/dashboard/publisher.html:61
+#: templates/apparel/admin/kpi_dashboard.html:78
+#: templates/apparel/admin/stores.html:35 templates/dashboard/admin.html:102
+#: templates/dashboard/admin.html.py:159 templates/dashboard/publisher.html:17
+#: templates/dashboard/publisher.html:61
 #: templates/dashboard/publisher.html:148
 #: templates/dashboard/publisher.html:206
 msgid "Clicks"
@@ -1246,7 +1253,7 @@ msgstr ""
 msgid "Total accepted commission:"
 msgstr ""
 
-#: templates/advertiser/store_admin.html:56 templates/dashboard/admin.html:67
+#: templates/advertiser/store_admin.html:56 templates/dashboard/admin.html:62
 msgid "Show: "
 msgstr ""
 
@@ -1417,7 +1424,7 @@ msgstr ""
 
 #: templates/apparel/contest_stylesearch_charts.html:30
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:100
-#: templates/apparel/look_editor.html:5 templates/apparel/look_editor.html:12
+#: templates/apparel/look_editor.html:5
 #: templates/apparel/product_detail.html:4
 #: templates/apparel/fragments/look_medium.html:24
 msgid "by"
@@ -1485,7 +1492,8 @@ msgid "Create a collage"
 msgstr ""
 
 #: templates/apparel/look_detail.html:93 templates/apparel/look_editor.html:12
-msgid "Draft"
+#: templates/apparel/fragments/look_medium.html:23
+msgid "Not published"
 msgstr ""
 
 #: templates/apparel/look_detail.html:95
@@ -1576,12 +1584,12 @@ msgstr ""
 
 #: templates/apparel/look_editor.html:21
 #: templates/apparel/look_editor.html:120
-msgid "Save"
+msgid "Save draft"
 msgstr ""
 
 #: templates/apparel/look_editor.html:21
 #: templates/apparel/look_editor.html:120
-msgid "Save draft"
+msgid "Save"
 msgstr ""
 
 #: templates/apparel/look_editor.html:37
@@ -1730,6 +1738,7 @@ msgstr ""
 #: templates/apparel/product_detail.html:122
 #: templates/apparel/fragments/look_embed_tooltip.html:27
 #: templates/apparel/fragments/look_product_tooltip.html:25
+#: templates/apparel/fragments/product_medium.html:30
 msgid "Sold out"
 msgstr ""
 
@@ -1821,68 +1830,98 @@ msgstr ""
 msgid "Only women"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:9
-msgid "KPI Dashboard"
+#: templates/apparel/admin/header.html:5
+msgid "Admin dashboard"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:20
+#: templates/apparel/admin/header.html:8
+msgid "KPI"
+msgstr ""
+
+#: templates/apparel/admin/kpi_dashboard.html:34
 msgid "Selected month"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:20
+#: templates/apparel/admin/kpi_dashboard.html:34
 msgid "Selected week"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:21
+#: templates/apparel/admin/kpi_dashboard.html:35
 #, python-format
 msgid "Change %%"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:22
+#: templates/apparel/admin/kpi_dashboard.html:36
 msgid "Last month"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:22
+#: templates/apparel/admin/kpi_dashboard.html:36
 msgid "Last week"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:27
+#: templates/apparel/admin/kpi_dashboard.html:41
 msgid "Sales generated (€)"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:33
-#: templates/apparel/admin/kpi_dashboard.html:51
+#: templates/apparel/admin/kpi_dashboard.html:47
+#: templates/apparel/admin/kpi_dashboard.html:65
 msgid " - APPRL"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:39
-#: templates/apparel/admin/kpi_dashboard.html:57
+#: templates/apparel/admin/kpi_dashboard.html:53
+#: templates/apparel/admin/kpi_dashboard.html:71
 msgid " - Publisher"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:45
+#: templates/apparel/admin/kpi_dashboard.html:59
 msgid "Commission (€)"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:70
-#: templates/dashboard/admin.html:133 templates/dashboard/publisher.html:175
+#: templates/apparel/admin/kpi_dashboard.html:84
+#: templates/apparel/admin/stores.html:36 templates/dashboard/admin.html:128
+#: templates/dashboard/publisher.html:175
 msgid "Sales"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:76
+#: templates/apparel/admin/kpi_dashboard.html:90
 msgid "Conversion rate"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:82
+#: templates/apparel/admin/kpi_dashboard.html:96
 msgid "Average commission rate"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:88
+#: templates/apparel/admin/kpi_dashboard.html:102
 msgid "Average sale value"
 msgstr ""
 
-#: templates/apparel/admin/kpi_dashboard.html:94
+#: templates/apparel/admin/kpi_dashboard.html:108
 msgid "Active publishers"
+msgstr ""
+
+#: templates/apparel/admin/stores.html:34
+msgid "Store"
+msgstr ""
+
+#: templates/apparel/admin/stores.html:37
+msgid "Sales value"
+msgstr ""
+
+#: templates/apparel/admin/stores.html:38
+msgid "Commission value"
+msgstr ""
+
+#: templates/apparel/admin/stores.html:39
+#, python-format
+msgid "Commission %%"
+msgstr ""
+
+#: templates/apparel/admin/stores.html:40
+msgid "Conversion"
+msgstr ""
+
+#: templates/apparel/admin/stores.html:41
+msgid "EPC"
 msgstr ""
 
 #: templates/apparel/fragments/browse_follow_brand.html:4
@@ -2000,7 +2039,7 @@ msgstr ""
 #: templates/apparel/fragments/product_filter.html:71
 #: templates/apparel/fragments/product_filter.html:103
 #: templates/apparel/fragments/product_filter.html:126
-#: templates/apparel/fragments/product_filter.html:150
+#: templates/apparel/fragments/product_filter.html:151
 msgid "Reset this filter"
 msgstr ""
 
@@ -2025,7 +2064,7 @@ msgstr ""
 msgid "Search brands"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:155
+#: templates/apparel/fragments/product_filter.html:156
 msgid "No matching stores"
 msgstr ""
 
@@ -2090,93 +2129,93 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: templates/dashboard/admin.html:5 templates/dashboard/admin.html.py:60
+#: templates/dashboard/admin.html:5
 msgid "Publisher Admin"
 msgstr ""
 
-#: templates/dashboard/admin.html:76
+#: templates/dashboard/admin.html:71
 #, python-format
 msgid "Total commission %(month_commission)s %(currency)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:77
+#: templates/dashboard/admin.html:72
 #, python-format
 msgid "Publisher commission %(partner)s %(currency)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:78
+#: templates/dashboard/admin.html:73
 #, python-format
 msgid "Apprl commission %(apprl)s %(currency)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:81
+#: templates/dashboard/admin.html:76
 #, python-format
 msgid "Sales %(sales_count)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:82
+#: templates/dashboard/admin.html:77
 #, python-format
 msgid "Conversion rate %(conversion_rate)s%%"
 msgstr ""
 
-#: templates/dashboard/admin.html:85
+#: templates/dashboard/admin.html:80
 #, python-format
 msgid "Total click %(click_total)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:86
+#: templates/dashboard/admin.html:81
 #, python-format
 msgid "Publisher click %(click_partner)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:87
+#: templates/dashboard/admin.html:82
 #, python-format
 msgid "Apprl click %(click_apprl)s"
 msgstr ""
 
-#: templates/dashboard/admin.html:101 templates/dashboard/publisher.html:142
+#: templates/dashboard/admin.html:96 templates/dashboard/publisher.html:142
 msgid "Most clicked products"
 msgstr ""
 
-#: templates/dashboard/admin.html:105 templates/dashboard/admin.html.py:131
-#: templates/dashboard/admin.html:160 templates/dashboard/publisher.html:146
+#: templates/dashboard/admin.html:100 templates/dashboard/admin.html.py:126
+#: templates/dashboard/admin.html:155 templates/dashboard/publisher.html:146
 #: templates/dashboard/publisher.html:173
 #: templates/dashboard/publisher.html:203
 msgid "Product"
 msgstr ""
 
-#: templates/dashboard/admin.html:119 templates/dashboard/admin.html.py:145
-#: templates/dashboard/admin.html:193 templates/dashboard/publisher.html:160
+#: templates/dashboard/admin.html:114 templates/dashboard/admin.html.py:140
+#: templates/dashboard/admin.html:188 templates/dashboard/publisher.html:160
 #: templates/dashboard/publisher.html:187
 #: templates/dashboard/publisher.html:236
 msgid "No sales yet."
 msgstr ""
 
-#: templates/dashboard/admin.html:127 templates/dashboard/publisher.html:169
+#: templates/dashboard/admin.html:122 templates/dashboard/publisher.html:169
 msgid "Generated most sales"
 msgstr ""
 
-#: templates/dashboard/admin.html:155
+#: templates/dashboard/admin.html:150
 msgid "All sales"
 msgstr ""
 
-#: templates/dashboard/admin.html:162
+#: templates/dashboard/admin.html:157
 msgid "User"
 msgstr ""
 
-#: templates/dashboard/admin.html:163 templates/dashboard/publisher.html:205
+#: templates/dashboard/admin.html:158 templates/dashboard/publisher.html:205
 msgid "From"
 msgstr ""
 
-#: templates/dashboard/admin.html:165
+#: templates/dashboard/admin.html:160
 msgid "Our Comm"
 msgstr ""
 
-#: templates/dashboard/admin.html:166
+#: templates/dashboard/admin.html:161
 msgid "Publisher Comm"
 msgstr ""
 
-#: templates/dashboard/admin.html:178 templates/dashboard/publisher.html:218
+#: templates/dashboard/admin.html:173 templates/dashboard/publisher.html:218
 msgid "Referral"
 msgstr ""
 
