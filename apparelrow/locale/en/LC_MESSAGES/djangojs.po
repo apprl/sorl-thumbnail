@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-23 09:38+0200\n"
+"POT-Creation-Date: 2013-10-22 11:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,81 +18,65 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: static/js/apparel.js:408
-msgid "Like products to save it to your profile and get sale alerts"
-msgstr ""
-
-#: static/js/apparel.js:446
-msgid "Buy"
-msgstr ""
-
-#: static/js/apparel.js:838
+#: static/js/apparel.js:749
 msgid "Found %(count)s product"
 msgid_plural "Found %(count)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:839
+#: static/js/apparel.js:750
 msgid "Found %(count)s look"
 msgid_plural "Found %(count)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:840
+#: static/js/apparel.js:751
 msgid "Found %(count)s matching brand"
 msgid_plural "Found %(count)s matching brands"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:841
+#: static/js/apparel.js:752
 msgid "Found %(count)s matching member"
 msgid_plural "Found %(count)s matching members"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:842
+#: static/js/apparel.js:753
 msgid "Found %(count)s matching store"
 msgid_plural "Found %(count)s matching stores"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:843
+#: static/js/apparel.js:754
 msgid "Show %(count)s product"
 msgid_plural "Show all %(count)s products"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:844
+#: static/js/apparel.js:755
 msgid "Show %(count)s look"
 msgid_plural "Show all %(count)s looks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:845
+#: static/js/apparel.js:756
 msgid "Show %(count)s matching brand"
 msgid_plural "Show all %(count)s matching brands"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:846
+#: static/js/apparel.js:757
 msgid "Show %(count)s matching member"
 msgid_plural "Show all %(count)s matching members"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/js/apparel.js:847
+#: static/js/apparel.js:758
 msgid "Show %(count)s matching store"
 msgid_plural "Show all %(count)s matching stores"
 msgstr[0] ""
 msgstr[1] ""
-
-#: static/js/browse.js:672
-msgid "See looks »"
-msgstr ""
-
-#: static/js/browse.js:673
-msgid "SOLD OUT"
-msgstr ""
 
 #: static/js/app/models/look.js:33
 msgid ""
@@ -120,14 +104,10 @@ msgstr ""
 msgid "Unpublish look?"
 msgstr ""
 
-#: static/js/app/views/dialog_unpublish.js:22
-msgid "Save draft"
-msgstr ""
-
-#: static/js/app/views/filter_product_category.js:76
-#: static/js/app/views/filter_product_color.js:78
-#: static/js/app/views/filter_product_price.js:68
-#: static/js/app/views/filter_product_subcategory.js:76
+#: static/js/app/views/filter_product_category.js:78
+#: static/js/app/views/filter_product_color.js:80
+#: static/js/app/views/filter_product_price.js:70
+#: static/js/app/views/filter_product_subcategory.js:78
 msgid "Reset"
 msgstr ""
 

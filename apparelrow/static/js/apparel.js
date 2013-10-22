@@ -300,7 +300,6 @@ $(document).ready(function() {
             product_id = getElementId(element.parent());
 
         if(!element.data('load_data')) {
-            element.find('.buy').text(gettext('Buy'));
             like_element = element.find('.btn-product-like');
             $.getJSON(product_popup_url + '?id=' + product_id, function(json) {
                 if(json[0].liked == true) {
