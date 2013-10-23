@@ -168,6 +168,17 @@ def set_query_parameter(url, param_name, param_value):
 
     return urlunsplit((scheme, netloc, path, new_query_string, fragment))
 
+def remove_query_parameter(url, param_name):
+    scheme, netloc, path, query_string, fragment = urlsplit(url)
+    query_params = parse_qs(query_string)
+
+    if param_name in query_params:
+        query_params.pop(param_name)
+
+    new_query_string = urlencode(query_params, doseq=True)
+
+    return urlunsplit((scheme, netloc, path, new_query_string, fragment))
+
 
 def generate_sid(product_id, target_user_id=0, page='Default'):
     try:

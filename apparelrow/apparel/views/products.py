@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
-from apparelrow.apparel.utils import JSONResponse, JSONPResponse, set_query_parameter, select_from_multi_gender, currency_exchange
+from apparelrow.apparel.utils import JSONResponse, JSONPResponse, remove_query_parameter, set_query_parameter, select_from_multi_gender, currency_exchange
 from apparelrow.apparel.utils import vendor_buy_url
 
 
@@ -335,12 +335,18 @@ class ProductList(View):
         result = {}
         if paged_result.has_next():
             next_page = request.build_absolute_uri()
+            # TODO: optimize, calls urlsplit and parse_qs 3 times
             next_page = set_query_parameter(next_page, 'page', paged_result.next_page_number())
+            next_page = remove_query_parameter(next_page, 'callback')
+            next_page = remove_query_parameter(next_page, '_')
             result.update(next_page=next_page)
 
         if paged_result.has_previous():
             prev_page = request.build_absolute_uri()
+            # TODO: optimize, calls urlsplit and parse_qs 3 times
             prev_page = set_query_parameter(prev_page, 'page', paged_result.previous_page_number())
+            prev_page = remove_query_parameter(prev_page, 'callback')
+            prev_page = remove_query_parameter(prev_page, '_')
             result.update(prev_page=prev_page)
 
         # SID
