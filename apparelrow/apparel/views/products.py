@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
-from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
+from apparelrow.apparel.utils import JSONResponse, JSONPResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 from apparelrow.apparel.utils import vendor_buy_url
 
 
@@ -383,5 +383,9 @@ class ProductList(View):
                 product.url = product_urls[product.id]
 
             result['products'].append(product.__dict__)
+
+        callback = request.GET.get('callback')
+        if callback:
+            return JSONPResponse(result, callback=callback)
 
         return JSONResponse(result)

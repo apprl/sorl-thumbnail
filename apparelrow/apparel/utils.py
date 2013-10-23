@@ -430,3 +430,13 @@ class JSONResponse(HttpResponse):
     """
     def __init__(self, obj='', json_opts={}, mimetype='application/json', *args, **kwargs):
         super(JSONResponse, self).__init__(json.dumps(obj, cls=CustomEncoder, **json_opts), mimetype, *args, **kwargs)
+
+class JSONPResponse(HttpResponse):
+    """
+    JSONP response class.
+    """
+    def __init__(self, obj='', json_opts={}, callback=None, mimetype='application/json', *args, **kwargs):
+        if not callback:
+            callback = 'callback'
+
+        super(JSONPResponse, self).__init__('%s(%s)' % (callback, json.dumps(obj, cls=CustomEncoder, **json_opts)), mimetype, *args, **kwargs)
