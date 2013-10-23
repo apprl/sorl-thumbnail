@@ -377,6 +377,10 @@ class API(object):
         if not self.dataset['product']['manufacturer']:
             raise IncompleteDataSet('manufacturer', 'The field manufacturer cannot be empty or null')
 
+        # Check for empty category
+        if not self.dataset['product']['category']:
+            raise IncompleteDataSet('category', 'The field category cannot be empty or null')
+
         # Check that the gender field is valid (it may be None)
         if self.dataset['product']['gender'] is not None:
             if self.dataset['product']['gender'] not in GENDERS:
