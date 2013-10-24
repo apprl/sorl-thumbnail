@@ -35,7 +35,7 @@ from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Opt
 from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
-from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender
+from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender, JSONResponse, JSONPResponse
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 
 from apparelrow.activity_feed.views import user_feed
@@ -632,6 +632,29 @@ def csrf_failure(request, reason=None):
     if reason is None: reason = '[None given]'
     logging.debug("CSRF failure: %s" % reason)
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
+
+
+def list_categories(request):
+    categories = {}
+    return_categories = []
+
+    last_level = 0
+    category_query = get_model('apparel', 'Category').objects.values('name_en', 'name_sv', 'pk', 'parent_id', 'level')
+    for category in category_query:
+        category_tuple = (category.get('name_en'), category.get('name_sv'), [])
+
+        categories[category.get('pk')] = category_tuple
+
+        if category.get('level') > last_level:
+            categories[category.get('parent_id')][2].append(category_tuple)
+        else:
+            return_categories.append(category_tuple)
+
+    callback = request.GET.get('callback')
+    if callback:
+        return JSONPResponse(return_categories, callback=callback)
+
+    return JSONResponse(return_categories)
 
 
 @login_required

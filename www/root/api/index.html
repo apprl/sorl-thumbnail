@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>APPRL API</title>
+        <meta charset="utf-8">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script language="javascript" type="text/javascript">
+            $(function() {
+                // On form submit
+                $('form').on('submit', function() {
+                    // Success response function
+                    var process = function(data) {
+                        var result = $('#result').html('');
+                        $.each(data.products, function(index, product) {
+                            result.append(
+                                $('<a>').attr({'target': '_blank', 'href': 'http://apprl.com/products/' + product.slug + '/'}).append(
+                                    $('<img>').attr({'src': product.image_medium, title: product.brand_name, alt: product.brand_name})
+                                )
+                            );
+                        });
+                    };
+
+                    // Get URL from form
+                    var url = $('form input').val();
+
+                    // Call JSONP Products API
+                    $.ajax({url: url, dataType: 'jsonp', success: process});
+
+                    // Disable default form submit action
+                    return false;
+                });
+
+
+                // Create category modal
+                var createElement = function(category) {
+                    return $('<li>').text(category[0] + ' -- ' + category[1]);
+                };
+                var displayCategories = function(response) {
+                    var categories = $('#categories');
+                    $.each(response, function(index, category) {
+                        categories.append(createElement(category));
+
+                        if (category[2].length > 0) {
+                            var subcategories = $('<ul>');
+                            $.each(category[2], function(index, subcategory) {
+                                subcategories.append(createElement(subcategory));
+
+                                if (subcategory[2].length > 0) {
+                                    var subsubcategories = $('<ul>');
+                                    $.each(subcategory[2], function(index, subsubcategory) {
+                                        subsubcategories.append(createElement(subsubcategory));
+                                    });
+                                    subcategories.append(subsubcategories);
+                                }
+                            });
+                            categories.append(subcategories);
+                        }
+                    });
+                };
+                $.ajax({url: 'http://apprl.com/backend/categories', dataType: 'jsonp', success: displayCategories});
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>APPRL API</h1>
+            <a class="btn btn-primary" data-toggle="modal" href="#categoryModal">Show category names</a>
+            <h3>Parameters</h3>
+            <dl class="dl-horizontal">
+                <dt>sid</dt>
+                <dd>User ID for tracking of sales. <strong>REQUIRED</strong></dd>
+                <dt>page</dt>
+                <dd>Between 1 and last page number. <strong>OPTIONAL</strong></dd>
+                <dt>limit</dt>
+                <dd>Between 1 and 30, default is 10. <strong>OPTIONAL</strong></dd>
+                <dt>category_name</dt>
+                <dd>Category name in text, either swedish or english (from our shop). <strong>OPTIONAL</strong></dd>
+                <dt>color_name</dt>
+                <dd>Color name in text, either swedish or english (from our shop). <strong>OPTIONAL</strong></dd>
+                <dt>brand</dt>
+                <dd>Brand name in text. <strong>OPTIONAL</strong></dd>
+                <dt>gender</dt>
+                <dd>Either 'M' for man or 'W' for woman. <strong>OPTIONAL</strong></dd>
+            </dl>
+            <p>Example: <strong>http://api.apprl.com/en/products/?sid=250&limit=30&category_name=shoes&gender=M</strong></p>
+            <form class="form" role="form">
+                <div class="form-group">
+                    <label class="sr-only" for="api_endpoint">Email address</label>
+                    <input type="text" class="form-control" id="api_endpoint" placeholder="API URL" value="http://api.apprl.com/en/products/">
+                </div>
+            </form>
+
+            <div id="result"></div>
+        </div>
+
+        <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Categories</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="categories"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
