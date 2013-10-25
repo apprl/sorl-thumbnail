@@ -78,21 +78,44 @@
             <h3>Parameters</h3>
             <dl class="dl-horizontal">
                 <dt>sid</dt>
-                <dd>You need an SID to earn money on your links, which you get by becoming an APPRL Publisher. Apply here if you're interested: <a target="_blank" href="http://apprl.com/publisher/">http://apprl.com/publisher/</a>. <strong>OPTIONAL but RECOMMENDED</strong></dd>
+                <dd>To earn money on your links you need an SID, which you get by becoming an APPRL Publisher. Apply here: <a target="_blank" href="http://apprl.com/publisher/">http://apprl.com/publisher/</a>. <strong>OPTIONAL but RECOMMENDED</strong></dd>
                 <dt>page</dt>
                 <dd>Between 1 and last page number. <strong>OPTIONAL</strong></dd>
                 <dt>limit</dt>
                 <dd>Between 1 and 30, default is 10. <strong>OPTIONAL</strong></dd>
                 <dt>category_name</dt>
-                <dd>English category name in text (<a data-toggle="modal" href="#categoryModal">show category names</a>). <strong>OPTIONAL</strong></dd>
+                <dd>One category name in text, case insensitive (<a data-toggle="modal" href="#categoryModal">show category names</a>). <strong>OPTIONAL</strong></dd>
                 <dt>color_name</dt>
-                <dd>English color name in text (<a data-toggle="modal" href="#colorModal">show color names</a>). <strong>OPTIONAL</strong></dd>
+                <dd>One or many color names in text, seperated with comma, case insensitive (<a data-toggle="modal" href="#colorModal">show color names</a>). <strong>OPTIONAL</strong></dd>
                 <dt>brand</dt>
-                <dd>Brand name in text. <strong>OPTIONAL</strong></dd>
+                <dd>One brand name in text, case insensitive (<a target="_blank" href="http://apprl.com/brands/">see all our brands here</a>). <strong>OPTIONAL</strong></dd>
                 <dt>gender</dt>
                 <dd>Either 'M' for man or 'W' for woman. <strong>OPTIONAL</strong></dd>
             </dl>
+            <p>Use /sv/ to return data in Swedish and SEK currency<br>
+            Use /en/ to return data in English and EUR currency</p>
             <p>Example: <strong>http://api.apprl.com/en/products/?sid=250&limit=30&category_name=shoes&gender=M</strong></p>
+            <h3>Return data</h3>
+            <pre>
+{"next_page": "http://api.apprl.com/en/products/?page=2",
+ "products": [
+    {"id": "2523471",
+     "image_medium": "http://s.apprl.com/cache/a1398d8dfb17f50037566dccc261c543/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
+     "image_look": "http://s.apprl.com/cache/4bd5aa14559ecf1c54e6d9ebecabc96f/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
+     "image_small": "http://s.apprl.com/cache/45405f7fa1045805090d739670fa007b/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
+     "url": "http://api.apprl.com/en/redirect/2523471/Ext-Site/0/",
+     "product_name": "Slimmer Stadil Blue Furry Sneakers",
+     "brand_name": "Hummel",
+     "slug": "hummel-slimmer-stadil-blue-furry-sneakers",
+     "availability": true,
+     "price": "109",
+     "discount": false,
+     "discount_price": "0",
+     "currency": "EUR"},
+     ...
+    ]
+}</pre>
+            <h3>Try it</h3>
             <form class="form" role="form">
                 <div class="form-group">
                     <label class="sr-only" for="api_endpoint">Email address</label>
