@@ -350,19 +350,18 @@ class ProductList(View):
             result.update(prev_page=prev_page)
 
         # SID
-        sid = None
-        product_urls = {}
+        sid = 0
         if 'sid' in request.REQUEST:
-            product_ids = []
             try:
                 sid = int(request.REQUEST['sid'])
-                product_ids = [product.id for product in paged_result.object_list]
             except (TypeError, ValueError, AttributeError):
                 pass
 
-            products = get_model('apparel', 'Product').objects.filter(pk__in=product_ids)
-            for product in products:
-                product_urls[str(product.pk)] = request.build_absolute_uri(reverse('product-redirect', args=(product.pk, 'Ext-Site', sid)))
+        product_ids = [product.id for product in paged_result.object_list if product]
+        product_urls = {}
+        products = get_model('apparel', 'Product').objects.filter(pk__in=product_ids)
+        for product in products:
+            product_urls[str(product.pk)] = request.build_absolute_uri(reverse('product-redirect', args=(product.pk, 'Ext-Site', sid)))
 
         # Language currency
         language_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
