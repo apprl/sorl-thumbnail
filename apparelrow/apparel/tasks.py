@@ -114,20 +114,34 @@ def product_popularity(product):
     return product.popularity
 
 
-@task(name='apparel.email.mailchimp_subscribe_members', run_every=crontab(minute='0', hour='6,18'), max_retries=1, ignore_result=True)
+@periodic_task(name='apparel.email.mailchimp_subscribe_members', run_every=crontab(minute='0', hour='6,18'), max_retries=1, ignore_result=True)
 def mailchimp_subscribe_members():
-    batch = []
-    for user in get_user_model().objects.exclude(Q(email__isnull=True) | Q(email__exact='')).iterator():
-        batch.append({'EMAIL': user.email,
-                      'FNAME': user.first_name,
-                      'LNAME': user.last_name,
-                      'GENDER': user.gender,
-                      'PUBLISHER': int(user.is_partner),
-                      'TOP_PUB': int(user.is_top_partner),
-                      'USERID': user.pk})
+    if not settings.DEBUG:
+        batch = []
+        for user in get_user_model().objects.exclude(Q(email__isnull=True) | Q(email__exact='')).iterator():
+            batch.append({'EMAIL': user.email,
+                          'FNAME': user.first_name,
+                          'LNAME': user.last_name,
+                          'GENDER': user.gender,
+                          'PUBLISHER': int(user.is_partner),
+                          'TOP_PUB': int(user.is_top_partner),
+                          'USERID': user.pk})
 
-    mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
-    mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_MEMBER_LIST, double_optin=False, update_existing=True, batch=batch)
+        mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
+        mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_MEMBER_LIST, double_optin=False, update_existing=True, batch=batch)
+
+        batch = []
+        for user in get_user_model().objects.filter(is_partner=True).exclude(Q(email__isnull=True) | Q(email__exact='')).iterator():
+            batch.append({'EMAIL': user.email,
+                          'FNAME': user.first_name,
+                          'LNAME': user.last_name,
+                          'GENDER': user.gender,
+                          'PUBLISHER': int(user.is_partner),
+                          'TOP_PUB': int(user.is_top_partner),
+                          'USERID': user.pk})
+
+        mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
+        mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_PUBLISHER_LIST, double_optin=False, update_existing=True, batch=batch)
 
 
 @task(name='apparel.email.mailchimp_subscribe', max_retries=5, ignore_result=True)
