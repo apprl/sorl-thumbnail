@@ -621,6 +621,12 @@ def login_as_user(request, user_id):
 
             auth.login(request, target_user)
 
+            if FB_USER_SESSION_KEY in request.session:
+                del request.session[FB_USER_SESSION_KEY]
+
+            if FB_USER_EXPIRES_SESSION_KEY in request.session:
+                del request.session[FB_USER_EXPIRES_SESSION_KEY]
+
             return HttpResponseRedirect('/')
 
     raise Http404
