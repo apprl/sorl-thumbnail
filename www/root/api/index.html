@@ -33,9 +33,18 @@
                 });
 
 
+                // Create color modal
+                var dispalyColors = function(response) {
+                    var colors = $('#colors');
+                    $.each(response, function(index, color) {
+                        colors.append($('<li>').text(color));
+                    });
+                };
+                $.ajax({url: 'http://apprl.com/backend/colors', dataType: 'jsonp', success: dispalyColors});
+
                 // Create category modal
                 var createElement = function(category) {
-                    return $('<li>').text(category[0] + ' -- ' + category[1]);
+                    return $('<li>').text(category[0]);
                 };
                 var displayCategories = function(response) {
                     var categories = $('#categories');
@@ -66,7 +75,6 @@
     <body>
         <div class="container">
             <h1>APPRL API</h1>
-            <a class="btn btn-primary" data-toggle="modal" href="#categoryModal">Show category names</a>
             <h3>Parameters</h3>
             <dl class="dl-horizontal">
                 <dt>sid</dt>
@@ -76,9 +84,9 @@
                 <dt>limit</dt>
                 <dd>Between 1 and 30, default is 10. <strong>OPTIONAL</strong></dd>
                 <dt>category_name</dt>
-                <dd>Category name in text, either swedish or english (from our shop). <strong>OPTIONAL</strong></dd>
+                <dd>English category name in text (<a data-toggle="modal" href="#categoryModal">show category names</a>). <strong>OPTIONAL</strong></dd>
                 <dt>color_name</dt>
-                <dd>Color name in text, either swedish or english (from our shop). <strong>OPTIONAL</strong></dd>
+                <dd>English color name in text (<a data-toggle="modal" href="#colorModal">show color names</a>). <strong>OPTIONAL</strong></dd>
                 <dt>brand</dt>
                 <dd>Brand name in text. <strong>OPTIONAL</strong></dd>
                 <dt>gender</dt>
@@ -93,6 +101,23 @@
             </form>
 
             <div id="result"></div>
+        </div>
+
+        <div class="modal fade" id="colorModal" tabindex="-1" role="dialog" aria-labelledby="colorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Colors</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="colors"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">

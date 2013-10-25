@@ -634,6 +634,16 @@ def csrf_failure(request, reason=None):
     return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
 
 
+def list_colors(request):
+    color_data = get_model('apparel', 'Option').objects.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('value', flat=True)
+
+    callback = request.GET.get('callback')
+    if callback:
+        return JSONPResponse(list(color_data), callback=callback)
+
+    return JSONResponse(list(color_data))
+
+
 def list_categories(request):
     categories = {}
     return_categories = []
