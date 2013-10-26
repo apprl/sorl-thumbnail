@@ -24,24 +24,6 @@
     </div>
     {% endif %}
 
-    {% if not user_id %}
-    <div class="panel panel-product-sort">
-        <div class="panel-heading">
-            <a class="accordion-toggle" data-toggle="collapse" href="#collapseSort">{% trans "Sort by" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
-        </div>
-        <div id="collapseSort" class="panel-collapse collapse">
-            <div class="panel-body" id="product-sort">
-                <ul class="list-unstyled">
-                    <li><a href="?sort=pop" data-sort="pop" class="selected">{% trans "trending" %}</a></li>
-                    <li><a href="?sort=lat" data-sort="lat">{% trans "latest" %}</a></li>
-                    <li><a href="?sort=che" data-sort="che">{% trans "low price" %}</a></li>
-                    <li><a href="?sort=exp" data-sort="exp">{% trans "high price" %}</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
     <div class="panel{% if selected_categories %} active{% endif %}">
         <div class="panel-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseOne">{% trans "Categories" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
@@ -160,4 +142,23 @@
         </div>
     </div>
     {% endif %}
+
+    {% if not user_id %}
+    <div class="panel panel-product-sort">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseSort">{% trans "Sort by" %}<span class="glyphicon glyphicon-chevron-up"></span></a>
+        </div>
+        <div id="collapseSort" class="panel-collapse collapse">
+            <div class="panel-body" id="product-sort">
+                <ul class="list-unstyled">
+                    <li><a href="?sort=pop" data-sort="pop" class="selected">{% trans "popular" %}</a></li>
+                    <li><a href="?sort=lat" data-sort="lat">{% trans "latest" %}</a></li>
+                    <li><a href="?sort=che" data-sort="che">{% trans "low price" %}</a></li>
+                    <li><a href="?sort=exp" data-sort="exp">{% trans "high price" %}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 </div>

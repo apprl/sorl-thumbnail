@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-22 11:40+0200\n"
+"POT-Creation-Date: 2013-10-26 13:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -300,7 +300,7 @@ msgid "Buy URL"
 msgstr "URL till köpsida"
 
 #: apparel/models.py:544 templates/apparel/look_editor.html:63
-#: templates/apparel/fragments/product_filter.html:67
+#: templates/apparel/fragments/product_filter.html:49
 msgid "Price"
 msgstr "Pris"
 
@@ -968,7 +968,7 @@ msgstr "Medlemmar"
 
 #: templates/base.html:174 templates/base.html.py:219
 #: templates/apparel/user_list.html:25
-#: templates/apparel/fragments/product_filter.html:122
+#: templates/apparel/fragments/product_filter.html:104
 msgid "Brands"
 msgstr "Varumärken"
 
@@ -1013,7 +1013,7 @@ msgid "Bloggers"
 msgstr "Bloggare"
 
 #: templates/base.html:248 templates/apparel/admin/header.html:9
-#: templates/apparel/fragments/product_filter.html:147
+#: templates/apparel/fragments/product_filter.html:129
 msgid "Stores"
 msgstr "Butiker"
 
@@ -1052,7 +1052,7 @@ msgstr "Bara dam"
 
 #: templates/search.html:22 templates/search.html.py:24
 #: templates/activity_feed/feed_list.html:54
-#: templates/activity_feed/feed_list.html:56 templates/apparel/browse.html:29
+#: templates/activity_feed/feed_list.html:56
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
 #: templates/apparel/user_list.html:32 templates/apparel/user_list.html:34
 #: templates/apparel/user_list.html:47
@@ -1349,11 +1349,19 @@ msgstr ""
 "view=brands\">Dina Varumärken</a>, <a href=\"%(shop_url)s?view=friends"
 "\">Dina Vänner</a> eller <a href=\"%(shop_url)s\">Allt</p>."
 
+#: templates/apparel/browse.html:29
+msgid "Popular"
+msgstr "Populära"
+
 #: templates/apparel/browse.html:30
+msgid "Latest in"
+msgstr "Senast inkommet"
+
+#: templates/apparel/browse.html:31
 msgid "My friends"
 msgstr "Mina vänner"
 
-#: templates/apparel/browse.html:31
+#: templates/apparel/browse.html:32
 msgid "My brands"
 msgstr "Mina varumärken"
 
@@ -2075,62 +2083,62 @@ msgstr "Dam"
 msgid "Mens"
 msgstr "Herr"
 
-#: templates/apparel/fragments/product_filter.html:30
-msgid "Sort by"
-msgstr "Sortera på"
-
-#: templates/apparel/fragments/product_filter.html:35
-msgid "trending"
-msgstr "popularitet"
-
-#: templates/apparel/fragments/product_filter.html:36
-msgid "latest"
-msgstr "senaste"
-
-#: templates/apparel/fragments/product_filter.html:37
-msgid "low price"
-msgstr "billigast"
-
-#: templates/apparel/fragments/product_filter.html:38
-msgid "high price"
-msgstr "dyrast"
-
-#: templates/apparel/fragments/product_filter.html:47
+#: templates/apparel/fragments/product_filter.html:29
 msgid "Categories"
 msgstr "Kategorier"
 
-#: templates/apparel/fragments/product_filter.html:51
-#: templates/apparel/fragments/product_filter.html:71
-#: templates/apparel/fragments/product_filter.html:103
-#: templates/apparel/fragments/product_filter.html:126
-#: templates/apparel/fragments/product_filter.html:151
+#: templates/apparel/fragments/product_filter.html:33
+#: templates/apparel/fragments/product_filter.html:53
+#: templates/apparel/fragments/product_filter.html:85
+#: templates/apparel/fragments/product_filter.html:108
+#: templates/apparel/fragments/product_filter.html:133
 msgid "Reset this filter"
 msgstr "Nollställ sökning"
 
-#: templates/apparel/fragments/product_filter.html:73
+#: templates/apparel/fragments/product_filter.html:55
 msgid "Min"
 msgstr "Min"
 
-#: templates/apparel/fragments/product_filter.html:75
-#: templates/apparel/fragments/product_filter.html:77
+#: templates/apparel/fragments/product_filter.html:57
+#: templates/apparel/fragments/product_filter.html:59
 msgid "Max"
 msgstr "Max"
 
-#: templates/apparel/fragments/product_filter.html:92
+#: templates/apparel/fragments/product_filter.html:74
 msgid "Only show products on sale"
 msgstr "Visa endast prissänkta varor"
 
-#: templates/apparel/fragments/product_filter.html:99
+#: templates/apparel/fragments/product_filter.html:81
 msgid "Colors"
 msgstr "Färg"
 
-#: templates/apparel/fragments/product_filter.html:128
+#: templates/apparel/fragments/product_filter.html:110
 msgid "Search brands"
 msgstr "Sök bland varumärken"
 
-#: templates/apparel/fragments/product_filter.html:156
+#: templates/apparel/fragments/product_filter.html:138
 msgid "No matching stores"
 msgstr "Inga butiker matchar ditt urval"
+
+#: templates/apparel/fragments/product_filter.html:149
+msgid "Sort by"
+msgstr "Sortera på"
+
+#: templates/apparel/fragments/product_filter.html:154
+msgid "popular"
+msgstr "populära"
+
+#: templates/apparel/fragments/product_filter.html:155
+msgid "latest"
+msgstr "senaste"
+
+#: templates/apparel/fragments/product_filter.html:156
+msgid "low price"
+msgstr "billigast"
+
+#: templates/apparel/fragments/product_filter.html:157
+msgid "high price"
+msgstr "dyrast"
 
 #: templates/apparel/fragments/product_medium.html:33
 msgid "See looks »"
@@ -3392,6 +3400,12 @@ msgid ""
 "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
 "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
+
+#~ msgid "Most popular"
+#~ msgstr "Populära"
+
+#~ msgid "trending"
+#~ msgstr "popularitet"
 
 #~ msgid "Draft"
 #~ msgstr "Utkast"
