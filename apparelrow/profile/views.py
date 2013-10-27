@@ -23,7 +23,7 @@ import requests
 from apparelrow.apparel.utils import get_paged_result, JSONResponse, get_ga_cookie_cid
 from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
 
-from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail
+from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail, FB_USER_SESSION_KEY, FB_USER_EXPIRES_SESSION_KEY
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task, mail_managers_task
