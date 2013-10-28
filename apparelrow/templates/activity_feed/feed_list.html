@@ -34,11 +34,8 @@
         <div class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             {% url 'profile-likes' request.user.slug as profile_url %}
-            {% if request.user.facebook_user_id %}
-            {% blocktrans with profile_url=profile_url %}This is your personal Apprl feed with the latest from your follows. You have automatically followed your friends &amp; some of our featured members. To manage who you follow go to <a href="{{profile_url}}">your profile</a>.{% endblocktrans %}
-            {% else %}
-            {% blocktrans with profile_url=profile_url %}This is your personal Apprl feed with the latest from your follows. You have automatically followed some of our featured members. To manage who you follow go to <a href="{{profile_url}}">your profile</a>.{% endblocktrans %}
-            {% endif %}
+            {% url 'user-list' as members_url %}
+            {% blocktrans with members_url=members_url profile_url=profile_url %}This is your personal Apprl feed with the latest from your follows. <a href="{{members_url}}">Discover more people, bloggers & brands to follow here</a> and <a href="{{profile_url}}">manage who you follow here</a>.{% endblocktrans %}
         </div>
     </div>
     {% endif %}

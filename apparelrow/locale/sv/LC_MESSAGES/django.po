@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-26 13:27+0200\n"
+"POT-Creation-Date: 2013-10-28 18:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -858,7 +858,7 @@ msgstr "Lösenordet är uppdaterat"
 msgid "Password was added"
 msgstr "Lösenordet är tillagt"
 
-#: profile/views.py:400
+#: profile/views.py:402
 msgid "Nearly created your membership..."
 msgstr "Ditt medlemskap är nästan klart..."
 
@@ -935,7 +935,7 @@ msgstr "+ Skapa look"
 msgid "Log out"
 msgstr "Logga ut"
 
-#: templates/base.html:166 templates/activity_feed/feed_list.html:49
+#: templates/base.html:166 templates/activity_feed/feed_list.html:46
 msgid "Your APPRL"
 msgstr "Din APPRL"
 
@@ -1037,22 +1037,22 @@ msgid "The product URL is no longer valid."
 msgstr "Produktlänken är inte längre giltig."
 
 #: templates/search.html:22 templates/search.html.py:25
+#: templates/activity_feed/feed_list.html:51
 #: templates/activity_feed/feed_list.html:54
-#: templates/activity_feed/feed_list.html:57
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:20
 msgid "Only men’s"
 msgstr "Bara herr"
 
 #: templates/search.html:22 templates/search.html.py:26
-#: templates/activity_feed/feed_list.html:54
-#: templates/activity_feed/feed_list.html:58
+#: templates/activity_feed/feed_list.html:51
+#: templates/activity_feed/feed_list.html:55
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:21
 msgid "Only women’s"
 msgstr "Bara dam"
 
 #: templates/search.html:22 templates/search.html.py:24
-#: templates/activity_feed/feed_list.html:54
-#: templates/activity_feed/feed_list.html:56
+#: templates/activity_feed/feed_list.html:51
+#: templates/activity_feed/feed_list.html:53
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
 #: templates/apparel/user_list.html:32 templates/apparel/user_list.html:34
 #: templates/apparel/user_list.html:47
@@ -1109,25 +1109,14 @@ msgstr "Upptäck inspirerande mode genom bloggare, dina vänner & designers."
 #: templates/activity_feed/feed_list.html:38
 #, python-format
 msgid ""
-"This is your personal Apprl feed with the latest from your follows. You have "
-"automatically followed your friends &amp; some of our featured members. To "
-"manage who you follow go to <a href=\"%(profile_url)s\">your profile</a>."
+"This is your personal Apprl feed with the latest from your follows. <a href="
+"\"%(members_url)s\">Discover more people, bloggers & brands to follow here</"
+"a> and <a href=\"%(profile_url)s\">manage who you follow here</a>."
 msgstr ""
-"Det här är ditt personliga nyhetsflöde med det senare från de du följer. Du "
-"har automatiskt börjat följa dina vänner & ett antal av våra populära "
-"medlemmar. För att välja vilka du ska följa gå till <a href=\"%(profile_url)s"
-"\">din profil</a>."
-
-#: templates/activity_feed/feed_list.html:40
-#, python-format
-msgid ""
-"This is your personal Apprl feed with the latest from your follows. You have "
-"automatically followed some of our featured members. To manage who you "
-"follow go to <a href=\"%(profile_url)s\">your profile</a>."
-msgstr ""
-"Det här är ditt personliga nyhetsflöde med det senare från de du följer. Du "
-"har automatiskt börjat följa ett antal av våra populära medlemmar. För att "
-"välja vilka du ska följa gå till <a href=\"%(profile_url)s\">din profil</a>."
+"Det här är ditt personliga nyhetsflöde med det senaste från de du följer. <a "
+"href=\"%(members_url)s\">Hitta fler medlemmar, bloggare och varumärken att "
+"följa här</a> och <a href=\"%(members_url)s\">hantera vilka du följer här</"
+"a>."
 
 #: templates/activity_feed/fragments/feed_list.html:7
 msgid "Follow members &amp; brands to fill your feed"
@@ -3400,6 +3389,17 @@ msgid ""
 "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
 "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
+
+#~ msgid ""
+#~ "This is your personal Apprl feed with the latest from your follows. You "
+#~ "have automatically followed your friends &amp; some of our featured "
+#~ "members. To manage who you follow go to <a href=\"%(profile_url)s\">your "
+#~ "profile</a>."
+#~ msgstr ""
+#~ "Det här är ditt personliga nyhetsflöde med det senare från de du följer. "
+#~ "Du har automatiskt börjat följa dina vänner & ett antal av våra populära "
+#~ "medlemmar. För att välja vilka du ska följa gå till <a href="
+#~ "\"%(profile_url)s\">din profil</a>."
 
 #~ msgid "Most popular"
 #~ msgstr "Populära"

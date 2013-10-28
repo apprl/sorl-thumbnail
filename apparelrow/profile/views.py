@@ -372,16 +372,18 @@ def login_flow_complete(request):
 
 
 def follow_featured_auto(request):
+    # XXX: disabled follow featured users automatically
+    #profiles = get_user_model().objects.filter(is_active=True, is_brand=False)
+    #profiles = profiles.exclude(pk=request.user.pk)
+    #if request.user.gender == 'M':
+        #profiles = profiles.order_by('-popularity_men', '-followers_count')
+    #else:
+        #profiles = profiles.order_by('-popularity', '-followers_count')
+
+    #friends = list(profiles[:20])
+    friends = []
+
     facebook_friends = get_facebook_friends(request)
-
-    profiles = get_user_model().objects.filter(is_active=True, is_brand=False)
-    profiles = profiles.exclude(pk=request.user.pk)
-    if request.user.gender == 'M':
-        profiles = profiles.order_by('-popularity_men', '-followers_count')
-    else:
-        profiles = profiles.order_by('-popularity', '-followers_count')
-
-    friends = list(profiles[:20])
     if facebook_friends:
         friends = friends + list(facebook_friends)
 
