@@ -1115,7 +1115,7 @@ msgid ""
 msgstr ""
 "Det här är ditt personliga nyhetsflöde med det senaste från de du följer. <a "
 "href=\"%(members_url)s\">Hitta fler medlemmar, bloggare och varumärken att "
-"följa här</a> och <a href=\"%(members_url)s\">hantera vilka du följer här</"
+"följa här</a> och <a href=\"%(profile_url)s\">hantera vilka du följer här</"
 "a>."
 
 #: templates/activity_feed/fragments/feed_list.html:7

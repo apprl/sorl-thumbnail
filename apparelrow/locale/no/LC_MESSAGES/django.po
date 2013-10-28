@@ -968,7 +968,7 @@ msgstr ""
 #: templates/apparel/user_list.html:25
 #: templates/apparel/fragments/product_filter.html:122
 msgid "Brands"
-msgstr ""
+msgstr "Merker"
 
 #: templates/base.html:216 templates/apparel/look_editor.html:46
 msgid "Women"
@@ -1791,7 +1791,7 @@ msgstr ""
 #: templates/apparel/product_list.html:5
 #: templates/apparel/fragments/product_filter.html:4
 msgid "Filter products"
-msgstr ""
+msgstr "Filter produkter"
 
 #: templates/apparel/product_list.html:6
 msgid "Reset all"
@@ -2000,20 +2000,19 @@ msgstr ""
 
 #: templates/apparel/fragments/product_filter.html:11
 msgid "Women’s / Men’s"
-msgstr ""
+msgstr "Kvinners / menns"
 
 #: templates/apparel/fragments/product_filter.html:17
 msgid "Show everything"
-msgstr ""
+msgstr "Vis alt"
 
 #: templates/apparel/fragments/product_filter.html:19
-#, fuzzy
 msgid "Womens"
 msgstr "Kvinner"
 
 #: templates/apparel/fragments/product_filter.html:20
 msgid "Mens"
-msgstr ""
+msgstr "Menn"
 
 #: templates/apparel/fragments/product_filter.html:30
 msgid "Sort by"
@@ -2037,7 +2036,7 @@ msgstr ""
 
 #: templates/apparel/fragments/product_filter.html:47
 msgid "Categories"
-msgstr ""
+msgstr "Kategorier"
 
 #: templates/apparel/fragments/product_filter.html:51
 #: templates/apparel/fragments/product_filter.html:71
@@ -2061,9 +2060,8 @@ msgid "Only show products on sale"
 msgstr "Vis bare salgsvarer"
 
 #: templates/apparel/fragments/product_filter.html:99
-#, fuzzy
 msgid "Colors"
-msgstr "Farve"
+msgstr "Farger"
 
 #: templates/apparel/fragments/product_filter.html:128
 msgid "Search brands"
