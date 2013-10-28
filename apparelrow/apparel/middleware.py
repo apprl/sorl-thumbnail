@@ -19,6 +19,11 @@ logger = logging.getLogger('apparelrow.apparel.middleware')
 
 class UpdateLocaleSessionMiddleware(object):
     def process_request(self, request):
+        if request.path.startswith('/da/'):
+            return HttpResponseRedirect(request.get_full_path().replace('/da/', '/en/'))
+        elif request.path.startswith('/no/'):
+            return HttpResponseRedirect(request.get_full_path().replace('/no/', '/en/'))
+
         try:
             language = request.LANGUAGE_CODE
         except AttributeError:

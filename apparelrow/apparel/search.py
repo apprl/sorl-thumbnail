@@ -311,12 +311,22 @@ def get_product_document(instance, rebuild=False):
         document['discount'] = discount
         document['published'] = instance.published
 
+        # Users and likes
+        likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', 'modified'))
+        document['user_likes'] = [x[0] for x in likes]
+        for x in likes:
+            document['%s_uld' % (x[0],)] = x[1]
+
         # Templates
         has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()
         #document['template'] = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks, 'LANGUAGE_CODE': translation.get_language()})
         cur_language = translation.get_language()
         try:
-            for language, _ in settings.LANGUAGES_DISPLAY:
+            languages = settings.LANGUAGES_DISPLAY
+            if likes:
+                languages = settings.LANGUAGES
+
+            for language, _ in languages:
                 if language != cur_language:
                     translation.activate(language)
                 document['{0}_template'.format(language)] = render_to_string('apparel/fragments/product_medium.html', {'object': instance, 'has_looks': has_looks, 'LANGUAGE_CODE': language})
@@ -343,12 +353,6 @@ def get_product_document(instance, rebuild=False):
 
         # Dates
         document['created'] = instance.date_added
-
-        # Users and likes
-        likes = list(get_model('apparel', 'ProductLike').objects.filter(product=instance, active=True).values_list('user__id', 'modified'))
-        document['user_likes'] = [x[0] for x in likes]
-        for x in likes:
-            document['%s_uld' % (x[0],)] = x[1]
 
         # Store
         if instance.default_vendor:
