@@ -29,6 +29,15 @@ class FacebookAccessor(object):
         self.access_token = user['access_token']
         self.graph = facebook.GraphAPI(self.access_token)
 
+
+def reset_facebook_user(request):
+    if FB_USER_SESSION_KEY in request.session:
+        del request.session[FB_USER_SESSION_KEY]
+
+    if FB_USER_EXPIRES_SESSION_KEY in request.session:
+        del request.session[FB_USER_EXPIRES_SESSION_KEY]
+
+
 def get_facebook_user(request):
     """
     Attempt to find a facebook user using a cookie. Cache fb_user in
@@ -37,23 +46,27 @@ def get_facebook_user(request):
     fb_user = request.session.get(FB_USER_SESSION_KEY)
     expires = request.session.get(FB_USER_EXPIRES_SESSION_KEY)
     if not fb_user or expires < time.time():
-        fb_user = facebook.get_user_from_cookie(request.COOKIES, settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
-        if fb_user:
-            try:
-                extended_user = facebook.GraphAPI(fb_user['access_token']).extend_access_token(settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
-                fb_user.update(extended_user)
-            except facebook.GraphAPIError as e:
-                logging.warning('Facebook GraphAPIError during extended access token attempt: %s' % (str(e),))
+        try:
+            fb_user = facebook.get_user_from_cookie(request.COOKIES, settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
+            if fb_user:
+                try:
+                    extended_user = facebook.GraphAPI(fb_user['access_token']).extend_access_token(settings.FACEBOOK_APP_ID, settings.FACEBOOK_SECRET_KEY)
+                    fb_user.update(extended_user)
+                except facebook.GraphAPIError as e:
+                    logging.warning('Facebook GraphAPIError during extended access token attempt: %s' % (str(e),))
 
-            expires = time.time() + int(fb_user['expires'])
+                expires = time.time() + int(fb_user['expires'])
 
-            request.session[FB_USER_SESSION_KEY] = fb_user
-            request.session[FB_USER_EXPIRES_SESSION_KEY] = expires
+                request.session[FB_USER_SESSION_KEY] = fb_user
+                request.session[FB_USER_EXPIRES_SESSION_KEY] = expires
 
-            get_user_model().objects.filter(facebook_user_id=fb_user['uid']).update(
-                facebook_access_token=fb_user['access_token'],
-                facebook_access_token_expire=datetime.datetime.fromtimestamp(expires)
-            )
+                get_user_model().objects.filter(facebook_user_id=fb_user['uid']).update(
+                    facebook_access_token=fb_user['access_token'],
+                    facebook_access_token_expire=datetime.datetime.fromtimestamp(expires)
+                )
+        except Exception as e:
+            logging.warning('Could not fetch facebook user: %s' % (str(e),))
+            return None
 
     return FacebookAccessor(fb_user) if fb_user else None
 

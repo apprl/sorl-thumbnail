@@ -23,7 +23,7 @@ import requests
 from apparelrow.apparel.utils import get_paged_result, JSONResponse, get_ga_cookie_cid
 from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
 
-from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail, FB_USER_SESSION_KEY, FB_USER_EXPIRES_SESSION_KEY
+from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail, reset_facebook_user
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task, mail_managers_task
@@ -343,8 +343,6 @@ def login_flow_brands(request):
     if not request.user.following.exists():
         follow_featured_auto(request)
 
-        return HttpResponseRedirect(reverse('login-flow-brands'))
-
     queryset = get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:24]
     paged_result = get_paged_result(queryset, 24, request.GET.get('page'))
 
@@ -474,6 +472,7 @@ def register_activate(request, key):
         # XXX: Bypass authenticate step by settings backend on user
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         auth.login(request, user)
+        reset_facebook_user(request)
 
         mail_subject = 'New email user activation: %s' % (user.display_name_live,)
         mail_managers_task.delay(mail_subject, 'URL: %s' % (request.build_absolute_uri(user.get_absolute_url()),))
@@ -546,6 +545,7 @@ def facebook_redirect_login(request):
                 user = auth.authenticate(fb_uid=response_json['data']['user_id'], fb_graphtoken=access_token, request=request)
                 if user and user.is_active:
                     auth.login(request, user)
+                    reset_facebook_user(request)
 
                     return _login_flow(request, user)
     elif request.GET.get('error_reason'):
@@ -565,6 +565,7 @@ def facebook_login(request):
         user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token, request=request)
         if user and user.is_active:
             auth.login(request, user)
+            reset_facebook_user(request)
 
             return _login_flow(request, user)
 
@@ -622,12 +623,7 @@ def login_as_user(request, user_id):
                     break
 
             auth.login(request, target_user)
-
-            if FB_USER_SESSION_KEY in request.session:
-                del request.session[FB_USER_SESSION_KEY]
-
-            if FB_USER_EXPIRES_SESSION_KEY in request.session:
-                del request.session[FB_USER_EXPIRES_SESSION_KEY]
+            reset_facebook_user(request)
 
             return HttpResponseRedirect('/')
 
