@@ -152,6 +152,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/dashboard/kpi/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard'),
     url(r'^admin/dashboard/stores/$', 'apparelrow.apparel.views.admin.stores', name='admin-stores'),
+    url(r'^admin/dashboard/adstores/$', 'apparelrow.apparel.views.admin.ad_stores', name='admin-ad-stores'),
     url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard_'),
 )
 

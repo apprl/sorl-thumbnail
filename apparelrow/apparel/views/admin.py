@@ -176,8 +176,8 @@ def kpi_dashboard(request):
     raise Http404
 
 
-def stores(request):
-    if request.user.is_authenticated() and request.user.is_superuser:
+def stores(request, user_id=None):
+    if request.user.is_authenticated() and (request.user.is_superuser or request.user.pk == user_id):
         decimal.setcontext(decimal.ExtendedContext)
 
         # Models
@@ -197,7 +197,8 @@ def stores(request):
 
         date_start, date_end = get_date_interval(date, is_month=is_month, is_year=is_year)
 
-        context = {'date_start': date_start,
+        context = {'user_id': user_id,
+                   'date_start': date_start,
                    'date_end': date_end,
                    'affiliates': {},
                    'clicks': 0,
@@ -206,7 +207,12 @@ def stores(request):
                    'commission': 0}
 
         # Group vendors by affiliate
-        for vendor in Vendor.objects.all():
+        if user_id:
+            vendors = Vendor.objects.filter(user_id=user_id)
+        else:
+            vendors = Vendor.objects.all()
+
+        for vendor in vendors:
             try:
                 affiliate_name = vendor.vendor_feed.provider_class
                 if affiliate_name not in context['affiliates']:
@@ -258,3 +264,7 @@ def stores(request):
         return render(request, 'apparel/admin/stores.html', context)
 
     raise Http404
+
+
+def ad_stores(request):
+    return stores(request, user_id=24981)

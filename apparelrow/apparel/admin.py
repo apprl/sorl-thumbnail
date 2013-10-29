@@ -317,7 +317,10 @@ admin.site.register(Option, OptionAdmin)
 # VENDOR
 #
 
-admin.site.register(Vendor)
+class VendorAdmin(admin.ModelAdmin):
+    raw_id_fields = ['user']
+
+admin.site.register(Vendor, VendorAdmin)
 
 #
 # VENDOR PRODUCT

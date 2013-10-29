@@ -4,7 +4,15 @@
 {% block body-classes %}admin-dashboard-stores-page{% endblock body-classes %}
 {% block body %}
 
+    {% if user_id %}
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Admin dashboard" %}</h1>
+        </div>
+    </div>
+    {% else %}
     {% include 'apparel/admin/header.html' %}
+    {% endif %}
 
     <div class="row">
         <div class="col-sm-12">

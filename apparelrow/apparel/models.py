@@ -159,6 +159,7 @@ class Vendor(models.Model):
     name     = models.CharField(max_length=100, db_index=True)
     homepage = models.URLField(_('Home page'))
     logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, help_text=_('Logotype'), max_length=127, blank=True, null=True)
+    user     = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', blank=True, null=True)
 
     class Meta:
         ordering = ['name']
