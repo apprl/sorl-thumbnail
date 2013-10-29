@@ -48,7 +48,8 @@ def update_subscribers(mailchimp):
         batch.append({'EMAIL': user.email,
                       'FNAME': user.first_name,
                       'LNAME': user.last_name,
-                      'GENDER': user.gender})
+                      'GENDER': user.gender,
+                      'PUBLISHER': int(user.is_partner)})
 
     mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST, double_optin=False, update_existing=True, batch=batch)
 

@@ -143,6 +143,21 @@ def mailchimp_subscribe_members():
         mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
         mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_PUBLISHER_LIST, double_optin=False, update_existing=True, batch=batch)
 
+        batch = []
+        for user in get_user_model().objects.filter(newsletter=True) \
+                                            .exclude(Q(email__isnull=True) | Q(email__exact='')) \
+                                            .exclude(Q(first_name__isnull=True) | Q(first_name__exact='')) \
+                                            .exclude(Q(last_name__isnull=True) | Q(last_name__exact='')) \
+                                            .iterator():
+            batch.append({'EMAIL': user.email,
+                          'FNAME': user.first_name,
+                          'LNAME': user.last_name,
+                          'GENDER': user.gender,
+                          'PUBLISHER': int(user.is_partner)})
+
+        mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
+        mailchimp.listBatchSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST, double_optin=False, update_existing=True, batch=batch)
+
 
 @task(name='apparel.email.mailchimp_subscribe', max_retries=5, ignore_result=True)
 def mailchimp_subscribe(user):
@@ -150,7 +165,7 @@ def mailchimp_subscribe(user):
         mailchimp = MailSnake(settings.MAILCHIMP_API_KEY)
         mailchimp.listSubscribe(id=settings.MAILCHIMP_NEWSLETTER_LIST,
                                 email_address=user.email,
-                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.gender},
+                                merge_vars={'EMAIL': user.email, 'FNAME': user.first_name, 'LNAME': user.last_name, 'GENDER': user.gender, 'PUBLISHER': int(user.is_partner)},
                                 double_optin=False,
                                 update_existing=True,
                                 send_welcome=False)
