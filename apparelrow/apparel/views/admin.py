@@ -150,13 +150,13 @@ def kpi_dashboard(request):
         context['col2_sales'] = (context['col1_sales'] - context['col3_sales']) / context['col3_sales'] * 100
 
         # Conversion rate
-        context['col1_conversion_rate'] = context['col1_sales'] / context['col1_clicks']
-        context['col3_conversion_rate'] = context['col3_sales'] / context['col3_clicks']
+        context['col1_conversion_rate'] = context['col1_sales'] / context['col1_clicks'] * 100
+        context['col3_conversion_rate'] = context['col3_sales'] / context['col3_clicks'] * 100
         context['col2_conversion_rate'] = (context['col1_conversion_rate'] - context['col3_conversion_rate']) / context['col3_conversion_rate'] * 100
 
         # Avg commission
-        context['col1_avg_commission'] = context['col1_total_commission'] / context['col1_total_sale']
-        context['col3_avg_commission'] = context['col3_total_commission'] / context['col3_total_sale']
+        context['col1_avg_commission'] = context['col1_total_commission'] / context['col1_total_sale'] * 100
+        context['col3_avg_commission'] = context['col3_total_commission'] / context['col3_total_sale'] * 100
         context['col2_avg_commission'] = (context['col1_avg_commission'] - context['col3_avg_commission']) / context['col3_avg_commission'] * 100
 
         # Avg sale
