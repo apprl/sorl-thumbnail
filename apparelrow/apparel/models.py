@@ -434,12 +434,12 @@ class ShortStoreLinkManager(models.Manager):
         if user_id is None:
             user_id = 0
 
-        return instance.template.format(sid='{}-0-Ext-Store'.format(user_id)), instance.name
+        return instance.template.format(sid='{}-0-Ext-Store'.format(user_id)), instance.vendor.name
 
 
 class ShortStoreLink(models.Model):
-    name = models.CharField(max_length=16)
-    template = models.CharField(max_length=512, blank=False, null=False, help_text="Use {sid} in the URL where you want the sid string to be placed")
+    vendor   = models.ForeignKey(Vendor)
+    template = models.CharField(max_length=512, blank=False, null=False, help_text="Use {sid} in the URL where you want the sid string to be placed<br><br>test")
 
     objects = ShortStoreLinkManager()
 

@@ -114,7 +114,7 @@ admin.site.register(Product, ProductAdmin)
 #
 
 class ShortStoreLinkAdmin(admin.ModelAdmin):
-    list_display = ('name', 'template', 'link')
+    list_display = ('vendor', 'template', 'link')
 
     def link(self, instance):
         current_site = Site.objects.get_current()
