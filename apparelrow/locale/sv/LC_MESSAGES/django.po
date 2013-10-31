@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-28 18:16+0100\n"
+"POT-Creation-Date: 2013-10-31 10:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,16 +63,16 @@ msgid "no"
 msgstr "nej"
 
 #: activity_feed/models.py:93 activity_feed/models.py:153
-#: apparel/models.py:390 apparel/models.py:711 apparel/models.py:920
-#: apparel/models.py:935 apparel/models.py:1132 apparel/models.py:1166
+#: apparel/models.py:391 apparel/models.py:712 apparel/models.py:921
+#: apparel/models.py:936 apparel/models.py:1133 apparel/models.py:1167
 #: dashboard/models.py:74 dashboard/models.py:98 dashboard/models.py:137
 #: profile/models.py:397 statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: activity_feed/models.py:94 apparel/models.py:225 apparel/models.py:391
-#: apparel/models.py:458 apparel/models.py:509 apparel/models.py:712
-#: apparel/models.py:936 dashboard/models.py:75 dashboard/models.py:99
+#: activity_feed/models.py:94 apparel/models.py:226 apparel/models.py:392
+#: apparel/models.py:459 apparel/models.py:510 apparel/models.py:713
+#: apparel/models.py:937 dashboard/models.py:75 dashboard/models.py:99
 #: profile/models.py:398
 msgid "Time modified"
 msgstr "Tid ändrad"
@@ -218,201 +218,201 @@ msgstr ""
 msgid "Option Items"
 msgstr ""
 
-#: apparel/models.py:181
+#: apparel/models.py:182
 msgid "Only active categories are visible and searchable on the website"
 msgstr "Endast aktiva kategorier visas och är sökbara på sajten"
 
-#: apparel/models.py:182
+#: apparel/models.py:183
 msgid "Option types"
 msgstr ""
 
-#: apparel/models.py:183
+#: apparel/models.py:184
 msgid "The category is visible on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:217
+#: apparel/models.py:218
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:218 apparel/models.py:705
+#: apparel/models.py:219 apparel/models.py:706
 msgid "Slug Name"
 msgstr "Slug"
 
-#: apparel/models.py:219 apparel/models.py:706
+#: apparel/models.py:220 apparel/models.py:707
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr "Används i URLer. Om den är tom, auto-genereras den från namnet"
 
-#: apparel/models.py:220
+#: apparel/models.py:221
 msgid "Stock Keeping Unit"
 msgstr "Produkt ID (SKU)"
 
-#: apparel/models.py:221
+#: apparel/models.py:222
 msgid "Has to be unique with the static_brand"
 msgstr ""
 
-#: apparel/models.py:223
+#: apparel/models.py:224
 msgid "Time added"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:224
+#: apparel/models.py:225
 msgid "Time published"
 msgstr "Tid publicerad"
 
-#: apparel/models.py:226
+#: apparel/models.py:227
 msgid "Product description"
 msgstr "Produktbeskrivning"
 
-#: apparel/models.py:227
+#: apparel/models.py:228
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:230 apparel/models.py:715 profile/forms.py:123
+#: apparel/models.py:231 apparel/models.py:716 profile/forms.py:123
 #: profile/models.py:51
 msgid "Gender"
 msgstr "Kön"
 
-#: apparel/models.py:231
+#: apparel/models.py:232
 msgid "Feed gender"
 msgstr ""
 
-#: apparel/models.py:234 apparel/models.py:679
+#: apparel/models.py:235 apparel/models.py:680
 msgid "In stock"
 msgstr "I lager"
 
-#: apparel/models.py:453
+#: apparel/models.py:454
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:454 profile/forms.py:98
+#: apparel/models.py:455 profile/forms.py:98
 msgid "Name"
 msgstr "Namn"
 
-#: apparel/models.py:456
+#: apparel/models.py:457
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:457
+#: apparel/models.py:458
 msgid "Override gender"
 msgstr ""
 
-#: apparel/models.py:543
+#: apparel/models.py:544
 msgid "Buy URL"
 msgstr "URL till köpsida"
 
-#: apparel/models.py:544 templates/apparel/look_editor.html:63
+#: apparel/models.py:545 templates/apparel/look_editor.html:63
 #: templates/apparel/fragments/product_filter.html:49
 msgid "Price"
 msgstr "Pris"
 
-#: apparel/models.py:544
+#: apparel/models.py:545
 msgid "Price converted to base currency"
 msgstr "Pris konverterat till basvaluta"
 
-#: apparel/models.py:545 importer/models.py:138
+#: apparel/models.py:546 importer/models.py:138
 msgid "Currency"
 msgstr "Valuta"
 
-#: apparel/models.py:545
+#: apparel/models.py:546
 msgid "Base currency as three-letter ISO code"
 msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:546
+#: apparel/models.py:547
 msgid "Original price"
 msgstr "Ursprungligt pris"
 
-#: apparel/models.py:547
+#: apparel/models.py:548
 msgid "Original currency"
 msgstr "Ursprunglig valuta"
 
-#: apparel/models.py:547 apparel/models.py:549 apparel/models.py:551
+#: apparel/models.py:548 apparel/models.py:550 apparel/models.py:552
 #: dashboard/models.py:62 dashboard/models.py:95
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:548
+#: apparel/models.py:549
 msgid "Discount price"
 msgstr ""
 
-#: apparel/models.py:549
+#: apparel/models.py:550
 msgid "Discount currency"
 msgstr "Rabattvaluta"
 
-#: apparel/models.py:550
+#: apparel/models.py:551
 msgid "Original discount price"
 msgstr "Ursprungligt rabatterat pris"
 
-#: apparel/models.py:551
+#: apparel/models.py:552
 msgid "Original discount currency"
 msgstr "Ursprunglig rabattvaluta"
 
-#: apparel/models.py:552 apparel/models.py:670
+#: apparel/models.py:553 apparel/models.py:671
 msgid "Items in stock"
 msgstr "Antal i lager"
 
-#: apparel/models.py:552 apparel/models.py:670
+#: apparel/models.py:553 apparel/models.py:671
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:675
+#: apparel/models.py:676
 msgid "No information available"
 msgstr "Ingen information tillgänglig"
 
-#: apparel/models.py:677
+#: apparel/models.py:678
 msgid "Out of stock"
 msgstr "Ej i lager"
 
-#: apparel/models.py:681
+#: apparel/models.py:682
 msgid "items in stock"
 msgstr "i lager"
 
-#: apparel/models.py:704
+#: apparel/models.py:705
 msgid "Title"
 msgstr "Titel"
 
-#: apparel/models.py:707
+#: apparel/models.py:708
 msgid "Look description"
 msgstr "Beskrivning"
 
-#: apparel/models.py:714
+#: apparel/models.py:715
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:980
+#: apparel/models.py:981
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:981
+#: apparel/models.py:982
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:982
+#: apparel/models.py:983
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:983
+#: apparel/models.py:984
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:984
+#: apparel/models.py:985
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:985
+#: apparel/models.py:986
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1152
+#: apparel/models.py:1153
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1196
+#: apparel/models.py:1197
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1196
+#: apparel/models.py:1197
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -845,7 +845,7 @@ msgstr "Postkod"
 msgid "City"
 msgstr "Postadress"
 
-#: profile/utils.py:104
+#: profile/utils.py:117
 #, python-format
 msgid "Welcome to Apprl %(name)s"
 msgstr "Välkommen till Apprl %(name)s"
@@ -858,7 +858,7 @@ msgstr "Lösenordet är uppdaterat"
 msgid "Password was added"
 msgstr "Lösenordet är tillagt"
 
-#: profile/views.py:402
+#: profile/views.py:400
 msgid "Nearly created your membership..."
 msgstr "Ditt medlemskap är nästan klart..."
 
@@ -1237,7 +1237,7 @@ msgstr "Transaktioner"
 
 #: templates/advertiser/store_admin.html:15
 #: templates/apparel/admin/kpi_dashboard.html:78
-#: templates/apparel/admin/stores.html:35 templates/dashboard/admin.html:102
+#: templates/apparel/admin/stores.html:43 templates/dashboard/admin.html:102
 #: templates/dashboard/admin.html.py:159 templates/dashboard/publisher.html:17
 #: templates/dashboard/publisher.html:61
 #: templates/dashboard/publisher.html:148
@@ -1876,6 +1876,7 @@ msgid "Only women"
 msgstr "Bara dam"
 
 #: templates/apparel/admin/header.html:5
+#: templates/apparel/admin/stores.html:10
 msgid "Admin dashboard"
 msgstr ""
 
@@ -1930,7 +1931,7 @@ msgid "Commission (€)"
 msgstr "Provision (SEK)"
 
 #: templates/apparel/admin/kpi_dashboard.html:84
-#: templates/apparel/admin/stores.html:36 templates/dashboard/admin.html:128
+#: templates/apparel/admin/stores.html:44 templates/dashboard/admin.html:128
 #: templates/dashboard/publisher.html:175
 msgid "Sales"
 msgstr "Köp"
@@ -1954,32 +1955,32 @@ msgstr "Konverterat säljpris"
 msgid "Active publishers"
 msgstr "Tid publicerad"
 
-#: templates/apparel/admin/stores.html:34
+#: templates/apparel/admin/stores.html:42
 #, fuzzy
 msgid "Store"
 msgstr "Butiker"
 
-#: templates/apparel/admin/stores.html:37
+#: templates/apparel/admin/stores.html:45
 #, fuzzy
 msgid "Sales value"
 msgstr "Köp"
 
-#: templates/apparel/admin/stores.html:38
+#: templates/apparel/admin/stores.html:46
 #, fuzzy
 msgid "Commission value"
 msgstr "Provision"
 
-#: templates/apparel/admin/stores.html:39
+#: templates/apparel/admin/stores.html:47
 #, fuzzy, python-format
 msgid "Commission %%"
 msgstr "Provision"
 
-#: templates/apparel/admin/stores.html:40
+#: templates/apparel/admin/stores.html:48
 #, fuzzy
 msgid "Conversion"
 msgstr "Provision"
 
-#: templates/apparel/admin/stores.html:41
+#: templates/apparel/admin/stores.html:49
 msgid "EPC"
 msgstr ""
 
@@ -2290,7 +2291,7 @@ msgstr "Så funkar det"
 
 #: templates/dashboard/body_header.html:9
 msgid "Invite and earn"
-msgstr ""
+msgstr "Bjud in bloggare"
 
 #: templates/dashboard/index.html:11
 msgid "APPRL FOR BLOGGERS & MEDIA"
@@ -2565,9 +2566,9 @@ msgstr "Referral-provision: %(referral_commission)s %(currency)s"
 msgid "Referrals: %(referral_sales)s"
 msgstr "Referrals: %(referral_sales)s"
 
-#: templates/dashboard/publisher.html:133 templates/dashboard/referral.html:9
-msgid "Earn money by inviting other bloggers"
-msgstr "Tjäna pengar på att bjuda in andra bloggare"
+#: templates/dashboard/publisher.html:133
+msgid "Earn money by inviting other publishers/bloggers"
+msgstr "Bjud in bloggare och tjäna pengar"
 
 #: templates/dashboard/publisher.html:198
 msgid "Your sales"
@@ -2600,49 +2601,66 @@ msgstr ""
 msgid "We will soon get in touch with you."
 msgstr "Vi hör av oss till dig inom kort."
 
+#: templates/dashboard/referral.html:9
+msgid "Earn money by inviting publishers/bloggers"
+msgstr "Bjud in bloggare och tjäna pengar"
+
 #: templates/dashboard/referral.html:10
 msgid ""
-"As one of our top publishers you will be rewarded when a blogger that you "
-"invite to APPRL joins and starts driving sales. If the blogger you invite "
-"via the link below joins APPRL, they will receive €20 on their APPRL account."
+"As one of our top members, you will earn money when a publisher/blogger that "
+"you invite to APPRL joins and starts driving sales. Also any publisher/"
+"blogger that joins using the link below will receive €20 on their APPRL "
+"account."
 msgstr ""
+"Som en av våra utvalda medlemmar så blir du belönad när du bjuder in "
+"bloggare till APPRL, när de tjänar pengar så gör du också det. När en "
+"bloggare klickar på din unika invite-länk nedan och ansöker till APPRL så "
+"får de också €20 på sitt APPRL-konto."
 
 #: templates/dashboard/referral.html:15
-#, fuzzy
 msgid "Your invitation link:"
-msgstr "Ansök om att bli Apprl partner här:"
+msgstr "Din invite-länk:"
 
 #: templates/dashboard/referral.html:17
-msgid "copy and share with other bloggers to get rewarded"
-msgstr ""
+msgid "copy and share with other publishers/bloggers to get rewarded"
+msgstr "kopiera länken och dela med bloggare för att tjäna pengar"
 
 #: templates/dashboard/referral.html:22
-#, fuzzy
 msgid "This is how it works:"
-msgstr "Så funkar det"
+msgstr "Så här fungerar det:"
 
 #: templates/dashboard/referral.html:24
 msgid ""
 "Share your invitation link with the person you wish to invite and ask them "
-"to click it and sign up on Apprl.com."
+"to click it and apply to APPRL."
 msgstr ""
+"Skicka din invite-länk till personen du vill bjuda in och be dem klicka på "
+"länken och ansöka till APPRL."
 
 #: templates/dashboard/referral.html:25
 msgid ""
-"For every blogger that signs up to APPRL via your invitation link, they will "
-"become a “referral publisher” to you for 6 months."
+"For every publisher/blogger that signs up to APPRL via your invitation link, "
+"they will become a “referral publisher” to you for 6 months."
 msgstr ""
+"Varje bloggare som ansöker via din länk, blir en “referral-publisher” till "
+"dig i 6 månader."
 
-#: templates/dashboard/referral.html:26
+#: templates/dashboard/referral.html:27
+#, python-format
 msgid ""
-"During these 6 months, you will make half the amount the bloggers you have "
-"invited make on every sale. For example, if they make €20 on one sale, you "
-"make €10."
+"<strong>During these 6 months, you will make half of what the publisher/"
+"blogger you have invited make</strong>. For example, if they make €20 on one "
+"sale, you make €10. You can track how much you earn under <a href="
+"\"%(dashboard_url)s\">your statistics</a>."
 msgstr ""
+"<strong>Under dessa 6 månader så kommer du tjäna hälften av allt det "
+"bloggaren tjänar på via APPRL</strong>. Om de exempelvis tjänar €20 på en "
+"försäljning så tjänar du €10. Du kan följa hur mycket du tjänar under <a "
+"href=\"%(dashboard_url)s\">din statistik</a>."
 
-#: templates/dashboard/referral.html:30
+#: templates/dashboard/referral.html:31
 msgid "So far these have successfully signed up via your invitation link:"
-msgstr ""
+msgstr "Dessa personer har ansökt via din länk:"
 
 #: templates/dashboard/referral.html:34
 #, python-format

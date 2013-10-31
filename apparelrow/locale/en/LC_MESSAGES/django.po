@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-22 11:40+0200\n"
+"POT-Creation-Date: 2013-10-31 10:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,16 +62,16 @@ msgid "no"
 msgstr ""
 
 #: activity_feed/models.py:93 activity_feed/models.py:153
-#: apparel/models.py:390 apparel/models.py:711 apparel/models.py:920
-#: apparel/models.py:935 apparel/models.py:1132 apparel/models.py:1166
+#: apparel/models.py:391 apparel/models.py:712 apparel/models.py:921
+#: apparel/models.py:936 apparel/models.py:1133 apparel/models.py:1167
 #: dashboard/models.py:74 dashboard/models.py:98 dashboard/models.py:137
 #: profile/models.py:397 statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr ""
 
-#: activity_feed/models.py:94 apparel/models.py:225 apparel/models.py:391
-#: apparel/models.py:458 apparel/models.py:509 apparel/models.py:712
-#: apparel/models.py:936 dashboard/models.py:75 dashboard/models.py:99
+#: activity_feed/models.py:94 apparel/models.py:226 apparel/models.py:392
+#: apparel/models.py:459 apparel/models.py:510 apparel/models.py:713
+#: apparel/models.py:937 dashboard/models.py:75 dashboard/models.py:99
 #: profile/models.py:398
 msgid "Time modified"
 msgstr ""
@@ -217,201 +217,201 @@ msgstr ""
 msgid "Option Items"
 msgstr ""
 
-#: apparel/models.py:181
+#: apparel/models.py:182
 msgid "Only active categories are visible and searchable on the website"
 msgstr ""
 
-#: apparel/models.py:182
+#: apparel/models.py:183
 msgid "Option types"
 msgstr ""
 
-#: apparel/models.py:183
+#: apparel/models.py:184
 msgid "The category is visible on the front page"
 msgstr ""
 
-#: apparel/models.py:217
+#: apparel/models.py:218
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:218 apparel/models.py:705
+#: apparel/models.py:219 apparel/models.py:706
 msgid "Slug Name"
 msgstr ""
 
-#: apparel/models.py:219 apparel/models.py:706
+#: apparel/models.py:220 apparel/models.py:707
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr ""
 
-#: apparel/models.py:220
+#: apparel/models.py:221
 msgid "Stock Keeping Unit"
 msgstr ""
 
-#: apparel/models.py:221
+#: apparel/models.py:222
 msgid "Has to be unique with the static_brand"
 msgstr ""
 
-#: apparel/models.py:223
+#: apparel/models.py:224
 msgid "Time added"
 msgstr ""
 
-#: apparel/models.py:224
+#: apparel/models.py:225
 msgid "Time published"
 msgstr ""
 
-#: apparel/models.py:226
+#: apparel/models.py:227
 msgid "Product description"
 msgstr ""
 
-#: apparel/models.py:227
+#: apparel/models.py:228
 msgid "Product image"
 msgstr ""
 
-#: apparel/models.py:230 apparel/models.py:715 profile/forms.py:123
+#: apparel/models.py:231 apparel/models.py:716 profile/forms.py:123
 #: profile/models.py:51
 msgid "Gender"
 msgstr ""
 
-#: apparel/models.py:231
+#: apparel/models.py:232
 msgid "Feed gender"
 msgstr ""
 
-#: apparel/models.py:234 apparel/models.py:679
+#: apparel/models.py:235 apparel/models.py:680
 msgid "In stock"
 msgstr ""
 
-#: apparel/models.py:453
+#: apparel/models.py:454
 msgid "category"
 msgstr ""
 
-#: apparel/models.py:454 profile/forms.py:98
+#: apparel/models.py:455 profile/forms.py:98
 msgid "Name"
 msgstr ""
 
-#: apparel/models.py:456
+#: apparel/models.py:457
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:457
+#: apparel/models.py:458
 msgid "Override gender"
 msgstr ""
 
-#: apparel/models.py:543
+#: apparel/models.py:544
 msgid "Buy URL"
 msgstr ""
 
-#: apparel/models.py:544 templates/apparel/look_editor.html:63
-#: templates/apparel/fragments/product_filter.html:67
+#: apparel/models.py:545 templates/apparel/look_editor.html:63
+#: templates/apparel/fragments/product_filter.html:49
 msgid "Price"
 msgstr ""
 
-#: apparel/models.py:544
+#: apparel/models.py:545
 msgid "Price converted to base currency"
 msgstr ""
 
-#: apparel/models.py:545 importer/models.py:138
+#: apparel/models.py:546 importer/models.py:138
 msgid "Currency"
 msgstr ""
 
-#: apparel/models.py:545
+#: apparel/models.py:546
 msgid "Base currency as three-letter ISO code"
 msgstr ""
 
-#: apparel/models.py:546
+#: apparel/models.py:547
 msgid "Original price"
 msgstr ""
 
-#: apparel/models.py:547
+#: apparel/models.py:548
 msgid "Original currency"
 msgstr ""
 
-#: apparel/models.py:547 apparel/models.py:549 apparel/models.py:551
+#: apparel/models.py:548 apparel/models.py:550 apparel/models.py:552
 #: dashboard/models.py:62 dashboard/models.py:95
 msgid "Currency as three-letter ISO code"
 msgstr ""
 
-#: apparel/models.py:548
+#: apparel/models.py:549
 msgid "Discount price"
 msgstr ""
 
-#: apparel/models.py:549
+#: apparel/models.py:550
 msgid "Discount currency"
 msgstr ""
 
-#: apparel/models.py:550
+#: apparel/models.py:551
 msgid "Original discount price"
 msgstr ""
 
-#: apparel/models.py:551
+#: apparel/models.py:552
 msgid "Original discount currency"
 msgstr ""
 
-#: apparel/models.py:552 apparel/models.py:670
+#: apparel/models.py:553 apparel/models.py:671
 msgid "Items in stock"
 msgstr ""
 
-#: apparel/models.py:552 apparel/models.py:670
+#: apparel/models.py:553 apparel/models.py:671
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:675
+#: apparel/models.py:676
 msgid "No information available"
 msgstr ""
 
-#: apparel/models.py:677
+#: apparel/models.py:678
 msgid "Out of stock"
 msgstr ""
 
-#: apparel/models.py:681
+#: apparel/models.py:682
 msgid "items in stock"
 msgstr ""
 
-#: apparel/models.py:704
+#: apparel/models.py:705
 msgid "Title"
 msgstr ""
 
-#: apparel/models.py:707
+#: apparel/models.py:708
 msgid "Look description"
 msgstr ""
 
-#: apparel/models.py:714
+#: apparel/models.py:715
 msgid "What compontent to show"
 msgstr ""
 
-#: apparel/models.py:980
+#: apparel/models.py:981
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:981
+#: apparel/models.py:982
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:982
+#: apparel/models.py:983
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:983
+#: apparel/models.py:984
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:984
+#: apparel/models.py:985
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:985
+#: apparel/models.py:986
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1152
+#: apparel/models.py:1153
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1196
+#: apparel/models.py:1197
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1196
+#: apparel/models.py:1197
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -842,7 +842,7 @@ msgstr ""
 msgid "City"
 msgstr ""
 
-#: profile/utils.py:104
+#: profile/utils.py:117
 #, python-format
 msgid "Welcome to Apprl %(name)s"
 msgstr ""
@@ -932,7 +932,7 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-#: templates/base.html:166 templates/activity_feed/feed_list.html:49
+#: templates/base.html:166 templates/activity_feed/feed_list.html:46
 msgid "Your APPRL"
 msgstr ""
 
@@ -965,7 +965,7 @@ msgstr ""
 
 #: templates/base.html:174 templates/base.html.py:219
 #: templates/apparel/user_list.html:25
-#: templates/apparel/fragments/product_filter.html:122
+#: templates/apparel/fragments/product_filter.html:104
 msgid "Brands"
 msgstr ""
 
@@ -1010,7 +1010,7 @@ msgid "Bloggers"
 msgstr ""
 
 #: templates/base.html:248 templates/apparel/admin/header.html:9
-#: templates/apparel/fragments/product_filter.html:147
+#: templates/apparel/fragments/product_filter.html:129
 msgid "Stores"
 msgstr ""
 
@@ -1035,22 +1035,22 @@ msgid "The product URL is no longer valid."
 msgstr ""
 
 #: templates/search.html:22 templates/search.html.py:25
+#: templates/activity_feed/feed_list.html:51
 #: templates/activity_feed/feed_list.html:54
-#: templates/activity_feed/feed_list.html:57
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:20
 msgid "Only men’s"
 msgstr ""
 
 #: templates/search.html:22 templates/search.html.py:26
-#: templates/activity_feed/feed_list.html:54
-#: templates/activity_feed/feed_list.html:58
+#: templates/activity_feed/feed_list.html:51
+#: templates/activity_feed/feed_list.html:55
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:21
 msgid "Only women’s"
 msgstr ""
 
 #: templates/search.html:22 templates/search.html.py:24
-#: templates/activity_feed/feed_list.html:54
-#: templates/activity_feed/feed_list.html:56 templates/apparel/browse.html:29
+#: templates/activity_feed/feed_list.html:51
+#: templates/activity_feed/feed_list.html:53
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
 #: templates/apparel/user_list.html:32 templates/apparel/user_list.html:34
 #: templates/apparel/user_list.html:47
@@ -1105,17 +1105,9 @@ msgstr ""
 #: templates/activity_feed/feed_list.html:38
 #, python-format
 msgid ""
-"This is your personal Apprl feed with the latest from your follows. You have "
-"automatically followed your friends &amp; some of our featured members. To "
-"manage who you follow go to <a href=\"%(profile_url)s\">your profile</a>."
-msgstr ""
-
-#: templates/activity_feed/feed_list.html:40
-#, python-format
-msgid ""
-"This is your personal Apprl feed with the latest from your follows. You have "
-"automatically followed some of our featured members. To manage who you "
-"follow go to <a href=\"%(profile_url)s\">your profile</a>."
+"This is your personal Apprl feed with the latest from your follows. <a href="
+"\"%(members_url)s\">Discover more people, bloggers & brands to follow here</"
+"a> and <a href=\"%(profile_url)s\">manage who you follow here</a>."
 msgstr ""
 
 #: templates/activity_feed/fragments/feed_list.html:7
@@ -1237,7 +1229,7 @@ msgstr ""
 
 #: templates/advertiser/store_admin.html:15
 #: templates/apparel/admin/kpi_dashboard.html:78
-#: templates/apparel/admin/stores.html:35 templates/dashboard/admin.html:102
+#: templates/apparel/admin/stores.html:43 templates/dashboard/admin.html:102
 #: templates/dashboard/admin.html.py:159 templates/dashboard/publisher.html:17
 #: templates/dashboard/publisher.html:61
 #: templates/dashboard/publisher.html:148
@@ -1328,11 +1320,19 @@ msgid ""
 "Friends</a> or to show <a href=\"%(shop_url)s\">Everything</a>."
 msgstr ""
 
+#: templates/apparel/browse.html:29
+msgid "Popular"
+msgstr ""
+
 #: templates/apparel/browse.html:30
-msgid "My friends"
+msgid "Latest in"
 msgstr ""
 
 #: templates/apparel/browse.html:31
+msgid "My friends"
+msgstr ""
+
+#: templates/apparel/browse.html:32
 msgid "My brands"
 msgstr ""
 
@@ -1831,6 +1831,7 @@ msgid "Only women"
 msgstr ""
 
 #: templates/apparel/admin/header.html:5
+#: templates/apparel/admin/stores.html:10
 msgid "Admin dashboard"
 msgstr ""
 
@@ -1878,7 +1879,7 @@ msgid "Commission (€)"
 msgstr ""
 
 #: templates/apparel/admin/kpi_dashboard.html:84
-#: templates/apparel/admin/stores.html:36 templates/dashboard/admin.html:128
+#: templates/apparel/admin/stores.html:44 templates/dashboard/admin.html:128
 #: templates/dashboard/publisher.html:175
 msgid "Sales"
 msgstr ""
@@ -1899,28 +1900,28 @@ msgstr ""
 msgid "Active publishers"
 msgstr ""
 
-#: templates/apparel/admin/stores.html:34
+#: templates/apparel/admin/stores.html:42
 msgid "Store"
 msgstr ""
 
-#: templates/apparel/admin/stores.html:37
+#: templates/apparel/admin/stores.html:45
 msgid "Sales value"
 msgstr ""
 
-#: templates/apparel/admin/stores.html:38
+#: templates/apparel/admin/stores.html:46
 msgid "Commission value"
 msgstr ""
 
-#: templates/apparel/admin/stores.html:39
+#: templates/apparel/admin/stores.html:47
 #, python-format
 msgid "Commission %%"
 msgstr ""
 
-#: templates/apparel/admin/stores.html:40
+#: templates/apparel/admin/stores.html:48
 msgid "Conversion"
 msgstr ""
 
-#: templates/apparel/admin/stores.html:41
+#: templates/apparel/admin/stores.html:49
 msgid "EPC"
 msgstr ""
 
@@ -2011,61 +2012,61 @@ msgstr ""
 msgid "Mens"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:30
-msgid "Sort by"
-msgstr ""
-
-#: templates/apparel/fragments/product_filter.html:35
-msgid "trending"
-msgstr ""
-
-#: templates/apparel/fragments/product_filter.html:36
-msgid "latest"
-msgstr ""
-
-#: templates/apparel/fragments/product_filter.html:37
-msgid "low price"
-msgstr ""
-
-#: templates/apparel/fragments/product_filter.html:38
-msgid "high price"
-msgstr ""
-
-#: templates/apparel/fragments/product_filter.html:47
+#: templates/apparel/fragments/product_filter.html:29
 msgid "Categories"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:51
-#: templates/apparel/fragments/product_filter.html:71
-#: templates/apparel/fragments/product_filter.html:103
-#: templates/apparel/fragments/product_filter.html:126
-#: templates/apparel/fragments/product_filter.html:151
+#: templates/apparel/fragments/product_filter.html:33
+#: templates/apparel/fragments/product_filter.html:53
+#: templates/apparel/fragments/product_filter.html:85
+#: templates/apparel/fragments/product_filter.html:108
+#: templates/apparel/fragments/product_filter.html:133
 msgid "Reset this filter"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:73
+#: templates/apparel/fragments/product_filter.html:55
 msgid "Min"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:75
-#: templates/apparel/fragments/product_filter.html:77
+#: templates/apparel/fragments/product_filter.html:57
+#: templates/apparel/fragments/product_filter.html:59
 msgid "Max"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:92
+#: templates/apparel/fragments/product_filter.html:74
 msgid "Only show products on sale"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:99
+#: templates/apparel/fragments/product_filter.html:81
 msgid "Colors"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:128
+#: templates/apparel/fragments/product_filter.html:110
 msgid "Search brands"
 msgstr ""
 
-#: templates/apparel/fragments/product_filter.html:156
+#: templates/apparel/fragments/product_filter.html:138
 msgid "No matching stores"
+msgstr ""
+
+#: templates/apparel/fragments/product_filter.html:149
+msgid "Sort by"
+msgstr ""
+
+#: templates/apparel/fragments/product_filter.html:154
+msgid "popular"
+msgstr ""
+
+#: templates/apparel/fragments/product_filter.html:155
+msgid "latest"
+msgstr ""
+
+#: templates/apparel/fragments/product_filter.html:156
+msgid "low price"
+msgstr ""
+
+#: templates/apparel/fragments/product_filter.html:157
+msgid "high price"
 msgstr ""
 
 #: templates/apparel/fragments/product_medium.html:33
@@ -2460,8 +2461,8 @@ msgstr ""
 msgid "Referrals: %(referral_sales)s"
 msgstr ""
 
-#: templates/dashboard/publisher.html:133 templates/dashboard/referral.html:9
-msgid "Earn money by inviting other bloggers"
+#: templates/dashboard/publisher.html:133
+msgid "Earn money by inviting other publishers/bloggers"
 msgstr ""
 
 #: templates/dashboard/publisher.html:198
@@ -2494,11 +2495,16 @@ msgstr ""
 msgid "We will soon get in touch with you."
 msgstr ""
 
+#: templates/dashboard/referral.html:9
+msgid "Earn money by inviting publishers/bloggers"
+msgstr ""
+
 #: templates/dashboard/referral.html:10
 msgid ""
-"As one of our top publishers you will be rewarded when a blogger that you "
-"invite to APPRL joins and starts driving sales. If the blogger you invite "
-"via the link below joins APPRL, they will receive €20 on their APPRL account."
+"As one of our top members, you will earn money when a publisher/blogger that "
+"you invite to APPRL joins and starts driving sales. Also any publisher/"
+"blogger that joins using the link below will receive €20 on their APPRL "
+"account."
 msgstr ""
 
 #: templates/dashboard/referral.html:15
@@ -2506,7 +2512,7 @@ msgid "Your invitation link:"
 msgstr ""
 
 #: templates/dashboard/referral.html:17
-msgid "copy and share with other bloggers to get rewarded"
+msgid "copy and share with other publishers/bloggers to get rewarded"
 msgstr ""
 
 #: templates/dashboard/referral.html:22
@@ -2516,23 +2522,25 @@ msgstr ""
 #: templates/dashboard/referral.html:24
 msgid ""
 "Share your invitation link with the person you wish to invite and ask them "
-"to click it and sign up on Apprl.com."
+"to click it and apply to APPRL."
 msgstr ""
 
 #: templates/dashboard/referral.html:25
 msgid ""
-"For every blogger that signs up to APPRL via your invitation link, they will "
-"become a “referral publisher” to you for 6 months."
+"For every publisher/blogger that signs up to APPRL via your invitation link, "
+"they will become a “referral publisher” to you for 6 months."
 msgstr ""
 
-#: templates/dashboard/referral.html:26
+#: templates/dashboard/referral.html:27
+#, python-format
 msgid ""
-"During these 6 months, you will make half the amount the bloggers you have "
-"invited make on every sale. For example, if they make €20 on one sale, you "
-"make €10."
+"<strong>During these 6 months, you will make half of what the publisher/"
+"blogger you have invited make</strong>. For example, if they make €20 on one "
+"sale, you make €10. You can track how much you earn under <a href="
+"\"%(dashboard_url)s\">your statistics</a>."
 msgstr ""
 
-#: templates/dashboard/referral.html:30
+#: templates/dashboard/referral.html:31
 msgid "So far these have successfully signed up via your invitation link:"
 msgstr ""
 
