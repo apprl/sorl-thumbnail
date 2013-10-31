@@ -422,10 +422,30 @@ def product_like_pre_delete(sender, instance, **kwargs):
 
 
 #
-# ShortProductLink
+# ShortStoreLink and ShortProductLink
 #
 
 SHORT_CONSTANT = 999999
+
+class ShortStoreLinkManager(models.Manager):
+    def get_for_short_link(self, short_link, user_id=None):
+        instance = ShortStoreLink.objects.get(pk=(saturate(short_link) - SHORT_CONSTANT))
+
+        if user_id is None:
+            user_id = 0
+
+        return instance.template.format(sid='{}-0-Ext-Store'.format(user_id)), instance.name
+
+
+class ShortStoreLink(models.Model):
+    name = models.CharField(max_length=16)
+    template = models.CharField(max_length=512, blank=False, null=False, help_text="Use {sid} in the URL where you want the sid string to be placed")
+
+    objects = ShortStoreLinkManager()
+
+    def link(self):
+        return dehydrate(self.pk + SHORT_CONSTANT)
+
 
 class ShortProductLinkManager(models.Manager):
     def get_for_short_link(self, short_link):

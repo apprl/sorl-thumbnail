@@ -1,0 +1,55 @@
+{% load i18n %}
+{% load static from staticfiles %}
+<!doctype html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head>
+    <title>Apprl - Social Shopping</title>
+    <meta charset="utf-8"/>
+    <meta name="robots" content="noindex"/>
+    <meta content="5;url={{ redirect_url|safe }}" http-equiv="refresh"/>
+    <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', '{{ GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT }}', {'cookieDomain': '{{ GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN }}'});
+        ga('send', 'pageview');
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
+        _gaq.push(['_setDomainName', '{{ GOOGLE_ANALYTICS_DOMAIN }}']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+        ga('send', 'event', 'Ext-Store', 'StoreLinkClick', '{{ name }}');
+        _gaq.push(['_trackEvent', 'Ext-Store', 'StoreLinkClick', '{{ name }}']);
+        var data = {csrfmiddlewaretoken: '{{ csrf_token }}',
+                    referer: '{{ request.META.HTTP_REFERER }}',
+                    sid: '{{ user_id }}',
+                    page: 'Ext-Store'};
+        jQuery.post('{% url "product-track" 0 'Ext-Store' user_id %}', data);
+        setTimeout(function() {
+            window.location.replace('{{ redirect_url|safe }}');
+        }, 1300);
+    </script>
+</head>
+<body>
+    <div style="position:fixed;top:42%;left:50%;width:400px;margin-left:-200px;height:140px;margin-top:-70px;text-align:center;font-family:'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;">
+        <div style="width:100%;background-color:#000000;margin:0;height:40px;line-height:40px;"><img style="vertical-align:middle;" src="{% static "images/small_logo.png" %}" alt="Apprl"></div>
+        <div style="width:100%;border:1px solid #eee;height:100px;line-height:100px;box-sizing:border-box;font-weight:bold;">
+            {% if name %}
+            <a style="color:#000000;text-decoration:none;" href="{{ redirect_url }}">{% blocktrans %}Redirecting you to {{name}}{% endblocktrans %}</a> <img style="padding-left:10px;" src="{% static "images/loading_white.gif" %}">
+            {% else %}
+            {% trans "The URL is no longer valid." %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

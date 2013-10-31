@@ -28,6 +28,8 @@ def map_placement(placement):
         link = _('Look on your site')
     elif placement == 'Ext-Link':
         link = _('Product link on your site')
+    elif placement == 'Ext-Store':
+        link = _('Store link on your site')
     elif placement == 'Look':
         link = _('Look on Apprl.com')
     elif placement == 'Shop':
