@@ -130,6 +130,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             'is_referral_sale': sale.is_referral_sale,
             'referral_user': referral_user,
             'link': map_placement(sale.placement),
+            'link_raw': sale.placement,
             'commission': 0 if sale.user_id == 0 else sale.commission,
             'apprl_commission': apprl_commission,
             'currency': sale.currency,
