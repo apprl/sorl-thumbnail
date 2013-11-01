@@ -140,6 +140,11 @@ class Signup(models.Model):
         return '%s' % (self.name,)
 
 
+class StoreCommission(models.Model):
+    vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False)
+    commission = models.CharField(max_length=255)
+    link = models.CharField(max_length=255, null=True, blank=True, help_text=_('Only our own store links works, should be copied excactly as they appear in short store link admin list without a user id.'))
+
 
 #
 # Model signals

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body-classes %}publisher-commissions{% endblock body-classes %}
+{% block body %}
+
+    {% include 'dashboard/body_header.html' %}
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{% trans "Store" %}</th>
+                        <th>{% trans "Commission" %}</th>
+                        <th>{% trans "Link to store" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for store in stores %}
+                    <tr>
+                        <td>{{ store.vendor.name }}</td>
+                        <td>{{ store.commission }}</td>
+                        <td>{% if store.link %}<a class="btn btn-primary" href="{% url 'dashboard-commissions-popup' store.pk %}" data-toggle="modal" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor.name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td>{% trans "Empty" %}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p><small>{% trans "Note: The commission rates above are approximate and might depend on how many sales you have generated and other factors." %}</small></p>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_store_link" tabindex="-1"></div>
+
+{% endblock %}
