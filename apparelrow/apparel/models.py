@@ -442,10 +442,10 @@ class ShortStoreLink(models.Model):
     template = models.CharField(max_length=512, blank=False, null=False, help_text="""Use {sid} in the URL where you want the sid string to be placed<br><br>
             AAN<br>http://apprl.com/a/link/?store_id=STORE_ID&custom={sid}&url=DESTINATION_URL<br><br>
             Tradedoubler<br>http://clk.tradedoubler.com/click?p=xxxxx&a=xxxxx&g=xxxxx&epi={sid}&url=DESTINATION_URL<br><br>
-            Linkshare<br>No example yet, u1={sid} is probably the parameter<br><br>
-            CJ<br>No example yet, SID={sid} is probably the parameter<br><br>
-            AW<br>No example yet, clickref={sid} is probably the parameter<br><br>
-            Zanox<br>No example yet, zpar0={sid} is probably the parameter<br><br>""")
+            Linkshare (not confirmed)<br>http://click.linksynergy.com/deeplink?id=xxxxx&mid=xxxxx&u1={sid}&murl=DESTINATION_URL<br><br>
+            CJ (not confirmed)<br>http://www.anrdoezrs.net/click-xxxxx-xxxxx?SID={sid}&URL=DESTINATION_URL<br><br>
+            AW (not confirmed, extra unsure of clickref)<br>http://www.awin1.com/pclick.php?a=xxxxx&m=xxxxx&clickref={sid}&p=DESTINATION_URL<br><br>
+            Zanox (not confirmed)<br>http://ad.zanox.com/ppc/?xxxxx&zpar0={sid}&ulp=[[DESTINATION_URL]]""")
 
     objects = ShortStoreLinkManager()
 
