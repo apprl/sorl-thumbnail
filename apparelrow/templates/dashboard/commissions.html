@@ -20,7 +20,7 @@
                 <tbody>
                     {% for store in stores %}
                     <tr>
-                        <td>{{ store.vendor.name }}</td>
+                        <td><a href="{% url 'shop' %}?store={{ store.vendor.pk }}">{{ store.vendor.name }}</a></td>
                         <td>{{ store.commission }}</td>
                         <td>{% if store.link %}<a class="btn btn-primary" href="{% url 'dashboard-commissions-popup' store.pk %}" data-toggle="modal" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor.name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
                     </tr>
