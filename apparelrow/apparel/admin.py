@@ -6,6 +6,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.loading import get_model
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
 
 from apparelrow.apparel.models import *
 from modeltranslation.admin import TranslationAdmin
@@ -106,6 +108,23 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 
+
+#
+# SHORT STORE LINK
+#
+
+class ShortStoreLinkAdmin(admin.ModelAdmin):
+    list_display = ('vendor', 'template', 'link')
+
+    def link(self, instance):
+        current_site = Site.objects.get_current()
+
+        return 'http://{}{}'.format(current_site.domain, reverse('store-short-link', args=[instance.link()]))
+
+
+admin.site.register(ShortStoreLink, ShortStoreLinkAdmin)
+
+
 #
 # SHORT PRODUCT LINK
 #
@@ -116,6 +135,7 @@ class ShortProductLinkAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ShortProductLink, ShortProductLinkAdmin)
+
 
 #
 # LOOK

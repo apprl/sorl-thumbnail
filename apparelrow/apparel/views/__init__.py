@@ -32,7 +32,7 @@ from apparelrow.profile.notifications import process_like_look_created
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
-from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink
+from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink, ShortStoreLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender, JSONResponse, JSONPResponse
@@ -217,6 +217,26 @@ def follow_unfollow(request, profile_id, do_follow=True):
         facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
 
     return HttpResponse(status=204)
+
+
+#
+# Store short link
+#
+
+def store_short_link(request, short_link, user_id=None):
+    """
+    Takes a short short link and redirect to associated url.
+    """
+    try:
+        url, name = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
+    except ShortStoreLink.DoesNotExist:
+        raise Http404
+
+    if user_id is None:
+        user_id = 0
+
+    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id})
+
 
 #
 # Products

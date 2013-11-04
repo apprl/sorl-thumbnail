@@ -224,7 +224,7 @@
                         <td class="center"></td>
                         {% else %}
                         <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
-                        <td class="hidden-xs">{% if sale.product_link %}<a href="{{ sale.product_link }}">{{ sale.product }}</a>{% else %}{{ sale.product }}{% endif %}</td>
+                        <td class="hidden-xs">{% if sale.product_link %}<a href="{{ sale.product_link }}">{{ sale.product }}</a>{% else %}{% if sale.link_raw != 'Ext-Store' %}{{ sale.product }}{% endif %}{% endif %}</td>
                         <td>{{ sale.link }}</td>
                         <td class="center">{{ sale.clicks }}</td>
                         {% endif %}

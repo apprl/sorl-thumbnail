@@ -422,10 +422,36 @@ def product_like_pre_delete(sender, instance, **kwargs):
 
 
 #
-# ShortProductLink
+# ShortStoreLink and ShortProductLink
 #
 
 SHORT_CONSTANT = 999999
+
+class ShortStoreLinkManager(models.Manager):
+    def get_for_short_link(self, short_link, user_id=None):
+        instance = ShortStoreLink.objects.get(pk=(saturate(short_link) - SHORT_CONSTANT))
+
+        if user_id is None:
+            user_id = 0
+
+        return instance.template.format(sid='{}-0-Ext-Store'.format(user_id)), instance.vendor.name
+
+
+class ShortStoreLink(models.Model):
+    vendor   = models.ForeignKey(Vendor)
+    template = models.CharField(max_length=512, blank=False, null=False, help_text="""Use {sid} in the URL where you want the sid string to be placed<br><br>
+            AAN<br>http://apprl.com/a/link/?store_id=STORE_ID&custom={sid}&url=DESTINATION_URL<br><br>
+            Tradedoubler<br>http://clk.tradedoubler.com/click?p=xxxxx&a=xxxxx&g=xxxxx&epi={sid}&url=DESTINATION_URL<br><br>
+            Linkshare<br>No example yet, u1={sid} is probably the parameter<br><br>
+            CJ<br>No example yet, SID={sid} is probably the parameter<br><br>
+            AW<br>No example yet, clickref={sid} is probably the parameter<br><br>
+            Zanox<br>No example yet, zpar0={sid} is probably the parameter<br><br>""")
+
+    objects = ShortStoreLinkManager()
+
+    def link(self):
+        return dehydrate(self.pk + SHORT_CONSTANT)
+
 
 class ShortProductLinkManager(models.Manager):
     def get_for_short_link(self, short_link):

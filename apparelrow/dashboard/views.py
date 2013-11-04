@@ -3,8 +3,8 @@ import calendar
 import decimal
 
 from django.conf import settings
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
 from django.db.models import get_model, Sum, Count
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
@@ -28,6 +28,8 @@ def map_placement(placement):
         link = _('Look on your site')
     elif placement == 'Ext-Link':
         link = _('Product link on your site')
+    elif placement == 'Ext-Store':
+        link = _('Store link on your site')
     elif placement == 'Look':
         link = _('Look on Apprl.com')
     elif placement == 'Shop':
@@ -128,6 +130,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             'is_referral_sale': sale.is_referral_sale,
             'referral_user': referral_user,
             'link': map_placement(sale.placement),
+            'link_raw': sale.placement,
             'commission': 0 if sale.user_id == 0 else sale.commission,
             'apprl_commission': apprl_commission,
             'currency': sale.currency,
@@ -401,6 +404,30 @@ def referral_signup(request, code):
         response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime, httponly=True)
 
     return response
+
+
+#
+# Commissions
+#
+
+def commissions(request):
+    if not request.user.is_authenticated() or not request.user.is_partner:
+        raise Http404
+
+    stores = list(get_model('dashboard', 'StoreCommission').objects.select_related('vendor').order_by('vendor__name'))
+
+    return render(request, 'dashboard/commissions.html', {'stores': stores})
+
+def commissions_popup(request, pk):
+    if not request.user.is_authenticated() or not request.user.is_partner:
+        raise Http404
+
+    store = get_object_or_404(get_model('dashboard', 'StoreCommission'), pk=pk)
+    link = None
+    if store.link:
+        link = '{}{}/'.format(store.link, request.user.pk)
+
+    return render(request, 'dashboard/commissions_popup.html', {'link': link, 'name': store.vendor.name})
 
 
 #

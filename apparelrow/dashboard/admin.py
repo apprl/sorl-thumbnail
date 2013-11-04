@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.core import urlresolvers
 
-from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup
+from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission
 
 class SaleAdmin(admin.ModelAdmin):
     list_display = ('id', 'affiliate', 'vendor', 'status', 'user_id', 'product_id', 'placement', 'cut', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')
@@ -53,3 +53,9 @@ class SignupAdmin(admin.ModelAdmin):
     raw_id_fields = ('referral_user',)
 
 admin.site.register(Signup, SignupAdmin)
+
+
+class StoreCommissionAdmin(admin.ModelAdmin):
+    list_display = ('vendor', 'commission', 'link')
+
+admin.site.register(StoreCommission, StoreCommissionAdmin)
