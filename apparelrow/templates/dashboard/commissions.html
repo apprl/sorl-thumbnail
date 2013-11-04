@@ -40,5 +40,12 @@
     </div>
 
     <div class="modal fade" id="modal_store_link" tabindex="-1"></div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#modal_store_link').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+            });
+        });
+    </script>
 
 {% endblock %}
