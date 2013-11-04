@@ -439,7 +439,13 @@ class ShortStoreLinkManager(models.Manager):
 
 class ShortStoreLink(models.Model):
     vendor   = models.ForeignKey(Vendor)
-    template = models.CharField(max_length=512, blank=False, null=False, help_text="Use {sid} in the URL where you want the sid string to be placed<br><br>test")
+    template = models.CharField(max_length=512, blank=False, null=False, help_text="""Use {sid} in the URL where you want the sid string to be placed<br><br>
+            AAN<br>http://apprl.com/a/link/?store_id=STORE_ID&custom={sid}&url=DESTINATION_URL<br><br>
+            Tradedoubler<br>http://clk.tradedoubler.com/click?p=xxxxx&a=xxxxx&g=xxxxx&epi={sid}&url=DESTINATION_URL<br><br>
+            Linkshare<br>No example yet, u1={sid} is probably the parameter<br><br>
+            CJ<br>No example yet, SID={sid} is probably the parameter<br><br>
+            AW<br>No example yet, clickref={sid} is probably the parameter<br><br>
+            Zanox<br>No example yet, zpar0={sid} is probably the parameter<br><br>""")
 
     objects = ShortStoreLinkManager()
 
