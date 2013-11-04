@@ -40,6 +40,11 @@ location @fallback_embed {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
 
+location /maint {
+    root $deploy_dir/www/maint;
+    try_files /index.html /index.html;
+}
+
 # Proxy /admin requests to our WSGI server for admin page
 location ~ "^/([a-zA-Z]{2})/admin" {
     proxy_read_timeout 1800;
