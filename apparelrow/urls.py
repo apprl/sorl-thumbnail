@@ -23,6 +23,7 @@ urlpatterns = patterns('',
 
     # Alias for store signup with analytics campaign for Ad
     url(r'^addstore/$', RedirectView.as_view(url='http://apprl.com/en/store?utm_source=AddStore&utm_medium=AddStore&utm_campaign=signupAddStore')),
+    url(r'^newsletter/$', RedirectView.as_view(url='http://apprl.us4.list-manage.com/subscribe?u=288a115f8369a96ef3fcf6e9d&id=6fa805a815', permanent=False, query_string=True), name='newsletter-redirect'),
 
     url(r'^i/(?P<code>[\w-]+)/$', 'apparelrow.dashboard.views.referral_signup', name='dashboard-referral-signup'),
 
@@ -32,7 +33,6 @@ urlpatterns = patterns('',
     url(r'^i18n/setlang/$', 'apparelrow.apparel.views.apparel_set_language', name='change_language_view'), # override builtin set_language
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^newsletter/', include('apparelrow.newsletter.urls')),
     (r'', include('apparelrow.apparel.urls')),
     (r'^partner/', RedirectView.as_view(url='/publisher/dashboard/')),
     (r'^publisher/', include('apparelrow.dashboard.urls')),

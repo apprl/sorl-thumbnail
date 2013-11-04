@@ -239,7 +239,6 @@ INSTALLED_APPS = (
     'apparelrow.apparel',              # Internal: Product display module
     'apparelrow.importer',             # Internal: Product importer module
     'apparelrow.statistics',           # Internal: Click statistics module
-    'apparelrow.newsletter',
     'apparelrow.dashboard',
     'apparelrow.activity_feed',
 )
