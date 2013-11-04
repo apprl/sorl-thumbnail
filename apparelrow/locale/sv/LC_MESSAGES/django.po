@@ -2346,7 +2346,7 @@ msgid ""
 "many sales you have generated and other factors."
 msgstr ""
 "Provisionsnivåerna ovan är ungefärliga och beror på exempelvis hur många "
-"försäljningar du har genererat och annat."
+"försäljningar du har genererat."
 
 #: templates/dashboard/commissions_popup.html:6
 #, python-format
