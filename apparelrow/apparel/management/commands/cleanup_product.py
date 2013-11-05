@@ -1,3 +1,4 @@
+import datetime
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
@@ -12,7 +13,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         deleted_count = 0
 
-        for product_id in Product.objects.filter(published=False, date_published__isnull=True).values_list('pk', flat=True):
+        seven_days_ago = datetime.datetime.today() - datetime.timedelta(days=7)
+
+        product_count = Product.objects.filter(published=False, date_published__isnull=True, modified__lte=seven_days_ago).count()
+        print 'About to check {} products'.format(product_count)
+
+        for product_id in Product.objects.filter(published=False, date_published__isnull=True, modified__lte=seven_days_ago).values_list('pk', flat=True):
             if ProductLike.objects.filter(product=product_id).count() == 0 and LookComponent.objects.filter(product=product_id).count() == 0:
                 product = Product.objects.get(pk=product_id)
                 product.delete()
