@@ -206,7 +206,6 @@ def deploy(param='', snapshot='master'):
     install_gunicorn()
     copy_bin()
     copy_config()
-    copy_solr()
     build_styles_and_scripts()
     migrate(param)
     copy_sitemap()
@@ -294,13 +293,6 @@ def install_requirements():
 def copy_bin():
     require('release', provided_by=[deploy, setup])
     run('cd %(path)s; cp ./releases/%(release)s/bin/* ./bin' % env, pty=True)
-
-def copy_solr():
-    require('release', provided_by=[deploy, setup])
-    with cd(env.path):
-        sudo('cp -rup ./releases/%(release)s/solr/ .' % env, pty=True)
-        sudo('chown --silent -R %(run_user)s:%(run_group)s ./solr' % env, pty=True)
-        sudo('touch ./solr/solr/collection1/conf/synonyms.txt', user=env.run_user, pty=True)
 
 def copy_config():
     require('release', provided_by=[deploy, setup])
