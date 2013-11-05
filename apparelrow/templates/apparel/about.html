@@ -1,90 +1,32 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n apparel_extras %}
 {% load static from staticfiles %}
 
-{% block body-header %}
-<div id="body-header">
-    <div class="column_one">
-        <h1>{% trans "About Apprl" %}</h1>
-        <h2>{% trans "Social shopping" %}</h2>
-    </div>
-</div>
-{% endblock body-header %}
-{% block body-classes %}one-column about{% endblock body-classes %}
+{% block extra-title %}{% trans "About" %} | {% endblock %}
 
+{% block body-classes %}about-page{% endblock %}
 {% block body %}
-<style type="text/css">
-    <!--.wrapper {max-height:200px;height: auto !important;height: 100%;margin: 0 auto -53px}-->
-    #content{text-align:center;width:980px;height:100%;overflow: hidden;margin:0 auto}
-    .content-row-ett{float:left;width:100%;min-width:10px;height:176px;border-bottom:1px solid #f0f0f0;}
-    .content-row-tva{float:left;width:100%;min-width:10px;height:176px;border-bottom:1px solid #f0f0f0;margin:4px 0}
-    .content-row-tre{float:left;width:100%;min-width:10px;height:176px;margin:4px 0}
-   .row-wrapper{width:100%;min-width:10px;float:left;height:128px;text-align:left;margin:24px 0 0}
-   .startbubble{float:left}
-   .row-span{float:left;width:250px;margin:0 0 0 20px}
-   .p-row{line-height: normal;margin:20px 0 0;text-align:left;float:left}
-   .mktmer{font-size: 0.85em;text-align:left;margin: 5px 0 0;float:right;}
-   .rowrubbe {line-height: normal;float: left;min-width: 200px;font-size: 1.3em;font-weight: bold;margin: 0;border: none}
-   #logoladdan-ett, #logoladdan-tva,  #logoladdan-tre{float:right}
-   #logoladdan-ett {width:490px;height: 95px;margin: 17px 0 0;}
-   #logoladdan-tva{width: 490px;height: 80px;margin: 30px 0 0;}
-   #logoladdan-tre {width: 490px;height: 70px;margin: 23px 0 0;}
-   .logo-row-ett{float:left;width:100px;height:41px; margin:0 30px 10px 0;}
-   .logo-row-tva{float:left;width:69px;height:65px;margin: 0 15px 0 0;}
-   .logo-row-tre{float:left;width:104px;height:89px;margin:0 24px 0 0;}
-</style>
-<div id="content">
-    <div class="content-row-ett">
-        <div class="row-wrapper">
-            <div class="startbubble"><img src="{% static "images/genderimg/bubble-1.png" %}" /></div>
-            <span class="row-span">
-                <h2 class="rowrubbe">{% trans "All in one place" %}</h2>
-                <p class="p-row">{% trans "We have collected clothes, shoes & accessories from all the best international brands & online retailers." %}</p>
-            </span>
-            <div id="logoladdan-ett">
-                <div class="logo-row-ett"><img src="{% static "images/genderimg/frontpage_stores/liberty.png" %}" /></div>
-                <div class="logo-row-ett"><img src="{% static "images/genderimg/frontpage_stores/harrods.png" %}" /></div>
-                <div class="logo-row-ett"><img src="{% static "images/genderimg/frontpage_stores/v_ave_shoerepair.png" %}" /></div>
-                <div class="logo-row-ett" style="margin: 0 0 12px 0;"><img src="{% static "images/genderimg/frontpage_stores/nelly.png" %}" /></div>
-                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{% static "images/genderimg/frontpage_stores/ralphlauren.png" %}" /></div>
-                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{% static "images/genderimg/frontpage_stores/asos.png" %}" /></div>
-                <div class="logo-row-ett" style="margin: 0 30px 0 0;"><img src="{% static "images/genderimg/frontpage_stores/urbanoutfitters.png" %}" /></div>
-                <div class="logo-row-ett" style="margin:0;"><img src="{% static "images/genderimg/frontpage_stores/mytheresa.png" %}" /></div>
-                <p class="mktmer">{% trans "... and many more!" %}</p>
-            </div>
+
+    {% include 'apparel/about_body_header.html' %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{% static 'images/about_apprl.png' %}" class="img-responsive">
+        </div>
+        <div class="col-md-6">
+            <h4>APPRL - The social commerce platform </h4>
+            <p>Apprl was founded from the simple insight that online shopping is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that.</p>
+            <p>Apprl is a social commerce platform that connects publishers, online stores and consumers through smart digital tools that make life easier for everyone.</p>
+            <ul>
+                <li>We help publishers to grow and earn money on their content (publishers <a href="{% url 'index-publisher' %}">apply here</a>)</li>
+                <li>We help online stores to drive sales and increase their reach (stores <a href="{% url 'index-store' %}">apply here</a>)</li>
+                <li>We help people to shop where they’re inspired and get inspired where they shop</li>
+            </ul>
+            <p>For example, bloggers can create their own <a target="_blank" href="http://tjock.se/#tjockShoppen">Apprl shop</a> in 5 minutes, a store can <a href="{% url 'profile-looks' 'menlook' %}">make their lookbook drive sales in social media</a> and shoppers can <a target="_blank" href="http://abraun.forme.se/2013/september/easy.html">buy directly from blogs</a> or <a href="{% multi_gender_url request 'look' 'look-list' %}">see how others have mixed & matched products before buying</a>.</p>
+            <p>We believe we can completely transform the way shopping works today through technology, mobility & outstanding user experiences.</p>
+            <p>Want to <a href="{% url 'jobs' %}">join our journey</a>?</p>
         </div>
     </div>
-    <div class="content-row-tva">
-        <div class="row-wrapper">
-            <div class="startbubble"><img src="{% static "images/genderimg/bubble-2.png" %}" /></div>
-            <span class="row-span">
-                <h2 class="rowrubbe">{% trans "Follow friends & brands" %}</h2>
-                <p class="p-row">{% trans "See what your friends like, get inspired by bloggers & follow your favourite brands!" %}</p>
-            </span>
-            <div id="logoladdan-tva">
-                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/aliciavikander.png" %}" /></div>
-                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/elinkling.png" %}" /></div>
-                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/viktortell.png" %}" /></div>
-                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/idarislow.png" %}" /></div>
-                <div class="logo-row-tva"><img src="{% static "images/genderimg/frontpage_profilepics/kimstrom.png" %}" /></div>
-                <div class="logo-row-tva" style="margin:0;"><img src="{% static "images/genderimg/frontpage_profilepics/fridafahrman.png" %}" /></div>
-            </div>
-        </div>
-    </div>
-    <div class="content-row-tre">
-        <div class="row-wrapper">
-            <div class="startbubble"><img src="{% static "images/genderimg/bubble-3.png" %}" /></div>
-            <span class="row-span">
-                <h2 class="rowrubbe">{% trans "Create looks" %}</h2>
-                <p class="p-row">{% trans "Create & share looks to Apprl, Facebook or your blog. Tag photos with products or mix & match collages!" %}</p>
-            </span>
-            <div id="logoladdan-tre">
-                <div class="logo-row-tre"><img src="{% static "images/genderimg/frontpage_looks/look1.png" %}" /></div>
-                <div class="logo-row-tre"><img src="{% static "images/genderimg/frontpage_looks/look2.png" %}" /></div>
-                <div class="logo-row-tre"><img src="{% static "images/genderimg/frontpage_looks/look3.png" %}" /></div>
-                <div class="logo-row-tre" style="margin:0;"><img src="{% static "images/genderimg/frontpage_looks/look4.png" %}" /></div>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 {% endblock %}

@@ -766,8 +766,13 @@ def index(request, gender=None):
 
 
 def about(request):
-    return render_to_response('apparel/about.html', {}, context_instance=RequestContext(request))
+    return render(request, 'apparel/about.html')
 
+def jobs(request):
+    return render(request, 'apparel/jobs.html')
+
+def founders(request):
+    return render(request, 'apparel/founders.html')
 
 #
 # Contest Stylesearch

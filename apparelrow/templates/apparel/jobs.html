@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block extra-title %}{% trans "About" %} | {% endblock %}
+
+{% block body-classes %}about-page{% endblock %}
+{% block body %}
+
+    {% include 'apparel/about_body_header.html' %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{% static 'images/about_jobs.png' %}" class="img-responsive">
+        </div>
+        <div class="col-md-6">
+            <h4>Senior Web/Python Developer</h4>
+            <p>We’re looking for an experienced developer to join our team who wants to build the future of commerce and become a driving force of Apprl. Personality-wise you probably get kicks out of building things that haven’t been built before, are an entrepreneur at heart and are not satisfied until things are perfect.</p>
+            <ul>
+                <li>Full stack! Focus is on back-end dev but you should master front-end as well as server deployment.</li>
+                <li>Skill is more important than language, but the more familiar you are with Python/Django and our other technologies (PostgreSQL, Apache, SOLR, Redis, Javascript (backbone/jquery)) the better.</li>
+                <li>We offer a competitive setup with the ambition of making you a long-term companion and a stakeholder in the company</li>
+            </ul>
+            <p>Let us know why you are the man/woman for the job with your CV on <a target="_blank" href="mailto:jobs@apprl.com">jobs@apprl.com</a> and we’ll take things from there!</p>
+
+            <h4>Web/Python developer</h4>
+            <p>We’re looking for a genius & curious developer to join our team to build the future of commerce. Skill is the most important thing but experience in our technologies will certanly help: Python/Django, PostgreSQL, Apache, SOLR, Redis, Javascript (backbone/jquery). You should be comfortable both front- and back-end but either one could be your focus. We’re open for both full- and part time gigs.</p>
+            <p>Drop us a line + CV on <a target="_blank" href="mailto:jobs@apprl.com">jobs@apprl.com</a> and we’ll take things from there!</p>
+        </div>
+    </div>
+
+{% endblock %}

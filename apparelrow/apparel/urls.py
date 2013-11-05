@@ -34,8 +34,10 @@ urlpatterns = patterns('',
     url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
     url(r'^widget/shop/$', 'apparelrow.apparel.browse.shop_widget', name='shop-widget'),
 
-    # About
+    # About pages
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),
+    url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
+    url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
 
     # Facebook friends widget
     (r'^home/friends/$', 'apparelrow.apparel.views.facebook_friends_widget'),
@@ -142,9 +144,6 @@ urlpatterns = patterns('',
     url(r'^users/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular'),
     url(r'^users/men/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-men'),
     url(r'^users/women/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-women'),
-
-    # Jobs
-    url(r'^jobs/$', RedirectView.as_view(url=reverse_lazy('index')), name='jobs'),
 
     # Extra admin
 
