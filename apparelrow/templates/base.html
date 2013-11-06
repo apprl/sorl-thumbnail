@@ -210,13 +210,6 @@
                 <div class="col-md-4">
                     <div class="row">
                         <ul class="list-unstyled col-xs-6">
-                            <li><h4>{% trans "Shop" %}</h4></li>
-                            <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
-                            <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
-                            <li><a href="{% multi_gender_url request 'look' 'look-list' %}">{% trans "Looks" %}</a></li>
-                            <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
-                        </ul>
-                        <ul class="list-unstyled col-xs-6">
                             <li><h4>{% trans "Language" %}</h4></li>
                             <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
@@ -226,6 +219,16 @@
                                     {% endfor %}
                                 </ul>
                             </li>
+                            <li><br></li>
+                            <li><a href="{% url 'index-store' %}"><i>{% trans "Do you have a store?" %}</i></a></li>
+                            <li><a href="{% url 'index-publisher' %}"><i>{% trans "Are you a blogger?" %}</i></a></li>
+                        </ul>
+                        <ul class="list-unstyled col-xs-6">
+                            <li><h4>{% trans "Shop" %}</h4></li>
+                            <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
+                            <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
+                            <li><a href="{% multi_gender_url request 'look' 'look-list' %}">{% trans "Looks" %}</a></li>
+                            <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -239,11 +242,10 @@
                         </ul>
                         <ul class="list-unstyled col-xs-6">
                             <li><h4>{% trans "Apprl" %}</h4></li>
+                            <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
                             <li><a target="_blank" href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
                             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Privacy & Terms" %}</a></li>
                             <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
-                            <li><a href="{% url 'index-publisher' %}">{% trans "Bloggers" %}</a></li>
-                            <li><a href="{% url 'index-store' %}">{% trans "Stores" %}</a></li>
                         </ul>
                     </div>
                 </div>
