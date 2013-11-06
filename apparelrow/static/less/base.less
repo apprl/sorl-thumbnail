@@ -613,11 +613,12 @@ body.account {
     footer, .navbar-nav-main, .navbar-form { display: none; }
 }
 
+body.frontpage .navbar-nav-main, body.frontpage .navbar-form { display: none; }
+
 body.index {
     #content-container {
         padding-bottom: 0;
     }
-    footer { display: none; }
     .index-choice {
         background-color: #333333;
         .row > div {
@@ -697,21 +698,6 @@ body.index {
         }
         .feed-item .panel-heading {
             padding-bottom: 20px;
-        }
-    }
-    .index-footer {
-        background-color: #000000;
-        color: #ffffff;
-        text-align: center;
-        > div {
-            padding-top: 20px;
-            padding-bottom: 10px;
-        }
-        a {
-            color: #ffffff;
-            &:hover, &:focus {
-                color: #dddddd;
-            }
         }
     }
 }
