@@ -61,12 +61,6 @@ logger = logging.getLogger('apparel.debug')
 # Brand
 #
 
-class Manufacturer(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    active = models.BooleanField(default=False, help_text=_("Products can only be displayed for an active manufactorer"))
-    logotype = models.ImageField(upload_to=settings.APPAREL_LOGO_IMAGE_ROOT, max_length=127, help_text=_('Logotype'))
-    homepage = models.URLField(_('Home page'))
-
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
     old_name = models.CharField(max_length=100, null=True, blank=True)
