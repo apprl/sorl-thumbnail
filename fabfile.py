@@ -67,6 +67,23 @@ def production_data():
     env.path = '/home/{user}/{project_name}'.format(**env)
     env.solr_path = '/home/{user}/solr'.format(**env)
 
+def production_web():
+    """
+    Production web server.
+    """
+    env.hosts = ['146.185.172.119']
+    env.hostname = 'web1'
+    env.user = 'deploy'
+    env.group = 'nogroup'
+    env.run_user = 'www-data'
+    env.run_group = env.run_user
+    env.path = '/home/%(user)s/%(project_name)s' % env
+    env.settings = 'production'
+    env.celery_processes='3'
+    env.celery_processes_background='2'
+    env.gunicorn_processes='2'
+
+
 def staging():
     env.hosts = ['ec2-176-34-85-220.eu-west-1.compute.amazonaws.com']
     env.hostname = 'staging1'
@@ -146,15 +163,14 @@ def setup(snapshot='master'):
     require('hosts', provided_by=[localhost,demo,prod])
     require('path')
     # install Python environment
+    sudo('apt-get install -y -q python-software-properties')
     sudo('add-apt-repository -y ppa:chris-lea/node.js')
-    sudo('apt-get update')
-    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv python-libxml2 python-libxslt1 libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev libpq-dev')
+    sudo('apt-get update -q')
+    sudo('apt-get install -y -q build-essential python-dev python-setuptools python-virtualenv python-libxml2 python-libxslt1 libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev libpq-dev')
     # install some version control systems, since we need Django modules in development
-    sudo('apt-get install -y git-core subversion')
+    sudo('apt-get install -y -q git-core subversion')
     # install memcached
-    sudo('apt-get install -y memcached')
-    # install java (for solr)
-    sudo('apt-get install -y openjdk-6-jre-headless')
+    sudo('apt-get install -y -q memcached')
     # install lessc
     sudo('apt-get install -y nodejs')
     sudo('npm install -g less')
@@ -187,7 +203,8 @@ def setup(snapshot='master'):
             sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     install_redis()
-    install_parallel()
+    # Disabled because it is no longer used by the importer
+    #install_parallel()
     deploy('first', snapshot=snapshot)
     load_fixtures()
 
