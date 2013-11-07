@@ -58,6 +58,9 @@ def prod_db():
     env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
 
 def production_data():
+    """
+    Production data server, should contain solr and postgresql.
+    """
     env.hosts = ['data1.apprl.com']
     env.user = 'deploy'
     env.group = env.user
@@ -96,12 +99,14 @@ def setup_data_server():
     require('path')
     require('solr_path')
 
-    sudo('apt-get update')
-    sudo('apt-get install -y openjdk-6-jre-headless')
-    #sudo('apt-get install -y postgresql-9.1 postgresql-client-9.1 postgresql-common postgresql-contrib-9.1')
+    sudo('apt-get update -q')
+    sudo('apt-get install -q -y openjdk-6-jre-headless')
+    sudo('apt-get install -q -y postgresql-9.1 postgresql-client-9.1 postgresql-common postgresql-contrib-9.1')
 
     run('mkdir -p {path}'.format(**env))
     run('mkdir -p {solr_path}'.format(**env))
+
+    install_postgresql()
 
     install_solr()
     deploy_solr()
@@ -143,7 +148,7 @@ def setup(snapshot='master'):
     # install Python environment
     sudo('add-apt-repository -y ppa:chris-lea/node.js')
     sudo('apt-get update')
-    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv python-libxml2 python-libxslt1 libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev')
+    sudo('apt-get install -y build-essential python-dev python-setuptools python-virtualenv python-libxml2 python-libxslt1 libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev libpq-dev')
     # install some version control systems, since we need Django modules in development
     sudo('apt-get install -y git-core subversion')
     # install memcached
@@ -158,10 +163,6 @@ def setup(snapshot='master'):
     # install more Python stuff
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
     sudo('easy_install pip')
-
-    # Install Compass
-    #sudo('apt-get install -y rubygems')
-    #sudo('gem install compass --no-rdoc --no-ri')
 
     if env.dbserver=='mysql':
         sudo('apt-get install -y libmysqlclient-dev')
@@ -439,6 +440,42 @@ def manage_py(command):
     env.manage_py_command = command
     with cd('%(path)s/releases/current/%(project_name)s' % env):
         sudo('%(path)s/bin/python ../manage.py %(manage_py_command)s' % env, pty=True, user=env.run_user)
+
+
+#
+# PostgreSQL commands
+#
+
+def install_postgresql():
+    upload_template('etc/postgres.sql', '/tmp/setup_postgres.sql', context=env)
+    sudo('psql < /tmp/setup_postgres.sql', user='postgres')
+    sudo('rm -f /tmp/setup_postgres.sql')
+
+    # TODO: setup pg_hba.conf (currently done manually)
+
+    restart_postgresql()
+
+
+def migrate_to_postgresql():
+    run('rm -f apparelrow_migrate.mysql')
+    run('ssh deploy@db1.apparelrow.com mysqldump --compatible=postgresql --default-character-set=utf8 -u root apparelrow -p > apparelrow_migrate.mysql')
+    run('wget https://raw.github.com/lanyrd/mysql-postgresql-converter/master/db_converter.py')
+    run('python db_converter.py apparelrow_migrate.mysql apparelrow_migrate.psql')
+    run('psql -h localhost -U apparel -d apparel -f apparelrow_migrate.psql')
+    run('rm -f db_converter.py')
+
+
+def start_postgresql():
+    sudo('service postgresql start')
+
+def stop_postgresql():
+    sudo('service postgresql stop')
+
+def restart_postgresql():
+    sudo('service postgresql restart')
+
+def status_postgresql():
+    sudo('service postgresql service')
 
 
 #

@@ -1,2 +1,2 @@
-CREATE DATABASE apparelrow;
-CREATE USER apparelrow WITH PASSWORD 'ashwe3';
+CREATE ROLE apparel WITH LOGIN PASSWORD 'ashwe3';
+CREATE DATABASE apparel WITH OWNER apparel;
