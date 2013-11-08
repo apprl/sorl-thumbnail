@@ -76,7 +76,7 @@
 - fields: {mapping_aliases: 'magenta,cerise,ceris,cerisa', mapping_key: magenta, mapping_type: color}
   model: importer.mapping
   pk: 13
-- fields: {mapping_aliases: purple, mapping_key: purple, mapping_type: color}
+- fields: {mapping_aliases: 'purple, lila', mapping_key: purple, mapping_type: color}
   model: importer.mapping
   pk: 14
 - fields: {mapping_aliases: 'black,svart,night,coal,caviar,black melange,nero,ruthenium
@@ -84,23 +84,26 @@
     mapping_type: color}
   model: importer.mapping
   pk: 15
-- fields: {mapping_aliases: "male,males,men,mens,mensware,herr,herrar,man,m\xE4n",
+- fields: {mapping_aliases: "male,males,men,mens,mensware,herr,herrar,man,m\xE4n,kille,killar",
     mapping_key: M, mapping_type: gender}
   model: importer.mapping
   pk: 16
-- fields: {mapping_aliases: 'female,females,woman,women,womens,womenswear,dam,damer,kvinna,kvinnor',
+- fields: {mapping_aliases: 'female,females,woman,women,womens,womenswear,dam,damer,kvinna,kvinnor,tjej,tjejer',
     mapping_key: W, mapping_type: gender}
   model: importer.mapping
   pk: 17
 - fields: {mapping_aliases: unisex, mapping_key: U, mapping_type: gender}
   model: importer.mapping
   pk: 18
-- fields: {mapping_aliases: 'striped,randigt', mapping_key: striped, mapping_type: pattern}
+- fields: {mapping_aliases: 'striped,randig,stripe,randiga,randigt', mapping_key: striped,
+    mapping_type: pattern}
   model: importer.mapping
   pk: 19
-- fields: {mapping_aliases: 'dotted,prickigt', mapping_key: dotted, mapping_type: pattern}
+- fields: {mapping_aliases: 'dotted,polka dot,prickig,prickiga, prickigt', mapping_key: dotted,
+    mapping_type: pattern}
   model: importer.mapping
   pk: 20
-- fields: {mapping_aliases: 'checkers,rutigt', mapping_key: checkers, mapping_type: pattern}
+- fields: {mapping_aliases: 'checkers,checker,checked,rutig,rutiga,rutigt', mapping_key: checkers,
+    mapping_type: pattern}
   model: importer.mapping
   pk: 21

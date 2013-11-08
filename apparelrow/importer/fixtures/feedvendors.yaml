@@ -1,186 +1,393 @@
-
-# - Granpa -
-- model: apparel.vendor
-  pk: 1
-  fields:
-    name: Grandpa
-    homepage: http://www.grandpa.se
-
-- model: importer.vendorfeed
-  pk: 1
-  fields:
-    vendor: 1
-    name: grandpa
-    provider_class: grandpa
-    url: http://www.grandpa.se/system/tools/kelkoo/product-feed.asp
-
-
-# - Fashionisland -
-- model: apparel.vendor
-  pk: 2
-  fields:
-    name: Fashionisland
-    homepage: http://www.fashionisland.se/
-
-- model: importer.vendorfeed
-  pk: 2
-  fields:
-    vendor: 2
-    name: fashionisland
-    provider_class: kelkoo
-    url: http://www.fashionisland.se/system/tools/dbexport/kelkoo.asp
-
-
-# - Nelly -
-- model: apparel.vendor
+- fields: {homepage: 'http://nelly.com/', logotype: '', name: Nelly, user: null}
+  model: apparel.vendor
   pk: 3
-  fields:
-    name: Nelly
-    homepage: http://nelly.com/
-
-- model: importer.vendorfeed
+- fields: {homepage: 'http://shoerepair.se/', logotype: '', name: Fifth Avenue, user: null}
+  model: apparel.vendor
+  pk: 4
+- fields: {homepage: 'http://shopbop.com', logotype: '', name: Shopbop, user: null}
+  model: apparel.vendor
+  pk: 6
+- fields: {homepage: 'http://www.luisaviaroma.com/', logotype: '', name: Luisaviaroma,
+    user: null}
+  model: apparel.vendor
+  pk: 7
+- fields: {homepage: 'http://www.happysocks.se', logotype: '', name: Happy Socks,
+    user: null}
+  model: apparel.vendor
+  pk: 9
+- fields: {homepage: 'http://www.stylebop.com/', logotype: '', name: Stylebop, user: null}
+  model: apparel.vendor
+  pk: 20
+- fields: {homepage: 'http://www.forzieri.com/', logotype: '', name: Forzieri, user: null}
+  model: apparel.vendor
+  pk: 30
+- fields: {homepage: 'http://www.liberty.co.uk/', logotype: '', name: Liberty, user: null}
+  model: apparel.vendor
+  pk: 31
+- fields: {homepage: 'http://www.urbanoutfitters.co.uk/', logotype: '', name: Urban
+      Outfitters, user: null}
+  model: apparel.vendor
+  pk: 32
+- fields: {homepage: 'http://www.tedbaker.com/', logotype: '', name: Ted Baker, user: null}
+  model: apparel.vendor
+  pk: 33
+- fields: {homepage: 'http://www.office.co.uk/', logotype: '', name: Office Shoes,
+    user: null}
+  model: apparel.vendor
+  pk: 34
+- fields: {homepage: 'http://www.mangoshop.com/', logotype: '', name: Mango, user: null}
+  model: apparel.vendor
+  pk: 36
+- fields: {homepage: 'http://www.mytheresa.com/', logotype: '', name: MyTheresa, user: null}
+  model: apparel.vendor
+  pk: 37
+- fields: {homepage: 'http://heppo.se/', logotype: '', name: Heppo, user: null}
+  model: apparel.vendor
+  pk: 38
+- fields: {homepage: 'http://yoox.com/', logotype: '', name: YOOX, user: null}
+  model: apparel.vendor
+  pk: 39
+- fields: {homepage: 'http://asos.com/', logotype: '', name: ASOS, user: null}
+  model: apparel.vendor
+  pk: 40
+- fields: {homepage: 'http://acnestudios.com/', logotype: '', name: Acne, user: null}
+  model: apparel.vendor
+  pk: 42
+- fields: {homepage: 'http://shop-uk.lacoste.com/', logotype: '', name: Lacoste, user: null}
+  model: apparel.vendor
+  pk: 47
+- fields: {homepage: 'http://softgoat.se/', logotype: '', name: Softgoat, user: null}
+  model: apparel.vendor
+  pk: 48
+- fields: {homepage: 'http://www.sunpocketoriginal.com/', logotype: '', name: Sunpocket,
+    user: null}
+  model: apparel.vendor
+  pk: 49
+- fields: {homepage: 'http://farfetch.com/', logotype: '', name: Farfetch, user: null}
+  model: apparel.vendor
+  pk: 50
+- fields: {homepage: 'http://matchesfashion.com/', logotype: '', name: Matches, user: null}
+  model: apparel.vendor
+  pk: 51
+- fields: {homepage: 'http://ssense.com/', logotype: '', name: SSENSE, user: null}
+  model: apparel.vendor
+  pk: 52
+- fields: {homepage: 'http://www.oki-ni.com/', logotype: '', name: Oki-Ni, user: null}
+  model: apparel.vendor
+  pk: 53
+- fields: {homepage: 'http://www.topman.com/', logotype: '', name: Topman, user: null}
+  model: apparel.vendor
+  pk: 54
+- fields: {homepage: 'http://www.harrods.com/', logotype: '', name: Harrods, user: null}
+  model: apparel.vendor
+  pk: 55
+- fields: {homepage: 'http://www.sneakersnstuff.com/', logotype: '', name: Sneakers
+      n Stuff, user: null}
+  model: apparel.vendor
+  pk: 56
+- fields: {homepage: 'http://www.zalando.se/', logotype: '', name: Zalando, user: null}
+  model: apparel.vendor
+  pk: 58
+- fields: {homepage: 'http://www.my-wardrobe.com/', logotype: '', name: My-Wardrobe,
+    user: null}
+  model: apparel.vendor
+  pk: 59
+- fields: {homepage: 'http://www.net-a-porter.com/', logotype: '', name: Net-a-Porter,
+    user: null}
+  model: apparel.vendor
+  pk: 60
+- fields: {homepage: 'http://www.mrporter.com/', logotype: '', name: Mr Porter, user: null}
+  model: apparel.vendor
+  pk: 61
+- fields: {homepage: 'http://www.theoutnet.com/', logotype: '', name: The Outnet,
+    user: null}
+  model: apparel.vendor
+  pk: 62
+- fields: {homepage: 'http://www.oxygenboutique.com/', logotype: '', name: Oxygen,
+    user: null}
+  model: apparel.vendor
+  pk: 63
+- fields: {homepage: 'http://topshop.com/', logotype: '', name: Topshop, user: null}
+  model: apparel.vendor
+  pk: 65
+- fields: {homepage: 'http://www.allsaints.com/', logotype: '', name: All Saints,
+    user: null}
+  model: apparel.vendor
+  pk: 66
+- fields: {homepage: 'http://bubbleroom.se/', logotype: '', name: Bubbleroom, user: null}
+  model: apparel.vendor
+  pk: 67
+- fields: {homepage: 'http://www.ln-cc.com/', logotype: '', name: LN-CC, user: null}
+  model: apparel.vendor
+  pk: 69
+- fields: {homepage: 'https://www.wolfandbadger.com/', logotype: '', name: Wolf &
+      Badger, user: null}
+  model: apparel.vendor
+  pk: 70
+- fields: {homepage: 'http://uk.menlook.com/', logotype: '', name: Menlook, user: null}
+  model: apparel.vendor
+  pk: 71
+- fields: {homepage: 'http://vrients.com/', logotype: '', name: Vrients, user: null}
+  model: apparel.vendor
+  pk: 72
+- fields: {homepage: 'http://www.minimarket.se/', logotype: '', name: Minimarket,
+    user: null}
+  model: apparel.vendor
+  pk: 73
+- fields: {homepage: 'http://www.mq.se/', logotype: '', name: MQ, user: null}
+  model: apparel.vendor
+  pk: 74
+- fields: {homepage: 'http://www.oddmolly.com/', logotype: '', name: Odd Molly, user: null}
+  model: apparel.vendor
+  pk: 75
+- fields: {homepage: 'http://www.bjornborg.com/', logotype: '', name: "Bj\xF6rn Borg",
+    user: null}
+  model: apparel.vendor
+  pk: 76
+- fields: {homepage: 'http://apprl.com/', logotype: '', name: APPRL test store, user: null}
+  model: apparel.vendor
+  pk: 77
+- fields: {homepage: 'http://www.b-sidebywale.com/', logotype: '', name: B-side by
+      Wale, user: null}
+  model: apparel.vendor
+  pk: 78
+- fields: {homepage: 'http://apprl.com/', logotype: '', name: martinvendor, user: null}
+  model: apparel.vendor
+  pk: 79
+- fields: {homepage: 'http://mutewatch.com/', logotype: '', name: Mutewatch, user: null}
+  model: apparel.vendor
+  pk: 80
+- fields: {comment: "[MEDIUM][STATUS: OK] Barnkl\xE4der i herr- och damkategorier",
+    decompress: null, name: nelly, password: '', provider_class: tradedoubler, url: 'http://pf.tradedoubler.com/export/export?myFeed=13164639121853028&myFormat=12919846971897050',
+    username: '', vendor: 3}
+  model: importer.vendorfeed
   pk: 3
-  fields:
-    vendor: 3
-    name: nelly
-    provider_class: tradedoubler
-    url: http://pf.tradedoubler.com/export/export?myFeed=12822969211771212&myFormat=12649335281771212
-
-
-# - Fifth Avenue -
-- model: apparel.vendor
+- fields: {comment: "[20131022 pausad, vill ej vara med] [MEDIUM][STATUS: Om\xF6jligt\
+      \ utan scraping] Uppmappad mot v\xE5ra kategorier, inte detaljerade kategorier\
+      \ fr\xE5n vendor. Har data om k\xF6n och f\xE4rg.\r\n\r\nStor bild finns h\xE4\
+      r: http://www.vave-shoerepair.com/en/images/4610/ss11_man_successtrouser_grey.jpg",
+    decompress: null, name: fifthavenue, password: '', provider_class: apparel-xml,
+    url: '[20131022 pausad, vill ej vara med] http://www.vave-shoerepair.com/en/search/bysearchdefinition/shop-socially?partial=shopsocially&viewall',
+    username: '', vendor: 4}
+  model: importer.vendorfeed
   pk: 4
-  fields:
-    name: Fifth Avenue
-    homepage: http://shoerepair.se/
-
-- model: importer.vendorfeed
-  pk: 4
-  fields:
-    vendor: 4
-    name: fifthavenue
-    provider_class: apparel-xml
-    url: http://fifthfeed.www1.panagora.se/feed.asp
-
-
-# - YOOX -
-- model: apparel.vendor
-  pk: 5
-  fields:
-    name: YOOX
-    homepage: http://www.yoox.com/
-
-- model: importer.vendorfeed
-  pk: 5
-  fields:
-    vendor: 5
-    name: yoox
-    provider_class: cj
-    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/70436/YOOX-Product_Catalog_large.txt.gz
-    username: 3131851
-    password: MrpG7TgL
-    decompress: gzip
-
-
-# - Shopbop -
-- model: apparel.vendor
+- fields: {comment: "[SMALL][STATUS: OK][Removed _\\d+x\\d from filename] Separat\
+      \ f\xE4rgf\xE4lt och k\xF6n finns. Uppmappad.\r\n\r\nhttp://g-images.amazon.com/images/G/01/Shopbop/p/pcs/products/juicy/juicy4053539583/juicy4053539583_p1_1-0_254x500.jpg\r\
+      \n\r\n\xC4ndra till http://g-images.amazon.com/images/G/01/Shopbop/p/pcs/products/juicy/juicy4053539583/juicy4053539583_p1_1-0.jpg",
+    decompress: gzip, name: shopbop, password: f3NPxFso, provider_class: cj, url: 'http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116583/Shopbop_com-Shopbop_Product_Catalog.txt.gz',
+    username: '3131851', vendor: 6}
+  model: importer.vendorfeed
   pk: 6
-  fields:
-    name: Shopbop
-    homepage: http://shopbop.com
-
-- model: importer.vendorfeed
-  pk: 6
-  fields:
-    vendor: 6
-    name: shopbop
-    provider_class: cj
-    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71190/Shopbop_com-Shopbop_Product_Catalog.txt.gz
-    username: 3131851
-    password: MrpG7TgL
-    decompress: gzip
-
-
-# - Luisaviaroma -
-- model: apparel.vendor
-  pk: 7
-  fields:
-    name: Luisaviaroma
-    homepage: http://www.luisaviaroma.com/
-
-- model: importer.vendorfeed
-  pk: 7
-  fields:
-    vendor: 7
-    name: luisaviaroma
-    provider_class: cj
-    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71252/LUISAVIAROMA_Affiliate_Program-Complete_Catalog.txt.gz
-    username: 3131851
-    password: MrpG7TgL
-    decompress: gzip
-
-
-# - La Senza -
-- model: apparel.vendor
-  pk: 8
-  fields:
-    name: La Senza
-    homepage: http://www.lasenza.co.uk
-
-- model: importer.vendorfeed
-  pk: 8
-  fields:
-    vendor: 8
-    name: lasenza
-    provider_class: tradedoubler
-    url: http://pf.tradedoubler.com/export/export?myFeed=12919846971897050&myFormat=12919846971897050
-
-
-# - Happy Socks -
-- model: apparel.vendor
+- fields: {comment: "[SMALL][STATUS: OK, men trasiga bild l\xE4nkar just nu][thumb\
+      \ -> full]\r\n\r\nLagt in samtliga kategorier i strumpor, Unisex, saknar data\
+      \ om f\xE4rg", decompress: gzip, name: happy_socks, password: f3NPxFso, provider_class: cj,
+    url: 'http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116590/Happy_Socks-Sweden_SEK_Product_Catalog.txt.gz',
+    username: '3131851', vendor: 9}
+  model: importer.vendorfeed
   pk: 9
-  fields:
-    name: Happy Socks
-    homepage: http://www.happysocks.se
-
-- model: importer.vendorfeed
-  pk: 9
-  fields:
-    vendor: 9
-    name: cj_happysocks
-    provider_class: cj
-    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71197/Happy_Socks-SEK_Product_Catalog.txt.gz
-
-
-# - Stayhard -
-- model: apparel.vendor
-  pk: 10
-  fields:
-    name: Stayhard
-    homepage: http://stayhard.se
-
-- model: importer.vendorfeed
-  pk: 10
-  fields:
-    vendor: 10
-    name: stayhard
-    provider_class: cj
-    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71193/Stayhard-Produkter.txt.gz
-
-
-# - Frank Dandy -
-- model: apparel.vendor
-  pk: 11
-  fields:
-    name: Frank Dandy
-    homepage: http://www.frankdandy.com
-
-- model: importer.vendorfeed
-  pk: 11
-  fields:
-    vendor: 11
-    name: cj_frankdandy
-    provider_class: cj
-    url: http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/71195/Frank_Dandy-SEK.txt.gz
-
-
+- fields: {comment: "[MEDIUM][STATUS: Om\xF6jligt utan scraping, kanske \xE4ven med\
+      \ scraping pga flash] \r\n\r\nF\xE4rgf\xE4lt saknas och f\xE4rg i textbeskrivningen\
+      \ saknas p\xE5 ganska m\xE5nga produkter.", decompress: gzip, name: luisaviaroma,
+    password: f3NPxFso, provider_class: cj, url: 'http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116591/LUISAVIAROMA_Affiliate_Program-Complete_Catalog.txt.gz',
+    username: '3131851', vendor: 7}
+  model: importer.vendorfeed
+  pk: 22
+- fields: {comment: "20131014 - Pausad pga d\xE5lig konvertering      [SMALL][STATUS:\
+      \ OK][Remove \\d+x\\d+ and .jpg and append scl=2]\r\n\r\nBild i feed:\r\nhttp://dynamic.forzieri.com/is/image/Forzieri/354x454/fz36459-009-1x.jpg\r\
+      \n\r\nSt\xF6rre bild:\r\nhttp://s7ondemand4.scene7.com/is/image/Forzieri/fz36459-009-1x?scl=2\r\
+      \n\r\nFinns fler bilder ocks\xE5, Linus vet hur man hittar URLar p\xE5 den h\xE4\
+      r siten...\r\n\r\nBra data i den h\xE4r feeden, st\xF6rre detaljniv\xE5 p\xE5\
+      \ kategorierna \xE4n v\xE5r site. Enbart accessoarer.", decompress: gzip, name: Forzieri,
+    password: '', provider_class: linkshare, url: "[20131014 - Pausad pga d\xE5lig\
+      \ konvertering] ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/24423_2648039_mp.txt.gz",
+    username: '', vendor: 30}
+  model: importer.vendorfeed
+  pk: 29
+- fields: {comment: "20131014 - Pausad pga d\xE5lig konvertering      [MEDIUM][STATUS:\
+      \ OK][Replace large1 with enlarge in url]\r\n\r\nI feeden:\r\nhttp://www.liberty.co.uk/pws/client/images/catalogue/products/ss12libe121001831-navy/large1/ss12libe121001831-navy.jpg\r\
+      \n\r\nStor bild:\r\nhttp://www.liberty.co.uk/pws/client/images/catalogue/products/ss12libe121001831-navy/enlarge/ss12libe121001831-navy.jpg\r\
+      \n\r\nFler bilder:\r\nhttp://www.liberty.co.uk/pws/client/images/catalogue/products/ss12libe121001831-navy/enlarge/ss12libe121001831-navy_1.jpg\r\
+      \nhttp://www.liberty.co.uk/pws/client/images/catalogue/products/ss12libe121001831-navy/enlarge/ss12libe121001831-navy_2.jpg",
+    decompress: gzip, name: liberty, password: '', provider_class: affiliatewindow,
+    url: "[20131014 - Pausad pga d\xE5lig konvertering] http://datafeed.api.productserve.com/datafeed/download/apikey/993ddcbcf6025953d8d8861233cd2f45/mid/3487/columns/merchant_id,merchant_name,aw_product_id,merchant_product_id,product_name,description,category_id,category_name,merchant_category,aw_deep_link,aw_image_url,search_price,delivery_cost,merchant_deep_link,merchant_image_url,rrp_price,stock_quantity,language,display_price,aw_thumb_url,commission_group,mpn,valid_from,web_offer,brand_id,delivery_time,merchant_thumb_url,valid_to,brand_name,commission_amount,currency,in_stock,model_number,promotional_text,specifications,upc/format/csv/delimiter/|/compression/gzip/",
+    username: '', vendor: 31}
+  model: importer.vendorfeed
+  pk: 30
+- fields: {comment: "20131014 - Pausad import      [SMALL][STATUS: OK][shoes -> product,\
+      \ large -> zoom, b1 -> z1]\r\n\r\nI feeden:\r\nhttp://www.office.co.uk/images/shoes/large/71554085_b1.jpg\r\
+      \n\r\nStor bild:\r\nhttp://www.office.co.uk/images/product/zoom/71554085_z1.jpg",
+    decompress: gzip, name: Office_shoes, password: '', provider_class: affiliatewindow,
+    url: '[20131014 - Pausad import] http://datafeed.api.productserve.com/datafeed/download/apikey/993ddcbcf6025953d8d8861233cd2f45/mid/2374/columns/merchant_id,merchant_name,aw_product_id,merchant_product_id,product_name,description,category_id,category_name,merchant_category,aw_deep_link,aw_image_url,search_price,delivery_cost,merchant_deep_link,merchant_image_url,aw_thumb_url,commission_group,display_price,language,mpn,rrp_price,stock_quantity,valid_from,web_offer,brand_id,delivery_time,valid_to,brand_name,commission_amount,currency,in_stock,is_for_sale,model_number,pre_order,promotional_text,specifications,upc,warranty,store_price,product_type,parent_product_id,merchant_thumb_url,isbn,ean,condition,is_hotpick/format/csv/delimiter/|/compression/gzip/',
+    username: '', vendor: 34}
+  model: importer.vendorfeed
+  pk: 31
+- fields: {comment: "20131014 - Pausad pga d\xE5lig konvertering [SMALL][STATUS: OK][feedimg\
+      \ -> zoom]\r\n\r\nI feed finns:\r\nhttp://products.tedbaker.com/PATCHA_00-BLACK_94200/feedimg/contrast-leather-flight-bag-182065_634649841078531110.jpg\r\
+      \n\r\n\r\nStor bild:\r\nhttp://products.tedbaker.com/PATCHA_00-BLACK_94200/zoom/contrast-leather-flight-bag-182065_634649841078531110.jpg\r\
+      \n\r\nFler bilder:\r\nhttp://products.tedbaker.com/PATCHA_00-BLACK_94200/zoom/contrast-leather-flight-bag-182066_634649841110875274.jpg\r\
+      \nhttp://products.tedbaker.com/PATCHA_00-BLACK_94200/zoom/contrast-leather-flight-bag-182067_634649841149313266.jpg\r\
+      \n\r\n\r\n\r\n\r\n(Denna \xE4r fr\xE5n Affiliate Window)", decompress: gzip,
+    name: Ted_Baker, password: '', provider_class: affiliatewindow, url: "[20131014\
+      \ - Pausad pga d\xE5lig konvertering] http://datafeed.api.productserve.com/datafeed/download/apikey/993ddcbcf6025953d8d8861233cd2f45/cid/97,98,142,144,146,129,595,539,147,149,613,626,135,163,168,159,169,161,167,170,137,171,548,174,183,178,179,175,172,623,139,614,189,194,141,205,198,206,203,208,199,204,201/mid/2525/columns/merchant_id,merchant_name,aw_product_id,merchant_product_id,product_name,description,category_id,category_name,merchant_category,aw_deep_link,aw_image_url,search_price,delivery_cost,merchant_deep_link,merchant_image_url,aw_thumb_url,commission_group,display_price,is_hotpick,language,mpn,rrp_price,stock_quantity,valid_from,web_offer,valid_to,store_price,product_type,merchant_thumb_url,parent_product_id,isbn,ean,delivery_time,condition,brand_id,brand_name,commission_amount,currency,in_stock,is_for_sale,model_number,pre_order,promotional_text,specifications,upc,warranty/format/csv/delimiter/|/compression/gzip/",
+    username: '', vendor: 33}
+  model: importer.vendorfeed
+  pk: 32
+- fields: {comment: 'Import pausad 130521 - [LARGE][STATUS: OK, NO FIX]', decompress: null,
+    name: Heppo, password: '', provider_class: tradedoubler, url: 'importera ej -
+      http://pf.tradedoubler.com/export/export?myFeed=13164639921853028&myFormat=12919846971897050',
+    username: '', vendor: 38}
+  model: importer.vendorfeed
+  pk: 37
+- fields: {comment: "20131014 - Pausad pga d\xE5lig konvertering  [SMALL][STATUS:\
+      \ OK ~MEDIUM][Replaced _m with _l on image-url not, image-large-url]\r\n\r\n\
+      I feeden finns:\r\nhttp://www.urbanoutfitters.co.uk/content/ebiz/urbanoutfitters/invt/5222415246666/5222415246666_Navy_m1.jpg\r\
+      \n\r\nMediumbild finns h\xE4r: http://www.urbanoutfitters.co.uk/content/ebiz/urbanoutfitters/invt/5222415246666/5222415246666_Navy_l1.jpg\r\
+      \n\r\nFler bilder finns h\xE4r:\r\nhttp://www.urbanoutfitters.co.uk/content/ebiz/urbanoutfitters/invt/5222415246666/5222415246666_Navy_l2.jpg\r\
+      \nhttp://www.urbanoutfitters.co.uk/content/ebiz/urbanoutfitters/invt/5222415246666/5222415246666_Navy_l3.jpg\r\
+      \nhttp://www.urbanoutfitters.co.uk/content/ebiz/urbanoutfitters/invt/5222415246666/5222415246666_Navy_l4.jpg",
+    decompress: gzip, name: urban_outfitter, password: '', provider_class: affiliatewindow,
+    url: "[20131014 - Pausad pga d\xE5lig konvertering] http://datafeed.api.productserve.com/datafeed/download/apikey/993ddcbcf6025953d8d8861233cd2f45/cid/97,98,142,144,146,129,595,539,147,149,613,626,135,163,168,159,169,161,167,170,137,171,548,174,183,178,179,175,172,623,139,614,189,194,141,205,198,206,203,208,199,204,201/mid/2077/columns/merchant_id,merchant_name,aw_product_id,merchant_product_id,product_name,description,category_id,category_name,merchant_category,aw_deep_link,aw_image_url,search_price,delivery_cost,merchant_deep_link,merchant_image_url,aw_thumb_url,commission_group,display_price,is_hotpick,language,mpn,rrp_price,stock_quantity,valid_from,web_offer,valid_to,store_price,product_type,parent_product_id,merchant_thumb_url,isbn,ean,delivery_time,condition,brand_id,brand_name,commission_amount,currency,in_stock,is_for_sale,model_number,pre_order,specifications,promotional_text,upc,warranty/format/csv/delimiter/|/compression/gzip/",
+    username: '', vendor: 32}
+  model: importer.vendorfeed
+  pk: 41
+- fields: {comment: "Importerar ej, d\xE5liga kategorier", decompress: gzip, name: Acne,
+    password: f3NPxFso, provider_class: cj, url: 'http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116638/Acne_Jeans_SE-Product_Catalog_SEK.txt.gz',
+    username: '3131851', vendor: 42}
+  model: importer.vendorfeed
+  pk: 42
+- fields: {comment: "20131014 - Pausad pga d\xE5lig konvertering SM\xC5 BILDER DEFAULT\
+      \ MEN EJ PRIO EFTERSOM FEEDEN \xC4R EJ UPPMAPPAD Kategorierna beh\xF6ver styras\
+      \ upp, bra kategorier finns i feeden. \xC4ven f\xE4rg och storlek finns. Verkar\
+      \ inte finnas k\xF6n.\r\n\r\nKategorierna \xE4r i stort sett samma f\xF6r herr\
+      \ och dam, t.ex. \"Sneakers\". Detta i kombination med att det inte finns k\xF6\
+      n i feeden g\xF6r att den inte ska mappas upp. Vidare \xE4r det m\xE5nga kategorier\
+      \ som inte passar med v\xE5ra, t.ex. \"Trousers and dresses\". - Gustav", decompress: gzip,
+    name: Lacoste, password: '', provider_class: linkshare, url: "[20131014 - Pausad\
+      \ pga d\xE5lig konvertering] ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/36597_2648039_mp.txt.gz",
+    username: '', vendor: 47}
+  model: importer.vendorfeed
+  pk: 48
+- fields: {comment: "20131014 - Pausad pga d\xE5lig konvertering  [LARGE][STATUS:\
+      \ OK, NO FIX]", decompress: gzip, name: Farfetch, password: '', provider_class: linkshare,
+    url: "[20131014 - Pausad pga d\xE5lig konvertering] ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/35653_2648039_mp.txt.gz",
+    username: '', vendor: 50}
+  model: importer.vendorfeed
+  pk: 49
+- fields: {comment: "20131014 - Pausad pga d\xE5lig konvertering \r\n\r\nSM\xC5 BILDER\
+      \ DEFAULT \r\n\r\nI feeden:\r\nhttp://www.matchesfashion.com/pws/images/catalogue/products/jv-b-y104j4-zx4_pur/xlarge/jv-b-y104j4-zx4_pur_1.jpg\r\
+      \n\r\nStor bild: \r\nhttp://s3-eu-west-1.amazonaws.com/mtchs/products/MEL9KN740002PUR_1_zoom.jpg\r\
+      \n\r\nFler bilder:\r\nhttp://s3-eu-west-1.amazonaws.com/mtchs/products/MEL9KN740002PUR_2_zoom.jpg\r\
+      \nhttp://s3-eu-west-1.amazonaws.com/mtchs/products/MEL9KN740002PUR_3_zoom.jpg\r\
+      \nhttp://s3-eu-west-1.amazonaws.com/mtchs/products/MEL9KN740002PUR_4_zoom.jpg",
+    decompress: gzip, name: Matches, password: '', provider_class: linkshare, url: "[20131014\
+      \ - Pausad pga d\xE5lig konvertering] ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/35725_2648039_mp.txt.gz",
+    username: '', vendor: 51}
+  model: importer.vendorfeed
+  pk: 50
+- fields: {comment: "20131016 - Pausad pga att vi vill k\xF6ra direkt ist\xE4llet",
+    decompress: gzip, name: Sunpocket, password: f3NPxFso, provider_class: cj, url: "[Pausad\
+      \ pga att vi vill k\xF6ra direkt ist\xE4llet] http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116587/Sunpocket_original-Sunpocket_product_feed.txt.gz",
+    username: '3131851', vendor: 49}
+  model: importer.vendorfeed
+  pk: 51
+- fields: {comment: "Testar att l\xE4gga till denna med standard cj inst\xE4llningarna",
+    decompress: gzip, name: SSENSE, password: f3NPxFso, provider_class: cj, url: 'http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116586/ssense_com_men_and_women_fashion-Product_Catalog.txt.gz',
+    username: '3131851', vendor: 52}
+  model: importer.vendorfeed
+  pk: 52
+- fields: {comment: '', decompress: gzip, name: Oki-Ni, password: '', provider_class: affiliatewindow,
+    url: 'http://datafeed.api.productserve.com/datafeed/download/apikey/993ddcbcf6025953d8d8861233cd2f45/mid/2083/columns/merchant_id,merchant_name,aw_product_id,merchant_product_id,product_name,description,category_id,category_name,merchant_category,aw_deep_link,aw_image_url,search_price,delivery_cost,merchant_deep_link,merchant_image_url,aw_thumb_url,brand_id,brand_name,commission_amount,commission_group,condition,currency,delivery_time,display_price,ean,in_stock,is_hotpick,isbn,is_for_sale,language,merchant_thumb_url,model_number,mpn,parent_product_id,pre_order,product_type,promotional_text,rrp_price,specifications,stock_quantity,store_price,upc,valid_from,valid_to,warranty,web_offer/format/csv/delimiter/|/compression/gzip/',
+    username: '', vendor: 53}
+  model: importer.vendorfeed
+  pk: 53
+- fields: {comment: "[SMALL][STATUS: OK][Replace l with xl or xxl if they exists]\r\
+      \n\r\nBilder i feed:\r\nhttp://images.asos.com/inv/media/2/1/8/8/2078812/navy/image1l.jpg\r\
+      \nhttp://images.asos.com/inv/media/2/1/8/8/2078812/navy/image1xl.jpg\r\n\r\n\
+      Stor bild:\r\nhttp://images.asos.com/inv/media/2/1/8/8/2078812/navy/image1xxl.jpg\r\
+      \n\r\nFler bilder:\r\nhttp://images.asos.com/inv/media/2/1/8/8/2078812/image2xxl.jpg\r\
+      \nhttp://images.asos.com/inv/media/2/1/8/8/2078812/image3xxl.jpg\r\nhttp://images.asos.com/inv/media/2/1/8/8/2078812/image4xxl.jpg",
+    decompress: gzip, name: ASOS, password: '', provider_class: zanox, url: 'http://productdata.zanox.com/exportservice/v1/rest/19595318C106179573.csv?ticket=340591472561713FE451A566542E92402FC9943162D23D40322CFA79DD48C142&columnDelimiter=,&textQualifier=DoubleQuote&nullOutputFormat=NullValue&dateFormat=dd/MM/yyyy
+      HH:mm:ss&decimalSeparator=period&gZipCompress=yes&id&pg&nb&na&pp&po&cy&du&df&dt&ds&dl&mc&zi&ia&im&il&mn&lk&cm&td&tm&ea&is&sh&sn&x1&x2&x3',
+    username: '', vendor: 40}
+  model: importer.vendorfeed
+  pk: 54
+- fields: {comment: "20131014: Pausad pga d\xE5lig konvertering\r\n\r\nI feeden:\r\
+      \nhttp://s7v1.scene7.com/is/image/Harrods/1849332?$productdetail_main_new$\r\
+      \n\r\nStor bild:\r\nhttp://s7v1.scene7.com/is/image/Harrods/1849332?$productdetail_zoom_new$\r\
+      \n\r\nFler bilder:\r\nhttp://s7v1.scene7.com/is/image/Harrods/1849332-1?$productdetail_zoom_new$\r\
+      \nhttp://s7v1.scene7.com/is/image/Harrods/1849332-2?$productdetail_zoom_new$",
+    decompress: gzip, name: harrods, password: '', provider_class: linkshare, url: "[Pausad\
+      \ pga d\xE5lig konvertering] ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/36666_2648039_mp.txt.gz",
+    username: '', vendor: 55}
+  model: importer.vendorfeed
+  pk: 56
+- fields: {comment: "130518 - import pausad. Har inte k\xF6n i feeden. ", decompress: gzip,
+    name: sneakersnstuff, password: f3NPxFso, provider_class: cj, url: 'Importera
+      ej -  http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116592/Sneakersnstuff-Product_Catalog_SEK.txt.gz',
+    username: '3131851', vendor: 56}
+  model: importer.vendorfeed
+  pk: 57
+- fields: {comment: 130325 - import pausad, decompress: gzip, name: zalando, password: '',
+    provider_class: zanox, url: 'importera ej - http://productdata.zanox.com/exportservice/v1/rest/22618471C49520794.csv?ticket=D2392FA58B5C2F1C99BB03D9CA0C3959&columnDelimiter=,&textQualifier=DoubleQuote&nullOutputFormat=NullValue&dateFormat=yyyy-MM-dd%27T%27HH:mm:ss:SSS&decimalSeparator=period&id=&nb=&na=&pp=&cy=&df=&ds=&mc=&zi=&ia=&im=&mn=&lk=&td=&tm=&is=&sh=&sn=&pg=&po=&du=&dt=&dl=&il=&cm=&ea=&x1=&x2=&x3=&gZipCompress=yes',
+    username: '', vendor: 58}
+  model: importer.vendorfeed
+  pk: 58
+- fields: {comment: '', decompress: gzip, name: my_wardrobe, password: '', provider_class: zanox,
+    url: 'http://productdata.zanox.com/exportservice/v1/rest/22618414C74707054.csv?ticket=D2392FA58B5C2F1C99BB03D9CA0C3959&columnDelimiter=;&textQualifier=none&nullOutputFormat=NullValue&dateFormat=dd/MM/yyyy
+      HH:mm:ss&decimalSeparator=comma&id=&na=&pp=&mc=&mn=&lk=&td=&ea=&pg=&nb=&po=&cy=&du=&df=&dt=&ds=&dl=&zi=&ia=&im=&il=&cm=&tm=&is=&sh=&sn=&x1=&x2=&x3=&gZipCompress=yes',
+    username: '', vendor: 59}
+  model: importer.vendorfeed
+  pk: 59
+- fields: {comment: '130518 - Import pausad ', decompress: gzip, name: softgoat, password: f3NPxFso,
+    provider_class: cj, url: 'importera ej - http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116593/Softgoat-SoftGoat_SEK.txt.gz',
+    username: '3131851', vendor: 48}
+  model: importer.vendorfeed
+  pk: 60
+- fields: {comment: '', decompress: gzip, name: netaporter, password: '', provider_class: linkshare,
+    url: 'ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/24448_2648039_mp.txt.gz',
+    username: '', vendor: 60}
+  model: importer.vendorfeed
+  pk: 61
+- fields: {comment: '', decompress: gzip, name: mr_porter, password: '', provider_class: linkshare,
+    url: 'ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/36586_2648039_mp.txt.gz',
+    username: '', vendor: 61}
+  model: importer.vendorfeed
+  pk: 62
+- fields: {comment: '', decompress: gzip, name: the_outnet, password: '', provider_class: linkshare,
+    url: 'ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/35290_2648039_mp.txt.gz',
+    username: '', vendor: 62}
+  model: importer.vendorfeed
+  pk: 63
+- fields: {comment: "20131014 - Pausad pga d\xE5lig konvertering", decompress: gzip,
+    name: oxygen, password: '', provider_class: linkshare, url: "[Pausad pga d\xE5\
+      lig konvertering] ftp://apparelrow:fdzfdFiJ@aftp.linksynergy.com/36266_2648039_mp.txt.gz",
+    username: '', vendor: 63}
+  model: importer.vendorfeed
+  pk: 64
+- fields: {comment: "20131014 - Pausad, tror anledningen \xE4r att vi inte f\xE5r\
+      \ n\xE5gon commission i sverige...", decompress: gzip, name: all_saints, password: '',
+    provider_class: affiliatewindow, url: '[20131014 - Pausad] http://datafeed.api.productserve.com/datafeed/download/apikey/993ddcbcf6025953d8d8861233cd2f45/mid/3708/columns/merchant_id,merchant_name,aw_product_id,merchant_product_id,product_name,description,category_id,category_name,merchant_category,aw_deep_link,aw_image_url,search_price,currency,delivery_cost,merchant_deep_link,merchant_image_url,aw_thumb_url,brand_id,brand_name,commission_amount,commission_group,condition,delivery_time,display_price,ean,in_stock,is_hotpick,isbn,is_for_sale,language,merchant_thumb_url,model_number,mpn,parent_product_id,pre_order,product_type,promotional_text,rrp_price,specifications,stock_quantity,store_price,upc,valid_from,valid_to,warranty,web_offer/format/csv/delimiter/|/compression/gzip/',
+    username: '', vendor: 66}
+  model: importer.vendorfeed
+  pk: 67
+- fields: {comment: '', decompress: null, name: bubbleroom, password: '', provider_class: tradedoubler,
+    url: 'http://pf.tradedoubler.com/export/export?myFeed=13554255561853028&myFormat=12919846971897050',
+    username: '', vendor: 67}
+  model: importer.vendorfeed
+  pk: 68
+- fields: {comment: '', decompress: gzip, name: menlook, password: '', provider_class: aan,
+    url: 'http://flux.lengow.com/shopbot/apprl/60001/txt/', username: '', vendor: 71}
+  model: importer.vendorfeed
+  pk: 69
+- fields: {comment: '', decompress: gzip, name: vrients, password: '', provider_class: aan,
+    url: 'http://www.vrients.com/media/feed/apprl.csv', username: '', vendor: 72}
+  model: importer.vendorfeed
+  pk: 70
+- fields: {comment: '', decompress: null, name: minimarket, password: '', provider_class: aan,
+    url: 'http://www.minimarket.se/plugin-export/product-feed/se', username: '', vendor: 73}
+  model: importer.vendorfeed
+  pk: 71
+- fields: {comment: '', decompress: null, name: odd_molly, password: '', provider_class: aan,
+    url: 'http://www.oddmolly.com/plugin-export/product-feed/se', username: '', vendor: 75}
+  model: importer.vendorfeed
+  pk: 72
