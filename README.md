@@ -1,11 +1,11 @@
 # APPRL
 
-## Setup a production server ##
+## Setup production servers ##
 
 Add a user called deploy and add it to sudoers. Install ufw and setup correct
 rules for webservers, databases and solr.
 
-Make sure that that the fabric environments production_data and production_web
+Make sure that that the fabric environments `production_data` and `production_web`
 is correct and the run the following fabric commands:
 
 ```
