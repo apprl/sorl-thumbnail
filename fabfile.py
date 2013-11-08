@@ -71,7 +71,7 @@ def production_web():
     """
     Production web server.
     """
-    env.hosts = ['146.185.172.119']
+    env.hosts = ['web.apprl.com']
     env.hostname = 'web1'
     env.user = 'deploy'
     env.group = 'nogroup'
@@ -79,9 +79,9 @@ def production_web():
     env.run_group = env.run_user
     env.path = '/home/%(user)s/%(project_name)s' % env
     env.settings = 'production'
-    env.celery_processes='3'
-    env.celery_processes_background='2'
-    env.gunicorn_processes='2'
+    env.celery_processes='4'
+    env.celery_processes_background='3'
+    env.gunicorn_processes='3'
 
 
 def staging():
@@ -166,13 +166,11 @@ def setup(snapshot='master'):
     sudo('apt-get install -y -q python-software-properties')
     sudo('add-apt-repository -y ppa:chris-lea/node.js')
     sudo('apt-get update -q')
-    sudo('apt-get install -y -q build-essential python-dev python-setuptools python-virtualenv python-libxml2 python-libxslt1 libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev libpq-dev')
-    # install some version control systems, since we need Django modules in development
-    sudo('apt-get install -y -q git-core subversion')
+    sudo('apt-get install -y -q build-essential python-dev python-setuptools python-virtualenv python-libxml2 python-libxslt1 libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev libpq-dev git-core')
     # install memcached
     sudo('apt-get install -y -q memcached')
     # install lessc
-    sudo('apt-get install -y nodejs')
+    sudo('apt-get install -y -q nodejs')
     sudo('npm install -g less')
     sudo('npm install -g uglify-js')
 
@@ -206,7 +204,8 @@ def setup(snapshot='master'):
     # Disabled because it is no longer used by the importer
     #install_parallel()
     deploy('first', snapshot=snapshot)
-    load_fixtures()
+    # Disabled, should run load fixtures manually when starting with a fresh database which is not always the case
+    #load_fixtures()
 
 def deploy(param='', snapshot='master'):
     """
@@ -306,6 +305,7 @@ def install_requirements():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
         with prefix('. bin/activate'):
+            run('curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | python')
             run('pip install -U -r ./releases/%(release)s/etc/requirements.pip' % env, pty=True)
 
 def copy_bin():
@@ -317,7 +317,6 @@ def copy_config():
     with cd(env.path):
         run('cp ./releases/%(release)s/etc/* ./etc' % env, pty=True)
         run('cp ./releases/%(release)s/etc/requirements.pip ./etc/requirements.pip' %env, pty=True)
-        run('cp ./etc/logging.conf.default ./etc/logging.conf' % env, pty=True)
         run('cd releases/%(release)s/apparelrow; cp %(settings)s.py.default settings.py' % env, pty=True)
         sudo('cp ./releases/%(release)s/etc/redis.conf /etc/redis.conf' % env, pty=True)
         sudo('cp ./releases/%(release)s/etc/crontab /etc/crontab' % env, pty=True)
@@ -440,11 +439,8 @@ def restart_webserver():
     "Restart the web server"
     require('webserver')
     with settings(warn_only=True):
-        # Temporary to migrate from lighttpd to nginx
-        if env.webserver == 'nginx':
-            sudo('/etc/init.d/lighttpd stop' % env, pty=False)
-            sudo('/etc/init.d/nginx start' % env, pty=False)
-        sudo('/etc/init.d/%(webserver)s reload' % env, pty=False)
+        sudo('service %(webserver)s start' % env, pty=False)
+        sudo('service %(webserver)s reload' % env, pty=False)
 
 def build_brand_list():
     """Build static brand list"""

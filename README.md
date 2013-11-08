@@ -13,6 +13,10 @@ fab production_data setup_data_server
 fab production_web setup
 ```
 
+Remember to setup `/etc/ssl/apprl.com.crt` and `/etc/ssl/apprl.com.key` before
+running setup on a web server. The SSL certifacte and the private key is not
+stored in the git repo.
+
 
 ## Setup development environment ##
 
@@ -31,7 +35,6 @@ pip install -r etc/requirements.pip # ... fika ...
 
 ### settings ###
 ```
-cp etc/logging.conf.default etc/logging.conf
 cp apparelrow/development.py.default apparelrow/development.py
 
 mkdir -p var/logs
