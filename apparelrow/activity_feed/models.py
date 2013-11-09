@@ -94,7 +94,7 @@ class Activity(models.Model):
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     active = models.BooleanField(default=True)
     is_available = models.BooleanField(default=True)
-    featured_date = models.DateField(null=True, blank=True)
+    featured_date = models.DateField(null=True, blank=True, db_index=True)
     object_count = models.PositiveIntegerField(default=1)
 
     objects = ActivityManager()
