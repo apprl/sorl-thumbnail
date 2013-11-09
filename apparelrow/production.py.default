@@ -9,11 +9,11 @@ from settings_common import *
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'apparelrow',
-        'USER': 'apparelrow',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'apparel',
+        'USER': 'apparel',
         'PASSWORD': 'ashwe3',
-        'HOST': 'db1.apparelrow.com',
+        'HOST': 'data1.apprl.com',
         'PORT': ''
     }
 }
