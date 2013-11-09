@@ -13,7 +13,7 @@ DATABASES = {
         'NAME': 'apparel',
         'USER': 'apparel',
         'PASSWORD': 'ashwe3',
-        'HOST': 'data1.apprl.com',
+        'HOST': '146.185.137.189',
         'PORT': ''
     }
 }
@@ -31,7 +31,7 @@ APPAREL_DECOMPRESS_UTILS = {
 CACHE_MIDDLEWARE_KEY_PREFIX = 'ar'
 CACHE_MIDDLEWARE_SECONDS = 120
 
-SOLR_URL = 'http://data1.apprl.com:8983/solr'
+SOLR_URL = 'http://146.185.137.189:8983/solr'
 SOLR_CURRENCY_LOCAL = False
 SOLR_SSH_STRING = 'deploy@data1.apprl.com'
 SOLR_CURRENCY_FILE = os.path.join('/home', 'deploy', 'solr', 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
