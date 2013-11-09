@@ -17,6 +17,7 @@ DATABASES = {
         'PORT': ''
     }
 }
+CONN_MAX_AGE = 600
 
 # Storage
 STATIC_URL = 'http://s.apprl.com/'
