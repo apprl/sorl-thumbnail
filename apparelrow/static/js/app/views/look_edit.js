@@ -22,8 +22,8 @@ App.Views.LookEdit = Backbone.View.extend({
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset({model: this.model}));
         this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete({model: this.model}));
-        this.popup_dispatcher.add('dialog_save', new App.Views.DialogSave({model: this.model, title: gettext('Save look')}));
-        this.popup_dispatcher.add('dialog_publish', new App.Views.DialogSave({model: this.model, title: gettext('Publish look')}));
+        this.popup_dispatcher.add('dialog_save', new App.Views.DialogSave({model: this.model, title: $('#dialog_save_template').data('title')}));
+        this.popup_dispatcher.add('dialog_publish', new App.Views.DialogSave({model: this.model, title: $('#dialog_publish_template').data('title')}));
         this.popup_dispatcher.add('dialog_unpublish', new App.Views.DialogUnpublish({model: this.model}));
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
 

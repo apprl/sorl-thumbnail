@@ -605,16 +605,28 @@ def search_view(request, model_name):
         paged_result = paginator.page(1)
 
     # Return object list based on model name
+    header_text = ''
+    button_text = ''
     if model_name == 'product':
         object_list = [o.template.replace('/Shop/0/', '/Search/0/') for o in paged_result.object_list if o]
+        header_text = translation.ungettext('Found %(count)d product', 'Found %(count)d products', paged_result.paginator.count) % {'count': paged_result.paginator.count}
+        button_text = translation.ungettext('Show %(count)d product', 'Show all %(count)d products', paged_result.paginator.count) % {'count': paged_result.paginator.count}
     elif model_name == 'look':
         object_list = [o.template for o in paged_result.object_list if o]
+        header_text = translation.ungettext('Found %(count)d look', 'Found %(count)d looks', paged_result.paginator.count) % {'count': paged_result.paginator.count}
+        button_text = translation.ungettext('Show %(count)d look', 'Show all %(count)d looks', paged_result.paginator.count) % {'count': paged_result.paginator.count}
     elif model_name == 'user':
         object_list = [o.template for o in paged_result.object_list if o]
+        header_text = translation.ungettext('Found %(count)d matching member', 'Found %(count)d matching members', paged_result.paginator.count) % {'count': paged_result.paginator.count}
+        button_text = translation.ungettext('Show %(count)d matching member', 'Show all %(count)d matching members', paged_result.paginator.count) % {'count': paged_result.paginator.count}
     elif model_name == 'manufacturer':
         object_list = [render_to_string('apparel/fragments/manufacturer_search.html', {'object': obj, 'gender': gender}) for obj in paged_result.object_list]
+        header_text = translation.ungettext('Found %(count)d matching brand', 'Found %(count)d matching brands', paged_result.paginator.count) % {'count': paged_result.paginator.count}
+        button_text = translation.ungettext('Show %(count)d matching brand', 'Show all %(count)d matching brands', paged_result.paginator.count) % {'count': paged_result.paginator.count}
     elif model_name == 'store':
         object_list = [render_to_string('apparel/fragments/store_search.html', {'object': obj, 'gender': gender}) for obj in paged_result.object_list]
+        header_text = translation.ungettext('Found %(count)d matching store', 'Found %(count)d matching stores', paged_result.paginator.count) % {'count': paged_result.paginator.count}
+        button_text = translation.ungettext('Show %(count)d matching store', 'Show all %(count)d matching stores', paged_result.paginator.count) % {'count': paged_result.paginator.count}
 
     return HttpResponse(
         json.dumps({
@@ -623,7 +635,9 @@ def search_view(request, model_name):
             'paginator': {
                 'num_pages': paged_result.paginator.num_pages,
                 'count': paged_result.paginator.count,
-            }
+            },
+            'header_text': header_text,
+            'button_text': button_text,
         }),
         mimetype='application/json'
     )

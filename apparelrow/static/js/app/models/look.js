@@ -30,7 +30,7 @@ window.App.Models.Look = Backbone.Model.extend({
         // TODO: implement auto size
         $(window).on('beforeunload', _.bind(function(e) {
             if (look_model._dirty) {
-                return gettext('You have unsaved changes that will be deleted if you leave this page without saving.');
+                return 'You have unsaved changes that will be deleted if you leave this page without saving.';
             }
         }, this));
 

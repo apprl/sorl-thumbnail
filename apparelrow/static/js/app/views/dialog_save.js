@@ -1,7 +1,7 @@
 App.Views.DialogSave = Backbone.View.extend({
 
     className: 'dialog-content look-save group',
-    title: gettext('Save look'),
+    title: $('#dialog_save_template').data('title'),
 
     save_template: _.template($('#dialog_save_template').html()),
     publish_template: _.template($('#dialog_publish_template').html()),

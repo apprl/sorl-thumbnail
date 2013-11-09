@@ -32,7 +32,7 @@
 
         <div id="edit-look"></div>
 
-        <div id="product-chooser">
+        <div id="product-chooser" data-reset-text="{% trans "Reset" %}">
             <ul id="product-tabs" class="nav nav-tabs nav-justified">
                 <li{% if request.user.is_authenticated and has_liked %} class="active"{% endif %}><a{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} class="tab-likes" href="#">{% trans "Your ♥" %}</a></li>
                 <li{% if request.user.is_authenticated and not has_liked %} class="active"{% endif %}><a class="tab-all" href="#">{% trans "All products" %}</a></li>
@@ -80,32 +80,32 @@
         </div>
     </div>
 
-    <script type="text/template" id="dialog_login_template">
+    <script type="text/template" id="dialog_login_template" data-title="{% trans "Login" %}">
         <p>{% trans "Do you want to save this look before logging in with Facebook?" %}</p>
         <a href="#" class="btn btn-primary btn-block btn-cancel">{% trans "Cancel" %}</a>
         <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
         <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
     </script>
 
-    <script type="text/template" id="dialog_reset_template">
+    <script type="text/template" id="dialog_reset_template" data-title="{% trans "Reset look?" %}">
         <p>{% trans "Are you sure you want to discard changes and start over?" %}</p>
         <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
         <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
     </script>
 
-    <script type="text/template" id="dialog_delete_template">
+    <script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete look?" %}">
         <p>{% trans "Are you sure you want to permanently delete your look?" %}</p>
         <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
         <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
     </script>
 
-    <script type="text/template" id="dialog_unpublish_template">
+    <script type="text/template" id="dialog_unpublish_template" data-title="{% trans "Unpublish look?" %}">
         <p>{% trans "Are you sure you want to unpublish this look so that no one can see it?" %}</p>
         <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
         <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
     </script>
 
-    <script type="text/template" id="dialog_save_template">
+    <script type="text/template" id="dialog_save_template" data-title="{% trans "Save look" %}">
         <div class="form-group">
             <label for="look_title">{% trans "Your look title" %} *</label>
             <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
@@ -120,7 +120,7 @@
         <a href="#" class="btn btn-block btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
     </script>
 
-    <script type="text/template" id="dialog_publish_template">
+    <script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish look" %}">
         <div class="form-group">
             <label for="look_title">{% trans "Your look title" %} *</label>
             <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
@@ -135,7 +135,7 @@
         <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
     </script>
 
-    <script type="text/template" id="popup_slim_template">
+    <script type="text/template" id="popup_slim_template" data-title="{% trans "Product info" %}">
         <div class="header group">
             <h5 class="title"></h5>
             <a href="#" class="close"></a>
@@ -149,7 +149,7 @@
         <img class="loading" src="{% static "images/loading_white.gif" %}">
     </script>
 
-    <script type="text/template" id="look_edit_add_popup_template">
+    <script type="text/template" id="look_edit_add_popup_template" data-title="{% trans "Add product" %}">
         <div class="add-container group">
             <img src="{% static "images/big-larrow.png" %}">
             <p>{% trans "Click in photo to place item" %}</p>

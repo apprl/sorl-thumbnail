@@ -21,7 +21,6 @@
     {% endblock extra-styles %}
     <script type="text/javascript">var addToHomeConfig = {returningVisitor: true};</script>
     <script src="//cdn.optimizely.com/js/180383028.js"></script>
-    <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
     <script type="text/javascript">

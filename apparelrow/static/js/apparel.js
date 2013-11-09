@@ -583,12 +583,6 @@ ApparelSearch = {
                 'gender': gender
             },
             selector: '#search-result-products',
-            text: {
-                header_plural: 'Found %(count)s products',
-                header_singular: 'Found %(count)s product',
-                button_plural: 'Show all %(count)s products',
-                button_singular: 'Show %(count)s product'
-            }
         });
 
         ApparelSearch._doSearch({
@@ -599,12 +593,6 @@ ApparelSearch = {
                 'gender': gender
             },
             selector: '#search-result-looks',
-            text: {
-                header_plural: 'Found %(count)s looks',
-                header_singular: 'Found %(count)s look',
-                button_plural: 'Show all %(count)s looks',
-                button_singular: 'Show %(count)s look'
-            }
         });
 
         ApparelSearch._doSearch({
@@ -615,12 +603,6 @@ ApparelSearch = {
                 'gender': gender
             },
             selector: '#search-result-manufacturers',
-            text: {
-                header_plural: 'Found %(count)s matching brands',
-                header_singular: 'Found %(count)s matching brand',
-                button_plural: 'Show all %(count)s matching brands',
-                button_singular: 'Show %(count)s matching brand'
-            }
         });
 
         ApparelSearch._doSearch({
@@ -631,12 +613,6 @@ ApparelSearch = {
                 'gender': gender
             },
             selector: '#search-result-stores',
-            text: {
-                header_plural: 'Found %(count)s matching stores',
-                header_singular: 'Found %(count)s matching store',
-                button_plural: 'Show all %(count)s matching stores',
-                button_singular: 'Show %(count)s matching store'
-            }
         });
 
         ApparelSearch._doSearch({
@@ -647,12 +623,6 @@ ApparelSearch = {
                 'gender': gender
             },
             selector: '#search-result-profiles',
-            text: {
-                header_plural: 'Found %(count)s matching members',
-                header_singular: 'Found %(count)s matching member',
-                button_plural: 'Show all %(count)s matching members',
-                button_singular: 'Show %(count)s matching member'
-            }
         });
 
         ApparelSearch.show();
@@ -695,17 +665,7 @@ ApparelSearch = {
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
                 var h3 = $('h3.' + opts.selector.substring(1));
-                    h3.find('> span').text(
-                    interpolate(
-                        ngettext(
-                            opts.text.header_singular,
-                            opts.text.header_plural,
-                            response.paginator.count
-                        ),
-                        { count: response.paginator.count },
-                        true
-                    )
-                );
+                    h3.find('> span').text(response.header_text);
                 var h3_a = h3.find('> a');
 
                 var href_attr = '#';
@@ -721,17 +681,7 @@ ApparelSearch = {
                         break;
                 }
 
-                var abutton = $('a.' + opts.selector.substring(1)).text(
-                    interpolate(
-                        ngettext(
-                            opts.text.button_singular,
-                            opts.text.button_plural,
-                            response.paginator.count
-                        ),
-                        { count: response.paginator.count },
-                        true
-                    )
-                ).attr('href', href_attr).hide();
+                var abutton = $('a.' + opts.selector.substring(1)).text(response.button_text).attr('href', href_attr).hide();
 
                 if(response.paginator.count > opts.query['limit']) {
                     abutton.show();
@@ -741,21 +691,6 @@ ApparelSearch = {
                 list.data('last-query', opts.query);
             }
         });
-    },
-    __translations: function() {
-        // FIXME: These lines are here so Django can pick them up. They're repeated
-        // in the _doSearch function. Find a nicer way of doing this
-
-        ngettext('Found %(count)s product', 'Found %(count)s products', 0);
-        ngettext('Found %(count)s look', 'Found %(count)s looks', 0);
-        ngettext('Found %(count)s matching brand', 'Found %(count)s matching brands', 0);
-        ngettext('Found %(count)s matching member', 'Found %(count)s matching members', 0);
-        ngettext('Found %(count)s matching store', 'Found %(count)s matching stores', 0);
-        ngettext('Show %(count)s product', 'Show all %(count)s products', 0);
-        ngettext('Show %(count)s look', 'Show all %(count)s looks', 0);
-        ngettext('Show %(count)s matching brand', 'Show all %(count)s matching brands', 0);
-        ngettext('Show %(count)s matching member', 'Show all %(count)s matching members', 0);
-        ngettext('Show %(count)s matching store', 'Show all %(count)s matching stores', 0);
     },
 
     format_query: function(query) {

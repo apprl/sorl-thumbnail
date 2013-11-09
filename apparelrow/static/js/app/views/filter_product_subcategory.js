@@ -75,7 +75,7 @@ App.Views.FilterProductSubCategory = Backbone.View.extend({
             if(subcategories.length > 0) {
                 this.$el.find('ul').remove();
                 var $ul = $(this.make('ul')).addClass('dropdown-menu');
-                $ul.append(this.make_element(0, gettext('Reset')));
+                $ul.append(this.make_element(0, $('#product-chooser').data('reset-text')));
                 _.each(subcategories, _.bind(function(model) {
                     $ul.append(this.make_element(model.get('id'), model.get('name')));
 

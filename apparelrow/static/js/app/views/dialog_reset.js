@@ -1,7 +1,7 @@
 App.Views.DialogReset = Backbone.View.extend({
 
     className: 'dialog-content group',
-    title: gettext('Reset look?'),
+    title: $('#dialog_reset_template').data('title'),
     template: _.template($('#dialog_reset_template').html()),
 
     events: {

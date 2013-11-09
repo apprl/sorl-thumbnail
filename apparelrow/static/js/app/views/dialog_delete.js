@@ -1,7 +1,7 @@
 App.Views.DialogDelete = Backbone.View.extend({
 
     className: 'dialog-content group',
-    title: gettext('Delete look?'),
+    title: $('#dialog_delete_template').data('title'),
     template: _.template($('#dialog_delete_template').html()),
 
     events: {

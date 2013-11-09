@@ -1,7 +1,7 @@
 App.Views.DialogLogin = Backbone.View.extend({
 
     className: 'dialog-content group dialog-login',
-    title: gettext('Login'),
+    title: $('#dialog_login_template').data('title'),
     template: _.template($('#dialog_login_template').html()),
 
     events: {

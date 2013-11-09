@@ -1,7 +1,7 @@
 App.Views.DialogUnpublish = Backbone.View.extend({
 
     className: 'dialog-content group',
-    title: gettext('Unpublish look?'),
+    title: $('#dialog_unpublish_template').data('title'),
     template: _.template($('#dialog_unpublish_template').html()),
 
     events: {
