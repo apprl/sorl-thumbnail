@@ -322,7 +322,7 @@ def copy_config():
         sudo('cp ./releases/%(release)s/etc/crontab /etc/crontab' % env, pty=True)
         sudo('cp ./releases/%(release)s/etc/celeryd.init /etc/init.d/celeryd' % env, pty=True)
 
-    upload_template('etc/logrotate.conf', '/etc/logrotate.d/apparelrow', context=env, use_sudo=True)
+    upload_template('etc/logrotate.conf', '/etc/logrotate.d/apparelrow', context=env, use_sudo=True, backup=False)
     upload_template('etc/arimport.cron', '/etc/cron.daily/arimport', context=env, use_sudo=True)
     sudo('chmod a+x /etc/cron.daily/arimport', pty=True)
     upload_template('etc/availability.cron', '/etc/cron.weekly/availability', context=env, use_sudo=True)
