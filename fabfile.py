@@ -25,16 +25,7 @@ def localhost():
     env.path = '/home/tote/coding/apparelrow/apparelrow'
     env.solr_path = '/home/tote/coding/apparelrow/solr/'
 
-def demo():
-    "Use the actual webserver"
-    env.hosts = ['demo.apparelrow.com:32744']
-    env.user = 'hanssonlarsson'
-    env.group = env.user
-    env.run_user = 'www-data'
-    env.run_group = env.run_user
-    env.path = '/home/%(user)s/%(project_name)s' % env
-
-def prod():
+def old_prod():
     "Use our EC2 server"
     env.hosts = ['web1.apparelrow.com']
     env.hostname = 'web1'
@@ -49,7 +40,7 @@ def prod():
     env.celery_processes_background='3'
     env.gunicorn_processes='3'
 
-def prod_db():
+def old_prod_db():
     "Use our EC2 server"
     env.hosts = ['db1.apparelrow.com']
     env.user = 'deploy'
@@ -134,7 +125,7 @@ def setup_db():
     """
     Setup a DB server
     """
-    require('hosts', provided_by=[localhost,demo,prod_db])
+    require('hosts', provided_by=[localhost])
     require('path')
     sudo('apt-get update')
     if env.dbserver=='mysql':
@@ -160,7 +151,7 @@ def setup(snapshot='master'):
     Setup a fresh virtualenv as well as a few useful directories, then run
     a full deployment
     """
-    require('hosts', provided_by=[localhost,demo,prod])
+    require('hosts', provided_by=[localhost])
     require('path')
     # install Python environment
     sudo('apt-get install -y -q python-software-properties')
@@ -213,7 +204,7 @@ def deploy(param='', snapshot='master'):
     required third party modules, install the virtual host and
     then restart the webserver
     """
-    require('hosts', provided_by=[localhost,demo,prod])
+    require('hosts', provided_by=[localhost,production_web])
     require('path')
     import time
     env.release = '%s-%s' % (time.strftime('%Y%m%d%H%M%S'), snapshot)
@@ -236,7 +227,7 @@ def deploy(param='', snapshot='master'):
 
 def deploy_version(version):
     "Specify a specific version to be made live"
-    require('hosts', provided_by=[localhost,demo,prod])
+    require('hosts', provided_by=[localhost,production_web])
     require('path')
     env.version = version
     with cd(env.path):
@@ -249,7 +240,7 @@ def rollback():
     Limited rollback capability. Simply loads the previously current
     version of the code. Rolling back again will swap between the two.
     """
-    require('hosts', provided_by=[localhost,demo,prod])
+    require('hosts', provided_by=[localhost,production_web])
     require('path')
     with cd(env.path):
         run('mv releases/current releases/_previous;', pty=True)
