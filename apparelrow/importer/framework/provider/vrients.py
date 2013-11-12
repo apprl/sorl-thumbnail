@@ -34,7 +34,8 @@ class VrientsMapper(DataMapper):
         return make_advertiser_url(store_id, self.record.get('link'))
 
     def get_category(self):
-        return self.record.get('categories')
+        bad_words = ['sales', 'view more', 'what\'s new', 'basouk', 'exclusive week-end sale', self.get_manufacturer().lower()]
+        return ', '.join(x for x in self.record.get('categories').split(', ') if x.lower() not in bad_words)
 
     def get_gender(self):
         return 'M'
