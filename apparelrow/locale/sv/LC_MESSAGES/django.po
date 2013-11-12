@@ -2877,7 +2877,7 @@ msgstr "Spara beskrivning"
 
 #: templates/profile/base_profile.html:64
 msgid "Change description"
-msgstr "Updatera beskrivning"
+msgstr "Uppdatera beskrivning"
 
 #: templates/profile/base_profile.html:78
 #: templates/profile/base_profile.html:82
