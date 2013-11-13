@@ -179,6 +179,23 @@ class TestDashboard(TransactionTestCase):
         self.assertEqual(sale.currency, 'EUR')
 
 
+    def test_signup_from_own_referral_link(self):
+        referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
+        referral_user.referral_partner = True
+        referral_user.is_partner = True
+        referral_user.save()
+
+        is_logged_in = self.client.login(username='referral_user', password='referral')
+        self.assertTrue(is_logged_in)
+
+        response = self.client.get(referral_user.get_referral_url(), follow=True)
+        self.assertRedirects(response, reverse('index-publisher'))
+
+        referral_user = get_user_model().objects.get(username='referral_user')
+        self.assertIsNone(referral_user.referral_partner_parent)
+        self.assertIsNone(referral_user.referral_partner_parent_date)
+
+
     def test_signup_from_invalid_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True

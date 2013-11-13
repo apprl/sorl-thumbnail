@@ -9,7 +9,7 @@ class ReferralMiddleware(object):
         if settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME in request.COOKIES and hasattr(request, 'user') and request.user and request.user.is_authenticated():
             if not request.user.referral_partner_parent:
                 user = get_referral_user_from_cookie(request)
-                if user and user.is_active and user.is_partner and user.referral_partner:
+                if user and user.is_active and user.is_partner and user.referral_partner and request.user != user:
                     request.user.referral_partner_parent = user
                     request.user.save()
 
