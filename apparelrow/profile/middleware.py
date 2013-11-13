@@ -10,14 +10,14 @@ logger = logging.getLogger('profile.middleware')
 class ImpersonateMiddleware(object):
     def process_request(self, request):
         try:
-            if request.user.is_superuser and '__imitera' in request.GET:
+            if hasattr(request, 'user') and request.user.is_superuser and '__imitera' in request.GET:
                 request.user = get_user_model().objects.get(id=int(request.GET['__imitera']))
         except Exception as e:
             logger.error('ImpersonateMiddleware request: %s' % (str(e),))
 
     def process_response(self, request, response):
         try:
-            if request.user.is_superuser and '__imitera' in request.GET:
+            if hasattr(request, 'user') and request.user.is_superuser and '__imitera' in request.GET:
                 if isinstance(response, HttpResponseRedirect):
                     location = response['Location']
                     if '?' in location:
@@ -35,7 +35,7 @@ class ImpersonateMiddleware(object):
 class LoginFlowMiddleware:
     def process_request(self, request):
         try:
-            if request.user.is_authenticated() and request.user.login_flow != 'complete':
+            if hasattr(request, 'user') and request.user.is_authenticated() and request.user.login_flow != 'complete':
                 resolved_url = resolve(request.path)
                 if not request.path.startswith('/media') and \
                    not request.path.startswith('/static') and \
