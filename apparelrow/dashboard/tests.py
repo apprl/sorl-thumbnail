@@ -12,6 +12,8 @@ from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from django.core import management
 
+from localeurl.utils import locale_url
+
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
 
 
@@ -63,7 +65,7 @@ class TestDashboard(TransactionTestCase):
         self.assertRegexpMatches(referral_url, r'\/i\/\w{4,16}')
 
         response = self.client.get(referral_url, follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, locale_url(reverse('index-publisher'), 'en'))
         self.assertIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
         # decode cookie manually and verify content
@@ -85,7 +87,7 @@ class TestDashboard(TransactionTestCase):
         referral_user.save()
 
         response = self.client.get(referral_url, follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, locale_url(reverse('index-publisher'), 'en'))
         self.assertNotIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
     def test_publisher_signup_from_referral_link(self):
@@ -138,7 +140,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, locale_url(reverse('index-publisher'), 'en'))
 
         # Register by email
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
@@ -181,7 +183,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, locale_url(reverse('index-publisher'), 'en'))
 
         referral_user.referral_partner = False
         referral_user.save()
