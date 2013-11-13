@@ -5,7 +5,7 @@ import decimal
 from django.conf import settings
 from django.core import mail
 from django.core import signing
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse as _reverse
 from django.test import TestCase, TransactionTestCase
 from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
@@ -15,6 +15,10 @@ from django.core import management
 from localeurl.utils import locale_url
 
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
+
+
+def reverse(*args, **kwargs):
+    return locale_url(_reverse(*args, **kwargs), 'en')
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -65,7 +69,7 @@ class TestDashboard(TransactionTestCase):
         self.assertRegexpMatches(referral_url, r'\/i\/\w{4,16}')
 
         response = self.client.get(referral_url, follow=True)
-        self.assertRedirects(response, locale_url(reverse('index-publisher'), 'en'))
+        self.assertRedirects(response, reverse('index-publisher'))
         self.assertIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
         # decode cookie manually and verify content
@@ -87,7 +91,7 @@ class TestDashboard(TransactionTestCase):
         referral_user.save()
 
         response = self.client.get(referral_url, follow=True)
-        self.assertRedirects(response, locale_url(reverse('index-publisher'), 'en'))
+        self.assertRedirects(response, reverse('index-publisher'))
         self.assertNotIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
     def test_publisher_signup_from_referral_link(self):
@@ -140,7 +144,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        self.assertRedirects(response, locale_url(reverse('index-publisher'), 'en'))
+        self.assertRedirects(response, reverse('index-publisher'))
 
         # Register by email
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
@@ -183,7 +187,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        self.assertRedirects(response, locale_url(reverse('index-publisher'), 'en'))
+        self.assertRedirects(response, reverse('index-publisher'))
 
         referral_user.referral_partner = False
         referral_user.save()
