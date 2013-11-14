@@ -185,8 +185,8 @@ def setup(snapshot='master'):
     with cd(env.path):
         run('virtualenv --no-site-packages .')
         with settings(warn_only=True):
-            run('mkdir -m a+w -p var/logs; mkdir -m a+w -p var/hprof; mkdir -p etc releases shared/warehouse packages backup;', pty=True)
-            sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse;' % env, pty=True)
+            run('mkdir -m a+w -p var/logs; mkdir -m a+w -p var/hprof; mkdir -p etc releases shared/warehouse shared/static/products packages backup;', pty=True)
+            sudo('chown -R %(run_user)s:%(run_group)s var shared/warehouse shared/static shared/static/products;' % env, pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     install_redis()
     # Disabled because it is no longer used by the importer
