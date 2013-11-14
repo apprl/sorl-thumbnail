@@ -10,7 +10,7 @@ from os import environ
 # globals
 env.project_name = 'apparelrow' # no spaces!
 env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
-env.dbserver = 'mysql' # mysql or postgresql
+env.dbserver = 'postgresql' # mysql or postgresql
 
 #env.solr_url = 'http://apache.mirrors.spacedump.net/lucene/solr/4.5.0/solr-4.5.0.tgz'
 env.solr_url = 'http://apache.cs.uu.nl/dist/lucene/solr/4.5.0/solr-4.5.0.tgz'
@@ -74,23 +74,23 @@ def production_web():
     env.celery_processes_background='3'
     env.gunicorn_processes='3'
 
-
 def staging():
-    env.hosts = ['ec2-176-34-85-220.eu-west-1.compute.amazonaws.com']
+    """
+    Staging web and data server.
+    """
+    env.hosts = ['146.185.148.124']
     env.hostname = 'staging1'
     env.user = 'deploy'
     env.group = 'nogroup'
     env.run_user = 'www-data'
     env.run_group = env.run_user
-    env.path = '/mnt/%(project_name)s' % env
-    env.solr_path = '/mnt/solr'
+    env.path = '/home/{user}/{project_name}'.format(**env)
+    env.solr_path = '/home/{user}/solr'.format(**env)
     env.settings = 'staging'
-    env.db_client_host = 'localhost'
-    env.datadir = '/mnt/mysql'
-    env.key_filename = '%(HOME)s/.ssh/apparelrow.pem' % environ
-    env.celery_processes='2'
-    env.celery_processes_background='2'
-    env.gunicorn_processes='2'
+    env.celery_processes = '2'
+    env.celery_processes_background = '2'
+    env.gunicorn_processes = '2'
+
 
 # tasks
 
@@ -121,30 +121,31 @@ def setup_data_server():
     start_solr()
 
 
-def setup_db():
-    """
-    Setup a DB server
-    """
-    require('hosts', provided_by=[localhost])
-    require('path')
-    sudo('apt-get update')
-    if env.dbserver=='mysql':
-        sudo('apt-get install -y mysql-server')
-        sudo('stop mysql')
-        sudo('test -d /var/lib/mysql && mv /var/lib/mysql /mnt || true')
-        sudo("sed -i 's/var\/lib/mnt/' /etc/apparmor.d/usr.sbin.mysqld")
-        upload_template('etc/mysql.cnf', '/etc/mysql/conf.d/apparelrow.cnf', use_sudo=True, context=env)
-        sudo('/etc/init.d/apparmor restart')
-        sudo('start mysql')
-        upload_template('etc/mysql.sql', '/tmp/setup.sql', context=env)
-        sudo('mysql -u root -p < /tmp/setup.sql')
-        sudo('restart mysql')
-    elif env.dbserver=='postgresql':
-        sudo('apt-get install -y postgresql')
-        upload_template('etc/postgres.sql', '/tmp/setup.sql', context=env)
-        sudo('psql < /tmp/setup.sql', user='postgres')
-        sudo('/etc/init.d/postgresql-8.4 restart')
-    sudo('rm -f /tmp/setup.sql')
+# OLD SETUP DATABASE CODE
+#def setup_db():
+    #"""
+    #Setup a DB server
+    #"""
+    #require('hosts', provided_by=[localhost])
+    #require('path')
+    #sudo('apt-get update')
+    #if env.dbserver=='mysql':
+        #sudo('apt-get install -y mysql-server')
+        #sudo('stop mysql')
+        #sudo('test -d /var/lib/mysql && mv /var/lib/mysql /mnt || true')
+        #sudo("sed -i 's/var\/lib/mnt/' /etc/apparmor.d/usr.sbin.mysqld")
+        #upload_template('etc/mysql.cnf', '/etc/mysql/conf.d/apparelrow.cnf', use_sudo=True, context=env)
+        #sudo('/etc/init.d/apparmor restart')
+        #sudo('start mysql')
+        #upload_template('etc/mysql.sql', '/tmp/setup.sql', context=env)
+        #sudo('mysql -u root -p < /tmp/setup.sql')
+        #sudo('restart mysql')
+    #elif env.dbserver=='postgresql':
+        #sudo('apt-get install -y postgresql')
+        #upload_template('etc/postgres.sql', '/tmp/setup.sql', context=env)
+        #sudo('psql < /tmp/setup.sql', user='postgres')
+        #sudo('/etc/init.d/postgresql-8.4 restart')
+    #sudo('rm -f /tmp/setup.sql')
 
 def setup(snapshot='master'):
     """
@@ -169,10 +170,6 @@ def setup(snapshot='master'):
     # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
     sudo('easy_install pip')
 
-    if env.dbserver=='mysql':
-        sudo('apt-get install -y libmysqlclient-dev')
-    elif env.dbserver=='postgresql':
-        sudo('apt-get install -y python-psycopg2')
     if env.webserver=='lighttpd':
         sudo('apt-get install -y lighttpd')
     elif env.webserver=='nginx':
