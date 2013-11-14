@@ -26,7 +26,7 @@ server {
 }
 
 server {
-	server_name apprl.com %(hostname)s.apprl.com;
+    server_name apprl.com %(hostname)s.apprl.com;
 
     include sites-available/%(project_name)s.include.conf;
 
