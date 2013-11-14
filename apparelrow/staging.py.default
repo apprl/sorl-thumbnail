@@ -13,8 +13,8 @@ DATABASES = {
         'NAME': 'apparel',
         'USER': 'apparel',
         'PASSWORD': 'ashwe3',
-        'HOST': '',
-        'PORT': ''
+        'HOST': '127.0.0.1',
+        'PORT': '5432'
     }
 }
 CONN_MAX_AGE = 600
