@@ -294,7 +294,7 @@ def generate_weekly_mail(request):
     activate('en')
 
     one_week_ago = datetime.datetime.now() - datetime.timedelta(weeks=1)
-    subject, products, looks, members = get_weekly_mail_content(request.GET.get('gender', 'M'), one_week_ago)
+    subject, products, looks, members = get_weekly_mail_content(request.GET.get('gender', 'M').upper(), one_week_ago)
 
     return render_to_response('email/weekly.html', {
             'products': products,
