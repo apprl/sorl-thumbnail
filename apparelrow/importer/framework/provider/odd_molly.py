@@ -98,6 +98,7 @@ class Provider(AanProvider):
                 continue
 
             duplicate_key = row.get('g:item_group_id') or row.get('g:id')
+            duplicate_key = (duplicate_key, row.get('g:color'))
             if duplicate_key in duplicate_storage:
                 logger.info('merge duplicate %s' % (duplicate_key,))
                 self.merge_duplicate(duplicate_storage[duplicate_key], record)
