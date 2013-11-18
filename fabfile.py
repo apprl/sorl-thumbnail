@@ -53,6 +53,7 @@ def production_data():
     Production data server, should contain solr and postgresql.
     """
     env.hosts = ['data1.apprl.com']
+    env.hostname = 'data1'
     env.user = 'deploy'
     env.group = env.user
     env.path = '/home/{user}/{project_name}'.format(**env)
@@ -119,6 +120,26 @@ def setup_data_server():
     install_solr()
     deploy_solr()
     start_solr()
+
+def setup_data_backup():
+    require('hosts', provided_by=[production_data, staging])
+
+    sudo('apt-get update -q')
+    sudo('apt-get install -q -y build-essential python-dev python-pip lzop pv libevent-dev daemontools')
+
+    # Lame, but it is easier to install it globally
+    sudo('pip install wal-e')
+
+    # TODO: encryption?
+    sudo('umask u=rwx,g=rx,o=')
+    sudo('mkdir -p /etc/wal-e.d/env')
+    sudo('echo "VLxYKMZ09WoYL20YoKjD/d/4CJvQS+HKiWGGhJQU" > /etc/wal-e.d/env/AWS_SECRET_ACCESS_KEY')
+    sudo('echo "AKIAIK3KEJCJEMGA2LTA" > /etc/wal-e.d/env/AWS_ACCESS_KEY_ID')
+    sudo('echo "s3://{hostname}-database-backup/" > /etc/wal-e.d/env/WALE_S3_PREFIX'.format(**env))
+    sudo('chown -R root:postgres /etc/wal-e.d')
+
+    # Install daily cron
+    put('etc/postgresql-backup.cron', '/etc/cron.d/postgresql-backup.cron', use_sudo=True)
 
 
 # OLD SETUP DATABASE CODE
@@ -448,11 +469,14 @@ def manage_py(command):
 #
 
 def install_postgresql():
-    upload_template('etc/postgres.sql', '/tmp/setup_postgres.sql', context=env)
+    # TODO: setup pg_hba.conf (currently done manually)
+    put('etc/postgresql.conf.{hostname}'.format(**env),
+        '/etc/postgresql/9.1/main/postgresql.conf', use_sudo=True)
+    sudo('chown postgres:postgres /etc/postgresql/9.1/main/postgresql.conf')
+
+    put('etc/postgres.sql', '/tmp/setup_postgres.sql')
     sudo('psql < /tmp/setup_postgres.sql', user='postgres')
     sudo('rm -f /tmp/setup_postgres.sql')
-
-    # TODO: setup pg_hba.conf (currently done manually)
 
     restart_postgresql()
 

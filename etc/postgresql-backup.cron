@@ -1,0 +1,5 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+30 20	* * *	postgres	envdir /etc/wal-e.d/env/ wal-e backup-push /var/lib/postgresql/9.1/main/
