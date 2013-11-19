@@ -8,7 +8,9 @@ urlpatterns = patterns('',
     url(r'^info/$', 'apparelrow.dashboard.views.dashboard_info', name='dashboard-info'),
     url(r'^dashboard/(?P<year>\d{4})/(?P<month>\d{1,2})/', 'apparelrow.dashboard.views.dashboard', name='dashboard-date'),
     url(r'^stores/$', 'apparelrow.dashboard.views.commissions', name='dashboard-commissions'),
-    url(r'^stores/(?P<pk>[\d]+)/$$', 'apparelrow.dashboard.views.commissions_popup', name='dashboard-commissions-popup'),
+    url(r'^stores/(?P<pk>[\d]+)/$', 'apparelrow.dashboard.views.commissions_popup', name='dashboard-commissions-popup'),
+
+    url(r'group/(?P<pk>\d+)/$', 'apparelrow.dashboard.views.dashboard_group_admin', name='dashboard-admin-group'),
 
     url(r'admin/$', 'apparelrow.dashboard.views.dashboard_admin', name='dashboard-admin'),
     url(r'admin/(?P<year>\d{4})/(?P<month>\d{1,2})/$', 'apparelrow.dashboard.views.dashboard_admin', name='dashboard-admin-date'),

@@ -177,6 +177,53 @@ class SignupForm(ModelForm):
         fields = ('name', 'email', 'blog')
 
 
+def dashboard_group_admin(request, pk):
+    if request.user.is_authenticated() and (request.user.is_superuser or request.user.pk == pk):
+        users = []
+        for user in get_user_model().objects.filter(partner_group__owner=pk, is_partner=True):
+            sales_total = decimal.Decimal('0')
+            sales_pending = Sale.objects.filter(user_id=user.pk, status=Sale.PENDING, paid=Sale.PAID_PENDING).aggregate(total=Sum('commission'))['total']
+            if sales_pending:
+                sales_total += sales_pending
+            else:
+                sales_pending = decimal.Decimal('0')
+            sales_confirmed = Sale.objects.filter(user_id=user.pk, status=Sale.CONFIRMED, paid=Sale.PAID_PENDING).aggregate(total=Sum('commission'))['total']
+            if sales_confirmed:
+                sales_total += sales_confirmed
+            else:
+                sales_confirmed = decimal.Decimal('0')
+
+            # Pending payment
+            pending_payment = 0
+            payments = Payment.objects.filter(cancelled=False, paid=False, user=user).order_by('-created')
+            if payments:
+                pending_payment = payments[0].amount
+
+            users.append({
+                'user': user,
+                'total': sales_total,
+                'confirmed': sales_confirmed,
+                'pending_payment': pending_payment,
+            })
+
+        owner = get_user_model().objects.get(pk=pk)
+        owner_total = sum(user['total'] for user in users)
+        owner_confirmed = sum(user['confirmed'] for user in users)
+        owner_pending_payment = sum(user['pending_payment'] for user in users)
+
+        context = {
+            'users': users,
+            'owner': owner,
+            'owner_total': owner_total,
+            'owner_confirmed': owner_confirmed,
+            'owner_pending_payment': owner_pending_payment,
+        }
+
+        return render(request, 'dashboard/publisher_group.html', context)
+
+    return HttpResponseNotFound()
+
+
 def dashboard_admin(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_superuser:
         if year is not None and month is not None:
