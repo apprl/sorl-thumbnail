@@ -139,7 +139,8 @@ def setup_data_backup():
     sudo('chown -R root:postgres /etc/wal-e.d')
 
     # Install daily cron
-    put('etc/postgresql-backup.cron', '/etc/cron.d/postgresql-backup.cron', use_sudo=True)
+    put('etc/postgresql-backup.cron', '/etc/cron.d/pgbackup', use_sudo=True)
+    sudo('chown root:root /etc/cron.d/pgbackup')
 
 
 # OLD SETUP DATABASE CODE
