@@ -65,7 +65,7 @@ class OddMollyMapper(DataMapper):
         return 0
 
     def get_color(self):
-        return self.map_colors(self.record.get('link', ''))
+        return self.map_colors(self.record.get('g:color', ''))
 
     def get_variations(self):
         availability = self.get_availability()
