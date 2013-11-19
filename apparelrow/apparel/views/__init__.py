@@ -799,6 +799,41 @@ def contest_stylesearch_charts(request):
 
     return render(request, 'apparel/contest_stylesearch_charts.html', {'looks': looks})
 
+#
+# Contest XMAS
+#
+
+def contest_xmas_menlook(request):
+    user_slug = 'menlook'
+    if settings.DEBUG:
+        user_slug = 'adminuser'
+
+    profile = get_user_model().objects.get(slug=user_slug)
+
+    return render(request, 'apparel/contest_xmas_menlook.html', {'profile': profile})
+
+
+def contest_xmas_menlook_charts(request):
+    start_date = datetime.datetime(2013, 11, 20, 0, 0, 0)
+    end_date = datetime.datetime(2013, 12, 8, 23, 59, 59)
+
+    vendor_id = 71
+    if settings.DEBUG:
+        vendor_id = 59
+        start_date = datetime.datetime(2013, 11, 19, 0, 0, 0)
+
+    looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),
+                                                                  published=True) \
+                                                          .filter(likes__created__lte=end_date, likes__active=True) \
+                                                          .filter(components__product__vendors=vendor_id) \
+                                                          .annotate(num_products=Count('components__product')) \
+                                                          .filter(num_products__gte=5) \
+                                                          .annotate(num_likes=Count('likes')) \
+                                                          .select_related('user') \
+                                                          .order_by('-num_likes', 'created')[:10]
+
+    return render(request, 'apparel/contest_xmas_menlook_charts.html', {'looks': looks})
+
 
 
 def apparel_set_language(request):

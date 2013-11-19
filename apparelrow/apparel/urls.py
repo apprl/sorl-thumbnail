@@ -19,6 +19,9 @@ urlpatterns = patterns('',
     url(r'^stylesearch/$', 'apparelrow.apparel.views.contest_stylesearch', name='contest-stylesearch'),
     url(r'^stylesearch/toplist/$', 'apparelrow.apparel.views.contest_stylesearch_charts', name='contest-stylesearch-charts'),
 
+    url(r'^menlookwishlist/$', 'apparelrow.apparel.views.contest_xmas_menlook', name='contest-xmas-menlook'),
+    url(r'^menlookwishlist/toplist/$', 'apparelrow.apparel.views.contest_xmas_menlook_charts', name='contest-xmas-menlook-charts'),
+
     # Feed
     url(r'^feed/$', RedirectView.as_view(url='/')),
     url(r'^all/$', RedirectView.as_view(url='/')),
