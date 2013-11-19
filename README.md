@@ -18,6 +18,23 @@ running setup on a web server. The SSL certifacte and the private key is not
 stored in the git repo.
 
 
+## Restore WAL-E backup (untested) ##
+```
+export ENVDIR=/etc/wal-e.d/env
+export PGDATA=/var/lib/postgresql/9.1/main
+export LATEST=`envdir $ENVDIR wal-e backup-list | tail -1 | awk '{ print $3 }'`
+
+/etc/init.d/postgresql stop
+
+rm -rf $PGDATA
+envdir $ENVDIR wal-e backup-fetch $PGDATA LATEST
+envdir $ENVDIR wal-e wal-fetch $LATEST $PGDATA/pg_xlog/$LATEST
+chmod 0700 $PGDATA
+chown -R postgres:postgres $PGDATA
+
+/etc/init.d/postgresql start
+```
+
 ## Setup development environment ##
 
 ### virtualenv ###
