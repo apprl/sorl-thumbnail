@@ -26,6 +26,7 @@ $(document).ready(function() {
 
 {% block content %}
         <h2 id="events">{% trans "Publisher" %}</h2>
+        <p>{% blocktrans with userid=request.user.pk %}Your publisher ID is <strong>{{userid}}</strong>.{% endblocktrans %}</p><br>
         <form id="publisher-form" action="{% url 'settings-publisher' %}" method="post">{% csrf_token %}
             <h4>{% trans "Your blog" %}</h4>
             <div class="group" style="clear: both; padding: 0 0 1em 0;">

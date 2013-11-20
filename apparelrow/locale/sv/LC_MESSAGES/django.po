@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-09 17:44+0100\n"
+"POT-Creation-Date: 2013-11-20 13:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,17 +63,17 @@ msgid "no"
 msgstr "nej"
 
 #: activity_feed/models.py:93 activity_feed/models.py:153
-#: apparel/models.py:385 apparel/models.py:732 apparel/models.py:941
-#: apparel/models.py:956 apparel/models.py:1153 apparel/models.py:1187
-#: dashboard/models.py:74 dashboard/models.py:98 dashboard/models.py:137
-#: profile/models.py:397 statistics/models.py:68 statistics/models.py:80
+#: apparel/models.py:385 apparel/models.py:732 apparel/models.py:945
+#: apparel/models.py:960 apparel/models.py:1157 apparel/models.py:1191
+#: dashboard/models.py:74 dashboard/models.py:98 dashboard/models.py:139
+#: profile/models.py:401 statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr "Tid tillagd"
 
 #: activity_feed/models.py:94 apparel/models.py:220 apparel/models.py:386
 #: apparel/models.py:479 apparel/models.py:530 apparel/models.py:733
-#: apparel/models.py:957 dashboard/models.py:75 dashboard/models.py:99
-#: profile/models.py:398
+#: apparel/models.py:961 dashboard/models.py:75 dashboard/models.py:99
+#: profile/models.py:402
 msgid "Time modified"
 msgstr "Tid ändrad"
 
@@ -263,7 +263,7 @@ msgid "Product image"
 msgstr "Produktbild"
 
 #: apparel/models.py:225 apparel/models.py:736 profile/forms.py:123
-#: profile/models.py:51
+#: profile/models.py:52
 msgid "Gender"
 msgstr "Kön"
 
@@ -376,39 +376,39 @@ msgstr "Beskrivning"
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:1001
+#: apparel/models.py:1005
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:1002
+#: apparel/models.py:1006
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:1003
+#: apparel/models.py:1007
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:1004
+#: apparel/models.py:1008
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:1005
+#: apparel/models.py:1009
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:1006
+#: apparel/models.py:1010
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1173
+#: apparel/models.py:1177
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1217
+#: apparel/models.py:1221
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1217
+#: apparel/models.py:1221
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -545,19 +545,19 @@ msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 msgid "Time of sale"
 msgstr "Tid för köp"
 
-#: dashboard/models.py:132 profile/forms.py:27
+#: dashboard/models.py:134 profile/forms.py:27
 msgid "Your name"
 msgstr "Ditt namn"
 
-#: dashboard/models.py:133
+#: dashboard/models.py:135
 msgid "E-mail"
 msgstr "E-postadress"
 
-#: dashboard/models.py:134
+#: dashboard/models.py:136
 msgid "Blog URL"
 msgstr "Blogg-URL"
 
-#: dashboard/models.py:146
+#: dashboard/models.py:148
 msgid ""
 "Only our own store links works, should be copied excactly as they appear in "
 "short store link admin list without a user id."
@@ -686,7 +686,7 @@ msgstr "En användare med den e-postadressen existerar redan."
 msgid "Personal info"
 msgstr ""
 
-#: profile/admin.py:82 templates/base.html:241
+#: profile/admin.py:82 templates/base.html:237
 #: templates/profile/base_settings.html:20
 #: templates/profile/base_settings.html:23
 #: templates/profile/settings_facebook.html:5
@@ -700,17 +700,18 @@ msgstr "Varumärke"
 #: profile/admin.py:86 templates/apparel/admin/header.html:7
 #: templates/dashboard/body_header.html:4 templates/dashboard/info.html:5
 #: templates/dashboard/publisher.html:5
+#: templates/dashboard/publisher_group.html:5
 #: templates/profile/base_settings.html:21
 #: templates/profile/settings_publisher.html:28
 msgid "Publisher"
-msgstr "Apprl Partner"
+msgstr "Apprl Publisher"
 
 #: profile/admin.py:93
 msgid "Extra"
 msgstr ""
 
-#: profile/admin.py:94 templates/base.html:157
-#: templates/dashboard/body_header.html:15
+#: profile/admin.py:94 templates/base.html:153
+#: templates/dashboard/body_header.html:18
 #: templates/profile/base_settings.html:4
 #: templates/profile/base_settings.html:10
 msgid "Settings"
@@ -819,106 +820,106 @@ msgstr "Fyll i samma lösenord som ovan för verifiering."
 msgid "E-mail does not exist or account is already confirmed."
 msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 
-#: profile/models.py:28
+#: profile/models.py:29
 msgid "All"
 msgstr "Alla"
 
-#: profile/models.py:29
+#: profile/models.py:30
 msgid "Those I follow"
 msgstr "De jag följer"
 
-#: profile/models.py:30
+#: profile/models.py:31
 msgid "No one"
 msgstr "Inga"
 
-#: profile/models.py:48
+#: profile/models.py:49
 msgid "User profile image"
 msgstr "Profilbild"
 
-#: profile/models.py:49 templates/base.html:247 templates/apparel/about.html:5
+#: profile/models.py:50 templates/base.html:243 templates/apparel/about.html:5
 #: templates/apparel/about_body_header.html:4
 msgid "About"
 msgstr "Om"
 
-#: profile/models.py:50 templates/base.html:215
+#: profile/models.py:51 templates/base.html:211
 #: templates/apparel/dialog_look_embed.html:22
-#: templates/profile/dialog_embed_shop.html:29
+#: templates/profile/dialog_embed_shop.html:35
 msgid "Language"
 msgstr "Språk"
 
-#: profile/models.py:60
+#: profile/models.py:61
 msgid "Login flow"
 msgstr "Inloggingsflöde"
 
-#: profile/models.py:63
+#: profile/models.py:64
 msgid "Participating in newsletter"
 msgstr ""
 
-#: profile/models.py:66
+#: profile/models.py:67
 msgid "Receiving sale alerts"
 msgstr ""
 
-#: profile/models.py:80
+#: profile/models.py:81
 msgid "Partner user"
 msgstr ""
 
-#: profile/models.py:81
+#: profile/models.py:82
 msgid "Top partner user"
 msgstr ""
 
-#: profile/models.py:85
+#: profile/models.py:86
 msgid "Referral partner user"
 msgstr ""
 
-#: profile/models.py:92
+#: profile/models.py:93
 msgid "When someone commented on a product that I have liked"
 msgstr "När någon kommenterat en produkt som jag har gillat"
 
-#: profile/models.py:94
+#: profile/models.py:95
 msgid "When someone commented on a product that I have commented on"
 msgstr "När någon kommenterat en produkt som jag kommenterat på"
 
-#: profile/models.py:96
+#: profile/models.py:97
 msgid "When someone commented on a look that I have created"
 msgstr "När någon kommenterat en look som jag har gjort"
 
-#: profile/models.py:98
+#: profile/models.py:99
 msgid "When someone commented on a look that I have commented on"
 msgstr "När någon kommenterat en look som jag har kommenterat på"
 
-#: profile/models.py:100
+#: profile/models.py:101
 msgid "When someone likes a look that I have created"
 msgstr "När någon gillar en look som jag har gjort"
 
-#: profile/models.py:102
+#: profile/models.py:103
 msgid "When someone starts to follow me"
 msgstr "När någon börjat följa mig"
 
-#: profile/models.py:104
+#: profile/models.py:105
 msgid "When a Facebook friend has joined Apprl"
 msgstr "När en Facebookvän blivit medlem på Apprl"
 
-#: profile/models.py:312
+#: profile/models.py:316
 msgid "Partner group must be set to be able to set partner status"
 msgstr ""
 
-#: profile/models.py:321
+#: profile/models.py:325
 msgid "Receive payments as a company"
 msgstr "Jag vill ha utbetalning som företag"
 
-#: profile/models.py:321
+#: profile/models.py:325
 msgid "Receive payments as a private person"
 msgstr "Jag vill ha utbetalning som privatperson"
 
-#: profile/models.py:325
+#: profile/models.py:329
 msgid "Address"
 msgstr "Adress"
 
-#: profile/models.py:326
+#: profile/models.py:330
 msgid "Postal code"
 msgstr "Postkod"
 
-#: profile/models.py:327
+#: profile/models.py:331
 msgid "City"
 msgstr "Postadress"
 
@@ -967,68 +968,88 @@ msgstr "500-fel"
 msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
-#: templates/base.html:116
+#: templates/base.html:98
+#: templates/apparel/contest_xmas_menlook_charts.html:12
+msgid "X-MAS WISHLIST CHALLENGE"
+msgstr ""
+
+#: templates/base.html:98
+#, fuzzy
+msgid "Compete with Menlook to win €250"
+msgstr "Tävla med Elin Kling om 5000kr"
+
+#: templates/base.html:98
+#, fuzzy
+msgid "Create your look and compete with Menlook to win €250"
+msgstr "Skapa din höstlook och tävla med Elin Kling för att vinna 5000kr"
+
+#: templates/base.html:101
+msgid "TOPLIST"
+msgstr ""
+
+#: templates/base.html:112
 msgid "Toggle navigation"
 msgstr "Växla navigation"
 
-#: templates/base.html:132
+#: templates/base.html:128
 msgid "Search for products, members & brands"
 msgstr "Sök produkter, medlemmar & varumärken"
 
-#: templates/base.html:142
+#: templates/base.html:138
 msgid "Get started"
 msgstr "Börja här"
 
-#: templates/base.html:143 templates/apparel/tags/login_bar.html:11
+#: templates/base.html:139 templates/apparel/tags/login_bar.html:11
 #: templates/registration/password_reset_complete.html:9
 msgid "Log in"
 msgstr "Logga in"
 
-#: templates/base.html:148
+#: templates/base.html:144
 msgid "Your profile"
 msgstr "Din profil"
 
-#: templates/base.html:150 templates/dashboard/body_header.html:6
+#: templates/base.html:146 templates/dashboard/body_header.html:6
 #: templates/dashboard/info.html:22 templates/dashboard/info.html.py:76
 msgid "Your statistics"
 msgstr "Din statistik"
 
-#: templates/base.html:153 templates/advertiser/store_admin.html:4
+#: templates/base.html:149 templates/advertiser/store_admin.html:4
 #: templates/advertiser/store_admin.html:43
 msgid "Your store"
 msgstr "Din butik"
 
-#: templates/base.html:155
+#: templates/base.html:151
 msgid "+ Invite friends"
 msgstr "+ Bjud in vänner"
 
-#: templates/base.html:156
+#: templates/base.html:152
 #: templates/apparel/fragments/create_look_button.html:3
 #: templates/apparel/fragments/create_look_button.html:5
 msgid "+ Create look"
 msgstr "+ Skapa look"
 
-#: templates/base.html:158
+#: templates/base.html:154
 msgid "Log out"
 msgstr "Logga ut"
 
-#: templates/base.html:166 templates/activity_feed/feed_list.html:46
+#: templates/base.html:162 templates/activity_feed/feed_list.html:46
 msgid "Your APPRL"
 msgstr "Din APPRL"
 
-#: templates/base.html:168 templates/base.html.py:229
+#: templates/base.html:164 templates/base.html.py:225
 #: templates/apparel/browse.html:4 templates/apparel/browse.html.py:27
 msgid "Shop"
 msgstr "Shop"
 
-#: templates/base.html:169 templates/base.html.py:232
+#: templates/base.html:165 templates/base.html.py:228
 #: templates/apparel/look_detail.html:4 templates/apparel/look_editor.html:5
 #: templates/apparel/look_list.html:4 templates/apparel/look_list.html:11
 #: templates/profile/looks.html:4
 msgid "Looks"
 msgstr "Looks"
 
-#: templates/base.html:171 templates/activity_feed/verbs/follow.html:14
+#: templates/base.html:167 templates/activity_feed/verbs/follow.html:14
+#: templates/apparel/contest_xmas_menlook.html:35
 #: templates/apparel/user_list.html:4 templates/apparel/user_list.html:22
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
@@ -1039,68 +1060,68 @@ msgstr "Looks"
 msgid "Follow"
 msgstr "Följ"
 
-#: templates/base.html:173 templates/apparel/user_list.html:24
+#: templates/base.html:169 templates/apparel/user_list.html:24
 msgid "Members"
 msgstr "Medlemmar"
 
-#: templates/base.html:174 templates/base.html.py:233
+#: templates/base.html:170 templates/base.html.py:229
 #: templates/apparel/user_list.html:25
 #: templates/apparel/fragments/product_filter.html:104
 msgid "Brands"
 msgstr "Varumärken"
 
-#: templates/base.html:225
+#: templates/base.html:221
 msgid "Do you have a store?"
 msgstr "Har du en butik?"
 
-#: templates/base.html:226 templates/apparel/index.html:27
+#: templates/base.html:222 templates/apparel/index.html:27
 msgid "Are you a blogger?"
 msgstr "Bloggar du?"
 
-#: templates/base.html:230 templates/apparel/look_editor.html:46
+#: templates/base.html:226 templates/apparel/look_editor.html:46
 msgid "Women"
 msgstr "Dam"
 
-#: templates/base.html:231 templates/apparel/look_editor.html:47
+#: templates/base.html:227 templates/apparel/look_editor.html:47
 msgid "Men"
 msgstr "Herr"
 
-#: templates/base.html:240
+#: templates/base.html:236
 msgid "Follow us"
 msgstr "Följ oss"
 
-#: templates/base.html:242
+#: templates/base.html:238
 msgid "Pinterest"
 msgstr ""
 
-#: templates/base.html:243
+#: templates/base.html:239
 msgid "E-mail newsletter"
 msgstr "E-post nyhetsbrev"
 
-#: templates/base.html:246 templates/apparel/about_body_header.html:6
+#: templates/base.html:242 templates/apparel/about_body_header.html:6
 msgid "Apprl"
 msgstr "Apprl"
 
-#: templates/base.html:248
+#: templates/base.html:244
 msgid "Contact"
 msgstr "Kontakt"
 
-#: templates/base.html:249
+#: templates/base.html:245
 msgid "Privacy & Terms"
 msgstr "Användarvillkor"
 
-#: templates/base.html:250 templates/flatpages/default.html:25
+#: templates/base.html:246 templates/flatpages/default.html:25
 msgid "Cookies"
 msgstr "Cookies"
 
-#: templates/base.html:262
+#: templates/base.html:258
 msgid "Sweden"
 msgstr "Sverige"
 
 #: templates/dialog_base.html:14 templates/apparel/dialog_look_embed.html:42
 #: templates/apparel/fragments/product_short_link.html:15
 #: templates/dashboard/commissions_popup.html:15
-#: templates/profile/dialog_embed_shop.html:68
+#: templates/profile/dialog_embed_shop.html:74
 msgid "Close"
 msgstr "Stäng"
 
@@ -1246,12 +1267,16 @@ msgid "now follows"
 msgstr "följer nu"
 
 #: templates/activity_feed/verbs/follow.html:14
+#: templates/apparel/contest_xmas_menlook.html:33
+#: templates/apparel/contest_xmas_menlook.html:35
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 msgid "Following"
 msgstr "Följer"
 
 #: templates/activity_feed/verbs/follow.html:14
+#: templates/apparel/contest_xmas_menlook.html:33
+#: templates/apparel/contest_xmas_menlook.html:35
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 msgid "Stop following"
@@ -1287,6 +1312,8 @@ msgstr "Order Värde"
 #: templates/dashboard/commissions.html:16
 #: templates/dashboard/publisher.html:15 templates/dashboard/publisher.html:54
 #: templates/dashboard/publisher.html:207
+#: templates/dashboard/publisher_group.html:15
+#: templates/dashboard/publisher_group.html:54
 msgid "Commission"
 msgstr "Provision"
 
@@ -1330,6 +1357,8 @@ msgstr "Transaktioner"
 #: templates/dashboard/publisher.html:61
 #: templates/dashboard/publisher.html:148
 #: templates/dashboard/publisher.html:206
+#: templates/dashboard/publisher_group.html:17
+#: templates/dashboard/publisher_group.html:61
 msgid "Clicks"
 msgstr "Klick"
 
@@ -1418,6 +1447,7 @@ msgstr ""
 "Skapa din höstlook på 5 minuter för en chans att vinna 5000kr att shoppa för"
 
 #: templates/apparel/contest_stylesearch.html:23
+#: templates/apparel/contest_xmas_menlook.html:23
 msgid "Competition is now closed"
 msgstr "Tävlingen är nu avslutad"
 
@@ -1443,6 +1473,8 @@ msgstr "Skapa din höstlook här:"
 
 #: templates/apparel/contest_stylesearch.html:36
 #: templates/apparel/contest_stylesearch.html:38
+#: templates/apparel/contest_xmas_menlook.html:49
+#: templates/apparel/contest_xmas_menlook.html:51
 msgid "+ CREATE LOOK"
 msgstr "+ SKAPA LOOK"
 
@@ -1461,6 +1493,7 @@ msgid ""
 msgstr "<strong>Elin Kling</strong> väljer ut vinnaren på vår Facebooksida"
 
 #: templates/apparel/contest_stylesearch.html:45
+#: templates/apparel/contest_xmas_menlook.html:57
 msgid "SEE FINALISTS"
 msgstr "SE FINALISTER"
 
@@ -1495,6 +1528,7 @@ msgid "FINALISTS"
 msgstr "FINALISTER"
 
 #: templates/apparel/contest_stylesearch_charts.html:16
+#: templates/apparel/contest_xmas_menlook_charts.html:16
 msgid "ABOUT THE CONTEST"
 msgstr "OM TÄVLINGEN"
 
@@ -1503,12 +1537,57 @@ msgid "SEE THE WINNER ON OUR FACEBOOK PAGE"
 msgstr "SE VINNAREN PÅ VÅR FACEBOOKSIDA"
 
 #: templates/apparel/contest_stylesearch_charts.html:30
+#: templates/apparel/contest_xmas_menlook_charts.html:27
 #: templates/apparel/look_detail.html:4 templates/apparel/look_detail.html:100
 #: templates/apparel/look_editor.html:5
 #: templates/apparel/product_detail.html:4
 #: templates/apparel/fragments/look_medium.html:24
 msgid "by"
 msgstr "av"
+
+#: templates/apparel/contest_xmas_menlook.html:5
+#: templates/apparel/contest_xmas_menlook_charts.html:4
+msgid "Menlook.com X-mas Wishlist Challenge"
+msgstr ""
+
+#: templates/apparel/contest_xmas_menlook.html:11
+#: templates/apparel/contest_xmas_menlook.html:20
+msgid "X-mas Wishlist Challenge"
+msgstr ""
+
+#: templates/apparel/contest_xmas_menlook.html:12
+#, fuzzy
+msgid ""
+"Create your wishlist with 5 Menlook items for a chance to win €250 at "
+"Menlook.com"
+msgstr ""
+"Skapa din höstlook på 5 minuter för en chans att vinna 5000kr att shoppa för"
+
+#: templates/apparel/contest_xmas_menlook.html:24
+#, fuzzy
+msgid "Competition open 20th Nov - 8th Dec"
+msgstr "Tävlingen är öppen 26 augusti - 1 september"
+
+#: templates/apparel/contest_xmas_menlook.html:25
+#, fuzzy
+msgid ""
+"The look with the most likes on Apprl.com by the end of Dec 8th wins the "
+"competition."
+msgstr "De looks som har fått flest röster efter 1:a september går till final"
+
+#: templates/apparel/contest_xmas_menlook.html:27
+msgid "To participate:"
+msgstr ""
+
+#: templates/apparel/contest_xmas_menlook.html:33
+#: templates/apparel/contest_xmas_menlook.html:35
+#: templates/apparel/contest_xmas_menlook.html:39
+msgid "+ Follow Menlook"
+msgstr ""
+
+#: templates/apparel/contest_xmas_menlook_charts.html:11
+msgid "Top List"
+msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:7
 msgid "Embed look on your site / blog"
@@ -1529,18 +1608,18 @@ msgid "Width"
 msgstr "Bredd"
 
 #: templates/apparel/dialog_look_embed.html:18
-#: templates/profile/dialog_embed_shop.html:18
-#: templates/profile/dialog_embed_shop.html:25
+#: templates/profile/dialog_embed_shop.html:22
+#: templates/profile/dialog_embed_shop.html:31
 msgid "pixels"
 msgstr "pixlar"
 
 #: templates/apparel/dialog_look_embed.html:32
-#: templates/profile/dialog_embed_shop.html:58
+#: templates/profile/dialog_embed_shop.html:64
 msgid "Show embed code"
 msgstr "Visa embed-kod"
 
 #: templates/apparel/dialog_look_embed.html:35
-#: templates/profile/dialog_embed_shop.html:61
+#: templates/profile/dialog_embed_shop.html:67
 msgid "Copy and paste this code (in HTML-mode) into your site/blog"
 msgstr "Kopiera och klistra in den här koden (i HTML-läge) på din site/blogg"
 
@@ -1683,7 +1762,7 @@ msgid "Your ♥"
 msgstr "Dina ♥"
 
 #: templates/apparel/look_editor.html:38
-#: templates/profile/dialog_embed_shop.html:41
+#: templates/profile/dialog_embed_shop.html:47
 msgid "All products"
 msgstr "Alla produkter"
 
@@ -2379,6 +2458,10 @@ msgstr "Så funkar det"
 msgid "Invite and earn"
 msgstr "Bjud in bloggare"
 
+#: templates/dashboard/body_header.html:15
+msgid "Network"
+msgstr ""
+
 #: templates/dashboard/commissions.html:17
 msgid "Link to store"
 msgstr "Länk till butik"
@@ -2629,6 +2712,7 @@ msgid "Let us know any questions on"
 msgstr "Vid frågor kontakta oss på"
 
 #: templates/dashboard/publisher.html:16
+#: templates/dashboard/publisher_group.html:16
 msgid "Referral commission"
 msgstr "Referral-provision"
 
@@ -2712,6 +2796,30 @@ msgstr ""
 #: templates/dashboard/publisher_complete.html:22
 msgid "We will soon get in touch with you."
 msgstr "Vi hör av oss till dig inom kort."
+
+#: templates/dashboard/publisher_group.html:92
+#, fuzzy
+msgid "Member"
+msgstr "Medlemmar"
+
+#: templates/dashboard/publisher_group.html:93
+#, fuzzy
+msgid "Total commission"
+msgstr "Totalt godkänd provision:"
+
+#: templates/dashboard/publisher_group.html:94
+#, fuzzy
+msgid "Confirmed commission"
+msgstr "Bekräftad provision: "
+
+#: templates/dashboard/publisher_group.html:95
+#, fuzzy
+msgid "Pending payment"
+msgstr "Att utbetalas: "
+
+#: templates/dashboard/publisher_group.html:108
+msgid "Owner"
+msgstr ""
 
 #: templates/dashboard/referral.html:9
 msgid "Earn money by inviting publishers/bloggers"
@@ -2969,19 +3077,19 @@ msgstr ""
 "gillar på Apprl. Ställ in vilket format du vill ha på din shop, kopiera och "
 "klistra sen in embed-koden (i HTML-läge) på din site/blogg."
 
-#: templates/profile/dialog_embed_shop.html:22
+#: templates/profile/dialog_embed_shop.html:28
 msgid "Height"
 msgstr "Höjd"
 
-#: templates/profile/dialog_embed_shop.html:37
+#: templates/profile/dialog_embed_shop.html:43
 msgid "Show"
 msgstr "Visa"
 
-#: templates/profile/dialog_embed_shop.html:47
+#: templates/profile/dialog_embed_shop.html:53
 msgid "Only women's"
 msgstr "Bara dam"
 
-#: templates/profile/dialog_embed_shop.html:53
+#: templates/profile/dialog_embed_shop.html:59
 msgid "Only men's"
 msgstr "Bara herr"
 
@@ -3183,7 +3291,7 @@ msgstr ""
 
 #: templates/profile/settings_facebook.html:21
 #: templates/profile/settings_notification.html:22
-#: templates/profile/settings_publisher.html:47
+#: templates/profile/settings_publisher.html:48
 msgid "Save changes"
 msgstr "Spara ändringar"
 
@@ -3213,11 +3321,16 @@ msgstr "Ändra ditt lösenord:"
 msgid "Add a password to your account:"
 msgstr "Lägg till ett lösenord till ditt konto:"
 
-#: templates/profile/settings_publisher.html:30
+#: templates/profile/settings_publisher.html:29
+#, python-format
+msgid "Your publisher ID is <strong>%(userid)s</strong>."
+msgstr "Ditt publisher ID är <strong>%(userid)s</strong>."
+
+#: templates/profile/settings_publisher.html:31
 msgid "Your blog"
 msgstr "Din blogg"
 
-#: templates/profile/settings_publisher.html:36
+#: templates/profile/settings_publisher.html:37
 msgid "Your payment settings"
 msgstr "Dina utbetalningsuppgifter"
 
@@ -3618,12 +3731,6 @@ msgstr ""
 
 #~ msgid "Between 1 and 0"
 #~ msgstr "Mellan 1 och 0"
-
-#~ msgid "Compete with Elin Kling to win €500"
-#~ msgstr "Tävla med Elin Kling om 5000kr"
-
-#~ msgid "Create your fall look and compete with Elin Kling to win €500"
-#~ msgstr "Skapa din höstlook och tävla med Elin Kling för att vinna 5000kr"
 
 #~ msgid "WINNER"
 #~ msgstr "VINNARE"
