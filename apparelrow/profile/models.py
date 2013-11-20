@@ -3,6 +3,7 @@ import uuid
 import os.path
 
 from django.db import models
+from django.db.models import get_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
@@ -276,6 +277,9 @@ class User(AbstractUser):
             return reverse('brand-following', args=[self.slug])
 
         return reverse('profile-following', args=[self.slug])
+
+    def has_partner_group_ownership(self):
+        return get_model('dashboard', 'Group').objects.filter(owner=self).exists()
 
     def is_referral_parent_valid(self):
         if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():
