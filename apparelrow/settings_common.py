@@ -101,6 +101,7 @@ LOCALE_INDEPENDENT_PATHS = (
     r'^/images/temporary/',
     r'^/a/link',
     r'^/a/conversion',
+    r'^/track/',
 )
 LOCALEURL_SUPPORTED_LOCALES = LANGUAGES
 
