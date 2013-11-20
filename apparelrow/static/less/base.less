@@ -63,7 +63,7 @@
 // Buttons
 // ----------------------------------------------------------------------------
 // All buttons
-.btn {
+.btn:not(#width_type) {
     border-radius: 0;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -76,6 +76,10 @@
 // Default button (used for non-important actions)
 .btn-default {
     .button-variant(#ffffff, @btn-custom-default-color, @btn-custom-default-color);
+}
+
+#embed_shop_form .btn-default {
+    .button-variant(@btn-default-color, @btn-default-bg, @btn-default-border);
 }
 
 // Primary button (used for every standard action)

@@ -433,7 +433,8 @@ def shop_widget(request):
     content = {}
     content['language'] = request.POST.get('language', 'sv')
     content['gender'] = request.POST.get('gender', 'A')
-    content['width'] = request.POST.get('width', '720')
+    content['width'] = request.POST.get('width', '100')
+    content['width_type'] = request.POST.get('width_type', '%')
     content['height'] = request.POST.get('height', '600')
 
     return render(request, 'apparel/fragments/shop_widget.html', content)
