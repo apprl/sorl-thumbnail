@@ -89,22 +89,20 @@
         })();
     </script>
 </head>
-<body class="{% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
+<body class="contest {% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
 
-    {% comment %}
     <div class="contest-bar">
         <div class="container">
             <div class="row">
                 <div class="col-xs-10">
-                    <p><a href="{% url 'contest-stylesearch' %}">{% trans "Fashion week style search" %} <span class="short">{% trans "Compete with Elin Kling to win €500" %}</span><span class="long">{% trans "Create your fall look and compete with Elin Kling to win €500" %}</span></a></p>
+                    <p><a href="{% url 'contest-xmas-menlook' %}">{% trans "X-MAS WISHLIST CHALLENGE" %} <span class="short">{% trans "Compete with Menlook to win €250" %}</span><span class="long">{% trans "Create your look and compete with Menlook to win €250" %}</span></a></p>
                 </div>
                 <div class="col-xs-2">
-                    <a target="_blank" class="btn btn-primary btn-sm pull-right" href="https://www.facebook.com/photo.php?fbid=649353078422601&set=a.471258842898693.113476.452127981478446&type=1&theater">{% trans "WINNER" %}</a>
+                    <a target="_blank" class="btn btn-primary btn-sm pull-right" href="{% url 'contest-xmas-menlook-charts' %}">{% trans "TOPLIST" %}</a>
                 </div>
             </div>
         </div>
     </div>
-    {% endcomment %}
 
     <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
         <div class="container">
