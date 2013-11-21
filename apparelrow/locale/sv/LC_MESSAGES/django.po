@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-20 13:22+0100\n"
+"POT-Creation-Date: 2013-11-21 14:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1493,7 +1493,6 @@ msgid ""
 msgstr "<strong>Elin Kling</strong> väljer ut vinnaren på vår Facebooksida"
 
 #: templates/apparel/contest_stylesearch.html:45
-#: templates/apparel/contest_xmas_menlook.html:57
 msgid "SEE FINALISTS"
 msgstr "SE FINALISTER"
 
@@ -1584,6 +1583,10 @@ msgstr ""
 #: templates/apparel/contest_xmas_menlook.html:39
 msgid "+ Follow Menlook"
 msgstr ""
+
+#: templates/apparel/contest_xmas_menlook.html:57
+msgid "See top list"
+msgstr "Se topplista"
 
 #: templates/apparel/contest_xmas_menlook_charts.html:11
 msgid "Top List"
