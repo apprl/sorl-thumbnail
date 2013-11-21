@@ -59,6 +59,11 @@ black, svart, svarta
 
 # ---------- MATERIAL ------------
 
+# ---------- BLA -------
+
+L'Oréal Paris, L'Oreal, Loreal, Loréal, L'Oreal Paris, Loreal Paris, Loréal Paris
+Levi's, Levis
+
 wool, ull
 corduroy, manchester
 
