@@ -477,6 +477,7 @@ class VendorCategory(models.Model):
     default_gender = models.CharField(_('Default gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     override_gender = models.CharField(_('Override gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True)
     modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
 
     # Update all related products to point to the category
     def save(self, *args, **kwargs):
@@ -528,6 +529,7 @@ class VendorBrand(models.Model):
     brand = models.ForeignKey(Brand, related_name='vendor_brands', blank=True, null=True)
     vendor = models.ForeignKey(Vendor, related_name='vendor_brands')
     modified = models.DateTimeField(_("Time modified"), auto_now=True, null=True, blank=True)
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.brand:

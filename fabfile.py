@@ -351,6 +351,10 @@ def copy_config():
     upload_template('etc/dashboard_payment.cron', '/etc/cron.monthly/dashboard_payment', context=env, use_sudo=True)
     sudo('chmod a+x /etc/cron.monthly/dashboard_payment', pty=True)
 
+    # vendor check cron
+    upload_template('etc/vendor_check.cron', '/etc/cron.daily/vendor_check', context=env, use_sudo=True)
+    sudo('chmod a+x /etc/cron.daily/vendor_check', pty=True)
+
     # django cleanup cron
     upload_template('etc/django_cleanup.cron', '/etc/cron.weekly/django_cleanup', context=env, use_sudo=True)
     sudo('chmod a+x /etc/cron.weekly/django_cleanup', pty=True)
