@@ -1,0 +1,49 @@
+OKI-NI
+
+head -n 10 warehouse/oki_ni/2012-11-08.csv | cut -d '|' -f 12,24,38,41
+
+search_price = priset
+rrp_price = icke discount priset
+
+
+
+
+
+LIBERTY
+
+head -n 10 warehouse/liberty/2012-11-09.csv | cut -d '|' -f 12,16,19
+
+samma överallt, rrp är 0 hela tiden, store_price lika så
+
+
+
+
+
+OFFICE SHOES
+
+head -n 10 warehouse/office_shoes/2012-11-09.csv | cut -d '|' -f 12,18,21,39,32
+
+search_price = priset
+rrp_price = icke discount priset
+
+
+
+
+
+TED BAKER
+
+head -n 10 warehouse/ted_baker/2012-11-09.csv | cut -d '|' -f 12,18,22,27,40
+
+search_price = priset
+rrp_price = icke discount priset
+
+
+
+
+
+# URBAN OUTFITTERS
+
+head -n 10 warehouse/urban_outfitters/2012-11-09.csv | cut -d '|' -f 12,18,22,27,40
+
+search_price = priset
+rrp_price = icke discount priset
