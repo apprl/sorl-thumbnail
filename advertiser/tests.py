@@ -14,8 +14,15 @@ from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 
+from localeurl.utils import locale_url
+
 from advertiser.views import get_cookie_name
 from advertiser.models import Transaction, Store, StoreHistory, Cookie
+
+
+def reverse_locale(*args, **kwargs):
+    return locale_url(reverse(*args, **kwargs), 'en')
+
 
 class AdvertiserMixin:
 
@@ -375,7 +382,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         self.client.login(username='user1', password='user1')
 
         # Display list
-        response = self.client.get(reverse('advertiser-store-admin'))
+        response = self.client.get(reverse_locale('advertiser-store-admin'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('transactions', response.context)
         self.assertEqual(len(response.context['transactions']), 1)
@@ -385,28 +392,28 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         """
         self.client.login(username='user2', password='user2')
 
-        response = self.client.get(reverse('advertiser-store-admin'))
+        response = self.client.get(reverse_locale('advertiser-store-admin'))
         self.assertEqual(response.status_code, 404)
 
     def test_admin_view_no_user(self):
         """
         """
-        response = self.client.get(reverse('advertiser-store-admin'))
+        response = self.client.get(reverse_locale('advertiser-store-admin'))
         self.assertEqual(response.status_code, 302)
 
     def test_non_existent_transaction(self):
         self.client.login(username='user1', password='user1')
 
-        response = self.client.get(reverse('advertiser-admin-accept', args=[1000]))
+        response = self.client.get(reverse_locale('advertiser-admin-accept', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.post(reverse('advertiser-admin-accept', args=[1000]))
+        response = self.client.post(reverse_locale('advertiser-admin-accept', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.get(reverse('advertiser-admin-reject', args=[1000]))
+        response = self.client.get(reverse_locale('advertiser-admin-reject', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.post(reverse('advertiser-admin-reject', args=[1000]))
+        response = self.client.post(reverse_locale('advertiser-admin-reject', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
     def test_accept_transaction(self):
@@ -427,10 +434,10 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
 
         self.client.login(username='user1', password='user1')
 
-        response = self.client.get(reverse('advertiser-admin-accept', args=[transaction.pk]))
+        response = self.client.get(reverse_locale('advertiser-admin-accept', args=[transaction.pk]))
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(reverse('advertiser-admin-accept', args=[transaction.pk]))
+        response = self.client.post(reverse_locale('advertiser-admin-accept', args=[transaction.pk]))
         self.assertEqual(response.status_code, 200)
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
@@ -446,7 +453,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         # Accept another transaction
         self.checkout(store_id='mystore', order_id='12345', order_value='10', currency='EUR')
         transaction = Transaction.objects.get(store_id='mystore', order_id=12345)
-        response = self.client.post(reverse('advertiser-admin-accept', args=[transaction.pk]))
+        response = self.client.post(reverse_locale('advertiser-admin-accept', args=[transaction.pk]))
 
         store = Store.objects.get(user=self.user1)
         self.assertEqual(store.balance, decimal.Decimal('-31.16'))
@@ -469,10 +476,10 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
 
         self.client.login(username='user1', password='user1')
 
-        response = self.client.get(reverse('advertiser-admin-reject', args=[transaction.pk]))
+        response = self.client.get(reverse_locale('advertiser-admin-reject', args=[transaction.pk]))
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(reverse('advertiser-admin-reject', args=[transaction.pk]), {'message': 'wrong price'})
+        response = self.client.post(reverse_locale('advertiser-admin-reject', args=[transaction.pk]), {'message': 'wrong price'})
         self.assertEqual(response.status_code, 200)
 
         transaction = Transaction.objects.get(store_id='mystore', order_id=1234)
