@@ -57,12 +57,6 @@ cp apparelrow/development.py.default apparelrow/development.py
 mkdir -p var/logs
 ```
 
-### build js ###
-```
-cd apparelrow
-./manage.py synccompress
-```
-
 ### Set up database ###
 ```
 cd apparelrow
