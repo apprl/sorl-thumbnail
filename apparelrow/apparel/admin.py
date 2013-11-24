@@ -154,6 +154,7 @@ recalculate_gender.short_description = 'Recalculate gender for marked looks'
 class LookAdmin(admin.ModelAdmin):
     list_display = ('title', 'user', 'component', 'gender', 'created')
     list_filter = ['gender']
+    raw_id_fields = ('user',)
     actions = [rebuild_static_image, recalculate_gender]
 
 admin.site.register(Look, LookAdmin)
