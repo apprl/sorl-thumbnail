@@ -571,7 +571,9 @@ ApparelSearch = {
 
         ApparelSearch.clear();
 
-        $('#search-query').text(s);
+        // No need to update search query headline anymore because we are
+        // reloading the page on search
+        //$('#search-query').text(s);
 
         //updateHash('!s', s, false);
 

@@ -3,6 +3,7 @@ import decimal
 import logging
 import re
 import collections
+import HTMLParser
 
 from django.conf import settings
 from django.shortcuts import render
@@ -503,6 +504,9 @@ def search(request, gender=None):
     gender = select_from_multi_gender(request, 'shop', gender)
     query = request.GET.get('q', '')
 
+    h = HTMLParser.HTMLParser()
+    query = h.unescape(query)
+
     return render(request, 'search.html', {'q': query, 'gender': gender})
 
 
@@ -518,6 +522,9 @@ def search_view(request, model_name):
     query = request.REQUEST.get('q')
     if not query:
         raise Http404()
+
+    h = HTMLParser.HTMLParser()
+    query = h.unescape(query)
 
     model_name = model_name.lower()
 
