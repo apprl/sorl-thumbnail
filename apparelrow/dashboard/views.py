@@ -178,7 +178,7 @@ class SignupForm(ModelForm):
 
 
 def dashboard_group_admin(request, pk):
-    if request.user.is_authenticated() and (request.user.is_superuser or request.user.pk == pk):
+    if request.user.is_authenticated() and (request.user.is_superuser or request.user.pk == int(pk)):
         users = []
         for user in get_user_model().objects.filter(partner_group__owner=pk, is_partner=True):
             sales_total = decimal.Decimal('0')
