@@ -179,6 +179,12 @@ class SignupForm(ModelForm):
 
 def dashboard_group_admin(request, pk):
     if request.user.is_authenticated() and (request.user.is_superuser or request.user.pk == int(pk)):
+        group = None
+        try:
+            group = get_model('dashboard', 'Group').objects.get(owner=pk)
+        except:
+            raise Http404
+
         users = []
         for user in get_user_model().objects.filter(partner_group__owner=pk, is_partner=True):
             sales_total = decimal.Decimal('0')
@@ -206,22 +212,32 @@ def dashboard_group_admin(request, pk):
                 'pending_payment': pending_payment,
             })
 
+        sum_total = sum(user['total'] for user in users)
+        sum_confirmed = sum(user['confirmed'] for user in users)
+        sum_pending_payment = sum(user['pending_payment'] for user in users)
+
         owner = get_user_model().objects.get(pk=pk)
-        owner_total = sum(user['total'] for user in users)
-        owner_confirmed = sum(user['confirmed'] for user in users)
-        owner_pending_payment = sum(user['pending_payment'] for user in users)
+        owner_total = sum_total * group.owner_cut
+        owner_confirmed = sum_confirmed * group.owner_cut
+        owner_pending_payment = sum_confirmed * group.owner_cut
 
         context = {
             'users': users,
             'owner': owner,
+            'sum_total': sum_total,
+            'sum_confirmed': sum_confirmed,
+            'sum_pending_payment': sum_pending_payment,
             'owner_total': owner_total,
             'owner_confirmed': owner_confirmed,
             'owner_pending_payment': owner_pending_payment,
+            'total_total': sum_total + owner_total,
+            'total_confirmed': sum_confirmed + owner_confirmed,
+            'total_pending_payment': sum_pending_payment + owner_pending_payment,
         }
 
         return render(request, 'dashboard/publisher_group.html', context)
 
-    return HttpResponseNotFound()
+    raise Http404
 
 
 def dashboard_admin(request, year=None, month=None):

@@ -105,10 +105,22 @@
             </tr>
             {% endfor %}
             <tr>
+                <td class="col1"><strong>{% trans "Sum" %}</strong></td>
+                <td class="col2"><strong>{{ sum_total }}</strong></td>
+                <td class="col3"><strong>{{ sum_confirmed }}</strong></td>
+                <td class="col4"><strong>{{ sum_pending_payment }}</strong></td>
+            </tr>
+            <tr>
                 <td class="col1"><strong>{% trans "Owner" %}: <a href="{{ owner.get_absolute_url }}">{{ owner }}</a></strong></td>
-                <td class="col2"><strong>{{ owner_total }}</strong></td>
-                <td class="col3"><strong>{{ owner_confirmed }}</strong></td>
-                <td class="col4"><strong>{{ owner_pending_payment }}</strong></td>
+                <td class="col2"><strong>{{ owner_total|floatformat:2 }}</strong></td>
+                <td class="col3"><strong>{{ owner_confirmed|floatformat:2 }}</strong></td>
+                <td class="col4"><strong>{{ owner_pending_payment|floatformat:2 }}</strong></td>
+            </tr>
+            <tr>
+                <td class="col1"><strong>{% trans "Total" %}</strong></td>
+                <td class="col2"><strong>{{ total_total|floatformat:2 }}</strong></td>
+                <td class="col3"><strong>{{ total_confirmed|floatformat:2 }}</strong></td>
+                <td class="col4"><strong>{{ total_pending_payment|floatformat:2 }}</strong></td>
             </tr>
         </tbody>
     </table>

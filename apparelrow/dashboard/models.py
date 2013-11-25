@@ -111,8 +111,9 @@ class Payment(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=30)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, help_text='Assign a group owner if publishers of this group will belong to an owner, for example a blog network.')
-    owner_cut = models.DecimalField(null=True, blank=True, default=None, max_digits=10, decimal_places=3, help_text='Between 1 and 0, default is not set, calculated after APPRLs cut has been accounted for.')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='owner_group', help_text='Assign a group owner if publishers of this group will belong to an owner, for example a blog network.')
+    owner_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
+                                    help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
 
     def __unicode__(self):
         return u'%s' % (self.name,)
