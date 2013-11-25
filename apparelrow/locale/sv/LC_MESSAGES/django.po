@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-25 10:48+0100\n"
+"POT-Creation-Date: 2013-11-25 15:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgstr "nej"
 #: apparel/models.py:385 apparel/models.py:480 apparel/models.py:532
 #: apparel/models.py:734 apparel/models.py:947 apparel/models.py:962
 #: apparel/models.py:1159 apparel/models.py:1193 dashboard/models.py:74
-#: dashboard/models.py:98 dashboard/models.py:139 profile/models.py:401
+#: dashboard/models.py:98 dashboard/models.py:140 profile/models.py:401
 #: statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr "Tid tillagd"
@@ -546,19 +546,19 @@ msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 msgid "Time of sale"
 msgstr "Tid för köp"
 
-#: dashboard/models.py:134 profile/forms.py:27
+#: dashboard/models.py:135 profile/forms.py:27
 msgid "Your name"
 msgstr "Ditt namn"
 
-#: dashboard/models.py:135
+#: dashboard/models.py:136
 msgid "E-mail"
 msgstr "E-postadress"
 
-#: dashboard/models.py:136
+#: dashboard/models.py:137
 msgid "Blog URL"
 msgstr "Blogg-URL"
 
-#: dashboard/models.py:148
+#: dashboard/models.py:149
 msgid ""
 "Only our own store links works, should be copied excactly as they appear in "
 "short store link admin list without a user id."
@@ -1010,10 +1010,9 @@ msgstr "Logga in"
 msgid "Your profile"
 msgstr "Din profil"
 
-#: templates/base.html:146 templates/dashboard/body_header.html:6
-#: templates/dashboard/info.html:22 templates/dashboard/info.html.py:76
-msgid "Your statistics"
-msgstr "Din statistik"
+#: templates/base.html:146
+msgid "For publishers"
+msgstr "För publishers"
 
 #: templates/base.html:149 templates/advertiser/store_admin.html:4
 #: templates/advertiser/store_admin.html:43
@@ -2447,6 +2446,11 @@ msgstr ""
 msgid "Referral"
 msgstr ""
 
+#: templates/dashboard/body_header.html:6 templates/dashboard/info.html:22
+#: templates/dashboard/info.html.py:76
+msgid "Your statistics"
+msgstr "Din statistik"
+
 #: templates/dashboard/body_header.html:6
 msgid "Become a publisher"
 msgstr "Bli Apprl partner"
@@ -2819,7 +2823,15 @@ msgid "Pending payment"
 msgstr "Att utbetalas: "
 
 #: templates/dashboard/publisher_group.html:108
+msgid "Sum"
+msgstr ""
+
+#: templates/dashboard/publisher_group.html:114
 msgid "Owner"
+msgstr ""
+
+#: templates/dashboard/publisher_group.html:120
+msgid "Total"
 msgstr ""
 
 #: templates/dashboard/referral.html:9
