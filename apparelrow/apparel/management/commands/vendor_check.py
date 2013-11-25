@@ -1,6 +1,6 @@
 import itertools
 
-from django.core.mail import mail_admins
+from django.core.mail import mail_managers
 from django.core.urlresolvers import reverse
 from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
@@ -34,4 +34,4 @@ class Command(BaseCommand):
                 subject = 'Updates for %s' % (vendor,)
                 message = template.render(Context({'brands': brands}))
 
-                mail_admins(subject, message)
+                mail_managers(subject, message)
