@@ -151,11 +151,26 @@ def recalculate_gender(modeladmin, request, queryset):
         get_model('apparel', 'Look').calculate_gender(look.pk)
 recalculate_gender.short_description = 'Recalculate gender for marked looks'
 
+class LookComponentInline(admin.TabularInline):
+    model = LookComponent
+    extra = 0
+    readonly_fields = ('product', 'component_of', 'top', 'left', 'width', 'height', 'z_index', 'rotation', 'positioned')
+    raw_id_fields = ('product',)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 class LookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'component', 'gender', 'created')
-    list_filter = ['gender']
+    ordering = ('-created',)
+    readonly_fields = ('width', 'height', 'image_width', 'image_height', 'created', 'modified')
+    list_display = ('title', 'user', 'component', 'gender', 'created', 'has_static_look_image')
+    list_filter = ('gender', 'component')
     raw_id_fields = ('user',)
     actions = [rebuild_static_image, recalculate_gender]
+    inlines = [LookComponentInline]
+
+    def has_static_look_image(self, obj):
+        return True if obj.static_image else False
 
 admin.site.register(Look, LookAdmin)
 
