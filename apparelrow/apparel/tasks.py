@@ -301,13 +301,14 @@ def build_static_look_image(look_id):
 
     if look.display_with_component == 'P' and look.image:
         # Reuse photo image
-        thumbnail = get_thumbnail(look.image, '694x524')
+        thumbnail = get_thumbnail(look.image, '694x524', upscale=False)
         # TODO: better solution?
         if thumbnail.url.startswith('http'):
             background = Image.open(StringIO(requests.get(thumbnail.url).content))
         else:
             background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
         offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
+        offset_top = (settings.APPAREL_LOOK_SIZE[1] - thumbnail.height) / 2
         image.paste(background, (offset_left, offset_top))
         look.width = thumbnail.width
         look.height = thumbnail.height
