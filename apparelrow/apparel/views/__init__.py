@@ -822,12 +822,16 @@ def contest_xmas_menlook_charts(request):
         vendor_id = 59
         start_date = datetime.datetime(2013, 11, 19, 0, 0, 0)
 
+
+    valid_looks = get_model('apparel', 'Look').published_objects.filter(components__product__vendors=vendor_id) \
+                                                                .annotate(num_products=Count('components__product')) \
+                                                                .filter(num_products__gte=5, published=True)
+
     looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),
-                                                                  published=True) \
-                                                          .filter(likes__created__lte=end_date, likes__active=True) \
-                                                          .filter(components__product__vendors=vendor_id) \
-                                                          .annotate(num_products=Count('components__product')) \
-                                                          .filter(num_products__gte=5) \
+                                                                  published=True,
+                                                                  likes__created__lte=end_date,
+                                                                  likes__active=True,
+                                                                  pk__in=valid_looks) \
                                                           .annotate(num_likes=Count('likes')) \
                                                           .select_related('user') \
                                                           .order_by('-num_likes', 'created')[:10]
