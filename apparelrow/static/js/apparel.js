@@ -621,7 +621,7 @@ ApparelSearch = {
             model: 'user',
             query: {
                 'q': s,
-                'limit': 10,
+                'limit': 30,
                 'gender': gender
             },
             selector: '#search-result-profiles',
