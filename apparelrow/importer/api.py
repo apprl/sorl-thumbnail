@@ -384,7 +384,7 @@ class API(object):
         # Check that the gender field is valid (it may be None)
         if self.dataset['product']['gender'] is not None:
             if self.dataset['product']['gender'] not in GENDERS:
-                raise IncompleteDataSet('gender', '%s is not a recognised gender' % key)
+                raise IncompleteDataSet('gender', '%s is not a recognised gender' % (self.dataset['product']['gender'],))
 
         # Make sure the image-url is a list
         if not isinstance(self.dataset['product']['image-url'], list):
