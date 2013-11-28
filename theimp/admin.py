@@ -16,14 +16,12 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class BrandMappingAdmin(admin.ModelAdmin):
-    list_display = ('vendor', 'brand', 'mapped_brand')
-    list_editable = ('mapped_brand',)
+    list_display = ('brand', 'vendor', 'mapped_brand')
     readonly_fields = ('vendor', 'brand', 'created', 'modified')
 
 
 class CategoryMappingAdmin(admin.ModelAdmin):
-    list_display = ('vendor', 'category', 'mapped_category')
-    list_editable = ('mapped_category',)
+    list_display = ('category', 'vendor', 'mapped_category')
     readonly_fields = ('vendor', 'category', 'created', 'modified')
 
 
