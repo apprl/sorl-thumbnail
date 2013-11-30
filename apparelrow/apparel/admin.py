@@ -316,6 +316,7 @@ class VendorBrandAdmin(admin.ModelAdmin):
     list_filter = ('vendor', BrandIsNullListFilter)
     list_display_links = ('name',)
     list_per_page = 25
+    raw_id_fields = ('brand',)
     search_fields = ('name',)
     readonly_fields = ('vendor', 'name')
 

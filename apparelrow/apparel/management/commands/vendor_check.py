@@ -18,8 +18,8 @@ class Command(BaseCommand):
         one_day_ago = timezone.now() - timezone.timedelta(hours=24)
 
         for vendor in Vendor.objects.order_by('-name').iterator():
-            vendor_categories = VendorCategory.objects.filter(created__gte=one_day_ago, vendor=vendor)
-            vendor_brands = VendorBrand.objects.filter(created__gte=one_day_ago, vendor=vendor)
+            vendor_categories = VendorCategory.objects.filter(created__gte=one_day_ago, vendor=vendor, category__isnull=True)
+            vendor_brands = VendorBrand.objects.filter(created__gte=one_day_ago, vendor=vendor, brand__isnull=True)
 
             if vendor_categories or vendor_brands:
                 brands = []
