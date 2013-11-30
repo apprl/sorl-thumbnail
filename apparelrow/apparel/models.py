@@ -783,7 +783,8 @@ class Look(models.Model):
 
         logger.debug('genders %s and length %s' % (genders, genders_len))
 
-        gender = 'U'
+        user_gender = look.user.gender
+        gender = user_gender if user_gender else 'U'
         if genders_len:
             if (genders.count('M') / genders_len) > 0.5:
                 gender = 'M'
