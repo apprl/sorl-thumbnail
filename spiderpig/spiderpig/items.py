@@ -22,6 +22,7 @@ class Product(Item):
     vendor = Field()
 
     url = Field()
+    affiliate = Field()
 
     regular_price = Field()
     discount_price = Field()

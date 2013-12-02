@@ -20,6 +20,7 @@ class VrientsSpider(CSVFeedSpider):
         item['name'] = row.get('title')
         item['vendor'] = VrientsSpider.name
         item['url'] = row.get('link')
+        item['affiliate'] = 'aan'
 
         item['description'] = row.get('description')
         item['brand'] = row.get('brand')
