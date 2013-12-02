@@ -10,16 +10,13 @@ class VrientsSpider(CSVFeedSpider):
     allowed_domains = ['vrients.com']
     start_urls = ['http://www.vrients.com/media/feed/apprl.csv']
     delimiter = ','
-    #headers = ['id', 'name', 'description']
 
     def parse_row(self, response, row):
-        print row
-
         item = Product()
-        # TODO: remove ?source=apprl, keep it for url
         item['key'] = row.get('link')
         if item['key']:
             item['key'] = item['key'].replace('?source=apprl', '')
+        item['sku'] = row.get('id')
         item['name'] = row.get('title')
         item['vendor'] = VrientsSpider.name
         item['url'] = row.get('link')
@@ -30,7 +27,8 @@ class VrientsSpider(CSVFeedSpider):
         item['regular_price'] = row.get('price')
         item['discount_price'] = row.get('sale_price')
         item['currency'] = 'EUR'
-        
+        item['in_stock'] = True
+        item['image_urls'] = [row.get('image_link')]
 
         # Replace the return item statement with this to fetch and parse the product page
         #return [item, Request(item['key'], callback=self.parse_item)]

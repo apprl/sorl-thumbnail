@@ -13,6 +13,7 @@ class ProductLoader(XPathItemLoader):
 
 class Product(Item):
     key = Field()
+    sku = Field()
     name = Field()
     description = Field()
     brand = Field()
@@ -20,8 +21,6 @@ class Product(Item):
     gender = Field()
     vendor = Field()
 
-    affiliate = Field()
-    buy_url = Field()
     url = Field()
 
     regular_price = Field()

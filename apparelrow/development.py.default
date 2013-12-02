@@ -21,6 +21,7 @@ DATABASES = {
 CONN_MAX_AGE = 600
 
 # Storage
+AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's-jdev.apprl.com'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATIC_URL = '/static/'

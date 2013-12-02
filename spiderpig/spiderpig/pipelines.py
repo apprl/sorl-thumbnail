@@ -3,25 +3,53 @@ import json
 import urlparse
 import decimal
 import re
+import hashlib
 
 from scrapy import signals
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
-from scrapy.contrib.pipeline.images import ImagesPipeline
+from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop
 
 from hotqueue import HotQueue
 
 from apparelrow import settings
 from theimp.models import Product, Vendor
 
-class ImporterImagesPipeline(ImagesPipeline):
+
+class MissingFieldDrop(DropItem):
+    """
+    Missing field exception
+    """
+
+
+class CustomImagesPipeline(ImagesPipeline):
+    """
+    Save images to path vendor/hash.
+    """
+    #CONVERTED_ORIGINAL = re.compile(r'^full/[0-9,a-f]+.jpg$')
+
+
+    #def get_images(self, response, request, info):
+        #for key, image, buf, in super(CustomImagesPipeline, self).get_images(response, request, info):
+            #if self.CONVERTED_ORIGINAL.match(key):
+                #key = self.change_key(key, request.meta)
+            #yield key, image, buf
+
+    #def get_media_requests(self, item, info):
+        #return [Request(x, meta={'vendor': item.get('vendor')}) for x in item.get(self.IMAGES_URLS_FIELD, [])]
+
+    #def change_key(self, key, meta):
+        #return key.replace('full', request.meta.get('vendor'))
+
+    def file_key(self, url):
+        media_guid = hashlib.sha1(url).hexdigest()
+        return 'full/%s/%s.jpg' % (media_guid[:2], media_guid)
 
     def item_completed(self, results, item, info):
-        if 'images' in item.fields:
-            results = [x for ok, x in results if ok]
-            if results:
-                item['images'] = results
-
+        if self.IMAGES_RESULT_FIELD in item.fields:
+            item[self.IMAGES_RESULT_FIELD] = [x for ok, x in results if ok]
+            if not item[self.IMAGES_RESULT_FIELD]:
+                raise NoimagesDrop('Item contains no images')
         return item
 
 
@@ -110,7 +138,7 @@ class RequiredFieldsPipeline:
     def process_item(self, item, spider):
         for field in self.required_fields:
             if not item.get(field, None):
-                raise DropItem('Missing field: %s' % (field,))
+                raise MissingFieldDrop('Missing field: %s' % (field,))
 
         return item
 
