@@ -109,4 +109,8 @@ class Provider(AanProvider):
             self.import_data(record)
 
     def merge_duplicate(self, stored_record, new_record):
-        pass
+        stored_availability = stored_record.get('product', {}).get('availability', 0)
+        new_availability = new_record.get('product', {}).get('availability', 0)
+
+        if stored_availability == 0 and new_availability != 0:
+            stored_record['product']['availability'] = new_availability
