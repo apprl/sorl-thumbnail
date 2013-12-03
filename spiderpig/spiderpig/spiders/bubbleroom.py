@@ -1,11 +1,16 @@
 import re
+import urllib
 
-from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.spiders import CSVFeedSpider
-from scrapy.http import Request
 
-from spiderpig.items import Product, ProductLoader
+from django.utils.encoding import force_bytes
+
+from spiderpig.items import Product
 from spiderpig.spiders import AffiliateMixin
+
+
+key_regex1 = re.compile(r'url\((.+)\)')
+key_regex2 = re.compile(r'\?url=(.+)\?tm')
 
 
 class BubbleroomSpider(CSVFeedSpider, AffiliateMixin):
@@ -19,7 +24,10 @@ class BubbleroomSpider(CSVFeedSpider, AffiliateMixin):
         row.update([x.split(':', 1) for x in row.get('fields', '').split(';') if x])
 
         item = Product()
-        item['key'] = row.get('productUrl') # TODO: remove tradedoubler tracking
+        key = key_regex1.search(row.get('productUrl'))
+        if key:
+            key = urllib.unquote(force_bytes(key.group(1)))
+            item['key'] = key_regex2.search(key).group(1)
         item['sku'] = row.get('sku')
         item['name'] = row.get('name')
         item['vendor'] = self.name
@@ -30,15 +38,12 @@ class BubbleroomSpider(CSVFeedSpider, AffiliateMixin):
         item['description'] = row.get('description')
         item['brand'] = row.get('brand')
         item['gender'] = row.get('merchantCategoryName')
+        item['colors'] = item.get('key', '')
         item['regular_price'] = row.get('previousPrice')
         item['discount_price'] = row.get('price')
         item['currency'] = row.get('currency')
         item['in_stock'] = True
+        item['stock'] = ''
         item['image_urls'] = [row.get('imageUrl', '').replace('300', '600')]
 
-        # Replace the return item statement with this to fetch and parse the product page
-        #return [item, Request(item['key'], callback=self.parse_item)]
         return item
-
-    #def parse_item(self, response):
-        #yield None
