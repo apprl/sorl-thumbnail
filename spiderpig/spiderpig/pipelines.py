@@ -133,11 +133,15 @@ class DatabaseHandler:
 
 
 class RequiredFieldsPipeline:
-    required_fields = ['key', 'name', 'vendor', 'url']
+    required_fields = ['key', 'sku', 'name', 'description', 'brand',
+                       'category', 'gender', 'vendor', 'url', 'affiliate',
+                       'regular_price', 'discount_price', 'currency',
+                       'colors', 'in_stock', 'stock', 'image_urls',
+                       'images']
 
     def process_item(self, item, spider):
         for field in self.required_fields:
-            if not item.get(field, None):
+            if item.get(field, None) is None:
                 raise MissingFieldDrop('Missing field: %s' % (field,))
 
         return item
