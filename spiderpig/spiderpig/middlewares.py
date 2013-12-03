@@ -12,7 +12,7 @@ from spiderpig.settings import USER_AGENT_LIST
 class DownloadGzipMiddleware(object):
 
     def process_response(self, request, response, spider):
-        if isinstance(response, Response) and is_gzipped(response):
+        if isinstance(response, Response) and (is_gzipped(response) or response.url[-3:] == '.gz'):
             response = response.replace(body=gunzip(response.body))
         return response
 
