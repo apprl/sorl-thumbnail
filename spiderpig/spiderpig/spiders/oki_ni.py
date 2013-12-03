@@ -28,10 +28,6 @@ class OkiNiSpider(CSVFeedSpider, AffiliateMixin):
         item['currency'] = row.get('currency')
         item['in_stock'] = True if row.get('in_stock') != '1' else False
         item['stock'] = row.get('stock_quantity')
-        image = row.get('merchant_image_url')
-        if image:
-            item['image_urls'] = [image]
-        else:
-            item['image_urls'] = []
+        item['image_urls'] = [row.get('merchant_image_url')]
 
         return item
