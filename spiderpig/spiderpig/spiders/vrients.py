@@ -23,6 +23,8 @@ class VrientsSpider(CSVFeedSpider, AffiliateMixin):
         item['url'] = row.get('link')
         item['affiliate'] = self.AFFILIATE_AAN
 
+        bad_words = ['sales', 'view more', 'what\'s new', 'basouk', 'exclusive week-end sale', row.get('brand').lower()]
+        item['category'] = ', '.join(x for x in row.get('categories').split(', ') if x.lower() not in bad_words)
         item['description'] = row.get('description')
         item['brand'] = row.get('brand')
         item['gender'] = 'M'

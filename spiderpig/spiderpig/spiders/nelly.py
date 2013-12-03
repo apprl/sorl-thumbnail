@@ -26,6 +26,7 @@ class NellySpider(CSVFeedSpider, AffiliateMixin):
         item['url'] = row.get('productUrl')
         item['affiliate'] = self.AFFILIATE_TRADEDOUBLER
 
+        item['category'] = '%s > %s' % (row.get('TDCategoryName'), row.get('merchantCategoryName'))
         item['description'] = row.get('description')
         item['brand'] = row.get('brand')
         item['gender'] = row.get('gender')
