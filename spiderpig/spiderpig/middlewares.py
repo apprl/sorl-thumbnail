@@ -2,10 +2,19 @@ import random
 
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.utils.url import url_is_from_spider
-from scrapy.http import HtmlResponse
+from scrapy.utils.gz import gunzip, is_gzipped
+from scrapy.http import HtmlResponse, Response
 from scrapy import log
 
 from spiderpig.settings import USER_AGENT_LIST
+
+
+class DownloadGzipMiddleware(object):
+
+    def process_response(self, request, response, spider):
+        if isinstance(response, Response) and is_gzipped(response):
+            response = response.replace(body=gunzip(response.body))
+        return response
 
 
 class RelCanonicalMiddleware(object):

@@ -31,6 +31,7 @@ EXTENSIONS = {
 
 DOWNLOADER_MIDDLEWARES = {
     'spiderpig.middlewares.RelCanonicalMiddleware': 1000,
+    'spiderpig.middlewares.DownloadGzipMiddleware': 10,
     'scrapy.contrib.downloadermiddleware.httpauth.HttpAuthMiddleware': 500,
     'scrapy.contrib.downloadermiddleware.httpcompression.HttpCompressionMiddleware': 1,
     #'spiderpig.middlewares.RandomUserAgentMiddleware': 1000,
