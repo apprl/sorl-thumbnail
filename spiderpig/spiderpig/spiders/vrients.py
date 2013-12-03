@@ -3,9 +3,10 @@ from scrapy.contrib.spiders import CSVFeedSpider
 from scrapy.http import Request
 
 from spiderpig.items import Product, ProductLoader
+from spiderpig.spiders import AffiliateMixin
 
 
-class VrientsSpider(CSVFeedSpider):
+class VrientsSpider(CSVFeedSpider, AffiliateMixin):
     name = 'vrients'
     allowed_domains = ['vrients.com']
     start_urls = ['http://www.vrients.com/media/feed/apprl.csv']
@@ -18,9 +19,9 @@ class VrientsSpider(CSVFeedSpider):
             item['key'] = item['key'].replace('?source=apprl', '')
         item['sku'] = row.get('id')
         item['name'] = row.get('title')
-        item['vendor'] = VrientsSpider.name
+        item['vendor'] = self.name
         item['url'] = row.get('link')
-        item['affiliate'] = 'aan'
+        item['affiliate'] = self.AFFILIATE_AAN
 
         item['description'] = row.get('description')
         item['brand'] = row.get('brand')

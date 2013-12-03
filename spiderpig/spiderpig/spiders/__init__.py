@@ -3,6 +3,12 @@ import itertools
 from scrapy.contrib.spiders import CrawlSpider
 
 
+class AffiliateMixin(object):
+    AFFILIATE_AAN = 'aan'
+    AFFILIATE_CJ = 'cj'
+    AFFILIATE_TRADEDOUBLER = 'tradedoubler'
+
+
 class BaseSpider(CrawlSpider):
 
     def parse(self, response):

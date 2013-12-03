@@ -5,9 +5,10 @@ from scrapy.contrib.spiders import CSVFeedSpider
 from scrapy.http import Request
 
 from spiderpig.items import Product, ProductLoader
+from spiderpig.spiders import AffiliateMixin
 
 
-class NellySpider(CSVFeedSpider):
+class NellySpider(CSVFeedSpider, AffiliateMixin):
     name = 'nelly'
     allowed_domains = ['nelly.com']
     start_urls = ['http://pf.tradedoubler.com/export/export?myFeed=13164639121853028&myFormat=12919846971897050']
@@ -21,9 +22,9 @@ class NellySpider(CSVFeedSpider):
         item['key'] = row.get('productUrl') # TODO: remove tradedoubler tracking
         item['sku'] = row.get('sku')
         item['name'] = row.get('name')
-        item['vendor'] = NellySpider.name
+        item['vendor'] = self.name
         item['url'] = row.get('productUrl')
-        item['affiliate'] = 'tradedoubler'
+        item['affiliate'] = self.AFFILIATE_TRADEDOUBLER
 
         item['description'] = row.get('description')
         item['brand'] = row.get('brand')
