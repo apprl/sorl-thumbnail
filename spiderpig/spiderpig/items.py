@@ -9,6 +9,7 @@ class ProductLoader(XPathItemLoader):
     default_output_processor = Compose(MapCompose(string.strip), TakeFirst())
 
     image_urls_out = Identity()
+    in_stock_out = TakeFirst()
 
 
 class Product(Item):

@@ -141,7 +141,7 @@ class RequiredFieldsPipeline:
 
     def process_item(self, item, spider):
         for field in self.required_fields:
-            if item.get(field, None) is None:
+            if field not in item:
                 raise MissingFieldDrop('Missing field: %s' % (field,))
 
         return item

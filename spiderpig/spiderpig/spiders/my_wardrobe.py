@@ -12,29 +12,31 @@ from spiderpig.spiders import AffiliateMixin
 key_regex1 = re.compile(r'\[\[(.+)\]\]')
 
 
-class AsosSpider(CSVFeedSpider, AffiliateMixin):
-    name = 'asos'
-    allowed_domains = ['asos.com']
-    start_urls = ['http://productdata.zanox.com/exportservice/v1/rest/19595318C106179573.csv?ticket=340591472561713FE451A566542E92402FC9943162D23D40322CFA79DD48C142&columnDelimiter=,&textQualifier=DoubleQuote&nullOutputFormat=NullValue&dateFormat=dd/MM/yyyy%20HH:mm:ss&decimalSeparator=period&gZipCompress=yes&id&pg&nb&na&pp&po&cy&du&df&dt&ds&dl&mc&zi&ia&im&il&mn&lk&cm&td&tm&ea&is&sh&sn&x1&x2&x3']
-    delimiter = ','
+class MyWardrobeSpider(CSVFeedSpider, AffiliateMixin):
+    name = 'my-wardrobe'
+    allowed_domains = ['my-wardrobe.com']
+    start_urls = ['http://productdata.zanox.com/exportservice/v1/rest/22618414C74707054.csv?ticket=D2392FA58B5C2F1C99BB03D9CA0C3959&columnDelimiter=;&textQualifier=none&nullOutputFormat=NullValue&dateFormat=dd/MM/yyyy%20HH:mm:ss&decimalSeparator=comma&id=&na=&pp=&mc=&mn=&lk=&td=&ea=&pg=&nb=&po=&cy=&du=&df=&dt=&ds=&dl=&zi=&ia=&im=&il=&cm=&tm=&is=&sh=&sn=&x1=&x2=&x3=&gZipCompress=yes']
+    delimiter = ';'
 
     def parse_row(self, response, row):
         item = Product()
         key = key_regex1.search(row.get('ZanoxProductLink'))
         if key:
-            item['key'] = 'http://www.asos.com%s' % (urllib.unquote(force_bytes(key.group(1))),)
+            key = urllib.unquote(force_bytes(key.group(1)))
+            key = key.split('?', 1)[0]
+            item['key'] = 'http://www.my-wardrobe.com%s' % (key,)
         item['sku'] = row.get('MerchantProductNumber')
         item['name'] = row.get('ProductName')
         item['vendor'] = self.name
         item['url'] = row.get('ZanoxProductLink')
         item['affiliate'] = self.AFFILIATE_ZANOX
-        item['category'] = row.get('MerchantProductCategory')
+        item['category'] = '%s > %s' % (row.get('ExtraTextOne'), row.get('MerchantProductCategory'))
         item['description'] = row.get('ProductLongDescription')
         item['brand'] = row.get('ProductManufacturerBrand')
-        item['gender'] = row.get('MerchantProductCategory')
-        item['colors'] = row.get('ExtraTextOne')
-        item['regular_price'] = row.get('ProductPriceOld')
-        item['discount_price'] = row.get('ProductPrice')
+        item['gender'] = row.get('ExtraTextOne')
+        item['colors'] = row.get('ExtraTextThree')
+        item['regular_price'] = row.get('ProductPriceOld', '').replace(',', '.')
+        item['discount_price'] = row.get('ProductPrice', '').replace(',', '.')
         item['currency'] = row.get('CurrencySymbolOfPrice')
         item['in_stock'] = True
         item['stock'] = ''
