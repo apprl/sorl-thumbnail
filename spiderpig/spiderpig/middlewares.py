@@ -11,8 +11,11 @@ from spiderpig.settings import USER_AGENT_LIST
 
 class DownloadGzipMiddleware(object):
 
+    def custom_is_gzipped(self, response):
+        return is_gzipped(response) or 'gzip/csv' in response.headers.get('Content-Type') or response.url[-3:] == '.gz'
+
     def process_response(self, request, response, spider):
-        if isinstance(response, Response) and (is_gzipped(response) or response.url[-3:] == '.gz'):
+        if isinstance(response, Response) and self.custom_is_gzipped(response):
             response = response.replace(body=gunzip(response.body))
         return response
 

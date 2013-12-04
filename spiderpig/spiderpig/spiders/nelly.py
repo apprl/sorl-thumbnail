@@ -23,7 +23,6 @@ class NellySpider(CSVFeedSpider, AffiliateMixin):
         row.update([x.split(':', 1) for x in row.get('fields', '').split(';') if x])
 
         item = Product()
-        item = Product()
         key = key_regex1.search(row.get('productUrl'))
         if key:
             item['key'] = urllib.unquote(force_bytes(key.group(1)))
