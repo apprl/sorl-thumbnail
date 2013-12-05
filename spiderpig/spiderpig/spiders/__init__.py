@@ -9,6 +9,7 @@ class AffiliateMixin(object):
     AFFILIATE_TRADEDOUBLER = 'tradedoubler'
     AFFILIATE_AW = 'affiliatewindow'
     AFFILIATE_ZANOX = 'zanox'
+    AFFILIATE_LINKSHARE = 'linkshare'
 
 
 class BaseSpider(CrawlSpider):
