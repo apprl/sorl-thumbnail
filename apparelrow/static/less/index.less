@@ -34,13 +34,24 @@ body.store-index-page .background {
 
 
 body.publisher-referral-page {
-    .row { margin-top: 20px; margin-bottom: 20px; }
+    .referral-row {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        > div {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
     .referral-link-container {
         text-align: center;
         background-color: @gray-lighter;
         padding: 20px 30px;
         p {
             margin-top: 10px;
+        }
+        textarea {
+            width: 100%;
+            margin-bottom: 10px;
         }
     }
 }

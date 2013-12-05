@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^stores/$', 'apparelrow.dashboard.views.commissions', name='dashboard-commissions'),
     url(r'^stores/(?P<pk>[\d]+)/$', 'apparelrow.dashboard.views.commissions_popup', name='dashboard-commissions-popup'),
 
+    url(r'^referral/mail/$', 'apparelrow.dashboard.views.referral_mail', name='dashboard-referral-mail'),
     url(r'group/(?P<pk>\d+)/$', 'apparelrow.dashboard.views.dashboard_group_admin', name='dashboard-group'),
 
     url(r'admin/$', 'apparelrow.dashboard.views.dashboard_admin', name='dashboard-admin'),

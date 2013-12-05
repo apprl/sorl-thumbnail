@@ -1,6 +1,7 @@
 import datetime
 import calendar
 import decimal
+import re
 
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
+from django.contrib import messages
 
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
@@ -459,6 +461,17 @@ def referral(request):
         return render(request, 'dashboard/referral.html', {'referrals': referrals})
 
     return HttpResponseRedirect(reverse('index-publisher'))
+
+
+def referral_mail(request):
+    emails = request.POST.get('emails')
+    emails = re.split(r'[\s,]+', emails)
+
+    # TODO: actually send the emails with the new template
+
+    messages.add_message(request, messages.SUCCESS, 'Sent mail to %s' % (', '.join(emails),))
+
+    return HttpResponseRedirect(reverse('dashboard-referral'))
 
 
 def referral_signup(request, code):

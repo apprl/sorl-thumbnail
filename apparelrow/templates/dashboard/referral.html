@@ -7,14 +7,32 @@
 {% include 'dashboard/body_header.html' %}
 
 <h2>{% trans "Earn money by inviting publishers/bloggers" %}</h2>
-<p>{% trans "As one of our top members, you will earn money when a publisher/blogger that you invite to APPRL joins and starts driving sales. Also any publisher/blogger that joins using the link below will receive €20 on their APPRL account." %}</p>
+<p>{% trans "As one of our top members, you will earn money when a publisher/blogger that you invite to APPRL joins and starts driving sales. For 6 months you will earn 50% of what they earn on APPRL. Also any publisher/blogger that you invite will receive €20 on their APPRL account to start with." %}</p>
 
-<div class="row">
-    <div class="col-sm-4 col-sm-offset-4">
+<div class="row referral-row">
+    <div class="col-md-4 col-md-offset-1">
         <div class="referral-link-container">
-            <h4>{% trans "Your invitation link:" %}</h4>
+            <h4>{% trans "Invite by e-mail:" %}</h4>
+            {% if messages %}
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <form method="POST" action="{% url 'dashboard-referral-mail' %}">
+                {% csrf_token %}
+                <textarea class="form-control" rows="3" name="emails" placeholder="{% trans "Add e-mails, separate with comma" %}"></textarea>
+                <button type="submit" class="btn btn-primary btn-block">{% trans "SEND" %}</button>
+            </form>
+            <p>{% trans "Write addresses like this:<br>email1@test.com, email2@test.com, ..." %}</p>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-4">
+        <div class="referral-link-container">
+            <h4>{% trans "Or invite by sharing your invitation link:" %}</h4>
             <input onFocus="this.select()" onMouseUp="return false" type="text" class="form-control" value="{{ request.user.get_referral_domain_url }}">
-            <p>{% trans "copy and share with other publishers/bloggers to get rewarded" %}</p>
+            <p>{% trans "You also can copy and share this link in a direct message, in an e-mail, text message or any other way if you want to make it more personal." %}</p>
         </div>
     </div>
 </div>
