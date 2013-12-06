@@ -10,8 +10,8 @@
 <p>{% blocktrans %}As one of our top members, you will earn money when a publisher/blogger that you invite to APPRL joins and starts driving sales. For 6 months you will earn 50% of what they earn on APPRL. Also any publisher/blogger that you invite will receive €20 on their APPRL account to start with.{% endblocktrans %}</p>
 
 <div class="row referral-row">
-    <div class="col-md-4 col-md-offset-1">
-        <div class="referral-link-container">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="referral-link-container box">
             <h4>{% trans "Invite by e-mail:" %}</h4>
             {% if messages %}
                 {% for message in messages %}
@@ -27,8 +27,9 @@
             <p>{% trans "Write addresses like this:<br>email1@test.com, email2@test.com, ..." %}</p>
         </div>
     </div>
-    <div class="col-md-2"></div>
-    <div class="col-md-4">
+</div>
+<div class="row referral-row">
+    <div class="col-md-8 col-md-offset-2">
         <div class="referral-link-container">
             <h4>{% trans "Or invite by sharing your invitation link:" %}</h4>
             <input onFocus="this.select()" onMouseUp="return false" type="text" class="form-control" value="{{ request.user.get_referral_domain_url }}">
