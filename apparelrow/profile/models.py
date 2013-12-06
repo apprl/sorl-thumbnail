@@ -329,7 +329,7 @@ class PaymentDetail(models.Model):
     address = models.CharField(_('Address'), max_length=64, null=True, blank=True)
     postal_code = models.CharField(_('Postal code'), max_length=8, null=True, blank=True)
     city = models.CharField(_('City'), max_length=64, null=True, blank=True)
-
+    notes = models.TextField(_('Notes'), null=True, blank=True)
 
     def __unicode__(self):
         return '%s - %s' % (self.user, self.name)

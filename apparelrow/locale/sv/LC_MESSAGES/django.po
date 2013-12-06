@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-25 15:28+0100\n"
+"POT-Creation-Date: 2013-12-06 16:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,8 +64,8 @@ msgstr "nej"
 
 #: activity_feed/models.py:93 activity_feed/models.py:153
 #: apparel/models.py:385 apparel/models.py:480 apparel/models.py:532
-#: apparel/models.py:734 apparel/models.py:947 apparel/models.py:962
-#: apparel/models.py:1159 apparel/models.py:1193 dashboard/models.py:74
+#: apparel/models.py:734 apparel/models.py:948 apparel/models.py:963
+#: apparel/models.py:1167 apparel/models.py:1201 dashboard/models.py:74
 #: dashboard/models.py:98 dashboard/models.py:140 profile/models.py:401
 #: statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
@@ -73,16 +73,16 @@ msgstr "Tid tillagd"
 
 #: activity_feed/models.py:94 apparel/models.py:220 apparel/models.py:386
 #: apparel/models.py:479 apparel/models.py:531 apparel/models.py:735
-#: apparel/models.py:963 dashboard/models.py:75 dashboard/models.py:99
+#: apparel/models.py:964 dashboard/models.py:75 dashboard/models.py:99
 #: profile/models.py:402
 msgid "Time modified"
 msgstr "Tid ändrad"
 
-#: apparel/admin.py:284
+#: apparel/admin.py:299
 msgid "brand mapped"
 msgstr ""
 
-#: apparel/admin.py:289 templates/advertiser/modal_accept.html:20
+#: apparel/admin.py:304 templates/advertiser/modal_accept.html:20
 #: templates/apparel/look_editor.html:87 templates/apparel/look_editor.html:93
 #: templates/apparel/look_editor.html:99
 #: templates/apparel/look_editor.html:105
@@ -92,7 +92,7 @@ msgstr ""
 msgid "Yes"
 msgstr "Ja"
 
-#: apparel/admin.py:290 templates/apparel/look_editor.html:86
+#: apparel/admin.py:305 templates/apparel/look_editor.html:86
 #: templates/apparel/look_editor.html:92 templates/apparel/look_editor.html:98
 #: templates/apparel/look_editor.html:104
 #: templates/apparel/modal_look_delete.html:12
@@ -263,7 +263,7 @@ msgstr "Produktbeskrivning"
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:225 apparel/models.py:738 profile/forms.py:123
+#: apparel/models.py:225 apparel/models.py:738 profile/forms.py:124
 #: profile/models.py:52
 msgid "Gender"
 msgstr "Kön"
@@ -377,108 +377,108 @@ msgstr "Beskrivning"
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:1007
+#: apparel/models.py:1008
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:1008
+#: apparel/models.py:1009
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:1009
+#: apparel/models.py:1010
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:1010
+#: apparel/models.py:1011
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:1011
+#: apparel/models.py:1012
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:1012
+#: apparel/models.py:1013
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1179
+#: apparel/models.py:1187
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1223
+#: apparel/models.py:1231
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1223
+#: apparel/models.py:1231
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
 msgstr ""
 
-#: apparel/search.py:612
+#: apparel/search.py:619
 #, python-format
 msgid "Found %(count)d product"
 msgid_plural "Found %(count)d products"
 msgstr[0] "Hittade %(count)d produkt"
 msgstr[1] "Hittade %(count)d produkter"
 
-#: apparel/search.py:613
+#: apparel/search.py:620
 #, python-format
 msgid "Show %(count)d product"
 msgid_plural "Show all %(count)d products"
 msgstr[0] "Visa %(count)d produkt"
 msgstr[1] "Visa alla %(count)d produkter"
 
-#: apparel/search.py:616
+#: apparel/search.py:623
 #, python-format
 msgid "Found %(count)d look"
 msgid_plural "Found %(count)d looks"
 msgstr[0] "Hittade %(count)d look"
 msgstr[1] "Hittade %(count)d looks"
 
-#: apparel/search.py:617
+#: apparel/search.py:624
 #, python-format
 msgid "Show %(count)d look"
 msgid_plural "Show all %(count)d looks"
 msgstr[0] "Visa %(count)d look"
 msgstr[1] "Visa alla %(count)d looks"
 
-#: apparel/search.py:620
+#: apparel/search.py:627
 #, python-format
 msgid "Found %(count)d matching member"
 msgid_plural "Found %(count)d matching members"
 msgstr[0] "Hittade %(count)d medlem"
 msgstr[1] "Hittade %(count)d medlemmar"
 
-#: apparel/search.py:621
+#: apparel/search.py:628
 #, python-format
 msgid "Show %(count)d matching member"
 msgid_plural "Show all %(count)d matching members"
 msgstr[0] "Visa %(count)d medlem"
 msgstr[1] "Visa alla %(count)d medlemmar"
 
-#: apparel/search.py:624
+#: apparel/search.py:631
 #, python-format
 msgid "Found %(count)d matching brand"
 msgid_plural "Found %(count)d matching brands"
 msgstr[0] "Hittade %(count)d varumärke"
 msgstr[1] "Hittade %(count)d varumärken"
 
-#: apparel/search.py:625
+#: apparel/search.py:632
 #, python-format
 msgid "Show %(count)d matching brand"
 msgid_plural "Show all %(count)d matching brands"
 msgstr[0] "Visa %(count)d varumärke"
 msgstr[1] "Visa alla %(count)d varumärken"
 
-#: apparel/search.py:628
+#: apparel/search.py:635
 #, python-format
 msgid "Found %(count)d matching store"
 msgid_plural "Found %(count)d matching stores"
 msgstr[0] "Hittade %(count)d butik"
 msgstr[1] "Hittade %(count)d butiker"
 
-#: apparel/search.py:629
+#: apparel/search.py:636
 #, python-format
 msgid "Show %(count)d matching store"
 msgid_plural "Show all %(count)d matching stores"
@@ -510,7 +510,7 @@ msgstr "Undersök din webbläsares inställningar"
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
-#: apparel_comments/__init__.py:6 profile/forms.py:122 profile/forms.py:159
+#: apparel_comments/__init__.py:6 profile/forms.py:123 profile/forms.py:160
 msgid "E-mail address"
 msgstr "E-postadress"
 
@@ -679,7 +679,7 @@ msgid ""
 "example: \"svart,night,coal\""
 msgstr ""
 
-#: profile/admin.py:44 profile/forms.py:156
+#: profile/admin.py:44 profile/forms.py:157
 msgid "A user with that e-mail already exists."
 msgstr "En användare med den e-postadressen existerar redan."
 
@@ -703,7 +703,7 @@ msgstr "Varumärke"
 #: templates/dashboard/publisher.html:5
 #: templates/dashboard/publisher_group.html:5
 #: templates/profile/base_settings.html:21
-#: templates/profile/settings_publisher.html:28
+#: templates/profile/settings_publisher.html:30
 msgid "Publisher"
 msgstr "Apprl Publisher"
 
@@ -726,12 +726,12 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: profile/forms.py:28 profile/forms.py:123
+#: profile/forms.py:28 profile/forms.py:124
 #: templates/registration/registration_email.html:60
 msgid "Man"
 msgstr "Man"
 
-#: profile/forms.py:28 profile/forms.py:123
+#: profile/forms.py:28 profile/forms.py:124
 #: templates/registration/registration_email.html:66
 msgid "Woman"
 msgstr "Kvinna"
@@ -784,40 +784,44 @@ msgstr "Person- eller organisationsnummer"
 msgid "Bank clearing number"
 msgstr "Bankens clearingnummer"
 
-#: profile/forms.py:101
+#: profile/forms.py:101 templates/profile/settings_publisher.html:40
 msgid "Bank account number"
 msgstr "Bankkontonummer"
 
-#: profile/forms.py:112
+#: profile/forms.py:102
+msgid "Other notes"
+msgstr "Andra noteringar"
+
+#: profile/forms.py:113
 msgid "http://"
 msgstr "http://"
 
-#: profile/forms.py:120
+#: profile/forms.py:121
 msgid "First name"
 msgstr "Förnamn"
 
-#: profile/forms.py:121
+#: profile/forms.py:122
 msgid "Last name"
 msgstr "Efternamn"
 
-#: profile/forms.py:122
+#: profile/forms.py:123
 msgid "Please enter a valid email address."
 msgstr "Fyll i en giltig e-postadress."
 
-#: profile/forms.py:124 templates/profile/base_settings.html:25
+#: profile/forms.py:125 templates/profile/base_settings.html:25
 #: templates/profile/settings_password.html:6
 msgid "Password"
 msgstr "Lösenord"
 
-#: profile/forms.py:126
+#: profile/forms.py:127
 msgid "Password confirmation"
 msgstr "Lösenord igen"
 
-#: profile/forms.py:128
+#: profile/forms.py:129
 msgid "Enter the same password as above, for verification."
 msgstr "Fyll i samma lösenord som ovan för verifiering."
 
-#: profile/forms.py:166
+#: profile/forms.py:167
 msgid "E-mail does not exist or account is already confirmed."
 msgstr "E-postadressen existerar inte eller så är kontot redan aktiverat."
 
@@ -923,6 +927,10 @@ msgstr "Postkod"
 #: profile/models.py:331
 msgid "City"
 msgstr "Postadress"
+
+#: profile/models.py:332
+msgid "Notes"
+msgstr ""
 
 #: profile/utils.py:117
 #, python-format
@@ -3304,7 +3312,7 @@ msgstr ""
 
 #: templates/profile/settings_facebook.html:21
 #: templates/profile/settings_notification.html:22
-#: templates/profile/settings_publisher.html:48
+#: templates/profile/settings_publisher.html:46
 msgid "Save changes"
 msgstr "Spara ändringar"
 
@@ -3334,18 +3342,30 @@ msgstr "Ändra ditt lösenord:"
 msgid "Add a password to your account:"
 msgstr "Lägg till ett lösenord till ditt konto:"
 
-#: templates/profile/settings_publisher.html:29
+#: templates/profile/settings_publisher.html:31
 #, python-format
 msgid "Your publisher ID is <strong>%(userid)s</strong>."
 msgstr "Ditt publisher ID är <strong>%(userid)s</strong>."
 
-#: templates/profile/settings_publisher.html:31
+#: templates/profile/settings_publisher.html:33
 msgid "Your blog"
 msgstr "Din blogg"
 
-#: templates/profile/settings_publisher.html:37
+#: templates/profile/settings_publisher.html:39
 msgid "Your payment settings"
 msgstr "Dina utbetalningsuppgifter"
+
+#: templates/profile/settings_publisher.html:40
+msgid "Organization number"
+msgstr "Organisationsnummer"
+
+#: templates/profile/settings_publisher.html:40
+msgid "Personal number"
+msgstr "Personnummer"
+
+#: templates/profile/settings_publisher.html:40
+msgid "Bank account number 1"
+msgstr "Postgiro/Bankgiro/Kontonummer"
 
 #: templates/profile/fragments/change_image_form.html:8
 msgid "Save picture"

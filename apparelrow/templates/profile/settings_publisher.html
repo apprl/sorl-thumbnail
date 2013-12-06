@@ -5,13 +5,15 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var company = $('input[name="company"]');
-    var person_fields = $('#id_clearingnr, #id_banknr, #id_address, #id_postal_code, #id_city');
+    var translations = $('form > .translations');
 
     function updateForm(isCompany) {
         if(isCompany === 'True') {
-            person_fields.parent().hide();
+            $('#id_orgnr').siblings('label').text(translations.data('orgnr-company'));
+            $('#id_banknr').siblings('label').text(translations.data('banknr-company'));
         } else {
-            person_fields.parent().show();
+            $('#id_orgnr').siblings('label').text(translations.data('orgnr-person'));
+            $('#id_banknr').siblings('label').text(translations.data('banknr-person'));
         }
     }
 
@@ -35,13 +37,9 @@ $(document).ready(function() {
                 {% endfor %}
             </div>
             <h4>{% trans "Your payment settings" %}</h4>
-            <div class="group">
+            <div class="group translations" data-orgnr-company="{% trans "Organization number" %}" data-orgnr-person="{% trans "Personal number" %}" data-banknr-company="{% trans "Bank account number 1" %}" data-banknr-person="{% trans "Bank account number" %}">
                 {% for field in details_form %}
-                {% if field.label == "Company" %}
-                <p>{{ field }}</p>
-                {% else %}
-                <p><label>{{ field.label }} {{ field }}</label></p>
-                {% endif %}
+                <p>{{ field.label_tag }} {{ field }}</p>
                 {% endfor %}
             </div>
             <div>
