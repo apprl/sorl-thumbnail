@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.http import require_POST
 from django.views.generic.base import RedirectView
-from django.utils import translation
+from django.utils import translation, timezone
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
 
@@ -810,7 +810,14 @@ def contest_xmas_menlook(request):
 
     profile = get_user_model().objects.get(slug=user_slug)
 
-    return render(request, 'apparel/contest_xmas_menlook.html', {'profile': profile})
+    is_closed = False
+    end_date = datetime.datetime(2013, 12, 8, 23, 59, 59)
+    if settings.DEBUG:
+        end_date = datetime.datetime(2013, 12, 8, 21, 59, 59)
+    if timezone.now() > end_date:
+        is_closed = True
+
+    return render(request, 'apparel/contest_xmas_menlook.html', {'profile': profile, 'is_closed': is_closed})
 
 
 def contest_xmas_menlook_charts(request):
@@ -820,7 +827,13 @@ def contest_xmas_menlook_charts(request):
     vendor_id = 71
     if settings.DEBUG:
         vendor_id = 59
+        end_date = datetime.datetime(2013, 12, 8, 21, 59, 59)
         start_date = datetime.datetime(2013, 11, 19, 0, 0, 0)
+
+
+    is_closed = False
+    if timezone.now() > end_date:
+        is_closed = True
 
 
     valid_looks = get_model('apparel', 'Look').published_objects.filter(components__product__vendors=vendor_id) \
@@ -832,11 +845,12 @@ def contest_xmas_menlook_charts(request):
                                                                   likes__created__lte=end_date,
                                                                   likes__active=True,
                                                                   pk__in=valid_looks) \
+                                                          .exclude(pk__in=[1497]) \
                                                           .annotate(num_likes=Count('likes')) \
                                                           .select_related('user') \
                                                           .order_by('-num_likes', 'created')[:10]
 
-    return render(request, 'apparel/contest_xmas_menlook_charts.html', {'looks': looks})
+    return render(request, 'apparel/contest_xmas_menlook_charts.html', {'looks': looks, 'is_closed': is_closed})
 
 
 

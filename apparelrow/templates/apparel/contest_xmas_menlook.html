@@ -20,8 +20,12 @@
                     <img src="{% static 'images/contest-xmas-menlook.jpg' %}" alt="{% trans "X-mas Wishlist Challenge" %}" class="img-responsive">
                 </div>
                 <div class="col-contest-text">
-                    <!--<p><strong>{% trans "Competition is now closed" %}</strong></p>-->
+                    {% if is_closed %}
+                    <p><strong>{% trans "Competition is now closed " %}</strong></p>
+                    <p style="text-decoration: line-through;"><strong>{% trans "Competition open 20th Nov - 8th Dec" %}</strong></p>
+                    {% else %}
                     <p><strong>{% trans "Competition open 20th Nov - 8th Dec" %}</strong></p>
+                    {% endif %}
                     <p>{% trans "The look with the most likes on Apprl.com by the end of Dec 8th wins the competition." %}</p>
 
                     <p><strong>{% trans "To participate:" %}</strong></p>
