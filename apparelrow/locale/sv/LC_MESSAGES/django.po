@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-09 16:28+0100\n"
+"POT-Creation-Date: 2013-12-09 16:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -493,7 +493,7 @@ msgstr "Logga in med Facebook"
 msgid "ago"
 msgstr "sedan"
 
-#: apparel/templatetags/login_bar.py:8 templates/apparel/index.html:14
+#: apparel/templatetags/login_bar.py:8
 msgid ""
 "Discover fashion selected by bloggers, your friends & other stylemakers."
 msgstr "Håll koll på bloggare, designers och dina vänners favoriter."
@@ -1082,7 +1082,8 @@ msgstr "Varumärken"
 msgid "Do you have a store?"
 msgstr "Har du en butik?"
 
-#: templates/base.html:222 templates/apparel/index.html:27
+#: templates/base.html:222 templates/apparel/index.html:21
+#: templates/apparel/index.html.py:33
 msgid "Are you a blogger?"
 msgstr "Bloggar du?"
 
@@ -1639,11 +1640,21 @@ msgstr "Visa embed-kod"
 msgid "Copy and paste this code (in HTML-mode) into your site/blog"
 msgstr "Kopiera och klistra in den här koden (i HTML-läge) på din site/blogg"
 
-#: templates/apparel/index.html:18
+#: templates/apparel/index.html:14
+msgid ""
+"The world's best online stores in one place, curated by your friends, "
+"bloggers & other stylemakers"
+msgstr "Produkter från världens bästa onlinebutiker, utvalda av bloggare, designers och dina vänner."
+
+#: templates/apparel/index.html:19
 msgid "Get Access"
 msgstr "Börja här"
 
-#: templates/apparel/index.html:28
+#: templates/apparel/index.html:22
+msgid "Are you a store?"
+msgstr "Har du en butik?"
+
+#: templates/apparel/index.html:34
 msgid "Are you an online store?"
 msgstr "Är du en onlinebutik?"
 

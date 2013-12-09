@@ -11,11 +11,17 @@
 
 <div class="container index-pre-choice">
     <div class="row">
-        <div class="col-sm-4"><h2>{% trans "Discover fashion selected by bloggers, your friends & other stylemakers." %}</h2></div>
+        <div class="col-sm-4"><h2>{% trans "The world's best online stores in one place, curated by your friends, bloggers & other stylemakers" %}</h2></div>
         <div class="col-sm-4 facepile-container">
             <div class="fb-facepile" data-max-rows="2" data-width="222" data-app-id="{{ FACEBOOK_APP_ID }}"></div>
         </div>
-        <div class="col-sm-4"><a class="btn btn-get-access" data-toggle="modal" href="#get-started" data-target="#modal_become_member">{% trans "Get Access" %}</a></div>
+        <div class="col-sm-4">
+            <a class="btn btn-get-access" data-toggle="modal" href="#get-started" data-target="#modal_become_member">{% trans "Get Access" %}</a>
+            <div class="row">
+                <div class="col-sm-6"><a href="{% url 'index-publisher' %}">{% trans "Are you a blogger?" %}</a></div>
+                <div class="col-sm-6"><a href="{% url 'index-store' %}">{% trans "Are you a store?" %}</a></div>
+            </div>
+        </div>
     </div>
 </div>
 
