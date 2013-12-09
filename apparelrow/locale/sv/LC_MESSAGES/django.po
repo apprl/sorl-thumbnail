@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-06 16:02+0100\n"
+"POT-Creation-Date: 2013-12-09 12:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -993,9 +993,8 @@ msgid "Create your look and compete with Menlook to win €250"
 msgstr "Skapa din höstlook och tävla med Elin Kling för att vinna 5000kr"
 
 #: templates/base.html:101
-#: templates/apparel/contest_xmas_menlook_charts.html:11
-msgid "TOPLIST"
-msgstr "TOPPLISTA"
+msgid "RESULTS"
+msgstr "RESULTAT"
 
 #: templates/base.html:112
 msgid "Toggle navigation"
@@ -1058,7 +1057,7 @@ msgid "Looks"
 msgstr "Looks"
 
 #: templates/base.html:167 templates/activity_feed/verbs/follow.html:14
-#: templates/apparel/contest_xmas_menlook.html:35
+#: templates/apparel/contest_xmas_menlook.html:39
 #: templates/apparel/user_list.html:4 templates/apparel/user_list.html:22
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
@@ -1276,16 +1275,16 @@ msgid "now follows"
 msgstr "följer nu"
 
 #: templates/activity_feed/verbs/follow.html:14
-#: templates/apparel/contest_xmas_menlook.html:33
-#: templates/apparel/contest_xmas_menlook.html:35
+#: templates/apparel/contest_xmas_menlook.html:37
+#: templates/apparel/contest_xmas_menlook.html:39
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 msgid "Following"
 msgstr "Följer"
 
 #: templates/activity_feed/verbs/follow.html:14
-#: templates/apparel/contest_xmas_menlook.html:33
-#: templates/apparel/contest_xmas_menlook.html:35
+#: templates/apparel/contest_xmas_menlook.html:37
+#: templates/apparel/contest_xmas_menlook.html:39
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
 msgid "Stop following"
@@ -1456,7 +1455,6 @@ msgstr ""
 "Skapa din höstlook på 5 minuter för en chans att vinna 5000kr att shoppa för"
 
 #: templates/apparel/contest_stylesearch.html:23
-#: templates/apparel/contest_xmas_menlook.html:23
 msgid "Competition is now closed"
 msgstr "Tävlingen är nu avslutad"
 
@@ -1482,8 +1480,8 @@ msgstr "Skapa din höstlook här:"
 
 #: templates/apparel/contest_stylesearch.html:36
 #: templates/apparel/contest_stylesearch.html:38
-#: templates/apparel/contest_xmas_menlook.html:49
-#: templates/apparel/contest_xmas_menlook.html:51
+#: templates/apparel/contest_xmas_menlook.html:53
+#: templates/apparel/contest_xmas_menlook.html:55
 msgid "+ CREATE LOOK"
 msgstr "+ SKAPA LOOK"
 
@@ -1573,29 +1571,39 @@ msgstr ""
 
 #: templates/apparel/contest_xmas_menlook.html:24
 #, fuzzy
+msgid "Competition is now closed "
+msgstr "Tävlingen är nu avslutad"
+
+#: templates/apparel/contest_xmas_menlook.html:25
+#: templates/apparel/contest_xmas_menlook.html:27
+#, fuzzy
 msgid "Competition open 20th Nov - 8th Dec"
 msgstr "Tävlingen är öppen 26 augusti - 1 september"
 
-#: templates/apparel/contest_xmas_menlook.html:25
+#: templates/apparel/contest_xmas_menlook.html:29
 #, fuzzy
 msgid ""
 "The look with the most likes on Apprl.com by the end of Dec 8th wins the "
 "competition."
 msgstr "De looks som har fått flest röster efter 1:a september går till final"
 
-#: templates/apparel/contest_xmas_menlook.html:27
+#: templates/apparel/contest_xmas_menlook.html:31
 msgid "To participate:"
 msgstr ""
 
-#: templates/apparel/contest_xmas_menlook.html:33
-#: templates/apparel/contest_xmas_menlook.html:35
+#: templates/apparel/contest_xmas_menlook.html:37
 #: templates/apparel/contest_xmas_menlook.html:39
+#: templates/apparel/contest_xmas_menlook.html:43
 msgid "+ Follow Menlook"
 msgstr ""
 
-#: templates/apparel/contest_xmas_menlook.html:57
-msgid "See toplist"
-msgstr "Se topplista"
+#: templates/apparel/contest_xmas_menlook.html:61
+msgid "See winner"
+msgstr ""
+
+#: templates/apparel/contest_xmas_menlook_charts.html:11
+msgid "RESULT"
+msgstr "RESULTAT"
 
 #: templates/apparel/dialog_look_embed.html:7
 msgid "Embed look on your site / blog"
@@ -3661,6 +3669,12 @@ msgid ""
 "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
 "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
+
+#~ msgid "See toplist"
+#~ msgstr "Se topplista"
+
+#~ msgid "TOPLIST"
+#~ msgstr "TOPPLISTA"
 
 #~ msgid "Products can only be displayed for an active manufactorer"
 #~ msgstr "Produkter visas endast för aktiva tillverkare"
