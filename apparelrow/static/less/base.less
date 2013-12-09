@@ -63,7 +63,7 @@
 // Buttons
 // ----------------------------------------------------------------------------
 // All buttons
-.btn:not(#width_type) {
+.btn {
     border-radius: 0;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -71,6 +71,11 @@
         padding-top: 5px;
         padding-bottom: 5px;
     }
+}
+
+.btn#width_type {
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 // Default button (used for non-important actions)
@@ -664,12 +669,15 @@ body.index {
             margin-bottom: 12px;
             @media (min-width: @screen-tablet) {
                 font-size: 18px;
+                margin-bottom: 0;
             }
             @media (min-width: @screen-desktop) {
-                font-size: 22px;
+                font-size: 20px;
+                margin-bottom: 0;
             }
             @media (min-width: @screen-lg-desktop) {
                 font-size: 24px;
+                margin-bottom: 0;
             }
         }
         h2, .facepile-container {

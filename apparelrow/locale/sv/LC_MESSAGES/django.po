@@ -1656,7 +1656,7 @@ msgstr "Har du en butik?"
 
 #: templates/apparel/index.html:34
 msgid "Are you an online store?"
-msgstr "Är du en onlinebutik?"
+msgstr "Har du en onlinebutik?"
 
 #: templates/apparel/look_create.html:5 templates/apparel/look_create.html:24
 msgid "Create a new look"
