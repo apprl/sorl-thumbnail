@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-09 12:03+0100\n"
+"POT-Creation-Date: 2013-12-09 16:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3225,22 +3225,34 @@ msgstr "har just nu inga produkter."
 msgid "does not like any products so far."
 msgstr "gillar inte några produkter än."
 
-#: templates/profile/login_flow_complete.html:9
+#: templates/profile/login_flow_complete.html:11
 #, python-format
 msgid "Welcome inside %(firstname)s, now you can:"
 msgstr "Välkommen in %(firstname)s, vill du:"
 
-#: templates/profile/login_flow_complete.html:15
-msgid "1. CHECK OUT YOUR PERSONAL APPRL FEED"
-msgstr "1. GÅ TILL DIN APPRL FEED"
+#: templates/profile/login_flow_complete.html:16
+msgid "1. GO TO YOUR FEED"
+msgstr "1. GÅ TILL DIN FEED"
 
-#: templates/profile/login_flow_complete.html:18
-msgid "2. BROWSE PRODUCTS IN OUR SHOP"
-msgstr "2. GÅ TILL VÅR SHOP"
+#: templates/profile/login_flow_complete.html:16
+msgid "See the latest from the brands & members you follow"
+msgstr "Se det senaste från varumärken & medlemmar som du följer"
 
-#: templates/profile/login_flow_complete.html:21
-msgid "3. FIND MORE PEOPLE & BRANDS TO FOLLOW"
-msgstr "3. HITTA FLER MEDLEMMAR OCH VARUMÄRKEN ATT FÖLJA"
+#: templates/profile/login_flow_complete.html:19
+msgid "2. GO TO THE SHOP"
+msgstr "2. GÅ TILL SHOPPEN"
+
+#: templates/profile/login_flow_complete.html:19
+msgid "Discover items from the world’s best online stores in one place"
+msgstr "Upptäck produkter från världens bästa onlinebutiker på ett ställe"
+
+#: templates/profile/login_flow_complete.html:22
+msgid "3. FOLLOW MEMBERS"
+msgstr "3. FÖLJ MEDLEMMAR"
+
+#: templates/profile/login_flow_complete.html:22
+msgid "Find more brands, bloggers & friends to get inspired by"
+msgstr "Hitta fler varumärken, bloggare och andra medlemmar att inspireras av"
 
 #: templates/profile/login_flow_welcome.html:16
 #: templates/profile/login_flow_welcome.html:37
@@ -3670,6 +3682,15 @@ msgid ""
 msgstr ""
 "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
 
+#~ msgid "1. CHECK OUT YOUR PERSONAL APPRL FEED"
+#~ msgstr "1. GÅ TILL DIN APPRL FEED"
+
+#~ msgid "2. BROWSE PRODUCTS IN OUR SHOP"
+#~ msgstr "2. GÅ TILL VÅR SHOP"
+
+#~ msgid "3. FIND MORE PEOPLE & BRANDS TO FOLLOW"
+#~ msgstr "3. HITTA FLER MEDLEMMAR OCH VARUMÄRKEN ATT FÖLJA"
+
 #~ msgid "See toplist"
 #~ msgstr "Se topplista"
 
@@ -3841,13 +3862,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Mode från världens bästa butiker utvalt av bloggare, designers & dina "
 #~ "vänner."
-
-#~ msgid ""
-#~ "Follow your favourite brands, bloggers & friends to discover fashion you "
-#~ "love."
-#~ msgstr ""
-#~ "Upptäck inspirerande mode från världens bästa butiker genom bloggare, "
-#~ "vänner & designers."
 
 #~ msgid "Search for your product here..."
 #~ msgstr "Sök produkter & varumärken..."

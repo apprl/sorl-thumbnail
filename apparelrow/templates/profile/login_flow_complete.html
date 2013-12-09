@@ -2,24 +2,27 @@
 {% load i18n apparel_extras %}
 
 {% block body-classes %}profile-welcome profile-welcome-complete{% endblock %}
-{% block body %}
+{% block full-body %}
 
-    <div class="body-header">
-        <div class="body-header-col-full">
-            <h1>{% blocktrans with firstname=request.user.first_name %}Welcome inside {{firstname}}, now you can:{% endblocktrans %}</h1>
+<div class="background">
+    <div class="container">
+        <div class="body-header">
+            <div class="body-header-col-full">
+                <h1>{% blocktrans with firstname=request.user.first_name %}Welcome inside {{firstname}}, now you can:{% endblocktrans %}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <a class="btn btn-primary btn-block" href="{% url 'index' %}?first=1"><span><strong>{% trans "1. GO TO YOUR FEED" %}</strong><br>{% trans "See the latest from the brands & members you follow" %}</span></a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-primary btn-block" href="{% gender_url request.user.gender 'shop' %}?view=brands&first=1"><span><strong>{% trans "2. GO TO THE SHOP" %}</strong><br>{% trans "Discover items from the world’s best online stores in one place" %}</span></a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-primary btn-block" href="{% url 'user-list' %}?first=1"><span><strong>{% trans "3. FOLLOW MEMBERS" %}</strong><br>{% trans "Find more brands, bloggers & friends to get inspired by" %}</span></a>
+            </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-sm-4">
-            <a class="btn btn-primary btn-block" href="{% url 'index' %}?first=1"><span>{% trans "1. CHECK OUT YOUR PERSONAL APPRL FEED" %}</span></a>
-        </div>
-        <div class="col-sm-4">
-            <a class="btn btn-primary btn-block" href="{% gender_url request.user.gender 'shop' %}?view=brands&first=1"><span>{% trans "2. BROWSE PRODUCTS IN OUR SHOP" %}</span></a>
-        </div>
-        <div class="col-sm-4">
-            <a class="btn btn-primary btn-block" href="{% url 'user-list' %}?first=1"><span>{% trans "3. FIND MORE PEOPLE & BRANDS TO FOLLOW" %}</span></a>
-        </div>
-    </div>
+</div>
 
 {% endblock %}
