@@ -7,6 +7,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core import urlresolvers
 from django.db.models import get_model, Sum
 from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
@@ -127,6 +128,10 @@ def pixel(request):
             if hasattr(transaction, attr):
                 setattr(transaction, attr, val)
         transaction.save()
+    else:
+        if transaction.status == Transaction.PENDING:
+            email_body = 'URL to transaction: %s' % (urlresolvers.reverse('admin:advertiser_transaction_change', args=[transaction.pk]),)
+            mail_superusers('Advertiser Pixel Info: new purchase on %s' % (store_id,), email_body)
 
     # Insert optional product data
     product_sku = request.GET.get('sku')
