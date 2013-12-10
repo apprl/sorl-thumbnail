@@ -1,0 +1,15 @@
+Store ID: {{ defaults.store_id }}
+Order ID: {{ defaults.order_id }}
+Transaction ID: {{ defaults.pk }}
+Order Value: {{ defaults.order_value }}
+IP Address: {{ defaults.ip_address }}
+Status: {{ defaults.status }}
+Cookie Date: {{ defaults.cookie_date }}
+Currency: {{ defaults.currency }}
+Commission: {{ defaults.commission }}
+Custom: {{ defaults.custom }}
+
+From (HTTP HOST): {{ request.META.HTTP_HOST }}
+Full path: {{ request.get_full_path }}
+
+URL: {% url 'admin:advertiser_transaction_change' defaults.pk %}

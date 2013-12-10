@@ -130,7 +130,9 @@ def pixel(request):
         transaction.save()
     else:
         if transaction.status == Transaction.PENDING:
-            email_body = 'URL to transaction: %s' % (urlresolvers.reverse('admin:advertiser_transaction_change', args=[transaction.pk]),)
+            defaults.update({'order_id': order_id, 'store_id': store_id, 'pk': transaction.pk})
+            email_body = render_to_string('advertiser/email_success.txt',
+                                          {'defaults': defaults, 'request': request})
             mail_superusers('Advertiser Pixel Info: new purchase on %s' % (store_id,), email_body)
 
     # Insert optional product data
