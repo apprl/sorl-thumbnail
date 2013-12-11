@@ -45,7 +45,7 @@ $(document).ready(function() {
             </div>
             <div class="col-sm-10 profile-content">
                 <h1>{{ profile.display_name }}</h1>
-                {% if request.user.is_authenticated and request.user.is_partner and request.user == profile %}
+                {% if request.user.is_authenticated and request.user == profile %}
                 <a class="btn btn-primary btn-create-shop" data-slug="{{ request.user.slug }}" data-toggle="modal" data-target="#modal_embed_shop">{% trans "Create a shop on your site" %}</a>
                 {% else %}
                 {% include 'apparel/fragments/follow.html' %}
