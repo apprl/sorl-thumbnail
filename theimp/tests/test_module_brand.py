@@ -1,9 +1,11 @@
 from django.test import TestCase
+from django.test.utils import override_settings
 from django.db.models.loading import get_model
 
 from theimp.parser.modules.brand import BrandMapper
 
 
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class BrandMapperTest(TestCase):
     fixtures = ['initial.json']
 

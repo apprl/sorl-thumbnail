@@ -21,7 +21,7 @@ class Parser(object):
     required_layers = ['scraped', 'parsed', 'final']
     gender_values = ['M', 'W', 'U']
 
-    def __init__(self):
+    def __init__(self, parse_queue=None, site_queue=None):
         self.modules = [
             'theimp.parser.modules.build_buy_url.BuildBuyURL',
             'theimp.parser.modules.brand.BrandMapper',
@@ -30,14 +30,22 @@ class Parser(object):
             'theimp.parser.modules.price.Price',
         ]
         self.load_modules()
-        self.parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
-                                    host=settings.THEIMP_REDIS_HOST,
-                                    port=settings.THEIMP_REDIS_PORT,
-                                    db=settings.THEIMP_REDIS_DB)
-        self.site_queue = HotQueue(settings.THEIMP_QUEUE_SITE,
-                                   host=settings.THEIMP_REDIS_HOST,
-                                   port=settings.THEIMP_REDIS_PORT,
-                                   db=settings.THEIMP_REDIS_DB)
+
+        if not parse_queue:
+            self.parse_queue = parse_queue_class(settings.THEIMP_QUEUE_PARSE,
+                                                 host=settings.THEIMP_REDIS_HOST,
+                                                 port=settings.THEIMP_REDIS_PORT,
+                                                 db=settings.THEIMP_REDIS_DB)
+        else:
+            self.parse_queue = parse_queue
+
+        if not site_queue:
+            self.site_queue = site_queue_class(settings.THEIMP_QUEUE_SITE,
+                                               host=settings.THEIMP_REDIS_HOST,
+                                               port=settings.THEIMP_REDIS_PORT,
+                                               db=settings.THEIMP_REDIS_DB)
+        else:
+            self.site_queue = site_queue
 
     def load_modules(self):
         """
@@ -99,9 +107,9 @@ class Parser(object):
             pprint.pprint(item)
 
             if validated:
-                logger.info('Successful validation moving to queue')
+                logger.info('Parsed product successful moving to site queue: (%s, %s)' % (product.pk, validated))
             else:
-                logger.info('Unsuccessful validation, try to hide the product on site')
+                logger.info('Parsed product unsuccessful moving to site queue: (%s, %s)' % (product.pk, validated))
 
             self.site_queue.put((product.pk, validated))
 
