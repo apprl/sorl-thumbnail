@@ -1,6 +1,8 @@
 import json
 from collections import deque
 
+from mock import patch
+
 from django.conf import settings
 from django.test import TransactionTestCase
 from django.test.utils import override_settings
@@ -69,6 +71,24 @@ class TheimpFlowTest(TransactionTestCase):
                                                   category='scraped-category',
                                                   mapped_category=self.category)
 
+    @patch('theimp.parser.logger')
+    def test_parser_queue(self, mock_logger):
+        self.parse_queue.put(1)
+        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
+        parser.run()
+
+        mock_logger.exception.assert_called_with('Could not load product with id 1')
+        self.assertEqual(self.product_model.objects.count(), 0)
+
+    @patch('theimp.importer.logger')
+    def test_importer_queue(self, mock_logger):
+        self.site_queue.put((1, True))
+        importer = Importer(site_queue=self.site_queue)
+        importer.run()
+
+        mock_logger.exception.assert_called_with('Could not load product with id 1')
+        self.assertEqual(self.site_product_model.objects.count(), 0)
+
     def test_flow(self):
         # Create a product from scraped data
         key = 'http://example.com/product/product-name.html'
@@ -83,25 +103,29 @@ class TheimpFlowTest(TransactionTestCase):
                 'brand': 'Fifth Avenue',
                 'category': 'scraped-category',
                 'vendor': 'TestVendor',
-                'description': 'Product Name description',
+                'description': 'Product Name description  ',
                 'gender': 'female products',
                 'currency': 'SEK',
                 'regular_price': '999.99',
                 'discount_price': '879.99',
                 'in_stock': True,
-                'image_urls': ['http://example.com/image.jpg'],
+                'image_urls': ['http://example.com/image_not_available.jpg'],
                 'images': [{'checksum': 'abc',
-                            'path': 'image.jpg',
-                            'url': 'http://example.com/image.jpg'}],
+                            'path': 'image_not_available.jpg',
+                            'url': 'http://example.com/image_not_available.jpg'}],
 
             }
         }
         json_data = json.dumps(data)
         product = self.product_model.objects.create(key=key, json=json_data, vendor=self.vendor)
-        self.assertTrue(product.pk)
-        self.parse_queue.put(product.pk)
+        self.assertEqual(product.dropped, False)
+
+        #
+        # 1. Initial parse and import
+        #
 
         # Parse
+        self.parse_queue.put(product.pk)
         parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
         parser.run()
 
@@ -113,20 +137,93 @@ class TheimpFlowTest(TransactionTestCase):
         importer.run()
 
         site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
-        self.assertTrue(site_product)
+        self.assertEqual(site_product.product_name, 'Product Name')
+        self.assertEqual(site_product.description, 'Product Name description')
+        self.assertEqual(site_product.availability, True)
+        self.assertTrue(site_product.default_vendor)
 
-        # Parse again
+        #
+        # 2. Parse and import again
+        #
+
+        # Parse and import again (update)
         self.parse_queue.put(product.pk)
-
         parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
         parser.run()
-
-        product = self.product_model.objects.get(key=key)
-        self.assertTrue(product.is_auto_validated)
-
-        # Site import (update)
         importer = Importer(site_queue=self.site_queue)
         importer.run()
 
         site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
-        self.assertTrue(site_product)
+        self.assertEqual(site_product.product_name, 'Product Name')
+        self.assertEqual(site_product.description, 'Product Name description')
+        self.assertEqual(site_product.availability, True)
+        self.assertTrue(site_product.default_vendor)
+
+        #
+        # 3. Parse invalid data and import again
+        #
+
+        # Mark product json with invalid data and try to parse and import it again
+        product = self.product_model.objects.get(key=key)
+        product_json = json.loads(product.json)
+        product_json['scraped']['currency'] = ''
+        product.json = json.dumps(product_json)
+        product.save()
+
+        self.parse_queue.put(product.pk)
+        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
+        parser.run()
+        importer = Importer(site_queue=self.site_queue)
+        importer.run()
+
+        site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
+        self.assertEqual(site_product.product_name, 'Product Name')
+        self.assertEqual(site_product.description, 'Product Name description')
+        self.assertEqual(site_product.availability, False)
+        self.assertTrue(site_product.default_vendor)
+
+        #
+        # 4. Parse changed product name and import again
+        #
+
+        # Change product json product name (should still be able to map it, how?)
+        product = self.product_model.objects.get(key=key)
+        product_json = json.loads(product.json)
+        product_json['scraped']['currency'] = 'SEK'
+        product_json['scraped']['name'] = 'Product Correct Name'
+        product.json = json.dumps(product_json)
+        product.save()
+
+        self.parse_queue.put(product.pk)
+        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
+        parser.run()
+        importer = Importer(site_queue=self.site_queue)
+        importer.run()
+
+        site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
+        self.assertEqual(site_product.product_name, 'Product Correct Name')
+        self.assertEqual(site_product.description, 'Product Name description')
+        self.assertEqual(site_product.availability, True)
+        self.assertTrue(site_product.default_vendor)
+
+        #
+        # 5. Manual update and parse and import again
+        #
+
+        product = self.product_model.objects.get(key=key)
+        product_json = json.loads(product.json)
+        product_json['manual']['description'] = 'Our manual description written by our team.'
+        product.json = json.dumps(product_json)
+        product.save()
+
+        self.parse_queue.put(product.pk)
+        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
+        parser.run()
+        importer = Importer(site_queue=self.site_queue)
+        importer.run()
+
+        site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
+        self.assertEqual(site_product.product_name, 'Product Correct Name')
+        self.assertEqual(site_product.description, 'Our manual description written by our team.')
+        self.assertEqual(site_product.availability, True)
+        self.assertTrue(site_product.default_vendor)

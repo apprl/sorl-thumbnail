@@ -54,8 +54,6 @@ class Importer(object):
                 product.save()
 
     def add_product(self, product, product_json):
-
-        # TODO: product image
         site_product = self.site_product_model.objects.create(
             product_name = product_json.get('name'),
             description = product_json.get('description'),
@@ -73,8 +71,6 @@ class Importer(object):
         logger.info('[%s] Add product to live site: %s' % (product.pk, site_product))
 
     def update_product(self, product, site_product, product_json):
-        # Product update
-        # TODO: product_image
         site_product.product_name = product_json.get('name')
         site_product.description = product_json.get('description')
         site_product.category_id = product_json.get('category_id')

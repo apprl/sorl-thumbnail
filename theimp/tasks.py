@@ -17,7 +17,7 @@ logger = get_task_logger(__name__)
 @periodic_task(name='theimp.tasks.update_old', run_every=crontab(minute=30, hour=5), max_retries=5, ignore_result=True)
 def update_old():
     """
-    Scraped products that have not been updated in 48 hours should be added to
+    Scraped products that have not been updated in 72 hours should be added to
     the site queue as not validated.
     """
     Product = get_model('theimp', 'Product')
