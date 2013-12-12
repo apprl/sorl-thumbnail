@@ -1,3 +1,5 @@
+from mock import Mock
+
 from django.test import TestCase
 from django.db.models.loading import get_model
 
@@ -42,6 +44,14 @@ class BuildBuyURLTest(TestCase):
         self.assertEqual(parsed_item.get('buy_url'), 'http://ad.zanox.com/ppc/?25086946C30669136&ulp=[[http%3A%2F%2Fdomain.com%2Fnormal_url%2F]]')
 
     def test_affiliate_tradedoubler(self):
+        mock_vendor = Mock(affiliate_identifier='abcd')
+        parsed_item = self.module({'affiliate': 'tradedoubler', 'vendor': 'nelly', 'url': 'http://domain.com/normal_url/'}, {}, mock_vendor)
+        self.assertEqual(parsed_item.get('buy_url'), None)
+
+        mock_vendor = Mock(affiliate_identifier=None)
+        parsed_item = self.module({'affiliate': 'tradedoubler', 'vendor': 'nelly', 'url': 'http://domain.com/normal_url/'}, {}, mock_vendor)
+        self.assertEqual(parsed_item.get('buy_url'), None)
+
         parsed_item = self.module({'affiliate': 'tradedoubler', 'vendor': 'nelly', 'url': 'http://domain.com/normal_url/'}, {}, self.vendor_tradedoubler)
         self.assertEqual(parsed_item.get('buy_url'), 'http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&url=http%3A%2F%2Fdomain.com%2Fnormal_url%2F')
 

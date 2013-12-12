@@ -34,6 +34,10 @@ class CategoryMapperTest(TestCase):
         self.assertEqual(parsed_item.get('category'), 'Category')
         self.assertEqual(parsed_item.get('category_id'), 1)
 
+    def test_map_category_no_category(self):
+        parsed_item = self.module({}, {}, self.vendor)
+        self.assertEqual(parsed_item, {})
+
     def test_map_category_invalid_vendor(self):
         parsed_item = self.module({'category': 'test-category'}, {}, None)
         self.assertEqual(parsed_item, {})
