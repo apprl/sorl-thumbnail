@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify
 
 from hotqueue import HotQueue
 
-from theimp.utils import load_product_json
+from theimp.utils import ProductItem
 
 
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class Importer(object):
 
     def __init__(self, site_queue=None):
-        self.imp_product_model = get_model('theimp', 'Product')
+        self.product_model = get_model('theimp', 'Product')
         self.site_product_model = get_model('apparel', 'Product')
         self.vendor_product_model = get_model('apparel', 'VendorProduct')
         if not site_queue:
@@ -31,111 +31,109 @@ class Importer(object):
         for product_id, is_valid in self.site_queue.consume():
             logger.debug('Consume from site queue: (%s, %s)' % (product_id, is_valid))
             try:
-                product = self.imp_product_model.objects.get(pk=product_id)
-            except self.imp_product_model.DoesNotExist as e:
+                product = self.product_model.objects.get(pk=product_id)
+            except self.product_model.DoesNotExist as e:
                 logger.exception('Could not load product with id %s' % (product_id,))
                 continue
 
-            product_final_json = load_product_json(product, layer='final')
-            site_product = self._find_site_product(product_final_json)
+            item = ProductItem(product)
+            site_product = self._find_site_product(item)
+            if site_product:
+                item.set_site_product(site_product.pk)
+                item.save()
 
             try:
                 if is_valid:
                     if site_product:
-                        self.update_product(product, site_product, product_final_json)
+                        self.update_product(item, site_product)
                     else:
-                        self.add_product(product, product_final_json)
+                        self.add_product(item)
                 else:
-                    self.hide_product(product, site_product)
+                    if site_product:
+                        self.hide_product(site_product)
             except Exception as e:
                 logger.exception('Could not import product to site: %s' % (product,))
             else:
                 # XXX: Is this for updating of modified datetime?
                 product.save()
 
-    def add_product(self, product, product_json):
+    def add_product(self, item):
         site_product = self.site_product_model.objects.create(
-            product_name = product_json.get('name'),
-            description = product_json.get('description'),
-            category_id = product_json.get('category_id'),
-            manufacturer_id = product_json.get('brand_id'),
-            static_brand = product_json.get('brand'),
-            gender = product_json.get('gender'),
-            availability = bool(product_json.get('in_stock', False)),
-            product_image = self._product_image(product_json)
+            product_name = item.get_final('name'),
+            description = item.get_final('description'),
+            category_id = item.get_final('category_id'),
+            manufacturer_id = item.get_final('brand_id'),
+            static_brand = item.get_final('brand'),
+            gender = item.get_final('gender'),
+            availability = bool(item.get_final('in_stock', False)),
+            product_image = self._product_image(item)
         )
 
-        self._update_vendor_product(product_json, site_product)
-        self._update_product_options(product_json, site_product)
+        self._update_vendor_product(item, site_product)
+        self._update_product_options(item, site_product)
 
-        logger.info('[%s] Add product to live site: %s' % (product.pk, site_product))
-
-    def update_product(self, product, site_product, product_json):
-        site_product.product_name = product_json.get('name')
-        site_product.description = product_json.get('description')
-        site_product.category_id = product_json.get('category_id')
-        site_product.manufacturer_id = product_json.get('brand_id')
-        site_product.static_brand = product_json.get('brand')
-        site_product.gender = product_json.get('gender')
-        site_product.availability = bool(product_json.get('in_stock', False))
-        site_product.product_image = self._product_image(product_json)
+    def update_product(self, item, site_product):
+        site_product.product_name = item.get_final('name')
+        site_product.description = item.get_final('description')
+        site_product.category_id = item.get_final('category_id')
+        site_product.manufacturer_id = item.get_final('brand_id')
+        site_product.static_brand = item.get_final('brand')
+        site_product.gender = item.get_final('gender')
+        site_product.availability = bool(item.get_final('in_stock', False))
+        site_product.product_image = self._product_image(item)
         site_product.save()
 
-        self._update_vendor_product(product_json, site_product)
-        self._update_product_options(product_json, site_product)
+        self._update_vendor_product(item, site_product)
+        self._update_product_options(item, site_product)
 
-        logger.info('[%s] Update product on live site: %s' % (product.pk, site_product))
-
-    def hide_product(self, product, site_product):
-        if site_product:
-            site_product.availability = False
-            for vendor_product in site_product.vendorproduct.all():
-                vendor_product.availability = 0
-                vendor_product.save()
-            site_product.save()
-            logger.info('[%s] Hide product on live site: %s' % (product.pk, site_product))
-        else:
-            logger.warning('[%s] Could not find a product to hide on live site' % (product.pk,))
+    def hide_product(self, site_product):
+        site_product.availability = False
+        for vendor_product in site_product.vendorproduct.all():
+            vendor_product.availability = 0
+            vendor_product.save()
+        site_product.save()
 
 
     #
     # HELPERS
     #
 
-    def _product_image(self, product_json):
-        # TODO: only returns first product image for now
-        return os.path.join(settings.APPAREL_PRODUCT_IMAGE_ROOT,
-                            product_json.get('images')[0]['path'])
+    def _product_image(self, item):
+        return os.path.join(settings.APPAREL_PRODUCT_IMAGE_ROOT, item.get_final('images')[0]['path'])
 
-    def _update_product_options(self, product_json, site_product):
-        # TODO: product options
+    # TODO: product options (colors mostly)
+    def _update_product_options(self, item, site_product):
         pass
 
-    def _update_vendor_product(self, product_json, site_product):
+    def _update_vendor_product(self, item, site_product):
         vendor_product, _ = self.vendor_product_model.objects.get_or_create(
-            product=site_product, vendor_id=product_json.get('vendor_id'),
+            product=site_product, vendor_id=item.get_final('vendor_id'),
         )
-        vendor_product.buy_url = product_json.get('buy_url')
-        vendor_product.original_price = product_json.get('regular_price') or '0.0'
-        vendor_product.original_currency = product_json.get('currency')
-        vendor_product.original_discount_price = product_json.get('discount_price')
-        vendor_product.original_discount_currency = product_json.get('currency')
-        vendor_product.availability = bool(product_json.get('in_stock', False))
+        vendor_product.buy_url = item.get_final('buy_url')
+        vendor_product.original_price = item.get_final('regular_price') or '0.0'
+        vendor_product.original_currency = item.get_final('currency')
+        vendor_product.original_discount_price = item.get_final('discount_price')
+        vendor_product.original_discount_currency = item.get_final('currency')
+        vendor_product.availability = bool(item.get_final('in_stock', False))
         # XXX: price, currency and discount_price should not be used, WHY???
-        #vendor_product.price = product_json.get('regular_price') or '0.0'
-        #vendor_product.currency = product_json.get('currency')
-        #vendor_product.discount_price = product_json.get('discount_price')
+        #vendor_product.price = item.get_final('regular_price') or '0.0'
+        #vendor_product.currency = item.get_final('currency')
+        #vendor_product.discount_price = item.get_final('discount_price')
         vendor_product.save()
 
-    def _find_site_product(self, product_json):
+    def _find_site_product(self, item):
         """
-        Find a product on the live site by slug.
+        Find a product on the live site by slug or explicit mapping.
         """
-        if product_json:
-            slug = slugify('%s-%s' % (product_json.get('brand'), product_json.get('name')))
+        site_product_pk = item.get_site_product()
+        if site_product_pk:
             try:
-                return self.site_product_model.objects.get(slug=slug)
+                return self.site_product_model.objects.get(pk=site_product_pk)
             except self.site_product_model.DoesNotExist:
-                logger.debug('Could not find product with slug %s' % (slug,))
+                item.set_site_product(None)
 
-        return None
+        slug = slugify('%s-%s' % (item.get_final('brand'), item.get_final('name')))
+        try:
+            return self.site_product_model.objects.get(slug=slug)
+        except self.site_product_model.DoesNotExist:
+            pass

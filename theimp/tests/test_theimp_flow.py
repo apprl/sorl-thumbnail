@@ -1,7 +1,7 @@
 import json
 from collections import deque
 
-from mock import patch
+from mock import patch, Mock
 
 from django.conf import settings
 from django.test import TransactionTestCase
@@ -10,6 +10,7 @@ from django.db.models.loading import get_model
 
 from theimp.parser import Parser
 from theimp.importer import Importer
+from theimp.utils import ProductItem
 
 
 class HotQueueMock(object):
@@ -88,6 +89,18 @@ class TheimpFlowTest(TransactionTestCase):
 
         mock_logger.exception.assert_called_with('Could not load product with id 1')
         self.assertEqual(self.site_product_model.objects.count(), 0)
+
+    def test_find_site_product_fail(self):
+        data = {'site_product': 10000}
+        product = self.product_model.objects.create(key='temp', json=json.dumps(data), vendor=self.vendor)
+        item = ProductItem(product)
+
+        self.assertEqual(item.get_site_product(), 10000)
+
+        importer = Importer(site_queue=Mock())
+        importer._find_site_product(item)
+
+        self.assertEqual(item.get_site_product(), None)
 
     def test_flow(self):
         # Create a product from scraped data
@@ -186,7 +199,6 @@ class TheimpFlowTest(TransactionTestCase):
         # 4. Parse changed product name and import again
         #
 
-        # Change product json product name (should still be able to map it, how?)
         product = self.product_model.objects.get(key=key)
         product_json = json.loads(product.json)
         product_json['scraped']['currency'] = 'SEK'
@@ -212,7 +224,7 @@ class TheimpFlowTest(TransactionTestCase):
 
         product = self.product_model.objects.get(key=key)
         product_json = json.loads(product.json)
-        product_json['manual']['description'] = 'Our manual description written by our team.'
+        product_json['manual'] = {'description': 'Our manual description written by our team.'}
         product.json = json.dumps(product_json)
         product.save()
 
