@@ -8,6 +8,8 @@ from django.utils.html import strip_tags
 
 from hotqueue import HotQueue
 
+from theimp.utils import load_product_json
+
 
 logger = logging.getLogger(__name__)
 
@@ -73,11 +75,8 @@ class Parser(object):
 
             logger.info('Begin parse for key: %s' % (product.key,))
 
-            try:
-                item = json.loads(product.json)
-            except (ValueError, AttributeError) as e:
-                logger.exception('Could not load JSON')
-                continue
+            # Load product json
+            item = load_product_json(product)
 
             if not self.validate_layers(item):
                 logger.error('Invalid layer specification')
