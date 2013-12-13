@@ -19,6 +19,12 @@ class ProductItem:
         except (AttributeError, TypeError, ValueError):
             logger.exception('Could not parse JSON [Product: %s - %s]' % (self.product.pk, self.product.key))
 
+    def validate_keys(self):
+        for key in [ProductItem.KEY_SCRAPED, ProductItem.KEY_PARSED, ProductItem.KEY_FINAL]:
+            if key not in self.data:
+                return False
+        return True
+
     def save(self):
         self.product.json = json.dumps(self.data)
         self.product.save()
@@ -37,6 +43,9 @@ class ProductItem:
     def get_final(self, attribute, default=None):
         return self.get(ProductItem.KEY_FINAL, attribute, default)
 
+    def set_scraped(self, attribute, value):
+        self.data[ProductItem.KEY_SCRAPED][attribute] = value
+
     def get_site_product(self):
         return self.data.get(ProductItem.KEY_SITE_PRODUCT)
 
@@ -45,19 +54,3 @@ class ProductItem:
             self.data.pop(ProductItem.KEY_SITE_PRODUCT)
         else:
             self.data[ProductItem.KEY_SITE_PRODUCT] = site_product_pk
-
-
-def load_product_json(product, layer=None):
-    item = None
-    try:
-        item = json.loads(product.json)
-    except (ValueError, TypeError, AttributeError) as e:
-        logger.exception('Could not parse JSON [Product ID: %s, Key: %s]' % (product.pk, product.key))
-
-    if item:
-        if layer:
-            return item.get(layer)
-
-        return item
-
-    return None
