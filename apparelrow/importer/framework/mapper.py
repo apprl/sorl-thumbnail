@@ -69,7 +69,12 @@ class DataMapper(object):
          * Add a special field to the product, called patterns
         
         """
-        
+        if 'product-name' not in self.mapped_record['product'] or not self.mapped_record['product']['product-name']:
+            raise SkipProduct('Missing product name')
+
+        if 'manufacturer' not in self.mapped_record['product'] or not self.mapped_record['product']['manufacturer']:
+            raise SkipProduct('Mising manufacturer')
+
         for field, value in self.mapped_record['product'].items():
             self.mapped_record['product'][field] = self.trim(value)
 

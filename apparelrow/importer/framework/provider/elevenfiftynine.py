@@ -21,7 +21,11 @@ class ElevenfiftynineMapper(DataMapper):
         return self.record.get('descriptions').get('descriptions-en').get('name-en')
 
     def get_description(self):
-        return self.record.get('descriptions').get('descriptions-en').get('description-en') or ''
+        description = self.record.get('descriptions').get('descriptions-en').get('description-en')
+        if not description:
+            description = self.record.get('descriptions').get('descriptions-sv').get('description-sv') or ''
+
+        return description
 
     def get_manufacturer(self):
         return self.record.get('manufacturer_name')
