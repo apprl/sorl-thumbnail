@@ -48,6 +48,10 @@ class TheimpFlowTest(TransactionTestCase):
         self.site_brand_model = get_model('apparel', 'Brand')
         self.site_category_model = get_model('apparel', 'Category')
 
+        # Create option types for site
+        get_model('apparel', 'OptionType').objects.create(name='color')
+        get_model('apparel', 'OptionType').objects.create(name='pattern')
+
         self.parse_queue = HotQueueMock(settings.THEIMP_QUEUE_PARSE)
         self.site_queue = HotQueueMock(settings.THEIMP_QUEUE_SITE)
 
@@ -103,9 +107,6 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(item.get_site_product(), None)
 
     def test_product_options(self):
-        get_model('apparel', 'OptionType').objects.create(name='color')
-        get_model('apparel', 'OptionType').objects.create(name='pattern')
-
         product = self.site_product_model.objects.create(product_name='Product Name')
 
         def get_final_side_effect(*args, **kwargs):
@@ -144,6 +145,7 @@ class TheimpFlowTest(TransactionTestCase):
                 'vendor': 'TestVendor',
                 'description': 'Product Name description  ',
                 'gender': 'female products',
+                'colors': 'red',
                 'currency': 'SEK',
                 'regular_price': '999.99',
                 'discount_price': '879.99',
@@ -179,6 +181,7 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Name')
         self.assertEqual(site_product.description, 'Product Name description')
         self.assertEqual(site_product.availability, True)
+        self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
 
         #
@@ -196,6 +199,7 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Name')
         self.assertEqual(site_product.description, 'Product Name description')
         self.assertEqual(site_product.availability, True)
+        self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
 
         #
@@ -219,6 +223,7 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Name')
         self.assertEqual(site_product.description, 'Product Name description')
         self.assertEqual(site_product.availability, False)
+        self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
 
         #
@@ -242,6 +247,7 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Correct Name')
         self.assertEqual(site_product.description, 'Product Name description')
         self.assertEqual(site_product.availability, True)
+        self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
 
         #
@@ -264,4 +270,5 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Correct Name')
         self.assertEqual(site_product.description, 'Our manual description written by our team.')
         self.assertEqual(site_product.availability, True)
+        self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)

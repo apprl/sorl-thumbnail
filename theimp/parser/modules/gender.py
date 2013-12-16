@@ -1,7 +1,7 @@
 import re
 
-from django.utils.encoding import smart_unicode
 from django.db.models.loading import get_model
+from django.utils.encoding import smart_unicode
 
 from theimp.parser.modules import BaseModule
 

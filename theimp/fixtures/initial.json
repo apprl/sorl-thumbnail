@@ -1,29 +1,191 @@
 [
   {
-    "model": "theimp.Mapping",
     "pk": 1,
+    "model": "theimp.mapping",
     "fields": {
-      "mapping_type": "gender",
-      "mapping_key": "U",
-      "mapping_aliases": "unisex"
+      "mapping_aliases": "grey,gr\u00e5,m\u00f6rkgr\u00e5,ljusgr\u00e5,gray,smut,charcoal,meadow,thyme,stone,cement,slate,salvia,aluminum,smoke,seal,sediment,dark heather grey,light heather grey,charcoal,cedar,cloud,argento,smoke,faded aluminum,steel,hematite,hope,dark charcoal,bombay,pewter,gunmetal,bright cement,heather cinder,zinc,seaglass,royal grey,india ink,gris chine,quartz grey,moonstruck,carbon,carbon melange,nickel melange,platinum,raven,raven melange,granite,granit,pebble,heather carbon,rock,steel,steel grey,morel,fog,gris,smog,excalibur,thunder,elephant,light rosewood,gravel,charcoal melange,shitake,grau,vert fonce,pumice,jet,winter powder,winter melange,dark grey,pearl,mid grey melange",
+      "mapping_type": "color",
+      "mapping_key": "grey"
     }
   },
   {
-    "model": "theimp.Mapping",
     "pk": 2,
+    "model": "theimp.mapping",
     "fields": {
-      "mapping_type": "gender",
-      "mapping_key": "M",
-      "mapping_aliases": "male,males,men,mens,mensware,herr,herrar,man,män,kille,killar"
+      "mapping_aliases": "white,vit,chalk,angel,ivory,oyster,porcelain,ivory heather,rice,ecru,natural white,bone,crema,heather oyster,blanc,tea,yogurt,pearl,ceramic,eggshell,marshmallow,alabaster,moonbeam,snow,alabaster,milk,vanilla,lite chalk,winter white",
+      "mapping_type": "color",
+      "mapping_key": "white"
     }
   },
   {
-    "model": "theimp.Mapping",
     "pk": 3,
+    "model": "theimp.mapping",
     "fields": {
+      "mapping_aliases": "beige,khaki,sand,creme,camel,rye,chino,oatmeal,nougat,dust,sandune,suntan,champagne,blonde,buff,powder,khaki,natural,scallop,taupe,tan combo,brule,cream,peanut,sahara,melange beige,skin,whisper,muave,light muave,cork tan,nude,pumice,barley,bare,pale khaki,portobello,chai,macrame,sepia,sepia melange,kaki,chalk,cocoon,khaki beige",
+      "mapping_type": "color",
+      "mapping_key": "beige"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "brown,brun,m\u00f6rkbrun,ljusbrun,chocolate,hickory,chicory,rum,herb,mocha,marled mocha,tobacco,espresso,amber,tortoise,hazel,tan,crazy tort,terracotta,copper,bengal large,bourbon,cedar,burn,bengal small,chocolate combo,leopard,huba,heather wood,cereale,mouse,sandalwood,moleskin,whiskey,agave,bronze,saffron,cognac,natural,dirty martini,coffee,cannon,fatigue,rust,henna,saddle,maroon,toffee,sable,fawn,chestnut,otter,walnut,antique brass,clove,butterscotch,bambi,russet,agave,topaz,umber,havana vintage,powder,dark brown",
+      "mapping_type": "color",
+      "mapping_key": "brown"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "red,r\u00f6d,m\u00f6rkr\u00f6d,merlot,wine,bubble gum,cherry,tunisian red,paprika,marled paprika,lava,zinnia,garnet,merlot combo,raspberry,canyon,hibiscus,pomegranate,bordeaux,aubrey,crushed berry,chianti,pinot noir,beaujolais,geranium,crimson,flame scarlet,venom,rhubarb,night,dark red,lite red,lite lipstick,lipstick,mid red ",
+      "mapping_type": "color",
+      "mapping_key": "red"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "yellow,gul,citron,ljusgul,m\u00f6rkgul,meringue,mustard,seaweed,dijon,zest",
+      "mapping_type": "color",
+      "mapping_key": "yellow"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "green, gr\u00f6n, ljusgr\u00f6n, m\u00f6rkgr\u00f6n, olive, oliv, arme, army, arm\u00e9, sage, fatigue, military, alpine, forest green, pacific green, mossgr\u00f6n, moss, dark green, light green, forest, thicket, malachite, kelly, teal, kava green, jade, bottle green, dark teal, acid green, army green, jungle, fresh grass, mallard, avocado, lime, fango,emerald,dark military,lite green,mid green,lite military,mid military,dark military",
+      "mapping_type": "color",
+      "mapping_key": "green"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "blue,bl\u00e5,navy,sapphire,m\u00f6rkbl\u00e5,ljusbl\u00e5,rinse,petrol,blue ribbon,aqua,naples,sicily,seville,dresden,mariner,snorkel,midnight,shelby,kara,christie,young,blaze,magic,twilight ,essex,copacabana wash,skye,cellar,heather night,san francisco wash,rivington,winger,cobalt,cobolt,ocean,reservoir,night fall,ashbury,token,darkstar,royal,city tramp,bondi blue,coastal,maritime,kenmare,indigo,dark ink,new york dark,stock,sea blue,navy nora,dark aqua,night clouds,bahama,peacoat,cornflower,dark blue,lite blue,dark sky,dark indigo,washed lite indigo,lite indigo",
+      "mapping_type": "color",
+      "mapping_key": "blue"
+    }
+  },
+  {
+    "pk": 9,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "silver",
+      "mapping_type": "color",
+      "mapping_key": "silver"
+    }
+  },
+  {
+    "pk": 10,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "gold,guld,oro, golden,guldf\u00e4rgade,guldf\u00e4rgad,guldiga",
+      "mapping_type": "color",
+      "mapping_key": "gold"
+    }
+  },
+  {
+    "pk": 11,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "pink, rosa, ljusrosa, m\u00f6rkrosa, cerise, ceris, ballerina, pale rose, nectar, blush, sherbet, sherbert, flamingo, tulip, rose, rose gold, apricot, peanut blush, light pink, sorbet pink, dusty coral, tickled pink, love pink, light peach, peach, melon, fuchsia, fluoro pink, grenadine, wild rose, petal pink, rosewood, ash rose, coral, barbie pink, powder, cafri, peony,winter rose,dark pink,lite powder",
+      "mapping_type": "color",
+      "mapping_key": "pink"
+    }
+  },
+  {
+    "pk": 12,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "orange,tangerine,m\u00f6rkorange,ljusorange,tangerine,sienna,pumpkin",
+      "mapping_type": "color",
+      "mapping_key": "orange"
+    }
+  },
+  {
+    "pk": 13,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "magenta,cerise,ceris,cerisa",
+      "mapping_type": "color",
+      "mapping_key": "magenta"
+    }
+  },
+  {
+    "pk": 14,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "purple, lila,liliac,ruby",
+      "mapping_type": "color",
+      "mapping_key": "purple"
+    }
+  },
+  {
+    "pk": 15,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "black,svart,night,coal,caviar,black melange,nero,ruthenium black,dark tin,bedford black,onyx,willow,ebonised,onyx,noir,almost black,lite almost black",
+      "mapping_type": "color",
+      "mapping_key": "black"
+    }
+  },
+  {
+    "pk": 16,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "male,males,men,mens,mensware,herr,herrar,man,m\u00e4n,kille,killar",
       "mapping_type": "gender",
-      "mapping_key": "W",
-      "mapping_aliases": "female,females,woman,women,womens,womenswear,dam,damer,kvinna,kvinnor,tjej,tjejer"
+      "mapping_key": "M"
+    }
+  },
+  {
+    "pk": 17,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "female,females,woman,women,womens,womenswear,dam,damer,kvinna,kvinnor,tjej,tjejer",
+      "mapping_type": "gender",
+      "mapping_key": "W"
+    }
+  },
+  {
+    "pk": 18,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "unisex",
+      "mapping_type": "gender",
+      "mapping_key": "U"
+    }
+  },
+  {
+    "pk": 19,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "striped,randig,stripe,randiga,randigt",
+      "mapping_type": "pattern",
+      "mapping_key": "striped"
+    }
+  },
+  {
+    "pk": 20,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "dotted,polka dot,prickig,prickiga, prickigt",
+      "mapping_type": "pattern",
+      "mapping_key": "dotted"
+    }
+  },
+  {
+    "pk": 21,
+    "model": "theimp.mapping",
+    "fields": {
+      "mapping_aliases": "checkers,checker,checked,rutig,rutiga,rutigt",
+      "mapping_type": "pattern",
+      "mapping_key": "checkers"
     }
   }
 ]

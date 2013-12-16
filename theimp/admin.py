@@ -25,8 +25,13 @@ class CategoryMappingAdmin(admin.ModelAdmin):
     readonly_fields = ('vendor', 'category', 'created', 'modified')
 
 
+class MappingAdmin(admin.ModelAdmin):
+    list_display = ('mapping_key', 'mapping_type', 'mapping_aliases')
+    readonly_fields = ('mapping_key', 'mapping_type')
+
+
 admin.site.register(get_model('theimp', 'Vendor'), VendorAdmin)
 admin.site.register(get_model('theimp', 'Product'), ProductAdmin)
 admin.site.register(get_model('theimp', 'BrandMapping'), BrandMappingAdmin)
 admin.site.register(get_model('theimp', 'CategoryMapping'), CategoryMappingAdmin)
-admin.site.register(get_model('theimp', 'Mapping'))
+admin.site.register(get_model('theimp', 'Mapping'), MappingAdmin)

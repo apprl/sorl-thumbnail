@@ -27,6 +27,7 @@ class Parser(object):
             'theimp.parser.modules.category.CategoryMapper',
             'theimp.parser.modules.gender.GenderMapper',
             'theimp.parser.modules.price.Price',
+            'theimp.parser.modules.option.OptionMapper',
         ]
         self.load_modules()
 
