@@ -102,6 +102,32 @@ class TheimpFlowTest(TransactionTestCase):
 
         self.assertEqual(item.get_site_product(), None)
 
+    def test_product_options(self):
+        get_model('apparel', 'OptionType').objects.create(name='color')
+        get_model('apparel', 'OptionType').objects.create(name='pattern')
+
+        product = self.site_product_model.objects.create(product_name='Product Name')
+
+        def get_final_side_effect(*args, **kwargs):
+            if args[0] == 'colors':
+                return ['red', 'blue']
+            elif args[0] == 'patterns':
+                return ['striped']
+            return None
+
+        mock_item = Mock()
+        mock_item.get_final.side_effect = get_final_side_effect
+
+        self.assertEqual(mock_item.get_final('colors'), ['red', 'blue'])
+
+        importer = Importer(site_queue=Mock())
+        importer._update_product_options(mock_item, product)
+
+        product = self.site_product_model.objects.get(product_name='Product Name')
+        self.assertEqual(product.options.count(), 3)
+        self.assertEqual(sorted(list(product.colors)), sorted([u'red', u'blue']))
+        self.assertEqual(sorted(list(product.options.filter(option_type__name='pattern').values_list('value', flat=True))), sorted([u'striped']))
+
     def test_flow(self):
         # Create a product from scraped data
         key = 'http://example.com/product/product-name.html'

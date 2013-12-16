@@ -30,20 +30,18 @@ class Parser(object):
         ]
         self.load_modules()
 
-        if not parse_queue:
-            self.parse_queue = parse_queue_class(settings.THEIMP_QUEUE_PARSE,
-                                                 host=settings.THEIMP_REDIS_HOST,
-                                                 port=settings.THEIMP_REDIS_PORT,
-                                                 db=settings.THEIMP_REDIS_DB)
-        else:
+        self.parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
+                                    host=settings.THEIMP_REDIS_HOST,
+                                    port=settings.THEIMP_REDIS_PORT,
+                                    db=settings.THEIMP_REDIS_DB)
+        if parse_queue:
             self.parse_queue = parse_queue
 
-        if not site_queue:
-            self.site_queue = site_queue_class(settings.THEIMP_QUEUE_SITE,
-                                               host=settings.THEIMP_REDIS_HOST,
-                                               port=settings.THEIMP_REDIS_PORT,
-                                               db=settings.THEIMP_REDIS_DB)
-        else:
+        self.site_queue = HotQueue(settings.THEIMP_QUEUE_SITE,
+                                   host=settings.THEIMP_REDIS_HOST,
+                                   port=settings.THEIMP_REDIS_PORT,
+                                   db=settings.THEIMP_REDIS_DB)
+        if site_queue:
             self.site_queue = site_queue
 
     def load_modules(self):

@@ -1,5 +1,6 @@
 import logging
 import os.path
+import re
 
 from django.conf import settings
 from django.db.models.loading import get_model
@@ -19,12 +20,14 @@ class Importer(object):
         self.product_model = get_model('theimp', 'Product')
         self.site_product_model = get_model('apparel', 'Product')
         self.vendor_product_model = get_model('apparel', 'VendorProduct')
-        if not site_queue:
-            self.site_queue = HotQueue(settings.THEIMP_QUEUE_SITE,
-                                       host=settings.THEIMP_REDIS_HOST,
-                                       port=settings.THEIMP_REDIS_PORT,
-                                       db=settings.THEIMP_REDIS_DB)
-        else:
+        self.site_option_model = get_model('apparel', 'Option')
+        self.option_types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in get_model('apparel', 'OptionType').objects.iterator()])
+
+        self.site_queue = HotQueue(settings.THEIMP_QUEUE_SITE,
+                                   host=settings.THEIMP_REDIS_HOST,
+                                   port=settings.THEIMP_REDIS_PORT,
+                                   db=settings.THEIMP_REDIS_DB)
+        if site_queue:
             self.site_queue = site_queue
 
     def run(self):
@@ -52,7 +55,7 @@ class Importer(object):
                     if site_product:
                         self.hide_product(site_product)
             except Exception as e:
-                logger.exception('Could not import product to site: %s' % (product,))
+                logger.exception('Could not import product to site with id %s' % (product_id,))
             else:
                 # XXX: Is this for updating of modified datetime?
                 product.save()
@@ -101,9 +104,15 @@ class Importer(object):
     def _product_image(self, item):
         return os.path.join(settings.APPAREL_PRODUCT_IMAGE_ROOT, item.get_final('images')[0]['path'])
 
-    # TODO: product options (colors mostly)
     def _update_product_options(self, item, site_product):
-        pass
+        for product_option in ['colors', 'patterns']:
+            for product_option_value in item.get_final(product_option):
+                # Option type name is singular
+                option_type = self.option_types.get(product_option[:-1])
+                if option_type:
+                    option, created = self.site_option_model.objects.get_or_create(option_type=option_type, value=product_option_value)
+                    if not site_product.options.filter(pk=option.pk).exists():
+                        site_product.options.add(option)
 
     def _update_vendor_product(self, item, site_product):
         vendor_product, _ = self.vendor_product_model.objects.get_or_create(
