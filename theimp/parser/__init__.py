@@ -126,12 +126,15 @@ class Parser(object):
         return item, vendor
 
     def initial_parse(self, item):
-        item.data[ProductItem.KEY_PARSED]['name'] = strip_tags(item.get_scraped('name')).strip()
-        item.data[ProductItem.KEY_PARSED]['description'] = strip_tags(item.get_scraped('description')).strip()
-        item.data[ProductItem.KEY_PARSED]['vendor_id'] = item.get_scraped('vendor_id')
-        item.data[ProductItem.KEY_PARSED]['affiliate'] = item.get_scraped('affiliate')
-        item.data[ProductItem.KEY_PARSED]['in_stock'] = item.get_scraped('in_stock')
-        item.data[ProductItem.KEY_PARSED]['images'] = item.get_scraped('images')
+        for key in ['name', 'description']:
+            value = item.get_scraped(key)
+            if value:
+                item.data[ProductItem.KEY_PARSED][key] = strip_tags(value).strip()
+
+        for key in ['vendor_id', 'affiliate', 'in_stock', 'images']:
+            value = item.get_scraped(key)
+            if value:
+                item.data[ProductItem.KEY_PARSED][key] = value
 
         return item
 
