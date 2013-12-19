@@ -42,10 +42,17 @@ class Vendor(BaseModel):
         return ('Vendor(%s)' % (self.name,)).encode('utf-8')
 
 
+class Brand(BaseModel):
+    name = models.CharField(max_length=1024)
+
+    def __unicode__(self):
+        return u'%s' % (self.name,)
+
+
 class BrandMapping(BaseModel):
     vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
     brand = models.CharField(max_length=1024)
-    mapped_brand = models.ForeignKey('apparel.Brand', null=True, blank=True)
+    mapped_brand = models.ForeignKey('theimp.Brand', null=True, blank=True)
 
     def __unicode__(self):
         if self.mapped_brand:
@@ -54,10 +61,17 @@ class BrandMapping(BaseModel):
         return '%s: "%s" is unmapped' % (self.vendor_id, self.brand)
 
 
+class Category(BaseModel):
+    name = models.CharField(max_length=1024)
+
+    def __unicode__(self):
+        return u'%s' % (self.name,)
+
+
 class CategoryMapping(BaseModel):
     vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
     category = models.CharField(max_length=1024)
-    mapped_category = models.ForeignKey('apparel.Category', null=True, blank=True)
+    mapped_category = models.ForeignKey('theimp.Category', null=True, blank=True)
 
     def __unicode__(self):
         if self.mapped_category:

@@ -40,13 +40,7 @@ class TheimpFlowTest(TransactionTestCase):
 
     def setUp(self):
         self.product_model = get_model('theimp', 'Product')
-        self.vendor_model = get_model('theimp', 'Vendor')
-        self.brand_mapper_model = get_model('theimp', 'BrandMapping')
-        self.category_mapper_model = get_model('theimp', 'CategoryMapping')
         self.site_product_model = get_model('apparel', 'Product')
-        self.site_vendor_model = get_model('apparel', 'Vendor')
-        self.site_brand_model = get_model('apparel', 'Brand')
-        self.site_category_model = get_model('apparel', 'Category')
 
         # Create option types for site
         get_model('apparel', 'OptionType').objects.create(name='color')
@@ -55,26 +49,15 @@ class TheimpFlowTest(TransactionTestCase):
         self.parse_queue = HotQueueMock(settings.THEIMP_QUEUE_PARSE)
         self.site_queue = HotQueueMock(settings.THEIMP_QUEUE_SITE)
 
-        self.category = self.site_category_model.objects.create(name='Category',
-                                                                name_en='Category',
-                                                                name_sv='Category',
-                                                                name_da='Category',
-                                                                name_no='Category',
-                                                                name_order_en='A',
-                                                                name_order_sv='A',
-                                                                name_order_da='A',
-                                                                name_order_no='A')
-        self.brand = self.site_brand_model.objects.create(name='Fifth Avenue Shoe Repair')
-        self.site_vendor = self.site_vendor_model.objects.create(name='Fifth Avenue Shoe Repair')
-        self.vendor = self.vendor_model.objects.create(name='TestVendor',
-                                                       vendor=self.site_vendor,
-                                                       affiliate_identifier='fifth_avenue')
-        self.brand_mapper_model.objects.create(vendor=self.vendor,
-                                               brand='Fifth Avenue',
-                                               mapped_brand=self.brand)
-        self.category_mapper_model.objects.create(vendor=self.vendor,
-                                                  category='scraped-category',
-                                                  mapped_category=self.category)
+        # Setup vendor for site and importer
+        self.site_vendor = get_model('apparel', 'Vendor').objects.create(name='Fifth Avenue Shoe Repair')
+        self.vendor = get_model('theimp', 'Vendor').objects.create(name='TestVendor', vendor=self.site_vendor, affiliate_identifier='fifth_avenue')
+
+        # Setup category and brand mapping
+        self.imported_brand = get_model('theimp', 'Brand').objects.create(name='Fifth Avenue Shoe Repair')
+        self.imported_category = get_model('theimp', 'Category').objects.create(name='Category')
+        get_model('theimp', 'BrandMapping').objects.create(vendor=self.vendor, brand='Fifth Avenue', mapped_brand=self.imported_brand)
+        get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor, category='scraped-category', mapped_category=self.imported_category)
 
     @patch('theimp.parser.logger')
     def test_parser_queue(self, mock_logger):
@@ -129,7 +112,9 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(sorted(list(product.colors)), sorted([u'red', u'blue']))
         self.assertEqual(sorted(list(product.options.filter(option_type__name='pattern').values_list('value', flat=True))), sorted([u'striped']))
 
-    def test_flow(self):
+
+    @patch('theimp.importer.logger')
+    def test_flow(self, mock_logger):
         # Create a product from scraped data
         key = 'http://example.com/product/product-name.html'
         data = {
@@ -177,10 +162,14 @@ class TheimpFlowTest(TransactionTestCase):
         importer = Importer(site_queue=self.site_queue)
         importer.run()
 
+        self.assertFalse(mock_logger.exception.called)
+
         site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
         self.assertEqual(site_product.product_name, 'Product Name')
         self.assertEqual(site_product.description, 'Product Name description')
         self.assertEqual(site_product.availability, True)
+        self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
+        self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
 
@@ -199,6 +188,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Name')
         self.assertEqual(site_product.description, 'Product Name description')
         self.assertEqual(site_product.availability, True)
+        self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
+        self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
 
@@ -223,6 +214,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Name')
         self.assertEqual(site_product.description, 'Product Name description')
         self.assertEqual(site_product.availability, False)
+        self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
+        self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
 
@@ -247,6 +240,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Correct Name')
         self.assertEqual(site_product.description, 'Product Name description')
         self.assertEqual(site_product.availability, True)
+        self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
+        self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
 
@@ -270,5 +265,7 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Correct Name')
         self.assertEqual(site_product.description, 'Our manual description written by our team.')
         self.assertEqual(site_product.availability, True)
+        self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
+        self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)

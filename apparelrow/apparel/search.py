@@ -282,7 +282,7 @@ def get_product_document(instance, rebuild=False):
 
         category_data = instance.category.get_ancestors(ascending=False, include_self=True).values_list('pk', 'name_en', 'name_sv')
         category_ids, category_en_names, category_sv_names = zip(*category_data)
-        category_names = ' '.join(category_en_names + category_sv_names)
+        category_names = ' '.join(x for x in category_en_names + category_sv_names if x)
 
         document['id'] = '%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk)
         document['django_ct'] = '%s.%s' % (instance._meta.app_label, instance._meta.module_name)

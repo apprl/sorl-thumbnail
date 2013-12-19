@@ -21,6 +21,9 @@ class Importer(object):
         self.site_product_model = get_model('apparel', 'Product')
         self.vendor_product_model = get_model('apparel', 'VendorProduct')
         self.site_option_model = get_model('apparel', 'Option')
+        self.site_brand_model = get_model('apparel', 'Brand')
+        self.site_category_model = get_model('apparel', 'Category')
+
         self.option_types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in get_model('apparel', 'OptionType').objects.iterator()])
 
         self.site_queue = HotQueue(settings.THEIMP_QUEUE_SITE,
@@ -61,11 +64,14 @@ class Importer(object):
                 product.save()
 
     def add_product(self, item):
+        brand, _ = self.site_brand_model.objects.get_or_create(name=item.get_final('brand'))
+        category, _ = self.site_category_model.objects.get_or_create(name=item.get_final('category'), name_order=item.get_final('category'))
+
         site_product = self.site_product_model.objects.create(
             product_name = item.get_final('name'),
             description = item.get_final('description'),
-            category_id = item.get_final('category_id'),
-            manufacturer_id = item.get_final('brand_id'),
+            category = category,
+            manufacturer = brand,
             static_brand = item.get_final('brand'),
             gender = item.get_final('gender'),
             availability = bool(item.get_final('in_stock', False)),
@@ -76,10 +82,13 @@ class Importer(object):
         self._update_product_options(item, site_product)
 
     def update_product(self, item, site_product):
+        brand, _ = self.site_brand_model.objects.get_or_create(name=item.get_final('brand'))
+        category, _ = self.site_category_model.objects.get_or_create(name=item.get_final('category'), name_order=item.get_final('category'))
+
         site_product.product_name = item.get_final('name')
         site_product.description = item.get_final('description')
-        site_product.category_id = item.get_final('category_id')
-        site_product.manufacturer_id = item.get_final('brand_id')
+        site_product.category = category
+        site_product.manufacturer = brand
         site_product.static_brand = item.get_final('brand')
         site_product.gender = item.get_final('gender')
         site_product.availability = bool(item.get_final('in_stock', False))
@@ -106,13 +115,15 @@ class Importer(object):
 
     def _update_product_options(self, item, site_product):
         for product_option in ['colors', 'patterns']:
-            for product_option_value in item.get_final(product_option):
-                # Option type name is singular
-                option_type = self.option_types.get(product_option[:-1])
-                if option_type:
-                    option, created = self.site_option_model.objects.get_or_create(option_type=option_type, value=product_option_value)
-                    if not site_product.options.filter(pk=option.pk).exists():
-                        site_product.options.add(option)
+            product_option_values = item.get_final(product_option)
+            if product_option_values:
+                for product_option_value in product_option_values:
+                    # Option type name is singular
+                    option_type = self.option_types.get(product_option[:-1])
+                    if option_type:
+                        option, created = self.site_option_model.objects.get_or_create(option_type=option_type, value=product_option_value)
+                        if not site_product.options.filter(pk=option.pk).exists():
+                            site_product.options.add(option)
 
     def _update_vendor_product(self, item, site_product):
         vendor_product, _ = self.vendor_product_model.objects.get_or_create(
