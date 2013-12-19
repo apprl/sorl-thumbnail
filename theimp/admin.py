@@ -5,6 +5,7 @@ from django import forms, utils
 from django.contrib import admin
 from django.db.models.loading import get_model
 from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
 
 
 class ProductJSONWidget(forms.Textarea):
@@ -114,15 +115,49 @@ class VendorAdmin(admin.ModelAdmin):
     readonly_fields = ('name', 'created', 'modified')
 
 
+class IsMappedBrandListFilter(admin.SimpleListFilter):
+    title = _('is mapped')
+    parameter_name = 'is_mapped'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', _('yes')),
+            ('no', _('no')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes':
+            return queryset.filter(mapped_brand__isnull=False)
+        if self.value() == 'no':
+            return queryset.filter(mapped_brand__isnull=True)
+
+
 class BrandMappingAdmin(admin.ModelAdmin):
     list_display = ('brand', 'vendor', 'mapped_brand')
-    list_filter = ('vendor',)
+    list_filter = (IsMappedBrandListFilter, 'vendor')
     readonly_fields = ('vendor', 'brand', 'created', 'modified')
+
+
+class IsMappedCategoryListFilter(admin.SimpleListFilter):
+    title = _('is mapped')
+    parameter_name = 'is_mapped'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', _('yes')),
+            ('no', _('no')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes':
+            return queryset.filter(mapped_category__isnull=False)
+        if self.value() == 'no':
+            return queryset.filter(mapped_category__isnull=True)
 
 
 class CategoryMappingAdmin(admin.ModelAdmin):
     list_display = ('category', 'vendor', 'mapped_category')
-    list_filter = ('vendor',)
+    list_filter = (IsMappedCategoryListFilter, 'vendor')
     readonly_fields = ('vendor', 'category', 'created', 'modified')
 
 
