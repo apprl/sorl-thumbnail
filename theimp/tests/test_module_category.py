@@ -21,6 +21,16 @@ class CategoryMapperTest(TestCase):
         self.assertEqual(parsed_item.get('category'), self.category.name)
         self.assertEqual(parsed_item.get('category_id'), self.category.pk)
 
+    def test_map_none_category(self):
+        mapper = CategoryMapper(Mock())
+        parsed_item = mapper({'category': None}, {}, self.vendor)
+        self.assertEqual(parsed_item, {})
+
+    def test_map_empty_category(self):
+        mapper = CategoryMapper(Mock())
+        parsed_item = mapper({'category': ''}, {}, self.vendor)
+        self.assertEqual(parsed_item, {})
+
     def test_map_category_no_category(self):
         mapper = CategoryMapper(Mock())
         parsed_item = mapper({}, {}, self.vendor)

@@ -8,7 +8,7 @@ class CategoryMapper(BaseModule):
         if not vendor:
             return parsed_item
 
-        if 'category' not in scraped_item:
+        if 'category' not in scraped_item or not scraped_item['category']:
             return parsed_item
 
         category_mapping, _ = get_model('theimp', 'CategoryMapping').objects.get_or_create(category=scraped_item['category'], vendor_id=vendor.pk)

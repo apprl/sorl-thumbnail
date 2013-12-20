@@ -8,7 +8,7 @@ class BrandMapper(BaseModule):
         if not vendor:
             return parsed_item
 
-        if 'brand' not in scraped_item:
+        if 'brand' not in scraped_item or not scraped_item['brand']:
             return parsed_item
 
         brand_mapping, _ = get_model('theimp', 'BrandMapping').objects.get_or_create(brand=scraped_item['brand'], vendor_id=vendor.pk)

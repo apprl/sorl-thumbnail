@@ -21,6 +21,16 @@ class BrandMapperTest(TestCase):
         self.assertEqual(parsed_item.get('brand'), self.brand.name)
         self.assertEqual(parsed_item.get('brand_id'), self.brand.pk)
 
+    def test_map_none_brand(self):
+        mapper = BrandMapper(Mock())
+        parsed_item = mapper({'brand': None}, {}, self.vendor)
+        self.assertEqual(parsed_item, {})
+
+    def test_map_empty_brand(self):
+        mapper = BrandMapper(Mock())
+        parsed_item = mapper({'brand': ''}, {}, self.vendor)
+        self.assertEqual(parsed_item, {})
+
     def test_map_brand_no_brand(self):
         mapper = BrandMapper(Mock())
         parsed_item = mapper({}, {}, self.vendor)
