@@ -166,10 +166,18 @@ class MappingAdmin(admin.ModelAdmin):
     readonly_fields = ('mapping_key', 'mapping_type')
 
 
+class BrandAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'modified')
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    readonly_fields = ('created', 'modified')
+
+
 admin.site.register(get_model('theimp', 'Product'), ProductAdmin)
 admin.site.register(get_model('theimp', 'Vendor'), VendorAdmin)
 admin.site.register(get_model('theimp', 'BrandMapping'), BrandMappingAdmin)
 admin.site.register(get_model('theimp', 'CategoryMapping'), CategoryMappingAdmin)
 admin.site.register(get_model('theimp', 'Mapping'), MappingAdmin)
-admin.site.register(get_model('theimp', 'Brand'))
-admin.site.register(get_model('theimp', 'Category'))
+admin.site.register(get_model('theimp', 'Brand'), BrandAdmin)
+admin.site.register(get_model('theimp', 'Category'), CategoryAdmin)
