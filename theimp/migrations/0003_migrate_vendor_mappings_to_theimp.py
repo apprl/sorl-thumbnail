@@ -6,6 +6,10 @@ from django.db import models
 
 class Migration(DataMigration):
 
+    depends_on = (
+        ('apparel', '0013_auto__add_field_vendorbrand_created__add_field_vendorcategory_created'),
+    )
+
     def forwards(self, orm):
         for brand in orm['apparel.Brand'].objects.iterator():
             orm['theimp.Brand'].objects.create(name=brand.name)
