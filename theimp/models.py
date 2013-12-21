@@ -1,3 +1,5 @@
+import string
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -93,7 +95,7 @@ class Mapping(models.Model):
             help_text=_('Mapping aliases should be separated with a single command and no spaces, example: "svart,night,coal"'))
 
     def get_list(self):
-        return self.mapping_aliases.split(',')
+        return map(string.strip, self.mapping_aliases.split(','))
 
     def __unicode__(self):
         return u'%s: %s' % (self.mapping_key, self.mapping_aliases)

@@ -1,9 +1,12 @@
-from django.test import TestCase
+from django.db.models.loading import get_model
+from django.test import TestCase, TransactionTestCase
+
+from mock import Mock
 
 from theimp.parser.modules.option import OptionMapper
 
 
-class GenderMapperTest(TestCase):
+class OptionMapperTest(TestCase):
     fixtures = ['initial.json']
 
     def setUp(self):
@@ -42,3 +45,24 @@ class GenderMapperTest(TestCase):
     def test_map_option_with_invalid_option_type(self):
         result = self.module.map_option('invalid_type', 'string with red color')
         self.assertIsNone(result)
+
+
+class WithoutFixtureOptionMapperTest(TransactionTestCase):
+
+    def test_map_color_with_space_after_comma(self):
+        get_model('theimp', 'Mapping').objects.create(mapping_type='color',
+                                                      mapping_key='pink',
+                                                      mapping_aliases='pink, rosa, ljusrosa')
+        mapper = OptionMapper(Mock())
+
+        parsed_item = mapper({'colors': 'rosa'}, {}, None)
+        self.assertEqual(parsed_item.get('colors'), ['pink'])
+
+    def test_map_patterns_with_space_after_comma(self):
+        get_model('theimp', 'Mapping').objects.create(mapping_type='pattern',
+                                                      mapping_key='striped',
+                                                      mapping_aliases='something, striped, bla')
+        mapper = OptionMapper(Mock())
+
+        parsed_item = mapper({'colors': 'striped'}, {}, None)
+        self.assertEqual(parsed_item.get('patterns'), ['striped'])
