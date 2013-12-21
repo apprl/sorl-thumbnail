@@ -47,24 +47,24 @@ class BuildBuyURL(BaseModule):
         return 'http://apprl.com%s?store_id=%s&url=%s' % (reverse('advertiser-link'), store_id, url)
 
     def __call__(self, scraped_item, parsed_item, vendor):
-        if 'buy_url' in scraped_item:
-            parsed_item['buy_url'] = scraped_item['buy_url']
+        if 'url' in scraped_item:
+            parsed_item['url'] = scraped_item['url']
 
             return parsed_item
 
-        if 'url' in scraped_item:
+        if 'key' in scraped_item:
             url_function = self.affiliate_url.get(scraped_item.get('affiliate'), None)
             if url_function:
-                encoded_url = urllib.quote(scraped_item.get('url', ''), '')
+                encoded_url = urllib.quote(scraped_item.get('key', ''), '')
                 if vendor.affiliate_identifier:
-                    buy_url = url_function(vendor.affiliate_identifier, encoded_url)
-                    if buy_url:
-                        parsed_item['buy_url'] = buy_url
+                    url = url_function(vendor.affiliate_identifier, encoded_url)
+                    if url:
+                        parsed_item['url'] = url
                     else:
-                        self.delete_value(parsed_item, 'buy_url')
+                        self.delete_value(parsed_item, 'url')
                 else:
-                    self.delete_value(parsed_item, 'buy_url')
+                    self.delete_value(parsed_item, 'url')
             else:
-                self.delete_value(parsed_item, 'buy_url')
+                self.delete_value(parsed_item, 'url')
 
         return parsed_item

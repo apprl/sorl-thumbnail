@@ -1,6 +1,7 @@
 import logging
 import json
 import decimal
+from pprint import pformat
 
 from django.conf import settings
 from django.db.models.loading import get_model
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 class Parser(object):
 
     required_fields = ['name', 'description', 'brand', 'category', 'gender', 'images',
-                       'currency', 'regular_price', 'buy_url', 'vendor']
+                       'currency', 'regular_price', 'url', 'vendor']
     gender_values = ['M', 'W', 'U']
 
     def __init__(self, parse_queue=None, site_queue=None):
@@ -69,7 +70,7 @@ class Parser(object):
                 logger.exception('Could not load product with id %s' % (product_id,))
                 continue
 
-            logger.info('Begin parse for key: %s' % (product.key,))
+            logger.info('Consume product id %s' % (product.pk,))
 
             # Load product json and validate initial specification
             item = ProductItem(product)
@@ -99,9 +100,6 @@ class Parser(object):
             product.is_auto_validated = validated
             product.json = json.dumps(item.data)
             product.save()
-
-            import pprint
-            pprint.pprint(item.data)
 
             if validated:
                 logger.info('Parsed product successful moving to site queue: (%s, %s)' % (product.pk, validated))
@@ -142,21 +140,26 @@ class Parser(object):
         for field in self.required_fields:
             if not item.get_parsed(field):
                 logger.warning('Missing required field %s' % (field,))
+                logger.debug('Data:\n%s' % (pformat(item.data),))
                 return False
 
         # Validate gender value
         if item.get_parsed('gender') not in self.gender_values:
             logger.warning('Invalid gender value: %s' % (item.get_parsed('gender'),))
+            logger.debug('Data:\n%s' % (pformat(item.data),))
             return False
 
         # Validate currency
         if len(item.get_parsed('currency')) != 3:
             logger.warning('Invalid currency value: %s' % (item.get_parsed('currency'),))
+            logger.debug('Data:\n%s' % (pformat(item.data),))
             return False
 
         # Validate vendor
         vendor = self._validate_vendor(item.get_parsed('vendor'))
         if not vendor.vendor_id:
+            logger.warning('Vendor has no mapping: %s' % (item.get_parsed('vendor'),))
+            logger.debug('Data:\n%s' % (pformat(item.data),))
             return False
 
         return True

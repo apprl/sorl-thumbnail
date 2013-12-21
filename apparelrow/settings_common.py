@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import os.path
 import posixpath
 
@@ -591,7 +592,8 @@ LOGGING = {
         'console': {
             'level': 'NOTSET',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'simple',
+            'stream': sys.stdout
         },
         'app_core': {
             'level': 'NOTSET',
