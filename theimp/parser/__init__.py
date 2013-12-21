@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class Parser(object):
 
     required_fields = ['name', 'description', 'brand', 'category', 'gender', 'images',
-                       'currency', 'regular_price', 'buy_url', 'vendor_id']
+                       'currency', 'regular_price', 'buy_url', 'vendor']
     gender_values = ['M', 'W', 'U']
 
     def __init__(self, parse_queue=None, site_queue=None):
@@ -77,10 +77,10 @@ class Parser(object):
                 logger.error('Invalid product json data specification')
                 continue
 
-            # Validate vendor
-            item, vendor = self.validate_vendor(item)
+            # Pre validate vendor for use in parser modules
+            vendor = self._validate_vendor(item.get_scraped('vendor'))
             if not vendor:
-                logger.error('Invalid vendor in product json data')
+                logger.error('Invalid vendor in product json data: %s' % (item.get_scraped('vendor'),))
                 continue
 
             item = self.initial_parse(item)
@@ -110,28 +110,13 @@ class Parser(object):
 
             self.site_queue.put((product.pk, validated))
 
-    def validate_vendor(self, item):
-        scraped_vendor = item.get_scraped('vendor')
-        try:
-            vendor = get_model('theimp', 'Vendor').objects.get(name=scraped_vendor)
-        except get_model('theimp', 'Vendor').DoesNotExist:
-            logger.error('Could not find vendor for %s' % (scraped_vendor,))
-            return item, None
-
-        if vendor.vendor_id:
-            item.set_scraped('vendor_id', vendor.vendor_id)
-        else:
-            item.set_scraped('vendor_id', None)
-
-        return item, vendor
-
     def initial_parse(self, item):
         for key in ['name', 'description']:
             value = item.get_scraped(key)
             if value:
                 item.data[ProductItem.KEY_PARSED][key] = strip_tags(value).strip()
 
-        for key in ['vendor_id', 'affiliate', 'in_stock', 'images']:
+        for key in ['sku', 'vendor', 'affiliate', 'in_stock', 'images']:
             value = item.get_scraped(key)
             if value:
                 item.data[ProductItem.KEY_PARSED][key] = value
@@ -144,6 +129,14 @@ class Parser(object):
                 pass
 
         return item
+
+    def _validate_vendor(self, vendor_name):
+        try:
+            return get_model('theimp', 'Vendor').objects.get(name=vendor_name)
+        except get_model('theimp', 'Vendor').DoesNotExist:
+            logger.warning('Could not validate vendor: %s' % (vendor_name,))
+
+        return None
 
     def validate(self, item):
         for field in self.required_fields:
@@ -159,6 +152,11 @@ class Parser(object):
         # Validate currency
         if len(item.get_parsed('currency')) != 3:
             logger.warning('Invalid currency value: %s' % (item.get_parsed('currency'),))
+            return False
+
+        # Validate vendor
+        vendor = self._validate_vendor(item.get_parsed('vendor'))
+        if not vendor.vendor_id:
             return False
 
         return True

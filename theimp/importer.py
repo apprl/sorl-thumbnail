@@ -8,6 +8,7 @@ from django.template.defaultfilters import slugify
 
 from hotqueue import HotQueue
 
+from theimp.models import Vendor
 from theimp.utils import ProductItem
 
 
@@ -126,9 +127,9 @@ class Importer(object):
                             site_product.options.add(option)
 
     def _update_vendor_product(self, item, site_product):
-        vendor_product, _ = self.vendor_product_model.objects.get_or_create(
-            product=site_product, vendor_id=item.get_final('vendor_id'),
-        )
+        vendor = Vendor.objects.get(name=item.get_final('vendor'))
+        vendor_product, _ = self.vendor_product_model.objects.get_or_create(product=site_product,
+                                                                            vendor_id=vendor.vendor_id)
         vendor_product.buy_url = item.get_final('buy_url')
         vendor_product.original_price = item.get_final('regular_price') or '0.0'
         vendor_product.original_currency = item.get_final('currency')
