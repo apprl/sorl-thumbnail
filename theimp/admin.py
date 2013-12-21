@@ -2,10 +2,13 @@ import collections
 import json
 
 from django import forms, utils
+from django.conf import settings
 from django.contrib import admin
 from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
+
+from hotqueue import HotQueue
 
 
 class ProductJSONWidget(forms.Textarea):
@@ -106,6 +109,16 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('is_auto_validated', 'is_manual_validated', 'dropped', 'vendor')
     readonly_fields = ('key', 'is_auto_validated', 'created', 'modified', 'vendor', 'dropped')
     search_fields = ('key',)
+    actions = ('add_to_parse_queue',)
+
+    def add_to_parse_queue(self, request, queryset):
+        parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
+                               host=settings.THEIMP_REDIS_HOST,
+                               port=settings.THEIMP_REDIS_PORT,
+                               db=settings.THEIMP_REDIS_DB)
+
+        for product_id in queryset.values_list('pk', flat=True):
+            parse_queue.put(product_id)
 
 
 class VendorAdmin(admin.ModelAdmin):
