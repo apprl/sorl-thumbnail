@@ -136,6 +136,13 @@ class Parser(object):
             if value:
                 item.data[ProductItem.KEY_PARSED][key] = value
 
+        stock = item.get_scraped('stock')
+        if stock:
+            try:
+                item.data[ProductItem.KEY_PARSED]['stock'] = int(stock)
+            except (TypeError, ValueError):
+                pass
+
         return item
 
     def validate(self, item):
