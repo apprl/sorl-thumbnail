@@ -70,35 +70,7 @@ class Parser(object):
                 logger.exception('Could not load product with id %s' % (product_id,))
                 continue
 
-            logger.info('Consume product id %s' % (product.pk,))
-
-            # Load product json and validate initial specification
-            item = ProductItem(product)
-            if not item.validate_keys():
-                logger.error('Invalid product json data specification')
-                continue
-
-            # Pre validate vendor for use in parser modules
-            vendor = self._validate_vendor(item.get_scraped('vendor'))
-            if not vendor:
-                logger.error('Invalid vendor in product json data: %s' % (item.get_scraped('vendor'),))
-                continue
-
-            item = self.initial_parse(item)
-
-            scraped_item = item.data[ProductItem.KEY_SCRAPED]
-            parsed_item = item.data[ProductItem.KEY_PARSED]
-            for module in self.loaded_modules:
-                parsed_item = module(scraped_item, parsed_item, vendor)
-            item.data[ProductItem.KEY_PARSED] = parsed_item
-
-            validated = self.validate(item)
-            if validated:
-                item = self.finalize(item)
-
-            product.is_auto_validated = validated
-            product.json = json.dumps(item.data)
-            product.save()
+            validated = self.parse(product)
 
             if validated:
                 logger.info('Parsed product successful moving to site queue: (%s, %s)' % (product.pk, validated))
@@ -106,6 +78,38 @@ class Parser(object):
                 logger.info('Parsed product unsuccessful moving to site queue: (%s, %s)' % (product.pk, validated))
 
             self.site_queue.put((product.pk, validated))
+
+    def parse(self, product):
+        logger.info('Parse product id %s' % (product.pk,))
+
+        # Load product json and validate initial specification
+        item = ProductItem(product)
+        if not item.validate_keys():
+            logger.error('Invalid product json data specification')
+            return
+
+        # Pre validate vendor for use in parser modules
+        vendor = self._validate_vendor(item.get_scraped('vendor'))
+        if not vendor:
+            logger.error('Invalid vendor in product json data: %s' % (item.get_scraped('vendor'),))
+            return
+
+        item = self.initial_parse(item)
+
+        scraped_item = item.data[ProductItem.KEY_SCRAPED]
+        parsed_item = item.data[ProductItem.KEY_PARSED]
+        for module in self.loaded_modules:
+            parsed_item = module(scraped_item, parsed_item, vendor)
+        item.data[ProductItem.KEY_PARSED] = parsed_item
+
+        validated = self.validate(item)
+        item = self.finalize(item, validated)
+
+        product.is_auto_validated = validated
+        product.json = json.dumps(item.data)
+        product.save()
+
+        return validated
 
     def initial_parse(self, item):
         for key in ['name', 'description']:
@@ -127,10 +131,11 @@ class Parser(object):
 
         return item
 
-    def finalize(self, item):
+    def finalize(self, item, validated):
         item.data[ProductItem.KEY_FINAL] = {}
-        for key in item.data[ProductItem.KEY_PARSED].keys():
-            item.data[ProductItem.KEY_FINAL][key] = item.get_parsed(key)
+        if validated:
+            for key in item.data[ProductItem.KEY_PARSED].keys():
+                item.data[ProductItem.KEY_FINAL][key] = item.get_parsed(key)
         return item
 
     def _validate_vendor(self, vendor_name):

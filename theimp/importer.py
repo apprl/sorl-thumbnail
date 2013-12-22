@@ -43,26 +43,29 @@ class Importer(object):
                 logger.exception('Could not load product with id %s' % (product_id,))
                 continue
 
-            item = ProductItem(product)
-            site_product = self._find_site_product(item)
-            if site_product:
-                item.set_site_product(site_product.pk)
-                item.save()
+            self.site_import(product, is_valid)
 
-            try:
-                if is_valid:
-                    if site_product:
-                        self.update_product(item, site_product)
-                    else:
-                        self.add_product(item)
+    def site_import(self, product, is_valid):
+        item = ProductItem(product)
+        site_product = self._find_site_product(item)
+        if site_product:
+            item.set_site_product(site_product.pk)
+            item.save()
+
+        try:
+            if is_valid:
+                if site_product:
+                    self.update_product(item, site_product)
                 else:
-                    if site_product:
-                        self.hide_product(site_product)
-            except Exception as e:
-                logger.exception('Could not import product to site with id %s' % (product_id,))
+                    self.add_product(item)
             else:
-                # XXX: Is this for updating of modified datetime?
-                product.save()
+                if site_product:
+                    self.hide_product(site_product)
+        except Exception as e:
+            logger.exception('Could not import product to site with id %s' % (product.pk,))
+        else:
+            # XXX: Is this for updating of modified datetime?
+            product.save()
 
     def add_product(self, item):
         brand, _ = self.site_brand_model.objects.get_or_create(name=item.get_final('brand'))

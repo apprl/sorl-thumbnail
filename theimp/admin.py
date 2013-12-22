@@ -1,14 +1,21 @@
 import collections
 import json
+import os.path
 
 from django import forms, utils
 from django.conf import settings
 from django.contrib import admin
+from django.core.files.storage import default_storage
 from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
 from hotqueue import HotQueue
+
+from sorl.thumbnail import get_thumbnail
+
+from theimp.parser import Parser
+from theimp.importer import Importer
 
 
 class ProductJSONWidget(forms.Textarea):
@@ -21,18 +28,19 @@ class ProductJSONWidget(forms.Textarea):
         attrs['value'] = utils.encoding.force_unicode(value)
         return u'<input style="width: 90%%;"%s>' % (forms.util.flatatt(attrs),)
 
-    def to_fields(self, name, json_obj):
+    def as_image_field(self, name, key, value):
         """
-        Get list of rendered fields for json object
+        Render key, value as an image field.
         """
-        inputs = []
-        for key, value in json_obj.items():
-            if type(value) in (str, unicode, int):
-                inputs.append((key, self.as_field(name, key, value)))
-            elif type(value) in (dict,):
-                inputs.extend(self.to_fields("%s__%s" % (name, key), value))
+        if value:
+            images = []
+            for image in value:
+                image_file = default_storage.open(os.path.join(settings.APPAREL_PRODUCT_IMAGE_ROOT, image.get('path')))
+                thumbnail = get_thumbnail(image_file, '100x100')
+                images.append(u'<img src="%s">' % (thumbnail.url,))
+            return u''.join(images)
+        return u''
 
-        return inputs
 
     def value_from_datadict(self, data, files, name):
         """
@@ -59,7 +67,7 @@ class ProductJSONWidget(forms.Textarea):
                         prev_dict[k] = {}
                         prev_dict = prev_dict[k]
 
-                if value:
+                if value is not None:
                     prev_dict[dict_key[-1:][0]] = value
 
         return json.dumps(prev_dict)
@@ -69,16 +77,20 @@ class ProductJSONWidget(forms.Textarea):
             value = '{}'
 
         json_obj = json.loads(value)
-        inputs = self.to_fields(name, json_obj.get('manual', {}))
-
-        remove_keys = ['key', 'images', 'image_urls', 'affiliate', 'vendor', 'vendor_id']
+        hide_keys = ['key', 'images', 'image_urls', 'affiliate', 'vendor', 'vendor_id', 'brand', 'category', 'url']
+        remove_keys = ['image_urls', 'vendor_id']
         keys = sorted(json_obj.get('scraped', {}).keys())
         table = collections.OrderedDict()
         for key in keys:
+            if key in remove_keys:
+                continue
+
             table[key] = {}
             for layer in ['scraped', 'parsed', 'manual', 'final']:
-                if layer == 'manual' and key not in remove_keys:
+                if layer == 'manual' and key not in hide_keys:
                     table[key][layer] = self.as_field(name, 'manual__%s' % (key,), json_obj.get(layer, {}).get(key, ''))
+                elif key == 'images':
+                    table[key][layer] = self.as_image_field(name, 'manual__%s' % (key,), json_obj.get(layer, {}).get(key, ''))
                 else:
                     table[key][layer] = json_obj.get(layer, {}).get(key, '')
 
@@ -110,6 +122,16 @@ class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ('key', 'is_auto_validated', 'created', 'modified', 'vendor', 'dropped')
     search_fields = ('key',)
     actions = ('add_to_parse_queue',)
+    save_on_top = True
+
+    #def save_model(self, request, obj, form, change):
+        #parser = Parser()
+        #importer = Importer()
+
+        #is_valid = parser.parse(obj)
+        #importer.site_import(obj, is_valid)
+
+        #obj.save()
 
     def add_to_parse_queue(self, request, queryset):
         parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
@@ -149,7 +171,7 @@ class BrandMappingAdmin(admin.ModelAdmin):
     list_display = ('brand', 'vendor', 'mapped_brand')
     list_filter = (IsMappedBrandListFilter, 'vendor')
     readonly_fields = ('vendor', 'brand', 'created', 'modified')
-
+    search_fields = ('brand',)
 
 class IsMappedCategoryListFilter(admin.SimpleListFilter):
     title = _('is mapped')
@@ -172,6 +194,7 @@ class CategoryMappingAdmin(admin.ModelAdmin):
     list_display = ('category', 'vendor', 'mapped_category')
     list_filter = (IsMappedCategoryListFilter, 'vendor')
     readonly_fields = ('vendor', 'category', 'created', 'modified')
+    search_fields = ('category',)
 
 
 class MappingAdmin(admin.ModelAdmin):

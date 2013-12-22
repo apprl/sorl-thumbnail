@@ -12,10 +12,10 @@
     {% for key, value in table.items %}
     <tr>
       <td style="width: 12%;"><strong>{{ key }}</strong></td>
-      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.scraped }}</td>
-      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.parsed }}</td>
+      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.scraped|safe }}</td>
+      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.parsed|safe }}</td>
       <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.manual|safe }}</td>
-      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.final }}</td>
+      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.final|safe }}</td>
     </tr>
     {% endfor %}
     <tr>

@@ -75,6 +75,6 @@ class TheimpFlowTest(TransactionTestCase):
         item = ProductItem(product_mock)
         parser = Parser(parse_queue=Mock(), site_queue=Mock())
 
-        new_item = parser.finalize(item)
+        new_item = parser.finalize(item, True)
         self.assertIsNone(new_item.get_final('patterns'))
         self.assertEqual(new_item.get_final('colors'), 'red')
