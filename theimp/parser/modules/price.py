@@ -61,6 +61,8 @@ class Price(BaseModule):
             if parsed_discount_price and parsed_discount_price < parsed_regular_price:
                 parsed_item['discount_price'] = str(parsed_discount_price)
                 parsed_item['is_discount'] = True
+            else:
+                self.delete_value(parsed_item, 'discount_price')
         else:
             self.delete_value(parsed_item, 'regular_price')
             self.delete_value(parsed_item, 'discount_price')

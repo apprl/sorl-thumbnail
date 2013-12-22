@@ -91,3 +91,10 @@ class PriceModuleTest(TestCase):
         self.assertEqual(parsed_item.get('regular_price'), '219')
         self.assertEqual(parsed_item.get('discount_price'), None)
         self.assertEqual(parsed_item.get('is_discount'), False)
+
+    def test_regular_and_discount_price_is_equal_previous_value(self):
+        parsed_item = self.module({'regular_price': '219', 'discount_price': '219', 'currency': 'SEK'}, {'is_discount': True, 'discount_price': '219'}, None)
+        self.assertEqual(parsed_item.get('currency'), 'SEK')
+        self.assertEqual(parsed_item.get('regular_price'), '219')
+        self.assertEqual(parsed_item.get('discount_price'), None)
+        self.assertEqual(parsed_item.get('is_discount'), False)
