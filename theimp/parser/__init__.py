@@ -94,8 +94,7 @@ class Parser(object):
 
             validated = self.validate(item)
             if validated:
-                for key in item.data[ProductItem.KEY_PARSED].keys():
-                    item.data[ProductItem.KEY_FINAL][key] = item.get_parsed(key)
+                item = self.finalize(item)
 
             product.is_auto_validated = validated
             product.json = json.dumps(item.data)
@@ -126,6 +125,12 @@ class Parser(object):
             except (TypeError, ValueError):
                 pass
 
+        return item
+
+    def finalize(self, item):
+        item.data[ProductItem.KEY_FINAL] = {}
+        for key in item.data[ProductItem.KEY_PARSED].keys():
+            item.data[ProductItem.KEY_FINAL][key] = item.get_parsed(key)
         return item
 
     def _validate_vendor(self, vendor_name):

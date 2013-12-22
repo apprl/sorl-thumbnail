@@ -39,3 +39,42 @@ class TheimpFlowTest(TransactionTestCase):
         item = parser.initial_parse(item)
 
         self.assertEqual(item.data[ProductItem.KEY_PARSED], {})
+
+    def test_clear_final_layer_before_finalization(self):
+        key = 'http://example.com/product/product-name.html'
+        data = {
+            'final': {'patterns': 'striped'},
+            'scraped': {},
+            'parsed': {
+                'key': key,
+                'url': key,
+                'affiliate': 'aan',
+                'name': 'Product Name',
+                'brand': 'Fifth Avenue',
+                'category': 'scraped-category',
+                'vendor': 'TestVendor',
+                'description': 'Product Name description  ',
+                'gender': 'female products',
+                'colors': 'red',
+                'currency': 'SEK',
+                'regular_price': '999.99',
+                'discount_price': '879.99',
+                'in_stock': True,
+                'image_urls': ['http://example.com/image_not_available.jpg'],
+                'images': [{'checksum': 'abc',
+                            'path': 'image_not_available.jpg',
+                            'url': 'http://example.com/image_not_available.jpg'}],
+
+            }
+        }
+
+        product_mock = MagicMock()
+        product_mock_json = PropertyMock(return_value=json.dumps(data))
+        type(product_mock).json = product_mock_json
+
+        item = ProductItem(product_mock)
+        parser = Parser(parse_queue=Mock(), site_queue=Mock())
+
+        new_item = parser.finalize(item)
+        self.assertIsNone(new_item.get_final('patterns'))
+        self.assertEqual(new_item.get_final('colors'), 'red')
