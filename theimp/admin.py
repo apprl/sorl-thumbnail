@@ -6,14 +6,16 @@ from django import forms, utils
 from django.conf import settings
 from django.contrib import admin
 from django.core.files.storage import default_storage
+from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
 from sorl.thumbnail import get_thumbnail
 
-from theimp.parser import Parser
 from theimp.importer import Importer
+from theimp.models import BrandMapping, CategoryMapping
+from theimp.parser import Parser
 
 
 class ProductJSONWidget(forms.Textarea):
@@ -25,6 +27,9 @@ class ProductJSONWidget(forms.Textarea):
         attrs = self.build_attrs(name="%s__%s" % (name, key))
         attrs['value'] = utils.encoding.force_unicode(value)
         return u'<input style="width: 90%%;"%s>' % (forms.util.flatatt(attrs),)
+
+    def as_link_field(self, name, key, value, url):
+        return u'<a target="_blank" href="%s">%s</a>' % (url, utils.encoding.force_unicode(value),)
 
     def as_image_field(self, name, key, value):
         """
@@ -85,12 +90,29 @@ class ProductJSONWidget(forms.Textarea):
 
             table[key] = {}
             for layer in ['scraped', 'parsed', 'manual', 'final']:
-                if layer == 'manual' and key not in hide_keys:
-                    table[key][layer] = self.as_field(name, 'manual__%s' % (key,), json_obj.get(layer, {}).get(key, ''))
+                key_value = json_obj.get(layer, {}).get(key, '')
+                if key == 'colors' and layer == 'manual':
+                    table[key][layer] = 'TODO'
+                elif layer == 'manual' and key not in hide_keys:
+                    table[key][layer] = self.as_field(name, 'manual__%s' % (key,), key_value)
                 elif key == 'images':
-                    table[key][layer] = self.as_image_field(name, 'manual__%s' % (key,), json_obj.get(layer, {}).get(key, ''))
+                    table[key][layer] = self.as_image_field(name, 'manual__%s' % (key,), key_value)
+                elif key == 'brand' and layer == 'scraped':
+                    try:
+                        brand = BrandMapping.objects.get(brand=key_value)
+                        url = reverse('admin:theimp_brandmapping_change', args=[brand.pk])
+                        table[key][layer] = self.as_link_field(name, key, key_value, url)
+                    except BrandMapping.DoesNotExist:
+                        table[key][layer] = 'MISSING BRAND: %s' % (key_value,)
+                elif key == 'category' and layer == 'scraped':
+                    try:
+                        category = CategoryMapping.objects.get(category=key_value)
+                        url = reverse('admin:theimp_categorymapping_change', args=[category.pk])
+                        table[key][layer] = self.as_link_field(name, key, key_value, url)
+                    except CategoryMapping.DoesNotExist:
+                        table[key][layer] = 'MISSING CATEGORY: %s' % (key_value,)
                 else:
-                    table[key][layer] = json_obj.get(layer, {}).get(key, '')
+                    table[key][layer] = key_value
 
         rendered = render_to_string('json_widget.html', {'table': table, 'raw': value})
 
