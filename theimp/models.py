@@ -18,13 +18,14 @@ class BaseModel(models.Model):
 
 class Product(BaseModel):
     key = models.CharField(max_length=512)
+    vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
     json = models.TextField()
 
-    dropped = models.BooleanField(default=False, null=False, blank=False)
-    is_auto_validated = models.NullBooleanField(default=None, null=True, blank=True)
-    is_manual_validated = models.NullBooleanField(default=None, null=True, blank=True)
-    merged = models.ForeignKey('theimp.Product', null=True, blank=True)
-    vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
+    is_dropped = models.BooleanField(default=False, null=False, blank=False)
+    is_validated = models.NullBooleanField(default=None, null=True, blank=True)
+
+    parsed_date = models.DateTimeField(null=True, blank=True)
+    imported_date = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
         return 'Product(key=%s)' % (self.key,)

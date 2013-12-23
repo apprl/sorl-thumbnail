@@ -117,9 +117,9 @@ class ProductAdminForm(forms.ModelForm):
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
     ordering = ('-modified',)
-    list_display = ('key', 'vendor', 'is_auto_validated', 'created', 'modified')
-    list_filter = ('is_auto_validated', 'is_manual_validated', 'dropped', 'vendor')
-    readonly_fields = ('key', 'is_auto_validated', 'created', 'modified', 'vendor', 'dropped')
+    list_display = ('key', 'vendor', 'is_validated', 'created', 'modified')
+    list_filter = ('is_validated', 'is_dropped', 'vendor')
+    readonly_fields = ('key', 'is_validated', 'created', 'modified', 'vendor', 'is_dropped', 'parsed_date', 'imported_date')
     search_fields = ('key',)
     actions = ('add_to_parse_queue',)
     save_on_top = True

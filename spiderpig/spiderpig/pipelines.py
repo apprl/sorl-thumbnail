@@ -97,7 +97,7 @@ class DatabaseHandler:
             product = None
             try:
                 product = Product.objects.get(key=key)
-                product.dropped = True
+                product.is_dropped = True
                 product.save()
                 spider.log('Dropped item with key: "%s"' % (key,))
             except Product.DoesNotExist:
@@ -124,7 +124,7 @@ class DatabaseHandler:
             json_data['scraped'].update(dict(item))
             product.json = json.dumps(json_data)
             product.vendor = vendor
-            product.dropped = False
+            product.is_dropped = False
             product.save()
 
         self.parse_queue.put(product.pk)

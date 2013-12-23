@@ -144,7 +144,7 @@ class TheimpFlowTest(TransactionTestCase):
         }
         json_data = json.dumps(data)
         product = self.product_model.objects.create(key=key, json=json_data, vendor=self.vendor)
-        self.assertEqual(product.dropped, False)
+        self.assertEqual(product.is_dropped, False)
 
         #
         # 1. Initial parse and import
@@ -156,7 +156,7 @@ class TheimpFlowTest(TransactionTestCase):
         parser.run()
 
         product = self.product_model.objects.get(key=key)
-        self.assertTrue(product.is_auto_validated)
+        self.assertTrue(product.is_validated)
 
         # Site import (add)
         importer = Importer(site_queue=self.site_queue)

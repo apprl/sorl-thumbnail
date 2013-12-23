@@ -5,6 +5,7 @@ from pprint import pformat
 
 from django.conf import settings
 from django.db.models.loading import get_model
+from django.utils import timezone
 from django.utils.html import strip_tags
 
 from hotqueue import HotQueue
@@ -105,7 +106,8 @@ class Parser(object):
         validated = self.validate(item)
         item = self.finalize(item, validated)
 
-        product.is_auto_validated = validated
+        product.is_validated = validated
+        product.parsed_date = timezone.now()
         product.json = json.dumps(item.data)
         product.save()
 
