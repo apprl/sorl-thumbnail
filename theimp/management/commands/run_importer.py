@@ -8,5 +8,4 @@ class Command(BaseCommand):
     help = 'Importer worker'
 
     def handle(self, *args, **options):
-        # TODO: run as a daemon?
         Importer().run()

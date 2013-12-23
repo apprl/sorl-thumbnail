@@ -1,5 +1,4 @@
 import json
-from collections import deque
 
 from mock import patch, Mock
 
@@ -11,27 +10,6 @@ from django.db.models.loading import get_model
 from theimp.parser import Parser
 from theimp.importer import Importer
 from theimp.utils import ProductItem
-
-
-class HotQueueMock(object):
-
-    queues = {}
-
-    def __init__(self, queue_name, *args, **kwargs):
-        if queue_name not in HotQueueMock.queues:
-            HotQueueMock.queues[queue_name] = deque()
-
-        self.queue = HotQueueMock.queues[queue_name]
-
-    def consume(self):
-        try:
-            while True:
-                yield self.queue.popleft()
-        except:
-            pass
-
-    def put(self, item):
-        self.queue.append(item)
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -46,9 +24,6 @@ class TheimpFlowTest(TransactionTestCase):
         get_model('apparel', 'OptionType').objects.create(name='color')
         get_model('apparel', 'OptionType').objects.create(name='pattern')
 
-        self.parse_queue = HotQueueMock(settings.THEIMP_QUEUE_PARSE)
-        self.site_queue = HotQueueMock(settings.THEIMP_QUEUE_SITE)
-
         # Setup vendor for site and importer
         self.site_vendor = get_model('apparel', 'Vendor').objects.create(name='Fifth Avenue Shoe Repair')
         self.vendor = get_model('theimp', 'Vendor').objects.create(name='TestVendor', vendor=self.site_vendor, affiliate_identifier='fifth_avenue')
@@ -60,22 +35,12 @@ class TheimpFlowTest(TransactionTestCase):
         get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor, category='scraped-category', mapped_category=self.imported_category)
 
     @patch('theimp.parser.logger')
-    def test_parser_queue(self, mock_logger):
-        self.parse_queue.put(1)
-        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
-        parser.run()
+    def test_parser_parse_with_none_product(self, mock_logger):
+        parser = Parser()
+        parser.parse(None)
 
-        mock_logger.exception.assert_called_with('Could not load product with id 1')
+        mock_logger.error.assert_called_with('Could not parse invalid product')
         self.assertEqual(self.product_model.objects.count(), 0)
-
-    @patch('theimp.importer.logger')
-    def test_importer_queue(self, mock_logger):
-        self.site_queue.put((1, True))
-        importer = Importer(site_queue=self.site_queue)
-        importer.run()
-
-        mock_logger.exception.assert_called_with('Could not load product with id 1')
-        self.assertEqual(self.site_product_model.objects.count(), 0)
 
     def test_find_site_product_fail(self):
         data = {'site_product': 10000}
@@ -84,7 +49,7 @@ class TheimpFlowTest(TransactionTestCase):
 
         self.assertEqual(item.get_site_product(), 10000)
 
-        importer = Importer(site_queue=Mock())
+        importer = Importer()
         importer._find_site_product(item)
 
         self.assertEqual(item.get_site_product(), None)
@@ -104,7 +69,7 @@ class TheimpFlowTest(TransactionTestCase):
 
         self.assertEqual(mock_item.get_final('colors'), ['red', 'blue'])
 
-        importer = Importer(site_queue=Mock())
+        importer = Importer()
         importer._update_product_options(mock_item, product)
 
         product = self.site_product_model.objects.get(product_name='Product Name')
@@ -151,15 +116,14 @@ class TheimpFlowTest(TransactionTestCase):
         #
 
         # Parse
-        self.parse_queue.put(product.pk)
-        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
-        parser.run()
+        parser = Parser()
+        parser.parse(product)
 
         product = self.product_model.objects.get(key=key)
         self.assertTrue(product.is_validated)
 
         # Site import (add)
-        importer = Importer(site_queue=self.site_queue)
+        importer = Importer()
         importer.run()
 
         self.assertFalse(mock_logger.exception.called)
@@ -178,10 +142,9 @@ class TheimpFlowTest(TransactionTestCase):
         #
 
         # Parse and import again (update)
-        self.parse_queue.put(product.pk)
-        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
-        parser.run()
-        importer = Importer(site_queue=self.site_queue)
+        parser = Parser()
+        parser.parse(product)
+        importer = Importer()
         importer.run()
 
         site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
@@ -204,10 +167,9 @@ class TheimpFlowTest(TransactionTestCase):
         product.json = json.dumps(product_json)
         product.save()
 
-        self.parse_queue.put(product.pk)
-        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
-        parser.run()
-        importer = Importer(site_queue=self.site_queue)
+        parser = Parser()
+        parser.parse(product)
+        importer = Importer()
         importer.run()
 
         site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
@@ -230,10 +192,10 @@ class TheimpFlowTest(TransactionTestCase):
         product.json = json.dumps(product_json)
         product.save()
 
-        self.parse_queue.put(product.pk)
-        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
-        parser.run()
-        importer = Importer(site_queue=self.site_queue)
+
+        parser = Parser()
+        parser.parse(product)
+        importer = Importer()
         importer.run()
 
         site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
@@ -255,10 +217,9 @@ class TheimpFlowTest(TransactionTestCase):
         product.json = json.dumps(product_json)
         product.save()
 
-        self.parse_queue.put(product.pk)
-        parser = Parser(parse_queue=self.parse_queue, site_queue=self.site_queue)
-        parser.run()
-        importer = Importer(site_queue=self.site_queue)
+        parser = Parser()
+        parser.parse(product)
+        importer = Importer()
         importer.run()
 
         site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')

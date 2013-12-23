@@ -10,8 +10,6 @@ from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
-from hotqueue import HotQueue
-
 from sorl.thumbnail import get_thumbnail
 
 from theimp.parser import Parser
@@ -117,30 +115,22 @@ class ProductAdminForm(forms.ModelForm):
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
     ordering = ('-modified',)
-    list_display = ('key', 'vendor', 'is_validated', 'created', 'modified')
+    list_display = ('key', 'vendor', 'is_validated', 'modified', 'parsed_date', 'imported_date')
     list_filter = ('is_validated', 'is_dropped', 'vendor')
     readonly_fields = ('key', 'is_validated', 'created', 'modified', 'vendor', 'is_dropped', 'parsed_date', 'imported_date')
     search_fields = ('key',)
-    actions = ('add_to_parse_queue',)
+    actions = ('parse_products',)
     save_on_top = True
 
-    #def save_model(self, request, obj, form, change):
-        #parser = Parser()
-        #importer = Importer()
+    def save_model(self, request, obj, form, change):
+        parser = Parser()
+        parser.parse(obj)
+        obj.save()
 
-        #is_valid = parser.parse(obj)
-        #importer.site_import(obj, is_valid)
-
-        #obj.save()
-
-    def add_to_parse_queue(self, request, queryset):
-        parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
-                               host=settings.THEIMP_REDIS_HOST,
-                               port=settings.THEIMP_REDIS_PORT,
-                               db=settings.THEIMP_REDIS_DB)
-
-        for product_id in queryset.values_list('pk', flat=True):
-            parse_queue.put(product_id)
+    def parse_products(self, request, queryset):
+        parser = Parser()
+        for product in queryset.iterator():
+            parser.parse(product)
 
 
 class VendorAdmin(admin.ModelAdmin):

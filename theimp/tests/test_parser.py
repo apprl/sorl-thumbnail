@@ -24,7 +24,7 @@ class TheimpFlowTest(TransactionTestCase):
         type(product_mock).json = product_mock_json
 
         item = ProductItem(product_mock)
-        parser = Parser(parse_queue=Mock(), site_queue=Mock())
+        parser = Parser()
         item = parser.initial_parse(item)
 
         self.assertEqual(item.data[ProductItem.KEY_PARSED], {})
@@ -35,7 +35,7 @@ class TheimpFlowTest(TransactionTestCase):
         type(product_mock).json = product_mock_json
 
         item = ProductItem(product_mock)
-        parser = Parser(parse_queue=Mock(), site_queue=Mock())
+        parser = Parser()
         item = parser.initial_parse(item)
 
         self.assertEqual(item.data[ProductItem.KEY_PARSED], {})
@@ -73,7 +73,7 @@ class TheimpFlowTest(TransactionTestCase):
         type(product_mock).json = product_mock_json
 
         item = ProductItem(product_mock)
-        parser = Parser(parse_queue=Mock(), site_queue=Mock())
+        parser = Parser()
 
         new_item = parser.finalize(item, True)
         self.assertIsNone(new_item.get_final('patterns'))

@@ -10,11 +10,9 @@ from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop
 
-from hotqueue import HotQueue
-
 from apparelrow import settings
 from theimp.models import Product, Vendor
-
+from theimp.parser import Parser
 
 class MissingFieldDrop(DropItem):
     """
@@ -66,10 +64,7 @@ class DatabaseHandler:
         crawler.signals.connect(ext.item_scraped, signal=signals.item_scraped)
         crawler.signals.connect(ext.item_dropped, signal=signals.item_dropped)
 
-        ext.parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
-                                   host=settings.THEIMP_REDIS_HOST,
-                                   port=settings.THEIMP_REDIS_PORT,
-                                   db=settings.THEIMP_REDIS_DB)
+        ext.parser = Parser()
 
         return ext
 
@@ -104,7 +99,7 @@ class DatabaseHandler:
                 spider.log('Could not find dropped item in database with key: "%s"' % (key,))
 
             if product:
-                self.parse_queue.put(product.pk)
+                self.parser.parse(product)
 
     def item_scraped(self, item, spider):
         """
@@ -127,7 +122,7 @@ class DatabaseHandler:
             product.is_dropped = False
             product.save()
 
-        self.parse_queue.put(product.pk)
+        self.parser.parse(product)
 
         return item
 

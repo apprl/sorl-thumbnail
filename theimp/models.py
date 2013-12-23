@@ -38,6 +38,8 @@ class Vendor(BaseModel):
     comment  = models.TextField(blank=True, default='')
     vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True)
 
+    last_imported_date = models.DateTimeField(null=True, blank=True)
+
     def __unicode__(self):
         return u'%s' % (self.name,)
 

@@ -3,12 +3,12 @@ import os.path
 import re
 
 from django.conf import settings
+from django.db import transaction
 from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
+from django.utils import timezone
 
-from hotqueue import HotQueue
-
-from theimp.models import Vendor
+from theimp.models import Vendor, Product
 from theimp.utils import ProductItem
 
 
@@ -18,32 +18,36 @@ logger = logging.getLogger(__name__)
 class Importer(object):
 
     def __init__(self, site_queue=None):
-        self.product_model = get_model('theimp', 'Product')
         self.site_product_model = get_model('apparel', 'Product')
-        self.vendor_product_model = get_model('apparel', 'VendorProduct')
+        self.site_vendor_product_model = get_model('apparel', 'VendorProduct')
         self.site_option_model = get_model('apparel', 'Option')
         self.site_brand_model = get_model('apparel', 'Brand')
         self.site_category_model = get_model('apparel', 'Category')
 
         self.option_types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in get_model('apparel', 'OptionType').objects.iterator()])
 
-        self.site_queue = HotQueue(settings.THEIMP_QUEUE_SITE,
-                                   host=settings.THEIMP_REDIS_HOST,
-                                   port=settings.THEIMP_REDIS_PORT,
-                                   db=settings.THEIMP_REDIS_DB)
-        if site_queue:
-            self.site_queue = site_queue
-
     def run(self):
-        for product_id, is_valid in self.site_queue.consume():
-            logger.debug('Consume from site queue: (%s, %s)' % (product_id, is_valid))
-            try:
-                product = self.product_model.objects.get(pk=product_id)
-            except self.product_model.DoesNotExist as e:
-                logger.exception('Could not load product with id %s' % (product_id,))
-                continue
+        for vendor in Vendor.objects.filter(vendor__isnull=False).iterator():
+            imported_date = None
+            product_queryset = Product.objects.filter(vendor=vendor)
+            if vendor.last_imported_date:
+                product_queryset = product_queryset.filter(parsed_date__gte=vendor.last_imported_date)
+            logger.info('Import %s products for vendor %s' % (product_queryset.count(), vendor))
+            for product_id in product_queryset.values_list('pk', flat=True):
+                try:
+                    product = Product.objects.get(pk=product_id)
+                except Product.DoesNotExist as e:
+                    logger.exception('Could not load product with id %s' % (product_id,))
+                    continue
 
-            self.site_import(product, is_valid)
+                logger.debug('Import product %s [valid = %s]' % (product.key, product.is_validated))
+
+                with transaction.atomic():
+                    imported_date = self.site_import(product, product.is_validated)
+
+            if imported_date:
+                vendor.last_imported_date = imported_date
+                vendor.save()
 
     def site_import(self, product, is_valid):
         item = ProductItem(product)
@@ -63,9 +67,11 @@ class Importer(object):
                     self.hide_product(site_product)
         except Exception as e:
             logger.exception('Could not import product to site with id %s' % (product.pk,))
-        else:
-            # XXX: Is this for updating of modified datetime?
+        finally:
+            product.imported_date = timezone.now()
             product.save()
+
+        return product.imported_date
 
     def add_product(self, item):
         brand, _ = self.site_brand_model.objects.get_or_create(name=item.get_final('brand'))
@@ -131,8 +137,8 @@ class Importer(object):
 
     def _update_vendor_product(self, item, site_product):
         vendor = Vendor.objects.get(name=item.get_final('vendor'))
-        vendor_product, _ = self.vendor_product_model.objects.get_or_create(product=site_product,
-                                                                            vendor_id=vendor.vendor_id)
+        vendor_product, _ = self.site_vendor_product_model.objects.get_or_create(product=site_product,
+                                                                                 vendor_id=vendor.vendor_id)
         vendor_product.buy_url = item.get_final('buy_url')
         vendor_product.original_price = item.get_final('regular_price') or '0.0'
         vendor_product.original_currency = item.get_final('currency')

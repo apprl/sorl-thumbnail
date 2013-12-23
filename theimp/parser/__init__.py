@@ -8,8 +8,6 @@ from django.db.models.loading import get_model
 from django.utils import timezone
 from django.utils.html import strip_tags
 
-from hotqueue import HotQueue
-
 from theimp.utils import ProductItem
 
 
@@ -22,7 +20,7 @@ class Parser(object):
                        'currency', 'regular_price', 'url', 'vendor']
     gender_values = ['M', 'W', 'U']
 
-    def __init__(self, parse_queue=None, site_queue=None):
+    def __init__(self):
         self.modules = [
             'theimp.parser.modules.build_buy_url.BuildBuyURL',
             'theimp.parser.modules.brand.BrandMapper',
@@ -32,20 +30,6 @@ class Parser(object):
             'theimp.parser.modules.option.OptionMapper',
         ]
         self.load_modules()
-
-        self.parse_queue = HotQueue(settings.THEIMP_QUEUE_PARSE,
-                                    host=settings.THEIMP_REDIS_HOST,
-                                    port=settings.THEIMP_REDIS_PORT,
-                                    db=settings.THEIMP_REDIS_DB)
-        if parse_queue:
-            self.parse_queue = parse_queue
-
-        self.site_queue = HotQueue(settings.THEIMP_QUEUE_SITE,
-                                   host=settings.THEIMP_REDIS_HOST,
-                                   port=settings.THEIMP_REDIS_PORT,
-                                   db=settings.THEIMP_REDIS_DB)
-        if site_queue:
-            self.site_queue = site_queue
 
     def load_modules(self):
         """
@@ -60,27 +44,11 @@ class Parser(object):
             except (ImportError, AttributeError):
                 logger.exception('Could not load module')
 
-    def run(self):
-        """
-        Run parser.
-        """
-        for product_id in self.parse_queue.consume():
-            try:
-                product = get_model('theimp', 'Product').objects.get(pk=product_id)
-            except get_model('theimp', 'Product').DoesNotExist as e:
-                logger.exception('Could not load product with id %s' % (product_id,))
-                continue
-
-            validated = self.parse(product)
-
-            if validated:
-                logger.info('Parsed product successful moving to site queue: (%s, %s)' % (product.pk, validated))
-            else:
-                logger.info('Parsed product unsuccessful moving to site queue: (%s, %s)' % (product.pk, validated))
-
-            self.site_queue.put((product.pk, validated))
-
     def parse(self, product):
+        if not product:
+            logger.error('Could not parse invalid product')
+            return
+
         logger.info('Parse product id %s' % (product.pk,))
 
         # Load product json and validate initial specification
