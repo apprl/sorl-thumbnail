@@ -130,10 +130,14 @@ class Parser(object):
             return False
 
         # Validate currency
+        # TODO: should validate against our imported currencies
         if len(item.get_parsed('currency')) != 3:
             logger.warning('Invalid currency value: %s' % (item.get_parsed('currency'),))
             logger.debug('Data:\n%s' % (pformat(item.data),))
             return False
+
+        # Validate regular and discount price
+        # TODO: how?
 
         # Validate vendor
         vendor = self._validate_vendor(item.get_parsed('vendor'))
