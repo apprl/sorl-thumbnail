@@ -26,7 +26,7 @@ class NellySpider(CSVFeedSpider, AffiliateMixin):
         key = key_regex1.search(row.get('productUrl'))
         if key:
             item['key'] = urllib.unquote(force_bytes(key.group(1)))
-        item['sku'] = row.get('sku')
+        item['sku'] = row.get('TDProductId')
         item['name'] = row.get('name')
         item['vendor'] = self.name
         item['url'] = row.get('productUrl')
