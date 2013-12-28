@@ -10,7 +10,6 @@ from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop
 
-from apparelrow import settings
 from theimp.models import Product, Vendor
 from theimp.parser import Parser
 

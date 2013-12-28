@@ -46,9 +46,9 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefo
 
 
 # DJANGO INTEGRATION
-# TODO: this must work when deployed
 import sys
-sys.path.append('/home/tote/coding/apparelrow/apparelrow')
+import os.path
+sys.path.append(os.path.abspath('../'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apparelrow.settings')
 from django.conf import settings
 
