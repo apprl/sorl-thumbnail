@@ -18,6 +18,10 @@ class NellySpider(CSVFeedSpider, AffiliateMixin):
     start_urls = ['http://pf.tradedoubler.com/export/export?myFeed=13164639121853028&myFormat=12919846971897050']
     delimiter = '|'
 
+    def parse_rows(self, response):
+        response = response.replace(encoding='iso-8859-1')
+        return super(NellySpider, self).parse_rows(response)
+
     def parse_row(self, response, row):
         # Preprocess
         row.update([x.split(':', 1) for x in row.get('fields', '').split(';') if x])
