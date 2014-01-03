@@ -426,7 +426,7 @@ def build_styles_and_scripts():
     with cd('%(path)s/releases/%(release)s/%(project_name)s' % env):
         sudo('chown -R %(run_user)s:%(run_group)s ./static' % env, pty=True)
         #sudo('cd ./sass; /var/lib/gems/1.8/bin/compass compile' % env, pty=True, user=env.run_user)
-        run('mkdir media', pty=True)
+        run('mkdir -p media', pty=True)
         sudo('chown -R %(run_user)s:%(run_group)s ./media' % env, pty=True)
         sudo('ln -s ../../../../shared/static media/static', pty=True, user=env.run_user)
         with prefix('. ../../../bin/activate'):
