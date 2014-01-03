@@ -120,7 +120,10 @@ class TransactionAdmin(admin.ModelAdmin):
         if obj and obj.invoice and obj.invoice.is_paid:
             return ('commission', 'order_value', 'is_paid', 'status') + self.readonly_fields
 
-        return self.readonly_fields
+        if obj and obj.invoice:
+            return self.readonly_fields
+
+        return ()
 
 admin.site.register(Transaction, TransactionAdmin)
 
