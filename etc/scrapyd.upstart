@@ -1,0 +1,14 @@
+# Scrapy service
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+script
+    appdir={{ path }}
+    . $appdir/bin/activate
+    logdir=$appdir/var/logs
+    cd $appdir/releases/current/spiderpig
+    exec scrapyd -u deploy -g deploy \
+                 --pidfile $appdir/var/scrapyd.pid \
+                 -l $logdir/scrapyd.log >$logdir/scrapyd.out 2>$logdir/scrapyd.err
+end script

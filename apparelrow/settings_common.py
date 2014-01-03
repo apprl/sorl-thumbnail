@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import os.path
 import posixpath
 
@@ -235,6 +236,7 @@ INSTALLED_APPS = (
     'localeurl',
 
     # Internal
+    'theimp',
     'advertiser',
     'apparelrow.profile',              # Internal: User related module
     'apparelrow.apparel',              # Internal: Product display module
@@ -522,6 +524,13 @@ THUMBNAIL_PREFIX = 'cache/'
 # FEED
 FEED_REDIS_DB = 1
 
+# SPIDERPIG / THEIMP
+THEIMP_REDIS_HOST = 'localhost'
+THEIMP_REDIS_PORT = 6380
+THEIMP_REDIS_DB = 10
+THEIMP_QUEUE_PARSE = 'theimp.parse'
+THEIMP_QUEUE_SITE = 'theimp.site'
+
 # CELERY CONFIGURATION
 CELERY_DEFAULT_QUEUE = 'standard'
 CELERY_DEFAULT_EXCHANGE_TYPE = 'direct'
@@ -558,6 +567,7 @@ CELERY_ROUTES = ({
     'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
     'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
+    'theimp.tasks.update_old': {'queue': 'background'},
 },)
 
 # LOGGING CONFIGURATION
@@ -582,7 +592,8 @@ LOGGING = {
         'console': {
             'level': 'NOTSET',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'simple',
+            'stream': sys.stdout
         },
         'app_core': {
             'level': 'NOTSET',
@@ -618,6 +629,14 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
             'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'dashboard.log'),
+            'maxBytes': 3000000,
+            'backupCount': 8,
+        },
+        'theimp': {
+            'level': 'NOTSET',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'theimp.log'),
             'maxBytes': 3000000,
             'backupCount': 8,
         },
@@ -667,6 +686,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propgate': False,
             'handlers': ['dashboard'],
+        },
+        'theimp': {
+            'level': 'DEBUG',
+            'propgate': False,
+            'handlers': ['theimp'],
         },
     }
 }

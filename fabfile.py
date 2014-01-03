@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import re
 import os.path
+import time
+
 from fabric.api import *
 from fabric.contrib.files import upload_template, exists
 from fabtools.require.files import file as require_file
@@ -58,6 +60,17 @@ def production_data():
     env.group = env.user
     env.path = '/home/{user}/{project_name}'.format(**env)
     env.solr_path = '/home/{user}/solr'.format(**env)
+
+def production_importer():
+    """
+    Production importer server.
+    """
+    env.hosts = ['importer1.apprl.com']
+    env.hostname = 'importer1'
+    env.user = 'deploy'
+    env.group = env.user
+    env.path = '/home/{user}/{project_name}'.format(**env)
+    env.settings = 'production'
 
 def production_web():
     """
@@ -143,6 +156,56 @@ def setup_data_backup():
     sudo('chown root:root /etc/cron.d/pgbackup')
 
 
+def setup_importer_server():
+    """
+    Setup importer server.
+    """
+    require('hosts', provided_by=[production_importer])
+    require('path')
+
+    sudo('apt-get install -y -q python-software-properties')
+    sudo('apt-get update -q')
+    sudo('apt-get install -y -q build-essential python-dev python-setuptools python-virtualenv libxml2-dev libxslt-dev libyaml-dev libjpeg-dev libtiff-dev libpq-dev git-core')
+
+    run('mkdir -p %(path)s/releases %(path)s/packages %(path)s/var/logs' % env, pty=True)
+    with cd(env.path):
+        run('virtualenv .')
+        with prefix('. bin/activate'):
+            run('pip install scrapyd')
+        with settings(warn_only=True):
+            run('cd releases; ln -s . current; ln -s . previous;', pty=True)
+
+
+def deploy_importer_server(snapshot='master'):
+    """
+    Deploy importer server.
+    """
+    require('hosts', provided_by=[production_importer])
+    require('path')
+
+    # Upload all project files
+    env.release = '%s-%s' % (time.strftime('%Y%m%d%H%M%S'), snapshot)
+    upload_tar_from_git(snapshot)
+    install_requirements()
+    symlink_current_release()
+    with cd(env.path):
+        run('mkdir -p var/logs var/items var/dbs var/eggs')
+        run('cd releases/current/apparelrow; cp %(settings)s.py.default settings.py' % env, pty=True)
+
+    # Migrate database (XXX: should we do it here?)
+    with cd('%(path)s/releases/current' % env), prefix('. ../../bin/activate'):
+        run('python manage.py migrate')
+
+    # Upload scrapyd upstart and config and restart scrapyd
+    upload_template(filename='etc/scrapyd.conf', destination='%(path)s/releases/current/spiderpig/scrapy.cfg' % env, context=env, use_sudo=False, use_jinja=True)
+    upload_template(filename='etc/scrapyd.upstart', destination='/etc/init/scrapyd.conf', context=env, use_sudo=True, use_jinja=True)
+    sudo('service scrapyd restart')
+
+    # Deploy spiderpig project
+    with cd(os.path.join(env.path, 'releases', 'current', 'spiderpig')), prefix('. ../../../bin/activate'):
+        run('scrapyd-deploy spiderpig -p spiderpig')
+
+
 # OLD SETUP DATABASE CODE
 #def setup_db():
     #"""
@@ -225,7 +288,6 @@ def deploy(param='', snapshot='master'):
     """
     require('hosts', provided_by=[localhost,production_web])
     require('path')
-    import time
     env.release = '%s-%s' % (time.strftime('%Y%m%d%H%M%S'), snapshot)
     upload_tar_from_git(snapshot)
     install_requirements()

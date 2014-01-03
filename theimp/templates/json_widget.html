@@ -1,0 +1,26 @@
+<table style="width: 100%;">
+  <thead>
+    <tr>
+      <td></td>
+      <td>Scraped</td>
+      <td>Parsed / Mapped</td>
+      <td>Manual</td>
+      <td>Final</td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for key, value in table.items %}
+    <tr>
+      <td style="width: 12%;"><strong>{{ key }}</strong></td>
+      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.scraped|safe }}</td>
+      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.parsed|safe }}</td>
+      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.manual|safe }}</td>
+      <td style="width: 22%; word-break: break-all; word-wrap: break-word;">{{ value.final|safe }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td></td>
+      <td colspan="4">{{ raw|safe }}</td>
+    </tr>
+  </tbody>
+</table>

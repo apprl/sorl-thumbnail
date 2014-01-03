@@ -21,6 +21,7 @@ DATABASES = {
 CONN_MAX_AGE = 600
 
 # Storage
+AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's-jdev.apprl.com'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATIC_URL = '/static/'
@@ -46,6 +47,10 @@ SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
 SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')
 
 BROKER_URL = "redis://localhost:6380/0"
+
+THEIMP_REDIS_HOST = 'localhost'
+THEIMP_REDIS_PORT = 6380
+
 CELERY_RESULT_BACKEND = "redis"
 CELERY_REDIS_HOST = "localhost"
 CELERY_REDIS_PORT = 6380
