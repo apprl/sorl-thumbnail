@@ -4,8 +4,9 @@ Order Value: {{ order_value }}
 Currency: {{ currency }}
 Transaction ID: {{ transaction.id }}
 
-From (HTTP HOST): {{ request.META.HTTP_HOST }}
-Full path: {{ request.get_full_path }}
+From (HTTP HOST): {{ request.META.HTTP_HOST|safe }}
+Full path: {{ request.get_full_path|safe }}
+Cookie: {{ request.COOKIES|safe }}
 
 Product data
 Sku: {{ product_sku }}
