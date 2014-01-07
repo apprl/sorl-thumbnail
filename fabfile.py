@@ -202,8 +202,9 @@ def deploy_importer_server(snapshot='master'):
     sudo('service scrapyd restart')
 
     # Upload crons
-    upload_template('etc/run_spiders.cron', '/etc/cron.d/run_spiders', context=env, use_sudo=True)
-    sudo('chmod a+x /etc/cron.d/run_spiders', pty=True)
+    upload_template('etc/run_spiders.cron', '/etc/cron.d/run_spiders', context=env, use_sudo=True, backup=False)
+    sudo('chown root:root /etc/cron.d/run_spiders', pty=True)
+    sudo('chmod 0644 /etc/cron.d/run_spiders', pty=True)
 
     # Deploy spiderpig project
     with cd(os.path.join(env.path, 'releases', 'current', 'spiderpig')), prefix('. ../../../bin/activate'):
