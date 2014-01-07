@@ -18,6 +18,19 @@ running setup on a web server. The SSL certifacte and the private key is not
 stored in the git repo.
 
 
+## Setup importer servers ##
+
+Add a user called deploy and add it to sudoers. Install ufw and setup correct
+rules for scrapyd.
+
+Make sure that that the fabric environment `production_import` is correct and
+the run the following fabric commands:
+
+```
+fab production_importer setup_importer_server
+fab production_importer deploy_importer_server
+```
+
 ## Restore WAL-E backup (untested) ##
 ```
 export ENVDIR=/etc/wal-e.d/env
@@ -39,14 +52,13 @@ chown -R postgres:postgres $PGDATA
 
 ### virtualenv ###
 ```
-virtualenv-2.6 --no-site-packages apparelrow
+virtualenv apparelrow
 cd apparelrow
 source bin/activate
 ```
 
-### pip ###
+### requirements ###
 ```
-easy_install pip
 pip install -r etc/requirements.pip # ... fika ...
 ```
 
@@ -56,10 +68,10 @@ cp apparelrow/development.py.default apparelrow/development.py
 
 mkdir -p var/logs
 ```
+Update settings to match your local environment.
 
 ### Set up database ###
 ```
-cd apparelrow
 ./manage.py syncdb # Warning: do not create a superuser in this stage
 ./manage.py migrate profile
 ./manage.py migrate
@@ -87,13 +99,15 @@ Now you can start django, either with the django-admin.py in bin, or the regular
 .               This directory
 ./bin           General scripts, such as the FCGI daemon controller
 ./apparelrow    Django application root directory
-./conf          Non-Django related configuration files, such as webserver config
+./advertiser    Advertiser module
+./theimp        The importer module
+./spiderpig     Scrapy project for scraping feeds and pages
+./etc           Non-Django related configuration files, such as webserver config
 ./docs          General documentation
 ```
 
 ### If rebuilding schema.xml ###
 ```
-./manage.py build_solr_schema > schema.xml
 Replace field type with name slong with:
     <fieldType name="slong" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
 ```
