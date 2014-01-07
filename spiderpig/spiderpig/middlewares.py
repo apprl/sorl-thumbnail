@@ -15,7 +15,7 @@ class DownloadGzipMiddleware(object):
         if is_gzipped(response) or response.url[-3:] == '.gz':
             return True
 
-        if hasattr(response, 'headers') and 'gzip/csv' in response.headers.get('Content-Type'):
+        if hasattr(response, 'headers') and 'gzip/csv' in response.headers.get('Content-Type', ''):
             return True
 
         return False
