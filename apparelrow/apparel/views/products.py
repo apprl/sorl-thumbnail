@@ -305,8 +305,14 @@ class ProductList(View):
             if language not in categories:
                 language = 'en'
 
+            # TODO: can probably be solved with one less loop
+            cid_count = []
+            for cid, count in zip(ids, values):
+                if cid in categories[language]:
+                    cid_count.append((cid, count))
+
             category_result = []
-            for cid, count in sorted(zip(ids, values), key=lambda (k,v): categories[language][k][2]):
+            for cid, count in sorted(cid_count, key=lambda (k,v): categories[language][k][2]):
                 category_result.append({'id': cid,
                                         'count': count,
                                         'name': categories[language][cid][0],
