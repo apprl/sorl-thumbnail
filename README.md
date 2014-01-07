@@ -50,51 +50,60 @@ chown -R postgres:postgres $PGDATA
 
 ## Setup development environment ##
 
-### virtualenv ###
+TODO: setup for OS X / PyCharm
+
+### system requirements ###
+```
+aptitude install python-software-properties
+add-apt-repository ppa:chris-lea/node.js
+aptitude install git python-virtualenv python-dev libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev openjdk-6-jre-headless nodejs
+aptitude install postgresql libpq-dev # required for psycopg2 python requirement in later step
+npm install -g less
+```
+
+### setup virtualenv ###
 ```
 virtualenv apparelrow
 cd apparelrow
 source bin/activate
 ```
 
-### requirements ###
+### clone repository and install requirements ###
 ```
-pip install -r etc/requirements.pip # ... fika ...
+git clone git@github.com:martinlanden/apprl.git apparelrow
+pip install -r apparelrow/etc/requirements.pip # ... fika ...
 ```
 
-### settings ###
+### settings and create folders ###
 ```
-cp apparelrow/development.py.default apparelrow/development.py
-
+cp apparelrow/apparelrow/development.py.default apparelrow/apparelrow/settings.py
 mkdir -p var/logs
 ```
-Update settings to match your local environment.
+Update settings.py to match your local environment.
+
+### Set up solr ###
+```
+# Update paths in fabric file localhost target and run (debian/ubuntu only)
+pip install fabric fabtools jinja2
+mkdir {solr-path}
+fab localhost install_solr start_solr deploy_solr
+
+# Or install it manually for your system and make sure that you copy the files in deploy_solr fabric command
+```
 
 ### Set up database ###
 ```
-./manage.py syncdb # Warning: do not create a superuser in this stage
-./manage.py migrate profile
+cd apparelrow
+./manage.py syncdb
 ./manage.py migrate
 ./manage.py createsuperuser
-```
-
-### Set up search ###
-```
-touch solr/solr/conf/synonyms.txt
-cd solr
-java -jar start.jar
-./manage.py rebuild_index
-```
-
-### Continue set up database ###
-```
 ./manage.py loaddata apparel/fixtures/*
 ./manage.py loaddata importer/fixtures/*
 ```
 
 Now you can start django, either with the django-admin.py in bin, or the regular manage.py
 
-### Directory Structure ###
+## Directory Structure ##
 ```
 .               This directory
 ./bin           General scripts, such as the FCGI daemon controller
@@ -105,11 +114,3 @@ Now you can start django, either with the django-admin.py in bin, or the regular
 ./etc           Non-Django related configuration files, such as webserver config
 ./docs          General documentation
 ```
-
-### If rebuilding schema.xml ###
-```
-Replace field type with name slong with:
-    <fieldType name="slong" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
-```
-
-Field with name name should have type string not text

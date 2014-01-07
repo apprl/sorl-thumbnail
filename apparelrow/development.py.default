@@ -20,6 +20,13 @@ DATABASES = {
 }
 CONN_MAX_AGE = 600
 
+LOGGING['handlers']['app_core']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['apparel_debug']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['importer']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['dashboard']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['theimp']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
+
+
 # Storage
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's-jdev.apprl.com'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
