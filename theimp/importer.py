@@ -26,7 +26,7 @@ class Importer(object):
 
         self.option_types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in get_model('apparel', 'OptionType').objects.iterator()])
 
-    def run(self):
+    def run(self, dry=False):
         for vendor in Vendor.objects.filter(vendor__isnull=False).iterator():
             imported_date = None
             product_queryset = Product.objects.filter(vendor=vendor)
@@ -40,12 +40,12 @@ class Importer(object):
                     logger.exception('Could not load product with id %s' % (product_id,))
                     continue
 
-                logger.debug('Import product %s [valid = %s]' % (product.key, product.is_validated))
+                if not dry:
+                    logger.debug('Import product %s [valid = %s]' % (product.key, product.is_validated))
+                    with transaction.atomic():
+                        imported_date = self.site_import(product, product.is_validated)
 
-                with transaction.atomic():
-                    imported_date = self.site_import(product, product.is_validated)
-
-            if imported_date:
+            if imported_date and not dry:
                 vendor.last_imported_date = imported_date
                 vendor.save()
 
