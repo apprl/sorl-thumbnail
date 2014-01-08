@@ -75,7 +75,7 @@ class Importer(object):
 
     def add_product(self, item):
         brand, _ = self.site_brand_model.objects.get_or_create(name=item.get_final('brand'))
-        category, _ = self.site_category_model.objects.get_or_create(name=item.get_final('category'), name_order=item.get_final('category'))
+        category, _ = self.site_category_model.objects.get_or_create(name=item.get_final('category'), defaults={'name_order': item.get_final('category')})
 
         site_product = self.site_product_model.objects.create(
             product_name = item.get_final('name'),
@@ -93,7 +93,7 @@ class Importer(object):
 
     def update_product(self, item, site_product):
         brand, _ = self.site_brand_model.objects.get_or_create(name=item.get_final('brand'))
-        category, _ = self.site_category_model.objects.get_or_create(name=item.get_final('category'), name_order=item.get_final('category'))
+        category, _ = self.site_category_model.objects.get_or_create(name=item.get_final('category'))
 
         site_product.product_name = item.get_final('name')
         site_product.description = item.get_final('description')

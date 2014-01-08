@@ -2,15 +2,17 @@ from mock import Mock
 
 from django.test import TestCase
 from django.db.models.loading import get_model
+from django.test.utils import override_settings
 
 from theimp.parser.modules.category import CategoryMapper
 
 
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class CategoryMapperTest(TestCase):
     fixtures = ['initial.json']
 
     def setUp(self):
-        self.category = get_model('theimp', 'Category').objects.create(name='Category')
+        self.category = get_model('apparel', 'Category').objects.create(name='Category')
         self.vendor = get_model('theimp', 'Vendor').objects.create(name='TestVendor')
         get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor, category='test-category', mapped_category=self.category)
         get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor, category='unmapped-category')

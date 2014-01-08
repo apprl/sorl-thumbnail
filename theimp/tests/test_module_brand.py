@@ -2,15 +2,17 @@ from mock import Mock
 
 from django.test import TestCase
 from django.db.models.loading import get_model
+from django.test.utils import override_settings
 
 from theimp.parser.modules.brand import BrandMapper
 
 
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class BrandMapperTest(TestCase):
     fixtures = ['initial.json']
 
     def setUp(self):
-        self.brand = get_model('theimp', 'Brand').objects.create(name='Brand')
+        self.brand = get_model('apparel', 'Brand').objects.create(name='Brand')
         self.vendor = get_model('theimp', 'Vendor').objects.create(name='TestVendor')
         get_model('theimp', 'BrandMapping').objects.create(vendor=self.vendor, brand='test-brand', mapped_brand=self.brand)
         get_model('theimp', 'BrandMapping').objects.create(vendor=self.vendor, brand='unmapped-brand')

@@ -29,8 +29,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.vendor = get_model('theimp', 'Vendor').objects.create(name='TestVendor', vendor=self.site_vendor, affiliate_identifier='fifth_avenue')
 
         # Setup category and brand mapping
-        self.imported_brand = get_model('theimp', 'Brand').objects.create(name='Fifth Avenue Shoe Repair')
-        self.imported_category = get_model('theimp', 'Category').objects.create(name='Category')
+        self.imported_brand = get_model('apparel', 'Brand').objects.create(name='Fifth Avenue Shoe Repair')
+        self.imported_category = get_model('apparel', 'Category').objects.create(name='Category')
         get_model('theimp', 'BrandMapping').objects.create(vendor=self.vendor, brand='Fifth Avenue', mapped_brand=self.imported_brand)
         get_model('theimp', 'CategoryMapping').objects.create(vendor=self.vendor, category='scraped-category', mapped_category=self.imported_category)
 
