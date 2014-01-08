@@ -144,7 +144,10 @@ class Importer(object):
         vendor_product.original_currency = item.get_final('currency')
         vendor_product.original_discount_price = item.get_final('discount_price')
         vendor_product.original_discount_currency = item.get_final('currency')
-        vendor_product.availability = bool(item.get_final('in_stock', False))
+        stock = item.get_final('stock')
+        if not stock:
+            stock = -1
+        vendor_product.availability = 0 if not bool(item.get_final('in_stock', False)) else stock
         # XXX: price, currency and discount_price should not be used, WHY???
         #vendor_product.price = item.get_final('regular_price') or '0.0'
         #vendor_product.currency = item.get_final('currency')
