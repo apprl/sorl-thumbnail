@@ -99,14 +99,14 @@ class ProductJSONWidget(forms.Textarea):
                     table[key][layer] = self.as_image_field(name, 'manual__%s' % (key,), key_value)
                 elif key == 'brand' and layer == 'scraped':
                     try:
-                        brand = BrandMapping.objects.get(brand=key_value)
+                        brand = BrandMapping.objects.get(brand=key_value, vendor__name=json_obj.get(layer, {}).get('vendor', ''))
                         url = reverse('admin:theimp_brandmapping_change', args=[brand.pk])
                         table[key][layer] = self.as_link_field(name, key, key_value, url)
                     except BrandMapping.DoesNotExist:
                         table[key][layer] = 'MISSING BRAND: %s' % (key_value,)
                 elif key == 'category' and layer == 'scraped':
                     try:
-                        category = CategoryMapping.objects.get(category=key_value)
+                        category = CategoryMapping.objects.get(category=key_value, vendor__name=json_obj.get(layer, {}).get('vendor', ''))
                         url = reverse('admin:theimp_categorymapping_change', args=[category.pk])
                         table[key][layer] = self.as_link_field(name, key, key_value, url)
                     except CategoryMapping.DoesNotExist:
