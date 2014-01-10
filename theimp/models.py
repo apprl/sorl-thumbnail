@@ -49,6 +49,9 @@ class Vendor(BaseModel):
     def __repr__(self):
         return ('Vendor(%s)' % (self.name,)).encode('utf-8')
 
+    class Meta:
+        ordering = ('name',)
+
 
 class BrandMapping(BaseModel):
     vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
