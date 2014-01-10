@@ -4,7 +4,7 @@ from django.db.models.loading import get_model
 
 class BrandMapper(BaseModule):
 
-    def __call__(self, scraped_item, parsed_item, vendor):
+    def __call__(self, scraped_item, parsed_item, vendor, product=None):
         if not vendor:
             return parsed_item
 
@@ -18,5 +18,8 @@ class BrandMapper(BaseModule):
         else:
             self.delete_value(parsed_item, 'brand')
             self.delete_value(parsed_item, 'brand_id')
+
+        if product:
+            product.brand_mapping = brand_mapping
 
         return parsed_item

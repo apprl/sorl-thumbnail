@@ -27,6 +27,9 @@ class Product(BaseModel):
     is_dropped = models.BooleanField(default=False, null=False, blank=False)
     is_validated = models.NullBooleanField(default=None, null=True, blank=True)
 
+    brand_mapping = models.ForeignKey('theimp.BrandMapping', related_name='products', null=True)
+    category_mapping = models.ForeignKey('theimp.CategoryMapping', related_name='products', null=True)
+
     parsed_date = models.DateTimeField(null=True, blank=True)
     imported_date = models.DateTimeField(null=True, blank=True)
 

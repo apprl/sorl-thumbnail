@@ -180,10 +180,14 @@ class IsMappedBrandListFilter(admin.SimpleListFilter):
 
 
 class BrandMappingAdmin(admin.ModelAdmin):
-    list_display = ('brand', 'vendor', 'mapped_brand')
+    list_display = ('brand', 'vendor', 'mapped_brand', 'num_products')
     list_filter = (IsMappedBrandListFilter, 'vendor')
     readonly_fields = ('vendor', 'brand', 'created', 'modified')
     search_fields = ('brand',)
+
+    def num_products(self, brand):
+        return brand.products.count()
+    num_products.admin_order_field = 'brand__products__count'
 
 class IsMappedCategoryListFilter(admin.SimpleListFilter):
     title = _('is mapped')
@@ -203,7 +207,7 @@ class IsMappedCategoryListFilter(admin.SimpleListFilter):
 
 
 class CategoryMappingAdmin(admin.ModelAdmin):
-    list_display = ('category', 'vendor', 'mapped_category', 'category_ancestors')
+    list_display = ('category', 'vendor', 'mapped_category', 'category_ancestors', 'num_products')
     list_filter = (IsMappedCategoryListFilter, 'vendor')
     readonly_fields = ('vendor', 'category', 'created', 'modified')
     search_fields = ('category',)
@@ -215,6 +219,10 @@ class CategoryMappingAdmin(admin.ModelAdmin):
             result = [c.name for c in category.mapped_category.get_ancestors()]
 
         return ' > '.join(result)
+
+    def num_products(self, category):
+        return category.products.count()
+    num_products.admin_order_field = 'category__products__count'
 
 
 class MappingAdmin(admin.ModelAdmin):

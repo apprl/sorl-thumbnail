@@ -88,6 +88,7 @@ class TheimpFlowTest(TransactionTestCase):
             'scraped': {
                 'key': key,
                 'url': key,
+                'sku': '1234ABCD',
                 'affiliate': 'aan',
                 'name': 'Product Name',
                 'brand': 'Fifth Avenue',

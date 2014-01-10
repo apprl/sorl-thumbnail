@@ -46,7 +46,7 @@ class BuildBuyURL(BaseModule):
     def get_apprl_url(self, store_id, url):
         return 'http://apprl.com%s?store_id=%s&url=%s' % (reverse('advertiser-link'), store_id, url)
 
-    def __call__(self, scraped_item, parsed_item, vendor):
+    def __call__(self, scraped_item, parsed_item, vendor, **kwargs):
         if 'url' in scraped_item:
             parsed_item['url'] = scraped_item['url']
 

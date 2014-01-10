@@ -27,7 +27,7 @@ class OptionMapper(BaseModule):
 
         return None
 
-    def __call__(self, scraped_item, parsed_item, vendor):
+    def __call__(self, scraped_item, parsed_item, vendor, **kwargs):
         if 'colors' not in scraped_item:
             return parsed_item
 

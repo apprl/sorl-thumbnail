@@ -68,7 +68,7 @@ class Parser(object):
         scraped_item = item.data[ProductItem.KEY_SCRAPED]
         parsed_item = item.data[ProductItem.KEY_PARSED]
         for module in self.loaded_modules:
-            parsed_item = module(scraped_item, parsed_item, vendor)
+            parsed_item = module(scraped_item, parsed_item, vendor, product=product)
         item.data[ProductItem.KEY_PARSED] = parsed_item
 
         validated = self.validate(item)

@@ -4,7 +4,7 @@ from django.db.models.loading import get_model
 
 class CategoryMapper(BaseModule):
 
-    def __call__(self, scraped_item, parsed_item, vendor):
+    def __call__(self, scraped_item, parsed_item, vendor, product=None):
         if not vendor:
             return parsed_item
 
@@ -18,4 +18,8 @@ class CategoryMapper(BaseModule):
         else:
             self.delete_value(parsed_item, 'category')
             self.delete_value(parsed_item, 'category_id')
+
+        if product:
+            product.category_mapping = category_mapping
+
         return parsed_item
