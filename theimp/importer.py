@@ -3,7 +3,7 @@ import os.path
 import re
 
 from django.conf import settings
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 from django.utils import timezone
@@ -42,8 +42,12 @@ class Importer(object):
 
                 if not dry:
                     logger.debug('Import product %s [valid = %s]' % (product.key, product.is_validated))
-                    with transaction.atomic():
-                        imported_date = self.site_import(product, product.is_validated)
+                    try:
+                        with transaction.atomic():
+                            imported_date = self.site_import(product, product.is_validated)
+                    except IntegrityError as e:
+                        logger.exception('Could not import product with id %s' % (product_id,))
+                        continue
 
             if imported_date and not dry:
                 vendor.last_imported_date = imported_date
@@ -56,20 +60,17 @@ class Importer(object):
             item.set_site_product(site_product.pk)
             item.save()
 
-        try:
-            if is_valid:
-                if site_product:
-                    self.update_product(item, site_product)
-                else:
-                    self.add_product(item)
+        if is_valid:
+            if site_product:
+                self.update_product(item, site_product)
             else:
-                if site_product:
-                    self.hide_product(site_product)
-        except Exception as e:
-            logger.exception('Could not import product to site with id %s' % (product.pk,))
-        finally:
-            product.imported_date = timezone.now()
-            product.save()
+                self.add_product(item)
+        else:
+            if site_product:
+                self.hide_product(site_product)
+
+        product.imported_date = timezone.now()
+        product.save()
 
         return product.imported_date
 
