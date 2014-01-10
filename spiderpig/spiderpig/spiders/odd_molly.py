@@ -32,7 +32,7 @@ class OddMollySpider(XMLFeedSpider, AffiliateMixin):
         l.add_value('vendor', self.name)
         l.add_xpath('url', 'link/text()')
         l.add_value('affiliate', self.AFFILIATE_AAN)
-        l.add_xpath('category', 'g:google_product_category/text()')
+        l.add_xpath('category', 'g:product_type/text()')
         l.add_xpath('description', 'description/text()')
         l.add_xpath('brand', 'g:brand/text()')
         l.add_xpath('gender', 'g:gender/text()')
