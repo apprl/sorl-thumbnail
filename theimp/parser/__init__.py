@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class Parser(object):
 
-    required_fields = ['name', 'description', 'brand', 'category', 'gender', 'images',
+    required_fields = ['sku', 'name', 'description', 'brand', 'category', 'gender', 'images',
                        'currency', 'regular_price', 'url', 'vendor']
     gender_values = ['M', 'W', 'U']
 
