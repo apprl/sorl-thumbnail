@@ -230,3 +230,25 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
         self.assertTrue(site_product.default_vendor)
+
+        #
+        # 6. Mark product as dropped
+        #
+
+        product = self.product_model.objects.get(key=key)
+        product.is_dropped = True
+        product.save()
+
+        parser = Parser()
+        parser.parse(product)
+
+        product = self.product_model.objects.get(key=key)
+        self.assertFalse(product.is_validated)
+
+        importer = Importer()
+        importer.run()
+
+        site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
+        self.assertEqual(site_product.product_name, 'Product Correct Name')
+        self.assertEqual(site_product.description, 'Our manual description written by our team.')
+        self.assertEqual(site_product.availability, False)

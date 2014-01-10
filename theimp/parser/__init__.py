@@ -74,7 +74,7 @@ class Parser(object):
         validated = self.validate(item)
         item = self.finalize(item, validated)
 
-        product.is_validated = validated
+        product.is_validated = validated if not product.is_dropped else False
         product.parsed_date = timezone.now()
         product.json = json.dumps(item.data)
         product.save()
