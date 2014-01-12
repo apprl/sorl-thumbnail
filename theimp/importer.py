@@ -62,9 +62,9 @@ class Importer(object):
 
         if is_valid:
             if site_product:
-                self.update_product(item, site_product)
+                self.update_product(product, item, site_product)
             else:
-                self.add_product(item)
+                self.add_product(product, item)
         else:
             if site_product:
                 self.hide_product(site_product)
@@ -74,15 +74,15 @@ class Importer(object):
 
         return product.imported_date
 
-    def add_product(self, item):
-        brand, _ = self.site_brand_model.objects.get_or_create(name=item.get_final('brand'))
-        category, _ = self.site_category_model.objects.get_or_create(name=item.get_final('category'), defaults={'name_order': item.get_final('category')})
+    def add_product(self, product, item):
+        brand = product.brand_mapping.mapped_brand_id
+        category = product.category_mapping.mapped_category_id
 
         site_product = self.site_product_model.objects.create(
             product_name = item.get_final('name'),
             description = item.get_final('description'),
-            category = category,
-            manufacturer = brand,
+            category_id = category,
+            manufacturer_id = brand,
             static_brand = item.get_final('brand'),
             gender = item.get_final('gender'),
             availability = bool(item.get_final('in_stock', False)),
@@ -92,14 +92,14 @@ class Importer(object):
         self._update_vendor_product(item, site_product)
         self._update_product_options(item, site_product)
 
-    def update_product(self, item, site_product):
-        brand, _ = self.site_brand_model.objects.get_or_create(name=item.get_final('brand'))
-        category, _ = self.site_category_model.objects.get_or_create(name=item.get_final('category'))
+    def update_product(self, product, item, site_product):
+        brand = product.brand_mapping.mapped_brand_id
+        category = product.category_mapping.mapped_category_id
 
         site_product.product_name = item.get_final('name')
         site_product.description = item.get_final('description')
-        site_product.category = category
-        site_product.manufacturer = brand
+        site_product.category_id = category
+        site_product.manufacturer_id = brand
         site_product.static_brand = item.get_final('brand')
         site_product.gender = item.get_final('gender')
         site_product.availability = bool(item.get_final('in_stock', False))
