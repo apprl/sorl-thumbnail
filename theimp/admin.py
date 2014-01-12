@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.db.models.loading import get_model
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
@@ -184,10 +185,15 @@ class BrandMappingAdmin(admin.ModelAdmin):
     list_filter = (IsMappedBrandListFilter, 'vendor')
     readonly_fields = ('vendor', 'brand', 'created', 'modified')
     search_fields = ('brand',)
+    list_per_page = 50
+
+    def queryset(self, request):
+        qs = super(BrandMappingAdmin, self).queryset(request)
+        return qs.annotate(Count('products'))
 
     def num_products(self, brand):
         return brand.products.count()
-    num_products.admin_order_field = 'brand__products__count'
+    num_products.admin_order_field = 'products__count'
 
 class IsMappedCategoryListFilter(admin.SimpleListFilter):
     title = _('is mapped')
@@ -212,6 +218,7 @@ class CategoryMappingAdmin(admin.ModelAdmin):
     readonly_fields = ('vendor', 'category', 'created', 'modified')
     search_fields = ('category',)
     list_editable = ('mapped_category',)
+    list_per_page = 50
 
     def category_ancestors(self, category):
         result = []
@@ -220,9 +227,13 @@ class CategoryMappingAdmin(admin.ModelAdmin):
 
         return ' > '.join(result)
 
+    def queryset(self, request):
+        qs = super(CategoryMappingAdmin, self).queryset(request)
+        return qs.annotate(Count('products'))
+
     def num_products(self, category):
         return category.products.count()
-    num_products.admin_order_field = 'category__products__count'
+    num_products.admin_order_field = 'products__count'
 
 
 class MappingAdmin(admin.ModelAdmin):
