@@ -15,6 +15,10 @@ from theimp.utils import ProductItem
 logger = logging.getLogger(__name__)
 
 
+class SiteImportError(Exception):
+    pass
+
+
 class Importer(object):
 
     def __init__(self, site_queue=None):
@@ -45,7 +49,7 @@ class Importer(object):
                     try:
                         with transaction.atomic():
                             imported_date = self.site_import(product, product.is_validated)
-                    except IntegrityError as e:
+                    except (SiteImportError, IntegrityError) as e:
                         logger.exception('Could not import product with id %s' % (product_id,))
                         continue
 
@@ -75,14 +79,19 @@ class Importer(object):
         return product.imported_date
 
     def add_product(self, product, item):
-        brand = product.brand_mapping.mapped_brand_id
-        category = product.category_mapping.mapped_category_id
+        brand = product.brand_mapping
+        if not brand:
+            raise SiteImportError('invalid brand mapping')
+
+        category = product.category_mapping
+        if not category:
+            raise SiteImportError('invalid category mapping')
 
         site_product = self.site_product_model.objects.create(
             product_name = item.get_final('name'),
             description = item.get_final('description'),
-            category_id = category,
-            manufacturer_id = brand,
+            category_id = category.mapped_category_id,
+            manufacturer_id = brand.mapped_brand_id,
             static_brand = item.get_final('brand'),
             gender = item.get_final('gender'),
             availability = bool(item.get_final('in_stock', False)),
@@ -93,13 +102,18 @@ class Importer(object):
         self._update_product_options(item, site_product)
 
     def update_product(self, product, item, site_product):
-        brand = product.brand_mapping.mapped_brand_id
-        category = product.category_mapping.mapped_category_id
+        brand = product.brand_mapping
+        if not brand:
+            raise SiteImportError('invalid brand mapping')
+
+        category = product.category_mapping
+        if not category:
+            raise SiteImportError('invalid category mapping')
 
         site_product.product_name = item.get_final('name')
         site_product.description = item.get_final('description')
-        site_product.category_id = category
-        site_product.manufacturer_id = brand
+        site_product.category_id = category.mapped_category_id
+        site_product.manufacturer_id = brand.mapped_brand_id
         site_product.static_brand = item.get_final('brand')
         site_product.gender = item.get_final('gender')
         site_product.availability = bool(item.get_final('in_stock', False))
