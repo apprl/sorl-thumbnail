@@ -92,6 +92,7 @@ class Importer(object):
             description = item.get_final('description'),
             category_id = category.mapped_category_id,
             manufacturer_id = brand.mapped_brand_id,
+            sku = item.get_final('sku'),
             static_brand = item.get_final('brand'),
             gender = item.get_final('gender'),
             availability = bool(item.get_final('in_stock', False)),
@@ -114,6 +115,7 @@ class Importer(object):
         site_product.description = item.get_final('description')
         site_product.category_id = category.mapped_category_id
         site_product.manufacturer_id = brand.mapped_brand_id
+        site_product.sku = item.get_final('sku')
         site_product.static_brand = item.get_final('brand')
         site_product.gender = item.get_final('gender')
         site_product.availability = bool(item.get_final('in_stock', False))
