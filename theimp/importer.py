@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os.path
 import re
@@ -52,6 +53,15 @@ class Importer(object):
                     except (SiteImportError, IntegrityError) as e:
                         logger.exception('Could not import product with id %s' % (product_id,))
                         continue
+
+            yesterday = timezone.now() - datetime.timedelta(hours=24)
+            for product_id in self.site_product_model.objects.filter(vendors=vendor.vendor_id, availability=True, modified__lte=yesterday).values_list('id', flat=True):
+                logger.debug('Setting availability to false for product with id %s' % (product_id,))
+                if not dry:
+                    product = self.site_product_model.objects.get(pk=product_id)
+                    product.availability=False
+                    product.vendorproduct.update(availability=0)
+                    product.save()
 
             if imported_date and not dry:
                 vendor.last_imported_date = imported_date

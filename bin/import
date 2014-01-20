@@ -26,13 +26,8 @@ cd "$PROJDIR/releases/current"
 # Refresh fx rates
 $PROJDIR/bin/python manage.py arfxrates --refresh --no_update --solr
 
-if [[ -z "$1" ]]; then
-    $PROJDIR/bin/python manage.py arimport --all
-elif [ "$1" = "--parallel" ]; then
-    $PROJDIR/bin/python manage.py arimport --list | tail -n +2 | cut -d\  -f1 | parallel -j 2 $PROJDIR/bin/import
-else
-    $PROJDIR/bin/python manage.py arimport $1
-fi
+# Run new the imp importer
+$PROJDIR/bin/python manage.py run_importer
 
 # Update fx rates
 $PROJDIR/bin/python manage.py arfxrates --refresh --solr
