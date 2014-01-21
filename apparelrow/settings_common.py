@@ -636,8 +636,8 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
             'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'theimp.log'),
-            'maxBytes': 3000000,
-            'backupCount': 8,
+            'maxBytes': 50000000,
+            'backupCount': 10,
         },
     },
     'loggers': {
