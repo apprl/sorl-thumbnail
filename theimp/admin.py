@@ -141,6 +141,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('key', 'vendor', 'is_validated', 'is_dropped', 'modified', 'parsed_date', 'imported_date')
     list_filter = ('is_validated', 'is_dropped', 'vendor')
     readonly_fields = ('key', 'is_validated', 'created', 'modified', 'vendor', 'parsed_date', 'imported_date')
+    raw_id_fields = ('brand_mapping', 'category_mapping')
     search_fields = ('key',)
     actions = ('parse_products',)
     save_on_top = True
