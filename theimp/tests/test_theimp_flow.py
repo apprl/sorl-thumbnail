@@ -136,7 +136,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
         self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
-        self.assertTrue(site_product.default_vendor)
+        self.assertIsNotNone(site_product.default_vendor)
+        self.assertEqual(site_product.default_vendor.buy_url, 'http://example.com/product/product-name.html')
 
         #
         # 2. Parse and import again
@@ -155,7 +156,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
         self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
-        self.assertTrue(site_product.default_vendor)
+        self.assertIsNotNone(site_product.default_vendor)
+        self.assertEqual(site_product.default_vendor.buy_url, 'http://example.com/product/product-name.html')
 
         #
         # 3. Parse invalid data and import again
@@ -180,7 +182,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
         self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
-        self.assertTrue(site_product.default_vendor)
+        self.assertIsNotNone(site_product.default_vendor)
+        self.assertEqual(site_product.default_vendor.buy_url, 'http://example.com/product/product-name.html')
 
         #
         # 4. Parse changed product name and import again
@@ -206,7 +209,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
         self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
-        self.assertTrue(site_product.default_vendor)
+        self.assertIsNotNone(site_product.default_vendor)
+        self.assertEqual(site_product.default_vendor.buy_url, 'http://example.com/product/product-name.html')
 
         #
         # 5. Manual update and parse and import again
@@ -230,7 +234,8 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
         self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
-        self.assertTrue(site_product.default_vendor)
+        self.assertIsNotNone(site_product.default_vendor)
+        self.assertEqual(site_product.default_vendor.buy_url, 'http://example.com/product/product-name.html')
 
         #
         # 6. Mark product as dropped

@@ -166,7 +166,8 @@ class Importer(object):
         vendor = Vendor.objects.get(name=item.get_final('vendor'))
         vendor_product, _ = self.site_vendor_product_model.objects.get_or_create(product=site_product,
                                                                                  vendor_id=vendor.vendor_id)
-        vendor_product.buy_url = item.get_final('buy_url')
+
+        vendor_product.buy_url = item.get_final('url')
         vendor_product.original_price = item.get_final('regular_price') or '0.0'
         vendor_product.original_currency = item.get_final('currency')
         vendor_product.original_discount_price = item.get_final('discount_price')
