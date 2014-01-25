@@ -367,7 +367,12 @@ def product_track(request, pk, page='Default', sid=0):
     """
     Fires a product_buy_click task when called.
     """
-    product_buy_click.delay(pk, '%s\n%s' % (request.POST.get('referer', ''), get_client_referer(request)), get_client_ip(request), get_user_agent(request), sid, page)
+    posted_referer = request.POST.get('referer', '')
+    client_referer = get_client_referer(request)
+    if posted_referer == client_referer and 'redirect' in client_referer:
+        return HttpResponse()
+
+    product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request), get_user_agent(request), sid, page)
 
     return HttpResponse()
 
