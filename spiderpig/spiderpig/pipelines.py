@@ -19,6 +19,12 @@ class MissingFieldDrop(DropItem):
     """
 
 
+class EmptyFieldDrop(DropItem):
+    """
+    Empty field exeception
+    """
+
+
 class CustomImagesPipeline(ImagesPipeline):
     """
     Save images to path vendor/hash.
@@ -133,10 +139,17 @@ class RequiredFieldsPipeline:
                        'colors', 'in_stock', 'stock', 'image_urls',
                        'images']
 
+    def __init__(self):
+        self.required_fields_value = list(set(self.required_fields) - set(['regular_price', 'discount_price', 'stock', 'colors']))
+
     def process_item(self, item, spider):
         for field in self.required_fields:
             if field not in item:
                 raise MissingFieldDrop('Missing field: %s' % (field,))
+
+        for field in self.required_fields_value:
+            if field in item and (item.get(field) == u'' or item.get(field) is None):
+                raise EmptyFieldDrop('Empty field: %s' % (field,))
 
         return item
 

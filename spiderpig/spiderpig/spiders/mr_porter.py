@@ -77,7 +77,7 @@ class MrPorterSpider(CSVFeedSpider, AffiliateMixin):
         item['affiliate'] = self.AFFILIATE_LINKSHARE
         item['category'] = '%s > %s > %s' % (row.get('gender'), row.get('category'), row.get('secondary-category'))
         item['description'] = row.get('description')
-        item['brand'] = row.get('manufacturer')
+        item['brand'] = row.get('manufacturer') or row.get('brand')
         item['gender'] = row.get('gender')
         item['colors'] = row.get('color')
         item['regular_price'] = row.get('retail-price')
