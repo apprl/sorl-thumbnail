@@ -23,7 +23,7 @@ class ElevenfiftynineSpider(XMLFeedSpider, AffiliateMixin):
         l.add_xpath('category', 'default_category/category_default_name-en/text()')
         l.add_xpath('description', 'descriptions/descriptions-en/description-en/text()')
         l.add_xpath('brand', 'manufacturer_name/text()')
-        l.add_value('gender', '')
+        l.add_value('gender', 'U')
         l.add_xpath('colors', 'descriptions/descriptions-en/name-en/text()')
         l.add_xpath('regular_price', 'price_sale/text()')
         l.add_value('discount_price', '')
