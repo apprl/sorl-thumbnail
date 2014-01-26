@@ -258,3 +258,73 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.product_name, 'Product Correct Name')
         self.assertEqual(site_product.description, 'Our manual description written by our team.')
         self.assertEqual(site_product.availability, False)
+
+
+    @patch('theimp.importer.logger')
+    def test_find_site_product_flow(self, mock_logger):
+        key = 'http://example.com/product/product-name.html'
+        json_data = json.dumps({
+            'final': {},
+            'parsed': {},
+            'scraped': {
+                'key': key,
+                'url': key,
+                'sku': '1234ABCD',
+                'affiliate': 'aan',
+                'name': 'Product Name',
+                'brand': 'Fifth Avenue',
+                'category': 'scraped-category',
+                'vendor': 'TestVendor',
+                'description': 'Product Name description  ',
+                'gender': 'female products',
+                'colors': 'red',
+                'currency': 'SEK',
+                'regular_price': '999.99',
+                'discount_price': '879.99',
+                'in_stock': True,
+                'image_urls': ['http://example.com/image_not_available.jpg'],
+                'images': [{'checksum': 'abc',
+                            'path': 'image_not_available.jpg',
+                            'url': 'http://example.com/image_not_available.jpg'}],
+
+            }
+        })
+        product = self.product_model.objects.create(key=key, json=json_data, vendor=self.vendor)
+
+        parser = Parser()
+        parser.parse(product)
+        importer = Importer()
+        importer.run()
+
+        self.assertFalse(mock_logger.exception.called)
+
+        site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name')
+        self.assertEqual(site_product.product_name, 'Product Name')
+        self.assertEqual(site_product.description, 'Product Name description')
+        self.assertEqual(site_product.availability, True)
+        self.assertEqual(site_product.manufacturer.name, 'Fifth Avenue Shoe Repair')
+        self.assertEqual(site_product.category.name, 'Category')
+        self.assertEqual(list(site_product.colors), ['red'])
+        self.assertIsNotNone(site_product.default_vendor)
+        self.assertEqual(site_product.default_vendor.buy_url, 'http://example.com/product/product-name.html')
+
+        # Update slug
+        site_product.slug = 'fifth-avenue-shoe-repair-product-name-10'
+        site_product.save()
+
+        # Product changes description
+        product = self.product_model.objects.get(key=key)
+        product_json = json.loads(product.json)
+        product_json['manual'] = {'description': 'Our manual description written by our team.'}
+        product.json = json.dumps(product_json)
+        product.save()
+
+        # Parse and import product
+        parser = Parser()
+        parser.parse(product)
+        importer = Importer()
+        importer.run()
+
+        # Verify that description is now updated with a changed slug
+        site_product = self.site_product_model.objects.get(slug='fifth-avenue-shoe-repair-product-name-10')
+        self.assertEqual(site_product.description, 'Our manual description written by our team.')

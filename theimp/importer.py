@@ -193,8 +193,17 @@ class Importer(object):
             except self.site_product_model.DoesNotExist:
                 item.set_site_product(None)
 
+        static_brand = item.get_final('brand')
+        sku = item.get_final('sku')
+        try:
+            return self.site_product_model.objects.get(static_brand=static_brand, sku=sku)
+        except self.site_product_model.DoesNotExist:
+            pass
+
         slug = slugify('%s-%s' % (item.get_final('brand'), item.get_final('name')))
         try:
             return self.site_product_model.objects.get(slug=slug)
         except self.site_product_model.DoesNotExist:
             pass
+
+        return None
