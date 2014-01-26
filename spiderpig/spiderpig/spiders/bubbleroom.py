@@ -28,7 +28,7 @@ class BubbleroomSpider(CSVFeedSpider, AffiliateMixin):
         if key:
             key = urllib.unquote(force_bytes(key.group(1)))
             item['key'] = key_regex2.search(key).group(1)
-        item['sku'] = row.get('sku')
+        item['sku'] = row.get('TDProductId')
         item['name'] = row.get('name')
         item['vendor'] = self.name
         item['url'] = row.get('productUrl')
