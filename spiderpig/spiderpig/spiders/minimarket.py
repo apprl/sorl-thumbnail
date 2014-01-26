@@ -25,6 +25,8 @@ class MinimarketSpider(XMLFeedSpider, AffiliateMixin):
         else:
             discount_price = ''
 
+        category = '%s > %s' % (node.xpath('g:google_product_category/text()').extract()[0], node.xpath('g:product_type/text()').extract()[0])
+
         l = ProductLoader(item=Product(), selector=node)
         l.add_xpath('key', 'link/text()')
         l.add_xpath('sku', 'g:id/text()')
@@ -32,7 +34,7 @@ class MinimarketSpider(XMLFeedSpider, AffiliateMixin):
         l.add_value('vendor', self.name)
         l.add_xpath('url', 'link/text()')
         l.add_value('affiliate', self.AFFILIATE_AAN)
-        l.add_xpath('category', 'g:google_product_category/text()')
+        l.add_value('category', category)
         l.add_xpath('description', 'description/text()')
         l.add_xpath('brand', 'g:brand/text()')
         l.add_xpath('gender', 'g:gender/text()')
