@@ -331,6 +331,9 @@ def dashboard_admin(request, year=None, month=None):
 
 
 def dashboard(request, year=None, month=None):
+    """
+    Display publisher data per month for logged in user.
+    """
     if request.user.is_authenticated() and request.user.is_partner:
         if year is not None and month is not None:
             start_date = datetime.date(int(year), int(month), 1)
@@ -412,7 +415,7 @@ def dashboard(request, year=None, month=None):
             conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
 
         # Enable sales listing after 2013-06-01 00:00:00
-        is_after_june = True if (year >= 2013 and month >= 6) or request.GET.get('override') else False
+        is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
 
         return render(request, 'dashboard/publisher.html', {'data_per_day': data_per_day,
                                                             'total_sales': sales_total,
