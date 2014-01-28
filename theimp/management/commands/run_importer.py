@@ -15,7 +15,13 @@ class Command(BaseCommand):
             default=False,
             help='Dry run, do not updated any products',
         ),
+        make_option('--vendor',
+            action='store',
+            dest='vendor',
+            default=None,
+            help='Run only this vendor',
+        ),
     )
 
     def handle(self, *args, **options):
-        Importer().run(dry=options.get('dry', False))
+        Importer().run(dry=options.get('dry', False), vendor=options.get('vendor'))

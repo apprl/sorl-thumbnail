@@ -31,8 +31,12 @@ class Importer(object):
 
         self.option_types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in get_model('apparel', 'OptionType').objects.iterator()])
 
-    def run(self, dry=False):
-        for vendor in Vendor.objects.filter(vendor__isnull=False).iterator():
+    def run(self, dry=False, vendor=None):
+        vendors = Vendor.objects.filter(vendor__isnull=False)
+        if vendor is not None:
+            vendors = vendors.filter(name=vendor)
+
+        for vendor in vendors.iterator():
             imported_date = None
             product_queryset = Product.objects.filter(vendor=vendor)
             if vendor.last_imported_date:
