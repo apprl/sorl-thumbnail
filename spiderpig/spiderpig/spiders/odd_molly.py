@@ -1,10 +1,10 @@
 from scrapy.contrib.spiders import XMLFeedSpider
 
 from spiderpig.items import Product, ProductLoader
-from spiderpig.spiders import AffiliateMixin
+from spiderpig.spiders import AffiliateMixin, PriceMixin
 
 
-class OddMollySpider(XMLFeedSpider, AffiliateMixin):
+class OddMollySpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
     name = 'odd-molly'
     allowed_domains = ['oddmolly.com']
     start_urls = ['http://www.oddmolly.com/plugin-export/product-feed/se']
@@ -17,11 +17,11 @@ class OddMollySpider(XMLFeedSpider, AffiliateMixin):
         currency = ''
         regular_price = node.xpath('g:price/text()').extract()
         if regular_price:
-            regular_price, currency = regular_price[0].split(' ', 1)
+            regular_price, currency = self.parse_price(regular_price[0])
 
         discount_price = node.xpath('g:sale_price/text()').extract()
         if discount_price:
-            discount_price = discount_price[0].split(' ', 1)[0]
+            discount_price, _ = self.parse_price(discount_price[0])
         else:
             discount_price = ''
 
