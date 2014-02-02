@@ -26,7 +26,7 @@ class OkiNiSpider(CSVFeedSpider, AffiliateMixin):
         item['regular_price'] = row.get('rrp_price')
         item['discount_price'] = row.get('search_price')
         item['currency'] = row.get('currency')
-        item['in_stock'] = True if row.get('in_stock') != '1' else False
+        item['in_stock'] = True if str(row.get('in_stock')) == '1' else False
         item['stock'] = row.get('stock_quantity')
         item['image_urls'] = [row.get('merchant_image_url')]
 
