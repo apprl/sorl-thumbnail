@@ -102,7 +102,7 @@ def pixel(request):
     # Currency conversion
     original_commission = commission
     original_order_value = order_value
-    original_currency = currency
+    original_currency = currency.upper()
 
     currency = 'EUR'
     commission, exchange_rate = exchange_amount(currency, original_currency, commission)
