@@ -569,6 +569,7 @@ CELERY_ROUTES = ({
     'profile.notifications.facebook_friends': {'queue': 'standard'},
     'profile.views.send_email_confirm_task': {'queue': 'standard'},
     'profile.views.send_welcome_email_task': {'queue': 'standard'},
+    'dashboard.tasks.send_email_task': {'queue': 'standard'},
     'apparel.email.mailchimp_subscribe': {'queue': 'standard'},
     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
     'apparel.email.mailchimp_subscribe_members': {'queue': 'standard'},

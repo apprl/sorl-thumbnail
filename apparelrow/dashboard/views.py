@@ -9,16 +9,18 @@ from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
 from django.db.models import get_model, Sum, Count
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, get_language
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.contrib import messages
+from django.template.loader import render_to_string
 
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
+from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import get_referral_user_from_cookie, get_cuts_for_user_and_vendor
 from apparelrow.profile.tasks import mail_managers_task
 
@@ -467,7 +469,19 @@ def referral_mail(request):
     emails = request.POST.get('emails')
     emails = re.split(r'[\s,]+', emails)
 
-    # TODO: actually send the emails with the new template
+    referral_code = request.user.get_referral_domain_url()
+    referral_name = request.user.display_name
+    referral_email = request.user.email
+    referral_language = get_language()
+
+    template = 'dashboard/referral_mail_en.html'
+    if referral_language == 'sv':
+        template = 'dashboard/referral_mail_sv.html'
+
+    body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
+
+    for email in emails:
+        send_email_task.delay('My referral subject', body, email, '%s <%s>' % (referral_name, referral_email))
 
     messages.add_message(request, messages.SUCCESS, 'Sent mail to %s' % (', '.join(emails),))
 
