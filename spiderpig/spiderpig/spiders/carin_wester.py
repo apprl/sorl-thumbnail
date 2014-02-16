@@ -1,10 +1,10 @@
 from scrapy.contrib.spiders import XMLFeedSpider
 
 from spiderpig.items import Product, ProductLoader
-from spiderpig.spiders import AffiliateMixin
+from spiderpig.spiders import AffiliateMixin, PriceMixin
 
 
-class CarinWesterSpider(XMLFeedSpider, AffiliateMixin):
+class CarinWesterSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
     name = 'carin-wester'
     allowed_domains = ['carinwester.com']
     start_urls = ['http://www.carinwester.com/plugin-export/product-feed/se/']
@@ -17,11 +17,11 @@ class CarinWesterSpider(XMLFeedSpider, AffiliateMixin):
         currency = ''
         regular_price = node.xpath('g:price/text()').extract()
         if regular_price:
-            regular_price, currency = regular_price[0].split(' ', 1)
+            regular_price, currency = self.parse_price(regular_price[0])
 
         discount_price = node.xpath('g:sale_price/text()').extract()
         if discount_price:
-            discount_price = discount_price[0].split(' ', 1)[0]
+            discount_price, _ = self.parse_price(discount_price[0])
         else:
             discount_price = ''
 
