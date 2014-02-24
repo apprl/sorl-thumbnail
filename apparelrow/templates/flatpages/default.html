@@ -27,7 +27,7 @@
         </div>
         <div class="col-sm-9">
             <h2>{{ flatpage.title }}</h2>
-            {% if LANGUAGE_CODE == 'sv' %}
+            {% if LANGUAGE_CODE == 'sv' and 'about/terms-of-use/-partner-villkor' not in request.path %}
             <p>Samtliga villkor är skrivna på Engelska för att kunna tillgängliggöra villkoren för så många som möjligt av våra användare. Är det något i våra villkor & policies som du inte förstår och vill ha förklarat på Svenska, hör av dig till oss på <a href="mailto:info@apprl.com">info@apprl.com</a>.</p>
             {% endif %}
             <div class="dynamic-content">

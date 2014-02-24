@@ -2985,7 +2985,7 @@ msgstr ""
 
 #: templates/flatpages/default.html:19
 msgid "Publisher terms"
-msgstr "Partnervillkor"
+msgstr "Publishervillkor"
 
 #: templates/flatpages/default.html:21
 msgid "Privacy Policy"
