@@ -59,7 +59,11 @@
                     </li>
                     {% endfor %}
                     <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                        {% if object.manufacturer.user %}
+                        <a itemprop="url" href="{{ object.manufacturer.user.get_absolute_url }}">
+                        {% else %}
                         <a itemprop="url" href="{% gender_url object.gender 'shop' %}?manufacturer={{ object.manufacturer.id }}">
+                        {% endif %}
                             <span itemprop="name">{{ object.manufacturer }}</span>
                         </a>
                     </li>
