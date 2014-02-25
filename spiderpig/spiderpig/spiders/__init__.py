@@ -1,4 +1,8 @@
 import itertools
+import re
+import urllib
+
+from django.utils.encoding import force_bytes
 
 from scrapy.contrib.spiders import CrawlSpider
 
@@ -24,6 +28,17 @@ class PriceMixin:
             return price.split(' ', 1)
 
         return (price, None)
+
+
+class KeyExtractorMixin:
+
+    url_last_regex = re.compile(r'\?url=(.+)$')
+
+    def get_url_last(self, url):
+        result = self.url_last_regex.search(url)
+        if result:
+            return urllib.unquote(force_bytes(result.group(1)))
+        return key
 
 
 class BaseSpider(CrawlSpider):
