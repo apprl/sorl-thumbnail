@@ -33,7 +33,7 @@ class MqSpider(XMLFeedSpider, AffiliateMixin):
         l.add_xpath('brand', 'brand/text()')
         l.add_xpath('gender', 'Categories/*[1]/text()')
         #l.add_xpath('colors', 'colors/text()')
-        l.add_xpath('colors', 'noop') # TODO: no color field
+        l.add_value('colors', 'noop') # TODO: no color field
         l.add_xpath('regular_price', 'price/text()')
         l.add_xpath('discount_price', 'new_price/text()')
         l.add_xpath('currency', 'currency/text()')
