@@ -48,14 +48,9 @@ class BuildBuyURL(BaseModule):
 
     def __call__(self, scraped_item, parsed_item, vendor, **kwargs):
         if 'url' in scraped_item:
-            parsed_item['url'] = scraped_item['url']
-
-            return parsed_item
-
-        if 'key' in scraped_item:
-            url_function = self.affiliate_url.get(scraped_item.get('affiliate'), None)
-            if url_function:
-                encoded_url = urllib.quote(scraped_item.get('key', ''), '')
+            if scraped_item.get('affiliate') == 'aan':
+                url_function = self.affiliate_url.get('aan')
+                encoded_url = urllib.quote(scraped_item.get('url', ''), '')
                 if vendor.affiliate_identifier:
                     url = url_function(vendor.affiliate_identifier, encoded_url)
                     if url:
@@ -65,6 +60,24 @@ class BuildBuyURL(BaseModule):
                 else:
                     self.delete_value(parsed_item, 'url')
             else:
-                self.delete_value(parsed_item, 'url')
+                parsed_item['url'] = scraped_item['url']
+
+            return parsed_item
+
+        # TODO: this does not actually work right now because key does not keep the tracking stuff....
+        #if 'key' in scraped_item:
+            #url_function = self.affiliate_url.get(scraped_item.get('affiliate'), None)
+            #if url_function:
+                #encoded_url = urllib.quote(scraped_item.get('key', ''), '')
+                #if vendor.affiliate_identifier:
+                    #url = url_function(vendor.affiliate_identifier, encoded_url)
+                    #if url:
+                        #parsed_item['url'] = url
+                    #else:
+                        #self.delete_value(parsed_item, 'url')
+                #else:
+                    #self.delete_value(parsed_item, 'url')
+            #else:
+                #self.delete_value(parsed_item, 'url')
 
         return parsed_item
