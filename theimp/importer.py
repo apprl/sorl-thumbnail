@@ -33,6 +33,7 @@ class Importer(object):
 
     def run(self, dry=False, vendor=None):
         vendors = Vendor.objects.filter(vendor__isnull=False)
+        request_links = []
         if vendor is not None:
             vendors = vendors.filter(name=vendor)
 
@@ -54,6 +55,14 @@ class Importer(object):
                     try:
                         with transaction.atomic():
                             imported_date = self.site_import(product, product.is_validated)
+
+                        # Snippet for writing the product urls to file
+                        if product.is_validated:
+                            item = ProductItem(product)
+                            site_product = self._find_site_product(item)
+                            if site_product:
+                                request_links.append(site_product.get_absolute_url())
+
                     except (SiteImportError, IntegrityError) as e:
                         logger.exception('Could not import product with id %s' % (product_id,))
                         continue
@@ -70,6 +79,8 @@ class Importer(object):
             if imported_date and not dry:
                 vendor.last_imported_date = imported_date
                 vendor.save()
+        if not dry and len(request_links) > 0:
+            self._write_to_file(request_links)
 
     def site_import(self, product, is_valid):
         item = ProductItem(product)
@@ -211,3 +222,13 @@ class Importer(object):
             pass
 
         return None
+
+    def _write_to_file(self,request_links):
+        try:
+            request_file = open(os.path.join(settings.PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'pending_requests.log'), "a")
+            try:
+                request_file.write('\n'.join(request_links))
+            finally:
+                request_file.close()
+        except IOError:
+            pass
