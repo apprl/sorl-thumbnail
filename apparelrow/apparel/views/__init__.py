@@ -758,6 +758,31 @@ def user_list(request, gender=None, brand=False):
         'gender': gender
     })
 
+def topmodel_user_list(request):
+    """
+    Displays a list of profiles
+    """
+    user_ids = [1,2,3,4,5]
+    from apparelrow.profile.models import User
+    queryset = get_user_model().objects.filter(id__in=user_ids)
+
+    extra_parameter = None
+
+    # Needed for this?
+    queryset = queryset.order_by( '-followers_count', 'first_name', 'last_name')
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
+
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/user_list.html', {
+            'current_page': paged_result,
+            'extra_parameter': extra_parameter,
+        })
+
+    return render(request, 'apparel/topmodel_list.html', {
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'extra_parameter': extra_parameter,
+    })
 
 #
 # Index page for unauthenticated users

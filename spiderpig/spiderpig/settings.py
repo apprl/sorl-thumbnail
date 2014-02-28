@@ -52,7 +52,7 @@ sys.path.append(os.path.abspath('../'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apparelrow.settings')
 from django.conf import settings
 
-IMAGES_EXPIRES = 90
+IMAGES_EXPIRES = 300
 #IMAGES_STORE = os.path.join(settings.PROJECT_ROOT, 'media', settings.APPAREL_PRODUCT_IMAGE_ROOT)
 IMAGES_STORE = 's3://%s/%s/' % (settings.AWS_STORAGE_BUCKET_NAME,
                                 settings.APPAREL_PRODUCT_IMAGE_ROOT)

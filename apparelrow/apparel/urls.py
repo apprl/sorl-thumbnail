@@ -147,6 +147,8 @@ urlpatterns = patterns('',
     url(r'^users/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular'),
     url(r'^users/men/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-men'),
     url(r'^users/women/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-women'),
+    url(r'^topmodelsverige/$', 'apparelrow.apparel.views.topmodel_user_list', name='topmodel'),
+
 
     # Extra admin
 
