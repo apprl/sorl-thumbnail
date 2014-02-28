@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n apparel_extras %}
+
+{% block extra-title %}{% trans "Follow" %} | {% endblock %}
+
+{% block body-classes %}discover-list-page{% endblock %}
+{% block body %}
+
+    {% if request.GET.first and request.user.is_authenticated %}
+    <div class="container">
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {% url 'index' as feed_url %}
+            {% url 'shop' as shop_url %}
+            {% blocktrans with feed_url=feed_url shop_friend=shop_url|add:"?view=friends" shop_brand=shop_url|add:"?view=brands" %}Follow members and brands to see their items and looks in your <a href="{{feed_url}}">APPRL feed</a> and under <a href="{{shop_friend}}">Shop > My Friends</a> & <a href="{{shop_brand}}">Shop > My Brands</a>.{% endblocktrans %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="body-header">
+        <div class="body-header-col-right">
+            <ul class="list-inline">
+                <li class="dropdown">
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men" %}{% elif gender == 'W' %}{% trans "Only women" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'user-list' %}">{% trans "Show all" %}</a></li>
+                        <li><a href="{% url 'user-list-men' %}">{% trans "Only men" %}</a></li>
+                        <li><a href="{% url 'user-list-women' %}">{% trans "Only women" %}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            {% include 'apparel/fragments/user_list.html' %}
+        </div>
+    </div>
+{% endblock %}
