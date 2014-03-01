@@ -36,3 +36,4 @@ django-crispy-forms==1.3.2
 #django-localeurl==2.0.1
 git+git://github.com/jbohman/django-localeurl.git#egg=localeurl
 newrelic
+eventlet==0.14.0
