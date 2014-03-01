@@ -32,8 +32,11 @@ class Importer(object):
         self.option_types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in get_model('apparel', 'OptionType').objects.iterator()])
 
     def run(self, dry=False, vendor=None):
+        import datetime
         vendors = Vendor.objects.filter(vendor__isnull=False)
         request_links = []
+        time_limit = datetime.datetime.today() + datetime.timedelta(days=-2)
+
         if vendor is not None:
             vendors = vendors.filter(name=vendor)
 
@@ -57,7 +60,7 @@ class Importer(object):
                             imported_date = self.site_import(product, product.is_validated)
 
                         # Snippet for writing the product urls to file
-                        if product.is_validated:
+                        if product.is_validated and product.created > time_limit:
                             item = ProductItem(product)
                             site_product = self._find_site_product(item)
                             if site_product:
