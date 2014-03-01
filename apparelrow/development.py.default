@@ -25,6 +25,7 @@ LOGGING['handlers']['apparel_debug']['filename'] = os.path.join(PROJECT_ROOT, '.
 LOGGING['handlers']['importer']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
 LOGGING['handlers']['dashboard']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
 LOGGING['handlers']['theimp']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['theimp_links']['filename'] = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'logs', 'app_logger.log')
 
 
 # Storage
