@@ -1333,7 +1333,9 @@ body.shop, body.profile-likes {
         }
         #selected-manufacturers li a {
             .custom-checkbox();
-            background-position: -14px 0px;
+            &:before {
+                background-position: -14px 0px;
+            }
         }
         #available-manufacturers {
             height: 200px;
