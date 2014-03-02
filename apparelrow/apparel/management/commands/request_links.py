@@ -27,12 +27,17 @@ class Command(BaseCommand):
                 print 'Found %s lines of requests to be made.' % len(lines)
                 for line in lines:
                     try:
-                        print 'Requesting %s' % line
+                        request_line = line.split(' ')
+                        if not len(request_line) == 5:
+                            continue
+                        product_url = request_line[4]
+                        print 'Requesting %s' % product_url
                         start = time.time()
-                        if not line.startswith('http'):
-                            line = 'http://apprl.com%s' % line
-                        r = requests.get('%s' % line)
-                        print 'Finished request in:%s s' % (time.time() - start)
+                        if not product_url.startswith('http'):
+                            product_url = 'http://apprl.com%s' % product_url
+                        r = requests.get('%s' % product_url)
+                        counter += 1
+                        print '%s:Finished request in:%s s' % (counter,time.time() - start)
                     except Exception,msg:
                         print 'Failed to request [%s] due to %s.' % (line,msg)
             except Exception,msg:
