@@ -50,7 +50,6 @@ LOOK_PAGE_SIZE = 12
 
 
 class BrandRedirectView(RedirectView):
-
     permanent = False
     query_string = True
 
@@ -90,6 +89,7 @@ def product_redirect_by_id(request, pk):
     product = get_object_or_404(Product, pk=pk, published=True)
     return HttpResponsePermanentRedirect(product.get_absolute_url())
 
+
 def brand_redirect(request, pk):
     """
     Redirect from a brand id to brand profile page.
@@ -111,6 +111,7 @@ def notification_like_product(request):
     url = request.build_absolute_uri(product.get_absolute_url())
     return render(request, 'apparel/notifications/like_product.html', {'object': product, 'url': url})
 
+
 def notification_like_look(request):
     try:
         look_id = int(request.GET.get('id', None))
@@ -120,6 +121,7 @@ def notification_like_look(request):
     look = get_object_or_404(Look, pk=look_id)
     url = request.build_absolute_uri(look.get_absolute_url())
     return render(request, 'apparel/notifications/like_look.html', {'object': look, 'url': url})
+
 
 def notification_create_look(request):
     try:
@@ -131,6 +133,7 @@ def notification_create_look(request):
     url = request.build_absolute_uri(look.get_absolute_url())
     return render(request, 'apparel/notifications/create_look.html', {'object': look, 'url': url})
 
+
 def notification_follow_member(request):
     try:
         profile_id = int(request.GET.get('id', None))
@@ -140,6 +143,7 @@ def notification_follow_member(request):
     profile = get_object_or_404(get_user_model(), pk=profile_id)
     url = request.build_absolute_uri(profile.get_absolute_url())
     return render(request, 'apparel/notifications/follow_member.html', {'object': profile, 'url': url})
+
 
 def notification_follow_brand(request):
     try:
@@ -171,14 +175,18 @@ def facebook_share(request, activity):
 
     facebook_user = get_facebook_user(request)
     if not facebook_user:
-        return HttpResponse(json.dumps(dict(success=False, message='', error=_('Check your browser settings.').encode('utf-8'))), mimetype='application/json')
+        return HttpResponse(
+            json.dumps(dict(success=False, message='', error=_('Check your browser settings.').encode('utf-8'))),
+            mimetype='application/json')
 
     if activity == 'push':
         facebook_push_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_url)
     elif activity == 'pull':
         facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_url)
 
-    return HttpResponse(json.dumps(dict(success=True, message=_('Shared to your Facebook timeline!').encode('utf-8'), error='')), mimetype='application/json')
+    return HttpResponse(
+        json.dumps(dict(success=True, message=_('Shared to your Facebook timeline!').encode('utf-8'), error='')),
+        mimetype='application/json')
 
 #
 # Follow/Unfollow
@@ -198,7 +206,8 @@ def follow_unfollow(request, profile_id, do_follow=True):
         if request.user.fb_share_follow_profile:
             facebook_user = get_facebook_user(request)
             if facebook_user:
-                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
+                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile',
+                                          request.build_absolute_uri(profile.get_absolute_url()))
 
         follow, _ = Follow.objects.get_or_create(user=request.user, user_follow=profile)
         if not follow.active:
@@ -214,7 +223,8 @@ def follow_unfollow(request, profile_id, do_follow=True):
 
     facebook_user = get_facebook_user(request)
     if facebook_user:
-        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(profile.get_absolute_url()))
+        facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile',
+                                  request.build_absolute_uri(profile.get_absolute_url()))
 
     return HttpResponse(status=204)
 
@@ -259,7 +269,8 @@ def product_detail(request, slug):
 
     # Full image url
     try:
-        product_full_image = request.build_absolute_uri(get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
+        product_full_image = request.build_absolute_uri(
+            get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
     except IOError:
         logging.error('Product id %s does not have a valid image on disk' % (product.pk,))
         raise Http404
@@ -270,7 +281,8 @@ def product_detail(request, slug):
         product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
 
     # More like this body
-    mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors), ', '.join([x.name for x in product.categories]))
+    mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors),
+                                ', '.join([x.name for x in product.categories]))
 
     # More alternatives
     #alternative = get_product_alternative(product)
@@ -284,24 +296,24 @@ def product_detail(request, slug):
         sid = 0
 
     return render_to_response(
-            'apparel/product_detail.html',
-            {
-                'object': product,
-                'is_liked': is_liked,
-                'looks_with_product': looks_with_product,
-                'looks_with_product_count': looks_with_product_count,
-                'object_url': request.build_absolute_uri(),
-                'more_like_this': more_like_this_product(mlt_body, product.gender, 9),
-                'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
-                'product_full_image': product_full_image,
-                'product_brand_full_url': product_brand_full_url,
-                'likes': regular_likes,
-                'partner_likes': partner_likes,
-                'referral_sid': referral_sid,
-                'alternative': alternative,
-                'alternative_url': alternative_url,
-            }, context_instance=RequestContext(request),
-        )
+        'apparel/product_detail.html',
+        {
+            'object': product,
+            'is_liked': is_liked,
+            'looks_with_product': looks_with_product,
+            'looks_with_product_count': looks_with_product_count,
+            'object_url': request.build_absolute_uri(),
+            'more_like_this': more_like_this_product(mlt_body, product.gender, 9),
+            'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
+            'product_full_image': product_full_image,
+            'product_brand_full_url': product_brand_full_url,
+            'likes': regular_likes,
+            'partner_likes': partner_likes,
+            'referral_sid': referral_sid,
+            'alternative': alternative,
+            'alternative_url': alternative_url,
+        }, context_instance=RequestContext(request),
+    )
 
 
 def product_generate_short_link(request, slug):
@@ -328,7 +340,8 @@ def product_short_link(request, short_link):
     except ShortProductLink.DoesNotExist:
         raise Http404
 
-    return HttpResponsePermanentRedirect(reverse('product-redirect', args=(short_product.product_id, 'Ext-Link', short_product.user_id)))
+    return HttpResponsePermanentRedirect(
+        reverse('product-redirect', args=(short_product.product_id, 'Ext-Link', short_product.user_id)))
 
 
 def product_redirect(request, pk, page='Default', sid=0):
@@ -372,7 +385,8 @@ def product_track(request, pk, page='Default', sid=0):
     if posted_referer == client_referer and 'redirect' in client_referer:
         return HttpResponse()
 
-    product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request), get_user_agent(request), sid, page)
+    product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
+                            get_user_agent(request), sid, page)
 
     return HttpResponse()
 
@@ -390,8 +404,9 @@ def product_popup(request):
     for product in product_ids:
         product_result = {'liked': False}
         if request.user and request.user.is_authenticated():
-            product_result['liked'] = ProductLike.objects.filter(product=product, active=True, user=request.user).exists()
-        #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
+            product_result['liked'] = ProductLike.objects.filter(product=product, active=True,
+                                                                 user=request.user).exists()
+            #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
 
         result.append(product_result)
 
@@ -412,7 +427,7 @@ def look_popup(request):
         temp_result = {'liked': False}
         if request.user and request.user.is_authenticated():
             temp_result['liked'] = LookLike.objects.filter(look=look, active=True, user=request.user).exists()
-        #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
+            #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
 
         result.append(temp_result)
 
@@ -425,18 +440,22 @@ def product_action(request, pk, action):
     Like or unlike a product through ajax.
     """
     if not request.user or not request.user.is_authenticated():
-        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
+                            mimetype='application/json')
     if request.method == 'GET':
         return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), mimetype='application/json')
     if action not in ['like', 'unlike']:
-        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
+                            mimetype='application/json')
 
     try:
         product = Product.objects.get(pk=pk)
     except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
-        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')),
+                            mimetype='application/json')
 
     return _product_like(request, product, action)
+
 
 @login_required
 def product_like(request, slug, action):
@@ -444,37 +463,45 @@ def product_like(request, slug, action):
     Like or unlike a product through ajax.
     """
     if not request.user.is_authenticated():
-        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
+                            mimetype='application/json')
     if request.method == 'GET':
         return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), mimetype='application/json')
     if action not in ['like', 'unlike']:
-        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
+                            mimetype='application/json')
 
     try:
         product = Product.objects.get(slug=slug)
     except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
-        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='No product found')),
+                            mimetype='application/json')
 
     return _product_like(request, product, action)
+
 
 def _product_like(request, product, action):
     if action == 'like':
         if request.user.fb_share_like_product:
             facebook_user = get_facebook_user(request)
             if facebook_user:
-                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(product.get_absolute_url()))
+                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object',
+                                          request.build_absolute_uri(product.get_absolute_url()))
     elif action == 'unlike':
         facebook_user = get_facebook_user(request)
         if facebook_user:
-            facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(product.get_absolute_url()))
+            facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object',
+                                      request.build_absolute_uri(product.get_absolute_url()))
 
     default_active = True if action == 'like' else False
-    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product, defaults={'active': default_active})
+    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product,
+                                                              defaults={'active': default_active})
     if not created:
         product_like.active = default_active
         product_like.save()
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+
 
 @login_required
 def look_like(request, slug, action):
@@ -484,9 +511,11 @@ def look_like(request, slug, action):
     if request.method == 'GET':
         return HttpResponse(json.dumps(dict(success=False, error_message='POST only')), mimetype='application/json')
     if not request.user.is_authenticated():
-        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
+                            mimetype='application/json')
     if action not in ['like', 'unlike']:
-        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
+                            mimetype='application/json')
 
     try:
         look = Look.objects.get(slug=slug)
@@ -497,14 +526,17 @@ def look_like(request, slug, action):
         if request.user.fb_share_like_look:
             facebook_user = get_facebook_user(request)
             if facebook_user:
-                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(look.get_absolute_url()))
+                facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object',
+                                          request.build_absolute_uri(look.get_absolute_url()))
     elif action == 'unlike':
         facebook_user = get_facebook_user(request)
         if facebook_user:
-            facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object', request.build_absolute_uri(look.get_absolute_url()))
+            facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'like', 'object',
+                                      request.build_absolute_uri(look.get_absolute_url()))
 
     default_active = True if action == 'like' else False
-    look_like, created = LookLike.objects.get_or_create(user=request.user, look=look, defaults={'active': default_active})
+    look_like, created = LookLike.objects.get_or_create(user=request.user, look=look,
+                                                        defaults={'active': default_active})
     if not created:
         look_like.active = default_active
         look_like.save()
@@ -589,7 +621,8 @@ def look_detail(request, slug):
             if look.display_components.count() > 0:
                 facebook_user = get_facebook_user(request)
                 if facebook_user:
-                    facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', request.build_absolute_uri(look.get_absolute_url()))
+                    facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look',
+                                              request.build_absolute_uri(look.get_absolute_url()))
         else:
             look_saved = request.session['look_saved']
 
@@ -616,22 +649,22 @@ def look_detail(request, slug):
         look = get_model('apparel', 'Look').objects.get(pk=look.pk)
 
     return render_to_response(
-            'apparel/look_detail.html',
-            {
-                'object': look,
-                'components': components,
-                'looks_by_user': looks_by_user,
-                'tooltips': True,
-                'object_url': request.build_absolute_uri(look.get_absolute_url()),
-                'look_full_image': request.build_absolute_uri(look.static_image.url),
-                'look_saved': look_saved,
-                'look_created': look_created,
-                'likes': likes,
-                'base_url': base_url,
-                'is_liked': is_liked,
-            },
-            context_instance=RequestContext(request),
-        )
+        'apparel/look_detail.html',
+        {
+            'object': look,
+            'components': components,
+            'looks_by_user': looks_by_user,
+            'tooltips': True,
+            'object_url': request.build_absolute_uri(look.get_absolute_url()),
+            'look_full_image': request.build_absolute_uri(look.static_image.url),
+            'look_saved': look_saved,
+            'look_created': look_created,
+            'likes': likes,
+            'base_url': base_url,
+            'is_liked': is_liked,
+        },
+        context_instance=RequestContext(request),
+    )
 
 
 @login_required
@@ -642,7 +675,8 @@ def look_delete(request, slug):
         # pull create look activity from facebook (cannot be in a pre_delete signal because request object requirement)
         facebook_user = get_facebook_user(request)
         if facebook_user:
-            facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look', request.build_absolute_uri(look.get_absolute_url()))
+            facebook_pull_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look',
+                                      request.build_absolute_uri(look.get_absolute_url()))
 
         look.delete()
         return (True, HttpResponseRedirect(reverse('profile-looks', args=(request.user.slug,))))
@@ -656,11 +690,13 @@ def csrf_failure(request, reason=None):
     """
     if reason is None: reason = '[None given]'
     logging.debug("CSRF failure: %s" % reason)
-    return render_to_response('403.html', { 'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason }, context_instance=RequestContext(request))
+    return render_to_response('403.html', {'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason},
+                              context_instance=RequestContext(request))
 
 
 def list_colors(request):
-    color_data = get_model('apparel', 'Option').objects.filter(option_type__name__in=['color', 'pattern']).exclude(value__exact='').values_list('value', flat=True)
+    color_data = get_model('apparel', 'Option').objects.filter(option_type__name__in=['color', 'pattern']).exclude(
+        value__exact='').values_list('value', flat=True)
 
     callback = request.GET.get('callback')
     if callback:
@@ -700,7 +736,8 @@ def follow_backend(request):
     if uids:
         uids = uids.split(',')
         for profile in get_user_model().objects.filter(id__in=uids):
-            follow_html = render_to_string('apparel/fragments/follow.html', {'profile': profile}, context_instance=RequestContext(request))
+            follow_html = render_to_string('apparel/fragments/follow.html', {'profile': profile},
+                                           context_instance=RequestContext(request))
             follows.append({'id': profile.pk, 'html': follow_html})
 
     return HttpResponse(json.dumps(follows), mimetype='application/json')
@@ -733,7 +770,7 @@ def user_list(request, gender=None, brand=False):
     if alphabet:
         if alphabet == '0-9':
             queryset = queryset.filter(name__regex=r'^\d.+')
-        elif alphabet in  string.lowercase:
+        elif alphabet in string.lowercase:
             queryset = queryset.filter(name__istartswith=alphabet)
 
         extra_parameter = 'alphabet=%s' % (alphabet,)
@@ -758,18 +795,20 @@ def user_list(request, gender=None, brand=False):
         'gender': gender
     })
 
+
 def topmodel_user_list(request):
     """
     Displays a list of profiles
     """
-    user_ids = [1,2,3,4,5]
-    from apparelrow.profile.models import User
-    queryset = get_user_model().objects.filter(id__in=user_ids)
+    queryset = None
+
+    if settings.DEBUG:
+        queryset = get_user_model().objects.filter(id__in=[1, 2, 3, 4, 5])
+    else:
+        queryset = get_user_model().objects.filter(last_name='- Top Model')
 
     extra_parameter = None
-
-    # Needed for this?
-    queryset = queryset.order_by( '-followers_count', 'first_name', 'last_name')
+    queryset = queryset.order_by('-followers_count', 'first_name', 'last_name')
     paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
 
     if request.is_ajax():
@@ -798,8 +837,10 @@ def index(request, gender=None):
 def about(request):
     return render(request, 'apparel/about.html')
 
+
 def jobs(request):
     return render(request, 'apparel/jobs.html')
+
 
 def founders(request):
     return render(request, 'apparel/founders.html')
@@ -822,10 +863,10 @@ def contest_stylesearch_charts(request):
 
     looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),
                                                                   published=True) \
-                                                          .filter(likes__created__lte=end_date, likes__active=True) \
-                                                          .annotate(num_likes=Count('likes')) \
-                                                          .select_related('user') \
-                                                          .order_by('-num_likes', 'created')[:10]
+                .filter(likes__created__lte=end_date, likes__active=True) \
+                .annotate(num_likes=Count('likes')) \
+                .select_related('user') \
+                .order_by('-num_likes', 'created')[:10]
 
     return render(request, 'apparel/contest_stylesearch_charts.html', {'looks': looks})
 
@@ -860,28 +901,25 @@ def contest_xmas_menlook_charts(request):
         end_date = datetime.datetime(2013, 12, 8, 21, 59, 59)
         start_date = datetime.datetime(2013, 11, 19, 0, 0, 0)
 
-
     is_closed = False
     if timezone.now() > end_date:
         is_closed = True
 
-
     valid_looks = get_model('apparel', 'Look').published_objects.filter(components__product__vendors=vendor_id) \
-                                                                .annotate(num_products=Count('components__product')) \
-                                                                .filter(num_products__gte=5, published=True)
+        .annotate(num_products=Count('components__product')) \
+        .filter(num_products__gte=5, published=True)
 
     looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),
                                                                   published=True,
                                                                   likes__created__lte=end_date,
                                                                   likes__active=True,
                                                                   pk__in=valid_looks) \
-                                                          .exclude(pk__in=[1497]) \
-                                                          .annotate(num_likes=Count('likes')) \
-                                                          .select_related('user') \
-                                                          .order_by('-num_likes', 'created')[:10]
+                .exclude(pk__in=[1497]) \
+                .annotate(num_likes=Count('likes')) \
+                .select_related('user') \
+                .order_by('-num_likes', 'created')[:10]
 
     return render(request, 'apparel/contest_xmas_menlook_charts.html', {'looks': looks, 'is_closed': is_closed})
-
 
 
 def apparel_set_language(request):
@@ -913,5 +951,5 @@ def facebook_friends_widget(request):
     friends = get_user_model().objects.filter(username__in=fids)
 
     return render_to_response('apparel/fragments/facebook_friends.html', {
-            'facebook_friends': friends,
-        }, context_instance=RequestContext(request))
+        'facebook_friends': friends,
+    }, context_instance=RequestContext(request))
