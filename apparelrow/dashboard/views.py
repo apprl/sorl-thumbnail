@@ -334,6 +334,9 @@ def dashboard(request, year=None, month=None):
     """
     Display publisher data per month for logged in user.
     """
+    if request.user.is_authenticated() and request.user.is_partner and request.user.partner_group_id == 3:
+        return HttpResponseRedirect(reverse('index'))
+
     if request.user.is_authenticated() and request.user.is_partner:
         if year is not None and month is not None:
             start_date = datetime.date(int(year), int(month), 1)

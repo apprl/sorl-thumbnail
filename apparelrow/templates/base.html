@@ -142,7 +142,7 @@
                        <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="img-circle" src="{{ request.user.avatar_small }}"><span> {{ request.user.display_name }}</span> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
-                            {% if request.user.is_partner %}
+                            {% if request.user.is_partner and request.user.partner_group_id != 3 %}
                             <li><a href="{% url 'dashboard' %}">{% trans "For publishers" %}</a></li>
                             {% endif %}
                             {% if request.user.advertiser_store %}
