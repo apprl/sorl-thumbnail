@@ -355,6 +355,7 @@ admin.site.register(Option, OptionAdmin)
 #
 
 class VendorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'provider')
     raw_id_fields = ['user']
 
 admin.site.register(Vendor, VendorAdmin)

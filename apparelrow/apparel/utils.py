@@ -230,27 +230,27 @@ def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
     url = smart_str(vendor.buy_url)
 
     try:
-        vendor_feed = vendor.vendor.vendor_feed
+        site_vendor = vendor.vendor
     except ObjectDoesNotExist:
         return url
 
     # Tradedoubler
-    if vendor_feed.provider_class == 'tradedoubler':
+    if site_vendor.provider == 'tradedoubler':
         url = '%sepi(%s)' % (url, sid)
     # Commission Junction
-    elif vendor_feed.provider_class == 'cj':
+    elif site_vendor.provider == 'cj':
         url = set_query_parameter(url, 'SID', sid)
     # Zanox
-    elif vendor_feed.provider_class == 'zanox':
+    elif site_vendor.provider == 'zanox':
         url = '%s&zpar0=%s' % (url, sid)
     # Linkshare
-    elif vendor_feed.provider_class == 'linkshare':
+    elif site_vendor.provider == 'linkshare':
         url = set_query_parameter(url, 'u1', sid)
     # Affiliate Window
-    elif vendor_feed.provider_class == 'affiliatewindow':
+    elif site_vendor.provider == 'affiliatewindow':
         url = set_query_parameter(url, 'clickref', sid)
     # Our network
-    elif vendor_feed.provider_class == 'aan':
+    elif site_vendor.provider == 'aan':
         url = set_query_parameter(url, 'custom', sid)
     # Default to our own network
     else:
