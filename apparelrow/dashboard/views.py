@@ -40,6 +40,8 @@ def map_placement(placement):
         link = _('Your profile on Apprl.com')
     elif placement == 'Product':
         link = _('Product page')
+    elif placement == 'Ext-Banner':
+        link = _('Banner on your site')
 
     return link
 
