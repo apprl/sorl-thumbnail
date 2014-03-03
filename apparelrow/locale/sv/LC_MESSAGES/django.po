@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-01 23:06+0100\n"
+"POT-Creation-Date: 2014-03-03 21:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,17 +63,17 @@ msgid "no"
 msgstr "nej"
 
 #: activity_feed/models.py:93 activity_feed/models.py:153
-#: apparel/models.py:385 apparel/models.py:480 apparel/models.py:532
-#: apparel/models.py:734 apparel/models.py:948 apparel/models.py:963
-#: apparel/models.py:1167 apparel/models.py:1201 dashboard/models.py:74
+#: apparel/models.py:386 apparel/models.py:481 apparel/models.py:533
+#: apparel/models.py:735 apparel/models.py:949 apparel/models.py:964
+#: apparel/models.py:1168 apparel/models.py:1202 dashboard/models.py:74
 #: dashboard/models.py:98 dashboard/models.py:140 profile/models.py:402
 #: statistics/models.py:68 statistics/models.py:80
 msgid "Time created"
 msgstr "Tid tillagd"
 
-#: activity_feed/models.py:94 apparel/models.py:220 apparel/models.py:386
-#: apparel/models.py:479 apparel/models.py:531 apparel/models.py:735
-#: apparel/models.py:964 dashboard/models.py:75 dashboard/models.py:99
+#: activity_feed/models.py:94 apparel/models.py:221 apparel/models.py:387
+#: apparel/models.py:480 apparel/models.py:532 apparel/models.py:736
+#: apparel/models.py:965 dashboard/models.py:75 dashboard/models.py:99
 #: profile/models.py:403
 msgid "Time modified"
 msgstr "Tid ändrad"
@@ -215,201 +215,201 @@ msgstr "Hem"
 msgid "Logotype"
 msgstr "Logotype"
 
-#: apparel/models.py:176
+#: apparel/models.py:177
 msgid "Only active categories are visible and searchable on the website"
 msgstr "Endast aktiva kategorier visas och är sökbara på sajten"
 
-#: apparel/models.py:177
+#: apparel/models.py:178
 msgid "Option types"
 msgstr ""
 
-#: apparel/models.py:178
+#: apparel/models.py:179
 msgid "The category is visible on the front page"
 msgstr "Kategorin visas på förstasidan"
 
-#: apparel/models.py:212
+#: apparel/models.py:213
 msgid "Option"
 msgstr ""
 
-#: apparel/models.py:213 apparel/models.py:728
+#: apparel/models.py:214 apparel/models.py:729
 msgid "Slug Name"
 msgstr "Slug"
 
-#: apparel/models.py:214 apparel/models.py:729
+#: apparel/models.py:215 apparel/models.py:730
 msgid "Used for URLs, auto-generated from name if blank"
 msgstr "Används i URLer. Om den är tom, auto-genereras den från namnet"
 
-#: apparel/models.py:215
+#: apparel/models.py:216
 msgid "Stock Keeping Unit"
 msgstr "Produkt ID (SKU)"
 
-#: apparel/models.py:216
+#: apparel/models.py:217
 msgid "Has to be unique with the static_brand"
 msgstr ""
 
-#: apparel/models.py:218
+#: apparel/models.py:219
 msgid "Time added"
 msgstr "Tid tillagd"
 
-#: apparel/models.py:219
+#: apparel/models.py:220
 msgid "Time published"
 msgstr "Tid publicerad"
 
-#: apparel/models.py:221
+#: apparel/models.py:222
 msgid "Product description"
 msgstr "Produktbeskrivning"
 
-#: apparel/models.py:222
+#: apparel/models.py:223
 msgid "Product image"
 msgstr "Produktbild"
 
-#: apparel/models.py:225 apparel/models.py:738 profile/forms.py:124
+#: apparel/models.py:226 apparel/models.py:739 profile/forms.py:124
 #: profile/models.py:52
 msgid "Gender"
 msgstr "Kön"
 
-#: apparel/models.py:226
+#: apparel/models.py:227
 msgid "Feed gender"
 msgstr ""
 
-#: apparel/models.py:229 apparel/models.py:702
+#: apparel/models.py:230 apparel/models.py:703
 msgid "In stock"
 msgstr "I lager"
 
-#: apparel/models.py:474
+#: apparel/models.py:475
 msgid "category"
 msgstr "kategori"
 
-#: apparel/models.py:475 profile/forms.py:98
+#: apparel/models.py:476 profile/forms.py:98
 msgid "Name"
 msgstr "Namn"
 
-#: apparel/models.py:477
+#: apparel/models.py:478
 msgid "Default gender"
 msgstr ""
 
-#: apparel/models.py:478
+#: apparel/models.py:479
 msgid "Override gender"
 msgstr ""
 
-#: apparel/models.py:566
+#: apparel/models.py:567
 msgid "Buy URL"
 msgstr "URL till köpsida"
 
-#: apparel/models.py:567 templates/apparel/look_editor.html:63
+#: apparel/models.py:568 templates/apparel/look_editor.html:63
 #: templates/apparel/fragments/product_filter.html:49
 msgid "Price"
 msgstr "Pris"
 
-#: apparel/models.py:567
+#: apparel/models.py:568
 msgid "Price converted to base currency"
 msgstr "Pris konverterat till basvaluta"
 
-#: apparel/models.py:568 importer/models.py:138
+#: apparel/models.py:569 importer/models.py:138
 msgid "Currency"
 msgstr "Valuta"
 
-#: apparel/models.py:568
+#: apparel/models.py:569
 msgid "Base currency as three-letter ISO code"
 msgstr "Basvaluta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:569
+#: apparel/models.py:570
 msgid "Original price"
 msgstr "Ursprungligt pris"
 
-#: apparel/models.py:570
+#: apparel/models.py:571
 msgid "Original currency"
 msgstr "Ursprunglig valuta"
 
-#: apparel/models.py:570 apparel/models.py:572 apparel/models.py:574
+#: apparel/models.py:571 apparel/models.py:573 apparel/models.py:575
 #: dashboard/models.py:62 dashboard/models.py:95
 msgid "Currency as three-letter ISO code"
 msgstr "Valuta som ISO-kod (3 bokstäver, t ex SEK)"
 
-#: apparel/models.py:571
+#: apparel/models.py:572
 msgid "Discount price"
 msgstr ""
 
-#: apparel/models.py:572
+#: apparel/models.py:573
 msgid "Discount currency"
 msgstr "Rabattvaluta"
 
-#: apparel/models.py:573
+#: apparel/models.py:574
 msgid "Original discount price"
 msgstr "Ursprungligt rabatterat pris"
 
-#: apparel/models.py:574
+#: apparel/models.py:575
 msgid "Original discount currency"
 msgstr "Ursprunglig rabattvaluta"
 
-#: apparel/models.py:575 apparel/models.py:693
+#: apparel/models.py:576 apparel/models.py:694
 msgid "Items in stock"
 msgstr "Antal i lager"
 
-#: apparel/models.py:575 apparel/models.py:693
+#: apparel/models.py:576 apparel/models.py:694
 msgid ""
 "Negative value means it is in stock, but we have no information about how "
 "many. Null means we have no information about availability. 0 means it is "
 "sold out"
 msgstr ""
 
-#: apparel/models.py:698
+#: apparel/models.py:699
 msgid "No information available"
 msgstr "Ingen information tillgänglig"
 
-#: apparel/models.py:700
+#: apparel/models.py:701
 msgid "Out of stock"
 msgstr "Ej i lager"
 
-#: apparel/models.py:704
+#: apparel/models.py:705
 msgid "items in stock"
 msgstr "i lager"
 
-#: apparel/models.py:727
+#: apparel/models.py:728
 msgid "Title"
 msgstr "Titel"
 
-#: apparel/models.py:730
+#: apparel/models.py:731
 msgid "Look description"
 msgstr "Beskrivning"
 
-#: apparel/models.py:737
+#: apparel/models.py:738
 msgid "What compontent to show"
 msgstr "Vilken komponent ska visas"
 
-#: apparel/models.py:1008
+#: apparel/models.py:1009
 msgid "CSS top"
 msgstr ""
 
-#: apparel/models.py:1009
+#: apparel/models.py:1010
 msgid "CSS left"
 msgstr ""
 
-#: apparel/models.py:1010
+#: apparel/models.py:1011
 msgid "CSS width"
 msgstr ""
 
-#: apparel/models.py:1011
+#: apparel/models.py:1012
 msgid "CSS height"
 msgstr ""
 
-#: apparel/models.py:1012
+#: apparel/models.py:1013
 msgid "CSS z-index"
 msgstr ""
 
-#: apparel/models.py:1013
+#: apparel/models.py:1014
 msgid "CSS rotation"
 msgstr ""
 
-#: apparel/models.py:1187
+#: apparel/models.py:1188
 msgid "Image"
 msgstr ""
 
-#: apparel/models.py:1231
+#: apparel/models.py:1232
 msgid "Synonyms"
 msgstr ""
 
-#: apparel/models.py:1231
+#: apparel/models.py:1232
 msgid ""
 "Place all synonyms on their own line, comma-separated. Comments start with "
 "\"#\"."
@@ -502,11 +502,11 @@ msgstr "Håll koll på bloggare, designers och dina vänners favoriter."
 msgid "Sign up to get sale alerts when the price drops on products you like!"
 msgstr "Bli medlem för att bli meddelad när produkter du gillat prissänks!"
 
-#: apparel/views/__init__.py:174
+#: apparel/views/__init__.py:179
 msgid "Check your browser settings."
 msgstr "Undersök din webbläsares inställningar"
 
-#: apparel/views/__init__.py:181
+#: apparel/views/__init__.py:188
 msgid "Shared to your Facebook timeline!"
 msgstr "Delad till din Facebook timeline!"
 
@@ -564,7 +564,7 @@ msgid ""
 "short store link admin list without a user id."
 msgstr ""
 
-#: dashboard/views.py:24 dashboard/views.py:76 dashboard/views.py:140
+#: dashboard/views.py:24 dashboard/views.py:78 dashboard/views.py:142
 msgid "Unknown"
 msgstr "Okänt"
 
@@ -603,6 +603,11 @@ msgstr "Din profil på Apprl.com"
 #: dashboard/views.py:42
 msgid "Product page"
 msgstr "Produktsida"
+
+#: dashboard/views.py:44
+#, fuzzy
+msgid "Banner on your site"
+msgstr "Shop på din site"
 
 #: importer/models.py:18
 msgid "a-z, 0-9 and _"
@@ -982,12 +987,12 @@ msgid "TOP MODEL SWEDEN ON APPRL"
 msgstr "TOP MODEL SVERIGE PÅ APPRL"
 
 #: templates/base.html:98
-msgid "Follow the models and win €150"
-msgstr "Följ modellerna och vinn 1500kr"
+msgid "Follow the models"
+msgstr "Följ modellernas stil"
 
 #: templates/base.html:98
-msgid "Follow the models for a chance to win €150 to shop for"
-msgstr "Följ modellerna och vinn 1500kr att shoppa för"
+msgid "Follow the models and shop their wardrobes"
+msgstr "Följ modellerna och shoppa i deras garderober"
 
 #: templates/base.html:101
 msgid "TO THE MODELS"
@@ -1055,7 +1060,7 @@ msgstr "Looks"
 
 #: templates/base.html:167 templates/activity_feed/verbs/follow.html:14
 #: templates/apparel/contest_xmas_menlook.html:39
-#: templates/apparel/topmodel_list.html:4 templates/apparel/user_list.html:4
+#: templates/apparel/topmodel_list.html:38 templates/apparel/user_list.html:4
 #: templates/apparel/user_list.html:22
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
@@ -1168,9 +1173,8 @@ msgstr "Bara dam"
 #: templates/activity_feed/feed_list.html:51
 #: templates/activity_feed/feed_list.html:53
 #: templates/apparel/look_list.html:17 templates/apparel/look_list.html:19
-#: templates/apparel/topmodel_list.html:24
-#: templates/apparel/topmodel_list.html:26 templates/apparel/user_list.html:32
-#: templates/apparel/user_list.html:34 templates/apparel/user_list.html:47
+#: templates/apparel/user_list.html:32 templates/apparel/user_list.html:34
+#: templates/apparel/user_list.html:47
 msgid "Show all"
 msgstr "Visa alla"
 
@@ -1445,6 +1449,7 @@ msgstr "Mina varumärken"
 #: templates/apparel/contest_stylesearch.html:20
 #: templates/apparel/contest_stylesearch_charts.html:4
 #: templates/apparel/contest_stylesearch_charts.html:12
+#: templates/apparel/contest_topmodel.html:20
 msgid "Fashion week style search"
 msgstr "Fashion week style search"
 
@@ -1466,6 +1471,7 @@ msgid "The looks with most votes by the end of Sept 1st enter the final."
 msgstr "De looks som har fått flest röster efter 1:a september går till final"
 
 #: templates/apparel/contest_stylesearch.html:27
+#: templates/apparel/contest_topmodel.html:26
 msgid "To join:"
 msgstr "För att delta:"
 
@@ -1499,6 +1505,7 @@ msgid ""
 msgstr "<strong>Elin Kling</strong> väljer ut vinnaren på vår Facebooksida"
 
 #: templates/apparel/contest_stylesearch.html:45
+#: templates/apparel/contest_topmodel.html:36
 msgid "SEE FINALISTS"
 msgstr "SE FINALISTER"
 
@@ -1525,6 +1532,7 @@ msgstr ""
 "av annan anledning. Apprls Användarvillkor gäller."
 
 #: templates/apparel/contest_stylesearch.html:55
+#: templates/apparel/contest_topmodel.html:46
 msgid "For questions & info contact "
 msgstr "För frågor & info kontakta "
 
@@ -1549,6 +1557,45 @@ msgstr "SE VINNAREN PÅ VÅR FACEBOOKSIDA"
 #: templates/apparel/fragments/look_medium.html:24
 msgid "by"
 msgstr "av"
+
+#: templates/apparel/contest_topmodel.html:5
+#: templates/apparel/contest_topmodel.html:11
+#, fuzzy
+msgid "COMPETE WITH TOP MODEL SWEDEN & PANOS EMPORIO"
+msgstr "TOP MODEL SVERIGE PÅ APPRL"
+
+#: templates/apparel/contest_topmodel.html:12
+#, fuzzy
+msgid ""
+"Follow the models on Apprl for a chance to become one of three winners of "
+"€150 at Panos Emporio"
+msgstr "Följ modellerna och vinn 1500kr att shoppa för"
+
+#: templates/apparel/contest_topmodel.html:23
+msgid "Contest open 3rd March - 11th May"
+msgstr ""
+
+#: templates/apparel/contest_topmodel.html:29
+msgid ""
+"Follow at least one of the Top Model Sweden participants on Apprl, <a "
+"href=“http://apprl.com/topmodelsverige/”>you find them all here</a>."
+msgstr ""
+
+#: templates/apparel/contest_topmodel.html:32
+msgid ""
+"Make sure you check the e-mail address registered to your Apprl account as "
+"further info about the contest will be sent via e-mail."
+msgstr ""
+
+#: templates/apparel/contest_topmodel.html:45
+msgid ""
+"The winning prize for three winners is a gift card (or equal) for €150 at "
+"the Panos Emporio web shop www.panos.se. The contestant is responsible to "
+"pay any taxes if required. A jury put together by Apprl will select the 3 "
+"winners. Apprl holds the right to disqualify contestants for suspected "
+"cheating, abuse or other reason. Our general terms of service & privacy "
+"policy apply."
+msgstr ""
 
 #: templates/apparel/contest_xmas_menlook.html:5
 #: templates/apparel/contest_xmas_menlook_charts.html:4
@@ -2032,7 +2079,15 @@ msgstr "Ansök nedan så kontaktar vi dig:"
 msgid "APPLY"
 msgstr "ANSÖK"
 
-#: templates/apparel/topmodel_list.html:15 templates/apparel/user_list.html:15
+#: templates/apparel/topmodel_list.html:85
+msgid "Top model sverige på apprl"
+msgstr ""
+
+#: templates/apparel/topmodel_list.html:94
+msgid "Följ modellernas stil och shoppa i deras garderober"
+msgstr ""
+
+#: templates/apparel/user_list.html:15
 #, python-format
 msgid ""
 "Follow members and brands to see their items and looks in your <a href="
@@ -2043,15 +2098,11 @@ msgstr ""
 "href=\"%(feed_url)s\">APPRL feed</a> och på <a href=\"%(shop_friend)s\">Shop "
 "> Mina vänner</a> & <a href=\"%(shop_brand)s\">Shop > Mina varumären</a>."
 
-#: templates/apparel/topmodel_list.html:24
-#: templates/apparel/topmodel_list.html:27 templates/apparel/user_list.html:32
-#: templates/apparel/user_list.html:35
+#: templates/apparel/user_list.html:32 templates/apparel/user_list.html:35
 msgid "Only men"
 msgstr "Bara herr"
 
-#: templates/apparel/topmodel_list.html:24
-#: templates/apparel/topmodel_list.html:28 templates/apparel/user_list.html:32
-#: templates/apparel/user_list.html:36
+#: templates/apparel/user_list.html:32 templates/apparel/user_list.html:36
 msgid "Only women"
 msgstr "Bara dam"
 
@@ -3696,9 +3747,6 @@ msgid ""
 "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
 "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
-
-#~ msgid "Follow the models and get their favourite items"
-#~ msgstr "Följ modellerna och se deras favoritprodukter"
 
 #, fuzzy
 #~ msgid "Compete with Menlook to win €250"
