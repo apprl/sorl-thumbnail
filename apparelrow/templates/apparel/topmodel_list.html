@@ -1,11 +1,47 @@
 {% extends "base.html" %}
-{% load i18n apparel_extras %}
+{% load i18n staticfiles apparel_extras %}
+
+{% block extra-styles %}
+    <style type="text/css">
+        .featured-container {
+            background: #000000 url('{% static "images/topmodel.jpg"%}') no-repeat center top;
+            overflow: hidden;
+            height: 310px;
+            /*padding-top: 132px;*/
+            margin-bottom: 17px;
+        }
+
+        .featured-container .body-header h1 {
+           color: #FFFFFF;
+           margin-bottom: 0px;
+           /*font-size: 26px;*/
+        }
+        .featured-container .body-header {
+            margin-top: 160px;
+        }
+
+        .row h1,.row  {
+            text-align: center;
+        }
+
+        h3.col-lg-12.alphabet {
+            font-size: 19px;
+            font-weight: 700;
+            text-transform: none;
+            padding-bottom: 10px;
+        }
+
+    </style>
+
+{% endblock %}
 
 {% block extra-title %}{% trans "Follow" %} | {% endblock %}
 
 {% block body-classes %}discover-list-page{% endblock %}
-{% block body %}
+{% block full-body %}
 
+
+    {% comment %}
     {% if request.GET.first and request.user.is_authenticated %}
     <div class="container">
         <div class="alert alert-success alert-dismissable">
@@ -18,7 +54,7 @@
     {% endif %}
 
     <div class="body-header">
-        <div class="{% if is_brand %}body-header-col-full{% else %}body-header-col-left{% endif %}">
+        <!--div class="{% if is_brand %}body-header-col-full{% else %}body-header-col-left{% endif %}">
             <h1>{% trans "Top Models" %}</h1>
             <!--<ul class="list-inline">
                 <li><h2><a{% if 'users' in request.path %} class="selected"{% endif %} href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></h2></li>
@@ -40,21 +76,27 @@
         </div>
         {% endif %}
     </div>
+    {% endcomment %}
+    <div class="featured-container" id="topmodel">
+          <div class="container">
 
-    <div class="row">
-        <div class="col-lg-12">
-            <ul class="alphabet list-inline">
-                <li><a{% if not selected_alphabet %} class="selected"{% endif %} href="{{ request.path }}">{% trans "Show all" %}</a></li>
-                <li><a{% if selected_alphabet == '0-9' %} class="selected"{% endif %} href="?alphabet=0-9">0-9</a></li>
-                {% for character in alphabet %}
-                <li><a{% if selected_alphabet == character %} class="selected"{% endif %} href="?alphabet={{ character }}">{{ character }}</a></li>
-                {% endfor %}
-            </ul>
+            <div class="row body-header">
+                        <h1 class="col-sm-12">{% trans "TOP MODEL SVERIGE APPRL" %}</h1>
+            </div>
         </div>
+    </div>
+
+
+   <div class="container">
+    <div class="row">
+        <h3 class="col-lg-12 alphabet">
+                {% trans "Följ modellernas stil och shoppa i deras garderober" %}
+        </h3>
     </div>
     <div class="row">
         <div class="col-lg-12">
             {% include 'apparel/fragments/user_list.html' %}
         </div>
     </div>
+   </div>
 {% endblock %}
