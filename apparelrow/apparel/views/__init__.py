@@ -809,7 +809,7 @@ def topmodel_user_list(request):
 
     extra_parameter = None
     queryset = queryset.order_by('-followers_count', 'first_name', 'last_name')
-    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 20, request.GET.get('page'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {
