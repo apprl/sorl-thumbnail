@@ -8,7 +8,7 @@ PIDFILE_ADMIN=$APP_ROOT/var/gunicorn-admin.pid
 ADDRESS=127.0.0.1:8090
 ADDRESS_ADMIN=127.0.0.1:8095
 NUM_WORKERS=%(gunicorn_processes)s
-NUM_WORKERS_ADMIN=$(expr %(gunicorn_processes)s - 1)
+NUM_WORKERS_ADMIN=%(gunicorn_admin_processes)s
 NEW_RELIC_CONFIG_FILE=$APP_ROOT/etc/newrelic.ini
 NEW_RELIC_ENVIRONMENT=%(settings)s
 export NEW_RELIC_CONFIG_FILE

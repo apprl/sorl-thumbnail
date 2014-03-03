@@ -41,6 +41,7 @@ def old_prod():
     env.celery_processes='4'
     env.celery_processes_background='3'
     env.gunicorn_processes='3'
+    env.gunicorn_admin_processes='2'
 
 def old_prod_db():
     "Use our EC2 server"
@@ -86,7 +87,8 @@ def production_web():
     env.settings = 'production'
     env.celery_processes='4'
     env.celery_processes_background='3'
-    env.gunicorn_processes='4'
+    env.gunicorn_processes='5'
+    env.gunicorn_admin_processes='2'
 
 def staging():
     """
@@ -104,6 +106,7 @@ def staging():
     env.celery_processes = '2'
     env.celery_processes_background = '2'
     env.gunicorn_processes = '2'
+    env.gunicorn_admin_processes='1'
 
 
 # tasks
@@ -372,7 +375,7 @@ def install_nginx():
         sudo('cd /etc/nginx/sites-enabled/; ln -sf ../sites-available/%(project_name)s.conf %(project_name)s.conf' % env, pty=True)
 
 def install_gunicorn():
-    require('path', 'gunicorn_processes')
+    require('path', 'gunicorn_processes', 'gunicorn_admin_processes')
     with cd(env.path):
         upload_template('etc/gunicorn-server' % env, '%(path)s/bin' % env, context=env, use_sudo=True)
         sudo('chmod a+x %(path)s/bin/gunicorn-server' % env, pty=True)
