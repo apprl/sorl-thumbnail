@@ -856,6 +856,13 @@ def contest_stylesearch(request):
 
     return render(request, 'apparel/contest_stylesearch.html', {'image': image})
 
+def contest_topmodel(request):
+    image = 'images/topmodel.png'
+    if request.LANGUAGE_CODE == 'sv':
+        image = 'images/topmodel_sv.png'
+
+    return render(request, 'apparel/contest_topmodel.html', {'image': image})
+
 
 def contest_stylesearch_charts(request):
     start_date = datetime.datetime(2013, 8, 26, 0, 0, 0)

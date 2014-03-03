@@ -22,6 +22,8 @@ urlpatterns = patterns('',
     url(r'^menlookwishlist/$', 'apparelrow.apparel.views.contest_xmas_menlook', name='contest-xmas-menlook'),
     url(r'^menlookwishlist/toplist/$', 'apparelrow.apparel.views.contest_xmas_menlook_charts', name='contest-xmas-menlook-charts'),
 
+    url(r'^topmodelcontest/$', 'apparelrow.apparel.views.contest_topmodel', name='contest-topmodelcontest'),
+
     # Feed
     url(r'^feed/$', RedirectView.as_view(url='/')),
     url(r'^all/$', RedirectView.as_view(url='/')),
