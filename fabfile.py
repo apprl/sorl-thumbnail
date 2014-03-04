@@ -638,3 +638,7 @@ def deploy_solr():
 
     if 'running' in run('service solr status'):
         run('wget -O - http://localhost:8983/solr/admin/cores?action=RELOAD')
+
+
+if os.path.exists(os.path.join(os.path.dirname(__file__), "fab_local.py")):
+    from fab_local import *
