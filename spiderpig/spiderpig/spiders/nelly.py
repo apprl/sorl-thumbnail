@@ -26,6 +26,14 @@ class NellySpider(CSVFeedSpider, AffiliateMixin):
         # Preprocess
         row.update([x.split(':', 1) for x in row.get('fields', '').split(';') if x])
 
+        in_stock = row.get('inStock')
+        stock = 0
+        if in_stock:
+            try:
+                stock = int(in_stock)
+            except ValueError:
+                pass
+
         item = Product()
         key = key_regex1.search(row.get('productUrl'))
         if key:
@@ -44,8 +52,8 @@ class NellySpider(CSVFeedSpider, AffiliateMixin):
         item['regular_price'] = row.get('previousPrice')
         item['discount_price'] = row.get('price')
         item['currency'] = row.get('currency')
-        item['in_stock'] = True if int(row.get('inStock', 0)) > 0 else False
-        item['stock'] = row.get('inStock')
+        item['in_stock'] = True if stock > 0 else False
+        item['stock'] = stock
         item['image_urls'] = [row.get('extraImageProductLarge', '').replace('productLarge', 'productPress')]
 
         return item
