@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-04 13:09+0100\n"
+"POT-Creation-Date: 2014-03-05 10:24+0100\n"
 "PO-Revision-Date: 2014-03-04 11:39+0100\n"
 "Last-Translator:   <klas@klas.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1064,8 +1064,7 @@ msgstr "Looks"
 
 #: templates/base.html:167 templates/activity_feed/verbs/follow.html:14
 #: templates/apparel/contest_xmas_menlook.html:39
-#: templates/apparel/topmodel_list.html:38 templates/apparel/user_list.html:4
-#: templates/apparel/user_list.html:22
+#: templates/apparel/user_list.html:4 templates/apparel/user_list.html:22
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
@@ -2089,13 +2088,15 @@ msgstr "Ansök nedan så kontaktar vi dig:"
 msgid "APPLY"
 msgstr "ANSÖK"
 
+#: templates/apparel/topmodel_list.html:38
 #: templates/apparel/topmodel_list.html:85
 #, fuzzy
-msgid "TOPMODEL SWEDEN ON APPRL"
-msgstr "Top model sverige på apprl"
+msgid "Top Model Sweden on Apprl"
+msgstr "Top Model Sverige på Apprl"
 
 #: templates/apparel/topmodel_list.html:94
-msgid "Follow the models on Apprl and shop in their wardrobes"
+#, fuzzy
+msgid "Follow the models and shop in their wardrobes"
 msgstr "Följ modellernas stil och shoppa i deras garderober"
 
 #: templates/apparel/user_list.html:15
@@ -3758,6 +3759,10 @@ msgid ""
 "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
 "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
+
+#, fuzzy
+#~ msgid "Top Model Sweden on APPRL"
+#~ msgstr "Top Model Sverige på Apprl"
 
 #~ msgid "Are you a store?"
 #~ msgstr "Har du en butik?"
