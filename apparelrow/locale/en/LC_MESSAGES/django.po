@@ -2,20 +2,21 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-05 10:23+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-03-05 10:47+0100\n"
+"Last-Translator:   <klas@klas.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+"X-Translated-Using: django-rosetta 0.7.4\n"
 
 #: settings_common.py:60 settings_common.py:66
 msgid "English (€)"
@@ -1222,9 +1223,9 @@ msgstr ""
 #: templates/activity_feed/feed_list.html:38
 #, python-format
 msgid ""
-"This is your personal Apprl feed with the latest from your follows. <a href="
-"\"%(members_url)s\">Discover more people, bloggers & brands to follow here</"
-"a> and <a href=\"%(profile_url)s\">manage who you follow here</a>."
+"This is your personal Apprl feed with the latest from your follows. <a "
+"href=\"%(members_url)s\">Discover more people, bloggers & brands to follow "
+"here</a> and <a href=\"%(profile_url)s\">manage who you follow here</a>."
 msgstr ""
 
 #: templates/activity_feed/fragments/feed_list.html:7
@@ -1408,9 +1409,10 @@ msgstr ""
 #, python-format
 msgid ""
 "For any item you ♥ like you will get a sale alert via e-mail when the price "
-"drops. You can personalize your shop to see only <a href=\"%(shop_url)s?"
-"view=brands\">My Brands</a>, <a href=\"%(shop_url)s?view=friends\">My "
-"Friends</a> or to show <a href=\"%(shop_url)s\">Everything</a>."
+"drops. You can personalize your shop to see only <a "
+"href=\"%(shop_url)s?view=brands\">My Brands</a>, <a "
+"href=\"%(shop_url)s?view=friends\">My Friends</a> or to show <a "
+"href=\"%(shop_url)s\">Everything</a>."
 msgstr ""
 
 #: templates/apparel/browse.html:29
@@ -1476,8 +1478,8 @@ msgstr ""
 
 #: templates/apparel/contest_stylesearch.html:41
 msgid ""
-"Promote your look - the 10 looks with the most <span class=\"heart\">♥</"
-"span> likes on APPRL enter the final round."
+"Promote your look - the 10 looks with the most <span "
+"class=\"heart\">♥</span> likes on APPRL enter the final round."
 msgstr ""
 
 #: templates/apparel/contest_stylesearch.html:42
@@ -1856,7 +1858,8 @@ msgstr ""
 
 #: templates/apparel/look_editor.html:103
 #: templates/apparel/modal_look_unpublish.html:7
-msgid "Are you sure you want to unpublish this look so that no one can see it?"
+msgid ""
+"Are you sure you want to unpublish this look so that no one can see it?"
 msgstr ""
 
 #: templates/apparel/look_editor.html:108
@@ -1943,8 +1946,8 @@ msgstr ""
 #: templates/apparel/fragments/product_popup.html:25
 #, python-format
 msgid ""
-"The item is sold in %(original_currency)s and the conversion to %(CURRENCY)s "
-"is approximate."
+"The item is sold in %(original_currency)s and the conversion to %(CURRENCY)s"
+" is approximate."
 msgstr ""
 
 #: templates/apparel/product_detail.html:121
@@ -2014,8 +2017,8 @@ msgstr ""
 
 #: templates/apparel/store.html:18
 msgid ""
-"Apprl is a digital & social platform that helps online stores to drive sales "
-"& engagement through the social platform Apprl.com and our network of "
+"Apprl is a digital & social platform that helps online stores to drive sales"
+" & engagement through the social platform Apprl.com and our network of "
 "fashion influencers, bloggers & online magazines."
 msgstr ""
 
@@ -2030,19 +2033,20 @@ msgstr ""
 #: templates/apparel/topmodel_list.html:38
 #: templates/apparel/topmodel_list.html:85
 msgid "Top Model Sweden on Apprl"
-msgstr "Top Model Sverige på Apprl"
+msgstr ""
 
 #: templates/apparel/topmodel_list.html:94
 #, fuzzy
 msgid "Follow the models and shop in their wardrobes"
-msgstr "Följ modellerna "
+msgstr " "
 
 #: templates/apparel/user_list.html:15
 #, python-format
 msgid ""
-"Follow members and brands to see their items and looks in your <a href="
-"\"%(feed_url)s\">APPRL feed</a> and under <a href=\"%(shop_friend)s\">Shop > "
-"My Friends</a> & <a href=\"%(shop_brand)s\">Shop > My Brands</a>."
+"Follow members and brands to see their items and looks in your <a "
+"href=\"%(feed_url)s\">APPRL feed</a> and under <a "
+"href=\"%(shop_friend)s\">Shop > My Friends</a> & <a "
+"href=\"%(shop_brand)s\">Shop > My Brands</a>."
 msgstr ""
 
 #: templates/apparel/user_list.html:32 templates/apparel/user_list.html:35
@@ -2314,8 +2318,8 @@ msgstr ""
 #: templates/apparel/fragments/product_short_link.html:9
 #: templates/dashboard/commissions_popup.html:9
 msgid ""
-"Share this link on your blog, social media, e-mail or anywhere, and you will "
-"make money on anyone who clicks on it and buys something from the store."
+"Share this link on your blog, social media, e-mail or anywhere, and you will"
+" make money on anyone who clicks on it and buys something from the store."
 msgstr ""
 
 #: templates/apparel/notifications/create_look.html:2
@@ -2516,8 +2520,8 @@ msgstr ""
 #: templates/dashboard/index.html:21
 msgid ""
 "Apprl is an invitation-only digital service for fashion influencers, "
-"bloggers & magazines that helps you earn money on your blog/site through our "
-"tools."
+"bloggers & magazines that helps you earn money on your blog/site through our"
+" tools."
 msgstr ""
 
 #: templates/dashboard/index.html:22
@@ -2577,9 +2581,9 @@ msgstr ""
 
 #: templates/dashboard/info.html:38
 msgid ""
-"By getting followers on Apprl, more people will discover your blog/site. You "
-"can promote your Apprl profile by putting one of these badges on your blog/"
-"site and linking them to your profile:"
+"By getting followers on Apprl, more people will discover your blog/site. You"
+" can promote your Apprl profile by putting one of these badges on your "
+"blog/site and linking them to your profile:"
 msgstr ""
 
 #: templates/dashboard/info.html:50
@@ -2601,8 +2605,9 @@ msgstr ""
 
 #: templates/dashboard/info.html:61
 msgid ""
-"To put a look on your blog/site, just click the “EMBED ON YOUR BLOG / SITE”-"
-"button and follow instructions to choose the width & language of your look."
+"To put a look on your blog/site, just click the “EMBED ON YOUR BLOG / "
+"SITE”-button and follow instructions to choose the width & language of your "
+"look."
 msgstr ""
 
 #: templates/dashboard/info.html:64
@@ -2800,10 +2805,10 @@ msgstr ""
 
 #: templates/dashboard/referral.html:10
 msgid ""
-"As one of our top members, you will earn money when a publisher/blogger that "
-"you invite to APPRL joins and starts driving sales. Also any publisher/"
-"blogger that joins using the link below will receive €20 on their APPRL "
-"account."
+"As one of our top members, you will earn money when a publisher/blogger that"
+" you invite to APPRL joins and starts driving sales. Also any "
+"publisher/blogger that joins using the link below will receive €20 on their "
+"APPRL account."
 msgstr ""
 
 #: templates/dashboard/referral.html:15
@@ -2826,17 +2831,17 @@ msgstr ""
 
 #: templates/dashboard/referral.html:25
 msgid ""
-"For every publisher/blogger that signs up to APPRL via your invitation link, "
-"they will become a “referral publisher” to you for 6 months."
+"For every publisher/blogger that signs up to APPRL via your invitation link,"
+" they will become a “referral publisher” to you for 6 months."
 msgstr ""
 
 #: templates/dashboard/referral.html:27
 #, python-format
 msgid ""
-"<strong>During these 6 months, you will make half of what the publisher/"
-"blogger you have invited make</strong>. For example, if they make €20 on one "
-"sale, you make €10. You can track how much you earn under <a href="
-"\"%(dashboard_url)s\">your statistics</a>."
+"<strong>During these 6 months, you will make half of what the "
+"publisher/blogger you have invited make</strong>. For example, if they make "
+"€20 on one sale, you make €10. You can track how much you earn under <a "
+"href=\"%(dashboard_url)s\">your statistics</a>."
 msgstr ""
 
 #: templates/dashboard/referral.html:31
@@ -2859,10 +2864,7 @@ msgstr ""
 #: templates/facebook/setup.html:11
 msgid ""
 "\n"
-"        If you already have an account at Apprl, enter your username and "
-"password below to link it with your facebook account. If you do not have an "
-"account, click Continue with facebook only - you will not have to remember a "
-"username and password.    \n"
+"        If you already have an account at Apprl, enter your username and password below to link it with your facebook account. If you do not have an account, click Continue with facebook only - you will not have to remember a username and password.    \n"
 "    "
 msgstr ""
 
@@ -2873,8 +2875,7 @@ msgstr ""
 #: templates/facebook/setup.html:20
 msgid ""
 "\n"
-"                Your username and password did not match. Please try again.</"
-"p>\n"
+"                Your username and password did not match. Please try again.</p>\n"
 "            "
 msgstr ""
 
@@ -2984,8 +2985,8 @@ msgstr ""
 
 #: templates/profile/confirm_email.html:6
 msgid ""
-"You have requested an e-mail address change, if you wish to continue with it "
-"click on the link below to complete it:"
+"You have requested an e-mail address change, if you wish to continue with it"
+" click on the link below to complete it:"
 msgstr ""
 
 #: templates/profile/confirm_email.html:8
@@ -3045,30 +3046,30 @@ msgstr ""
 
 #: templates/profile/email_welcome.html:7
 msgid ""
-"All products that you ♥ are placed under <a href=\"http://apprl.com/profile/?"
-"utm_source=notification&utm_medium=email&utm_campaign=welcome\">your "
-"profile</a> and you'll get an e-mail when the price drops on them."
+"All products that you ♥ are placed under <a "
+"href=\"http://apprl.com/profile/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">your"
+" profile</a> and you'll get an e-mail when the price drops on them."
 msgstr ""
 
 #: templates/profile/email_welcome.html:8
 msgid ""
-"It's easy to <a href=\"http://apprl.com/looks/create/?"
-"utm_source=notification&utm_medium=email&utm_campaign=welcome\">create "
-"looks</a> to share on Apprl, Facebook, your blog or elsewhere."
+"It's easy to <a "
+"href=\"http://apprl.com/looks/create/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">create"
+" looks</a> to share on Apprl, Facebook, your blog or elsewhere."
 msgstr ""
 
 #: templates/profile/email_welcome.html:9
 msgid ""
-"Follow bloggers, members & brands to personalize <a href=\"http://apprl.com/?"
-"utm_source=notification&utm_medium=email&utm_campaign=welcome\">your "
-"newsfeed</a>."
+"Follow bloggers, members & brands to personalize <a "
+"href=\"http://apprl.com/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">your"
+" newsfeed</a>."
 msgstr ""
 
 #: templates/profile/email_welcome.html:11
 msgid ""
-"Are you blogging? Apply to <a href=\"http://apprl.com/publisher/?"
-"utm_source=notification&utm_medium=email&utm_campaign=welcome\">become a "
-"publisher</a>."
+"Are you blogging? Apply to <a "
+"href=\"http://apprl.com/publisher/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">become"
+" a publisher</a>."
 msgstr ""
 
 #: templates/profile/followers.html:4
@@ -3226,7 +3227,8 @@ msgstr ""
 
 #: templates/profile/settings_notification.html:6
 msgid ""
-"Here you can set which notifications you want to be notified about via email:"
+"Here you can set which notifications you want to be notified about via "
+"email:"
 msgstr ""
 
 #: templates/profile/settings_notification.html:9
@@ -3286,8 +3288,8 @@ msgstr ""
 #: templates/profile/notifications/email_base.html:9
 #, python-format
 msgid ""
-"If you wish to change your e-mail preferences go to <a href=\"http://"
-"%(domain)s/profile/settings/\">your settings</a>."
+"If you wish to change your e-mail preferences go to <a "
+"href=\"http://%(domain)s/profile/settings/\">your settings</a>."
 msgstr ""
 
 #: templates/profile/notifications/email_comment_look_comment.html:2
@@ -3359,7 +3361,8 @@ msgstr ""
 #: templates/profile/notifications/email_second_sale_alert.html:2
 #, python-format
 msgid ""
-"that you have ♥ is now reduced from %(original_price)s to %(discount_price)s."
+"that you have ♥ is now reduced from %(original_price)s to "
+"%(discount_price)s."
 msgstr ""
 
 #: templates/profile/notifications/subject_comment_look_comment.html:1
@@ -3497,8 +3500,8 @@ msgstr ""
 
 #: templates/registration/password_reset_form.html:14
 msgid ""
-"Enter your e-mail address below, and we'll e-mail instructions for setting a "
-"new one."
+"Enter your e-mail address below, and we'll e-mail instructions for setting a"
+" new one."
 msgstr ""
 
 #: templates/registration/registration_activation_email.html:6
@@ -3518,8 +3521,8 @@ msgstr ""
 
 #: templates/registration/registration_complete.html:17
 msgid ""
-"If you can't find the confirmation e-mail,<br>check your spam folder or send "
-"the e-mail again:"
+"If you can't find the confirmation e-mail,<br>check your spam folder or send"
+" the e-mail again:"
 msgstr ""
 
 #: templates/registration/registration_complete.html:24
@@ -3534,8 +3537,8 @@ msgstr ""
 #: templates/registration/fragments/registration.html:8
 #, python-format
 msgid ""
-"By signing up you are agreeing to our <a class=\"underline\" target=\"_blank"
-"\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
+"By signing up you are agreeing to our <a class=\"underline\" "
+"target=\"_blank\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
 msgstr ""
 
 #: templates/registration/registration_invalid_activation.html:9
@@ -3552,6 +3555,5 @@ msgstr ""
 
 #: templates/registration/fragments/registration.html:11
 #, python-format
-msgid ""
-"<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
+msgid "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
 msgstr ""
