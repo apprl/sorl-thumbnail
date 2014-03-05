@@ -10,6 +10,7 @@ import os.path
 
 
 BOT_NAME = 'spiderpig'
+LOG_LEVEL = 'INFO'
 
 CONCURRENT_REQUESTS_PER_DOMAIN = 2
 
