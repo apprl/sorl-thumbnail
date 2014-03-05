@@ -14,12 +14,14 @@ class MqSpider(XMLFeedSpider, AffiliateMixin):
         in_stock = node.xpath('inStock/text()').extract()[0]
 
         real_categories = []
-        categories = node.xpath('Categories/category/text()').extract()
+        categories = list(node.xpath('Categories/category/text()').extract())
         for category in categories:
             if 'Kategorier' in category and 'Visa Alla' not in category:
                 real_categories.append(category)
-
-        category = sorted(real_categories, key=len)[-1]
+        if real_categories:
+            category = sorted(real_categories, key=len)[-1]
+        else:
+            category = None
 
         l = ProductLoader(item=Product(), selector=node)
         l.add_xpath('key', 'link/text()')
