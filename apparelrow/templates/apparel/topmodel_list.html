@@ -3,32 +3,9 @@
 
 {% block extra-styles %}
     <style type="text/css">
-        .featured-container {
-            background: #000000 url('{% static "images/topmodel.jpg"%}') no-repeat center top;
-            overflow: hidden;
-            height: 310px;
-            /*padding-top: 132px;*/
-            margin-bottom: 17px;
-        }
-
-        .featured-container .body-header h1 {
-           color: #FFFFFF;
-           margin-bottom: 0px;
-           /*font-size: 26px;*/
-        }
-        .featured-container .body-header {
-            margin-top: 160px;
-        }
 
         .row h1, .row h3  {
             text-align: center;
-        }
-
-        h3.col-lg-12.alphabet {
-            font-size: 23px;
-            font-weight: 700;
-            text-transform: none;
-            padding-bottom: 15px;
         }
 
     </style>
@@ -77,7 +54,7 @@
         {% endif %}
     </div>
     {% endcomment %}
-    <div class="featured-container" id="topmodel">
+    <div class="featured-container topmodel">
           <div class="container">
 
             <div class="row body-header">
@@ -88,8 +65,8 @@
 
 
    <div class="container">
-    <div class="row">
-        <h3 class="col-lg-12 alphabet">
+    <div class="row discover-list-page">
+        <h3 class="topmodel col-lg-12 alphabet">
                 {% trans "Follow the models and shop in their wardrobes" %}
         </h3>
     </div>
