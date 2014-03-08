@@ -101,6 +101,9 @@ class Importer(object):
 
         return product.imported_date
 
+    # TODO: might be a problem when adding new products that the solr update
+    # code wont be able to handle it and the product will actually be picked up
+    # in solr on update_product call the next day
     def add_product(self, product, item):
         brand = product.brand_mapping
         if not brand:
