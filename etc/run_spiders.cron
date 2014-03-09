@@ -1,4 +1,4 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-0 */6 * * * deploy . %(path)s/bin/activate && cd %(path)s/releases/current/spiderpig && python push_jobs.py 
+0 0 * * * deploy . %(path)s/bin/activate && cd %(path)s/releases/current/spiderpig && python push_jobs.py
