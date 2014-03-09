@@ -13,7 +13,7 @@ from django.utils.translation import ugettext
 
 import facebook
 
-from apparelrow.profile.tasks import send_email_confirm_task
+from apparelrow.profile.tasks import send_welcome_email_task
 
 
 FB_USER_SESSION_KEY = '_fb_user'
@@ -116,4 +116,4 @@ def get_current_user(view_func):
 def send_welcome_mail(user):
     subject = ugettext(u'Welcome to Apprl %(name)s') % {'name': user.display_name}
     body = render_to_string('profile/email_welcome.html', {'name': user.display_name})
-    send_email_confirm_task.delay(subject, body, user.email)
+    send_welcome_email_task.delay(subject, body, user.email)
