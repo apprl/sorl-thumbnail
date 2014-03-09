@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-05 10:41+0100\n"
+"POT-Creation-Date: 2014-03-09 12:21+0100\n"
 "PO-Revision-Date: 2014-03-05 10:55+0100\n"
 "Last-Translator:   <klas@klas.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
@@ -1231,14 +1231,14 @@ msgstr "Upptäck inspirerande mode genom bloggare, dina vänner & designers."
 #: templates/activity_feed/feed_list.html:38
 #, python-format
 msgid ""
-"This is your personal Apprl feed with the latest from your follows. <a "
-"href=\"%(members_url)s\">Discover more people, bloggers & brands to follow "
-"here</a> and <a href=\"%(profile_url)s\">manage who you follow here</a>."
+"This is your personal Apprl feed with the latest from your follows. <a href="
+"\"%(members_url)s\">Discover more people, bloggers & brands to follow here</"
+"a> and <a href=\"%(profile_url)s\">manage who you follow here</a>."
 msgstr ""
-"Det här är ditt personliga nyhetsflöde med det senaste från de du följer. <a"
-" href=\"%(members_url)s\">Hitta fler medlemmar, bloggare och varumärken att "
-"följa här</a> och <a href=\"%(profile_url)s\">hantera vilka du följer "
-"här</a>."
+"Det här är ditt personliga nyhetsflöde med det senaste från de du följer. <a "
+"href=\"%(members_url)s\">Hitta fler medlemmar, bloggare och varumärken att "
+"följa här</a> och <a href=\"%(profile_url)s\">hantera vilka du följer här</"
+"a>."
 
 #: templates/activity_feed/fragments/feed_list.html:7
 msgid "Follow members &amp; brands to fill your feed"
@@ -1422,16 +1422,14 @@ msgstr "Shop på din site"
 #, python-format
 msgid ""
 "For any item you ♥ like you will get a sale alert via e-mail when the price "
-"drops. You can personalize your shop to see only <a "
-"href=\"%(shop_url)s?view=brands\">My Brands</a>, <a "
-"href=\"%(shop_url)s?view=friends\">My Friends</a> or to show <a "
-"href=\"%(shop_url)s\">Everything</a>."
+"drops. You can personalize your shop to see only <a href=\"%(shop_url)s?"
+"view=brands\">My Brands</a>, <a href=\"%(shop_url)s?view=friends\">My "
+"Friends</a> or to show <a href=\"%(shop_url)s\">Everything</a>."
 msgstr ""
 "Du får ett mail när priset på produkter du har \"♥ gillat\" sänks. Du kan "
-"anpassa shoppen genom att välja att se enbart <a "
-"href=\"%(shop_url)s?view=brands\">Dina Varumärken</a>, <a "
-"href=\"%(shop_url)s?view=friends\">Dina Vänner</a> eller <a "
-"href=\"%(shop_url)s\">Allt</p>."
+"anpassa shoppen genom att välja att se enbart <a href=\"%(shop_url)s?"
+"view=brands\">Dina Varumärken</a>, <a href=\"%(shop_url)s?view=friends"
+"\">Dina Vänner</a> eller <a href=\"%(shop_url)s\">Allt</p>."
 
 #: templates/apparel/browse.html:29
 msgid "Popular"
@@ -1497,8 +1495,8 @@ msgstr "+ SKAPA LOOK"
 
 #: templates/apparel/contest_stylesearch.html:41
 msgid ""
-"Promote your look - the 10 looks with the most <span "
-"class=\"heart\">♥</span> likes on APPRL enter the final round."
+"Promote your look - the 10 looks with the most <span class=\"heart\">♥</"
+"span> likes on APPRL enter the final round."
 msgstr ""
 "Sprid din look - de 10 som flest har <span class=\"heart\">♥</span> gillat "
 "på APPRL går till final"
@@ -1526,11 +1524,11 @@ msgid ""
 "disqualify contestants for suspected cheating, abuse or other reason. Our "
 "general terms of service & privacy policy apply."
 msgstr ""
-"Alla looks skapade mellan 26 augusti - 1 september är med i tävlingen. De 10"
-" looks som flest personer har gillat på Apprl efter 1:a september publiceras"
-" på vår Facebooksida där Elin Kling väljer ut en vinnare. Priset består av "
-"rätten till produkter till ett värde av €500 från någon av de butiker som är"
-" kopplade till Apprl enligt Apprls process för detta. Den tävlande betalar "
+"Alla looks skapade mellan 26 augusti - 1 september är med i tävlingen. De 10 "
+"looks som flest personer har gillat på Apprl efter 1:a september publiceras "
+"på vår Facebooksida där Elin Kling väljer ut en vinnare. Priset består av "
+"rätten till produkter till ett värde av €500 från någon av de butiker som är "
+"kopplade till Apprl enligt Apprls process för detta. Den tävlande betalar "
 "eventuell vinstskatt och är ansvarig för att eventuellt uppladdat innehåll "
 "följer Apprl's Användarvillkor. Apprl förbehåller sig rätten att "
 "diskvalificera en tävlande för misstanke om fusk, oetiskt uppträdande eller "
@@ -1585,8 +1583,8 @@ msgid ""
 "Follow at least one of the Top Model Sweden participants on Apprl, <a "
 "href=“http://apprl.com/topmodelsverige/”>you find them all here</a>."
 msgstr ""
-"Följ minst en av Top Model Sverige deltagarna på Apprl, <a "
-"href=“http://apprl.com/topmodelsverige/”>du hittar dem här</a>."
+"Följ minst en av Top Model Sverige deltagarna på Apprl, <a href=“http://"
+"apprl.com/topmodelsverige/”>du hittar dem här</a>."
 
 #: templates/apparel/contest_topmodel.html:32
 msgid ""
@@ -1676,8 +1674,8 @@ msgid ""
 "below, copy and paste the embed-code (In HTML-mode) into your blog/site."
 msgstr ""
 "Du kan enkelt lägga in en look på din blogg/site. Ställ in vilket format du "
-"vill ha, kopiera och klistra sen in embed-koden (i HTML-läge) på din "
-"blogg/site."
+"vill ha, kopiera och klistra sen in embed-koden (i HTML-läge) på din blogg/"
+"site."
 
 #: templates/apparel/dialog_look_embed.html:15
 #: templates/profile/dialog_embed_shop.html:15
@@ -1914,10 +1912,8 @@ msgstr "Avpublicera look?"
 
 #: templates/apparel/look_editor.html:103
 #: templates/apparel/modal_look_unpublish.html:7
-msgid ""
-"Are you sure you want to unpublish this look so that no one can see it?"
-msgstr ""
-"Är du säker på att du vill avpublicera looken så att ingen kan se den?"
+msgid "Are you sure you want to unpublish this look so that no one can see it?"
+msgstr "Är du säker på att du vill avpublicera looken så att ingen kan se den?"
 
 #: templates/apparel/look_editor.html:108
 msgid "Save look"
@@ -2003,11 +1999,11 @@ msgstr "Finns hos "
 #: templates/apparel/fragments/product_popup.html:25
 #, python-format
 msgid ""
-"The item is sold in %(original_currency)s and the conversion to %(CURRENCY)s"
-" is approximate."
+"The item is sold in %(original_currency)s and the conversion to %(CURRENCY)s "
+"is approximate."
 msgstr ""
-"Produkten säljs i %(original_currency)s och översättningen till %(CURRENCY)s"
-" är ungefärlig."
+"Produkten säljs i %(original_currency)s och översättningen till %(CURRENCY)s "
+"är ungefärlig."
 
 #: templates/apparel/product_detail.html:121
 #: templates/apparel/product_detail.html:126
@@ -2076,8 +2072,8 @@ msgstr "APPRL FÖR ONLINEBUTIKER"
 
 #: templates/apparel/store.html:18
 msgid ""
-"Apprl is a digital & social platform that helps online stores to drive sales"
-" & engagement through the social platform Apprl.com and our network of "
+"Apprl is a digital & social platform that helps online stores to drive sales "
+"& engagement through the social platform Apprl.com and our network of "
 "fashion influencers, bloggers & online magazines."
 msgstr ""
 "Apprl är en digital & social plattform som hjälper retailers och varumärken "
@@ -2088,7 +2084,7 @@ msgstr ""
 msgid "Apply and we'll get in touch with you:"
 msgstr "Ansök nedan så kontaktar vi dig:"
 
-#: templates/apparel/store.html:46 templates/dashboard/index.html:48
+#: templates/apparel/store.html:46 templates/dashboard/index.html:49
 msgid "APPLY"
 msgstr "ANSÖK"
 
@@ -2104,14 +2100,13 @@ msgstr "Följ modellernas stil och shoppa i deras garderober"
 #: templates/apparel/user_list.html:15
 #, python-format
 msgid ""
-"Follow members and brands to see their items and looks in your <a "
-"href=\"%(feed_url)s\">APPRL feed</a> and under <a "
-"href=\"%(shop_friend)s\">Shop > My Friends</a> & <a "
-"href=\"%(shop_brand)s\">Shop > My Brands</a>."
+"Follow members and brands to see their items and looks in your <a href="
+"\"%(feed_url)s\">APPRL feed</a> and under <a href=\"%(shop_friend)s\">Shop > "
+"My Friends</a> & <a href=\"%(shop_brand)s\">Shop > My Brands</a>."
 msgstr ""
 "Följ medlemmar och varumärken för att se deras produkter och looks i din <a "
-"href=\"%(feed_url)s\">APPRL feed</a> och på <a href=\"%(shop_friend)s\">Shop"
-" > Mina vänner</a> & <a href=\"%(shop_brand)s\">Shop > Mina varumären</a>."
+"href=\"%(feed_url)s\">APPRL feed</a> och på <a href=\"%(shop_friend)s\">Shop "
+"> Mina vänner</a> & <a href=\"%(shop_brand)s\">Shop > Mina varumären</a>."
 
 #: templates/apparel/user_list.html:32 templates/apparel/user_list.html:35
 msgid "Only men"
@@ -2265,8 +2260,16 @@ msgid "You need to become a member to create a look."
 msgstr "Du behöver bli medlem för att kunna skapa looks."
 
 #: templates/apparel/fragments/dialog_follow_user.html:7
-msgid "You need to become a member to follow someone."
-msgstr "Du behöver bli medlem för att kunna följa någon."
+msgid ""
+"The first time you follow someone on Apprl.com you need to connect with "
+"Facebook or create an account with your e-mail address. Once that is done, "
+"you can easily log in and get access to people and brands you follow and "
+"quickly get an overview of the fashion trends you want to follow."
+msgstr ""
+"Första gången du följer någon på Apprl.com behöver du bli medlem genom att "
+"logga in med Facebook eller skapa en användare med din e-post. Därefter kan "
+"du enkelt logga in och få tillgång till personer och varumärken du följer så "
+"du får koll på de modetrender du vill följa framöver."
 
 #: templates/apparel/fragments/dialog_like_look.html:5
 msgid "Like a look"
@@ -2397,11 +2400,11 @@ msgstr "Din produktlänk"
 #: templates/apparel/fragments/product_short_link.html:9
 #: templates/dashboard/commissions_popup.html:9
 msgid ""
-"Share this link on your blog, social media, e-mail or anywhere, and you will"
-" make money on anyone who clicks on it and buys something from the store."
+"Share this link on your blog, social media, e-mail or anywhere, and you will "
+"make money on anyone who clicks on it and buys something from the store."
 msgstr ""
-"Den här länken kan du sprida på exempelvis din blogg, sociala medier och i "
-"e-mail. Du tjänar pengar på alla som klickar på den och köper något från "
+"Den här länken kan du sprida på exempelvis din blogg, sociala medier och i e-"
+"mail. Du tjänar pengar på alla som klickar på den och köper något från "
 "butiken."
 
 #: templates/apparel/notifications/create_look.html:2
@@ -2605,16 +2608,25 @@ msgstr ""
 
 #: templates/dashboard/index.html:21
 msgid ""
-"Apprl is an invitation-only digital service for fashion influencers, "
-"bloggers & magazines that helps you earn money on your blog/site through our"
-" tools."
+"Apprl can be used by online magazines and bloggers within fashion & beauty. "
+"We help you grow, earn money on your content and learn more about your "
+"readers. "
 msgstr ""
-"Apprl är en digital tjänst bloggare och onlinemedier som hjälper dig att "
-"tjäna pengar på din stil genom våra digitala verktyg."
+"Apprl kan användas av dig som driver en digital tidning eller är bloggare "
+"inom mode/skönhet. Vi hjälper dig växa, tjäna pengar på ditt redaktionella "
+"innehåll och förbättra dina relationer till läsarna."
 
 #: templates/dashboard/index.html:22
-msgid "Apply for an invitation:"
-msgstr "Ansök om att bli Apprl partner här:"
+msgid ""
+"It’s free to apply for anyone, but we only accept new publishers at a rate "
+"that we can help and support in a good way. "
+msgstr ""
+"Alla kan ansöka om att gå med, men vi tar endast emot nya publishers i den "
+"takt som vi kan ge den hjälp som behövs för att komma igång."
+
+#: templates/dashboard/index.html:23
+msgid "Apply to become an Apprl Publisher here:"
+msgstr "Ansök om att bli Apprl Publisher här:"
 
 #: templates/dashboard/info.html:16 templates/dashboard/info.html.py:35
 msgid "Grow your blog and gain followers"
@@ -2671,18 +2683,18 @@ msgid ""
 "Every time you “like” a product on Apprl.com, we show that the product is "
 "selected by you with a link back to your blog/site."
 msgstr ""
-"Varje gång du “gillar” en produkt på Apprl.com så visar vi att produkten "
-"är utvald av dig med en länk till din blogg/site."
+"Varje gång du “gillar” en produkt på Apprl.com så visar vi att produkten är "
+"utvald av dig med en länk till din blogg/site."
 
 #: templates/dashboard/info.html:38
 msgid ""
-"By getting followers on Apprl, more people will discover your blog/site. You"
-" can promote your Apprl profile by putting one of these badges on your "
-"blog/site and linking them to your profile:"
+"By getting followers on Apprl, more people will discover your blog/site. You "
+"can promote your Apprl profile by putting one of these badges on your blog/"
+"site and linking them to your profile:"
 msgstr ""
-"Genom att skaffa dig följare på Apprl.com kommer fler att upptäcka din "
-"blogg/site. Det kan du göra genom att länka till din profilsida med någon"
-" av de här follow-knapparna:"
+"Genom att skaffa dig följare på Apprl.com kommer fler att upptäcka din blogg/"
+"site. Det kan du göra genom att länka till din profilsida med någon av de "
+"här follow-knapparna:"
 
 #: templates/dashboard/info.html:50
 msgid ""
@@ -2690,8 +2702,8 @@ msgid ""
 "a publisher just click the “Get product link”-button and share the link on "
 "your blog, Facebook page or elsewhere."
 msgstr ""
-"Det enklaste sättet att börja tjäna pengar är att länka till våra produkter."
-" Du plockar enkelt ut produktlänkar från produktsidor som du sen kan sprida "
+"Det enklaste sättet att börja tjäna pengar är att länka till våra produkter. "
+"Du plockar enkelt ut produktlänkar från produktsidor som du sen kan sprida "
 "på din blogg, Facebooksida eller var som helst!"
 
 #: templates/dashboard/info.html:54
@@ -2700,8 +2712,7 @@ msgid ""
 "Every time someone clicks and buys a product – you make money."
 msgstr ""
 "Alla produkter du “gillar“ på Apprl.com läggs till din profilsida. Varje "
-"gång någon klickar och köper en produkt från din profilsida tjänar du "
-"pengar!"
+"gång någon klickar och köper en produkt från din profilsida tjänar du pengar!"
 
 #: templates/dashboard/info.html:58
 msgid "On Apprl you can create two types of looks: Tagged photos & collages."
@@ -2709,21 +2720,19 @@ msgstr "Du kan skapa två sorters looks på Apprl: Taggat foto och kollage."
 
 #: templates/dashboard/info.html:61
 msgid ""
-"To put a look on your blog/site, just click the “EMBED ON YOUR BLOG / "
-"SITE”-button and follow instructions to choose the width & language of your "
-"look."
+"To put a look on your blog/site, just click the “EMBED ON YOUR BLOG / SITE”-"
+"button and follow instructions to choose the width & language of your look."
 msgstr ""
 "För att lägga en look på din site/blogg, klicka på knappen \"LÄGG IN LOOKEN "
-"PÅ DIN BLOGG / SITE\" och följ instruktionerna för att välja bredd och "
-"språk."
+"PÅ DIN BLOGG / SITE\" och följ instruktionerna för att välja bredd och språk."
 
 #: templates/dashboard/info.html:64
 msgid ""
 "As a publisher you will now make money on every person that clicks and buys "
 "a product from your look."
 msgstr ""
-"Som Apprl partner kommer du nu att tjäna pengar på alla klick på produkter i"
-" din look som leder till köp."
+"Som Apprl partner kommer du nu att tjäna pengar på alla klick på produkter i "
+"din look som leder till köp."
 
 #: templates/dashboard/info.html:67
 msgid ""
@@ -2779,8 +2788,8 @@ msgid ""
 msgstr ""
 "Direkt när ett köp har skett så ser du det under “Din provision”. För att "
 "detta köp ska kunna betalas ut till dig, så behöver butiken godkänna köpet. "
-"Detta görs normalt efter ca 30 dagar för att kunna vara säker på att inga av"
-" varorna returneras och att det verkligen blir ett köp."
+"Detta görs normalt efter ca 30 dagar för att kunna vara säker på att inga av "
+"varorna returneras och att det verkligen blir ett köp."
 
 #: templates/dashboard/modal_more_info.html:8
 msgid ""
@@ -2809,8 +2818,8 @@ msgid ""
 "For a payment to be made, you have to enter your account details under your "
 "settings."
 msgstr ""
-"För att en utbetalning ska kunna göras så måste du ha angett "
-"kontouppgifter under dina inställningar."
+"För att en utbetalning ska kunna göras så måste du ha angett kontouppgifter "
+"under dina inställningar."
 
 #: templates/dashboard/modal_more_info.html:11
 msgid "Let us know any questions on"
@@ -2940,10 +2949,10 @@ msgstr "Bjud in bloggare och tjäna pengar"
 
 #: templates/dashboard/referral.html:10
 msgid ""
-"As one of our top members, you will earn money when a publisher/blogger that"
-" you invite to APPRL joins and starts driving sales. Also any "
-"publisher/blogger that joins using the link below will receive €20 on their "
-"APPRL account."
+"As one of our top members, you will earn money when a publisher/blogger that "
+"you invite to APPRL joins and starts driving sales. Also any publisher/"
+"blogger that joins using the link below will receive €20 on their APPRL "
+"account."
 msgstr ""
 "Som en av våra utvalda medlemmar så blir du belönad när du bjuder in "
 "bloggare till APPRL, när de tjänar pengar så gör du också det. När en "
@@ -2972,8 +2981,8 @@ msgstr ""
 
 #: templates/dashboard/referral.html:25
 msgid ""
-"For every publisher/blogger that signs up to APPRL via your invitation link,"
-" they will become a “referral publisher” to you for 6 months."
+"For every publisher/blogger that signs up to APPRL via your invitation link, "
+"they will become a “referral publisher” to you for 6 months."
 msgstr ""
 "Varje bloggare som ansöker via din länk, blir en “referral-publisher” till "
 "dig i 6 månader."
@@ -2981,10 +2990,10 @@ msgstr ""
 #: templates/dashboard/referral.html:27
 #, python-format
 msgid ""
-"<strong>During these 6 months, you will make half of what the "
-"publisher/blogger you have invited make</strong>. For example, if they make "
-"€20 on one sale, you make €10. You can track how much you earn under <a "
-"href=\"%(dashboard_url)s\">your statistics</a>."
+"<strong>During these 6 months, you will make half of what the publisher/"
+"blogger you have invited make</strong>. For example, if they make €20 on one "
+"sale, you make €10. You can track how much you earn under <a href="
+"\"%(dashboard_url)s\">your statistics</a>."
 msgstr ""
 "<strong>Under dessa 6 månader så kommer du tjäna hälften av allt det "
 "bloggaren tjänar på via APPRL</strong>. Om de exempelvis tjänar €20 på en "
@@ -3011,11 +3020,17 @@ msgstr "Med ♥ från Apprl"
 #: templates/facebook/setup.html:11
 msgid ""
 "\n"
-"        If you already have an account at Apprl, enter your username and password below to link it with your facebook account. If you do not have an account, click Continue with facebook only - you will not have to remember a username and password.    \n"
+"        If you already have an account at Apprl, enter your username and "
+"password below to link it with your facebook account. If you do not have an "
+"account, click Continue with facebook only - you will not have to remember a "
+"username and password.    \n"
 "    "
 msgstr ""
 "\n"
-"        Om du redan har ett konto på Apprl, ange ditt användarnamn och lösenord nedan för att länka det med ditt Facebook-konto. Om du inte har ett konto, klicka Fortsätt med endast Facebook - du behöver inte komma ihåg ditt användarnamn och lösenord.\n"
+"        Om du redan har ett konto på Apprl, ange ditt användarnamn och "
+"lösenord nedan för att länka det med ditt Facebook-konto. Om du inte har ett "
+"konto, klicka Fortsätt med endast Facebook - du behöver inte komma ihåg ditt "
+"användarnamn och lösenord.\n"
 "    "
 
 #: templates/facebook/setup.html:15 templates/facebook/setup.html.py:27
@@ -3025,11 +3040,13 @@ msgstr "Länka konton"
 #: templates/facebook/setup.html:20
 msgid ""
 "\n"
-"                Your username and password did not match. Please try again.</p>\n"
+"                Your username and password did not match. Please try again.</"
+"p>\n"
 "            "
 msgstr ""
 "\n"
-"                Ditt lösenord och användarnamn stämde inte. Försök igen.</p>\n"
+"                Ditt lösenord och användarnamn stämde inte. Försök igen.</"
+"p>\n"
 "            "
 
 #: templates/facebook/setup.html:30
@@ -3138,8 +3155,8 @@ msgstr "Hej %(username)s,"
 
 #: templates/profile/confirm_email.html:6
 msgid ""
-"You have requested an e-mail address change, if you wish to continue with it"
-" click on the link below to complete it:"
+"You have requested an e-mail address change, if you wish to continue with it "
+"click on the link below to complete it:"
 msgstr ""
 "Du har begärt att ändra din e-postadress hos oss. Om du vill slutföra "
 "ändringen klicka på länken nedan:"
@@ -3165,8 +3182,8 @@ msgid ""
 "This link is already used. To change you e-mail address address go to <a "
 "href=\"%(settings_url)s\">your settings</a>."
 msgstr ""
-"Den här länken är redan använd. För att byta mailadress gå till <a "
-"href=\"%(settings_url)s\">dina inställningar</a>."
+"Den här länken är redan använd. För att byta mailadress gå till <a href="
+"\"%(settings_url)s\">dina inställningar</a>."
 
 #: templates/profile/dialog_embed_shop.html:7
 msgid "Create a shop for your site/blog"
@@ -3208,44 +3225,43 @@ msgstr ""
 
 #: templates/profile/email_welcome.html:7
 msgid ""
-"All products that you ♥ are placed under <a "
-"href=\"http://apprl.com/profile/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">your"
-" profile</a> and you'll get an e-mail when the price drops on them."
+"All products that you ♥ are placed under <a href=\"http://apprl.com/profile/?"
+"utm_source=notification&utm_medium=email&utm_campaign=welcome\">your "
+"profile</a> and you'll get an e-mail when the price drops on them."
 msgstr ""
-"Alla produkter som du ♥ samlas under <a "
-"href=\"http://apprl.com/profile/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">din"
-" profil</a> och du får mail när priset på dem sänks."
+"Alla produkter som du ♥ samlas under <a href=\"http://apprl.com/profile/?"
+"utm_source=notification&utm_medium=email&utm_campaign=welcome\">din profil</"
+"a> och du får mail när priset på dem sänks."
 
 #: templates/profile/email_welcome.html:8
 msgid ""
-"It's easy to <a "
-"href=\"http://apprl.com/looks/create/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">create"
-" looks</a> to share on Apprl, Facebook, your blog or elsewhere."
+"It's easy to <a href=\"http://apprl.com/looks/create/?"
+"utm_source=notification&utm_medium=email&utm_campaign=welcome\">create "
+"looks</a> to share on Apprl, Facebook, your blog or elsewhere."
 msgstr ""
-"Du kan enkelt <a "
-"href=\"http://apprl.com/looks/create/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">skapa"
-" looks</a> att dela på Apprl, Facebook, din blogg eller vilken site som "
-"helst."
+"Du kan enkelt <a href=\"http://apprl.com/looks/create/?"
+"utm_source=notification&utm_medium=email&utm_campaign=welcome\">skapa looks</"
+"a> att dela på Apprl, Facebook, din blogg eller vilken site som helst."
 
 #: templates/profile/email_welcome.html:9
 msgid ""
-"Follow bloggers, members & brands to personalize <a "
-"href=\"http://apprl.com/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">your"
-" newsfeed</a>."
+"Follow bloggers, members & brands to personalize <a href=\"http://apprl.com/?"
+"utm_source=notification&utm_medium=email&utm_campaign=welcome\">your "
+"newsfeed</a>."
 msgstr ""
-"Följ bloggare, medlemmar och varumärken för att skapa <a "
-"href=\"http://apprl.com/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">din"
-" personliga newsfeed</a>."
+"Följ bloggare, medlemmar och varumärken för att skapa <a href=\"http://apprl."
+"com/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">din "
+"personliga newsfeed</a>."
 
 #: templates/profile/email_welcome.html:11
 msgid ""
-"Are you blogging? Apply to <a "
-"href=\"http://apprl.com/publisher/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">become"
-" a publisher</a>."
+"Are you blogging? Apply to <a href=\"http://apprl.com/publisher/?"
+"utm_source=notification&utm_medium=email&utm_campaign=welcome\">become a "
+"publisher</a>."
 msgstr ""
-"Bloggar du? Ansök om att <a "
-"href=\"http://apprl.com/partner/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">bli"
-" partnerbloggare</a>."
+"Bloggar du? Ansök om att <a href=\"http://apprl.com/partner/?"
+"utm_source=notification&utm_medium=email&utm_campaign=welcome\">bli "
+"partnerbloggare</a>."
 
 #: templates/profile/followers.html:4
 msgid "Followers"
@@ -3415,8 +3431,7 @@ msgstr "Spara ändringar"
 
 #: templates/profile/settings_notification.html:6
 msgid ""
-"Here you can set which notifications you want to be notified about via "
-"email:"
+"Here you can set which notifications you want to be notified about via email:"
 msgstr ""
 "Här kan du ställa in vilka händelser du vill bli meddelad om via e-mail:"
 
@@ -3477,11 +3492,11 @@ msgstr "Hej %(recipient_name)s!"
 #: templates/profile/notifications/email_base.html:9
 #, python-format
 msgid ""
-"If you wish to change your e-mail preferences go to <a "
-"href=\"http://%(domain)s/profile/settings/\">your settings</a>."
+"If you wish to change your e-mail preferences go to <a href=\"http://"
+"%(domain)s/profile/settings/\">your settings</a>."
 msgstr ""
-"Om du inte vill ha såna här meddelanden, gå till <a "
-"href=\"http://%(domain)s/profile/settings/\">dina inställningar</a>."
+"Om du inte vill ha såna här meddelanden, gå till <a href=\"http://%(domain)s/"
+"profile/settings/\">dina inställningar</a>."
 
 #: templates/profile/notifications/email_comment_look_comment.html:2
 msgid " have also commented on the look "
@@ -3553,8 +3568,7 @@ msgstr " gillar din look "
 #: templates/profile/notifications/email_second_sale_alert.html:2
 #, python-format
 msgid ""
-"that you have ♥ is now reduced from %(original_price)s to "
-"%(discount_price)s."
+"that you have ♥ is now reduced from %(original_price)s to %(discount_price)s."
 msgstr "är nu sänkt från %(original_price)s till %(discount_price)s."
 
 #: templates/profile/notifications/subject_comment_look_comment.html:1
@@ -3644,8 +3658,7 @@ msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
 msgstr ""
-"Ange ditt nya lösenord två gånger så att vi kan verifiera att det är "
-"korrekt."
+"Ange ditt nya lösenord två gånger så att vi kan verifiera att det är korrekt."
 
 #: templates/registration/password_reset_confirm.html:27
 msgid "Password reset unsuccessful"
@@ -3671,8 +3684,8 @@ msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
 msgstr ""
-"Vi har skickat instruktioner hur du kan återställa ditt lösenord till "
-"e-postadressen du angivit."
+"Vi har skickat instruktioner hur du kan återställa ditt lösenord till e-"
+"postadressen du angivit."
 
 #: templates/registration/password_reset_email.html:4
 msgid "You're receiving this e-mail because you requested a password reset"
@@ -3697,8 +3710,8 @@ msgstr "Glömt ditt lösenord?"
 
 #: templates/registration/password_reset_form.html:14
 msgid ""
-"Enter your e-mail address below, and we'll e-mail instructions for setting a"
-" new one."
+"Enter your e-mail address below, and we'll e-mail instructions for setting a "
+"new one."
 msgstr ""
 "Ange din e-mail här och vi skickar instruktioner för att ange ett nytt!"
 
@@ -3715,16 +3728,15 @@ msgstr "Kolla din e-mail!"
 msgid ""
 "We have sent an e-mail to you.<br>To complete your signup, open that e-mail "
 "and click the link."
-msgstr ""
-"Vi har skickat ett e-mail till dig, öppna mailet och klicka på länken."
+msgstr "Vi har skickat ett e-mail till dig, öppna mailet och klicka på länken."
 
 #: templates/registration/registration_complete.html:17
 msgid ""
-"If you can't find the confirmation e-mail,<br>check your spam folder or send"
-" the e-mail again:"
+"If you can't find the confirmation e-mail,<br>check your spam folder or send "
+"the e-mail again:"
 msgstr ""
-"Om du inte hittar något e-mail,<br>kolla din spam/skräp-mapp eller skicka ut"
-" ett nytt e-mail:"
+"Om du inte hittar något e-mail,<br>kolla din spam/skräp-mapp eller skicka ut "
+"ett nytt e-mail:"
 
 #: templates/registration/registration_complete.html:24
 msgid "Send e-mail again"
@@ -3738,11 +3750,11 @@ msgstr "E-postmeddelande skickat."
 #: templates/registration/fragments/registration.html:8
 #, python-format
 msgid ""
-"By signing up you are agreeing to our <a class=\"underline\" "
-"target=\"_blank\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
+"By signing up you are agreeing to our <a class=\"underline\" target=\"_blank"
+"\" href=\"%(tou)s\">Privacy Policy & Terms of use</a>."
 msgstr ""
-"Genom att skapa ditt konto godkänner du våra <a class=\"underline\" "
-"target=\"_blank\" href=\"%(tou)s\">Användarvillkor</a>."
+"Genom att skapa ditt konto godkänner du våra <a class=\"underline\" target="
+"\"_blank\" href=\"%(tou)s\">Användarvillkor</a>."
 
 #: templates/registration/registration_invalid_activation.html:9
 msgid "Invalid activation key"
@@ -3758,8 +3770,24 @@ msgstr "eller skapa ett konto med din e-postadress"
 
 #: templates/registration/fragments/registration.html:11
 #, python-format
-msgid "<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
-msgstr "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
+msgid ""
+"<a href=\"%(login_url)s\">If you're already a member, login here »</a></p>"
+msgstr ""
+"<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
+
+#~ msgid ""
+#~ "Apprl is an invitation-only digital service for fashion influencers, "
+#~ "bloggers & magazines that helps you earn money on your blog/site through "
+#~ "our tools."
+#~ msgstr ""
+#~ "Apprl är en digital tjänst bloggare och onlinemedier som hjälper dig att "
+#~ "tjäna pengar på din stil genom våra digitala verktyg."
+
+#~ msgid "Apply for an invitation:"
+#~ msgstr "Ansök om att bli Apprl partner här:"
+
+#~ msgid "You need to become a member to follow someone."
+#~ msgstr "Du behöver bli medlem för att kunna följa någon."
 
 #~ msgid "Top Model Sweden on APPRL"
 #~ msgstr "Top Model Sverige på Apprl"
@@ -3811,11 +3839,11 @@ msgstr "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></
 #~ msgstr "Följ vänner, bloggare och varumärken"
 
 #~ msgid ""
-#~ "See what your friends like, get inspired by bloggers & follow your favourite"
-#~ " brands!"
+#~ "See what your friends like, get inspired by bloggers & follow your "
+#~ "favourite brands!"
 #~ msgstr ""
-#~ "Se vad dina vänner gillar för kläder, inspireras av modebloggare & följ dina"
-#~ " favoritvarumärken!"
+#~ "Se vad dina vänner gillar för kläder, inspireras av modebloggare & följ "
+#~ "dina favoritvarumärken!"
 
 #~ msgid "Create looks"
 #~ msgstr "Skapa looks"
@@ -3824,21 +3852,22 @@ msgstr "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></
 #~ "Create & share looks to Apprl, Facebook or your blog. Tag photos with "
 #~ "products or mix & match collages!"
 #~ msgstr ""
-#~ "Skapa och dela looks på Apprl, Facebook eller på din egen blogg. Tagga upp "
-#~ "foton med plagg eller mixa och matcha kollage!"
+#~ "Skapa och dela looks på Apprl, Facebook eller på din egen blogg. Tagga "
+#~ "upp foton med plagg eller mixa och matcha kollage!"
 
 #~ msgid "Commissions"
 #~ msgstr "Provision"
 
 #~ msgid ""
-#~ "This is your personal Apprl feed with the latest from your follows. You have"
-#~ " automatically followed your friends &amp; some of our featured members. To "
-#~ "manage who you follow go to <a href=\"%(profile_url)s\">your profile</a>."
+#~ "This is your personal Apprl feed with the latest from your follows. You "
+#~ "have automatically followed your friends &amp; some of our featured "
+#~ "members. To manage who you follow go to <a href=\"%(profile_url)s\">your "
+#~ "profile</a>."
 #~ msgstr ""
-#~ "Det här är ditt personliga nyhetsflöde med det senare från de du följer. Du "
-#~ "har automatiskt börjat följa dina vänner & ett antal av våra populära "
-#~ "medlemmar. För att välja vilka du ska följa gå till <a "
-#~ "href=\"%(profile_url)s\">din profil</a>."
+#~ "Det här är ditt personliga nyhetsflöde med det senare från de du följer. "
+#~ "Du har automatiskt börjat följa dina vänner & ett antal av våra populära "
+#~ "medlemmar. För att välja vilka du ska följa gå till <a href="
+#~ "\"%(profile_url)s\">din profil</a>."
 
 #~ msgid "Most popular"
 #~ msgstr "Populära"
@@ -3853,11 +3882,11 @@ msgstr "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></
 #~ msgstr "Embed-kod"
 
 #~ msgid ""
-#~ "You currently don't follow anyone who has liked any looks, find friends to "
-#~ "follow amoung our members."
+#~ "You currently don't follow anyone who has liked any looks, find friends "
+#~ "to follow amoung our members."
 #~ msgstr ""
-#~ "Du följer just nu ingen som gillar någon look, hitta vänner att följa bland "
-#~ "våra medlemmar."
+#~ "Du följer just nu ingen som gillar någon look, hitta vänner att följa "
+#~ "bland våra medlemmar."
 
 #~ msgid "See all members"
 #~ msgstr "Se alla medlemmar"
@@ -3908,17 +3937,15 @@ msgstr "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></
 #~ msgstr "Är du bloggare?"
 
 #~ msgid "Promote your look - the 10 looks with the most <span class=\\"
-#~ msgstr "Sprid din look - de 10 som flest har ♥ gillat på APPRL går till final"
-
-#~ msgid "Apply to become a publisher"
-#~ msgstr "Ansök om att bli Apprl partner"
+#~ msgstr ""
+#~ "Sprid din look - de 10 som flest har ♥ gillat på APPRL går till final"
 
 #~ msgid "Discover"
 #~ msgstr "Följ"
 
 #~ msgid ""
-#~ "It looks like you are on a mobile device, some of the features in our look "
-#~ "tool work better on a desktop/laptop computer."
+#~ "It looks like you are on a mobile device, some of the features in our "
+#~ "look tool work better on a desktop/laptop computer."
 #~ msgstr ""
 #~ "Du verkar använda en mobil enhet, en del av funktionerna för att skapa "
 #~ "looksfungerar bättre om du använder en dator"

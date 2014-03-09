@@ -18,8 +18,9 @@
                     {% if referral_user %}
                     <div class="alert alert-warning">{% blocktrans with name=referral_user.display_name %}You have been invited by {{name}}. Therefore we will put €20 in your Apprl account to start with if you apply below.{% endblocktrans %}</div>
                     {% endif %}
-                    <p>{% trans "Apprl is an invitation-only digital service for fashion influencers, bloggers & magazines that helps you earn money on your blog/site through our tools." %}</p>
-                    <p>{% trans "Apply for an invitation:" %}</p>
+                    <p>{% trans "Apprl can be used by online magazines and bloggers within fashion & beauty. We help you grow, earn money on your content and learn more about your readers. " %}</p>
+                    <p>{% trans "It’s free to apply for anyone, but we only accept new publishers at a rate that we can help and support in a good way. " %}</p>
+                    <p>{% trans "Apply to become an Apprl Publisher here:" %}</p>
                     <form action="" method="post" class="form-horizontal">
                         {% csrf_token %}
                         <div class="form-group{% if form.name.errors %} has-error{% endif %}">
