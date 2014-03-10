@@ -87,7 +87,7 @@ def production_web():
     env.settings = 'production'
     env.celery_processes='4'
     env.celery_processes_background='3'
-    env.gunicorn_processes='5'
+    env.gunicorn_processes='8'
     env.gunicorn_admin_processes='2'
 
 def staging():
