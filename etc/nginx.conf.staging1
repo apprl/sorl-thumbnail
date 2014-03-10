@@ -28,6 +28,11 @@ server {
 server {
     server_name apprl.com %(hostname)s.apprl.com;
 
+    error_page 500 502 503 504 404 /502.html;
+    location = /502.html {
+         root $deploy_dir/www/;
+    }
+
     include sites-available/%(project_name)s.include.conf;
 
     auth_basic "Apprl Staging";
