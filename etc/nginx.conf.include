@@ -61,3 +61,21 @@ location / {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
+
+#location /sv/topmodelsverige/ {
+#    root $deploy_dir/www/;
+#    try_files /topmodelsverige.html /topmodelsverige.html;
+#}
+#
+#location /en/topmodelsverige/ {
+#    return 301 $scheme://apprl.com/sv/topmodelsverige/;
+#}
+#
+#location /topmodelsverige {
+#    return 301 $scheme://apprl.com/sv/topmodelsverige/;
+#}
+#
+#location /topmodelsverige/ {
+#    return 301 $scheme://apprl.com/sv/topmodelsverige/;
+#}
+
