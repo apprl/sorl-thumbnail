@@ -89,20 +89,20 @@
         })();
     </script>
 </head>
-<body class="{% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
+<body class="contest {% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
 
-    <!--<div class="contest-bar">-->
-        <!--<div class="container">-->
-            <!--<div class="row">-->
-                <!--<div class="col-xs-10">-->
-                    <!--<p><a href="{% url 'contest-xmas-menlook' %}">{% trans "X-MAS WISHLIST CHALLENGE" %} <span class="short">{% trans "Compete with Menlook to win €250" %}</span><span class="long">{% trans "Create your look and compete with Menlook to win €250" %}</span></a></p>-->
-                <!--</div>-->
-                <!--<div class="col-xs-2">-->
-                    <!--<a class="btn btn-primary btn-sm pull-right" href="{% url 'contest-xmas-menlook-charts' %}">{% trans "RESULTS" %}</a>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+    <div class="contest-bar">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-11">
+                    <p><a href="{% url 'topmodel' %}">{% trans "TOP MODEL SWEDEN ON APPRL" %} <span class="arrow">»</span><span class="short">{% trans "Follow the models" %}</span><span class="long">{% trans "Follow the models and shop their wardrobes" %}</span></a></p>
+                </div>
+                <div class="col-xs-1">
+                    <a class="btn btn-primary btn-sm pull-right hidden-xs" href="{% url 'topmodel' %}">{% trans "TO THE MODELS" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
         <div class="container">

@@ -576,6 +576,15 @@ body.contest .navbar { top: 40px; }
             font-weight: 500;
             text-transform: none;
         }
+        span.arrow { display: none; }
+        @media (max-width: @screen-xs-max) {
+            span.arrow {
+                font-family: @font-family-base;
+                font-style: normal;
+                font-size: 12px;
+                display: inline;
+            }
+        }
         @media (min-width: @screen-tablet) {
             span.short { display: inline; }
         }

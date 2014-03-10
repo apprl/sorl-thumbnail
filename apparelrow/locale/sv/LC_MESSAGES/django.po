@@ -984,23 +984,20 @@ msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
 #: templates/base.html:98
-#: templates/apparel/contest_xmas_menlook_charts.html:12
-msgid "X-MAS WISHLIST CHALLENGE"
-msgstr ""
+msgid "TOP MODEL SWEDEN ON APPRL"
+msgstr "TOP MODEL SVERIGE PÅ APPRL"
 
 #: templates/base.html:98
-#, fuzzy
-msgid "Compete with Menlook to win €250"
-msgstr "Tävla med Elin Kling om 5000kr"
+msgid "Follow the models"
+msgstr "Följ modellernas stil"
 
 #: templates/base.html:98
-#, fuzzy
-msgid "Create your look and compete with Menlook to win €250"
-msgstr "Skapa din höstlook och tävla med Elin Kling för att vinna 5000kr"
+msgid "Follow the models and shop their wardrobes"
+msgstr "Följ modellerna och shoppa i deras garderober"
 
 #: templates/base.html:101
-msgid "RESULTS"
-msgstr "RESULTAT"
+msgid "TO THE MODELS"
+msgstr "TILL MODELLERNA"
 
 #: templates/base.html:112
 msgid "Toggle navigation"
@@ -1064,7 +1061,8 @@ msgstr "Looks"
 
 #: templates/base.html:167 templates/activity_feed/verbs/follow.html:14
 #: templates/apparel/contest_xmas_menlook.html:39
-#: templates/apparel/user_list.html:4 templates/apparel/user_list.html:22
+#: templates/apparel/topmodel_list.html:38 templates/apparel/user_list.html:4
+#: templates/apparel/user_list.html:22
 #: templates/apparel/fragments/dialog_follow_user.html:5
 #: templates/apparel/fragments/follow.html:6
 #: templates/apparel/fragments/follow.html:8
@@ -1664,6 +1662,10 @@ msgstr ""
 #: templates/apparel/contest_xmas_menlook_charts.html:11
 msgid "RESULT"
 msgstr "RESULTAT"
+
+#: templates/apparel/contest_xmas_menlook_charts.html:12
+msgid "X-MAS WISHLIST CHALLENGE"
+msgstr ""
 
 #: templates/apparel/dialog_look_embed.html:7
 msgid "Embed look on your site / blog"
@@ -3803,67 +3805,6 @@ msgid ""
 msgstr ""
 "<a href=\"%(login_url)s\">Om du redan är medlem, logga in här »</a></p>"
 
-#~ msgid ""
-#~ "at Apprl we have collected clothes, shoes and accessories from all the "
-#~ "leading international brands and retailers."
-#~ msgstr ""
-#~ "på Apprl har vi samlat kläder, skor och accessoarer från världens bästa "
-#~ "onlinebutiker."
-
-#~ msgid ""
-#~ "All products that you ♥ are placed under <a href=\"http://apprl.com/"
-#~ "profile/?utm_source=notification&utm_medium=email&utm_campaign=welcome"
-#~ "\">your profile</a> and you'll get an e-mail when the price drops on them."
-#~ msgstr ""
-#~ "Alla produkter som du ♥ samlas under <a href=\"http://apprl.com/profile/?"
-#~ "utm_source=notification&utm_medium=email&utm_campaign=welcome\">din "
-#~ "profil</a> och du får mail när priset på dem sänks."
-
-#~ msgid ""
-#~ "It's easy to <a href=\"http://apprl.com/looks/create/?"
-#~ "utm_source=notification&utm_medium=email&utm_campaign=welcome\">create "
-#~ "looks</a> to share on Apprl, Facebook, your blog or elsewhere."
-#~ msgstr ""
-#~ "Du kan enkelt <a href=\"http://apprl.com/looks/create/?"
-#~ "utm_source=notification&utm_medium=email&utm_campaign=welcome\">skapa "
-#~ "looks</a> att dela på Apprl, Facebook, din blogg eller vilken site som "
-#~ "helst."
-
-#~ msgid ""
-#~ "Follow bloggers, members & brands to personalize <a href=\"http://apprl."
-#~ "com/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">your "
-#~ "newsfeed</a>."
-#~ msgstr ""
-#~ "Följ bloggare, medlemmar och varumärken för att skapa <a href=\"http://"
-#~ "apprl.com/?utm_source=notification&utm_medium=email&utm_campaign=welcome"
-#~ "\">din personliga newsfeed</a>."
-
-#~ msgid ""
-#~ "Are you blogging? Apply to <a href=\"http://apprl.com/publisher/?"
-#~ "utm_source=notification&utm_medium=email&utm_campaign=welcome\">become a "
-#~ "publisher</a>."
-#~ msgstr ""
-#~ "Bloggar du? Ansök om att <a href=\"http://apprl.com/partner/?"
-#~ "utm_source=notification&utm_medium=email&utm_campaign=welcome\">bli "
-#~ "partnerbloggare</a>."
-
-#~ msgid ""
-#~ "Apprl is an invitation-only digital service for fashion influencers, "
-#~ "bloggers & magazines that helps you earn money on your blog/site through "
-#~ "our tools."
-#~ msgstr ""
-#~ "Apprl är en digital tjänst bloggare och onlinemedier som hjälper dig att "
-#~ "tjäna pengar på din stil genom våra digitala verktyg."
-
-#~ msgid "Apply for an invitation:"
-#~ msgstr "Ansök om att bli Apprl partner här:"
-
-#~ msgid "You need to become a member to follow someone."
-#~ msgstr "Du behöver bli medlem för att kunna följa någon."
-
-#~ msgid "Top Model Sweden on APPRL"
-#~ msgstr "Top Model Sverige på Apprl"
-
 #~ msgid "Are you a store?"
 #~ msgstr "Har du en butik?"
 
@@ -4024,9 +3965,6 @@ msgstr ""
 
 #~ msgid "Follow a brand"
 #~ msgstr "Följ ett varumärke"
-
-#~ msgid "Follow a member"
-#~ msgstr "Följ en medlem"
 
 #~ msgid "By"
 #~ msgstr "Av"
