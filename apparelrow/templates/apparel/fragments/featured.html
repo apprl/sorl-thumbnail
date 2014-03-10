@@ -11,6 +11,8 @@
             </div>
         </div>
         <div class="row">
+
+            {% include 'apparel/fragments/topmodel-featured.html' %}
             {% for activity in featured %}
             <div class="col-featured-item">
                 <div class="feed-item featured-feed-item panel" id="user-featured-{{ activity.user_id }}" data-user-id="{{ activity.user_id }}">
