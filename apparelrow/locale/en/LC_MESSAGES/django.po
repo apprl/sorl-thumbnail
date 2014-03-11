@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-05 10:23+0100\n"
-"PO-Revision-Date: 2014-03-05 10:47+0100\n"
+"POT-Creation-Date: 2014-03-11 15:09+0100\n"
+"PO-Revision-Date: 2014-03-11 15:16+0100\n"
 "Last-Translator:   <klas@klas.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -980,20 +980,20 @@ msgid "An error occurred"
 msgstr ""
 
 #: templates/base.html:98
-#: templates/apparel/contest_xmas_menlook_charts.html:12
-msgid "X-MAS WISHLIST CHALLENGE"
+msgid "TOP MODEL SWEDEN ON APPRL"
 msgstr ""
 
 #: templates/base.html:98
-msgid "Compete with Menlook to win €250"
+msgid "Follow the models"
 msgstr ""
 
-#: templates/base.html:98
-msgid "Create your look and compete with Menlook to win €250"
-msgstr ""
+#: templates/base.html:98 templates/apparel/topmodel_list.html:73
+#, fuzzy
+msgid "Follow the models and shop their wardrobes"
+msgstr " "
 
 #: templates/base.html:101
-msgid "RESULTS"
+msgid "TO THE MODELS"
 msgstr ""
 
 #: templates/base.html:112
@@ -1064,6 +1064,7 @@ msgstr ""
 #: templates/apparel/fragments/follow.html:8
 #: templates/apparel/fragments/follow.html:14
 #: templates/apparel/fragments/follow_cache.html:2
+#: templates/apparel/fragments/topmodel-featured.html:9
 #: templates/profile/notifications/email_follow_user.html:3
 msgid "Follow"
 msgstr ""
@@ -1083,6 +1084,7 @@ msgid "Do you have a store?"
 msgstr ""
 
 #: templates/base.html:222 templates/apparel/index.html:29
+#: templates/profile/email_welcome.html:14
 msgid "Are you a blogger?"
 msgstr ""
 
@@ -1619,6 +1621,10 @@ msgstr ""
 msgid "RESULT"
 msgstr ""
 
+#: templates/apparel/contest_xmas_menlook_charts.html:12
+msgid "X-MAS WISHLIST CHALLENGE"
+msgstr ""
+
 #: templates/apparel/dialog_look_embed.html:7
 msgid "Embed look on your site / blog"
 msgstr ""
@@ -1970,7 +1976,7 @@ msgid "Get product link"
 msgstr ""
 
 #: templates/apparel/product_detail.html:144
-#: templates/apparel/fragments/featured.html:21
+#: templates/apparel/fragments/featured.html:25
 msgid "Selected by"
 msgstr ""
 
@@ -2026,19 +2032,14 @@ msgstr ""
 msgid "Apply and we'll get in touch with you:"
 msgstr ""
 
-#: templates/apparel/store.html:46 templates/dashboard/index.html:48
+#: templates/apparel/store.html:46 templates/dashboard/index.html:49
 msgid "APPLY"
 msgstr ""
 
-#: templates/apparel/topmodel_list.html:38
-#: templates/apparel/topmodel_list.html:85
+#: templates/apparel/topmodel_list.html:17
+#: templates/apparel/topmodel_list.html:64
 msgid "Top Model Sweden on Apprl"
 msgstr ""
-
-#: templates/apparel/topmodel_list.html:94
-#, fuzzy
-msgid "Follow the models and shop in their wardrobes"
-msgstr " "
 
 #: templates/apparel/user_list.html:15
 #, python-format
@@ -2186,7 +2187,11 @@ msgid "You need to become a member to create a look."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_follow_user.html:7
-msgid "You need to become a member to follow someone."
+msgid ""
+"The first time you follow someone on Apprl.com you need to connect with "
+"Facebook or create an account with your e-mail address. Once that is done, "
+"you can easily log in and get access to people and brands you follow and "
+"quickly get an overview of the fashion trends you want to follow."
 msgstr ""
 
 #: templates/apparel/fragments/dialog_like_look.html:5
@@ -2209,7 +2214,7 @@ msgstr ""
 msgid "Spotlight"
 msgstr ""
 
-#: templates/apparel/fragments/featured.html:23
+#: templates/apparel/fragments/featured.html:27
 msgid "Created by"
 msgstr ""
 
@@ -2321,6 +2326,10 @@ msgid ""
 "Share this link on your blog, social media, e-mail or anywhere, and you will"
 " make money on anyone who clicks on it and buys something from the store."
 msgstr ""
+
+#: templates/apparel/fragments/topmodel-featured.html:8
+msgid "Follow Top Model on APPRL"
+msgstr "Follow Top Model Sweden on APPRL"
 
 #: templates/apparel/notifications/create_look.html:2
 msgid "Nice look!"
@@ -2519,13 +2528,19 @@ msgstr ""
 
 #: templates/dashboard/index.html:21
 msgid ""
-"Apprl is an invitation-only digital service for fashion influencers, "
-"bloggers & magazines that helps you earn money on your blog/site through our"
-" tools."
+"Apprl can be used by online magazines and bloggers within fashion & beauty. "
+"We help you grow, earn money on your content and learn more about your "
+"readers. "
 msgstr ""
 
 #: templates/dashboard/index.html:22
-msgid "Apply for an invitation:"
+msgid ""
+"It’s free to apply for anyone, but we only accept new publishers at a rate "
+"that we can help and support in a good way. "
+msgstr ""
+
+#: templates/dashboard/index.html:23
+msgid "Apply to become an Apprl Publisher here:"
 msgstr ""
 
 #: templates/dashboard/info.html:16 templates/dashboard/info.html.py:35
@@ -2990,7 +3005,6 @@ msgid ""
 msgstr ""
 
 #: templates/profile/confirm_email.html:8
-#: templates/profile/email_welcome.html:13
 #: templates/profile/notifications/email_base.html:7
 #: templates/registration/registration_activation_email.html:8
 msgid "With ♥ from Apprl"
@@ -3039,37 +3053,57 @@ msgid "Only men's"
 msgstr ""
 
 #: templates/profile/email_welcome.html:5
+#, python-format
+msgid "Hi %(name)s!"
+msgstr ""
+
+#: templates/profile/email_welcome.html:6
 msgid ""
-"at Apprl we have collected clothes, shoes and accessories from all the "
-"leading international brands and retailers."
+"My name is Gustav and I’m one of the founders of Apprl. We’re welcoming you "
+"as our newest member, below I’ll share a few words with you of how to use "
+"our service."
 msgstr ""
 
 #: templates/profile/email_welcome.html:7
 msgid ""
-"All products that you ♥ are placed under <a "
-"href=\"http://apprl.com/profile/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">your"
-" profile</a> and you'll get an e-mail when the price drops on them."
+"We’re growing fast right now and it’s important for us to grow in the right "
+"direction so we’re very interested in your opinion. I encourage you to reply"
+" to me with what you think of our service and what you miss."
 msgstr ""
 
 #: templates/profile/email_welcome.html:8
 msgid ""
-"It's easy to <a "
-"href=\"http://apprl.com/looks/create/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">create"
-" looks</a> to share on Apprl, Facebook, your blog or elsewhere."
+"On Apprl.com you can shop from other members’ selected products and looks "
+"created by style makers, bloggers and your own friends. You’ll get notified "
+"via e-mail when the price of items you have liked drops and when new "
+"collections for brands you follow are available."
 msgstr ""
 
-#: templates/profile/email_welcome.html:9
-msgid ""
-"Follow bloggers, members & brands to personalize <a "
-"href=\"http://apprl.com/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">your"
-" newsfeed</a>."
+#: templates/profile/email_welcome.html:10
+msgid "Shopping made simple"
 msgstr ""
 
 #: templates/profile/email_welcome.html:11
 msgid ""
-"Are you blogging? Apply to <a "
-"href=\"http://apprl.com/publisher/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">become"
-" a publisher</a>."
+"We believe that it’s easier and more fun to shop through personal "
+"recommendations from people with similar style. That’s why we created Apprl."
+" For you to be able to discover fashion you love, get notified when items "
+"you “like” drop in price and simply to find styles you would have missed "
+"otherwise. <a "
+"href=\"http://apprl.com/users/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">Find"
+" other members and brands to follow here.</a>"
+msgstr ""
+
+#: templates/profile/email_welcome.html:15
+msgid ""
+"Apprl helps large publishers as well as independent bloggers to earn money "
+"on their editorial work. We do this through shops/wardrobes and looks. <a "
+"href=\"http://apprl.com/publisher/?utm_source=notification&utm_medium=email&utm_campaign=welcome\">If"
+" you’re interested you can read more about it here.</a>"
+msgstr ""
+
+#: templates/profile/email_welcome.html:17
+msgid "Let me know if you have any questions!"
 msgstr ""
 
 #: templates/profile/followers.html:4
