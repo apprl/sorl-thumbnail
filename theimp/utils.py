@@ -51,6 +51,7 @@ class ProductItem:
 
     def set_site_product(self, site_product_pk):
         if not site_product_pk:
-            self.data.pop(ProductItem.KEY_SITE_PRODUCT)
+            if ProductItem.KEY_SITE_PRODUCT in self.data:
+                self.data.pop(ProductItem.KEY_SITE_PRODUCT)
         else:
             self.data[ProductItem.KEY_SITE_PRODUCT] = site_product_pk
