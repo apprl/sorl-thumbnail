@@ -151,6 +151,9 @@ class RequiredFieldsPipeline:
             if field in item and (item.get(field) == u'' or item.get(field) is None):
                 raise EmptyFieldDrop('Empty field: %s' % (field,))
 
+        item['key'] = item['key'].strip()
+        item['url'] = item['url'].strip()
+
         return item
 
 
