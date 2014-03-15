@@ -71,7 +71,7 @@ class Parser(object):
             parsed_item = module(scraped_item, parsed_item, vendor, product=product)
         item.data[ProductItem.KEY_PARSED] = parsed_item
 
-        validated = self.validate(item)
+        validated = self.validate(item, vendor)
         item = self.finalize(item, validated)
 
         product.is_validated = validated if not product.is_dropped else False
@@ -105,7 +105,14 @@ class Parser(object):
         item.data[ProductItem.KEY_FINAL] = {}
         if validated:
             for key in item.data[ProductItem.KEY_PARSED].keys():
-                item.data[ProductItem.KEY_FINAL][key] = item.get_parsed(key)
+                if key == 'brand' and item.data[ProductItem.KEY_MANUAL]['brand']:
+                    item.data[ProductItem.KEY_FINAL]['brand'] = item.product.brand_mapping.mapped_brand.name
+                    item.data[ProductItem.KEY_FINAL]['brand_id'] = item.product.brand_mapping.mapped_brand.pk
+                elif key == 'category' and item.data[ProductItem.KEY_MANUAL]['category']:
+                    item.data[ProductItem.KEY_FINAL]['category'] = item.product.category_mapping.mapped_category.name
+                    item.data[ProductItem.KEY_FINAL]['category_id'] = item.product.category_mapping.mapped_category.pk
+                else:
+                    item.data[ProductItem.KEY_FINAL][key] = item.get_parsed(key)
         return item
 
     def _validate_vendor(self, vendor_name):
@@ -116,11 +123,43 @@ class Parser(object):
 
         return None
 
-    def validate(self, item):
+    def validate(self, item, vendor):
         for field in self.required_fields:
             if not item.get_parsed(field):
                 logger.warning('Missing required field %s' % (field,))
                 logger.debug('Data:\n%s' % (pformat(item.data),))
+                return False
+
+        # Validate and setup manual brand if needed (ugly hack)
+        if item.data[ProductItem.KEY_MANUAL]['brand']:
+            manual_brand_id = item.data[ProductItem.KEY_MANUAL]['brand']
+            try:
+                brand = get_model('apparel', 'Brand').objects.get(pk=int(manual_brand_id))
+                mapping, _ = get_model('theimp', 'BrandMapping').objects.get_or_create(
+                    brand='%s-manual' % (manual_brand_id,),
+                    vendor_id=vendor.pk,
+                    mapped_brand=brand)
+
+                item.product.brand_mapping = mapping
+                item.product.save()
+            except Exception:
+                logger.exception('Invalid manual brand id %s' % (manual_brand_id,))
+                return False
+
+        # Validate and setup manual category if needed (ugly hack)
+        if item.data[ProductItem.KEY_MANUAL]['category']:
+            manual_category_id = item.data[ProductItem.KEY_MANUAL]['category']
+            try:
+                category = get_model('apparel', 'Category').objects.get(pk=int(manual_category_id))
+                mapping, _ = get_model('theimp', 'CategoryMapping').objects.get_or_create(
+                    category='%s-manual' % (manual_category_id,),
+                    vendor_id=vendor.pk,
+                    mapped_category=category)
+
+                item.product.category_mapping = mapping
+                item.product.save()
+            except Exception:
+                logger.exception('Invalid manual category id %s' % (manual_category_id,))
                 return False
 
         # Validate gender value

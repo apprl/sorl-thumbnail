@@ -94,6 +94,10 @@ class ProductJSONWidget(forms.Textarea):
                 key_value = json_obj.get(layer, {}).get(key, '')
                 if key == 'colors' and layer == 'manual':
                     table[key][layer] = 'TODO'
+                elif layer == 'manual' and key == 'brand':
+                    table[key][layer] = self.as_field(name, 'manual__%s' % (key,), key_value)
+                elif layer == 'manual' and key == 'category':
+                    table[key][layer] = self.as_field(name, 'manual__%s' % (key,), key_value)
                 elif layer == 'manual' and key not in hide_keys:
                     table[key][layer] = self.as_field(name, 'manual__%s' % (key,), key_value)
                 elif key == 'images':
