@@ -11,16 +11,16 @@ class PanosEmporioSpider(CSVFeedSpider, AffiliateMixin):
     delimiter = '\t'
 
     def parse_row(self, response, row):
-        print row
+        product_url = row.get('product-url').strip()
 
         item = Product()
-        item['key'] = row.get('product-url')
+        item['key'] = product_url
         if item['key']:
             item['key'] = item['key'].replace('?source=apprl', '')
         item['sku'] = row.get('product-id')
         item['name'] = row.get('product-name')
         item['vendor'] = self.name
-        item['url'] = row.get('product-url')
+        item['url'] = product_url
         item['affiliate'] = self.AFFILIATE_AAN
         item['category'] = row.get('category')
         item['description'] = row.get('description')
