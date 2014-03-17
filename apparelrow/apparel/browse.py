@@ -436,5 +436,7 @@ def shop_widget(request):
     content['width'] = request.POST.get('width', '100')
     content['width_type'] = request.POST.get('width_type', '%')
     content['height'] = request.POST.get('height', '600')
+    if content['width_type'] == '%' and int(content['width']) > 100:
+        content['width'] = '100'
 
     return render(request, 'apparel/fragments/shop_widget.html', content)
