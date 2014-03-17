@@ -78,6 +78,7 @@
 </div>
 <script type="text/javascript">
     function updateQueryStringParameter(uri, key, value) {
+        console.log('Called update');
         var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
         var separator = uri.indexOf('?') !== -1 ? "&" : "?";
         if (uri.match(re)) {
