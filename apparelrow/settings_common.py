@@ -7,6 +7,8 @@ import posixpath
 gettext = lambda s: s
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..', '..', '..')
+
 WSGI_APPLICATION = 'apparelrow.wsgi.application'
 
 DEBUG = False
@@ -50,7 +52,7 @@ NUMBER_GROUPING = 3
 
 # Locale paths
 LOCALE_PATHS = (
-    os.path.join(PROJECT_ROOT, 'locale'),
+    os.path.join(SERVER_APP_ROOT, 'locale'),
 )
 
 # Language code for this installation. All choices can be found here:
@@ -244,6 +246,7 @@ INSTALLED_APPS = (
     'apparelrow.statistics',           # Internal: Click statistics module
     'apparelrow.dashboard',
     'apparelrow.activity_feed',
+    'rosetta'
 )
 
 # - STATIC SITEMAP -
@@ -454,6 +457,19 @@ GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT = 'UA-21990268-2'
 GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN = 'apprl.com'
 
+# Rosetta Google Translate
+# To register a site https://ssl.bing.com/webmaster/home/mysites
+ROSETTA_MESSAGES_PER_PAGE = 5
+ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = 'en'
+ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = 'Engelska'
+ROSETTA_WSGI_AUTO_RELOAD = False
+ROSETTA_UWSGI_AUTO_RELOAD = False
+ROSETTA_EXCLUDED_APPLICATIONS = ()
+ROSETTA_REQUIRES_AUTH = True
+ROSETTA_STORAGE_CLASS = 'rosetta.storage.CacheRosettaStorage'
+#ROSETTA_HOME = 'http://apprl.local.com/rosetta/'
+
+
 # SOLR COMMON
 #SOLR_HOSTNAME = '146.185.137.189'
 SOLR_CURRENCY_LOCAL = True
@@ -574,6 +590,11 @@ CELERY_ROUTES = ({
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
+    #'root': {
+    #    'level': 'DEBUG',
+    #    'handlers': ['sentry'],
+    #},
+
     'formatters': {
         'simple': {
             'format': '%(asctime)s %(name)s %(levelname)s %(message)s'
@@ -599,7 +620,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'app_logger.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'app_logger.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -607,7 +628,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'apparel_debug.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'apparel_debug.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -615,7 +636,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'importer.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'importer.log'),
             'maxBytes': 8000000,
             'backupCount': 10
         },
@@ -628,7 +649,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'dashboard.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'dashboard.log'),
             'maxBytes': 3000000,
             'backupCount': 8,
         },
@@ -636,7 +657,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'theimp.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'theimp.log'),
             'maxBytes': 50000000,
             'backupCount': 10,
         },
@@ -644,7 +665,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(PROJECT_ROOT, '..', '..', '..', 'var', 'logs', 'pending_requests.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'pending_requests.log'),
             'maxBytes': 50000000,
             'backupCount': 10,
         },
@@ -653,12 +674,12 @@ LOGGING = {
         '': {
             'level': 'INFO',
             'propagate': True,
-            'handlers': ['app_core'],
+            'handlers': ['app_core','sentry'],
         },
         'requests': {
             'level': 'DEBUG',
             'propagate': False,
-            'handlers': ['null'],
+            'handlers': ['app_core'],
         },
         'pysolr': {
             'level': 'ERROR',
@@ -697,7 +718,7 @@ LOGGING = {
         },
         'theimp': {
             'level': 'DEBUG',
-            'propagate': False,
+            'propagate': True,
             'handlers': ['theimp'],
         },
         'theimp.links': {

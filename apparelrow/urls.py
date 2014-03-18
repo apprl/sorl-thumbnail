@@ -32,6 +32,7 @@ urlpatterns = patterns('',
     (r'^comments/', include('django.contrib.comments.urls')),
     url(r'^i18n/setlang/$', 'apparelrow.apparel.views.apparel_set_language', name='change_language_view'), # override builtin set_language
     (r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^admin/rosetta/', include('rosetta.urls')),
     (r'^admin/', include(admin.site.urls)),
     (r'', include('apparelrow.apparel.urls')),
     (r'^partner/', RedirectView.as_view(url='/publisher/dashboard/')),
