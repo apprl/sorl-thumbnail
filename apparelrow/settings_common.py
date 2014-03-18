@@ -52,7 +52,7 @@ NUMBER_GROUPING = 3
 
 # Locale paths
 LOCALE_PATHS = (
-    os.path.join(SERVER_APP_ROOT, 'locale'),
+    os.path.join(SERVER_APP_ROOT, 'var','locale'),
 )
 
 # Language code for this installation. All choices can be found here:
@@ -674,7 +674,7 @@ LOGGING = {
         '': {
             'level': 'INFO',
             'propagate': True,
-            'handlers': ['app_core','sentry'],
+            'handlers': ['app_core'],
         },
         'requests': {
             'level': 'DEBUG',
