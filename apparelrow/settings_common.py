@@ -459,7 +459,7 @@ GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN = 'apprl.com'
 
 # Rosetta Google Translate
 # To register a site https://ssl.bing.com/webmaster/home/mysites
-ROSETTA_MESSAGES_PER_PAGE = 5
+ROSETTA_MESSAGES_PER_PAGE = 30
 ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = 'en'
 ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = 'Engelska'
 ROSETTA_WSGI_AUTO_RELOAD = False
