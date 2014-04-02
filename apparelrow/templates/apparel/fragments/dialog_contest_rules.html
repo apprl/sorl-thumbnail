@@ -1,0 +1,31 @@
+{% load i18n %}
+<div class="modal fade" id="modal_contest_rules" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">{% trans "Contest rules & info" %}</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    {% blocktrans %}
+                    The winning prize for three winners is a voucher (or equal) for 1500 SEK at the Panos Emporio web shop www.panos.se. The contestant is responsible to pay any taxes if required. A jury put together by Apprl will select the 3 winners.
+                    {% endblocktrans %}
+                </p>
+                <p>
+                    {% blocktrans %}
+                    Apprl holds the right to disqualify contestants for suspected cheating, abuse or other reason. Our general terms of service & privacy policy apply.
+                    {% endblocktrans %}
+                </p>
+            <p>
+                {% blocktrans %}
+                    For questions & info contact info@apprl.com
+                {% endblocktrans %}
+            </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+            </div>
+        </div>
+    </div>
+</div>

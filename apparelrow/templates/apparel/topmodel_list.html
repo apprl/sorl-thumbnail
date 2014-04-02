@@ -6,8 +6,12 @@
 
         .row h1, .row h3  {
             text-align: center;
-        }
+            text-transform: uppercase;
 
+        }
+        .col-md-6 {
+            padding-top: 15px;
+        }
     </style>
 
 {% endblock %}
@@ -65,6 +69,54 @@
         </div>
     </div>
 
+
+    <div class="container">
+        <div class="row topmodel">
+
+            <h1 class="col-lg-12">{% trans 'Compete with the models and Panos Emporio. Win 1500 SEK'  %}</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{% static 'images/APPRL_PE_tavling_puff_' %}{{ request.LANGUAGE_CODE }}.jpg" class="img-responsive">
+
+            </div>
+            <div class="col-md-6">
+                <div class="col-contest-text">
+                    <p><strong>{% trans 'Contest open April 2nd - 14th 2014' %}</strong></p>
+                    <p><strong>{% trans 'To join:' %}</strong></p>
+                    <ol>
+                        <li>
+                            <p>
+                            {% blocktrans %}
+                                Follow at least one of the Top Model Sweden participants on Apprl below.
+                            {% endblocktrans %}
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                            {% blocktrans %}
+                                "Like" at least 10 products on Apprl.com that you would like to have in your spring/summer closet. (Find products on the models' profile pages below or in our shop)
+                            {% endblocktrans %}
+                            </p>
+                        </li>
+                    </ol>
+                    <p>
+                        {% blocktrans %}
+                            <a href="/profile/elzana-top-model/">Elzana</a> & <a href="/profile/konstantinos-top-model/">Kostas</a> from Top Model Sweden will select the 3 winners with the best-looking spring/summer product selections on their profile page. The winners receive a 1500 SEK (ca. €170) voucher on www.panos.se.
+                        {% endblocktrans %}
+                    </p>
+                    <p>
+                        {% blocktrans %}
+                            The winner will be announced on our <a href="http://facebook.com/apprl">Facebook page</a> , <a href="http://facebook.com/apprl">like us on Facebook not to miss it.</a>
+                        {% endblocktrans %}
+                    </p>
+                <p>
+                    <a data-toggle="modal" href="#" data-target="#modal_contest_rules">Contest rules & info</a>
+                </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
    <div class="container">
     <div class="row discover-list-page">
