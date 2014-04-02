@@ -77,8 +77,11 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <img src="{% static 'images/APPRL_PE_tavling_puff_' %}{{ request.LANGUAGE_CODE }}.jpg" class="img-responsive">
-
+                {% if request.LANGUAGE_CODE == 'sv' %}
+                    <img src="{% static 'images/APPRL_PE_tavling_puff_sv.jpg' %}" class="img-responsive">
+                {% else %}
+                    <img src="{% static 'images/APPRL_PE_tavling_puff_en.jpg' %}" class="img-responsive">
+                {% endif %}
             </div>
             <div class="col-md-6">
                 <div class="col-contest-text">
