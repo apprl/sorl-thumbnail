@@ -85,6 +85,6 @@ class NetAPorterSpider(CSVFeedSpider, AffiliateMixin):
         item['currency'] = row.get('currency')
         item['in_stock'] = True #Not working anymoreif row.get('availability', '').lower() == 'in stock' else False
         item['stock'] = ''
-        item['image_urls'] = [row.get('image-url')]
+        item['image_urls'] = [row.get('image-url').replace("in_l","in_xl") if row.get('image-url',None) else '']
 
         return item
