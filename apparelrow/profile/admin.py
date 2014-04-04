@@ -31,6 +31,9 @@ class CustomUserChangeForm(UserChangeForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+        if not email:
+            return email
+
         try:
             if self.instance and hasattr(self.instance, 'pk'):
                 get_user_model()._default_manager.exclude(pk=self.instance.pk).get(email=email)
