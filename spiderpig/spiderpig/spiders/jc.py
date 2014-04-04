@@ -2,7 +2,7 @@ from scrapy.contrib.spiders import XMLFeedSpider
 
 from spiderpig.items import Product, ProductLoader
 from spiderpig.spiders import AffiliateMixin, PriceMixin
-from spiderpig.utils import ApprlFileLogObserver,WARNING,INFO
+#from spiderpig.utils import ApprlFileLogObserver,WARNING,INFO
 from scrapy import log
 import os
 from twisted.python.logfile import DailyLogFile
