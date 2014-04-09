@@ -81,7 +81,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': [('username', 'password'),]}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'name',
                                          'email', 'image', 'about', 'gender',
-                                         'language', 'blog_url')}),
+                                         'language', 'blog_url', 'manual_about_en', 'manual_about_sv')}),
         (_('Facebook'), {'fields': ('facebook_user_id',
                                     'facebook_access_token',
                                     'facebook_access_token_expire')}),

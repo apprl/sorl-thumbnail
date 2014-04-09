@@ -48,6 +48,7 @@ class User(AbstractUser):
     slug = models.CharField(max_length=100, unique=True, null=True)
     image = models.ImageField(upload_to=profile_image_path, help_text=_('User profile image'), blank=True, null=True)
     about = models.TextField(_('About'), null=True, blank=True)
+    manual_about = models.TextField(_('Manual About'), null=True, blank=True)
     language = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     gender = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     blog_url = models.CharField(max_length=255, null=True, blank=True)
@@ -119,6 +120,10 @@ class User(AbstractUser):
                 setattr(self, field, value.title())
 
         super(User, self).save(*args, **kwargs)
+
+    @cached_property
+    def translated_manual_about(self):
+        return getattr(self, 'manual_about_%s' % (get_language(),), None)
 
     @cached_property
     def blog_url_external(self):

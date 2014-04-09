@@ -50,7 +50,11 @@ $(document).ready(function() {
                 {% else %}
                 {% include 'apparel/fragments/follow.html' %}
                 {% endif %}
+                {% if profile and profile.is_brand and profile.translated_manual_about %}
+                <p class="description">{{ profile.translated_manual_about }}</p>
+                {% else %}
                 <p class="description">{% if profile.about %}{{ profile.about|urlize_target_blank|linebreaksbr }}{% else %}{% if request.user.is_authenticated and request.user == profile %}{% trans "Add your description by clicking here." %}{% endif %}{% endif %}</p>
+                {% endif %}
 
                 {% if request.user.is_authenticated and request.user == profile %}
                 <form id="description-form" method="post" action="{% url 'settings-save-description' %}" style="display: none;">
