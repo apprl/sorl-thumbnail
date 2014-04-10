@@ -5,7 +5,7 @@ from scrapy.contrib.spiders import XMLFeedSpider
 class ShirtonomySpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
     name = 'shirtonomy'
     allowed_domains = ['localhost']
-    start_urls = ['http://localhost:8002/services/export/']
+    start_urls = ['http://shirtonomy.com/services/export/']
     itertag = 'item'
 
     def parse_node(self, response, node):
