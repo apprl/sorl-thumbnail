@@ -4,7 +4,7 @@ from spiderpig.items import Product, ProductLoader
 from spiderpig.spiders import AffiliateMixin, PriceMixin
 from scrapy.exceptions import NotConfigured, NotSupported
 from scrapy.selector import Selector
-from scrapy.utils.spider import iterate_spider_output
+
 from scrapy import log
 
 class WolfnBadger(XMLFeedSpider, AffiliateMixin, PriceMixin):
@@ -14,7 +14,7 @@ class WolfnBadger(XMLFeedSpider, AffiliateMixin, PriceMixin):
     namespaces = [('g', 'http://base.google.com/ns/1.0')]
     itertag = 'entry'
 
-    def __init__(self, name=None, **kwargs):
+    """def __init__(self, name=None, **kwargs):
         from spiderpig.utils import ApprlFileLogObserver
         from scrapy import log
         from scrapy.log import INFO
@@ -25,7 +25,7 @@ class WolfnBadger(XMLFeedSpider, AffiliateMixin, PriceMixin):
         sflo = ApprlFileLogObserver(file_to_write, loglevel, logencoding, crawler)
         log.log.addObserver(sflo.emit)
         super(WolfnBadger, self).__init__(name, **kwargs)
-
+    """
     def parse(self, response):
         if not hasattr(self, 'parse_node'):
             raise NotConfigured('You must define parse_node method in order to scrape this XML feed')
@@ -36,7 +36,7 @@ class WolfnBadger(XMLFeedSpider, AffiliateMixin, PriceMixin):
         return self.parse_nodes(response, nodes)
 
     def parse_nodes(self, response, nodes):
-
+        from scrapy.utils.spider import iterate_spider_output
         for selector in nodes:
             selector.remove_namespaces()
             ret = iterate_spider_output(self.parse_node(response, selector))
