@@ -15,6 +15,7 @@
         <ul class="list-group">
             <li class="list-group-item"><a href="#blog">{% trans "Grow your blog and gain followers" %}</a></li>
             <li class="list-group-item"><a href="#product">{% trans "Make money on product links" %}</a></li>
+            <li class="list-group-item"><a href="#links">{% trans "Earn money on store links" %}</a></li>
             <li class="list-group-item"><a href="#profile">{% trans "Make money from your profile" %}</a></li>
             <li class="list-group-item"><a href="#looks">{% trans "Make money on looks for your site/blog" %}</a></li>
             <li class="list-group-item"><a href="#shop">{% trans "Create an APPRL-shop for your site/blog" %}</a></li>
@@ -49,6 +50,12 @@
         <h4 id="product">{% trans "Make money on product links" %}</h4>
         <p>{% trans "The easiest way to start making money is to simply link to our products. As a publisher just click the “Get product link”-button and share the link on your blog, Facebook page or elsewhere." %}</p>
         <img class="img-responsive" src="{% static "images/dashboard_product_link_"|add:LANGUAGE_CODE|add:".png" %}">
+
+        <h4 id="links">{% trans "Earn money on store links" %}</h4>
+        <p>{% trans "You can also link directly to the home page of our partner stores, for example asos.com or net-a-porter.com and earn money the same way as when linking directly to products: When someone buys something from a store you have linked to within 30-45 days you earn commission." %}</p>
+        {% url 'dashboard-commissions' as store_url %}
+        <p>{% blocktrans with host=request.META.HTTP_HOST %}To get store links go to "Stores" under the "For Publishers"-page (<a href="http://{{ host }}{{ store_url }}">http://{{ host }}{{ store_url }}</a>). Here you can also see how much commission you earn from the different stores.{% endblocktrans %}</p>
+        <img class="img-responsive" src="{% static "images/dashboard_store_link_"|add:LANGUAGE_CODE|add:".png" %}">
 
         <h4 id="profile">{% trans "Make money from your profile" %}</h4>
         <p>{% trans "All products that you “like” on Apprl.com ends up on your profile page. Every time someone clicks and buys a product – you make money." %}</p>
