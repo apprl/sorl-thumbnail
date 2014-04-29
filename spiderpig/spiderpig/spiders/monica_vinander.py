@@ -77,11 +77,16 @@ class MonicaVinanderSpider(CSVFeedSpider, AffiliateMixin):
     def parse_row(self, response, row):
         item = Product()
         key = key_regex1.search(row.get('product-url'))
+        product_name = row.get('product-name')
+        if product_name.lower().find("size") > 0:
+            name_list = product_name.split(" - ")
+            product_name = " - ".join(name_list[:len(name_list)-1])
+
         if key:
             item['key'] = urllib.unquote(force_bytes(key.group(1)))
             item['key'] = item['key'].split('?', 1)[0]
         item['sku'] = row.get('product-id')
-        item['name'] = row.get('product-name')
+        item['name'] = product_name
         item['vendor'] = self.name
         item['url'] = row.get('product-url')
         item['affiliate'] = self.AFFILIATE_LINKSHARE
