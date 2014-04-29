@@ -17,7 +17,7 @@ from sorl.thumbnail import get_thumbnail
 from theimp.importer import Importer
 from theimp.models import BrandMapping, CategoryMapping
 from theimp.parser import Parser
-
+from django.core.cache import cache
 
 class ProductJSONWidget(forms.Textarea):
 
@@ -197,7 +197,10 @@ class BrandMappingAdmin(admin.ModelAdmin):
         return qs.annotate(Count('products'))
 
     def num_products(self, brand):
-        return brand.products.count()
+        key = '%s_sum_brandmapping_products' % self.id
+        if not cache.get(key,None):
+            cache.set(key,brand.products.count(),60*10)
+        return cache.get(key)
     num_products.admin_order_field = 'products__count'
 
 class IsMappedCategoryListFilter(admin.SimpleListFilter):

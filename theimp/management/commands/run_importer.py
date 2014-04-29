@@ -19,7 +19,6 @@ class Command(BaseCommand):
             action='store',
             dest='vendor',
             default=None,
-            help='Run only this vendor',
         ),
     )
 
