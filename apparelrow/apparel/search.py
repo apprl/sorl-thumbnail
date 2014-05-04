@@ -381,8 +381,9 @@ def look_save(instance, **kwargs):
     else:
         connection = Solr(settings.SOLR_URL)
 
-    document, boost = get_look_document(instance)
-    connection.add([document], commit=False, boost=boost, commitWithin=False)
+    if not instance.user.is_hidden:
+        document, boost = get_look_document(instance)
+        connection.add([document], commit=False, boost=boost, commitWithin=False)
 
 @receiver(post_delete, sender=Look, dispatch_uid='look_delete')
 def look_delete(instance, **kwargs):
@@ -395,7 +396,7 @@ def rebuild_look_index(url=None):
     look_count = 0
     look_buffer = collections.deque()
 
-    for look in get_model('apparel', 'Look').objects.iterator():
+    for look in get_model('apparel', 'Look').objects.filter(user__is_hidden=False).iterator():
         document, boost = get_look_document(look)
         look_buffer.append(document)
         if len(look_buffer) == 100:
@@ -441,7 +442,7 @@ def search_index_user_save(instance, **kwargs):
     else:
         connection = Solr(settings.SOLR_URL)
 
-    if not instance.is_brand:
+    if not instance.is_brand and not instance.is_hidden:
         document, boost = get_profile_document(instance)
         connection.add([document], commit=False, boost=boost, commitWithin=False)
 
@@ -455,7 +456,7 @@ def rebuild_user_index(url=None):
     user_count = 0
     user_buffer = collections.deque()
 
-    for user in get_user_model().objects.filter(is_brand=False).iterator():
+    for user in get_user_model().objects.filter(is_hidden=False, is_brand=False).iterator():
         document, boost = get_profile_document(user)
         user_buffer.append(document)
         if len(user_buffer) == 100:
