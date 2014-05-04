@@ -66,12 +66,16 @@ def roundrobin(*iterables):
             nexts = itertools.cycle(itertools.islice(nexts, pending))
 
 def get_featured_activity_today():
+    """
+    Filters activity on featured date and if the user is not hidden.
+    """
     today = datetime.date.today()
     # TODO: if no featured date, default to something?
 
-    return get_model('activity_feed', 'Activity').objects.filter(active=True, featured_date=today)[:2]
+    return get_model('activity_feed', 'Activity').objects.filter(user__is_hidden=False, active=True, featured_date=today)[:2]
 
 
+# NOT USED
 def get_top_looks_in_network(profile, limit=None):
     Follow = get_model('profile', 'Follow')
     Look = get_model('apparel', 'Look')
@@ -85,6 +89,7 @@ def get_top_looks_in_network(profile, limit=None):
     return looks
 
 
+# NOT USED
 def get_top_products_in_network(profile, limit=None):
     Follow = get_model('profile', 'Follow')
     Product = get_model('apparel', 'Product')
