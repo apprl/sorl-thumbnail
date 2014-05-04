@@ -9,5 +9,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for user in get_user_model().objects.all():
-            user.followers_count = Follow.objects.filter(user_follow=user, active=True).count()
+            user.followers_count = Follow.objects.filter(user__is_hidden=False, user_follow=user, active=True).count()
             user.save()

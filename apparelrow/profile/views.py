@@ -12,7 +12,6 @@ from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
-from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.exceptions import ObjectDoesNotExist
@@ -53,8 +52,7 @@ def get_profile_sidebar_info(request, profile):
     else:
         info['products'] = get_model('apparel', 'Product').published_objects.filter(likes__user=profile, likes__active=True).count()
 
-    content_type = ContentType.objects.get_for_model(get_user_model())
-    info['following'] = Follow.objects.filter(user=profile, active=True).count()
+    info['following'] = Follow.objects.filter(user_follow__is_hidden=False, user=profile, active=True).count()
 
     return info
 
@@ -135,7 +133,7 @@ def looks(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def followers(request, profile, form, page=0):
-    queryset = get_user_model().objects.filter(following__user_follow=profile, following__active=True) \
+    queryset = get_user_model().objects.filter(is_hidden=False, following__user_follow=profile, following__active=True) \
                                        .order_by('name', 'first_name', 'username')
 
     paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
@@ -159,7 +157,7 @@ def followers(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def following(request, profile, form, page=0):
-    queryset = get_user_model().objects.filter(followers__user=profile, followers__active=True) \
+    queryset = get_user_model().objects.filter(is_hidden=False, followers__user=profile, followers__active=True) \
                                        .order_by('name', 'first_name', 'username')
 
     paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
