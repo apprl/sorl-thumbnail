@@ -53,6 +53,8 @@ class User(AbstractUser):
     gender = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     blog_url = models.CharField(max_length=255, null=True, blank=True)
 
+    is_hidden = models.BooleanField(default=False, blank=False, null=False)
+
     # brand profile
     is_brand = models.BooleanField(default=False)
     brand = models.OneToOneField('apparel.Brand', default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='user')

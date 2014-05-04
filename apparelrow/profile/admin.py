@@ -72,8 +72,8 @@ class CustomUserAdmin(UserAdmin):
 
     change_form_template = 'profile/admin_change_form.html'
 
-    list_display = ('username', 'slug', 'name', 'first_name', 'last_name', 'email', 'is_brand', 'date_joined')
-    list_filter = ('is_brand', 'is_partner', 'is_active', 'is_staff', 'is_superuser')
+    list_display = ('username', 'slug', 'name', 'first_name', 'last_name', 'email', 'is_brand', 'is_hidden', 'date_joined')
+    list_filter = ('is_brand', 'is_partner', 'is_active', 'is_staff', 'is_superuser', 'is_hidden')
     raw_id_fields = ('brand', 'referral_partner_parent')
     search_fields = ('username', 'name', 'slug')
     readonly_fields = ('referral_partner_code', 'referral_partner_url')
@@ -81,7 +81,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': [('username', 'password'),]}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'name',
                                          'email', 'image', 'about', 'gender',
-                                         'language', 'blog_url', 'manual_about_en', 'manual_about_sv')}),
+                                         'language', 'blog_url', 'manual_about_en', 'manual_about_sv', 'is_hidden')}),
         (_('Facebook'), {'fields': ('facebook_user_id',
                                     'facebook_access_token',
                                     'facebook_access_token_expire')}),

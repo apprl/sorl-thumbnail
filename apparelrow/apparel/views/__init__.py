@@ -259,11 +259,11 @@ def product_detail(request, slug):
     if request.user.is_authenticated():
         is_liked = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
 
-    looks_with_product = Look.published_objects.filter(components__product=product).distinct().order_by('-modified')[:2]
-    looks_with_product_count = Look.published_objects.filter(components__product=product).distinct().count()
+    looks_with_product = Look.published_objects.filter(user__is_hidden=False, components__product=product).distinct().order_by('-modified')[:2]
+    looks_with_product_count = Look.published_objects.filter(user__is_hidden=False, components__product=product).distinct().count()
 
     # Likes
-    likes = product.likes.filter(active=True).order_by('modified').select_related('user')
+    likes = product.likes.filter(active=True, user__is_hidden=False).order_by('modified').select_related('user')
     regular_likes = likes.filter(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
     partner_likes = likes.exclude(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
 
@@ -564,6 +564,8 @@ def look_list(request, search=None, contains=None, gender=None):
                    'M': ['M', 'U'],
                    'W': ['W', 'U']}
 
+    queryset = Look.published_objects.filter(user__is_hidden=False)
+
     if search:
         if not gender or gender == 'A':
             gender_field = 'gender:(U OR M OR W)'
@@ -575,11 +577,11 @@ def look_list(request, search=None, contains=None, gender=None):
                            'start': 0,
                            'rows': 500} # XXX: maximum search results, sync this with the count that is displayed in the search result box
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
-        queryset = Look.published_objects.filter(id__in=[doc.django_id for doc in results.get_docs()])
+        queryset = queryset.filter(id__in=[doc.django_id for doc in results.get_docs()])
     elif contains:
-        queryset = Look.published_objects.filter(components__product__slug=contains).distinct()
+        queryset = queryset.filter(components__product__slug=contains).distinct()
     else:
-        queryset = Look.published_objects.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
+        queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page'))
 
@@ -629,7 +631,7 @@ def look_detail(request, slug):
         del request.session['look_saved']
 
     # Likes
-    likes = look.likes.filter(active=True).order_by('-modified').select_related('user')
+    likes = look.likes.filter(active=True, user__is_hidden=False).order_by('-modified').select_related('user')
 
     # Base url
     base_url = request.build_absolute_uri('/')[:-1]
@@ -754,6 +756,7 @@ def user_list(request, gender=None, brand=False):
 
     queryset = get_user_model().objects.filter(is_active=True,
                                                is_brand=brand,
+                                               is_hidden=False,
                                                advertiser_store__isnull=True)
 
     if not brand:
