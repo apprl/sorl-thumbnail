@@ -12,11 +12,22 @@ jQuery(document).ready(function() {
 
     // Hide hotspots and only show them on mouseenter if !mobile
     if (!is_mobile()) {
+        var active = false;
         jQuery('.hotspot').hide();
-        jQuery(document).on('mouseenter', '.look-photo', function() {
+        jQuery(document).on('click', '.look-photo', function() {
+            if (active === false) {
+              jQuery('.hotspot', this).stop(true, true).fadeIn(300);
+              setTimeout(function(){active=true}, 400);
+            }
+        }).on('mouseenter', '.look-photo', function() {
             jQuery('.hotspot', this).stop(true, true).fadeIn(300);
         }).on('mouseleave', '.look-photo', function() {
             jQuery('.hotspot', this).stop(true, true).fadeOut(300);
+        }).on('click', '.look-photo', function() {
+            if (active === true) {
+                setTimeout(function(){active=false}, 400);
+                jQuery('.hotspot', this).stop(true, true).fadeOut(300);
+            }
         });
     }
 
