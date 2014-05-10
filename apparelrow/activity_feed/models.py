@@ -26,6 +26,10 @@ class ActivityManager(models.Manager):
 
     """
     def push_activity(self, profile, verb, activity_object, gender=None):
+        if profile.is_hidden:
+            logger.info("Don't push activity for hidden user: %s" % (profile.id,))
+            return None
+
         if gender is not None and gender not in ['M', 'W']:
             gender = None
         content_type = ContentType.objects.get_for_model(activity_object)
