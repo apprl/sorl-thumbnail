@@ -61,7 +61,7 @@ class MonicaVinanderSpider(CSVFeedSpider, AffiliateMixin):
         for url in self.start_urls:
             yield Request(url, meta=meta, dont_filter=True)
 
-    def __init__(self, name=None, **kwargs):
+    """def __init__(self, name=None, **kwargs):
         from spiderpig.utils import ApprlFileLogObserver
         from scrapy import log
         from scrapy.log import INFO
@@ -72,7 +72,7 @@ class MonicaVinanderSpider(CSVFeedSpider, AffiliateMixin):
         sflo = ApprlFileLogObserver(file_to_write, loglevel, logencoding, crawler)
         log.log.addObserver(sflo.emit)
         super(MonicaVinanderSpider, self).__init__(name, **kwargs)
-
+    """
 
     def parse_row(self, response, row):
         item = Product()
