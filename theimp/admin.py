@@ -197,7 +197,7 @@ class BrandMappingAdmin(admin.ModelAdmin):
         return qs.annotate(Count('products'))
 
     def num_products(self, brand):
-        key = '%s_sum_brandmapping_products' % self.id
+        key = '%s_sum_brandmapping_products' % brand.id
         if not cache.get(key,None):
             cache.set(key,brand.products.count(),60*10)
         return cache.get(key)
