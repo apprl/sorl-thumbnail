@@ -11,7 +11,7 @@ SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-DATA_HOST ="localhost"
+"""DATA_HOST ="localhost"
 DATABASES = {
     'default':
         {'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -20,9 +20,9 @@ DATABASES = {
             'PASSWORD': 'admin',
             'HOST': 'localhost',
     }
-}
+}"""
 
-"""DATA_HOST ="apprlvm"
+DATA_HOST ="apprlvm"
 DATABASES = {
     'default':
         {'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -31,7 +31,7 @@ DATABASES = {
             'PASSWORD': 'apprl',
             'HOST': DATA_HOST,
     }
-}"""
+}
 CONN_MAX_AGE = 600
 
 LOGGING['handlers']['app_core']['filename'] = os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'app_logger.log')
@@ -140,12 +140,12 @@ INSTALLED_APPS += ('debug_toolbar',
                    'raven.contrib.django.raven_compat',
                   )
 
-RAVEN_CONFIG = {
+"""RAVEN_CONFIG = {
     'dsn': 'https://3d0e910228c343f38f69e4640a1243f0:f27b835e983a404d82a4871f97b39807@sentry.local.com/2',
 }
 
 SENTRY_DSN='https://3d0e910228c343f38f69e4640a1243f0:f27b835e983a404d82a4871f97b39807@sentry.local.com/2'
-
+"""
 
 #PIPELINE_CSS_COMPRESSOR = None
 #PIPELINE_JS_COMPRESSOR = None
@@ -160,7 +160,7 @@ PIPELINE_UGLIFYJS_BINARY = '/usr/bin/env uglifyjs'
 PIPELINE_UGLIFYJS_ARGUMENTS = ''
 """
 #PIPELINE_ENABLED = False
-PIPELINE_LESS_BINARY = '/usr/local/bin/lessc'
+#PIPELINE_LESS_BINARY = '/usr/local/bin/lessc'
 #PIPELINE_YUGLIFY_BINARY = '/usr/local/bin/yuglify'
 
 # Rosetta Google Translate
