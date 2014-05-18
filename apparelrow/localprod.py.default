@@ -101,13 +101,22 @@ CELERY_REDIS_HOST = "localhost"
 CELERY_REDIS_PORT = 6379
 CELERY_REDIS_DB = 0
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-CELERY_ALWAYS_EAGER=DEBUG
+CELERY_ALWAYS_EAGER=False
+CELERY_TIMEZONE = 'Europe/Stockholm'
+
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}})
 
 if CELERY_ALWAYS_EAGER:
     print 'Celery set to always eager.'
 
-EMAIL_BACKEND = 'django.core.mail.backends.file.EmailBackend'
-
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT,'..', 'logs')
 
 import djcelery
 djcelery.setup_loader()
@@ -136,9 +145,10 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
 )
-INSTALLED_APPS += ('debug_toolbar',
+"""INSTALLED_APPS += ('debug_toolbar',
                    'raven.contrib.django.raven_compat',
                   )
+"""
 
 """RAVEN_CONFIG = {
     'dsn': 'https://3d0e910228c343f38f69e4640a1243f0:f27b835e983a404d82a4871f97b39807@sentry.local.com/2',
