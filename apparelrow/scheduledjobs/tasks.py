@@ -53,7 +53,7 @@ def dashboard_import():
     management.call_command('dashboard_import',days=365)
 
 #daily
-@periodic_task(name='apparelrow.scheduledjobs.tasks.dashboard_payment', run_every=crontab(day_of_month='1'), max_retries=5, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.dashboard_payment', run_every=crontab(minute='0',hour='0',day_of_month='1'), max_retries=5, ignore_result=True)
 def dashboard_payment():
     from django.core import management
     log.info('Running dashboard_payment job.')
