@@ -92,14 +92,14 @@ SOLR_CONF_DIRECTORY = os.path.join(PROJECT_ROOT, '..', 'solr', 'solr', 'collecti
 SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
 SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')
 
-BROKER_URL = "redis://localhost:6379/0"
+BROKER_URL = "redis://localhost:6380/0"
 
 THEIMP_REDIS_HOST = 'localhost'
 THEIMP_REDIS_PORT = 6380
 
 CELERY_RESULT_BACKEND = "redis"
 CELERY_REDIS_HOST = "localhost"
-CELERY_REDIS_PORT = 6379
+CELERY_REDIS_PORT = 6380
 CELERY_REDIS_DB = 0
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 CELERY_ALWAYS_EAGER=False
