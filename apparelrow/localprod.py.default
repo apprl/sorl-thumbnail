@@ -59,12 +59,13 @@ CACHES = {
 
 
 # Storage
-#AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's-jdev.apprl.com'
-
+AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's-jdev.apprl.com'
 #DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+STATIC_URL = 'http://s-jdev.apprl.com/'
 
-STATIC_URL = '/static/'
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+#STATIC_URL = '/static/'
 #STATIC_URL = 'http://s.apprl.com/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT,'static')
 STATICFILES_DIRS = (
@@ -121,11 +122,11 @@ EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT,'..', 'logs')
 import djcelery
 djcelery.setup_loader()
 
-DEFAULT_FILE_STORAGE = 'apparelrow.storage.HybridStorage'
+#DEFAULT_FILE_STORAGE = 'apparelrow.storage.HybridStorage'
 
-HYBRID_STORAGE_BACKENDS= ('django.core.files.storage.FileSystemStorage',
-                          #'storages.backends.s3boto.S3BotoStorage'
-                        )
+#HYBRID_STORAGE_BACKENDS= ('django.core.files.storage.FileSystemStorage',
+#                          #'storages.backends.s3boto.S3BotoStorage'
+#                        )
 
 
 # --- Application wide init code goes here. 

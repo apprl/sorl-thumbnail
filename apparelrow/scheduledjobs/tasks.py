@@ -72,11 +72,3 @@ def vendor_check():
     from django.core import management
     log.info('Running clearsessions job.')
     management.call_command('clearsessions')
-
-"""
-@periodic_task(name='apparelrow.scheduledjobs.tasks.run_arfxrates', run_every=crontab(minute=0, hour=0), max_retries=1, ignore_result=True)
-def run_arfxrates():
-    from django.core import management
-    management.call_command('arfxrates','refresh','no_update','solr'
-    )
-"""
