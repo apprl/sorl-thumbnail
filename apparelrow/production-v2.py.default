@@ -1,0 +1,84 @@
+# -*- coding: utf-8 -*-
+# Django settings for production-v2 server
+
+import os.path
+import logging
+import logging.config
+
+from settings_common import *
+
+SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'apparel',
+        'USER': 'apparel',
+        'PASSWORD': 'ashwe3',
+        'HOST': '146.185.137.189',
+        'PORT': ''
+    }
+}
+CONN_MAX_AGE = 600
+
+# Storage
+STATIC_URL = 'http://s.apprl.com/'
+AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
+
+LOGGING['handlers']['app_core']['filename'] = os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'app_logger.log')
+LOGGING['handlers']['apparel_debug']['filename'] = os.path.join(SERVER_APP_ROOT,'..' ,'logs', 'app_logger.log')
+LOGGING['handlers']['importer']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'app_logger.log')
+LOGGING['handlers']['dashboard']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'app_logger.log')
+LOGGING['handlers']['theimp']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'app_logger.log')
+LOGGING['handlers']['theimp_links']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'pending_requests.log')
+
+APPAREL_DECOMPRESS_UTILS = {
+    'gzip': '/bin/gunzip',
+    'zip':  '/bin/zip',
+}
+
+CACHE_MIDDLEWARE_KEY_PREFIX = 'ar'
+CACHE_MIDDLEWARE_SECONDS = 120
+
+SOLR_URL = 'http://146.185.137.189:8983/solr'
+SOLR_CURRENCY_LOCAL = False
+SOLR_SSH_STRING = 'deploy@data1.apprl.com'
+SOLR_CURRENCY_FILE = os.path.join('/home', 'deploy', 'solr', 'solr', 'example', 'solr', 'collection1', 'conf', 'currency.xml')
+
+
+THEIMP_REDIS_HOST = 'localhost'
+THEIMP_REDIS_PORT = 6380
+
+BROKER_URL = "redis://localhost:6380/0"
+CELERY_RESULT_BACKEND = "redis"
+CELERY_REDIS_HOST = "localhost"
+CELERY_REDIS_PORT = 6380
+CELERY_REDIS_DB = 0
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+CELERY_ALWAYS_EAGER=False
+CELERY_TIMEZONE = 'Europe/Stockholm'
+
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'}})
+CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}})
+
+import djcelery
+djcelery.setup_loader()
+
+# --- Application wide init code goes here. 
+# It would be nice to move this somewhere, but I'm not sure where to put it
+# to ensure it is executed only *once* and after all settings has been evaluated
+
+INSTALLED_APPS += ('raven.contrib.django.raven_compat',
+                   'apparelrow.scheduledjobs'
+)
+
+RAVEN_CONFIG = {
+    'dsn': 'https://180cbce95dfe45e5888d49e4359f8df4:50bf5dc8f4ae4368af01a6c7c9af6a56@sentry.wordex.se/7',
+}
+
+SENTRY_DSN = 'https://180cbce95dfe45e5888d49e4359f8df4:50bf5dc8f4ae4368af01a6c7c9af6a56@sentry.wordex.se/7'
