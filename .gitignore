@@ -48,3 +48,4 @@ settings_local.py
 /apparelrow/development.py
 /redis/*rdb
 bootstrap/bootstrap-3.0.0-rc1/less/bootstrap.css
+/locale
