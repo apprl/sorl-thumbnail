@@ -82,3 +82,8 @@ RAVEN_CONFIG = {
 }
 
 SENTRY_DSN = 'https://180cbce95dfe45e5888d49e4359f8df4:50bf5dc8f4ae4368af01a6c7c9af6a56@sentry.wordex.se/7'
+
+# Locale paths
+LOCALE_PATHS = (
+    os.path.join(SERVER_APP_ROOT,'locale'),
+)
