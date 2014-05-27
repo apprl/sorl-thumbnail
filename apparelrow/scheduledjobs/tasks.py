@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+from theimp.importer import Importer
+
 __author__ = 'klaswikblad'
 
 from celery.schedules import crontab
-from celery.task import periodic_task
+from celery.task import periodic_task, task
 
 import logging
 log = logging.getLogger('celery_scheduled')
@@ -16,7 +18,7 @@ def run_importer():
     try:
         management.call_command('arfxrates',refresh=True,no_update='no-update-please',solr=True)
     except Exception, msg:
-        log.info('Arfxrates job1 failed %s' % msg)
+        log.warn('Arfxrates job1 failed %s' % msg)
 
     log.info('Running run_importer job.')
     management.call_command('run_importer')
@@ -24,10 +26,20 @@ def run_importer():
         log.info('Running arfxrates job, update true.')
         management.call_command('arfxrates',refresh=True,solr=True)
     except Exception, msg:
-        log.info('Arfxrates job2 failed %s' % msg)
+        log.warn('Arfxrates job2 failed %s' % msg)
 
     log.info('Running brand updates job.')
     management.call_command('brand_updates')
+
+# Run importer at midnight
+@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute=0,hour=0), max_retries=1, ignore_result=True)
+def initiate_product_importer():
+    from django.core import management
+    from theimp.models import Vendor
+    log.info('Initiating product import job.')
+    vendors = Vendor.objects.filter(vendor__isnull=False)
+    for vendor in vendors:
+        run_vendor_importer.delay(vendor)
 
 #weekly
 @periodic_task(name='apparelrow.scheduledjobs.tasks.popularity', run_every=crontab(minute='0',hour='0',day_of_week='sunday'), max_retries=1, ignore_result=True)
@@ -72,3 +84,8 @@ def vendor_check():
     from django.core import management
     log.info('Running clearsessions job.')
     management.call_command('clearsessions')
+
+@task(name='apparelrow.scheduledjobs.tasks.run_vendor_product_importer', max_retries=5, ignore_result=True)
+def run_vendor_importer(vendor):
+    log.info('Initiating import for vendor %s.' % vendor)
+    Importer().run(dry=False, vendor=vendor)

@@ -585,6 +585,7 @@ CELERY_ROUTES = ({
     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
     'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
     'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.initiate_products_importer': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'},

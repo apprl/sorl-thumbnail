@@ -253,7 +253,7 @@ def update_activity_feed(profile, followee, add=True):
             remove_aggregate(r, profile, 'W', activity)
 
 
-@periodic_task(name='activity_feed.tasks.featured_activity', run_every=crontab(hour='23'), max_retries=1, ignore_result=True)
+@periodic_task(name='activity_feed.tasks.featured_activity', run_every=crontab(hour='23',minute='0'), max_retries=1, ignore_result=True)
 def featured_activity(next_day=True):
     Activity = get_model('activity_feed', 'activity')
     since = datetime.datetime.now() - datetime.timedelta(days=90)
