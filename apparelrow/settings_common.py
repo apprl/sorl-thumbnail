@@ -18,6 +18,7 @@ FORCE_SCRIPT_NAME = ''
 
 ADMINS = (
     ('Joel Bohman', 'joelboh@gmail.com'),
+    ('Klas Wikblad', 'klas@apprl.com'),
 )
 
 MANAGERS = ADMINS + (
@@ -33,8 +34,6 @@ ALLOWED_HOSTS = ['.apprl.com']
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/Stockholm'
-
-
 
 SITE_ID = 1
 SITE_NAME = "Apprl"
@@ -246,7 +245,8 @@ INSTALLED_APPS = (
     'apparelrow.statistics',           # Internal: Click statistics module
     'apparelrow.dashboard',
     'apparelrow.activity_feed',
-    'rosetta'
+    'rosetta',
+    'raven.contrib.django.raven_compat'
 )
 
 # - STATIC SITEMAP -
@@ -394,7 +394,7 @@ CSRF_FAILURE_VIEW = 'apparelrow.apparel.views.csrf_failure'
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
-CONTACT_EMAIL = "support@hanssonlarsson.se"
+CONTACT_EMAIL = "klas@apprl.com"
 
 # ACCOUNT/LOGIN AND OTHER STUFF
 LOGIN_URL = "/accounts/login/"
@@ -584,7 +584,13 @@ CELERY_ROUTES = ({
     'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
     'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
-},)
+    'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}},)
 
 # LOGGING CONFIGURATION
 LOGGING = {
@@ -606,6 +612,10 @@ LOGGING = {
         }
     },
     'handlers': {
+        'sentry': {
+            'level': 'WARNING',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
         'null': {
             'level': 'DEBUG',
             'class': 'django.utils.log.NullHandler',
@@ -674,7 +684,7 @@ LOGGING = {
         '': {
             'level': 'INFO',
             'propagate': True,
-            'handlers': ['app_core'],
+            'handlers': ['app_core','sentry'],
         },
         'requests': {
             'level': 'DEBUG',

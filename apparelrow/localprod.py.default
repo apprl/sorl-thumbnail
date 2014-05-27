@@ -83,14 +83,6 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 CELERY_ALWAYS_EAGER=False
 CELERY_TIMEZONE = 'Europe/Stockholm'
 
-CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'}})
-CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'}})
-CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'}})
-CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'}})
-CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'}})
-CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'}})
-CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}})
-
 if CELERY_ALWAYS_EAGER:
     print 'Celery set to always eager.'
 
@@ -113,7 +105,8 @@ djcelery.setup_loader()
 
 #INTERNAL_IPS = ('127.0.0.1',)
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-DEBUG_TOOLBAR_PANELS = (
+
+"""DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.version.VersionDebugPanel',
     'debug_toolbar.panels.timer.TimerDebugPanel',
     'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
@@ -123,18 +116,18 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.sql.SQLDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
-)
+)"""
+
 """INSTALLED_APPS += ('debug_toolbar',
                    'raven.contrib.django.raven_compat',
                   )
 """
 
-"""RAVEN_CONFIG = {
-    'dsn': 'https://3d0e910228c343f38f69e4640a1243f0:f27b835e983a404d82a4871f97b39807@sentry.local.com/2',
+RAVEN_CONFIG = {
+    'dsn': 'https://0cd745f71e1f4cedb80adf2fda0a79e8:019c2b33e6904e2ab1d6cca01f3e2a83@sentry.wordex.se/8',
 }
 
-SENTRY_DSN='https://3d0e910228c343f38f69e4640a1243f0:f27b835e983a404d82a4871f97b39807@sentry.local.com/2'
-"""
+SENTRY_DSN='https://0cd745f71e1f4cedb80adf2fda0a79e8:019c2b33e6904e2ab1d6cca01f3e2a83@sentry.wordex.se/8'
 
 #PIPELINE_CSS_COMPRESSOR = None
 #PIPELINE_JS_COMPRESSOR = None
