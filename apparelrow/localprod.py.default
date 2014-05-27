@@ -11,16 +11,16 @@ SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-"""DATA_HOST ="localhost"
-DATABASES = {
-    'default':
-        {'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'apprl',
-            'USER': 'postgres',
-            'PASSWORD': 'admin',
-            'HOST': 'localhost',
-    }
-}"""
+#DATA_HOST ="localhost"
+#DATABASES = {
+#    'default':
+#        {'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#            'NAME': 'apprl',
+#            'USER': 'postgres',
+#            'PASSWORD': 'admin',
+#            'HOST': 'localhost',
+#    }
+#}
 
 DATA_HOST ="apprlvm"
 DATABASES = {
@@ -34,6 +34,10 @@ DATABASES = {
 }
 CONN_MAX_AGE = 600
 
+# Storage
+AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's-jdev.apprl.com'
+STATIC_URL = 'http://s-jdev.apprl.com/'
+
 LOGGING['handlers']['app_core']['filename'] = os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'app_logger.log')
 LOGGING['handlers']['apparel_debug']['filename'] = os.path.join(SERVER_APP_ROOT,'..' ,'logs', 'app_logger.log')
 LOGGING['handlers']['importer']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'app_logger.log')
@@ -41,62 +45,36 @@ LOGGING['handlers']['dashboard']['filename'] = os.path.join(SERVER_APP_ROOT,'..'
 LOGGING['handlers']['theimp']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'app_logger.log')
 LOGGING['handlers']['theimp_links']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'pending_requests.log')
 
-# CACHE CONFIGURATION
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        #'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-        'LOCATION': '127.0.0.1:11211',
-        'TIMEOUT': 60 * 60 * 12,
-    },
-    'nginx': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
-        'TIMEOUT': 60 * 60 * 24 * 20,
-        'KEY_FUNCTION': lambda key, x, y: key,
-    },
-}
-
-
-# Storage
-AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's-jdev.apprl.com'
-#DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-STATIC_URL = 'http://s-jdev.apprl.com/'
-
 #STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
 #STATIC_URL = '/static/'
 #STATIC_URL = 'http://s.apprl.com/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT,'static')
-STATICFILES_DIRS = (
-    (os.path.join(PROJECT_ROOT, 'static_local')),
-)
+
+#STATIC_ROOT = os.path.join(PROJECT_ROOT,'static')
+#STATICFILES_DIRS = (
+#    (os.path.join(PROJECT_ROOT, 'static_local')),
+#)
 
 APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/bin/gunzip',
     'zip':  '/bin/zip',
 }
 
-APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', 'warehouse')
-
-FACEBOOK_APP_ID = '151961958184186'
-FACEBOOK_API_KEY = '2c74b09ea8dae83e4b9699a72ee55db2'
-FACEBOOK_SECRET_KEY = '0e53ad32bdd85a49bb972fa2f6985908'
-
-#CACHE_MIDDLEWARE_KEY_PREFIX = 'ar-demo'
+#CACHE_MIDDLEWARE_KEY_PREFIX = 'ar'
 #CACHE_MIDDLEWARE_SECONDS = 120
 
 SOLR_URL = 'http://%s:8983/solr' % DATA_HOST
 SOLR_RELOAD_URL = 'http://%s:8983/solr/admin/cores?action=RELOAD&core=collection1' % DATA_HOST
-SOLR_CONF_DIRECTORY = os.path.join(PROJECT_ROOT, '..', 'solr', 'solr', 'collection1', 'conf')
+SOLR_CURRENCY_LOCAL = False
+SOLR_SSH_STRING = 'deploy@%s' % DATA_HOST
+SOLR_CONF_DIRECTORY = os.path.join('solr', 'solr','example','solr', 'collection1', 'conf')
 SOLR_CURRENCY_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'currency.xml')
 SOLR_SYNONYM_FILE = os.path.join(SOLR_CONF_DIRECTORY, 'synonyms.txt')
 
-BROKER_URL = "redis://localhost:6380/0"
 
 THEIMP_REDIS_HOST = 'localhost'
 THEIMP_REDIS_PORT = 6380
 
+BROKER_URL = "redis://localhost:6380/0"
 CELERY_RESULT_BACKEND = "redis"
 CELERY_REDIS_HOST = "localhost"
 CELERY_REDIS_PORT = 6380
