@@ -245,6 +245,7 @@ INSTALLED_APPS = (
     'apparelrow.statistics',           # Internal: Click statistics module
     'apparelrow.dashboard',
     'apparelrow.activity_feed',
+    'apparelrow.scheduledjobs',
     'rosetta',
     'raven.contrib.django.raven_compat'
 )
@@ -631,7 +632,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'app_logger.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'app_logger.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -639,7 +640,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'apparel_debug.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'apparel_debug.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -647,7 +648,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'importer.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'importer.log'),
             'maxBytes': 8000000,
             'backupCount': 10
         },
@@ -660,7 +661,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'dashboard.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'dashboard.log'),
             'maxBytes': 3000000,
             'backupCount': 8,
         },
@@ -668,7 +669,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'theimp.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'theimp.log'),
             'maxBytes': 50000000,
             'backupCount': 10,
         },
@@ -676,7 +677,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'pending_requests.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'pending_requests.log'),
             'maxBytes': 50000000,
             'backupCount': 10,
         },
