@@ -7,7 +7,7 @@ import posixpath
 gettext = lambda s: s
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..', '..', '..')
+SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..', '..')
 
 WSGI_APPLICATION = 'apparelrow.wsgi.application'
 
