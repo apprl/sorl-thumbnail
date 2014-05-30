@@ -29,7 +29,7 @@ class BjornBorgSpider(CSVFeedSpider, AffiliateMixin):
         u'color',
     )
 
-    def __init__(self, name=None, **kwargs):
+    """def __init__(self, name=None, **kwargs):
         from spiderpig.utils import ApprlFileLogObserver
         from scrapy import log
         from scrapy.log import INFO
@@ -40,7 +40,7 @@ class BjornBorgSpider(CSVFeedSpider, AffiliateMixin):
         sflo = ApprlFileLogObserver(file_to_write, loglevel, logencoding, crawler)
         log.log.addObserver(sflo.emit)
         super(BjornBorgSpider, self).__init__(name, **kwargs)
-
+    """
 
     def parse_row(self, response, row):
         item = Product()
