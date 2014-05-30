@@ -23,6 +23,8 @@ class ElevenSpider(CSVFeedSpider, AffiliateMixin):
     u'Länk',
     u'Länk - Bild',
     u'Beskrivning',
+    u'MAN, WOMAN, UNISEX',
+    u'Ordinarie Pris'
         )
 
 
@@ -50,10 +52,15 @@ class ElevenSpider(CSVFeedSpider, AffiliateMixin):
         item['category'] = row.get('Grupp')
         item['description'] = row.get('Beskrivning')
         item['brand'] = row.get(u'Märke/Tillverkare')
-        item['gender'] = row.get('Grupp')
+        item['gender'] = row.get(u'MAN, WOMAN, UNISEX')
         item['colors'] = ''
-        item['regular_price'] = row.get('Pris (inkl. moms)')
-        item['discount_price'] = '-1'
+
+        regular_price = row.get('Ordinarie Pris')
+        discount_price = row.get('Pris (inkl. moms)')
+
+        item['regular_price'] = regular_price if regular_price else discount_price
+        item['discount_price'] = discount_price
+
         item['currency'] = 'SEK'
         item['in_stock'] = True
         item['stock'] = '-'
