@@ -73,10 +73,6 @@ djcelery.setup_loader()
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
 
-INSTALLED_APPS += ('raven.contrib.django.raven_compat',
-                   'apparelrow.scheduledjobs'
-)
-
 RAVEN_CONFIG = {
     'dsn': 'https://180cbce95dfe45e5888d49e4359f8df4:50bf5dc8f4ae4368af01a6c7c9af6a56@sentry.wordex.se/7',
 }
