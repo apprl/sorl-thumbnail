@@ -58,14 +58,14 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 CELERY_ALWAYS_EAGER=False
 CELERY_TIMEZONE = 'Europe/Stockholm'
 
-CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'}})
+"""CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'}})
 CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'}})
 CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'}})
 CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'}})
 CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'}})
 CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'}})
 CELERY_ROUTES[0].update({'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}})
-
+"""
 import djcelery
 djcelery.setup_loader()
 
