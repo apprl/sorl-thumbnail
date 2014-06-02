@@ -49,7 +49,7 @@ class ElevenSpider(CSVFeedSpider, AffiliateMixin):
         item['vendor'] = self.name
         item['url'] = row.get(u'Länk')
         item['affiliate'] = self.AFFILIATE_AAN
-        item['category'] = row.get('Grupp')
+        item['category'] = "%s -> %s" % (row.get(u'MAN, WOMAN, UNISEX'),row.get('Grupp') )
         item['description'] = row.get('Beskrivning')
         item['brand'] = row.get(u'Märke/Tillverkare')
         item['gender'] = row.get(u'MAN, WOMAN, UNISEX')
