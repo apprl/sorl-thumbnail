@@ -796,33 +796,6 @@ def user_list(request, gender=None, brand=False):
     })
 
 
-def topmodel_user_list(request):
-    """
-    Displays a list of profiles
-    """
-    queryset = None
-
-    if settings.DEBUG:
-        queryset = get_user_model().objects.filter(id__in=[1, 2, 3, 4, 5])
-    else:
-        queryset = get_user_model().objects.filter(last_name='- Top Model')
-
-    extra_parameter = None
-    queryset = queryset.order_by('-followers_count', 'first_name', 'last_name')
-    paged_result = get_paged_result(queryset, 20, request.GET.get('page'))
-
-    if request.is_ajax():
-        return render(request, 'apparel/fragments/user_list.html', {
-            'current_page': paged_result,
-            'extra_parameter': extra_parameter,
-        })
-
-    return render(request, 'apparel/topmodel_list.html', {
-        'current_page': paged_result,
-        'next': request.get_full_path(),
-        'extra_parameter': extra_parameter,
-    })
-
 #
 # Index page for unauthenticated users
 #
@@ -855,13 +828,6 @@ def contest_stylesearch(request):
         image = 'images/stylesearch_sv.png'
 
     return render(request, 'apparel/contest_stylesearch.html', {'image': image})
-
-def contest_topmodel(request):
-    image = 'images/topmodel.png'
-    if request.LANGUAGE_CODE == 'sv':
-        image = 'images/topmodel_sv.png'
-
-    return render(request, 'apparel/contest_topmodel.html', {'image': image})
 
 
 def contest_stylesearch_charts(request):
@@ -927,6 +893,80 @@ def contest_xmas_menlook_charts(request):
                 .order_by('-num_likes', 'created')[:10]
 
     return render(request, 'apparel/contest_xmas_menlook_charts.html', {'looks': looks, 'is_closed': is_closed})
+
+#
+# Contest TOPMODEL
+#
+
+
+def topmodel_user_list(request):
+    """
+    Displays a list of profiles
+    """
+    queryset = None
+
+    if settings.DEBUG:
+        queryset = get_user_model().objects.filter(id__in=[1, 2, 3, 4, 5])
+    else:
+        queryset = get_user_model().objects.filter(last_name='- Top Model')
+
+    extra_parameter = None
+    queryset = queryset.order_by('-followers_count', 'first_name', 'last_name')
+    paged_result = get_paged_result(queryset, 20, request.GET.get('page'))
+
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/user_list.html', {
+            'current_page': paged_result,
+            'extra_parameter': extra_parameter,
+        })
+
+    return render(request, 'apparel/topmodel_list.html', {
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'extra_parameter': extra_parameter,
+    })
+
+
+def contest_topmodel(request):
+    image = 'images/topmodel.png'
+    if request.LANGUAGE_CODE == 'sv':
+        image = 'images/topmodel_sv.png'
+
+    return render(request, 'apparel/contest_topmodel.html', {'image': image})
+
+
+#
+# Contest JC
+#
+
+def contest_jc(request):
+    return render(request, 'apparel/contest_jc.html', {})
+
+def contest_jc_charts(request):
+    start_date = datetime.datetime(2014, 6, 26, 0, 0, 0)
+    end_date = datetime.datetime(2014, 8, 30, 23, 59, 59)
+
+    category_id = 288
+    if settings.DEBUG:
+        category_id = 6
+        start_date = datetime.datetime(2014, 1, 1, 0, 0, 0)
+        end_date = datetime.datetime(2014, 8, 30, 23, 59, 59)
+    is_closed = False
+    if timezone.now() > end_date:
+        is_closed = True
+
+    valid_looks = get_model('apparel', 'Look').published_objects.filter(components__product__category=category_id,published=True)
+
+    looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),published=True,
+                                                                  likes__created__lte=end_date,
+                                                                  likes__active=True,
+                                                                  pk__in=valid_looks) \
+                .annotate(num_likes=Count('likes')) \
+                .select_related('user') \
+                .order_by('-num_likes', 'created')[:10]
+
+    return render(request, 'apparel/contest_jc_charts.html', {'looks': looks, 'is_closed': is_closed})
+
 
 
 def apparel_set_language(request):

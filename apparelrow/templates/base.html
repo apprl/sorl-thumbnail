@@ -89,20 +89,20 @@
         })();
     </script>
 </head>
-<body class="{% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
+<body class="contest {% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
 
-    <!--div class="contest-bar">
+    <div class="contest-bar">
         <div class="container">
             <div class="row">
                 <div class="col-xs-11">
-                    <p><a href="{% url 'topmodel' %}">{% trans "TOP MODEL SWEDEN ON APPRL" %} <span class="arrow">»</span><span class="short">{% trans "Follow the models" %}</span><span class="long">{% trans "Follow the models and shop their wardrobes" %}</span></a></p>
+                    <p><a href="{% url 'festivalsommar' %}">{% trans "FESTIVALSOMMAR MED JC" %} <span class="arrow">»</span><span class="long">{% trans "Skapa din festivallook och tävla om 10 000kr" %}</span></a></p>
                 </div>
                 <div class="col-xs-1">
-                    <a class="btn btn-primary btn-sm pull-right hidden-xs" href="{% url 'topmodel' %}">{% trans "TO THE MODELS" %}</a>
+                    <a class="btn btn-primary btn-sm pull-right hidden-xs" href="{% url 'festivalsommar' %}">{% trans "Skapa din festivallook och tävla om 10 000kr" %}</a>
                 </div>
             </div>
         </div>
-    </div-->
+    </div>
 
     <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
         <div class="container">
@@ -262,9 +262,9 @@
                         </ul>
                         <div class="footer-social col-xs-6">
                             <div class="fb-like" data-href="https://facebook.com/apprl/" data-layout="button_count" data-send="false" data-width="100" data-show-faces="false"></div>
-                            <div class="last">
+                            <!--div class="last">
                                 <a data-pin-do="buttonFollow" href="http://pinterest.com/apprl/">APPRL</a>
-                            </div>
+                            </div-->
                         </div>
                     </div>
                 </div>
@@ -330,9 +330,11 @@
 
 {% block body-scripts %}{% endblock body-scripts %}
 
+{% comment %}
 {% block pinterest-scripts %}
 <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
 {% endblock %}
+{% endcomment %}
 
 </body>
 </html>
