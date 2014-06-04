@@ -72,9 +72,11 @@
             <h1 class="col-lg-12">{% trans 'Compete with the models and Panos Emporio. Win 1500 SEK'  %}</h1>
         </div-->
         <div class="row">
-            <div class="col-md-12">
-                <div class="col-contest-text">
-                    <p><strong>{% trans 'Tävlingen öppen 26 juni - 30 augusti.' %}</strong></p>
+                <div class="col-md-6">
+                    <img src="{% static "images/720px_JC_festivalprodukter.jpg" %}" class="img-responsive">
+                </div>
+                <div class="col-md-6">
+                    <p><strong>{% trans 'Tävlingen öppen 6 juni - 30 augusti.' %}</strong></p>
                     <p>
                     {% blocktrans %}
                         JC har tagit fram en festivalkollektion till sommaren 2014 och kommer
@@ -117,7 +119,6 @@
             <div class="col-contest-button"><a class="btn btn-primary btn-block" href="{% url 'contest-jc-charts' %}">{% trans "SE TOPPLISTAN" %}</a></div>
 
         </div>
-    </div>
 {% comment %}
    <div class="container">
     <div class="row discover-list-page">
