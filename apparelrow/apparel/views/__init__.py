@@ -943,7 +943,7 @@ def contest_jc(request):
     return render(request, 'apparel/contest_jc.html', {})
 
 def contest_jc_charts(request):
-    start_date = datetime.datetime(2014, 6, 26, 0, 0, 0)
+    start_date = datetime.datetime(2014, 6, 6, 0, 0, 0)
     end_date = datetime.datetime(2014, 8, 30, 23, 59, 59)
 
     category_id = 288

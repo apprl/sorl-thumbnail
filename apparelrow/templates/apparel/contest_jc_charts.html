@@ -25,7 +25,7 @@
                 <div class="panel-heading">
                     <a href="{{ look.user.get_absolute_url }}"><img class="img-circle" src="{{ look.user.avatar }}"></a>
                     <p><a href="{{ look.get_absolute_url }}">{{ forloop.counter }}. {{ look.title }}</a> {% trans "by" %} {{ look.user.display_name }}</p>
-                    <p><span>♥</span> {{ look.contest_xmas_menlook_score }}</p>
+                    <p><span>♥</span> {{ look.contest_jc_score }}</p>
                 </div>
                 <div class="panel-body">
                     {% include 'apparel/fragments/look_medium_cache.html' with object=look %}
