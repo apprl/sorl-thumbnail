@@ -38,12 +38,6 @@ CONN_MAX_AGE = 600
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's-jdev.apprl.com'
 STATIC_URL = 'http://s-jdev.apprl.com/'
 
-#LOGGING['handlers']['app_core']['filename'] = os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'app_logger.log')
-#LOGGING['handlers']['apparel_debug']['filename'] = os.path.join(SERVER_APP_ROOT,'..' ,'logs', 'app_logger.log')
-#LOGGING['handlers']['importer']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'app_logger.log')
-#LOGGING['handlers']['dashboard']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'app_logger.log')
-#LOGGING['handlers']['theimp']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'app_logger.log')
-#LOGGING['handlers']['theimp_links']['filename'] = os.path.join(SERVER_APP_ROOT,'..', 'logs', 'pending_requests.log')
 
 #STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 #STATIC_URL = '/static/'
@@ -147,14 +141,14 @@ PIPELINE_UGLIFYJS_ARGUMENTS = ''
 
 # Rosetta Google Translate
 # To register a site https://ssl.bing.com/webmaster/home/mysites
-ROSETTA_MESSAGES_PER_PAGE = 5
-ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = 'en'
-ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = 'Engelska'
-ROSETTA_WSGI_AUTO_RELOAD = False
-ROSETTA_UWSGI_AUTO_RELOAD = False
-ROSETTA_EXCLUDED_APPLICATIONS = ()
-ROSETTA_REQUIRES_AUTH = True
-ROSETTA_STORAGE_CLASS = 'rosetta.storage.CacheRosettaStorage'
+#ROSETTA_MESSAGES_PER_PAGE = 5
+#ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = 'en'
+#ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = 'Engelska'
+#ROSETTA_WSGI_AUTO_RELOAD = False
+#ROSETTA_UWSGI_AUTO_RELOAD = False
+#ROSETTA_EXCLUDED_APPLICATIONS = ()
+#ROSETTA_REQUIRES_AUTH = True
+#ROSETTA_STORAGE_CLASS = 'rosetta.storage.CacheRosettaStorage'
 #ROSETTA_HOME = 'http://apprl.local.com/rosetta/'
 
 LOCALE_PATHS = (
