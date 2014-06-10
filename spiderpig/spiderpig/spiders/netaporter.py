@@ -59,14 +59,31 @@ class NetAPorterSpider(CSVFeedSpider, AffiliateMixin):
             'attribute10',
         )
 
+    """def __init__(self, name=None, **kwargs):
+        from spiderpig.utils import ApprlFileLogObserver
+        from scrapy import log
+        from scrapy.log import INFO
+        loglevel = INFO
+        file_to_write = open('%s.log' % self.name,'a')
+        logencoding = "utf-8"
+        crawler = name
+        sflo = ApprlFileLogObserver(file_to_write, loglevel, logencoding, crawler)
+        log.log.addObserver(sflo.emit)
+        super(NetAPorterSpider, self).__init__(name, **kwargs)
+"""
+
     def start_requests(self):
         meta = {'ftp_user': 'apparelrow', 'ftp_password': 'fdzfdFiJ'}
         for url in self.start_urls:
             yield Request(url, meta=meta, dont_filter=True)
 
     def parse_row(self, response, row):
+        from scrapy import log
+        from scrapy.log import INFO
         item = Product()
         key = key_regex1.search(row.get('product-url'))
+        log.msg('Input [%s] Output [%s]' % (row.get('product-url'),key.group(1)),INFO)
+        print key
         if key:
             item['key'] = urllib.unquote(force_bytes(key.group(1)))
             item['key'] = item['key'].split('?', 1)[0]
