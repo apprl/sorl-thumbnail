@@ -13,6 +13,8 @@ from django.db.models.loading import get_model
 from django.core import management
 
 from localeurl.utils import locale_url
+from apparelrow.apparel.models import Vendor
+from apparelrow.dashboard.models import Group, StoreCommission, Cut
 
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
 
@@ -357,8 +359,8 @@ class TestDashboardCuts(TransactionTestCase):
         FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
         FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
 
-    def _create_partner_user(self):
-        user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+    def _create_partner_user(self,username='user'):
+        user = get_user_model().objects.create_user(username, 'user@xvid.se', 'user')
         user.is_partner = True
         user.save()
 
@@ -510,6 +512,26 @@ class TestDashboardCuts(TransactionTestCase):
         self.assertEqual(sale.status, get_model('dashboard', 'Sale').CONFIRMED)
         self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_READY)
 
+    def test_parse_and_calculate_store_commissions(self):
+        from decimal import Decimal
+        print "Initiating parse cuts from store commission test"
+        user = self._create_partner_user('bluebeltch')
+        partner_user = self._create_partner_user()
+        group = Group.objects.create(name="TestGroup",owner=partner_user,owner_cut='0.67')
+        user.partner_group = group
+        user.save()
+        vendor = Vendor.objects.create(name="TestVendor",homepage="http://www.example.com",provider="aaa")
+        cut = Cut.objects.create(vendor=vendor,group=group)
+        store_commission = StoreCommission.objects.create(vendor=vendor,commission='10/10/10')
+
+        user_remote, normal_cut, referral_cut = get_cuts_for_user_and_vendor(user.id,vendor)
+        self.assertEquals(user,user_remote)
+        self.assertEquals(normal_cut, Decimal('0.67'))
+        self.assertEquals(referral_cut,Decimal('0.33'))
+
+        store_commission.calculated_commission()
+
+        print "Finished parse cuts from store commission test!"
 
 
 

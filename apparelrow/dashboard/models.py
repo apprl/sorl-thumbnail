@@ -9,7 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
 
 from apparelrow.apparel.base_62_converter import dehydrate
+import logging
 
+log = logging.getLogger( __name__ )
 
 class Sale(models.Model):
     """
@@ -145,10 +147,34 @@ class Signup(models.Model):
 
 class StoreCommission(models.Model):
     vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False)
-    commission = models.CharField(max_length=255)
+    commission = models.CharField(max_length=255,help_text=_('Written like X/Y/Z which translates into X-Y%% (Sale Z%%). If the number is 0 then it will not be used. '
+                                                             'If the said format X/Y/Z is not used at all just the plain text will be displayed.'))
     link = models.CharField(max_length=255, null=True, blank=True, help_text=_('Only our own store links works, should be copied excactly as they appear in short store link admin list without a user id.'))
 
 
+    def calculated_commissions(self,commission,*args):
+        from decimal import Decimal,ROUND_HALF_UP,ROUND_UP
+        commission_array = commission.split("/")
+        normal_cut = args[1]
+        referral_cut = args[2]
+
+        try:
+            if not len(commission_array) == 3 or commission_array[0] == '0':
+                log.warn('Store commission %s is invalidly structured. Needs to be in the format [X/Y/Z] where X <> 0!' % self.vendor)
+            else:
+                if commission_array[1] == '0':
+                    if commission_array[2] == '0':
+                        self.commission =  _('%(standard)s%%' % {'standard':(Decimal(commission_array[0])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)})
+                    else:
+                        self.commission =  _('%(standard)s%% (Sale %(sale)s%%)' % {'standard':(Decimal(commission_array[0])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP),
+                                                                         'sale':(Decimal(commission_array[2])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)})
+                else:
+                    self.commission = _('%(standard_from)s-%(standard_to)s%% (Sale %(sale)s%%)' % {'standard_from':(Decimal(commission_array[0])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP),
+                                                                                  'standard_to':(Decimal(commission_array[1])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP),
+                                                                                  'sale':(Decimal(commission_array[2])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)})
+        except Exception,msg:
+            log.warn('Unable to convert store commissions for %s. [%s]' % (self,msg))
+        return self
 #
 # Model signals
 #
