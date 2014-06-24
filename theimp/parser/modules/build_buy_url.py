@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse
 
 from theimp.parser.modules import BaseModule
 
+import logging
+log = logging.getLogger( __name__ )
 
 class BuildBuyURL(BaseModule):
 
@@ -56,8 +58,12 @@ class BuildBuyURL(BaseModule):
                     if url:
                         parsed_item['url'] = url
                     else:
+                        log.warn('Build url failed, function returned None. Affiliate = %s Vendor = %s'
+                            % (scraped_item.get('affiliate'),vendor))
                         self.delete_value(parsed_item, 'url')
                 else:
+                    log.warn('Build url failed, vendor.affiliate_identifier is None. Affiliate = %s Vendor = %s'
+                            % (scraped_item.get('affiliate'),vendor))
                     self.delete_value(parsed_item, 'url')
             else:
                 parsed_item['url'] = scraped_item['url']

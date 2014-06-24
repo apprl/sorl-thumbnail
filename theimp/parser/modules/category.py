@@ -1,6 +1,9 @@
 from theimp.parser.modules import BaseModule
 
 from django.db.models.loading import get_model
+import logging
+
+log = logging.getLogger( __name__ )
 
 class CategoryMapper(BaseModule):
 
@@ -16,6 +19,8 @@ class CategoryMapper(BaseModule):
             parsed_item['category'] = category_mapping.mapped_category.name
             parsed_item['category_id'] = category_mapping.mapped_category.pk
         else:
+            log.warn('Category mapping failed, category = %s Vendor = %s'
+                % (scraped_item['category'],vendor))
             self.delete_value(parsed_item, 'category')
             self.delete_value(parsed_item, 'category_id')
 
