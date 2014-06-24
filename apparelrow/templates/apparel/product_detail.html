@@ -93,7 +93,7 @@
                                     {% if object.default_vendor.availability == 0 %}
                                     <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
                                     {% else %}
-                                    <a target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
+                                    <a rel="nofollow" target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
                                     {% endif %}
                                 {% endif %}
                             </p>
@@ -120,7 +120,7 @@
                                     {% if object.default_vendor.availability == 0 %}
                                     <span itemprop="availability" content="out_of_stock" class="btn btn-default btn-lg btn-block disabled btn-sold-out">{% trans "Sold out" %}</span>
                                     {% else %}
-                                    <a itemprop="availability" content="in_stock" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" target="_blank" class="btn btn-success btn-lg btn-block btn-buy" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+                                    <a rel="nofollow" itemprop="availability" content="in_stock" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" target="_blank" class="btn btn-success btn-lg btn-block btn-buy" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
                                     {% endif %}
                                 {% else %}
                                     <span itemprop="availability" content="out_of_stock" class="btn btn-default btn-lg btn-block disabled btn-sold-out">{% trans "Sold out" %}</span>
