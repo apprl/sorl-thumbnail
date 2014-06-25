@@ -40,7 +40,7 @@
         jQuery.post('{% url "product-track" id page sid %}', data);
         setTimeout(function() {
             window.location.replace('{{ redirect_url|safe }}');
-        }, 1300);
+        }, 800);
         {% endif %}
     </script>
 </head>
