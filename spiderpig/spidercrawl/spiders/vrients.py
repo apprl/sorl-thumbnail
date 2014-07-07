@@ -1,7 +1,7 @@
 from scrapy.contrib.spiders import CSVFeedSpider
 
-from spiderpig.spiderpig.items import Product
-from spiderpig.spiderpig.spiders import AffiliateMixin
+from spiderpig.spidercrawl.items import Product
+from spiderpig.spidercrawl.spiders import AffiliateMixin
 
 
 class VrientsSpider(CSVFeedSpider, AffiliateMixin):

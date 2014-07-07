@@ -6,17 +6,17 @@ from scrapy.http import Request
 
 from django.utils.encoding import force_bytes
 
-from spiderpig.spiderpig.items import Product
-from spiderpig.spiderpig.spiders import AffiliateMixin
+from spiderpig.spidercrawl.items import Product
+from spiderpig.spidercrawl.spiders import AffiliateMixin
 
 
 key_regex1 = re.compile(r'murl=(.+)')
 
 
-class MrPorterSpider(CSVFeedSpider, AffiliateMixin):
-    name = 'mr-porter'
-    allowed_domains = ['mrporter.com']
-    start_urls = ['ftp://aftp.linksynergy.com/36586_2648039_mp.txt.gz']
+class TheOutnetSpider(CSVFeedSpider, AffiliateMixin):
+    name = 'the-outnet'
+    allowed_domains = ['theoutnet.com']
+    start_urls = ['ftp://aftp.linksynergy.com/35290_2648039_mp.txt.gz']
     delimiter = '|'
     headers = (
             'product-id',
@@ -83,7 +83,7 @@ class MrPorterSpider(CSVFeedSpider, AffiliateMixin):
         item['regular_price'] = row.get('retail-price')
         item['discount_price'] = row.get('discount-price')
         item['currency'] = row.get('currency')
-        item['in_stock'] = True if row.get('availability', '').lower() == 'in stock' else False
+        item['in_stock'] = True #Not working anymoreif row.get('availability', '').lower() == 'in stock' else False
         item['stock'] = ''
         item['image_urls'] = [row.get('image-url')]
 

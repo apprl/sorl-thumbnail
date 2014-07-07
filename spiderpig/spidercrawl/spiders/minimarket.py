@@ -1,12 +1,13 @@
 from scrapy.contrib.spiders import XMLFeedSpider
 
-from spiderpig.spiderpig.items import Product, ProductLoader
-from spiderpig.spiderpig.spiders import AffiliateMixin, PriceMixin, KeyExtractorMixin
+from spiderpig.spidercrawl.items import Product, ProductLoader
+from spiderpig.spidercrawl.spiders import AffiliateMixin, PriceMixin
 
-class AplaceSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorMixin):
-    name = 'aplace'
-    allowed_domains = ['aplace.com']
-    start_urls = ['http://www.aplace.com/plugin-export/product-feed/se/']
+
+class MinimarketSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
+    name = 'minimarket'
+    allowed_domains = ['minimarket.se']
+    start_urls = ['http://www.minimarket.se/plugin-export/product-feed/se']
     namespaces = [('g', 'http://base.google.com/ns/1.0')]
     itertag = 'item'
 
@@ -24,20 +25,25 @@ class AplaceSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorMixin)
         else:
             discount_price = ''
 
-        key = node.xpath('link/text()').extract()[0]
+        google_category = node.xpath('g:google_product_category/text()').extract()
+        google_category = google_category[0] if google_category else ''
+        product_type = node.xpath('g:product_type/text()').extract()
+        product_type = product_type[0] if product_type else ''
+
+        category = ' > '.join([x for x in [google_category, product_type] if x])
 
         l = ProductLoader(item=Product(), selector=node)
-        l.add_value('key', self.get_url_last(key))
+        l.add_xpath('key', 'link/text()')
         l.add_xpath('sku', 'g:id/text()')
         l.add_xpath('name', 'title/text()')
         l.add_value('vendor', self.name)
         l.add_xpath('url', 'link/text()')
         l.add_value('affiliate', self.AFFILIATE_AAN)
-        l.add_xpath('category', 'g:product_type/text()')
+        l.add_value('category', category)
         l.add_xpath('description', 'description/text()')
         l.add_xpath('brand', 'g:brand/text()')
         l.add_xpath('gender', 'g:gender/text()')
-        l.add_xpath('colors', 'g:material/text()')
+        l.add_xpath('colors', 'link/text()')
         l.add_value('regular_price', regular_price)
         l.add_value('discount_price', discount_price)
         l.add_value('currency', currency)

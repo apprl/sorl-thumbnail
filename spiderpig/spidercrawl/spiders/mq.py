@@ -1,9 +1,9 @@
 from scrapy.contrib.spiders import XMLFeedSpider
 
-from spiderpig.spiderpig.items import Product, ProductLoader
-from spiderpig.spiderpig.spiders import AffiliateMixin
+from spiderpig.spidercrawl.items import Product, ProductLoader
+from spiderpig.spidercrawl.spiders import AffiliateMixin
 from scrapy import log
-from spiderpig.spiderpig.utils import ApprlFileLogObserver,WARNING
+#from spiderpig.spidercrawl.utils import ApprlFileLogObserver,WARNING
 
 class MqSpider(XMLFeedSpider, AffiliateMixin):
     name = 'mq'
@@ -12,7 +12,7 @@ class MqSpider(XMLFeedSpider, AffiliateMixin):
     itertag = 'product'
 
 
-    def __init__(self, name=None, **kwargs):
+    """def __init__(self, name=None, **kwargs):
         loglevel = WARNING
         file_to_write = open('%s.log' % self.name,'a')
         logencoding = "utf-8"
@@ -20,6 +20,7 @@ class MqSpider(XMLFeedSpider, AffiliateMixin):
         sflo = ApprlFileLogObserver(file_to_write, loglevel, logencoding, crawler)
         log.log.addObserver(sflo.emit)
         super(MqSpider, self).__init__(name, **kwargs)
+    """
 
     def parse_node(self, response, node):
         in_stock = node.xpath('inStock/text()').extract()[0]

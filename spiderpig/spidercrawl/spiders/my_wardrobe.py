@@ -4,16 +4,16 @@ import urllib
 from scrapy.contrib.spiders import CSVFeedSpider
 from scrapy.http import Request
 from django.utils.encoding import force_bytes
-from spiderpig.spiderpig.items import Product
-from spiderpig.spiderpig.spiders import AffiliateMixin
+from spiderpig.spidercrawl.items import Product
+from spiderpig.spidercrawl.spiders import AffiliateMixin
 
 key_regex1 = re.compile(r'murl=(.+)')
 
 
-class MonicaVinanderSpider(CSVFeedSpider, AffiliateMixin):
-    name = 'monica-vinander'
-    allowed_domains = ['www.monicavinander.com']
-    start_urls = ['ftp://aftp.linksynergy.com/38267_2648039_mp.txt.gz']
+class MyWardrobeSpider(CSVFeedSpider, AffiliateMixin):
+    name = 'my-wardrobe'
+    allowed_domains = ['my-wardrobe.com']
+    start_urls = ['ftp://aftp.linksynergy.com/39116_2648039_mp.txt.gz']
     delimiter = '|'
     headers = (
             'product-id',#1
@@ -44,16 +44,11 @@ class MonicaVinanderSpider(CSVFeedSpider, AffiliateMixin):
             'currency',
             'm1',                   # blank field
             'tracking-pixel-url',#28
-            'miscellaneous-attribute1',
-            'miscellaneous-category',
-            'miscellaneous-size',
-            'miscellaneous-material',
-            'color',
-            'miscellaneous-attribute2',
-            'miscellaneous-category2',
-            'miscellaneous-agegroup',
-            'miscellaneous-attribute3',
-            'miscellaneous-attribute4',
+
+            #'miscellaneous-attribute',
+            #'color',
+            #'gender',
+            #'agegroup',
         )
 
     def start_requests(self):
@@ -71,22 +66,17 @@ class MonicaVinanderSpider(CSVFeedSpider, AffiliateMixin):
         crawler = name
         sflo = ApprlFileLogObserver(file_to_write, loglevel, logencoding, crawler)
         log.log.addObserver(sflo.emit)
-        super(MonicaVinanderSpider, self).__init__(name, **kwargs)
+        super(MyWardrobeSpider, self).__init__(name, **kwargs)
     """
 
     def parse_row(self, response, row):
         item = Product()
         key = key_regex1.search(row.get('product-url'))
-        product_name = row.get('product-name')
-        if product_name.lower().find("size") > 0:
-            name_list = product_name.split(" - ")
-            product_name = " - ".join(name_list[:len(name_list)-1])
-
         if key:
             item['key'] = urllib.unquote(force_bytes(key.group(1)))
             item['key'] = item['key'].split('?', 1)[0]
         item['sku'] = row.get('product-id')
-        item['name'] = product_name
+        item['name'] = row.get('product-name')
         item['vendor'] = self.name
         item['url'] = row.get('product-url')
         item['affiliate'] = self.AFFILIATE_LINKSHARE
@@ -100,6 +90,6 @@ class MonicaVinanderSpider(CSVFeedSpider, AffiliateMixin):
         item['currency'] = row.get('currency')
         item['in_stock'] = True #Not working anymoreif row.get('availability', '').lower() == 'in stock' else False
         item['stock'] = '-1'
-        item['image_urls'] = [row.get('image-url','')]
+        item['image_urls'] = [row.get('image-url').replace("t_","m1_") if row.get('image-url',None) else '']
 
         return item

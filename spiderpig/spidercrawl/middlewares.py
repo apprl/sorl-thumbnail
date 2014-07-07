@@ -6,7 +6,7 @@ from scrapy.utils.gz import gunzip, is_gzipped
 from scrapy.http import HtmlResponse, Response
 from scrapy import log
 
-from spiderpig.spiderpig.settings import USER_AGENT_LIST
+from spiderpig.spidercrawl.settings import USER_AGENT_LIST
 
 
 class DownloadGzipMiddleware(object):
