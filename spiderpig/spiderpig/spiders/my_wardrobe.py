@@ -4,8 +4,8 @@ import urllib
 from scrapy.contrib.spiders import CSVFeedSpider
 from scrapy.http import Request
 from django.utils.encoding import force_bytes
-from spiderpig.items import Product
-from spiderpig.spiders import AffiliateMixin
+from spiderpig.spiderpig.items import Product
+from spiderpig.spiderpig.spiders import AffiliateMixin
 
 key_regex1 = re.compile(r'murl=(.+)')
 

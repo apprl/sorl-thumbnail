@@ -1,7 +1,7 @@
 from scrapy.contrib.spiders import XMLFeedSpider
 
-from spiderpig.items import Product, ProductLoader
-from spiderpig.spiders import AffiliateMixin, PriceMixin
+from spiderpig.spiderpig.items import Product, ProductLoader
+from spiderpig.spiderpig.spiders import AffiliateMixin, PriceMixin
 
 
 class MinimarketSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):

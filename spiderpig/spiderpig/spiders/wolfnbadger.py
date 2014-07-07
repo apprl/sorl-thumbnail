@@ -1,7 +1,7 @@
 from scrapy.contrib.spiders import XMLFeedSpider
 
-from spiderpig.items import Product, ProductLoader
-from spiderpig.spiders import AffiliateMixin, PriceMixin
+from spiderpig.spiderpig.items import Product, ProductLoader
+from spiderpig.spiderpig.spiders import AffiliateMixin, PriceMixin
 from scrapy.exceptions import NotConfigured, NotSupported
 from scrapy.selector import Selector
 
@@ -44,7 +44,7 @@ class WolfnBadger(XMLFeedSpider, AffiliateMixin, PriceMixin):
                 yield result_item
 
     def parse_node(self, response, node):
-        in_stock = node.xpath('availability/text()').extract()
+        in_stock = node.xpath('availability/text()').extract()[0]
 
         currency = ''
         regular_price = node.xpath('price/text()').extract()

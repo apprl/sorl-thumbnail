@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from scrapy.contrib.spiders import CSVFeedSpider
 
-from spiderpig.items import Product
-from spiderpig.spiders import AffiliateMixin
+from spiderpig.spiderpig.items import Product
+from spiderpig.spiderpig.spiders import AffiliateMixin
 
 
 class BjornBorgSpider(CSVFeedSpider, AffiliateMixin):

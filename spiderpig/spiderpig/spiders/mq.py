@@ -1,14 +1,25 @@
 from scrapy.contrib.spiders import XMLFeedSpider
 
-from spiderpig.items import Product, ProductLoader
-from spiderpig.spiders import AffiliateMixin
-
+from spiderpig.spiderpig.items import Product, ProductLoader
+from spiderpig.spiderpig.spiders import AffiliateMixin
+from scrapy import log
+from spiderpig.spiderpig.utils import ApprlFileLogObserver,WARNING
 
 class MqSpider(XMLFeedSpider, AffiliateMixin):
     name = 'mq'
     allowed_domains = ['mq.se']
     start_urls = ['http://www.mq.se/xml/mythings/artInfo.xml']
     itertag = 'product'
+
+
+    def __init__(self, name=None, **kwargs):
+        loglevel = WARNING
+        file_to_write = open('%s.log' % self.name,'a')
+        logencoding = "utf-8"
+        crawler = name
+        sflo = ApprlFileLogObserver(file_to_write, loglevel, logencoding, crawler)
+        log.log.addObserver(sflo.emit)
+        super(MqSpider, self).__init__(name, **kwargs)
 
     def parse_node(self, response, node):
         in_stock = node.xpath('inStock/text()').extract()[0]
@@ -40,7 +51,7 @@ class MqSpider(XMLFeedSpider, AffiliateMixin):
         l.add_xpath('discount_price', 'new_price/text()')
         l.add_xpath('currency', 'currency/text()')
         l.add_value('in_stock', True if in_stock == 'TRUE' else False)
-        l.add_value('stock', '')
+        l.add_value('stock', '-')
         l.add_xpath('image_urls', 'images/image/@url')
 
         return l.load_item()

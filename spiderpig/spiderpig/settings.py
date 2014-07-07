@@ -17,13 +17,13 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 2
 DOWNLOAD_DELAY = 1.5
 RANDOMIZE_DOWNLOAD_DELAY = True
 
-SPIDER_MODULES = ['spiderpig.spiders']
-NEWSPIDER_MODULE = 'spiderpig.spiders'
+SPIDER_MODULES = ['spiders']
+NEWSPIDER_MODULE = 'spiders'
 
 ITEM_PIPELINES = [
-    'spiderpig.pipelines.CustomImagesPipeline',
-    'spiderpig.pipelines.RequiredFieldsPipeline',
-    'spiderpig.pipelines.PricePipeline',
+    'spiderpig.spiderpig.pipelines.CustomImagesPipeline',
+    'spiderpig.spiderpig.pipelines.RequiredFieldsPipeline',
+    'spiderpig.spiderpig.pipelines.PricePipeline',
 ]
 
 EXTENSIONS = {
@@ -31,8 +31,8 @@ EXTENSIONS = {
 }
 
 DOWNLOADER_MIDDLEWARES = {
-    'spiderpig.middlewares.RelCanonicalMiddleware': 1000,
-    'spiderpig.middlewares.DownloadGzipMiddleware': 10,
+    'spiderpig.spiderpig.middlewares.RelCanonicalMiddleware': 1000,
+    'spiderpig.spiderpig.middlewares.DownloadGzipMiddleware': 10,
     'scrapy.contrib.downloadermiddleware.httpauth.HttpAuthMiddleware': 500,
     'scrapy.contrib.downloadermiddleware.httpcompression.HttpCompressionMiddleware': 1,
     #'spiderpig.middlewares.RandomUserAgentMiddleware': 1000,
@@ -49,7 +49,7 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefo
 # DJANGO INTEGRATION
 import sys
 import os.path
-sys.path.append(os.path.abspath('../'))
+sys.path.append(os.path.abspath('../../'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apparelrow.settings')
 from django.conf import settings
 
