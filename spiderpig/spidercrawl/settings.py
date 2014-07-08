@@ -12,6 +12,13 @@ import os.path
 BOT_NAME = 'spidercrawl'
 LOG_LEVEL = 'INFO'
 
+RAVEN_CONFIG = {
+    'dsn': 'https://d9f9d656ce4f43b8b0e180337c81ac20:9bec16b72e9f45eca4b0a4361c72e8a8@sentry.wordex.se/9',
+}
+
+SENTRY_DSN='https://d9f9d656ce4f43b8b0e180337c81ac20:9bec16b72e9f45eca4b0a4361c72e8a8@sentry.wordex.se/9'
+
+
 CONCURRENT_REQUESTS_PER_DOMAIN = 2
 
 DOWNLOAD_DELAY = 1.5
@@ -27,6 +34,7 @@ ITEM_PIPELINES = [
 ]
 
 EXTENSIONS = {
+    'scrapy_sentry.extensions.Errors':10,
     'spidercrawl.pipelines.DatabaseHandler': 500,
 }
 
