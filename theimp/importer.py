@@ -32,7 +32,7 @@ class Importer(object):
 
         self.option_types = dict([(re.sub(r'\W', '', v.name.lower()), v) for v in get_model('apparel', 'OptionType').objects.iterator()])
 
-    def run(self, dry=False, vendor=None):
+    def run(self, dry=False, vendor=None,force=None):
         vendors = Vendor.objects.filter(vendor__isnull=False)
         request_links = []
         if vendor is not None:
@@ -41,7 +41,7 @@ class Importer(object):
         for vendor in vendors.iterator():
             imported_date = None
             product_queryset = Product.objects.filter(vendor=vendor)
-            if vendor.last_imported_date:
+            if vendor.last_imported_date and not force:
                 product_queryset = product_queryset.filter(parsed_date__gte=vendor.last_imported_date)
             logger.info('Import %s products for vendor %s' % (product_queryset.count(), vendor))
             for product_id in product_queryset.values_list('pk', flat=True):
@@ -87,6 +87,7 @@ class Importer(object):
                 site_product = self.add_product(product, item)
         else:
             if site_product:
+                logger.warn('Hiding product %s' % site_product)
                 self.hide_product(site_product)
 
         if site_product:

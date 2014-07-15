@@ -20,7 +20,12 @@ class Command(BaseCommand):
             dest='vendor',
             default=None,
         ),
+        make_option('--force',
+            action='store_true',
+            dest='force',
+            default=False,
+        ),
     )
 
     def handle(self, *args, **options):
-        Importer().run(dry=options.get('dry', False), vendor=options.get('vendor'))
+        Importer().run(dry=options.get('dry', False), vendor=options.get('vendor'),force=options.get('force', False))

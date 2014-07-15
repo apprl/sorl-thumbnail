@@ -4,7 +4,9 @@ from django.db.models.loading import get_model
 from django.utils.encoding import smart_unicode
 
 from theimp.parser.modules import BaseModule
+import logging
 
+log = logging.getLogger( __name__ )
 
 class OptionMapper(BaseModule):
 
@@ -37,11 +39,15 @@ class OptionMapper(BaseModule):
         if mapped_color:
             parsed_item['colors'] = mapped_color
         else:
+            log.warn('Color mapping failed. Color = %s vendor = %s'
+                     % (scraped_item.get('colors'),vendor) )
             self.delete_value(parsed_item, 'colors')
 
         if mapped_pattern:
             parsed_item['patterns'] = mapped_pattern
         else:
+            log.info('Pattern mapping failed. Pattern = %s vendor = %s'
+                     % (scraped_item.get('patterns'),vendor) )
             self.delete_value(parsed_item, 'patterns')
 
         return parsed_item

@@ -17,8 +17,11 @@ from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
-from apparelrow.dashboard.utils import get_referral_user_from_cookie
+from apparelrow.dashboard.utils import get_referral_user_from_cookie, get_cuts_for_user_and_vendor
 from apparelrow.profile.tasks import mail_managers_task
+
+import logging
+log = logging.getLogger(__name__)
 
 def map_placement(placement):
     link = _('Unknown')
@@ -480,10 +483,16 @@ def referral_signup(request, code):
 
 def commissions(request):
     if not request.user.is_authenticated() or not request.user.is_partner:
+        log.error('Unauthorized user trying to access store commission page. Returning 404.')
+        raise Http404
+
+    if not request.user.partner_group:
+        log.error('User %s is partner but has no partner group. Disallowing viewing of store commissions page.' % request.user)
         raise Http404
 
     stores = list(get_model('dashboard', 'StoreCommission').objects.select_related('vendor').order_by('vendor__name'))
-
+    user_id = request.user.id
+    stores = [store.calculated_commissions(store.commission,*get_cuts_for_user_and_vendor(user_id,store.vendor)) for store in stores]
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):

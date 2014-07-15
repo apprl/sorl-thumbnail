@@ -212,7 +212,7 @@ class Product(models.Model):
     category = TreeForeignKey(Category, blank=True, null=True)
     options  = models.ManyToManyField(Option,   blank=True, verbose_name=_("Option"))
     slug = AutoSlugField(_("Slug Name"), populate_from=("static_brand", "product_name",), blank=True,
-        help_text=_("Used for URLs, auto-generated from name if blank"), max_length=80)
+        help_text=_("Ued for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the static_brand"))
     product_name  = models.CharField(max_length=200, null=True, blank=True)
@@ -810,6 +810,10 @@ class Look(models.Model):
     @cached_property
     def contest_xmas_menlook_score(self):
         return self.likes.filter(active=True, created__lte=datetime.datetime(2013, 12, 8, 23, 59, 59)).count()
+
+    @cached_property
+    def contest_jc_score(self):
+        return self.likes.filter(active=True, created__lte=datetime.datetime(2014, 8, 30, 23, 59, 59)).count()
 
     @cached_property
     def comment_count(self):

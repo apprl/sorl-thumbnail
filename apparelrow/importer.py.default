@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+# Django settings for importer production server
+
+import os.path
+import logging
+import logging.config
+
+from settings_common import *
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..', '..', '..')
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'apparel',
+        'USER': 'apparel',
+        'PASSWORD': 'ashwe3',
+        'HOST': '146.185.137.189',
+        'PORT': ''
+    }
+}
+CONN_MAX_AGE = 600
+
+
+LOGGING['handlers']['app_core']['filename'] = os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['apparel_debug']['filename'] = os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['importer']['filename'] = os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['dashboard']['filename'] = os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['theimp']['filename'] = os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'app_logger.log')
+LOGGING['handlers']['theimp_links']['filename'] = os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'pending_requests.log')

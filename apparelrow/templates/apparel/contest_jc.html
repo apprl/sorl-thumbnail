@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load i18n staticfiles apparel_extras %}
+
+{% block extra-styles %}
+    <style type="text/css">
+
+        .row h1, .row h3  {
+            text-align: center;
+            text-transform: uppercase;
+
+        }
+        .col-md-6 {
+            padding-top: 15px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block extra-title %}{% trans "Festivalsommar med JC" %} | {% endblock %}
+{% block body-classes %}discover-list-page{% endblock %}
+{% block full-body %}
+
+
+    {% comment %}
+    {% if request.GET.first and request.user.is_authenticated %}
+    <div class="container">
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {% url 'index' as feed_url %}
+            {% url 'shop' as shop_url %}
+            {% blocktrans with feed_url=feed_url shop_friend=shop_url|add:"?view=friends" shop_brand=shop_url|add:"?view=brands" %}Follow members and brands to see their items and looks in your <a href="{{feed_url}}">APPRL feed</a> and under <a href="{{shop_friend}}">Shop > My Friends</a> & <a href="{{shop_brand}}">Shop > My Brands</a>.{% endblocktrans %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="body-header">
+        <!--div class="{% if is_brand %}body-header-col-full{% else %}body-header-col-left{% endif %}">
+            <h1>{% trans "Top Models" %}</h1>
+            <!--<ul class="list-inline">
+                <li><h2><a{% if 'users' in request.path %} class="selected"{% endif %} href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></h2></li>
+                <li><h2><a{% if 'brands' in request.path %} class="selected"{% endif %} href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></h2></li>
+            </ul>-->
+        </div>
+        {% if not is_brand %}
+        <div class="body-header-col-right">
+            <!-- ul class="list-inline">
+                <li class="dropdown">
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men" %}{% elif gender == 'W' %}{% trans "Only women" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'user-list' %}">{% trans "Show all" %}</a></li>
+                        <li><a href="{% url 'user-list-men' %}">{% trans "Only men" %}</a></li>
+                        <li><a href="{% url 'user-list-women' %}">{% trans "Only women" %}</a></li>
+                    </ul>
+                </li>
+            </ul-->
+        </div>
+        {% endif %}
+    </div>
+    {% endcomment %}
+    <div class="featured-container contest-page jc">
+          <div class="container">
+
+            <div class="row body-header">
+                        <h1 class="col-sm-12">{% trans "Festivalsommar med JC" %}</h1>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <!--div class="row topmodel">
+            <h1 class="col-lg-12">{% trans 'Compete with the models and Panos Emporio. Win 1500 SEK'  %}</h1>
+        </div-->
+        <div class="row">
+                <div class="col-md-6">
+                    <img src="{% static "images/720px_JC_festivalprodukter.jpg" %}" class="img-responsive">
+                </div>
+                <div class="col-md-6">
+                    <p><strong>{% trans 'Tävlingen öppen 6 juni - 30 augusti.' %}</strong></p>
+                    <p>
+                    {% blocktrans %}
+                        Under hela sommaren 2014 kan du tävla med JC och Nöjesguiden om ett presentkort på kläder.
+                    {% endblocktrans %}
+                    </p>
+                    <p>
+                    {% blocktrans %}
+                        JC har tagit fram en festivalkollektion till sommaren 2014 och kommer tillsammans med Nöjesguiden att besöka
+                        landets alla största festivaler. Nu har du chans att vinna kläder från JC till ett värde av 3 000:-.
+                    {% endblocktrans %}
+                    </p>
+                    <p>
+                    {% blocktrans %}
+                        För att vara med och tävla vill vi att du skapar en look med minst ett av plaggen i kollektionen som bas.
+                        De tio looks som har flest ❤ går sedan till final, där JC och Nöjesguiden väljer ut tre vinnare
+                        som får varsitt presentkort på 3000 kronor.
+                    {% endblocktrans %}
+                    </p>
+                    <p>
+                        {% blocktrans %}
+                            Så här gör du:
+                        {% endblocktrans %}
+                    </p>
+                    <ol>
+                        <li>
+                        {% url 'shop' as shop_url %}
+                        {% url 'look-create' as look_url %}
+                        {% url 'auth_register' as register_url %}
+                        {% url 'contest-jc-charts' as jc_toplist_url %}
+                        {% blocktrans  %}
+                            <a href="{{ register_url }}">Skapa ett konto på APPRL</a> och <a href="{{ look_url }}">skapa en collage look här</a>.
+                        {% endblocktrans %}
+                        </li>
+                        <li>
+                        {% blocktrans  %}
+                            Lägg till minst en av produkterna i JCs festivalkollektion i din look, du hittar dem i kategorin "✿ JC Festivalsommar ✿".
+                        {% endblocktrans %}
+                        </li>
+                        <li>
+                        {% blocktrans  %}
+                            Publicera din look på Apprl och dela den med dina vänner för att få fler ❤!
+                        {% endblocktrans %}
+                        </li>
+                    </ol>
+                <p>
+                    {% blocktrans %}
+                        <a href="{{ jc_toplist_url }}">Du kan se topplistan med vilka looks som leder tävlingen här.</a>
+                    {% endblocktrans %}
+                </p>
+                <p>
+                    {% blocktrans %}
+                        Om du har frågor eller behöver hjälp, maila <a href="mailto:hello@apprl.com" target="_top">hello@apprl.com</a>.
+                    {% endblocktrans %}
+                </p>
+                <p>
+                    {% blocktrans %}
+                        Tävlingen pågår till och med den 31 augusti och vinnarna kontaktas därefter via mail. Eventuell vinstskatt betalas av respektive vinnare.
+                    {% endblocktrans %}
+                </p>
+                <!--p>
+                    <a data-toggle="modal" href="#" data-target="#modal_contest_rules">{% trans 'Contest rules & info' %}</a>
+                </p -->
+                </div>
+            </div>
+            <div class="col-contest-button"><a class="btn btn-primary btn-block" href="{% url 'contest-jc-charts' %}">{% trans "SE TOPPLISTAN" %}</a></div>
+
+        </div>
+{% comment %}
+   <div class="container">
+    <div class="row discover-list-page">
+        <h3 class="topmodel col-lg-12 alphabet">
+                {% trans "TOPPLISTA Festivalsommar med JC" %}
+        </h3>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            {% include 'apparel/fragments/user_list.html' %}
+        </div>
+    </div>
+   </div>
+{% endcomment %}
+
+    <script>
+        $("body").removeClass('contest');
+    </script>
+
+{% endblock %}

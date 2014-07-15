@@ -7,7 +7,7 @@ import posixpath
 gettext = lambda s: s
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..', '..', '..')
+SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')
 
 WSGI_APPLICATION = 'apparelrow.wsgi.application'
 
@@ -18,6 +18,7 @@ FORCE_SCRIPT_NAME = ''
 
 ADMINS = (
     ('Joel Bohman', 'joelboh@gmail.com'),
+    ('Klas Wikblad', 'klas@apprl.com'),
 )
 
 MANAGERS = ADMINS + (
@@ -33,8 +34,6 @@ ALLOWED_HOSTS = ['.apprl.com']
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/Stockholm'
-
-
 
 SITE_ID = 1
 SITE_NAME = "Apprl"
@@ -246,7 +245,9 @@ INSTALLED_APPS = (
     'apparelrow.statistics',           # Internal: Click statistics module
     'apparelrow.dashboard',
     'apparelrow.activity_feed',
-    'rosetta'
+    'apparelrow.scheduledjobs',
+    'rosetta',
+    'raven.contrib.django.raven_compat'
 )
 
 # - STATIC SITEMAP -
@@ -394,7 +395,7 @@ CSRF_FAILURE_VIEW = 'apparelrow.apparel.views.csrf_failure'
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
-CONTACT_EMAIL = "support@hanssonlarsson.se"
+CONTACT_EMAIL = "klas@apprl.com"
 
 # ACCOUNT/LOGIN AND OTHER STUFF
 LOGIN_URL = "/accounts/login/"
@@ -584,7 +585,14 @@ CELERY_ROUTES = ({
     'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
     'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
-},)
+    'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.initiate_products_importer': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}},)
 
 # LOGGING CONFIGURATION
 LOGGING = {
@@ -606,6 +614,10 @@ LOGGING = {
         }
     },
     'handlers': {
+        'sentry': {
+            'level': 'WARNING',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
         'null': {
             'level': 'DEBUG',
             'class': 'django.utils.log.NullHandler',
@@ -620,7 +632,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'app_logger.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'app_logger.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -628,7 +640,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'apparel_debug.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'apparel_debug.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -636,7 +648,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'importer.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'importer.log'),
             'maxBytes': 8000000,
             'backupCount': 10
         },
@@ -649,7 +661,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'dashboard.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'dashboard.log'),
             'maxBytes': 3000000,
             'backupCount': 8,
         },
@@ -657,7 +669,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'theimp.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'theimp.log'),
             'maxBytes': 50000000,
             'backupCount': 10,
         },
@@ -665,7 +677,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT, 'var', 'logs', 'pending_requests.log'),
+            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'pending_requests.log'),
             'maxBytes': 50000000,
             'backupCount': 10,
         },
@@ -674,7 +686,7 @@ LOGGING = {
         '': {
             'level': 'INFO',
             'propagate': True,
-            'handlers': ['app_core'],
+            'handlers': ['app_core','sentry'],
         },
         'requests': {
             'level': 'DEBUG',

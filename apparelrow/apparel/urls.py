@@ -21,9 +21,11 @@ urlpatterns = patterns('',
 
     url(r'^menlookwishlist/$', 'apparelrow.apparel.views.contest_xmas_menlook', name='contest-xmas-menlook'),
     url(r'^menlookwishlist/toplist/$', 'apparelrow.apparel.views.contest_xmas_menlook_charts', name='contest-xmas-menlook-charts'),
-
+    url(r'^topmodelsverige/$', 'apparelrow.apparel.views.topmodel_user_list', name='topmodel'),
     url(r'^topmodelcontest/$', 'apparelrow.apparel.views.contest_topmodel', name='contest-topmodelcontest'),
 
+    url(r'^festivalsommar/$', 'apparelrow.apparel.views.contest_jc', name='festivalsommar'),
+    url(r'^festivalsommar/toplist/$', 'apparelrow.apparel.views.contest_jc_charts', name='contest-jc-charts'),
     # Feed
     url(r'^feed/$', RedirectView.as_view(url='/')),
     url(r'^all/$', RedirectView.as_view(url='/')),
@@ -149,8 +151,6 @@ urlpatterns = patterns('',
     url(r'^users/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular'),
     url(r'^users/men/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-men'),
     url(r'^users/women/popular/$', RedirectView.as_view(url=reverse_lazy('user-list')), name='user-list-popular-women'),
-    url(r'^topmodelsverige/$', 'apparelrow.apparel.views.topmodel_user_list', name='topmodel'),
-
 
     # Extra admin
 

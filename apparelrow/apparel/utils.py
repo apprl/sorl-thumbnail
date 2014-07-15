@@ -72,7 +72,7 @@ def get_featured_activity_today():
     today = datetime.date.today()
     # TODO: if no featured date, default to something?
 
-    return get_model('activity_feed', 'Activity').objects.filter(user__is_hidden=False, active=True, featured_date=today)[:2]
+    return get_model('activity_feed', 'Activity').objects.filter(user__is_hidden=False, active=True, featured_date=today)[:3]
 
 
 # NOT USED
