@@ -53,6 +53,8 @@ class User(AbstractUser):
     gender = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     blog_url = models.CharField(max_length=255, null=True, blank=True)
 
+    is_hidden = models.BooleanField(default=False, blank=False, null=False)
+
     # brand profile
     is_brand = models.BooleanField(default=False)
     brand = models.OneToOneField('apparel.Brand', default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='user')
@@ -392,10 +394,10 @@ def update_profile_language(sender, user, request, **kwargs):
 class FollowManager(models.Manager):
 
     def followers(self, profile):
-        return [follow.user for follow in self.filter(user_follow=profile, active=True).select_related('user')]
+        return [follow.user for follow in self.filter(user_follow__is_hidden=False, user_follow=profile, active=True).select_related('user')]
 
     def following(self, profile):
-        return [follow.user_follow for follow in self.filter(user=profile, active=True).prefetch_related('user_follow')]
+        return [follow.user_follow for follow in self.filter(user__is_hidden=False, user=profile, active=True).prefetch_related('user_follow')]
 
 # TODO: when django 1.5 is released we will only use one profile/user class
 class Follow(models.Model):

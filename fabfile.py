@@ -62,6 +62,7 @@ def production_data():
     env.path = '/home/{user}/{project_name}'.format(**env)
     env.solr_path = '/home/{user}/solr'.format(**env)
 
+@task
 def production_importer():
     """
     Production importer server.
@@ -71,7 +72,7 @@ def production_importer():
     env.user = 'deploy'
     env.group = env.user
     env.path = '/home/{user}/{project_name}'.format(**env)
-    env.settings = 'production'
+    env.settings = 'importer'
 
 def production_web():
     """
@@ -158,7 +159,6 @@ def setup_data_backup():
     put('etc/postgresql-backup.cron', '/etc/cron.d/pgbackup', use_sudo=True)
     sudo('chown root:root /etc/cron.d/pgbackup')
 
-
 def setup_importer_server():
     """
     Setup importer server.
@@ -178,7 +178,7 @@ def setup_importer_server():
         with settings(warn_only=True):
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
 
-
+@task
 def deploy_importer_server(snapshot='master'):
     """
     Deploy importer server.
@@ -196,8 +196,8 @@ def deploy_importer_server(snapshot='master'):
         run('cd releases/current/apparelrow; cp %(settings)s.py.default settings.py' % env, pty=True)
 
     # Migrate database (XXX: should we do it here?)
-    with cd('%(path)s/releases/current' % env), prefix('. ../../bin/activate'):
-        run('python manage.py migrate')
+    #with cd('%(path)s/releases/current' % env), prefix('. ../../bin/activate'):
+    #    run('python manage.py migrate')
 
     # Upload scrapyd upstart and config and restart scrapyd
     upload_template(filename='etc/scrapyd.conf', destination='%(path)s/releases/current/spiderpig/scrapy.cfg' % env, context=env, use_sudo=False, use_jinja=True)
@@ -211,7 +211,7 @@ def deploy_importer_server(snapshot='master'):
 
     # Deploy spiderpig project
     with cd(os.path.join(env.path, 'releases', 'current', 'spiderpig')), prefix('. ../../../bin/activate'):
-        run('scrapyd-deploy spiderpig -p spiderpig')
+        run('scrapyd-deploy spidercrawl -p spidercrawl')
 
 
 # OLD SETUP DATABASE CODE
@@ -252,6 +252,7 @@ def setup(snapshot='master'):
     sudo('add-apt-repository -y ppa:chris-lea/node.js')
     sudo('apt-get update -q')
     sudo('apt-get install -y -q build-essential python-dev python-setuptools python-virtualenv python-libxml2 python-libxslt1 libxml2-dev libxslt1-dev libyaml-dev libjpeg-dev libtiff-dev libpq-dev git-core')
+
     # install memcached
     sudo('apt-get install -y -q memcached')
     # install lessc
@@ -275,6 +276,7 @@ def setup(snapshot='master'):
 
     # new project setup
     sudo('mkdir -p %(path)s; chown %(user)s:%(group)s %(path)s;' % env, pty=True)
+
     with cd(env.path):
         run('virtualenv --no-site-packages .')
         with settings(warn_only=True):
@@ -385,7 +387,7 @@ def install_requirements():
     require('release', provided_by=[deploy, setup])
     with cd(env.path):
         with prefix('. bin/activate'):
-            run('curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | python')
+            #run('curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py | python')
             run('pip install -U -r ./releases/%(release)s/etc/requirements.pip' % env, pty=True)
 
 def copy_bin():
@@ -555,7 +557,6 @@ def install_postgresql():
 
     restart_postgresql()
 
-
 def migrate_to_postgresql():
     run('rm -f apparelrow_migrate.mysql')
     run('ssh deploy@db1.apparelrow.com mysqldump --compatible=postgresql --default-character-set=utf8 -u root apparelrow -p > apparelrow_migrate.mysql')
@@ -563,7 +564,6 @@ def migrate_to_postgresql():
     run('python db_converter.py apparelrow_migrate.mysql apparelrow_migrate.psql')
     run('psql -h localhost -U apparel -d apparel -f apparelrow_migrate.psql')
     run('rm -f db_converter.py')
-
 
 def start_postgresql():
     sudo('service postgresql start')
