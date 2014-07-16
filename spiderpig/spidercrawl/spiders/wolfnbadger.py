@@ -10,7 +10,7 @@ from scrapy import log
 class WolfnBadger(XMLFeedSpider, AffiliateMixin, PriceMixin):
     name = 'wolfnbadger'
     allowed_domains = ['www.wolfandbadger.com']
-    start_urls = ['https://www.wolfandbadger.com/media/google/feed.xml']
+    start_urls = ['https://www.wolfandbadger.com/media/feeds/products_excluding_variants_eur.xml']
     namespaces = [('g', 'http://base.google.com/ns/1.0')]
     itertag = 'entry'
 
