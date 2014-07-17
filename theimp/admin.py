@@ -1,5 +1,6 @@
 import collections
 import json
+from django.http import HttpResponseRedirect
 import os.path
 
 from django import forms, utils
@@ -142,12 +143,12 @@ class ProductAdminForm(forms.ModelForm):
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
     ordering = ('-modified',)
-    list_display = ('key', 'vendor', 'is_validated', 'is_dropped', 'modified', 'parsed_date', 'imported_date')
-    list_filter = ('is_validated', 'is_dropped', 'vendor')
+    list_display = ('key', 'vendor', 'is_validated', 'is_dropped','is_released', 'modified', 'parsed_date', 'imported_date')
+    list_filter = ('is_validated', 'is_dropped','is_released', 'vendor','modified','parsed_date','imported_date')
     readonly_fields = ('key', 'is_validated', 'created', 'modified', 'vendor', 'parsed_date', 'imported_date')
     raw_id_fields = ('brand_mapping', 'category_mapping')
     search_fields = ('key',)
-    actions = ('parse_products',)
+    actions = ('parse_products','release_products','unrelease_products')
     save_on_top = True
 
     def save_model(self, request, obj, form, change):
@@ -160,6 +161,17 @@ class ProductAdmin(admin.ModelAdmin):
         for product in queryset.iterator():
             parser.parse(product)
 
+    def release_products(self, request, queryset):
+        rows_updated = queryset.update(is_released=True)
+        self.message_user(request, _("%s successfully marked as released") % rows_updated)
+        return HttpResponseRedirect('')
+    release_products.short_description = _("Release these products")
+
+    def unrelease_products(self, request, queryset):
+        rows_updated = queryset.update(is_released=False)
+        self.message_user(request, _("%s successfully marked as not released") % rows_updated)
+        return HttpResponseRedirect('')
+    unrelease_products.short_description = _("Unrelease these products")
 
 class VendorAdmin(admin.ModelAdmin):
     exclude = ('is_active',)
