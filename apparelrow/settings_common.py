@@ -17,7 +17,7 @@ TEMPLATE_DEBUG = DEBUG
 FORCE_SCRIPT_NAME = ''
 
 ADMINS = (
-    ('Joel Bohman', 'joelboh@gmail.com'),
+    #('Joel Bohman', 'joelboh@gmail.com'),
     ('Klas Wikblad', 'klas@apprl.com'),
 )
 
@@ -58,28 +58,28 @@ LOCALE_PATHS = (
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en'
 LANGUAGES = (
-    ('en', gettext(u'English (€)')),
+    ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
     ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
 )
 LANGUAGES_DISPLAY = (
-    ('en', gettext(u'English (€)')),
+    ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
 )
 SHORT_LANGUAGES = (
-    ('en', gettext(u'Eng (€)')),
+    ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
     ('da', gettext(u'Dnk (DKK)')),
     ('no', gettext(u'Nor (NOK)')),
 )
 SHORT_LANGUAGES_DISPLAY = (
-    ('en', gettext(u'Eng (€)')),
+    ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
 )
 SHORT_LANGUAGES_LIST_DISPLAY = ('en', 'sv')
 LANGUAGE_TO_CURRENCY = {
-    'en': 'EUR',
+    'en': 'USD',
     'sv': 'SEK',
     'da': 'DKK',
     'no': 'NOK',
