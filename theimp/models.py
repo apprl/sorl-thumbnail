@@ -33,6 +33,8 @@ class Product(BaseModel):
     parsed_date = models.DateTimeField(null=True, blank=True)
     imported_date = models.DateTimeField(null=True, blank=True)
 
+    is_released = models.BooleanField(default=False, null=False, blank=False)
+
     def __unicode__(self):
         return 'Product(key=%s)' % (self.key,)
 

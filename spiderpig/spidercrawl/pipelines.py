@@ -119,6 +119,11 @@ class DatabaseHandler:
 
         vendor, _ = Vendor.objects.get_or_create(name=item['vendor'])
         product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
+
+        if product.is_released:
+            spider.log('Product %s is released and will not be parsed.' % item['key'])
+            return item
+
         if not created:
             json_data = json.loads(product.json)
             json_data['scraped'].update(dict(item))
