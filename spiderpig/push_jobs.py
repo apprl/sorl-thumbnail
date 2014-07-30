@@ -10,6 +10,12 @@ spiders = spiders.get('spiders', [])
 jobs = requests.get(listjobs).json()
 pending_spiders = map(lambda x: x['spider'], jobs.get('pending', []))
 
-for spider in spiders:
+# Do only half the stores everytime to easen the load on the server
+import datetime
+
+crawl_group = datetime.datetime.today().day % 2
+
+for i, spider in enumerate(spiders):
     if spider not in pending_spiders:
-        result = requests.post(schedule, data={'project': 'spidercrawl', 'spider': spider})
+        if i % 2 == crawl_group:
+            result = requests.post(schedule, data={'project': 'spidercrawl', 'spider': spider})
