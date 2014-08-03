@@ -10,7 +10,7 @@ import logging
 log = logging.getLogger('celery_scheduled')
 
 # Run importer at midnight
-@periodic_task(name='apparelrow.scheduledjobs.tasks.run_importer', run_every=crontab(minute=0,hour=0), max_retries=1, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.run_importer', run_every=crontab(minute='0',hour='0'), max_retries=1, ignore_result=True)
 def run_importer():
     from django.core import management
     log.info('Running arfxrates job, no update.')
@@ -32,7 +32,7 @@ def run_importer():
     management.call_command('brand_updates')
 
 # Run importer at midnight
-@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute=0,hour=0), max_retries=1, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute='0',hour='15'), max_retries=1, ignore_result=True)
 def initiate_product_importer():
     from django.core import management
     from theimp.models import Vendor
