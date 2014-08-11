@@ -5,6 +5,7 @@
   "version": "0.1",
   "homepage_url": "http://apprl.com/",
   "permissions": [
+    "cookies",
     "tabs",
     "*://apprl.com/",
     "*://*.apprl.com/",
