@@ -58,7 +58,11 @@ function likeProductRequest(product, callback) {
     xhr.setRequestHeader("X-CSRFToken", csrftoken);
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
-        callback(JSON.parse(xhr.responseText));
+        var parsed = {};
+        try {
+          parsed = JSON.parse(xhr.responseText);
+        } catch(error) {}
+        callback(parsed);
       } 
     }
     xhr.send();
@@ -101,7 +105,7 @@ function run(response) {
         productShortLinkInput.value = response.product_short_link;
 
         likeButton.onclick = function() {
-          likeProductRequest(response.product_pk);
+          likeProductRequest(response.product_pk, function() {});
           likeButtonText.innerText = 'Liked';
           likeButton.className = 'like-button liked';
         };
