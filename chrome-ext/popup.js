@@ -75,6 +75,7 @@ function run(response) {
   };
 
   var body = document.querySelector('body');
+  var buttons = document.querySelector('.buttons');
   var likeButton = document.querySelector('.like-button');
   var likeButtonText = document.querySelector('.like-button span:first-child');
   var productButton = document.querySelector('.product-button');
@@ -111,6 +112,7 @@ function run(response) {
           }
         };
       } else {
+        buttons.style.display = 'none';
         document.querySelector('.no-hit').className = 'no-hit';
         likeButtonText.innerText = 'Like';
       }
