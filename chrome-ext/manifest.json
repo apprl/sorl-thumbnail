@@ -1,9 +1,15 @@
 {
   "manifest_version": 2,
   "name": "APPRL",
-  "description": "TODO DESCRIPTION",
+  "description": "Save items to your Apprl profile & create short links directly from online retailers.",
   "version": "0.1",
   "homepage_url": "http://apprl.com/",
+  "icons": {
+    "16": "apprl-icon16.png",
+    "32": "apprl-icon32.png",
+    "48": "apprl-icon48.png",
+    "128": "apprl-icon128.png"
+  },
   "permissions": [
     "cookies",
     "tabs",
