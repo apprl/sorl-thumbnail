@@ -117,6 +117,8 @@ urlpatterns = patterns('',
     url(r'^backend/follow/$', 'apparelrow.apparel.views.follow_backend', name='follow-backend'),
     url(r'^backend/categories/$', 'apparelrow.apparel.views.list_categories', name='backend-list-categories'),
     url(r'^backend/colors/$', 'apparelrow.apparel.views.list_colors', name='backend-list-colors'),
+    url(r'^backend/authenticated/$', 'apparelrow.apparel.views.authenticated_backend', name='backend-authenticated'),
+    url(r'^backend/product/lookup/$', 'apparelrow.apparel.views.product_lookup', name='backend-product-lookup'),
 
     # Looks
     url(r'^looks/create/$', 'apparelrow.apparel.views.looks.create', name='look-create'),
