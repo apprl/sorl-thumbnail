@@ -51,10 +51,10 @@ function fetchProduct(product, callback) {
 /**
  * Like product XHR-request
  */
-function likeProductRequest(product, callback) {
+function likeProductRequest(product, action, callback) {
   getCookies(DOMAIN, 'csrftoken', function(csrftoken) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', DOMAIN + '/products/' + product + '/like/', true);
+    xhr.open('POST', DOMAIN + '/products/' + product + '/' + action + '/', true);
     xhr.setRequestHeader("X-CSRFToken", csrftoken);
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
@@ -104,10 +104,25 @@ function run(response) {
         productLink.href = response.product_link;
         productShortLinkInput.value = response.product_short_link;
 
+        var likeActive = false;
         likeButton.onclick = function() {
-          likeProductRequest(response.product_pk, function() {});
-          likeButtonText.innerText = 'Liked';
-          likeButton.className = 'like-button liked';
+          if (likeActive === false) {
+            likeActive = true;
+            if (response.product_liked) {
+              var action = 'unlike';
+              likeButtonText.innerText = 'Like';
+              likeButton.className = 'like-button';
+            } else {
+              var action = 'like';
+              likeButtonText.innerText = 'Liked';
+              likeButton.className = 'like-button liked';
+            }
+            likeProductRequest(response.product_pk, action, function() {
+              likeActive = false;
+              response.product_liked = (action === 'like' ? true : false);
+            });
+
+          }
         };
 
         productButton.onclick = function() {
