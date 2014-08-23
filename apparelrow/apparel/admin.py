@@ -136,6 +136,15 @@ class ShortProductLinkAdmin(admin.ModelAdmin):
 
 admin.site.register(ShortProductLink, ShortProductLinkAdmin)
 
+#
+# DOMAIN DEEP LINKING
+#
+
+class DomainDeepLinkingAdmin(admin.ModelAdmin):
+    list_display = ('vendor', 'domain', 'template')
+
+admin.site.register(DomainDeepLinking, DomainDeepLinkingAdmin)
+
 
 #
 # LOOK

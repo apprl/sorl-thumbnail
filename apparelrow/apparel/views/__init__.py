@@ -737,10 +737,16 @@ def authenticated_backend(request):
         profile = request.build_absolute_uri(request.user.get_absolute_url())
     return JSONResponse({'authenticated': request.user and request.user.is_authenticated(), 'profile': profile})
 
+def product_lookup_by_domain(request, domain):
+    domain_deep_linking = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain=domain)
+    if domain_deep_linking.template:
+        return domain_deep_linking.template
+    return None
+
 def product_lookup_by_theimp(request, key):
     products = get_model('theimp', 'Product').objects.filter(key__startswith=key)
     if len(products) < 1:
-        raise Http404
+        return None
     json_data = json.loads(products[0].json)
     return json_data.get('site_product', None)
 
@@ -773,8 +779,13 @@ def product_lookup(request):
         product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
         product_short_link = reverse('product-short-link', args=[product_short_link.link()])
         product_short_link = request.build_absolute_uri(product_short_link)
-
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
+    else:
+        domain = urllib.unquote(request.GET.get('domain', '')).decode('utf8')
+        product_short_link = product_lookup_by_domain(request, domain)
+        if product_short_link is not None:
+            # TODO: somehow create the short link...
+            product_short_link = request.build_absolute_uri(product_short_link)
 
     return JSONResponse({
         'product_pk': product_pk,

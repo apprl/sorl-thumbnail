@@ -448,6 +448,13 @@ class ShortStoreLink(models.Model):
         return dehydrate(self.pk + SHORT_CONSTANT)
 
 
+class DomainDeepLinking(models.Model):
+    vendor = models.ForeignKey(Vendor)
+    domain = models.CharField(max_length=100, blank=False, null=False)
+    template = models.CharField(max_length=512, blank=False, null=False)
+
+
+
 class ShortProductLinkManager(models.Manager):
     def get_for_short_link(self, short_link):
         return ShortProductLink.objects.select_related('product').get(pk=(saturate(short_link) - SHORT_CONSTANT))
