@@ -90,6 +90,9 @@ urlpatterns = patterns('',
     # Short product link
     url(r'^p/(?P<short_link>[\w]+)/$', 'apparelrow.apparel.views.product_short_link', name='product-short-link'),
 
+    # Short domain link
+    url(r'^pd/(?P<short_link>[\w]+)/$', 'apparelrow.apparel.views.domain_short_link', name='domain-short-link'),
+
     # Short store link
     url(r'^s/(?P<short_link>[\w]+)/$', 'apparelrow.apparel.views.store_short_link', name='store-short-link'),
     url(r'^s/(?P<short_link>[\w]+)/(?P<user_id>[\d]+)/$', 'apparelrow.apparel.views.store_short_link', name='store-short-link-userid'),

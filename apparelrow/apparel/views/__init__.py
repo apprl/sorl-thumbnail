@@ -34,7 +34,7 @@ from apparelrow.profile.notifications import process_like_look_created
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
-from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink, ShortStoreLink
+from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink, ShortStoreLink, ShortDomainLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender, JSONResponse, JSONPResponse
@@ -247,7 +247,7 @@ def store_short_link(request, short_link, user_id=None):
     if user_id is None:
         user_id = 0
 
-    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id})
+    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store', 'event': 'StoreLinkClick'})
 
 
 #
@@ -344,6 +344,22 @@ def product_short_link(request, short_link):
 
     return HttpResponsePermanentRedirect(
         reverse('product-redirect', args=(short_product.product_id, 'Ext-Link', short_product.user_id)))
+
+
+def domain_short_link(request, short_link):
+    """
+    Takes a short short link and redirect to associated url.
+    """
+    try:
+        url, name, user_id = ShortDomainLink.objects.get_short_domain_for_link(short_link)
+    except ShortDomainLink.DoesNotExist:
+        raise Http404
+
+    if user_id is None:
+        user_id = 0
+
+    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Link', 'event': 'BuyReferral'})
+
 
 
 def product_redirect(request, pk, page='Default', sid=0):
@@ -737,11 +753,12 @@ def authenticated_backend(request):
         profile = request.build_absolute_uri(request.user.get_absolute_url())
     return JSONResponse({'authenticated': request.user and request.user.is_authenticated(), 'profile': profile})
 
-def product_lookup_by_domain(request, domain):
-    domain_deep_linking = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain=domain)
-    if domain_deep_linking.template:
-        return domain_deep_linking.template
-    return None
+def product_lookup_by_domain(request, domain, key):
+    instance = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain=domain)
+    if instance.template:
+        user_id = request.user.pk
+        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=key), instance.vendor
+    return None, None
 
 def product_lookup_by_theimp(request, key):
     products = get_model('theimp', 'Product').objects.filter(key__startswith=key)
@@ -782,9 +799,10 @@ def product_lookup(request):
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
     else:
         domain = urllib.unquote(request.GET.get('domain', '')).decode('utf8')
-        product_short_link = product_lookup_by_domain(request, domain)
+        product_short_link, vendor = product_lookup_by_domain(request, domain, key)
         if product_short_link is not None:
-            # TODO: somehow create the short link...
+            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link, user=request.user, vendor=vendor)
+            product_short_link = reverse('domain-short-link', args=[product_short_link.link()])
             product_short_link = request.build_absolute_uri(product_short_link)
 
     return JSONResponse({

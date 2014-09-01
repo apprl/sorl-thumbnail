@@ -136,6 +136,18 @@ class ShortProductLinkAdmin(admin.ModelAdmin):
 
 admin.site.register(ShortProductLink, ShortProductLinkAdmin)
 
+
+#
+# SHORT DOMAIN LINK
+#
+
+class ShortDomainLinkAdmin(admin.ModelAdmin):
+    raw_id_fields = ('user',)
+    list_display = ('url', 'user', 'vendor', 'created')
+
+admin.site.register(ShortDomainLink, ShortDomainLinkAdmin)
+
+
 #
 # DOMAIN DEEP LINKING
 #

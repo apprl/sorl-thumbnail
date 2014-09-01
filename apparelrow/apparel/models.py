@@ -454,6 +454,28 @@ class DomainDeepLinking(models.Model):
     template = models.CharField(max_length=512, blank=False, null=False)
 
 
+class ShortDomainLinkManager(models.Manager):
+    def get_short_domain_for_link(self, short_link):
+        instance = ShortDomainLink.objects.get(pk=(saturate(short_link) - SHORT_CONSTANT))
+
+        return instance.url, instance.vendor.name, instance.user.pk
+
+
+class ShortDomainLink(models.Model):
+    url = models.CharField(max_length=512, blank=False, null=False)
+    vendor = models.ForeignKey(Vendor)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='short_domain_links')
+    created = models.DateTimeField(default=timezone.now)
+
+    objects = ShortDomainLinkManager()
+
+    def link(self):
+        return dehydrate(self.pk + SHORT_CONSTANT)
+
+    class Meta:
+        unique_together = ('url', 'user')
+
+
 
 class ShortProductLinkManager(models.Manager):
     def get_for_short_link(self, short_link):

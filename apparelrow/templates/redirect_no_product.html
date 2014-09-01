@@ -28,13 +28,13 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
 
-        ga('send', 'event', 'Ext-Store', 'StoreLinkClick', '{{ name }}');
-        _gaq.push(['_trackEvent', 'Ext-Store', 'StoreLinkClick', '{{ name }}']);
+        ga('send', 'event', '{{ page }}', '{{ event }}', '{{ name }}');
+        _gaq.push(['_trackEvent', '{{ page }}', '{{ event }}', '{{ name }}']);
         var data = {csrfmiddlewaretoken: '{{ csrf_token }}',
                     referer: '{{ request.META.HTTP_REFERER }}',
                     sid: '{{ user_id }}',
-                    page: 'Ext-Store'};
-        jQuery.post('{% url "product-track" 0 'Ext-Store' user_id %}', data);
+                    page: '{{ page }}'};
+        jQuery.post('{% url "product-track" 0 page user_id %}', data);
         setTimeout(function() {
             window.location.replace('{{ redirect_url|safe }}');
         }, 1300);
