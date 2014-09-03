@@ -17,5 +17,5 @@ crawl_group = datetime.datetime.today().day % 2
 
 for i, spider in enumerate(spiders):
     if spider not in pending_spiders:
-        if i % 2 == crawl_group:
-            result = requests.post(schedule, data={'project': 'spidercrawl', 'spider': spider})
+        #if i % 2 == crawl_group:
+        result = requests.post(schedule, data={'project': 'spidercrawl', 'spider': spider})
