@@ -45,12 +45,12 @@ class NastyGalSpider(CSVFeedSpider, AffiliateMixin):
         item['category'] = row.get('ADVERTISERCATEGORY')
         item['description'] = row.get('DESCRIPTION')
         item['brand'] = row.get('MANUFACTURER')
-        item['gender'] = row.get('ADVERTISERCATEGORY')
+        item['gender'] = 'W'
         item['colors'] = row.get('KEYWORDS')
         item['regular_price'] = row.get('SALEPRICE')
         item['discount_price'] = row.get('PRICE')
         item['currency'] = row.get('CURRENCY')
-        item['in_stock'] = True if row.get('INSTOCK') == 'Yes' else False
+        item['in_stock'] = True if row.get('INSTOCK') == 'yes' else False
         item['stock'] = ''
         item['image_urls'] = [row.get('IMAGEURL', '')]
 

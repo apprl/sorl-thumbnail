@@ -28,7 +28,7 @@ class PhilipBSpider(CSVFeedSpider, AffiliateMixin):
         item['discount_price'] = ''
         item['currency'] = 'USD'
         item['in_stock'] = True
-        item['stock'] = ''
+        item['stock'] = '-'
         item['image_urls'] = [row.get('Image URL')]
 
         return item
