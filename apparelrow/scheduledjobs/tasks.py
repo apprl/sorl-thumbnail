@@ -20,8 +20,8 @@ def run_importer():
     except Exception, msg:
         log.warn('Arfxrates job1 failed %s' % msg)
 
-    log.info('Running run_importer job.')
-    management.call_command('run_importer')
+    #log.info('Running run_importer job.')
+    #management.call_command('run_importer')
     try:
         log.info('Running arfxrates job, update true.')
         management.call_command('arfxrates',refresh=True,solr=True)
