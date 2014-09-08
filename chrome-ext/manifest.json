@@ -14,8 +14,7 @@
     "cookies",
     "tabs",
     "*://apprl.com/",
-    "*://*.apprl.com/",
-    "http://dev-apprl.xvid.se/"
+    "*://*.apprl.com/"
   ],
   "browser_action": {
     "default_icon": {

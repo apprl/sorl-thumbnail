@@ -1,5 +1,5 @@
 
-var DOMAIN = 'http://dev-apprl.xvid.se';
+var DOMAIN = 'http://apprl.com';
 
 var AUTHENTICATED_URL = DOMAIN + '/backend/authenticated/';
 var PRODUCT_URL = DOMAIN + '/backend/product/lookup/';
