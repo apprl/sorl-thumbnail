@@ -115,7 +115,7 @@ function run(response) {
         productButton.className = 'product-button';
 
         if (response.product_link) {
-          productLink.className = 'product-link';
+          productLink.className = 'product-link bold-link';
           productLink.href = response.product_link;
         }
         productShortLinkInput.value = response.product_short_link;
