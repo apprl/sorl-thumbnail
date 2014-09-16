@@ -13,10 +13,10 @@ from spiderpig.spidercrawl.spiders import AffiliateMixin
 key_regex1 = re.compile(r'murl=(.+)')
 
 
-class NetAPorterSpider(CSVFeedSpider, AffiliateMixin):
-    name = 'net-a-porter'
-    allowed_domains = ['netaporter.com']
-    start_urls = ['ftp://aftp.linksynergy.com/24448_2648039_mp.txt.gz']
+class AldoSpider(CSVFeedSpider, AffiliateMixin):
+    name = 'aldo'
+    allowed_domains = ['aldoshoes.com']
+    start_urls = ['ftp://aftp.linksynergy.com/38479_2648039_mp.txt.gz']
     delimiter = '|'
     headers = (
             'product-id',
@@ -78,12 +78,9 @@ class NetAPorterSpider(CSVFeedSpider, AffiliateMixin):
             yield Request(url, meta=meta, dont_filter=True)
 
     def parse_row(self, response, row):
-        from scrapy import log
-        from scrapy.log import INFO
         item = Product()
         key = key_regex1.search(row.get('product-url'))
-        #log.msg('Input [%s] Output [%s]' % (row.get('product-url'),key.group(1)),INFO)
-        #print key
+
         if key:
             item['key'] = urllib.unquote(force_bytes(key.group(1)))
             item['key'] = item['key'].split('?', 1)[0]
@@ -100,7 +97,7 @@ class NetAPorterSpider(CSVFeedSpider, AffiliateMixin):
         item['regular_price'] = row.get('retail-price')
         item['discount_price'] = row.get('discount-price')
         item['currency'] = row.get('currency')
-        item['in_stock'] = True #Not working anymoreif row.get('availability', '').lower() == 'in stock' else False
+        item['in_stock'] = True if row.get('availability', '').lower() == 'in stock' else False
         item['stock'] = ''
         item['image_urls'] = [row.get('image-url').replace("in_l","in_xl") if row.get('image-url',None) else '']
 
