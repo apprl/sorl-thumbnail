@@ -29,7 +29,7 @@ class AsosSpider(CSVFeedSpider, AffiliateMixin):
         item['url'] = row.get('ZanoxProductLink')
         item['affiliate'] = self.AFFILIATE_ZANOX
         item['category'] = row.get('MerchantProductCategory')
-        item['description'] = row.get('ProductLongDescription')
+        item['description'] = row.get('ProductShortDescription')
         item['brand'] = row.get('ProductManufacturerBrand')
         item['gender'] = row.get('MerchantProductCategory')
         item['colors'] = row.get('ExtraTextOne')

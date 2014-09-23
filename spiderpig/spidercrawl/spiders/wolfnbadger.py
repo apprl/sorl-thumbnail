@@ -52,11 +52,11 @@ class WolfnBadger(XMLFeedSpider, AffiliateMixin, PriceMixin):
             regular_price, currency = self.parse_price(regular_price[0])
 
         l = ProductLoader(item=Product(), selector=node)
-        l.add_xpath('key', 'link/@href')
+        l.add_xpath('key', 'link/text()')
         l.add_xpath('sku', 'id/text()')
         l.add_xpath('name', 'title/text()')
         l.add_value('vendor', self.name)
-        l.add_xpath('url', 'link/@href')
+        l.add_xpath('url', 'link/text()')
         l.add_value('affiliate', self.AFFILIATE_AAN)
         l.add_xpath('category', 'google_product_category/text()')
         l.add_xpath('description', 'description/text()')
@@ -65,7 +65,7 @@ class WolfnBadger(XMLFeedSpider, AffiliateMixin, PriceMixin):
         l.add_xpath('colors', 'color/text()')
         l.add_value('regular_price', regular_price)
         l.add_value('discount_price', regular_price)
-        l.add_value('currency', 'GBP')
+        l.add_value('currency', 'EUR')
         l.add_value('in_stock', True if in_stock == 'in stock' else False)
         l.add_xpath('stock', 'quantity/text()')
         #if image:

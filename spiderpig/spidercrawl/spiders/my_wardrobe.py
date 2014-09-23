@@ -16,35 +16,44 @@ class MyWardrobeSpider(CSVFeedSpider, AffiliateMixin):
     start_urls = ['ftp://aftp.linksynergy.com/39116_2648039_mp.txt.gz']
     delimiter = '|'
     headers = (
-            'product-id',#1
+            'product-id',
             'product-name',
             'sku',
             'category',
-            'secondary-category',#5
+            'secondary-category',
             'product-url',
             'image-url',
             'buy-url',
             'description',
-            'long-description',#10
+            'long-description',
             'discount',
             'discount-type',
             'discount-price',       # Sale price, includes discount
             'retail-price',
-            'available-from',#15
+            'available-from',
             'available-to',
             'brand',
             'delivery-price',
             'keywords',             # ~~ delimited
-            'manufacturer-part-no',#20
+            'manufacturer-part-no',
             'manufacturer',
             'shipping-information',
             'availability',
             'universal-product-code',
-            'classification-id',#25
+            'classification-id',
             'currency',
             'm1',                   # blank field
-            'tracking-pixel-url',#28
-
+            'tracking-pixel-url',
+            'miscellaneous-attribute',
+            'attribute2',
+            'size',                 # attribute 3
+            'material',             # attribute 4
+            'color',
+            'gender',
+            'type',                 # attribute 7
+            'agegroup',
+            'attribute9',
+            'attribute10',
             #'miscellaneous-attribute',
             #'color',
             #'gender',
