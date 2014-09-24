@@ -20,10 +20,6 @@ class CarinWesterSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorM
             regular_price, currency = self.parse_price(regular_price[0])
 
         discount_price = node.xpath('g:sale_price/text()').extract()
-        if discount_price:
-            discount_price, _ = self.parse_price(discount_price[0])
-        else:
-            discount_price = ''
 
         key = node.xpath('link/text()').extract()[0]
 
@@ -40,10 +36,10 @@ class CarinWesterSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorM
         l.add_xpath('gender', 'g:gender/text()')
         l.add_xpath('colors', 'g:color/text()')
         l.add_value('regular_price', regular_price)
-        l.add_value('discount_price', discount_price)
+        l.add_value('discount_price', discount_price if discount_price else regular_price)
         l.add_value('currency', currency)
         l.add_value('in_stock', True if in_stock == 'in stock' else False)
-        l.add_value('stock', '')
+        l.add_value('stock', '-')
         l.add_xpath('image_urls', 'g:image_link/text()')
 
         return l.load_item()
