@@ -30,10 +30,10 @@ class ElevenfiftynineSpider(XMLFeedSpider, AffiliateMixin):
         l.add_value('gender', 'U')
         l.add_xpath('colors', 'descriptions/descriptions-en/name-en/text()')
         l.add_xpath('regular_price', 'price_sale/text()')
-        l.add_value('discount_price', '')
+        l.add_xpath('discount_price', 'price_sale/text()')
         l.add_value('currency', 'SEK')
         l.add_value('in_stock', True if in_stock == '1' else False)
-        l.add_value('stock', '')
+        l.add_value('stock', '-')
         l.add_xpath('image_urls', 'images/thickbox/text()')
 
         return l.load_item()

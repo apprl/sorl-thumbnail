@@ -15,7 +15,7 @@ key_regex1 = re.compile(r'\?url=(.+)$')
 class LuisaviaromaSpider(CSVFeedSpider, AffiliateMixin):
     name = 'luisaviaroma'
     allowed_domains = ['luisaviaroma.com']
-    start_urls = ['http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116591/LUISAVIAROMA_Affiliate_Program-Complete_Catalog.txt.gz']
+    start_urls = ['http://datatransfer.cj.com/datatransfer/files/3131851/outgoing/productcatalog/116591/LUISAVIAROMA_COM-Complete_Catalog.txt.gz']
     delimiter = '|'
     http_user = '3131851'
     http_pass = 'f3NPxFso'
@@ -38,8 +38,8 @@ class LuisaviaromaSpider(CSVFeedSpider, AffiliateMixin):
         item['regular_price'] = row.get('SALEPRICE')
         item['discount_price'] = row.get('PRICE')
         item['currency'] = row.get('CURRENCY')
-        item['in_stock'] = True if row.get('INSTOCK') == 'Yes' else False
-        item['stock'] = ''
+        item['in_stock'] = True if row.get('INSTOCK') == 'yes' else False
+        item['stock'] = '-'
         item['image_urls'] = [row.get('IMAGEURL', '')]
 
         return item
