@@ -475,13 +475,14 @@ def referral_mail(request):
     referral_language = get_language()
 
     template = 'dashboard/referral_mail_en.html'
-    if referral_language == 'sv':
-        template = 'dashboard/referral_mail_sv.html'
+    # TODO: fix when we have swedish email
+    #if referral_language == 'sv':
+        #template = 'dashboard/referral_mail_sv.html'
 
     body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
 
     for email in emails:
-        send_email_task.delay('My referral subject', body, email, '%s <%s>' % (referral_name, referral_email))
+        send_email_task.delay('Invitation from %s' % (referral_name,), body, email, '%s <%s>' % (referral_name, referral_email))
 
     messages.add_message(request, messages.SUCCESS, 'Sent mail to %s' % (', '.join(emails),))
 
