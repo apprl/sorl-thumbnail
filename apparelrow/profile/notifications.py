@@ -55,6 +55,9 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     if extra_context is None:
         extra_context = {}
 
+    if sender.is_hidden:
+        return
+
     extra_context['domain'] = Site.objects.get_current().domain
     extra_context['sender_name'] = sender.display_name
     extra_context['sender_link'] = 'http://%s%s' % (extra_context['domain'], sender.get_absolute_url())
