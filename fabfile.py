@@ -15,7 +15,7 @@ env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'postgresql' # mysql or postgresql
 
 #env.solr_url = 'http://apache.mirrors.spacedump.net/lucene/solr/4.5.0/solr-4.5.0.tgz'
-env.solr_url = 'http://apache.cs.uu.nl/dist/lucene/solr/4.5.0/solr-4.5.0.tgz'
+env.solr_url = 'http://apache.cs.uu.nl/dist/lucene/solr/4.8.0/solr-4.8.0.tgz'
 
 # environments
 
