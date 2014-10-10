@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 __author__ = 'klaswikblad'
-from django.utils.translation import ugettext_lazy as _
+
+import os
+from fabric.colors import green, red
 from fabric.api import *
+
+if os.path.exists(os.path.join(os.path.dirname(__file__), "fab_apps.py")):
+    from fab_apps import *
+    green("Loading app settings", bold=True)
+else:
+    red("Failed to load app settings", bold=True)
 
 
 def localhost():
@@ -98,33 +106,6 @@ def production_web_v2():
     env.reqs_path = 'etc/requirements.pip'
     env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
 
-@task
-def common_aws():
-    env.settings = 'production-aws'
-    env.user = 'deploy'
-    env.group = env.user
-    env.run_user = 'www-data'
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-                            # Mostly involves shared servers when for example memacached is already installed.
-    env.venv_home = "/home/%(user)s" % env
-    env.venv_path = "%(venv_home)s/%(project_name)s" % env
-    env.path = env.venv_path
-    env.home_path = '/home/%(user)s' % env
-    env.project_dirname = 'project'
-    env.project_path = "%(venv_path)s/%(project_dirname)s" % env
-    env.install_complete = True
-    env.celery_processes = '0'
-    env.celery_processes_background = '0'
-    env.memcached_url = 'apparel-cache.uhyk4j.cfg.euw1.cache.amazonaws.com'
-    env.gunicorn_admin_processes = '2'
-    env.gunicorn_port = 8090
-    env.gunicorn_admin_port = 8095
-    env.locale = "en_US.UTF-8"
-    env.repo_url = "git@github.com:martinlanden/apprl.git"
-    env.manage = "%(venv_path)s/bin/python %(project_path)s/manage.py" % env
-    env.reqs_path = 'etc/requirements.pip'
-    env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
-
 
 @task
 def production_web_aws_2():
@@ -139,7 +120,6 @@ def production_web_aws_2():
     env.db_user = 'apparel'
     env.db_pass = 'gUp8Swub'
     env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
-
 
 @task
 def production_web_aws_3():

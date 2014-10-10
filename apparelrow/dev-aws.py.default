@@ -14,9 +14,9 @@ EMAIL_DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'apparel',
-        'USER': 'apparel',
-        'PASSWORD': '0p1a7IUmE6NU',
+        'NAME': '{{ db_name }}',
+        'USER': '{{ db_user }}',
+        'PASSWORD': '{{ db_pass }}',
         'HOST': '{{ db_url }}',
         'PORT': '5432'
     }
@@ -24,8 +24,8 @@ DATABASES = {
 CONN_MAX_AGE = 600
 
 # Storage
-STATIC_URL = 'http://{{ s3_url }}.apprl.com/'
-AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = '{{ s3_url }}.apprl.com'
+STATIC_URL = 'http://{{ s3_url }}/'
+AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = '{{ s3_url }}'
 
 APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/bin/gunzip',

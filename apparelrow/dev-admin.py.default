@@ -60,12 +60,6 @@ djcelery.setup_loader()
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
 
-#RAVEN_CONFIG = {
-#    'dsn': 'https://1e617fbfbbf2401ca29dd489b87f7b5a:c170b6488efb41618aaa46b49f79ddef@sentry.wordex.se/11',
-#}
-#
-#SENTRY_DSN='https://1e617fbfbbf2401ca29dd489b87f7b5a:c170b6488efb41618aaa46b49f79ddef@sentry.wordex.se/11'
-
 # Locale paths
 LOCALE_PATHS = (
     os.path.join(SERVER_APP_ROOT,'locale'),
@@ -92,3 +86,6 @@ EMAIL_FILE_PATH = ''
 if EMAIL_DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT,'../logs/emails')
+
+
+ALLOWED_HOSTS = ['%(settings)s.apprl.com','ec2-54-77-127-96.eu-west-1.compute.amazonaws.com']
