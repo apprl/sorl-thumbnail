@@ -85,10 +85,8 @@ def common_aws():
     env.home_path = '/home/%(user)s' % env
     env.project_dirname = 'project'
     env.project_path = "%(venv_path)s/%(project_dirname)s" % env
-    env.install_complete = True
     env.celery_processes = '0'
     env.celery_processes_background = '0'
-    env.memcached_url = 'apparel-cache.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.gunicorn_admin_processes = '2'
     env.gunicorn_port = 8090
     env.gunicorn_admin_port = 8095
@@ -113,7 +111,6 @@ def common_local():
     env.home_path = '/home/%(user)s' % env
     env.project_dirname = 'project'
     env.project_path = "%(venv_path)s/%(project_dirname)s" % env
-    env.install_complete = False
     env.celery_processes = '0'
     env.celery_processes_background = '0'
     env.memcached_url = 'localhost'

@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-# Django settings for production-v2 server
 
 import os.path
 import logging
 import logging.config
 
 from settings_common import *
-DEBUG = True
-EMAIL_DEBUG = True
+DEBUG = False
+EMAIL_DEBUG = False
 
 #SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')
 
@@ -60,6 +59,13 @@ djcelery.setup_loader()
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
 
+#RAVEN_CONFIG = {
+#    'dsn': 'https://db158e8c01bc473399e0ae3b2a4a85af:9c6fbe8e2b56414199c902006ce91ab6@sentry.wordex.se/10',
+#}
+#
+#SENTRY_DSN='https://db158e8c01bc473399e0ae3b2a4a85af:9c6fbe8e2b56414199c902006ce91ab6@sentry.wordex.se/10'
+#
+
 # Locale paths
 LOCALE_PATHS = (
     os.path.join(SERVER_APP_ROOT,'locale'),
@@ -87,5 +93,4 @@ if EMAIL_DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT,'../logs/emails')
 
-
-ALLOWED_HOSTS = ['{{ hostname }}s.apprl.com',]
+ALLOWED_HOSTS = ['*']

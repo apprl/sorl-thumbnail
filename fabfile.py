@@ -78,7 +78,7 @@ def deploy_app():
             print_command("%s is not activated in this install, skipping." % name)
 
     with project():
-        # Todo reactivate this
+        # Todo reactivate this if not in RDS
         #backup("last.db")
 
         upload_template('apparelrow/%(settings)s.py.default' % env,'%(project_path)s/apparelrow/settings.py' % env,context=env,use_sudo=True,use_jinja=True)
@@ -104,7 +104,7 @@ def deploy_app():
         with update_changed_requirements():
             run("git pull origin master -f")
         # Todo reactivate this
-        #manage("collectstatic -v 0 --noinput")
+        manage("collectstatic -v 0 --noinput")
 
         #sudo("chown -R %(run_user)s:%(user)s %(static_dir)s;sudo chmod -R 770 %(static_dir)s" % env)
         #sudo("chown -R %(run_user)s:%(user)s .;sudo chmod -R 770 ." % env)

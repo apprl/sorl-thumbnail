@@ -11,6 +11,17 @@ if os.path.exists(os.path.join(os.path.dirname(__file__), "fab_apps.py")):
 else:
     red("Failed to load app settings", bold=True)
 
+def prod_settings():
+    env.db_name = 'apparel'
+    env.db_user = 'apparel'
+    env.db_pass = 'gUp8Swub'
+    env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
+    env.memcached_url = 'apparel-cache.uhyk4j.cfg.euw1.cache.amazonaws.com'
+    env.redis_url = "ip-10-0-1-166.eu-west-1.compute.internal"
+    env.solr_url =  "ip-10-0-1-38.eu-west-1.compute.internal"
+    env.s3_url = "s.apprl.com"
+    env.gateway = 'deploy@bastion'
+
 
 def localhost():
     "Use the local virtual server"
@@ -34,7 +45,6 @@ def dev_op():
     env.solr_path = '/Users/%(user)s/PycharmProjects/apparelenv/apparelrow/solr-apprl/' % env
     env.solr_path = '/home/{user}/solr'.format(**env)
 
-@task
 def dev_production_v2():
     #if not vm_bridge:
     #    env.hosts = ['192.168.1.38']
@@ -55,7 +65,6 @@ def dev_production_v2():
     env.home_path = '/home/%(user)s' % env
     env.project_dirname = 'project'
     env.project_path = "%(venv_path)s/%(project_dirname)s" % env
-    env.install_complete = True
     env.celery_processes = '1'
     env.celery_processes_background = '1'
     env.memcached_url = '127.0.0.1'
@@ -73,7 +82,7 @@ def dev_production_v2():
     env.reqs_path = 'etc/requirements.pip'
     env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
 
-@task
+
 def production_web_v2():
     env.hosts = ['web-v2.apprl.com']
     env.settings = 'production-v2'
@@ -89,7 +98,6 @@ def production_web_v2():
     env.home_path = '/home/%(user)s' % env
     env.project_dirname = 'project'
     env.project_path = "%(venv_path)s/%(project_dirname)s" % env
-    env.install_complete = True
     env.celery_processes = '3'
     env.celery_processes_background = '2'
     env.memcached_url = '127.0.0.1'
@@ -110,53 +118,41 @@ def production_web_v2():
 @task
 def production_web_aws_2():
     common_aws()
-    env.hosts = ['ec2-54-77-137-129.eu-west-1.compute.amazonaws.com']
-
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-                            # Mostly involves shared servers when for example memacached is already installed.
-    env.hostname="web-aws2"
+    prod_settings()
     env.internal_ip = '10.0.0.211'
-    env.db_name = 'apparel'
-    env.db_user = 'apparel'
-    env.db_pass = 'gUp8Swub'
-    env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
+    env.hosts = ['%(user)s@%(internal_ip)s' % env]
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.restart = ['gunicorn','nginx']
+    env.hostname="web-aws2"
 
 @task
 def production_web_aws_3():
     common_aws()
-    env.hosts = ['ec2-54-77-98-23.eu-west-1.compute.amazonaws.com']
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-                            # Mostly involves shared servers when for example memacached is already installed.
-    env.hostname="web-aws3"
+    prod_settings()
     env.internal_ip = '10.0.0.18'
-    env.db_name = 'apparel'
-    env.db_user = 'apparel'
-    env.db_pass = 'gUp8Swub'
-    env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
+    env.hosts = ['%(user)s@%(internal_ip)s' % env]
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.restart = ['gunicorn','nginx']
+    env.hostname="web-aws3"
 
 @task
 def production_web_aws_4():
     common_aws()
-    env.hosts = ['ec2-54-76-167-133.eu-west-1.compute.amazonaws.com']
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-                            # Mostly involves shared servers when for example memacached is already installed.
-    env.hostname="web-aws4"
+    prod_settings()
     env.internal_ip = '10.0.0.168'
-    env.db_name = 'apparel'
-    env.db_user = 'apparel'
-    env.db_pass = 'gUp8Swub'
-    env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
+    env.hosts = ['%(user)s@%(internal_ip)s' % env]
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.restart = ['gunicorn','nginx']
+    env.hostname="web-aws4"
 
 @task
 def production_aws_admin():
     common_aws()
-    env.hosts = ['ec2-54-77-127-96.eu-west-1.compute.amazonaws.com']
-    env.installed_apps = ['supervisor-gunicorn-admin','gunicorn-admin','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-                            # Mostly involves shared servers when for example memacached is already installed.
-    env.hostname="admin"
-    env.db_name = 'apparel'
-    env.db_user = 'apparel'
-    env.db_pass = 'gUp8Swub'
-    env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
+    prod_settings()
     env.settings = 'production-admin'
+    env.internal_ip = '10.0.0.89'
+    env.hosts = ['%(user)s@%(internal_ip)s' % env]
+    env.installed_apps = ['supervisor-gunicorn-admin','gunicorn-admin','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.restart = ['gunicorn_admin','nginx']
+    env.hostname = 'admin'
 

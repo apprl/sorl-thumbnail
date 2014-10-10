@@ -6,7 +6,7 @@ import logging
 import logging.config
 
 from settings_common import *
-DEBUG = True
+DEBUG = False
 EMAIL_DEBUG = True
 
 #SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')
@@ -60,6 +60,12 @@ djcelery.setup_loader()
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
 
+RAVEN_CONFIG = {
+    'dsn': 'https://0cd745f71e1f4cedb80adf2fda0a79e8:019c2b33e6904e2ab1d6cca01f3e2a83@sentry.wordex.se/8',
+}
+
+SENTRY_DSN='https://0cd745f71e1f4cedb80adf2fda0a79e8:019c2b33e6904e2ab1d6cca01f3e2a83@sentry.wordex.se/8'
+
 # Locale paths
 LOCALE_PATHS = (
     os.path.join(SERVER_APP_ROOT,'locale'),
@@ -87,5 +93,4 @@ if EMAIL_DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT,'../logs/emails')
 
-
-ALLOWED_HOSTS = ['{{ hostname }}s.apprl.com',]
+ALLOWED_HOSTS = ['{{ hostname }}s.apprl.com']
