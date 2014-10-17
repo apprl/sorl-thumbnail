@@ -979,6 +979,7 @@ class LookEmbed(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='look_embeds')
     language = models.CharField(max_length=3, null=False, blank=False)
     width = models.IntegerField(null=False, blank=False)
+    width_type = models.CharField(max_length=2, null=False, blank=False, default='px')
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
 
     class Meta:
