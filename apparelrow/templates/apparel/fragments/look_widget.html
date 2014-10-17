@@ -1,5 +1,5 @@
 {% spaceless %}
-<div style="width: {{ width }}px; margin: 0px auto;">
+<div style="width: {{ width }}{{ width_type }}; margin: 0px auto;">
   <iframe src="http://{{ request.get_host }}{% url 'look-embed-identifier' slug=object.slug identifier=identifier %}" width="{{ width }}" height="{{ height }}" frameborder="0" scrolling="no"></iframe>
   <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;overflow:hidden;">
   <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look" title="Follow me on APPRL" style="text-decoration:none;color:#000000;float:left;font-size:12px;">+ follow {{ object.user.display_name }}</a>
