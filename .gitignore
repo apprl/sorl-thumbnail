@@ -51,3 +51,4 @@ settings.py
 bootstrap/bootstrap-3.0.0-rc1/less/bootstrap.css
 /locale
 /etc/v2
+.DS_Store
