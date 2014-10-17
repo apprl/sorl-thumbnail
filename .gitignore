@@ -4,6 +4,7 @@
 *~
 *#*#
 settings_local.py
+settings.py
 /apparelrow/media/js/compiled/
 /apparelrow/media/styles/ie.css
 /apparelrow/media/styles/print.css
