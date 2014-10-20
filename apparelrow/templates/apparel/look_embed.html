@@ -33,7 +33,7 @@
         <div class="look collage">
           {% for component in components %}
             {% thumbnail component.product.product_image "694x524" crop="noop" format="PNG" transparent=True as im %}
-            <a rel="nofollow" target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid component.product.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }}">
+            <a rel="nofollow" target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid component.product.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }};">
               <img src="{{ im.url }}" title="{{ component.product }}" />
             </a>
             {% endthumbnail %}
@@ -60,6 +60,10 @@
       {% endif %}
     </div>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    var embedWidth = {{ embed_width }};
+    var embedHeight = {{ embed_height }};
+    </script>
     {% compressed_js 'embed' %}
   </body>
 </html>

@@ -77,7 +77,7 @@ def embed(request, slug, identifier=None):
                        'fl': 'price,discount_price',
                        'sort': 'price asc, popularity desc, created desc'}
     for component in components:
-        component.style_embed = component._style(max_width / float(look.width))
+        component.style_embed = component.style_percentage()
 
         colors_pk = list(map(str, component.product.options.filter(option_type__name='color').values_list('pk', flat=True)))
         query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
@@ -104,7 +104,9 @@ def embed(request, slug, identifier=None):
     response = render(request, 'apparel/look_embed.html', {'object': look,
                                                            'components': components,
                                                            'width': str(width),
-                                                           'height': str(height)})
+                                                           'height': str(height),
+                                                           'embed_width': settings.APPAREL_LOOK_SIZE[0],
+                                                           'embed_height': settings.APPAREL_LOOK_SIZE[1]},)
     translation.deactivate()
 
     get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
