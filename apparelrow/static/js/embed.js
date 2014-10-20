@@ -7,6 +7,13 @@ function is_mobile() {
       return false;
 }
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 jQuery(document).ready(function() {
     jQuery().enableApprlTooltip('.product');
 
@@ -30,6 +37,16 @@ jQuery(document).ready(function() {
             }
         });
     }
+
+    var parentHost = getParameterByName('host');
+
+    function sendHeight() {
+        if(parent && parentHost) {
+            parent.postMessage($('.look.collage').height(), parentHost);
+        }
+    }
+
+    $(window).on('message', sendHeight).trigger('message');
 
     function trackEvent(category, action) {
         return function() {
