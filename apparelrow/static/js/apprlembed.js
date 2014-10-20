@@ -8,7 +8,7 @@ var ApprlEmbed = ApprlEmbed || function(p, id, n, w, h, o) {
 
 	self.container = document.createElement('div');
 	self.frame = document.createElement('iframe');
-	self.frame.setAttribute('src', 'http://'+ o +'/embed/look/'+id+'/'+n+'/?host='+ encodeURIComponent(host));
+	self.frame.setAttribute('src', '//'+ o +'/embed/look/'+id+'/'+n+'/?host='+ encodeURIComponent(host));
 	self.frame.setAttribute('width', w);
 	self.frame.setAttribute('height', h);
 	self.container.appendChild(self.frame);
