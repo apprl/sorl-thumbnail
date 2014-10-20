@@ -41,8 +41,11 @@ jQuery(document).ready(function() {
     var parentHost = getParameterByName('host');
 
     function sendHeight() {
-        if(parent && parentHost) {
-            parent.postMessage($('.look.collage').height(), parentHost);
+        if(parent && parent.postMessage && parentHost) {
+            // TODO: No hardcoded width adding
+            var height = Math.ceil(($('body').width() * 1.03) * (embedHeight/embedWidth));
+
+            parent.postMessage(height, parentHost);
         }
     }
 
