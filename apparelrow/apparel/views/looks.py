@@ -139,10 +139,15 @@ def widget(request, slug):
 
     # Width
     content['width'] = int(request.POST.get('width', '720'))
-    if content['width'] < 600:
-        content['width'] = 600
-    elif content['width'] > 1200:
-        content['width'] = 1200
+    content['width_type'] = request.POST.get('width_type', 'px')
+
+    if content['width_type'] == '%' and int(content['width']) > 100:
+        content['width'] = 100
+    elif content['width_type'] == 'px':
+        if content['width'] < 600:
+            content['width'] = 600
+        elif content['width'] > 1200:
+            content['width'] = 1200
 
     # Height
     scale = content['width'] / float(look.width)
@@ -158,6 +163,7 @@ def widget(request, slug):
                                                           user=request.user,
                                                           language=content['language'],
                                                           width=content['width'],
+                                                          width_type=content['width_type'],
                                                           defaults={'identifier': identifier})
     content['identifier'] = look_embed.identifier
 

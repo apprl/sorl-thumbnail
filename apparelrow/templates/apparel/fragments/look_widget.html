@@ -1,6 +1,13 @@
 {% spaceless %}
-<div style="width: {{ width }}px; margin: 0px auto;">
-  <iframe src="http://{{ request.get_host }}{% url 'look-embed-identifier' slug=object.slug identifier=identifier %}" width="{{ width }}" height="{{ height }}" frameborder="0" scrolling="no"></iframe>
+<script>(function(d, i, n, w, h, o) {
+    var ss = d.getElementsByTagName('script'), st = ss[ss.length - 1];
+    var s = d.createElement('script');
+    s.src = 'http://'+ o +'/static/js/apprlembed.js';
+    s.addEventListener('load', function() {
+        new ApprlEmbed(st, i, n, w, h, o);
+    }); st.parentNode.insertBefore(s, st);
+})(document, '{{ identifier }}', '{{ object.slug }}', '{{ width }}{{ width_type }}', '{{ height }}', 'http://{{ request.get_host }}');</script>
+<div style="width: {{ width }}{{ width_type }}; margin: 0px auto;">
   <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;overflow:hidden;">
   <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look" title="Follow me on APPRL" style="text-decoration:none;color:#000000;float:left;font-size:12px;">+ follow {{ object.user.display_name }}</a>
     <span style="font-size:12px;color:#000000;float:left;"> &nbsp;</span>
