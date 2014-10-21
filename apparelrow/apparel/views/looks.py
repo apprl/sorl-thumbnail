@@ -106,7 +106,8 @@ def embed(request, slug, identifier=None):
                                                            'width': str(width),
                                                            'height': str(height),
                                                            'embed_width': settings.APPAREL_LOOK_SIZE[0],
-                                                           'embed_height': settings.APPAREL_LOOK_SIZE[1]},)
+                                                           'embed_height': settings.APPAREL_LOOK_SIZE[1],
+                                                           'embed_id': look_embed.identifier},)
     translation.deactivate()
 
     get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
