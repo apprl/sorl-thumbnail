@@ -10,6 +10,7 @@ var ApprlEmbed = ApprlEmbed || function(p, id, n, w, h, o) {
 	self.frame = document.createElement('iframe');
 	self.frame.setAttribute('src', '//'+ o +'/embed/look/'+id+'/'+n+'/?host='+ encodeURIComponent(host));
 	self.frame.setAttribute('width', w);
+    self.frame.setAttribute('scrolling', 'no');
 	self.frame.setAttribute('height', h);
 	self.container.appendChild(self.frame);
 	p.parentNode.insertBefore(self.container, p);
@@ -23,8 +24,11 @@ var ApprlEmbed = ApprlEmbed || function(p, id, n, w, h, o) {
 	};
 
     this.setHeight = function(height) {
-      self.frame.setAttribute('height', height);
-      self.setRatio();
+      var values = height.split('|');
+      if(id == values[1]) {
+          self.frame.setAttribute('height', values[0]);
+          self.setRatio();
+      }
     };
 
 	self.setRatio();
