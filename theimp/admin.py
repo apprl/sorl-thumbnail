@@ -150,6 +150,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('key',)
     actions = ('parse_products','release_products','unrelease_products')
     save_on_top = True
+    list_per_page = 20
 
     def save_model(self, request, obj, form, change):
         parser = Parser()
@@ -202,7 +203,7 @@ class BrandMappingAdmin(admin.ModelAdmin):
     list_filter = (IsMappedBrandListFilter, 'vendor')
     readonly_fields = ('vendor', 'brand', 'created', 'modified')
     search_fields = ('brand',)
-    list_per_page = 50
+    list_per_page = 20
 
     def queryset(self, request):
         qs = super(BrandMappingAdmin, self).queryset(request)
@@ -238,7 +239,7 @@ class CategoryMappingAdmin(admin.ModelAdmin):
     readonly_fields = ('vendor', 'category', 'created', 'modified')
     search_fields = ('category',)
     list_editable = ('mapped_category',)
-    list_per_page = 50
+    list_per_page = 20
 
     def category_ancestors(self, category):
         result = []
