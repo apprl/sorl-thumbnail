@@ -7,11 +7,13 @@ var ApprlEmbed = ApprlEmbed || function(p, id, n, w, h, o) {
 	var host = 'http://'+window.location.host;
 
 	self.container = document.createElement('div');
+    self.container.setAttribute('style', 'width: ' + w + ';margin: 0 auto;')
 	self.frame = document.createElement('iframe');
 	self.frame.setAttribute('src', '//'+ o +'/embed/look/'+id+'/'+n+'/?host='+ encodeURIComponent(host));
 	self.frame.setAttribute('width', w);
     self.frame.setAttribute('scrolling', 'no');
 	self.frame.setAttribute('height', h);
+    self.frame.setAttribute('frameborder', 0);
 	self.container.appendChild(self.frame);
 	p.parentNode.insertBefore(self.container, p);
 
