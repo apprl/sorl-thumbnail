@@ -503,7 +503,7 @@ def _product_like(request, product, action):
     if request.user.partner_group:
         partner_group = request.user.partner_group
         owner_group = partner_group.owner
-        if not owner_group == request.user:
+        if not owner_group == request.user and partner_group.is_subscriber:
             product_like, created = ProductLike.objects.get_or_create(user=owner_group, product=product,
                                                               defaults={'active': default_active})
             if not created:
