@@ -2,7 +2,7 @@
 {% load thumbnail cache compressed buy_extras %}
 {% spaceless %}
 <!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE }}">
+<html lang="{{ request.LANGUAGE_CODE }}" class="look-type-{{ object.display_with_component }}">
   <head>
     <title>{{ object.title }} by {{ object.user.display_name }} | Apprl - Social Shopping</title>
     <link rel="stylesheet" href="{% static 'styles/widget.css' %}">
