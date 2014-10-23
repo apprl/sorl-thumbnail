@@ -48,7 +48,7 @@ class AplaceSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorMixin)
         l.add_value('discount_price', discount_price if discount_price else regular_price)
         l.add_value('currency', currency)
         l.add_value('in_stock', True if in_stock == 'in stock' else False)
-        l.add_value('stock', '-1')
+        l.add_value('stock', '-')
         l.add_xpath('image_urls', 'g:image_link/text()')
 
         return l.load_item()
