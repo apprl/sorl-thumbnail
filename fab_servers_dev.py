@@ -103,6 +103,7 @@ def dev_scrapy():
     env.celery_processes = '1'
     env.celery_processes_background = '1'
     env.installed_apps = ['']
+    env.restart = []
     env.hostname="scrapy"
 
 @task
@@ -114,4 +115,5 @@ def dev_importer():
     env.celery_processes = '0'
     env.celery_processes_background = '0'
     env.installed_apps = ['']
+    env.restart = []
     env.hostname="importer"
