@@ -22,7 +22,7 @@ class NastyGalSpider(CSVFeedSpider, AffiliateMixin):
     http_user = '3131851'
     http_pass = 'f3NPxFso'
 
-    """def __init__(self, name=None, **kwargs):
+    """def __init__(self, name=None, **kwargs):g
         loglevel = WARNING
         file_to_write = open('%s.log' % self.name,'a')
         logencoding = "utf-8"
@@ -35,8 +35,10 @@ class NastyGalSpider(CSVFeedSpider, AffiliateMixin):
     def parse_row(self, response, row):
         item = Product()
         key = key_regex1.search(row.get('BUYURL'))
+
         if key:
-            item['key'] = urllib.unquote(force_bytes(key.group(1)))
+            shortened_url = urllib.unquote(force_bytes(key.group(1))).split("?")[0]
+            item['key'] = shortened_url
         item['sku'] = row.get('SKU')
         item['name'] = row.get('NAME')
         item['vendor'] = self.name
