@@ -22,7 +22,7 @@ class NastyGalSpider(CSVFeedSpider, AffiliateMixin):
     http_user = '3131851'
     http_pass = 'f3NPxFso'
 
-    """def __init__(self, name=None, **kwargs):g
+    """def __init__(self, name=None, **kwargs):
         loglevel = WARNING
         file_to_write = open('%s.log' % self.name,'a')
         logencoding = "utf-8"
