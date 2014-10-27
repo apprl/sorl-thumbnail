@@ -12,3 +12,15 @@
 .container {
   position: static;
 }
+html.look-type-C {
+  height: 100%;
+}
+html.look-type-C body,
+html.look-type-C .container,
+html.look-type-C .collage {
+  height: 100%;
+}
+html.look-type-C .container,
+html.look-type-C .collage {
+  box-sizing: border-box;
+}
