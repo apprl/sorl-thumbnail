@@ -231,6 +231,18 @@ App.Views.LookEdit = Backbone.View.extend({
         // TODO: this must be done here because it must happen after main
         // template is rendered or else it will be wiped be the above html
         // renderning call
+
+        // Reposition some stuff before adding the components
+        if (this.model.get('width') < this.max_width) {
+            var adjust = (this.max_width - this.model.get('width'))/2;
+            this.model.components.each(function(model) {model.set('left', model.get('left') + adjust)});
+        }
+        if (this.model.get('height') < this.max_height) {
+            var adjust = (this.max_height - this.model.get('height'))/2;
+            this.model.components.each(function(model) {model.set('top', model.get('top') + adjust)});
+        }
+
+
         this.add_components(this.model.components);
 
         this.render_temporary_image();

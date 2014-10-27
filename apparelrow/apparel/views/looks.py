@@ -283,6 +283,8 @@ def look_instance_to_dict(look):
         'component': look.component,
         'description': look.description,
         'published': look.published,
+        'width': look.width,
+        'height': look.height
     }
 
     if look.components:
@@ -327,8 +329,8 @@ def crop_look(json_data):
             component['top'] = component['top'] - top
             component['left'] = component['left'] - left
 
-        json_data['width'] = width
-        json_data['height'] = height
+        json_data['width'] = width - left
+        json_data['height'] = height - top
 
 
 
