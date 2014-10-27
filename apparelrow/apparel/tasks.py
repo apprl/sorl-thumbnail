@@ -313,8 +313,8 @@ def build_static_look_image(look_id):
         look.width = thumbnail.width
         look.height = thumbnail.height
     else:
-        look.width = 694
-        look.height = 524
+        offset_left = (settings.APPAREL_LOOK_SIZE[0] - look.width)/2
+        offset_top = (settings.APPAREL_LOOK_SIZE[1] - look.height)/2
 
     for component in look.display_components.order_by('z_index').all():
         if look.display_with_component == 'P':
