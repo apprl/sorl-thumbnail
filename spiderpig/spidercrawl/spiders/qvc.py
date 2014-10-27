@@ -32,11 +32,11 @@ class QVCSpider(CSVFeedSpider, AffiliateMixin):
         item['category'] = row.get('ADVERTISERCATEGORY')
         item['description'] = row.get('DESCRIPTION')
         item['brand'] = row.get('MANUFACTURER')
-        item['gender'] = 'U' if row.get('THIRDPARTYCATEGORY') == '' else row.get('THIRDPARTYCATEGORY')
+        item['gender'] = 'U' if not row.get('THIRDPARTYCATEGORY') else row.get('THIRDPARTYCATEGORY')
         item['colors'] = row.get('NAME') + row.get('DESCRIPTION')
         item['regular_price'] = row.get('SALEPRICE')
         item['discount_price'] = row.get('PRICE')
         item['currency'] = row.get('CURRENCY')
-        item['in_stock'] = True if row.get('INSTOCK') == 'yes' else False
+        item['in_stock'] = row.get('INSTOCK') == 'yes'
         item['stock'] = '-'
         item['image_urls'] = [row.get('IMAGEURL', '')]
