@@ -214,3 +214,16 @@ def scrape(vendor):
     require('hostname', provided_by=[dev_scrapy])
     with project():
         run("curl http://localhost:6800/schedule.json -d project=spidercrawl -d spider=%(vendor)s" % {'vendor':vendor})
+
+@task
+def reload_scrapy():
+    if env.reload_scrapy:
+        with project():
+            with cd("spiderpig"):
+                run("scrapyd-deploy spidercrawl -p spidercrawl")
+
+@task
+def scrape(vendor):
+    require('hostname', provided_by=[dev_scrapy])
+    with project():
+        run("curl http://localhost:6800/schedule.json -d project=spidercrawl -d spider=%(vendor)s" % {'vendor':vendor})

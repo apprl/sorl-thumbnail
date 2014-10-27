@@ -104,6 +104,7 @@ def dev_scrapy():
     env.celery_processes_background = '1'
     env.installed_apps = ['']
     env.restart = []
+    env.reload_scrapy = True
     env.hostname="scrapy"
 
 @task
