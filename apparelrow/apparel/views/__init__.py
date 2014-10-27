@@ -636,9 +636,16 @@ def look_detail(request, slug):
     # Base url
     base_url = request.build_absolute_uri('/')[:-1]
 
+    wrapper_element = {'width': '100', 'height': '100'}
     # Components
     if look.display_with_component == 'C':
         components = look.collage_components.select_related('product')
+        # look image is responsible for scaling the look view. Since the look width and height might not be different we need to rescale
+        if float(look.height)/look.image_height > float(look.width)/look.image_width:
+            wrapper_element['width'] = 100*float(look.image_height)/look.height*float(look.width)/look.image_width
+        else:
+            wrapper_element['height'] = 100*float(look.image_width)/look.width*float(look.height)/look.image_height
+
     elif look.display_with_component == 'P':
         components = look.photo_components.select_related('product')
 
@@ -664,6 +671,7 @@ def look_detail(request, slug):
             'likes': likes,
             'base_url': base_url,
             'is_liked': is_liked,
+            'wrapper_element': wrapper_element
         },
         context_instance=RequestContext(request),
     )
