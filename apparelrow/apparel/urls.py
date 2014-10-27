@@ -36,6 +36,7 @@ urlpatterns = patterns('',
     url(r'^shop/$', 'apparelrow.apparel.browse.browse_products', name='shop'),
     url(r'^shop/men/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^shop/women/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
+    url(r'^shop/create/$', 'apparelrow.apparel.shop.create_shop', name='create-shop'),
 
     # Shop embed - wardrobe
     url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
