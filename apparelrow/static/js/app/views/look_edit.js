@@ -1,4 +1,4 @@
-App.Views.LookEdit = Backbone.View.extend({
+App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     el: '#edit-look',
     template: _.template($('#edit_look_template').html()),

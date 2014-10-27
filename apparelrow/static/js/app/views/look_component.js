@@ -1,4 +1,4 @@
-App.Views.LookComponent = Backbone.View.extend({
+App.Views.LookComponent = App.Views.WidgetBase.extend({
 
     events: {
         'click .delete': 'on_delete',

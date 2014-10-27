@@ -1,4 +1,4 @@
-window.App.Models.ProductFilter = Backbone.Model.extend({
+window.App.Models.ProductFilter = window.App.Models.WidgetModelBase.extend({
 
     defaults: {
         gender: selected_gender,
