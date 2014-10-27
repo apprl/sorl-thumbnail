@@ -1,4 +1,4 @@
-App.Views.PopupDispatcher = Backbone.View.extend({
+App.Views.PopupDispatcher = App.Views.WidgetBase.extend({
 
     id: 'popup-slim',
     template: _.template($('#popup_slim_template').html()),

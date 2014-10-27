@@ -1,4 +1,4 @@
-App.Views.LookEditFilterTabs = Backbone.View.extend({
+App.Views.LookEditFilterTabs = App.Views.WidgetBase.extend({
 
     el: '#product-tabs',
 

@@ -1,4 +1,4 @@
-App.Views.LookEditPopup = Backbone.View.extend({
+App.Views.LookEditPopup = App.Views.WidgetBase.extend({
 
     id: 'popup-slim',
     template: _.template($('#look_edit_add_popup_template').html()),
