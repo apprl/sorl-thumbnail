@@ -141,7 +141,7 @@ class RequiredFieldsPipeline:
     required_fields = ['key', 'sku', 'name', 'description', 'brand',
                        'category', 'gender', 'vendor', 'url', 'affiliate',
                        'regular_price', 'discount_price', 'currency',
-                       'colors', 'in_stock', 'stock', 'image_urls',
+                       'in_stock', 'image_urls',
                        'images']
 
     def __init__(self):
