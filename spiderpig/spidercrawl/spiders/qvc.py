@@ -40,3 +40,5 @@ class QVCSpider(CSVFeedSpider, AffiliateMixin):
         item['in_stock'] = row.get('INSTOCK') == 'yes'
         item['stock'] = '-'
         item['image_urls'] = [row.get('IMAGEURL', '')]
+
+        return item
