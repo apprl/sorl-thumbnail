@@ -23,7 +23,13 @@ class QVCSpider(CSVFeedSpider, AffiliateMixin):
         item = Product()
         key = key_regex1.search(row.get('BUYURL'))
         if key:
-            item['key'] = urllib.unquote(force_bytes(key.group(1)))
+            urlkey = urllib.unquote(force_bytes(key.group(1)))
+            try:
+                # Given the url http://www.qvc.com/scripts/reference.pl?item=A233083&ref=CJ4&tpl=detail try to remove ref and tpl.
+                item['key'] = urlkey.split("&")[0]
+            except:
+                item['key'] = urlkey
+
         item['sku'] = row.get('SKU')
         item['name'] = row.get('NAME')
         item['vendor'] = self.name
