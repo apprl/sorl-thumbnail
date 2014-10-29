@@ -1,0 +1,9 @@
+.create-store-page #shop-preview {
+  width: 50%;
+  float: left;
+}
+.create-store-page #content-container {
+  padding-bottom: 0px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
