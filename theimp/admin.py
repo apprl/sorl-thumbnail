@@ -249,9 +249,9 @@ class CategoryMappingAdmin(admin.ModelAdmin):
 
         return ' > '.join(result)
 
-    def queryset(self, request):
-        qs = super(CategoryMappingAdmin, self).queryset(request)
-        return qs.annotate(Count('products'))
+    #def queryset(self, request):
+    #    qs = super(CategoryMappingAdmin, self).queryset(request)
+    #    return qs.annotate(Count('products'))
 
     def num_products(self, category):
         return category.products.count()
