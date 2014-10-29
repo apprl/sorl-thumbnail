@@ -234,7 +234,7 @@ class IsMappedCategoryListFilter(admin.SimpleListFilter):
 
 
 class CategoryMappingAdmin(admin.ModelAdmin):
-    list_display = ('category', 'vendor', 'mapped_category', 'category_ancestors', 'num_products')
+    list_display = ('category', 'vendor', 'mapped_category', 'category_ancestors',)
     list_filter = (IsMappedCategoryListFilter, 'vendor')
     readonly_fields = ('vendor', 'category', 'created', 'modified')
     search_fields = ('category',)
