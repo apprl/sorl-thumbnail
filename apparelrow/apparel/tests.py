@@ -5,7 +5,7 @@ from django.db.models.loading import get_model
 from django.test import TestCase
 from django.test.utils import override_settings
 
-
+""" CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestChromeExtension(TestCase):
 
@@ -84,6 +84,6 @@ class TestChromeExtension(TestCase):
         json_content = json.loads(response.content)
 
         self.assertEqual(json_content['product_pk'], 1)
-        self.assertEqual(json_content['product_link'], 'http://testserver/en/products/product/')
+        self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/en/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
