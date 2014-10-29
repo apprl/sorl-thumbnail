@@ -448,6 +448,35 @@ class ShortStoreLink(models.Model):
         return dehydrate(self.pk + SHORT_CONSTANT)
 
 
+class DomainDeepLinking(models.Model):
+    vendor = models.ForeignKey(Vendor)
+    domain = models.CharField(max_length=100, blank=False, null=False)
+    template = models.CharField(max_length=512, blank=False, null=False)
+
+
+class ShortDomainLinkManager(models.Manager):
+    def get_short_domain_for_link(self, short_link):
+        instance = ShortDomainLink.objects.get(pk=(saturate(short_link) - SHORT_CONSTANT))
+
+        return instance.url, instance.vendor.name, instance.user.pk
+
+
+class ShortDomainLink(models.Model):
+    url = models.CharField(max_length=512, blank=False, null=False)
+    vendor = models.ForeignKey(Vendor)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='short_domain_links')
+    created = models.DateTimeField(default=timezone.now)
+
+    objects = ShortDomainLinkManager()
+
+    def link(self):
+        return dehydrate(self.pk + SHORT_CONSTANT)
+
+    class Meta:
+        unique_together = ('url', 'user')
+
+
+
 class ShortProductLinkManager(models.Manager):
     def get_for_short_link(self, short_link):
         return ShortProductLink.objects.select_related('product').get(pk=(saturate(short_link) - SHORT_CONSTANT))
@@ -950,6 +979,7 @@ class LookEmbed(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='look_embeds')
     language = models.CharField(max_length=3, null=False, blank=False)
     width = models.IntegerField(null=False, blank=False)
+    width_type = models.CharField(max_length=2, null=False, blank=False, default='px')
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
 
     class Meta:
@@ -1082,23 +1112,13 @@ class LookComponent(models.Model):
             if height is None:
                 height = self.height
 
-            look_width = self.look.width
-            look_height = self.look.height
+            s.append('width: %spx;' % (80,))
+            s.append('height: %spx;' % (80,))
+            s.append('top: %s%%;' % ((self.top + self.height / 2) / float(self.look.height) * 100,))
+            s.append('left: %s%%;' % ((self.left + self.width/2) / float(self.look.width) * 100,))
 
-            if width < look_width:
-                look_width = width
-                look_height = height
-
-            canvas_width = self.width / float(look_width) * 100
-            canvas_height = self.height / float(look_height) * 100
-
-            real_width = self.width / float(width) * 100
-            real_height = self.height / float(height) * 100
-
-            s.append('width: %s%%;' % (real_width,))
-            s.append('height: %s%%;' % (real_height,))
-            s.append('top: %s%%;' % ((self.top / float(look_height) * 100) + canvas_height / 2 - real_height / 2,))
-            s.append('left: %s%%;' % ((self.left / float(look_width) * 100) + canvas_width / 2 - real_width / 2,))
+            ''' TODO: move to widget.css '''
+            s.append('transform: translateX(-50%) translateY(-50%);')
         else:
             s.append('width: %s%%;' % (self.width / float(self.look.width) * 100,))
             s.append('height: %s%%;' % (self.height / float(self.look.height) * 100,))

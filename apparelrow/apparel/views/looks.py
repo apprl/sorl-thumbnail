@@ -77,7 +77,7 @@ def embed(request, slug, identifier=None):
                        'fl': 'price,discount_price',
                        'sort': 'price asc, popularity desc, created desc'}
     for component in components:
-        component.style_embed = component._style(max_width / float(look.width))
+        component.style_embed = component.style_percentage()
 
         colors_pk = list(map(str, component.product.options.filter(option_type__name='color').values_list('pk', flat=True)))
         query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
@@ -104,7 +104,10 @@ def embed(request, slug, identifier=None):
     response = render(request, 'apparel/look_embed.html', {'object': look,
                                                            'components': components,
                                                            'width': str(width),
-                                                           'height': str(height)})
+                                                           'height': str(height),
+                                                           'embed_width': settings.APPAREL_LOOK_SIZE[0],
+                                                           'embed_height': settings.APPAREL_LOOK_SIZE[1],
+                                                           'embed_id': look_embed.identifier},)
     translation.deactivate()
 
     get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
@@ -139,10 +142,15 @@ def widget(request, slug):
 
     # Width
     content['width'] = int(request.POST.get('width', '720'))
-    if content['width'] < 600:
-        content['width'] = 600
-    elif content['width'] > 1200:
-        content['width'] = 1200
+    content['width_type'] = request.POST.get('width_type', 'px')
+
+    if content['width_type'] == '%' and int(content['width']) > 100:
+        content['width'] = 100
+    elif content['width_type'] == 'px':
+        if content['width'] < 600:
+            content['width'] = 600
+        elif content['width'] > 1200:
+            content['width'] = 1200
 
     # Height
     scale = content['width'] / float(look.width)
@@ -158,6 +166,7 @@ def widget(request, slug):
                                                           user=request.user,
                                                           language=content['language'],
                                                           width=content['width'],
+                                                          width_type=content['width_type'],
                                                           defaults={'identifier': identifier})
     content['identifier'] = look_embed.identifier
 

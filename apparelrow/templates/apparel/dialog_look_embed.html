@@ -15,7 +15,13 @@
                     <label class="control-label" for="id_look_width">{% trans "Width" %}</label>
                     <div class="input-group">
                         <input id="id_look_width" type="text" name="width" class="form-control" placeholder="600">
-                        <span class="input-group-addon">{% trans "pixels" %}</span>
+                         <div class="input-group-btn">
+                            <button id="width_type" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="text">{% trans "pixels" %}</span> <span class="caret"></span></button>
+                            <ul id="width_dropdown" class="dropdown-menu">
+                                <li><a href="#" data-text="{% trans "pixels" %}" data-value="px">{% trans "pixels" %}</a></li>
+                                <li><a href="#" data-text="%" data-value="%">%</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -54,6 +60,22 @@
         }
     }
 $(document).ready(function() {
+        var width_type = 'px';
+
+        $('#width_dropdown a').on('click', function(e) {
+            e.preventDefault();
+            var value = $(this).data('value');
+            var text = $(this).data('text');
+
+            width_type = value;
+            $('#width_type .text').text(text);
+            if (value == 'px') {
+                $('#id_look_width').attr('placeholder', '600');
+            } else {
+                $('#id_look_width').attr('placeholder', '100');
+            }
+        });
+
         $('#modal_embed_look').on('show.bs.modal', function () {
             $('#id_look_embed_code').parent().hide();
         });
@@ -64,19 +86,23 @@ $(document).ready(function() {
         $('#embed_look_form').on('submit', function() {
             var data = {
                 width: jQuery('#id_look_width').val(),
-                language: jQuery('#id_look_language').val(),
+                width_type: width_type,
+                language: jQuery('#id_look_language').val()
             };
 
-            if(!data['width']) {
-                data['width'] = '600';
-                $('#id_look_width').val(data['width']);
+             if(!data['width']) {
+                if (width_type == '%') {
+                    data['width'] = '100';
+                    $('#id_look_width').val(data['width']);
+                } else {
+                    data['width'] = '600';
+                    $('#id_look_width').val(data['width']);
+                }
             }
 
             $('#id_look_embed_code').hide().parent().show().append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
 
             $.post("{% url 'look-widget' look.slug %}", data, function(response) {
-                var actual_width = $(response).css('width').replace(/px/, '');
-                $('#id_look_width').val(actual_width);
                 $('#id_look_embed_code').val(response).show();
                 $('#loading_image').remove();
                 $('#modal_embed_look').animate({scrollTop: 800});

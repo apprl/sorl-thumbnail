@@ -90,6 +90,9 @@ urlpatterns = patterns('',
     # Short product link
     url(r'^p/(?P<short_link>[\w]+)/$', 'apparelrow.apparel.views.product_short_link', name='product-short-link'),
 
+    # Short domain link
+    url(r'^pd/(?P<short_link>[\w]+)/$', 'apparelrow.apparel.views.domain_short_link', name='domain-short-link'),
+
     # Short store link
     url(r'^s/(?P<short_link>[\w]+)/$', 'apparelrow.apparel.views.store_short_link', name='store-short-link'),
     url(r'^s/(?P<short_link>[\w]+)/(?P<user_id>[\d]+)/$', 'apparelrow.apparel.views.store_short_link', name='store-short-link-userid'),
@@ -117,6 +120,8 @@ urlpatterns = patterns('',
     url(r'^backend/follow/$', 'apparelrow.apparel.views.follow_backend', name='follow-backend'),
     url(r'^backend/categories/$', 'apparelrow.apparel.views.list_categories', name='backend-list-categories'),
     url(r'^backend/colors/$', 'apparelrow.apparel.views.list_colors', name='backend-list-colors'),
+    url(r'^backend/authenticated/$', 'apparelrow.apparel.views.authenticated_backend', name='backend-authenticated'),
+    url(r'^backend/product/lookup/$', 'apparelrow.apparel.views.product_lookup', name='backend-product-lookup'),
 
     # Looks
     url(r'^looks/create/$', 'apparelrow.apparel.views.looks.create', name='look-create'),

@@ -1,3 +1,4 @@
+from StringIO import StringIO
 import random
 
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
@@ -7,6 +8,7 @@ from scrapy.http import HtmlResponse, Response
 from scrapy import log
 
 from spiderpig.spidercrawl.settings import USER_AGENT_LIST
+from spiderpig.utils import unzip
 
 
 class DownloadGzipMiddleware(object):
@@ -23,6 +25,23 @@ class DownloadGzipMiddleware(object):
     def process_response(self, request, response, spider):
         if isinstance(response, Response) and self.custom_is_gzipped(response):
             response = response.replace(body=gunzip(response.body))
+        return response
+
+class DownloadZipMiddleware(object):
+
+    def custom_is_zipped(self, response):
+        import zipfile
+        if zipfile.is_zipfile(StringIO(response.body)) or response.url[-4:] == '.zip':
+            return True
+
+        if hasattr(response, 'headers') and 'application/zip' in response.headers.get('Content-Type', ''):
+            return True
+
+        return False
+
+    def process_response(self, request, response, spider):
+        if isinstance(response, Response) and self.custom_is_zipped(response):
+            response = response.replace(body=unzip(response.body))
         return response
 
 

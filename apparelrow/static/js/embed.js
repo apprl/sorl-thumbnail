@@ -7,29 +7,55 @@ function is_mobile() {
       return false;
 }
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 jQuery(document).ready(function() {
     jQuery().enableApprlTooltip('.product');
+    var isPhoto = ($('#photo-markers').length) ? true : false;
 
     // Hide hotspots and only show them on mouseenter if !mobile
     if (!is_mobile()) {
         var active = false;
         jQuery('.hotspot').hide();
-        jQuery(document).on('click touchstart', '.look-photo', function() {
+        jQuery(document).on('click touchstart', '.photo-hotspots', function() {
             if (active === false) {
               jQuery('.hotspot', this).stop(true, true).fadeIn(300);
               setTimeout(function(){active=true}, 400);
             }
-        }).on('mouseenter', '.look-photo', function() {
+        }).on('mouseenter', '.photo-hotspots', function() {
             jQuery('.hotspot', this).stop(true, true).fadeIn(300);
-        }).on('mouseleave', '.look-photo', function() {
+        }).on('mouseleave', '.photo-hotspots', function() {
             jQuery('.hotspot', this).stop(true, true).fadeOut(300);
-        }).on('click touchstart', '.look-photo', function() {
+        }).on('click touchstart', '.photo-hotspots', function() {
             if (active === true) {
                 setTimeout(function(){active=false}, 400);
                 jQuery('.hotspot', this).stop(true, true).fadeOut(300);
             }
         });
     }
+
+    var parentHost = getParameterByName('host');
+
+    function sendHeight() {
+        if(parent && parent.postMessage && parentHost) {
+            var height;
+
+            if(isPhoto) {
+                height = $('body').height();
+            } else { // TODO: No hardcoded width adding
+                height = Math.ceil(($('body').width() * 1.03) * (embedHeight / embedWidth));
+            }
+
+            parent.postMessage(height +"|"+ embedId, parentHost);
+        }
+    }
+
+    $(window).on('message', sendHeight).trigger('message');
 
     function trackEvent(category, action) {
         return function() {

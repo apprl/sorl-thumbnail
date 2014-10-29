@@ -5,6 +5,7 @@ import json
 import datetime
 import os.path
 import string
+import urllib
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
@@ -17,6 +18,7 @@ from django.template.defaultfilters import floatformat
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from django.views.generic.base import RedirectView
 from django.utils import translation, timezone
@@ -32,7 +34,7 @@ from apparelrow.profile.notifications import process_like_look_created
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
-from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink, ShortStoreLink
+from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink, ShortStoreLink, ShortDomainLink
 from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender, JSONResponse, JSONPResponse
@@ -245,7 +247,7 @@ def store_short_link(request, short_link, user_id=None):
     if user_id is None:
         user_id = 0
 
-    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id})
+    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store', 'event': 'StoreLinkClick'})
 
 
 #
@@ -342,6 +344,22 @@ def product_short_link(request, short_link):
 
     return HttpResponsePermanentRedirect(
         reverse('product-redirect', args=(short_product.product_id, 'Ext-Link', short_product.user_id)))
+
+
+def domain_short_link(request, short_link):
+    """
+    Takes a short short link and redirect to associated url.
+    """
+    try:
+        url, name, user_id = ShortDomainLink.objects.get_short_domain_for_link(short_link)
+    except ShortDomainLink.DoesNotExist:
+        raise Http404
+
+    if user_id is None:
+        user_id = 0
+
+    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Link', 'event': 'BuyReferral'})
+
 
 
 def product_redirect(request, pk, page='Default', sid=0):
@@ -728,6 +746,73 @@ def list_categories(request):
         return JSONPResponse(return_categories, callback=callback)
 
     return JSONResponse(return_categories)
+
+
+@ensure_csrf_cookie
+def authenticated_backend(request):
+    profile = None
+    if request.user and request.user.is_authenticated():
+        profile = request.build_absolute_uri(request.user.get_absolute_url())
+    return JSONResponse({'authenticated': request.user and request.user.is_authenticated(), 'profile': profile})
+
+def product_lookup_by_domain(request, domain, key):
+    instance = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain=domain)
+    if instance.template:
+        user_id = request.user.pk
+        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=key), instance.vendor
+    return None, None
+
+def product_lookup_by_theimp(request, key):
+    products = get_model('theimp', 'Product').objects.filter(key__startswith=key)
+    if len(products) < 1:
+        return None
+    json_data = json.loads(products[0].json)
+    return json_data.get('site_product', None)
+
+def product_lookup(request):
+    if not request.user.is_authenticated():
+        raise Http404
+
+    key = urllib.unquote(request.GET.get('key', '')).decode('utf8')
+    try:
+        product_pk = long(urllib.unquote(request.GET.get('pk', '')).decode('utf8'))
+    except ValueError:
+        product_pk = None
+
+
+    if key and not product_pk:
+        product_pk = product_lookup_by_theimp(request, key)
+
+    # TODO: must go through theimp database right now to fetch site product by real url
+    #key = urllib.unquote(request.GET.get('key', '')).decode('utf8')
+    #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
+
+    #json_data = json.loads(imported_product.json)
+    #product_pk = json_data.get('site_product', None)
+    product_short_link = None
+    product_link = None
+    product_liked = False
+    if product_pk:
+        product = get_object_or_404(Product, pk=product_pk, published=True)
+        product_link = request.build_absolute_uri(product.get_absolute_url())
+        product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
+        product_short_link = reverse('product-short-link', args=[product_short_link.link()])
+        product_short_link = request.build_absolute_uri(product_short_link)
+        product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
+    else:
+        domain = urllib.unquote(request.GET.get('domain', '')).decode('utf8')
+        product_short_link, vendor = product_lookup_by_domain(request, domain, key)
+        if product_short_link is not None:
+            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link, user=request.user, vendor=vendor)
+            product_short_link = reverse('domain-short-link', args=[product_short_link.link()])
+            product_short_link = request.build_absolute_uri(product_short_link)
+
+    return JSONResponse({
+        'product_pk': product_pk,
+        'product_link': product_link,
+        'product_short_link': product_short_link,
+        'product_liked': product_liked
+    })
 
 
 @login_required
