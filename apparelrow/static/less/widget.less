@@ -1,3 +1,10 @@
+@import "./../bootstrap/less/variables.less";
+@import "./variables.less";
+@import "./retina.less";
+@import "./utils.less";
+
+
+
 #photo-markers {
   position: absolute;
   top: 0;
@@ -29,10 +36,7 @@ html.look-type-C {
 #product-chooser {
     position: relative;
     overflow: hidden;
-    max-width: 834px; // 6 columns of products
-    min-width: 418px; // 3 columns of products
-    min-height: 400px;
-    padding-left: 20px;
+    width: 100%;
     #product-tabs > li {
         > a {
             border-radius: 0;
@@ -128,7 +132,6 @@ html.look-type-C {
             }
         }
 
-
     }
     .product-filter-container {
         padding: 0 10px;
@@ -147,4 +150,28 @@ html.look-type-C {
             }
         }
     }
+}
+
+.widget-footer {
+  background-color: #FFFFFF;
+  .btn {
+    width: 100%;
+  }
+  .btn-touch-menu {
+    background-color: #68e2b9;
+    margin-left: 3px;
+    color: #FFFFFF;
+  }
+  .btn-add-item {
+    background-color: #000000;
+    color: #FFFFFF;
+    font-weight: bold;
+  }
+  .touch-menu-col {
+    width: 70px;
+    float:right;
+  }
+  .add-item-col {
+    overflow: hidden;
+  }
 }

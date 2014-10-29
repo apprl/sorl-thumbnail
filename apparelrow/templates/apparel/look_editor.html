@@ -11,17 +11,18 @@
 
     <div id="content">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 col-widget">
                 <div id="edit-look"></div>
             </div>
-            <div class="col-md-6 hidden-sm hidden-sx">
+            <div class="col-md-6 visible-md visible-lg">
                 {% include "apparel/tools/product_picker.html" %}
             </div>
         </div>
     </div>
 
-   {% include "apparel/tools/widget_templates.html" %}
+    {% include "apparel/tools/widget_templates.html" %}
 
+    {% include "apparel/tools/widget_footer.html" %}
     <script type="text/javascript">
         var external_look_type = '{{ component }}';
         var external_look_id = {% if object %}{{ object.id }}{% else %}-1{% endif %};

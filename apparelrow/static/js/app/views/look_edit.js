@@ -70,6 +70,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
         this.pending_product = false;
         this.pending_component = false;
+
+        App.Views.LookEdit.__super__.initialize(this);
     },
 
     login_popup: function() {
