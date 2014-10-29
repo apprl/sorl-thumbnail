@@ -235,11 +235,12 @@ class IsMappedCategoryListFilter(admin.SimpleListFilter):
 
 class CategoryMappingAdmin(admin.ModelAdmin):
     list_display = ('category', 'vendor', 'mapped_category', 'category_ancestors',)
-    list_filter = (IsMappedCategoryListFilter, 'vendor')
+    #list_filter = (IsMappedCategoryListFilter, 'vendor')
+    list_filter = ('vendor',)
     readonly_fields = ('vendor', 'category', 'created', 'modified')
     search_fields = ('category',)
-    list_editable = ('mapped_category',)
-    list_per_page = 20
+    #list_editable = ('mapped_category',)
+    list_per_page = 10
 
     def category_ancestors(self, category):
         result = []
