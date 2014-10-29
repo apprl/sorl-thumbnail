@@ -10,10 +10,14 @@
     {% include "apparel/tools/widget_header.html" %}
 
     <div id="content">
-
-        <div id="edit-look"></div>
-
-        {% include "apparel/tools/product_picker.html" %}
+        <div class="row">
+            <div class="col-md-6">
+                <div id="edit-look"></div>
+            </div>
+            <div class="col-md-6 hidden-sm hidden-sx">
+                {% include "apparel/tools/product_picker.html" %}
+            </div>
+        </div>
     </div>
 
    {% include "apparel/tools/widget_templates.html" %}
