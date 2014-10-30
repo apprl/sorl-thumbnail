@@ -8223,13 +8223,13 @@ fieldset[disabled] .pagination .btn-pagination.active {
 @media (min-width: 1200px) and (min-width: 768px) {
   .product-list-container .col-product-filter {
     float: left;
-    width: 25%;
+    width: 33.33333333%;
   }
 }
 @media (min-width: 1200px) and (min-width: 768px) {
   .product-list-container .col-product-list {
     float: left;
-    width: 75%;
+    width: 66.66666667%;
   }
 }
 @media (min-width: 1200px) and (min-width: 768px) {
@@ -9421,7 +9421,7 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   display: none;
 }
 .create-store-page #shop-preview {
-  width: 50%;
+  width: 100%;
   float: left;
 }
 .create-store-page #content-container {

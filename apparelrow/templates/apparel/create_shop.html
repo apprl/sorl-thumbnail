@@ -3,13 +3,19 @@
 {% load i18n compressed %}
 
 
-{% block body-classes %}create-shop product-list look-editor-page{% endblock %}
+{% block body-classes %}create-shop product-list create-store-page shop{% endblock %}
 {% block full-body %}
 
-    {% include "apparel/tools/widget_header.html" with title='Title' %}
+    {% include "apparel/tools/widget_header.html" with title='Create a shop' type='create_shop' %}
 
-    <div id="content">
-        {% include "apparel/tools/product_picker.html" %}
+    <div id="content" class="row">
+        <div class="col-md-6">
+            {% include "apparel/tools/widget_shop_edit.html" %}
+        </div>
+
+        <div class="col-md-6">
+            {% include "apparel/tools/product_picker.html" %}
+        </div>
     </div>
 
     {% include "apparel/tools/widget_templates.html" %}
@@ -18,5 +24,5 @@
         var selected_gender = '{{ gender }}';
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-    {% compressed_js 'look_editor' %}
+    {% compressed_js 'create_store' %}
 {% endblock %}

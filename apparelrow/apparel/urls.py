@@ -5,6 +5,7 @@ from django.views.generic import TemplateView, RedirectView
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
+from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views import BrandRedirectView
 
 urlpatterns = patterns('',
@@ -36,7 +37,8 @@ urlpatterns = patterns('',
     url(r'^shop/$', 'apparelrow.apparel.browse.browse_products', name='shop'),
     url(r'^shop/men/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^shop/women/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
-    url(r'^shop/create/$', 'apparelrow.apparel.shop.create_shop', name='create-shop'),
+    url(r'^shop/create/$', 'apparelrow.apparel.views.shop.create_shop', name='create-shop'),
+    url(r'^shop/create/api$', ShopCreateView.as_view(), name='create_shop'),
 
     # Shop embed - wardrobe
     url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),

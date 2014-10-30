@@ -31,16 +31,18 @@
         <div id="collapseOne" class="panel-collapse collapse">
             <div class="panel-body" id="product-category">
                 <a class="reset" href="">{% trans "Reset this filter" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
-                {% for category, structure in categories_all|tree_info %}
-                {% if structure.new_level %}
-                <ul class="level-{{ category.get_level }} list-unstyled">
-                    {% else %}
-                    </li>
-                    {% endif %}
-                    <li class="{% if categories and category.id not in categories %} to_filter{% endif %}">
-                    <a data-order="{{ category.name_order }}" id="category-{{ category.id }}" class="{% if category.id in selected_categories %} selected{% endif %}" href="?category={{ category.id }}">{{ category.name }}</a>
-                    {% for level in structure.closed_levels %}</li></ul>{% endfor %}
-                {% endfor %}
+                {% if categories_all %}
+                    {% for category, structure in categories_all|tree_info %}
+                    {% if structure.new_level %}
+                    <ul class="level-{{ category.get_level }} list-unstyled">
+                        {% else %}
+                        </li>
+                        {% endif %}
+                        <li class="{% if categories and category.id not in categories %} to_filter{% endif %}">
+                        <a data-order="{{ category.name_order }}" id="category-{{ category.id }}" class="{% if category.id in selected_categories %} selected{% endif %}" href="?category={{ category.id }}">{{ category.name }}</a>
+                        {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
