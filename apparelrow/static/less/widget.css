@@ -24,3 +24,158 @@ html.look-type-C .container,
 html.look-type-C .collage {
   box-sizing: border-box;
 }
+#product-chooser {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+#product-chooser #product-tabs > li {
+  font-size: 18px;
+  text-transform: uppercase;
+}
+#product-chooser #product-tabs > li > a {
+  border-radius: 0;
+}
+#product-chooser #product-filter {
+  border-bottom: 3px solid #000000;
+}
+#product-chooser #product-filter .middle-filters {
+  padding: 10px 0;
+}
+#product-chooser #product-filter .middle-filters #product-filter-gender {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 0;
+}
+#product-chooser #product-filter .middle-filters #product-filter-gender li {
+  padding: 0;
+}
+#product-chooser #product-filter .middle-filters #product-filter-gender li > a {
+  display: inline-block;
+  padding: 1px 5px;
+}
+#product-chooser #product-filter .middle-filters #product-filter-gender li > a:before {
+  margin-right: 5px;
+  margin-bottom: 2px;
+  display: inline-block;
+  content: '';
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  background-position: 0 0;
+  background-image: url("../images/radiobutton.png");
+}
+@media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (min-resolution: 1.5dppx) {
+  #product-chooser #product-filter .middle-filters #product-filter-gender li > a:before {
+    background-image: url("../images/radiobutton@2x.png");
+    background-size: 28px 14px;
+  }
+}
+#product-chooser #product-filter .middle-filters #product-filter-gender li > a.selected:before {
+  background-position: -14px 0px;
+}
+#product-chooser .product-list-container {
+  padding: 0 10px;
+  border-left: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+}
+#product-chooser .product-list-container #product-list-empty,
+#product-chooser .product-list-container #product-list-unauthenticated {
+  padding: 10px;
+  display: none;
+  text-align: center;
+}
+#product-chooser .product-list-container #product-list-empty p,
+#product-chooser .product-list-container #product-list-unauthenticated p {
+  padding: 15px 0;
+}
+#product-chooser .product-list-container #product-list {
+  margin-bottom: 0;
+  padding: 10px;
+  height: 340px;
+  overflow-y: scroll;
+}
+#product-chooser .product-list-container #product-list > li .product-small {
+  position: relative;
+  width: 112px;
+  margin: 0;
+  text-align: center;
+}
+#product-chooser .product-list-container #product-list > li .product-small .image-small {
+  display: block;
+  width: 112px;
+  height: 145px;
+  line-height: 145px;
+}
+#product-chooser .product-list-container #product-list > li .product-small .image-small img {
+  max-height: 145px;
+  max-width: 112px;
+  vertical-align: middle;
+}
+#product-chooser .product-list-container #product-list > li .product-small .hover {
+  position: absolute;
+  width: 92px;
+  height: 82;
+  top: 32px;
+  left: 10px;
+  right: 10px;
+  display: none;
+}
+#product-chooser .product-list-container #product-list > li .product-small .hover a {
+  margin-bottom: 10px;
+}
+#product-chooser .product-list-container #product-list > li .product-small .caption {
+  padding-top: 10px;
+  height: 50px;
+}
+#product-chooser .product-list-container #product-list > li .product-small .caption p {
+  font-size: 11px;
+  margin-bottom: 0;
+}
+#product-chooser .product-list-container #product-list > li .product-small .caption h4 {
+  font-size: 12px;
+  margin: 0;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#product-chooser .product-filter-container {
+  padding: 0 10px;
+  border-left: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
+}
+#product-chooser .product-filter-container .hidden-filters li:first-child {
+  padding-left: 0;
+}
+#product-chooser .product-filter-container .hidden-filters li:last-child {
+  padding-right: 0;
+}
+#product-chooser .product-filter-container .hidden-filters .dropdown-menu {
+  max-height: 240px;
+  overflow-y: scroll;
+}
+.widget-footer {
+  background-color: #FFFFFF;
+}
+.widget-footer .btn {
+  width: 100%;
+}
+.widget-footer .btn-touch-menu {
+  background-color: #68e2b9;
+  margin-left: 3px;
+  color: #FFFFFF;
+}
+.widget-footer .btn-add-item {
+  background-color: #000000;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+.widget-footer .touch-menu-col {
+  width: 70px;
+  float: right;
+}
+.widget-footer .add-item-col {
+  overflow: hidden;
+}
