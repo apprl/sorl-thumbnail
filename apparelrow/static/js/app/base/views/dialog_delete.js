@@ -16,10 +16,8 @@ App.Views.DialogDelete = Backbone.View.extend({
     },
 
     yes: function(e) {
-        this.model._dirty = false;
-        this.model.destroy({success: function() {
-            window.location.replace('/looks/');
-        }});
+        App.Events.trigger('popup_dispatcher:hide');
+        App.Events.trigger('widget:delete');
     },
 
     render: function() {

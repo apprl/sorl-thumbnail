@@ -1,0 +1,30 @@
+{% load static from staticfiles %}
+{% load i18n compressed %}
+
+<div class="widget-footer row visible-xs visible-sm">
+  <div class="touch-menu-col">
+        <button class="btn-touch-menu btn">&bull;&nbsp;&bull;&nbsp;&bull;</button>
+    </div>
+    <div class="add-item-col">
+        <button class="btn-add-item btn">+ Add item</button>
+    </div>
+
+    <!--<div class="body-header-col-left">
+        <h1>{% if object %}{{ object.title }} {% if not object.published %}({% trans "Not published" %}) {% endif %}{% else %}{% if component == 'photo' %}{% trans "Create a tagged photo" %}{% else %}{% trans "Create a collage" %}{% endif %}{% endif %}</h1>
+    </div>
+    <div class="body-header-col-right">
+        <ul class="list-inline">
+            {% if object and object.slug %}
+            <li><button class="btn btn-delete" name="look_delete">{% trans "Delete look" %}</button></li>
+            {% else %}
+            <li><button class="btn btn-reset" name="look_reset">{% trans "Reset look" %}</button></li>
+            {% endif %}
+            <li><button class="btn btn-save" name="look_save" data-save-draft-text="{% trans "Save draft" %}">{% if object and object.published %}{% trans "Save" %}{% else %}{% trans "Save draft" %}{% endif %}</button></li>
+            {% if object and object.published %}
+            <li><button class="btn btn-unpublish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Unpublish" %}</button></li>
+            {% else %}
+            <li><button class="btn btn-publish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Publish" %}</button></li>
+            {% endif %}
+        </ul>
+    </div>-->
+</div>

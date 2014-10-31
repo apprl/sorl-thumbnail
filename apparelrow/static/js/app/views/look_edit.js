@@ -18,13 +18,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             'collage': App.Views.LookComponentCollage
         };
 
+        // Header - send model so we can fetch title and publish info - should always be available (set default values otherwise)
+        this.header = new App.Views.Header({model: this.model});
+
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
-        this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset({model: this.model}));
-        this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete({model: this.model}));
-        this.popup_dispatcher.add('dialog_save', new App.Views.DialogSave({model: this.model, title: $('#dialog_save_template').data('title')}));
-        this.popup_dispatcher.add('dialog_publish', new App.Views.DialogSave({model: this.model, title: $('#dialog_publish_template').data('title')}));
-        this.popup_dispatcher.add('dialog_unpublish', new App.Views.DialogUnpublish({model: this.model}));
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
 
         // Look editor popup
@@ -36,9 +34,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         //this.model.on('change', this.render, this);
         this.model.on('change:image', this.render_image, this);
         this.model.on('destroy', this.render, this);
+
         this.model.components.on('add', this.add_component, this);
         this.model.components.on('remove', this.remove_component, this);
         this.model.components.on('reset', this.add_components, this);
+
         // TODO: is it ok to render on error? wil it work for look edits?
         this.model.fetch({error: _.bind(function() { this.render(); }, this), success: _.bind(function() { this.render(); }, this)});
 
@@ -49,13 +49,6 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             $('.facebook-btn').attr('onclick', '').on('click', _.bind(this.login_popup, this));
         }
 
-        // TODO: move this to another view or expand this view
-        $('.body-header').on('click', '.btn-reset', _.bind(this.look_reset, this))
-                         .on('click', '.btn-delete', _.bind(this.look_delete, this))
-                         .on('click', '.btn-save', _.bind(this.look_save, this))
-                         .on('click', '.btn-publish', _.bind(this.look_publish, this))
-                         .on('click', '.btn-unpublish', _.bind(this.look_unpublish, this));
-
         this.model.on('change:published', function(model, value, options) {
             if(value === false) {
                 var $button = $('.btn-unpublish');
@@ -63,13 +56,17 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             }
         }, this);
 
-        // Render look edit view on custom look reset event
-        App.Events.on('look:reset', this.render, this);
-
         // Listen on product add
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
         this.pending_product = false;
         this.pending_component = false;
+
+        // Listen on widget events
+        App.Events.on('widget:delete', this.delete_look, this);
+        App.Events.on('widget:reset', this.render, this);
+        App.Events.on('widget:save', this.save_look, this);
+        App.Events.on('widget:publish', this.publish_look, this);
+        App.Events.on('widget:unpublish', this.unpublish_look, this);
 
         App.Views.LookEdit.__super__.initialize(this);
     },
@@ -189,38 +186,12 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         e.preventDefault();
     },
 
-    /**
-     * Look buttons
-     */
-
-    look_reset: function() {
-        this.popup_dispatcher.show('dialog_reset');
-
-        return false;
-    },
-
-    look_delete: function() {
-        this.popup_dispatcher.show('dialog_delete');
-
-        return false;
-    },
-
-    look_publish: function() {
-        this.popup_dispatcher.show('dialog_publish');
-
-        return false;
-    },
-
-    look_unpublish: function() {
-        this.popup_dispatcher.show('dialog_unpublish');
-
-        return false;
-    },
-
-    look_save: function() {
-        this.popup_dispatcher.show('dialog_save');
-
-        return false;
+    // callback for delete dialog
+    delete_look: function() {
+        this.model._dirty = false;
+        this.model.destroy({success: function() {
+            window.location.replace('/looks/');
+        }});
     },
 
     initialize_temporary_image: function() {
@@ -289,6 +260,84 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         } else {
             this.$el.find('.look-container').css({width: this.max_width, height: this.max_height});
             this.$el.css({width: this.max_width});
+        }
+    },
+
+    publish_look: function(values) {
+        this.model.set('published', true);
+        this.save_look(values);
+    },
+
+    unpublish_look: function() {
+        this.model.set('published', false);
+        this.model.save();
+    },
+
+    save_look: function(values) {
+        if (values) {
+            this.model.set('title', values.title);
+            this.model.set('description', values.description);
+        }
+
+        if(!isAuthenticated) {
+            FB.login(_.bind(function(response) {
+                if(response.authResponse) {
+                    data = {uid: response.authResponse.userID,
+                            access_token: response.authResponse.accessToken};
+                    $.post('/facebook/login', data, _.bind(function(response) {
+                        this._look_save();
+                    }, this));
+                }
+            }, this), {scope: facebook_scope});
+        } else {
+            this._look_save();
+        }
+
+        return false;
+    },
+
+    _look_save: function() {
+        // Remove components without products before saving
+        this.model.components.each(_.bind(function(model) {
+            if(!model.has('product') || !model.get('product')) {
+                this.model.components.remove(model);
+                model.destroy();
+            }
+        }, this));
+
+        if(this.model.backend == 'client') {
+            this.model.backend = 'server';
+            this.model.unset('id', {silent: true});
+        }
+
+        this.model.save({}, {success: _.bind(this.save_success, this)});
+
+        // TODO: Get image data from <img> tag instead of downloading it again
+        //this._image2base64(this.model.get('image'), _.bind(function(base64_image) {
+            //this.model.set('image_base64', base64_image, {silent: true});
+            //this.model.save({}, {success: _.bind(this.save_success, this)});
+        //}, this));
+    },
+
+    save_success: function() {
+        this.model._dirty = false;
+        window.location.replace('/looks/' + this.model.get('slug'));
+    },
+
+    _image2base64: function(image_url, callback) {
+        var canvas = document.createElement('canvas');
+        var image = new Image();
+        image.src = image_url;
+
+        image.onload = function() {
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0);
+            var dataURL = canvas.toDataURL('image/png');
+
+            callback(dataURL.replace(/^data:image\/(png|jpg);base64,/, ''));
         }
     }
 

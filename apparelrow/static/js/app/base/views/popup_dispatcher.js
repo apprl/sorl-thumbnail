@@ -53,25 +53,32 @@ App.Views.PopupDispatcher = App.Views.WidgetBase.extend({
             this.$el.fadeIn(200);
         }
 
+        // Listen to window resize for repositioning
+        $(window).on('resize.dialog', _.bind(this._center, this));
+
         this.active = name;
     },
 
     hide: function(hide_animation) {
-        var dialog = this.content[this.active];
+        if (this.active && this.content.hasOwnProperty(this.active)) {
+            var dialog = this.content[this.active];
 
-        if(dialog.hasOwnProperty('hide')) {
-            dialog.hide();
+            if (dialog.hasOwnProperty('hide')) {
+                dialog.hide();
+            }
+
+            if (hide_animation) {
+                this.$overlay.hide();
+                this.$el.hide();
+            } else {
+                this.$overlay.fadeOut(200);
+                this.$el.fadeOut(200);
+            }
+            this.active = false;
+
+            // Remove listener
+            $(window).off('resize.dialog');
         }
-
-        if(hide_animation) {
-            this.$overlay.hide();
-            this.$el.hide();
-        } else {
-            this.$overlay.fadeOut(200);
-            this.$el.fadeOut(200);
-        }
-        this.active = false;
-
         return false;
     },
 

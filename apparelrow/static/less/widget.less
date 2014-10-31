@@ -38,21 +38,28 @@ html.look-type-C {
     overflow: hidden;
     width: 100%;
     #product-tabs > li {
+        background-color: @lighter_gray_color;
         > a {
             border-radius: 0;
+            padding: 6px 13px;
+            font-weight: bold;
         }
-        font-size: 18px;
-        text-transform: uppercase;
+        font-size: 16px;
     }
 
     #product-filter {
         border-bottom: 3px solid #000000;
         .middle-filters {
             padding: 10px 0;
+            .form-control-wrapper {
+              overflow: hidden;
+            }
             #product-filter-gender {
                 padding-top: 5px;
                 padding-bottom: 5px;
                 margin-bottom: 0;
+                float:left;
+                width: 150px;
                 li {
                     padding: 0;
                 }
@@ -153,13 +160,15 @@ html.look-type-C {
 }
 
 .widget-footer {
+  bottom: 0px;
+  position: absolute;
+  width: 100%;
   background-color: #FFFFFF;
   .btn {
     width: 100%;
   }
   .btn-touch-menu {
     background-color: #68e2b9;
-    margin-left: 3px;
     color: #FFFFFF;
   }
   .btn-add-item {
@@ -168,7 +177,8 @@ html.look-type-C {
     font-weight: bold;
   }
   .touch-menu-col {
-    width: 70px;
+    width: 73px;
+    padding-left: 3px;
     float:right;
   }
   .add-item-col {
