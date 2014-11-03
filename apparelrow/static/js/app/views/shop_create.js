@@ -7,6 +7,15 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             success: _.bind(function() { this.init_products(); }, this)
         });
 
+        // Popup dispatcher
+        this.popup_dispatcher = new App.Views.PopupDispatcher();
+        this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset({model: this.model}));
+        this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete({model: this.model}));
+        this.popup_dispatcher.add('dialog_save', new App.Views.DialogSave({model: this.model, title: $('#dialog_save_template').data('title')}));
+        this.popup_dispatcher.add('dialog_publish', new App.Views.DialogSave({model: this.model, title: $('#dialog_publish_template').data('title')}));
+        this.popup_dispatcher.add('dialog_unpublish', new App.Views.DialogUnpublish({model: this.model}));
+        this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
+
         App.Events.on('look_edit:product:add', this.pending_add_component, this)
         this.model.components.on('add', this.add_component, this);
     },

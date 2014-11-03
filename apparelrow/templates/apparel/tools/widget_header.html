@@ -10,7 +10,7 @@
         {% endif %}
     </div>
     <div class="body-header-col-right">
-        {% if type == 'look_editor' %}
+        {% if type == 'look_editor' or type == 'create_shop' %}
             <ul class="list-inline">
                 {% if object and object.slug %}
                 <li><button class="btn btn-delete" name="look_delete">{% trans "Delete look" %}</button></li>
@@ -26,6 +26,7 @@
             </ul>
         {% endif %}
 
+        {% comment %}
         {% if type == 'create_shop' %}
             <ul class="list-inline">
                 {% if object and object.slug %}
@@ -41,5 +42,6 @@
                 {% endif %}
             </ul>
         {% endif %}
+        {% endcomment %}
     </div>
 </div>
