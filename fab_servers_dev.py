@@ -22,6 +22,10 @@ def dev_settings():
     env.solr_url = "ip-10-0-1-247.ec2.internal"
     env.s3_url = "s-staging.apprl.com"
     env.gateway = 'deploy@dev-bastion'
+    env.aws_key_id = 'AKIAJWFWCTRXKCOCRPTQ'
+    env.aws_key = 'rCUAw8IwyysB3u3pgDi5nKLsqJyGe2pchBc1on1a'
+    env.sentry_url = ''
+
 
 def localhost():
     "Use the local virtual server"
@@ -55,12 +59,13 @@ def dev_local():
 def dev_aws_1():
     common_aws()
     dev_settings()
-    env.settings = 'dev-aws'
+    env.settings = "dev-aws"
     env.internal_ip = "10.0.0.213"
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
     env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.restart = ['gunicorn','nginx']
     env.hostname="dev-aws1"
+    env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
 
 @task
 def dev_aws_2():
@@ -72,6 +77,7 @@ def dev_aws_2():
     env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.restart = ['gunicorn','nginx']
     env.hostname="dev-aws2"
+    env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
 
 @task
 def dev_admin_aws():
@@ -84,6 +90,7 @@ def dev_admin_aws():
                             # Mostly involves shared servers when for example memacached is already installed.
     env.restart = ['gunicorn_admin','nginx']
     env.hostname="dev-admin"
+    env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
 
 @task
 def dev_solr():
@@ -103,9 +110,11 @@ def dev_scrapy():
     env.celery_processes = '1'
     env.celery_processes_background = '1'
     env.installed_apps = ['']
-    env.restart = []
+    env.run_user = env.user
+    env.restart = ['scrapyd']
     env.reload_scrapy = True
     env.hostname="scrapy"
+
 
 @task
 def dev_importer():

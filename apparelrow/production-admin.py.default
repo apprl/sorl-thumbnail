@@ -61,10 +61,10 @@ djcelery.setup_loader()
 # to ensure it is executed only *once* and after all settings has been evaluated
 
 RAVEN_CONFIG = {
-    'dsn': 'https://0cd745f71e1f4cedb80adf2fda0a79e8:019c2b33e6904e2ab1d6cca01f3e2a83@sentry.wordex.se/8',
+    'dsn': '{{ sentry_url }}',
 }
 
-SENTRY_DSN='https://0cd745f71e1f4cedb80adf2fda0a79e8:019c2b33e6904e2ab1d6cca01f3e2a83@sentry.wordex.se/8'
+SENTRY_DSN='{{ sentry_url }}'
 
 # Locale paths
 LOCALE_PATHS = (

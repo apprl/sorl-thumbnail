@@ -227,3 +227,16 @@ def scrape(vendor):
     require('hostname', provided_by=[dev_scrapy])
     with project():
         run("curl http://localhost:6800/schedule.json -d project=spidercrawl -d spider=%(vendor)s" % {'vendor':vendor})
+
+@task
+def minorupdate():
+    sudo("apt-get update;apt-get upgrade")
+
+@task
+def scrapingstatus():
+    run("sh get_stats.sh")
+
+@task
+def importer(vendor):
+    with project():
+        sudo ("python manage.py run_importer --vendor=%(vendor)s" % {"vendor":vendor}, user="%(run_user)s" % env)

@@ -104,7 +104,7 @@ def deploy_app():
         with update_changed_requirements():
             run("git pull origin master -f")
         # Todo reactivate this
-        if not "dev" in env.settings:
+        if not "dev" in env.settings and env.collectstatic:
             manage("collectstatic -v 0 --noinput")
 
         #sudo("chown -R %(run_user)s:%(user)s %(static_dir)s;sudo chmod -R 770 %(static_dir)s" % env)

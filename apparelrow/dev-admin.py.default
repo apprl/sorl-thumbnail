@@ -60,6 +60,12 @@ djcelery.setup_loader()
 # It would be nice to move this somewhere, but I'm not sure where to put it
 # to ensure it is executed only *once* and after all settings has been evaluated
 
+RAVEN_CONFIG = {
+    'dsn': '{{ sentry_url }}',
+}
+
+SENTRY_DSN='{{ sentry_url }}'
+
 # Locale paths
 LOCALE_PATHS = (
     os.path.join(SERVER_APP_ROOT,'locale'),
