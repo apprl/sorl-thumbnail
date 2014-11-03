@@ -1,6 +1,5 @@
 App.Views.Header = Backbone.View.extend({
-    el: '.body-header',
-    template: _.template($('.body-header').html()),
+    template: _.template($('#widget_header').html()),
 
     events: {
         'click .btn-delete': 'header_delete',
@@ -47,5 +46,13 @@ App.Views.Header = Backbone.View.extend({
         this.popup_dispatcher.show('dialog_save');
 
         return false;
+    },
+
+    render: function() {
+        this.$el.html(this.template);
+
+        return this;
     }
+
+
 });

@@ -18,9 +18,6 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             'collage': App.Views.LookComponentCollage
         };
 
-        // Header - send model so we can fetch title and publish info - should always be available (set default values otherwise)
-        this.header = new App.Views.Header({model: this.model});
-
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));

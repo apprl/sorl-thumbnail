@@ -1,8 +1,8 @@
 {% load static from staticfiles %}
 {% load i18n compressed %}
-
+<script type="text/template" id="widget_header">
 <div class="body-header visible-md visible-lg">
-    <div class="body-header-col-left">
+    <div class="body-header-col-left visible-md visible-lg">
         <h1>{% if object %}{{ object.title }} {% if not object.published %}({% trans "Not published" %}) {% endif %}{% else %}{% if component == 'photo' %}{% trans "Create a tagged photo" %}{% else %}{% trans "Create a collage" %}{% endif %}{% endif %}</h1>
     </div>
     <div class="body-header-col-right">
@@ -21,3 +21,4 @@
         </ul>
     </div>
 </div>
+</script>

@@ -373,6 +373,7 @@ PIPELINE_JS = {
                              'js/app/base/views/dialog_login.js',
                              'js/app/look_editor/views/look_edit_filter_tabs.js',
                              'js/app/base/views/header.js',
+                             'js/app/base/views/dialog_header_mobile.js',
                              'js/app/base/views/filter_product.js',
                              'js/app/base/views/filter_product_category.js',
                              'js/app/base/views/filter_product_subcategory.js',

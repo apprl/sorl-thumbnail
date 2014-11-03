@@ -258,13 +258,23 @@ body {
         text-align: center;
         > ul {
             > li {
+                width: 100%;
                 padding-right: 0;
                 padding-left: 10px;
                 > .btn {
+                    width: 100%;
                     margin-top: 10px;
                     padding-top: 10px;
                     padding-bottom: 10px;
                 }
+            }
+            @media (min-width: @grid-float-breakpoint) {
+              > li {
+                width: auto;
+                > .btn {
+                  width: auto;
+                }
+              }
             }
             .dropdown-menu {
                 left: auto;
