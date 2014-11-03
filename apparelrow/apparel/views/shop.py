@@ -50,10 +50,17 @@ DEFAULT_SORT_ARGUMENTS = {
 
 def create_shop(request, template='apparel/create_shop.html', shop_id=None, gender=None, user_gender=None, user_id=None, language=None, **kwargs):
 
+    if not request.user.is_authenticated():
+        return HttpResponse('Unauthorized', status=401)
+
     if shop_id is not None:
         shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=shop_id)
+
+        if request.user is not shop.user:
+            return HttpResponse('Unauthorized', status=401)
+
     else:
-        shop = None
+        shop = False
 
     if not language:
         language = get_language()
@@ -104,11 +111,120 @@ class ShopCreateView(View):
         if pk is not None:
             shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=pk)
             return JSONResponse(shop_instance_to_dict(shop))
+
     def delete(self, request, pk, *args, **kwargs):
-        print "ShopCreateView: Delete"
+        shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=pk)
+
+        if request.user.is_authenticated() and request.user == shop.user:
+            shop.delete()
+            return JSONResponse(status=204)
+
+        return JSONResponse({ 'message': 'Not authenticated'}, status=401)
+
+
 
     def put(self, request, pk, *args, **kwargs):
-        print "ShopCreateView: Put"
+        if pk is not -1:
+            shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=pk)
+        else:
+            shop = ShopEmbed()
+            shop.save()
+
+        try:
+            json_data = json.loads(request.body)
+        except ValueError:
+            return JSONResponse({ 'message': 'Invalid json body' }, status=400)
+
+        if not request.user.is_authenticated():
+            return JSONResponse({ 'message': 'Not authenticated'}, status=401)
+
+        required_keys = ['title', 'components', 'published']
+        for key in required_keys:
+            if key not in json_data:
+                return JSONResponse({ 'message': 'Missing key %s' % (key,) }, status=400)
+
+        json_data['user'] = request.user
+
+        if json_data['published']:
+            request.session['shop_saved'] = True
+
+        if json_data['components']:
+
+            # Remove components
+            shop_components = get_model('apparel', 'ShopEmbedProduct').objects.filter(shop_embed_id=pk)
+            updated_component_ids = [x['id'] for x in json_data['components'] if 'id' in x]
+            for component in shop_components:
+                if component.id not in updated_component_ids:
+                    component.delete()
+
+            # Add new components and update old
+            ShopEmbedProduct = get_model('apparel', 'ShopEmbedProduct')
+            for component in json_data['components']:
+                component_id = None
+                if 'id' in component:
+                    component_id = component['id']
+                    del component['id']
+
+                product_id = component['product']['id']
+                del component['product']
+
+                shop_component, created = ShopEmbedProduct.objects.get_or_create(id=component_id,
+                                                                                 shop_embed_id=pk,
+                                                                                 product_id=product_id)
+
+                for key, value in component.items():
+                    setattr(shop_component, key, value)
+
+                shop_component.save()
+
+            del json_data['components']
+
+        # TODO: Handle errors
+        shop.save()
+
+        return JSONResponse(status=204)
 
     def post(self, request, *args, **kwargs):
-        print "ShopCreateView: Post"
+        try:
+            json_data = json.loads(request.body)
+        except ValueError:
+            return JSONResponse({'message': 'Invalid json body'}, status=400)
+
+        if not request.user.is_authenticated():
+            return JSONResponse({'message': 'Not authenticated'}, status=401)
+
+        required_keys = ['title', 'components', 'published']
+        for key in required_keys:
+            if key not in json_data:
+                return JSONResponse({ 'message': 'Missing key %s' % (key,) }, status=400)
+
+        json_data['user'] = request.user
+
+        if json_data['published']:
+            request.session['shop_saved'] = True
+
+        # Exclude components, handle later
+        components = json_data['components']
+        del json_data['components']
+
+        shop = get_model('apparel', 'ShopEmbed')(**json_data)
+        shop.save()
+
+        for component in components:
+            component['product_id'] = component['product']['id']
+            del component['product']
+
+            if 'component_of' not in component:
+                component['component_of'] = shop.component
+
+            component['shop_id'] = shop.pk
+
+            # TODO: Error handling
+            shop_component = get_model('apparel', 'ShopEmbedProduct')(**component)
+            shop_component.shop_embed = shop
+            shop_component.save()
+
+        response = JSONResponse(shop_instance_to_dict(shop), status=201)
+        response['Location'] = reverse('shop_create', args=[shop.pk])
+
+        return response

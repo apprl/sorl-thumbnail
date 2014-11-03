@@ -7,25 +7,27 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             success: _.bind(function() { this.init_products(); }, this)
         });
 
-        // Popup dispatcher
-        this.popup_dispatcher = new App.Views.PopupDispatcher();
-        this.popup_dispatcher.add('dialog_reset', new App.Views.DialogReset({model: this.model}));
-        this.popup_dispatcher.add('dialog_delete', new App.Views.DialogDelete({model: this.model}));
-        this.popup_dispatcher.add('dialog_save', new App.Views.DialogSave({model: this.model, title: $('#dialog_save_template').data('title')}));
-        this.popup_dispatcher.add('dialog_publish', new App.Views.DialogSave({model: this.model, title: $('#dialog_publish_template').data('title')}));
-        this.popup_dispatcher.add('dialog_unpublish', new App.Views.DialogUnpublish({model: this.model}));
-        this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
+
+        App.Events.on('widget:delete', this.delete_shop, this);
+        App.Events.on('widget:reset', this.render, this);
+        App.Events.on('widget:save', this.save_shop, this);
+        App.Events.on('widget:publish', this.publish_shop, this);
+        App.Events.on('widget:unpublish', this.unpublish_shop, this);
 
         App.Events.on('look_edit:product:add', this.pending_add_component, this)
         this.model.components.on('add', this.add_component, this);
+
+        App.Views.ShopCreate.__super__.initialize(this);
     },
     init_products: function() {
-        for(var i = 0; i < this.model.attributes.products.length; i++) {
-            var product = this.model.attributes.products[i];
-            var self = this;
-            var component = new App.Models.ShopComponent();
-            component.set('product', product);
-            self.model.components.add(component);
+        if(this.model.attributes.hasOwnProperty('products')) {
+            for (var i = 0; i < this.model.attributes.products.length; i++) {
+                var product = this.model.attributes.products[i];
+                var self = this;
+                var component = new App.Models.ShopComponent();
+                component.set('product', product);
+                self.model.components.add(component);
+            }
         }
     },
     pending_add_component: function(product) {
@@ -46,5 +48,61 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     add_component: function(model, collection) {
         var view = new App.Views.ShopComponentProduct({ model: model, collection: collection });
         this.$('#shop-product-list').append(view.render().el);
-    }
+    },
+
+
+    publish_shop: function(values) {
+        this.model.set('published', true);
+        this.save_shop(values);
+    },
+
+    unpublish_shop: function() {
+        this.model.set('published', false);
+        this.model.save();
+    },
+
+    save_shop: function(values) {
+        if (values) {
+            this.model.set('title', values.title);
+            this.model.set('description', values.description);
+        }
+
+        if(!isAuthenticated) {
+            FB.login(_.bind(function(response) {
+                if(response.authResponse) {
+                    data = {uid: response.authResponse.userID,
+                            access_token: response.authResponse.accessToken};
+                    $.post('/facebook/login', data, _.bind(function(response) {
+                        this._look_save();
+                    }, this));
+                }
+            }, this), {scope: facebook_scope});
+        } else {
+            this._shop_save();
+        }
+
+        return false;
+    },
+
+    _shop_save: function() {
+        // Remove components without products before saving
+        this.model.components.each(_.bind(function(model) {
+            if(!model.has('product') || !model.get('product')) {
+                this.model.components.remove(model);
+                model.destroy();
+            }
+        }, this));
+
+        if(this.model.backend == 'client') {
+            this.model.backend = 'server';
+            this.model.unset('id', {silent: true});
+        }
+
+        this.model.save({}, {success: _.bind(this.save_success, this)});
+    },
+
+    save_success: function() {
+        this.model._dirty = false;
+        window.location.replace('/shop/edit/' + this.model.get('id'));
+    },
 });

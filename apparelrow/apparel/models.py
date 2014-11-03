@@ -965,7 +965,9 @@ class ShopEmbed(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('shop', [str(self.slug)])
+        url = ('shop', [str(self.pk)])
+        print url
+        return url
 
 #
 # ShopEmbedProduct
