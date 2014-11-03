@@ -7,11 +7,8 @@ import json
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
 from django.conf import settings
 from django.shortcuts import render_to_response
-<<<<<<< HEAD
+
 from django.shortcuts import get_object_or_404, render
-=======
-from django.shortcuts import render
->>>>>>> 7c92b8aab2ac0b7e053730af024ce31a454cc38e
 from django.db.models import Max
 from django.db.models import Min
 from django.db.models.loading import get_model
@@ -36,12 +33,9 @@ from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
 
-<<<<<<< HEAD
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 
-=======
->>>>>>> 7c92b8aab2ac0b7e053730af024ce31a454cc38e
 from apparelrow.profile.models import Follow
 
 BROWSE_PAGE_SIZE = 30
@@ -53,7 +47,7 @@ DEFAULT_SORT_ARGUMENTS = {
     'che': 'price asc, popularity desc, created desc'
 }
 
-<<<<<<< HEAD
+
 def create_shop(request, template='apparel/create_shop.html', shop_id=None, gender=None, user_gender=None, user_id=None, language=None, **kwargs):
 
     if shop_id is not None:
@@ -61,9 +55,6 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
     else:
         shop = None
 
-=======
-def create_shop(request, template='apparel/create_shop.html', gender=None, user_gender=None, user_id=None, language=None, **kwargs):
->>>>>>> 7c92b8aab2ac0b7e053730af024ce31a454cc38e
     if not language:
         language = get_language()
     translation.activate(language)
@@ -76,7 +67,6 @@ def create_shop(request, template='apparel/create_shop.html', gender=None, user_
     # Todo: how real data do we need here?
     return render(request, template, {
         'gender': gender,
-<<<<<<< HEAD
         'pricerange': {'min': 0, 'max': 10000},
         'external_shop_id': shop_id,
     })
@@ -115,13 +105,6 @@ class ShopCreateView(View):
             shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=pk)
             return JSONResponse(shop_instance_to_dict(shop))
     def delete(self, request, pk, *args, **kwargs):
-=======
-        'pricerange': {'min': 0, 'max': 10000}
-    })
-
-class ShopCreateView(View):
-    def delete(selfself, request, pk, *args, **kwargs):
->>>>>>> 7c92b8aab2ac0b7e053730af024ce31a454cc38e
         print "ShopCreateView: Delete"
 
     def put(self, request, pk, *args, **kwargs):
