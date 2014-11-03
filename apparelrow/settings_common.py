@@ -334,7 +334,8 @@ PIPELINE_JS = {
         'output_filename': 'js/compiled/main.js',
     },
     'shop': {
-        'source_filenames': ('js/vendor/jquery-1.9.1.js',
+        'source_filenames': (#'js/vendor/jquery-1.9.1.js',
+                             'js/vendor/jquery-2.1.1.js',
                              'js/vendor/jquery-ui-1.9.2.custom.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
                              'js/vendor/jquery.history.js',
