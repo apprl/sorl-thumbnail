@@ -16,7 +16,7 @@ App.Views.DialogReset = Backbone.View.extend({
     },
 
     yes: function(e) {
-        App.Events.trigger('look:reset');
+        App.Events.trigger('widget:reset');
         App.Events.trigger('popup_dispatcher:hide');
 
         return false;
