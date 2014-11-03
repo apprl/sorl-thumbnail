@@ -30,11 +30,13 @@ html.look-type-C .collage {
   width: 100%;
 }
 #product-chooser #product-tabs > li {
-  font-size: 18px;
-  text-transform: uppercase;
+  background-color: #e6e6e6;
+  font-size: 16px;
 }
 #product-chooser #product-tabs > li > a {
   border-radius: 0;
+  padding: 6px 13px;
+  font-weight: bold;
 }
 #product-chooser #product-filter {
   border-bottom: 3px solid #000000;
@@ -42,10 +44,15 @@ html.look-type-C .collage {
 #product-chooser #product-filter .middle-filters {
   padding: 10px 0;
 }
+#product-chooser #product-filter .middle-filters .form-control-wrapper {
+  overflow: hidden;
+}
 #product-chooser #product-filter .middle-filters #product-filter-gender {
   padding-top: 5px;
   padding-bottom: 5px;
   margin-bottom: 0;
+  float: left;
+  width: 150px;
 }
 #product-chooser #product-filter .middle-filters #product-filter-gender li {
   padding: 0;
@@ -157,6 +164,9 @@ html.look-type-C .collage {
   overflow-y: scroll;
 }
 .widget-footer {
+  bottom: 0px;
+  position: absolute;
+  width: 100%;
   background-color: #FFFFFF;
 }
 .widget-footer .btn {
@@ -164,7 +174,6 @@ html.look-type-C .collage {
 }
 .widget-footer .btn-touch-menu {
   background-color: #68e2b9;
-  margin-left: 3px;
   color: #FFFFFF;
 }
 .widget-footer .btn-add-item {
@@ -173,7 +182,8 @@ html.look-type-C .collage {
   font-weight: bold;
 }
 .widget-footer .touch-menu-col {
-  width: 70px;
+  width: 73px;
+  padding-left: 3px;
   float: right;
 }
 .widget-footer .add-item-col {
