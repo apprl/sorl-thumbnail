@@ -12,7 +12,6 @@ jQuery(document).ready(function() {
             ':country/shop/create': 'shop_create'
         },
         shop_create: function() {
-            console.log("SHOP_CREATE??");
         }
     });
 

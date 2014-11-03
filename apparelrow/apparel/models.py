@@ -940,38 +940,39 @@ models.signals.post_save.connect(invalidate_model_handler, sender=Look)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Look)
 
 #
-# StoreEmbed
+# ShopEmbed
 #
 
-class StoreEmbed(models.Model):
+class ShopEmbed(models.Model):
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     title       = models.CharField(_('Title'), max_length=200, validators=[validate_not_spaces])
     slug        = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
                     help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description = models.TextField(_('Look description'), null=True, blank=True)
-    user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='store_embed')
-    products    = models.ManyToManyField(Product, through='StoreEmbedProduct')
+    user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='shop_embed')
+    products    = models.ManyToManyField(Product, through='ShopEmbedProduct')
     width       = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0])
     height      = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1])
-
-    # The variables below are _only_ used for temporary stores that are being edited.
-    is_temporary = models.BooleanField(default=False)
-    real_store   = models.ForeignKey('StoreEmbed', blank=True, null=True)
+    published   = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u'%s\'s store (%i products)' % (self.user, len(self.products),)
+        return u'%s\'s shop' % (self.user,)
 
     def save(self, *args, **kwargs):
-        logger.debug('User store save: %s %s %s %s' % (self.pk, self.user, self.published, self.products))
-        super(StoreEmbed, self).save(*args, **kwargs)
+        logger.debug('User shop save: %s %s %s' % (self.pk, self.user, self.published))
+        super(ShopEmbed, self).save(*args, **kwargs)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('shop', [str(self.slug)])
 
 #
-# StoreEmbedProduct
+# ShopEmbedProduct
 #
 
-class StoreEmbedProduct(models.Model):
-    store_embed = models.ForeignKey(StoreEmbed, on_delete=models.CASCADE)
+class ShopEmbedProduct(models.Model):
+    shop_embed = models.ForeignKey(ShopEmbed, on_delete=models.CASCADE)
     product     = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 

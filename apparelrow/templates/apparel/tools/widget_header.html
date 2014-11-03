@@ -25,5 +25,21 @@
                 {% endif %}
             </ul>
         {% endif %}
+
+        {% if type == 'create_shop' %}
+            <ul class="list-inline">
+                {% if object and object.slug %}
+                <li><button class="btn btn-delete" name="shop_delete">{% trans "Delete shop" %}</button></li>
+                {% else %}
+                <li><button class="btn btn-reset" name="shop_reset">{% trans "Reset shop" %}</button></li>
+                {% endif %}
+                <li><button class="btn btn-save" name="shop_save" data-save-draft-text="{% trans "Save draft" %}">{% if object and object.published %}{% trans "Save" %}{% else %}{% trans "Save draft" %}{% endif %}</button></li>
+                {% if object and object.published %}
+                <li><button class="btn btn-unpublish" name="shop_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Unpublish" %}</button></li>
+                {% else %}
+                <li><button class="btn btn-publish" name="shop_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Publish" %}</button></li>
+                {% endif %}
+            </ul>
+        {% endif %}
     </div>
 </div>

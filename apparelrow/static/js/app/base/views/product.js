@@ -26,13 +26,11 @@ App.Views.Product = Backbone.View.extend({
 
     add: function(e) {
         App.Events.trigger('look_edit:product:add', this.model);
-
         return false;
     },
 
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
-
         return this;
     }
 
