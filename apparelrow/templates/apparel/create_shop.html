@@ -2,18 +2,20 @@
 {% load static from staticfiles %}
 {% load i18n compressed %}
 
-{% block body-classes %}create-shop product-list create-store-page shop{% endblock %}
+{% block body-classes %}create-shop product-list create-store-page shop widget-page{% endblock %}
 {% block full-body %}
 
     {% include "apparel/tools/widget_header.html" with title='Create a shop' type='create_shop' %}
 
     <div id="content" class="row">
-        <div class="col-md-6">
-            {% include "apparel/tools/widget_shop_edit.html" %}
-        </div>
+        <div class="row">
+            <div class="col-md-6 col-widget">
+                {% include "apparel/tools/widget_shop_edit.html" %}
+            </div>
 
-        <div class="col-md-6 visible-md visible-lg">
-            {% include "apparel/tools/product_picker.html" %}
+            <div class="col-md-6 visible-md visible-lg">
+                {% include "apparel/tools/product_picker.html" %}
+            </div>
         </div>
     </div>
 
