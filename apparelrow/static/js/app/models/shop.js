@@ -6,6 +6,7 @@ window.App.Models.Shop = window.App.Models.WidgetModelBase.extend({
         'published': false,
         'title': '',
         'description': '',
+<<<<<<< HEAD
         'id': external_shop_id
     },
 
@@ -97,5 +98,12 @@ window.App.Models.Shop = window.App.Models.WidgetModelBase.extend({
         } else {
             return Backbone.sync.apply(this, arguments);
         }
+=======
+        'id': 50
+    },
+
+    initialize: function() {
+        console.log("ShopModel init");
+>>>>>>> 7c92b8aab2ac0b7e053730af024ce31a454cc38e
     }
 });

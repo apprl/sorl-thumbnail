@@ -355,6 +355,7 @@ PIPELINE_JS = {
             'js/vendor/jquery.fileupload.js',
             'js/jquery/jquery.ui.rotatable.js',
             'js/app/main.js',
+
             'js/app/base/models/WidgetModelBase.js',
             'js/app/base/models/product_filter.js',
             'js/app/base/models/facet.js',
@@ -399,6 +400,7 @@ PIPELINE_JS = {
             'js/app/views/look_component_collage.js',
             'js/app/views/shop_component.js',
             'js/app/views/shop_component_product.js',
+
             'js/app/shop_creator.js',
         ),
       'output_filename': 'js/compiled/create_store.js',
