@@ -132,6 +132,35 @@ def looks(request, profile, form, page=0):
 
 @get_current_user
 @avatar_change
+def shops(request, profile, form, page=0):
+    if profile == request.user:
+        queryset = profile.shop_embed.order_by('-created')
+    else:
+        return HttpResponse('Unauthorized', status=401)
+
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
+
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/shop_list.html', {
+            'current_page': paged_result
+        })
+
+    content = {
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'profile': profile,
+        'avatar_absolute_url': profile.avatar_large_absolute_uri(request)
+    }
+
+    content.update(form)
+    content.update(get_profile_sidebar_info(request, profile))
+
+    return render(request, 'profile/shops.html', content)
+
+
+
+@get_current_user
+@avatar_change
 def followers(request, profile, form, page=0):
     queryset = get_user_model().objects.filter(is_hidden=False, following__user_follow=profile, following__active=True) \
                                        .order_by('name', 'first_name', 'username')

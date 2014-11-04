@@ -145,6 +145,11 @@ class User(AbstractUser):
         return self.look.filter(published=True).count()
 
     @cached_property
+    def shops(self):
+        """Number of shops"""
+        return self.shop_embed.all().count()
+
+    @cached_property
     def likes(self):
         """Number of likes on products and looks combined"""
         return self.product_likes_count + self.look_likes_count
@@ -273,6 +278,11 @@ class User(AbstractUser):
             return reverse('brand-looks', args=[self.slug])
 
         return reverse('profile-looks', args=[self.slug])
+
+    @cached_property
+    def url_shops(self):
+        return reverse('profile-shops', args=[self.slug])
+
     @cached_property
     def url_followers(self):
         if self.is_brand:
