@@ -23,7 +23,7 @@
 
     {% include "apparel/tools/widget_footer.html" %}
     <script type="text/javascript">
-        var external_shop_id = {% if external_shop_id %}{{ external_shop_id }}{% else %}-1{% endif %};
+        var external_shop_id = {% if external_shop_id %}{{ external_shop_id }}{% else %}0{% endif %};
         var selected_gender = '{{ gender }}';
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>

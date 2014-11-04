@@ -53,14 +53,15 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
     if not request.user.is_authenticated():
         return HttpResponse('Unauthorized', status=401)
 
-    if shop_id is not None:
+    if shop_id is not None and shop_id is not 0:
         shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=shop_id)
 
-        if request.user is not shop.user:
+        if request.user.pk is not shop.user.pk:
             return HttpResponse('Unauthorized', status=401)
 
     else:
         shop = False
+        shop_id = 0
 
     if not language:
         language = get_language()
@@ -123,8 +124,8 @@ class ShopCreateView(View):
 
 
 
-    def put(self, request, pk, *args, **kwargs):
-        if pk is not -1:
+    def put(self, request, pk=None, *args, **kwargs):
+        if pk is not None and pk is not 0:
             shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=pk)
         else:
             shop = ShopEmbed()
@@ -214,10 +215,10 @@ class ShopCreateView(View):
             component['product_id'] = component['product']['id']
             del component['product']
 
-            if 'component_of' not in component:
-                component['component_of'] = shop.component
+            #if 'component_of' not in component:
+            #    component['component_of'] = shop.component
 
-            component['shop_id'] = shop.pk
+            #component['shop_id'] = shop.pk
 
             # TODO: Error handling
             shop_component = get_model('apparel', 'ShopEmbedProduct')(**component)
@@ -225,6 +226,6 @@ class ShopCreateView(View):
             shop_component.save()
 
         response = JSONResponse(shop_instance_to_dict(shop), status=201)
-        response['Location'] = reverse('shop_create', args=[shop.pk])
+        response['Location'] = reverse('create_shop', args=[shop.pk])
 
         return response
