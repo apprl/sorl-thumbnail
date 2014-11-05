@@ -9,7 +9,9 @@ window.App.Models.Look = Backbone.Model.extend({
         'component': (external_look_type == 'photo') ? 'P' : 'C',
         'description': '',
         'title': '',
-        'id': external_look_type
+        'id': external_look_type,
+        'width': 0,
+        'height': 0
     },
 
     initialize: function() {
