@@ -72,14 +72,14 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         $(window).on('resize', _.bind(this.update_sizes, this));
         $(window).on('resize', _.bind(_.debounce(this.update_component_measures, 500), this));
 
-        $(window).trigger('resize');
-
         App.Views.LookEdit.__super__.initialize(this);
     },
 
     update_component_measures: function() {
-        $container = this.$el.find('.look-container');
-        App.Events.trigger('lookedit:update_measures', {width: $container.width(), height: $container.height()});
+        $container = this.$el.find('.look-container:visible');
+        if ($container.length) {
+            App.Events.trigger('lookedit:update_measures', {width: $container.width(), height: $container.height()});
+        }
     },
 
     login_popup: function() {
@@ -231,6 +231,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
         this.render_temporary_image();
         this.render_image();
+        $(window).trigger('resize');
     },
 
     render_temporary_image: function() {
@@ -240,13 +241,25 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     render_image: function() {
-        this.update_sizes();
-
         if(this.model.has('image')) {
             // Enable product on image
             App.Events.trigger('product:enable');
             this.temporary_image_view.$el.hide();
             this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
+            this.local_image = new Image();
+            self = this;
+            this.local_image.onload = function() {
+                var image_width = this.width;
+                var image_height = this.height;
+                if (typeof this.naturalWidth !== 'undefined' && typeof this.naturalHeight !== 'undefined') {
+                    image_width = this.naturalWidth;
+                    image_height = this.naturalHeight;
+                }
+                self.image_ratio = image_width / image_height;
+                self.model.set({image_width: image_width, image_height: image_height});
+                self.update_sizes();
+            }
+            this.local_image.src = this.model.get('image');
         } else {
             this.temporary_image_view.$el.show();
             this.$el.find('.look-container').css('background-image', '');
@@ -254,40 +267,21 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     update_sizes: function() {
-
-        if(external_look_type == 'photo') {
-            var self = this;
-            this.local_image = new Image();
-            this.local_image.onload = function() {
-                var new_width = Math.min(self.max_width, this.width);
-                var new_height = new_width / (this.width / this.height);
-                if(new_height > self.max_height) {
-                    var temp_height = new_height;
-                    var new_height = self.max_height;
-                    var new_width = (new_width / temp_height) * new_height;
-                }
-                new_width = Math.round(new_width);
-                new_height = Math.round(new_height);
-
-                self.$el.find('.look-container').css({width: new_width, height: new_height});
-                self.$el.css({width: new_width});
-
-                var image_width = this.width;
-                var image_height = this.height;
-                if(typeof this.naturalWidth !== 'undefined' && typeof this.naturalHeight !== 'undefined') {
-                    image_width = this.naturalWidth;
-                    image_height = this.naturalHeight;
-                }
-                self.model.set({width: new_width, height: new_height, image_width: image_width, image_height: image_height});
-            }
-            this.local_image.src = this.model.get('image');
-        } else {
-            var window_height = $(window).height(),
+        var window_height = $(window).height(),
             new_height = window_height - this.$el.offset().top - 20,
-            $footer = $('.widget-footer:visible');
-            new_height -= $footer.length ? $footer.height() : 0;
+        $footer = $('.widget-footer:visible');
+        new_height -= $footer.length ? $footer.height() : 0;
 
-            this.$el.css('height', new_height);
+        this.$el.css('height', new_height);
+
+        if(external_look_type == 'photo' && this.model.has('image')) {
+            $container = this.$el.children('.look-container');
+            if (this.image_ratio >= 1) {
+                $container.height(this.$el.width()/this.image_ratio);
+            } else {
+                $container.width(this.$el.height()*this.image_ratio);
+            }
+            this.model.set({width: $container.width(), height: $container.height()});
         }
     },
 
@@ -327,6 +321,9 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     _look_save: function() {
         // Remove components without products before saving
         this.model.components.each(_.bind(function(model) {
+            if (model.has('width_rel')) model.unset('width_rel');
+            if (model.has('left_rel')) model.unset('left_rel');
+            if (model.has('top_rel')) model.unset('top_rel');
             if(!model.has('product') || !model.get('product')) {
                 this.model.components.remove(model);
                 model.destroy();

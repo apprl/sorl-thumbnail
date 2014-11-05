@@ -4,7 +4,7 @@
 
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
-{% block body-classes %}look-editor-page{% endblock %}
+{% block body-classes %}look-editor-page look-editor-{{ component }}-page{% endblock %}
 {% block full-body %}
 
     {% include "apparel/tools/widget_header.html" %}

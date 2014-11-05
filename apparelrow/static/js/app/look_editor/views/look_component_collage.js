@@ -54,7 +54,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             new_height = ratio*new_width,
             new_left = this.model.get('left_rel') * measures.width,
             new_top = this.model.get('top_rel') * measures.height;
-        console.log(this.model);
+
         this.$el.css({
             left: new_left,
             top:  new_top,
@@ -79,8 +79,6 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         this.model.set({left: left, top: top}, {silent: true});
         if (!rescaled) {
             var $container = $('.look-container');
-            console.log($container);
-            console.log(left/$container.width());
             this.model.set({left_rel: left/$container.width(), top_rel: top/$container.height()});
         }
         App.Events.trigger('look:dirty');
