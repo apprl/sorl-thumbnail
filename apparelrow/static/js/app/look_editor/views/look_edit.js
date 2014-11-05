@@ -53,6 +53,9 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             }
         }, this);
 
+        // Create toolbar
+        this.toolbar = new App.Views.LookEditToolbar();
+
         // Listen on product add
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
         this.pending_product = false;
@@ -65,7 +68,18 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         App.Events.on('widget:publish', this.publish_look, this);
         App.Events.on('widget:unpublish', this.unpublish_look, this);
 
+
+        $(window).on('resize', _.bind(this.update_sizes, this));
+        $(window).on('resize', _.bind(_.debounce(this.update_component_measures, 500), this));
+
+        $(window).trigger('resize');
+
         App.Views.LookEdit.__super__.initialize(this);
+    },
+
+    update_component_measures: function() {
+        $container = this.$el.find('.look-container');
+        App.Events.trigger('lookedit:update_measures', {width: $container.width(), height: $container.height()});
     },
 
     login_popup: function() {
@@ -228,7 +242,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     update_sizes: function() {
-        if(this.model.has('image')) {
+
+        if(external_look_type == 'photo') {
             var self = this;
             this.local_image = new Image();
             this.local_image.onload = function() {
@@ -255,8 +270,12 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             }
             this.local_image.src = this.model.get('image');
         } else {
-            this.$el.find('.look-container').css({width: this.max_width, height: this.max_height});
-            this.$el.css({width: this.max_width});
+            var window_height = $(window).height(),
+            new_height = window_height - this.$el.offset().top - 20,
+            $footer = $('.widget-footer:visible');
+            new_height -= $footer.length ? $footer.height() : 0;
+
+            this.$el.css('height', new_height);
         }
     },
 

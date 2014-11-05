@@ -1,4 +1,4 @@
-window.App.Models.Look = window.App.Models.WidgetModelBase.extend({
+window.App.Models.Look = Backbone.Model.extend({
 
     urlRoot: look_api_base_url,
 

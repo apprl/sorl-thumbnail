@@ -229,7 +229,7 @@
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
-        a {
+        a {
             display: inline-block;
             padding: 0;
         }
@@ -247,6 +247,37 @@
 }
 
 .look-editor-page {
+  .product {
+    .ui-resizable-handle, .ui-rotatable-handle, .delete {
+      display: none;
+    }
+    &.active {
+      border: 1px solid #67e2b8;
+      .ui-resizable-handle, .ui-rotatable-handle, .delete {
+        display: block;
+      }
+    }
+  }
+}
+
+ .lookedit_toolbar {
+    background: @lighter_gray_color;
+    overflow: hidden;
+    opacity: 0.7;
+    &.active {
+      opacity: 1;
+    }
+    .section {
+      float:left;
+      padding: 6px 13px;
+      a {
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+  }
+
+.look-editor-page {
     background-color: #ffffff;
     #content-container {
         padding-bottom: 0px;
@@ -255,11 +286,13 @@
     }
 
     #edit-look {
-        width: 50%;
+        width: 100%;
         float: left;
         position: relative;
         #collage {
             border: 1px solid @light_gray_color;
+          width: 100%;
+          height: 100%;
         }
         #image-form {
             position: absolute;
@@ -301,7 +334,6 @@
         .ui-rotatable-handle {
             position: absolute;
             z-index: 99999;
-            display: block;
         }
 
         .ui-rotatable-nw {

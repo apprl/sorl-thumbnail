@@ -298,6 +298,9 @@ def look_instance_to_dict(look):
                 'height': component.height,
                 'z_index': component.z_index,
                 'rotation': component.rotation,
+                'left_rel': float(component.left)/look.width,
+                'top_rel': float(component.top)/look.height,
+                'width_rel': float(component.width)/look.width,
                 'product': {
                     'id': component.product.id,
                     'slug': component.product.slug,

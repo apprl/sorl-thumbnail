@@ -1,4 +1,4 @@
-window.App.Models.FacetContainer = window.App.Models.WidgetModelBase.extend({
+window.App.Models.FacetContainer = Backbone.Model.extend({
     url: '/products',
 
     defaults: {

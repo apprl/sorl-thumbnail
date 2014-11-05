@@ -1,4 +1,4 @@
-window.App.Models.LookComponent = window.App.Models.WidgetModelBase.extend({
+window.App.Models.LookComponent = Backbone.Model.extend({
 
     defaults: {
         top: 0,

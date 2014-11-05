@@ -12,6 +12,24 @@
     <div id="content">
         <div class="row">
             <div class="col-md-6 col-widget">
+                <div class="lookedit_toolbar">
+                    <div class="section">
+                        <a href="#"><i class="glyphicon glyphicon-star"></i> <span>Crop</span></a>
+                        <div class="tools"></div>
+                    </div>
+                    <div class="section">
+                        <a href="#"><i class="glyphicon glyphicon-star"></i> <span>Clone</span></a>
+                        <div class="tools"></div>
+                    </div>
+                    <div class="section">
+                        <a href="#"><i class="glyphicon glyphicon-star"></i> <span>Forward</span></a>
+                        <div class="tools"></div>
+                    </div>
+                    <div class="section">
+                        <a href="#"><i class="glyphicon glyphicon-star"></i> <span>Back</span></a>
+                        <div class="tools"></div>
+                    </div>
+                </div>
                 <div id="edit-look"></div>
             </div>
             <div class="col-md-6 visible-md visible-lg">
@@ -29,6 +47,9 @@
         var external_has_liked = '{{ has_liked }}';
         var selected_gender = '{{ gender }}';
     </script>
+    <script src="/static/js/vendor/touch-emulator.js"></script>
+    <script>//TouchEmulator(); </script>
+
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     {% compressed_js 'look_editor' %}
 
