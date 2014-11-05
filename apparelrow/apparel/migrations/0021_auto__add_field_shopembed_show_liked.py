@@ -8,35 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'ShopEmbedProduct'
-        db.create_table(u'apparel_shopembedproduct', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('shop_embed', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.ShopEmbed'])),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Product'])),
-        ))
-        db.send_create_signal(u'apparel', ['ShopEmbedProduct'])
-
-        # Adding model 'ShopEmbed'
-        db.create_table(u'apparel_shopembed', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('slug', self.gf('django_extensions.db.fields.AutoSlugField')(allow_duplicates=False, max_length=80, separator=u'-', blank=True, populate_from=('title',), overwrite=False)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='shop_embed', to=orm['profile.User'])),
-            ('width', self.gf('django.db.models.fields.IntegerField')(default=696)),
-            ('height', self.gf('django.db.models.fields.IntegerField')(default=526)),
-        ))
-        db.send_create_signal(u'apparel', ['ShopEmbed'])
+        # Adding field 'ShopEmbed.show_liked'
+        db.add_column(u'apparel_shopembed', 'show_liked',
+                      self.gf('django.db.models.fields.BooleanField')(default=False),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'ShopEmbedProduct'
-        db.delete_table(u'apparel_shopembedproduct')
-
-        # Deleting model 'ShopEmbed'
-        db.delete_table(u'apparel_shopembed')
+        # Deleting field 'ShopEmbed.show_liked'
+        db.delete_column(u'apparel_shopembed', 'show_liked')
 
 
     models = {
@@ -224,6 +204,8 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Product']", 'through': u"orm['apparel.ShopEmbedProduct']", 'symmetrical': 'False'}),
+            'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'show_liked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('title',)", 'overwrite': 'False'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop_embed'", 'to': u"orm['profile.User']"}),
