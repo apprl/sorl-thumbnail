@@ -156,7 +156,6 @@
 }
 
 #photo, #collage {
-    height: @look_height;
     position: relative;
     .product {
         position: absolute;
@@ -304,9 +303,11 @@
             top: 50%;
             left: 50%;
             width: 360px;
+            max-width: 80%;
             height: 120px;
             margin-top: -60px;
-            margin-left: -180px;
+            .translate(-50%, 0);
+            margin-left: -40px;
             .loading {
                 text-align: center;
                 img {

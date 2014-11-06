@@ -72,14 +72,14 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         $(window).on('resize', _.bind(this.update_sizes, this));
         $(window).on('resize', _.bind(_.debounce(this.update_component_measures, 500), this));
 
+        this.update_sizes();
+
         App.Views.LookEdit.__super__.initialize(this);
     },
 
     update_component_measures: function() {
-        $container = this.$el.find('.look-container:visible');
-        if ($container.length) {
-            App.Events.trigger('lookedit:update_measures', {width: $container.width(), height: $container.height()});
-        }
+        $container = this.$el.find('.look-container');
+        App.Events.trigger('lookedit:update_measures', {width: $container.width(), height: $container.height()});
     },
 
     login_popup: function() {
@@ -156,9 +156,12 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
                            height: height,
                            left: ($container.width() / 2) - width / 2,
                            top: ($container.height() / 2) - height / 2});
+
+            component.set({width_rel: width/$container.width(), left_rel: component.get('left')/$container.width(), top_rel: component.get('top')/$container.height()});
             self.add_product_to_component(component, product);
             self.model.components.add(component);
         }
+
         image.src = product.get('image_look');
     },
 
@@ -271,17 +274,19 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             new_height = window_height - this.$el.offset().top - 20,
         $footer = $('.widget-footer:visible');
         new_height -= $footer.length ? $footer.height() : 0;
-
         this.$el.css('height', new_height);
-
+        $container = this.$el.children('.look-container');
         if(external_look_type == 'photo' && this.model.has('image')) {
-            $container = this.$el.children('.look-container');
             if (this.image_ratio >= 1) {
                 $container.height(this.$el.width()/this.image_ratio);
             } else {
-                $container.width(this.$el.height()*this.image_ratio);
+                var new_width = Math.min(this.$el.height()*this.image_ratio, $container.width());
+                $container.width(new_width);
+                $container.height(new_width/this.image_ratio);
             }
             this.model.set({width: $container.width(), height: $container.height()});
+        } else {
+            $container.height(this.$el.height());
         }
     },
 
