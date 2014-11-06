@@ -32,7 +32,7 @@ from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
-
+from apparelrow.apparel.models import ShopEmbed
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 
@@ -59,7 +59,7 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
         return HttpResponse('Unauthorized', status=401)
 
     if shop_id is not None and shop_id is not 0:
-        shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=shop_id)
+        shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
 
         if request.user.pk is not shop.user.pk:
             return HttpResponse('Unauthorized', status=401)
@@ -112,11 +112,11 @@ def shop_instance_to_dict(shop):
 class ShopCreateView(View):
     def get(self, request, pk, *args, **kwargs):
         if pk is not None:
-            shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=pk)
+            shop = get_object_or_404(get_model('apparel', 'Shop'), pk=pk)
             return JSONResponse(shop_instance_to_dict(shop))
 
     def delete(self, request, pk, *args, **kwargs):
-        shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=pk)
+        shop = get_object_or_404(get_model('apparel', 'Shop'), pk=pk)
 
         if request.user.is_authenticated() and request.user == shop.user:
             shop.delete()
@@ -128,9 +128,9 @@ class ShopCreateView(View):
 
     def put(self, request, pk=None, *args, **kwargs):
         if pk is not None and pk is not 0:
-            shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=pk)
+            shop = get_object_or_404(get_model('apparel', 'Shop'), pk=pk)
         else:
-            shop = ShopEmbed()
+            shop = Shop()
             shop.save()
 
         try:
@@ -154,14 +154,14 @@ class ShopCreateView(View):
         if json_data['components']:
 
             # Remove components
-            shop_components = get_model('apparel', 'ShopEmbedProduct').objects.filter(shop_embed_id=pk)
+            shop_components = get_model('apparel', 'ShopProduct').objects.filter(shop_embed_id=pk)
             updated_component_ids = [x['id'] for x in json_data['components'] if 'id' in x]
             for component in shop_components:
                 if component.id not in updated_component_ids:
                     component.delete()
 
             # Add new components and update old
-            ShopEmbedProduct = get_model('apparel', 'ShopEmbedProduct')
+            ShopProduct = get_model('apparel', 'ShopProduct')
             for component in json_data['components']:
                 component_id = None
                 if 'id' in component:
@@ -171,7 +171,7 @@ class ShopCreateView(View):
                 product_id = component['product']['id']
                 del component['product']
 
-                shop_component, created = ShopEmbedProduct.objects.get_or_create(id=component_id,
+                shop_component, created = ShopProduct.objects.get_or_create(id=component_id,
                                                                                  shop_embed_id=pk,
                                                                                  product_id=product_id)
 
@@ -210,7 +210,7 @@ class ShopCreateView(View):
         components = json_data['components']
         del json_data['components']
 
-        shop = get_model('apparel', 'ShopEmbed')(**json_data)
+        shop = get_model('apparel', 'Shop')(**json_data)
         shop.save()
 
         for component in components:
@@ -218,7 +218,7 @@ class ShopCreateView(View):
             del component['product']
 
             # TODO: Error handling
-            shop_component = get_model('apparel', 'ShopEmbedProduct')(**component)
+            shop_component = get_model('apparel', 'ShopProduct')(**component)
             shop_component.shop_embed = shop
             shop_component.save()
 
@@ -228,23 +228,83 @@ class ShopCreateView(View):
         return response
 
 
+def shop_widget(request, shop_id=None):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed()
+
+    shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
+
+    if request.user.pk is not shop.user.pk:
+        return HttpResponseNotAllowed()
+
+
+    content = {}
+    content['width'] = int(request.POST.get('width', 100))
+    content['width_type'] = request.POST.get('width_type', '%')
+    content['height'] = int(request.POST.get('height', 600))
+    content['language'] = request.POST.get('language', 'sv')
+    show_product_brand = bool(int(request.POST.get('show_product_brand', 1)))
+    show_filters = bool(int(request.POST.get('show_filters', 1)))
+    show_filters_collapsed = bool(int(request.POST.get('show_filters_collapsed', 1)))
+
+    if content['width_type'] == '%' and int(content['width']) > 100:
+        content['width'] = 100
+    elif content['width_type'] == 'px':
+        if content['width'] < 600:
+            content['width'] = 600
+        elif content['width'] > 1200:
+            content['width'] = 1200
+
+    shop_embed = ShopEmbed(
+        shop=shop,
+        user=shop.user,
+        width=content['width'],
+        width_type=content['width_type'],
+        height=content['height'],
+        language=content['language'],
+        show_product_brand=show_product_brand,
+        show_filters=show_filters,
+        show_filters_collapsed=show_filters_collapsed
+    )
+
+    shop_embed.save()
+    content['object'] = shop_embed
+
+    return render(request, 'apparel/fragments/shop_widget.html', content)
+
+
+def dialog_embed(request, shop_id=None):
+    shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
+
+    max_width = 1200
+    default_width = 600
+
+    return render(request, 'apparel/dialog_shop_embed.html', {
+        'shop': shop,
+        'default_width': default_width,
+        'max_width': max_width,
+    })
+
 #
 # Embed
 #
-def embed_shop(request, template='apparel/shop_embed.html', shop_id=None):
-    if shop_id is None:
+def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
+    if embed_shop_id is None:
         return HttpResponse('Not found', status=404)
 
-    shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=shop_id)
+    embed_shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=embed_shop_id)
+    shop = embed_shop.shop
 
     if shop.published is not True:
         return HttpResponse('Unauthorized', status=401)
 
-    response = browse_products(request, template, shop)
+    language = embed_shop.language
+
+    response = browse_products(request, template, shop, embed_shop, language)
 
     return response
 
-def browse_products(request, template='apparel/browse.html', shop=None, language=None, **kwargs):
+def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None, **kwargs):
     user_id = shop.user.id
 
     if not language:
@@ -486,6 +546,9 @@ def browse_products(request, template='apparel/browse.html', shop=None, language
         default_colors = default_colors,
         categories_all = Category.objects.all(),
         current_page = paged_result,
+        show_product_brand = embed_shop.show_product_brand,
+        show_filters = embed_shop.show_filters,
+        show_filters_collapsed = embed_shop.show_filters_collapsed
     )
 
     # Added remaining kwargs for rendering

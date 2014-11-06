@@ -281,8 +281,8 @@
     {% include 'apparel/fragments/dialog_become_member.html' with request=request csrf_token=csrf_token next=next only %}
     {% include 'apparel/fragments/dialog_contest_rules.html' with request=request LANGUAGES=LANGUAGES only %}
     {% if request.user.is_authenticated %}
-    {% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES only %}
     <div class="modal fade" id="modal_embed_look" tabindex="-1"></div>
+    <div class="modal fade" id="modal_embed_shop" tabindex="-1"></div>
     <script type="text/html" id="user_like_template">
         <li data-user-id="{{ request.user.pk }}"><a href="{{ request.user.get_absolute_url }}" title="{{ request.user.display_name }}"><img class="img-circle" alt="{{ request.user.display_name }}" title="{{ request.user.display_name }}" src="{{ request.user.avatar }}"></a></li>
     </script>

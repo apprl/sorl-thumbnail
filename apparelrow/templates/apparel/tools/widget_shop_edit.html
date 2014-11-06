@@ -1,4 +1,5 @@
 {% load i18n compressed %}
+{% load static from staticfiles %}
 
 <div id="shop-preview">
     <div class="row product-list-container">
@@ -12,3 +13,5 @@
         </div>
     </div>
 </div>
+
+{% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES external_shop_id=external_shop_id only %}

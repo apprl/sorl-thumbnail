@@ -147,7 +147,7 @@ class User(AbstractUser):
     @cached_property
     def shops(self):
         """Number of shops"""
-        return self.shop_embed.all().count()
+        return self.shop.all().count()
 
     @cached_property
     def likes(self):

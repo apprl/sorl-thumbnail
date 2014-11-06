@@ -5,12 +5,16 @@
 {% block body-classes %}create-shop product-list create-store-page shop widget-page{% endblock %}
 {% block full-body %}
 
-    {% include "apparel/tools/widget_header.html" with title='Create a shop' type='create_shop' %}
+    {% if external_shop_id %}
+        {% include "apparel/tools/widget_header.html" with title='Edit shop' type='create_shop' external_shop_id=external_shop_id %}
+    {% else %}
+        {% include "apparel/tools/widget_header.html" with title='Create a shop' type='create_shop' external_shop_id=external_shop_id %}
+    {% endif %}
 
     <div id="content" class="row">
         <div class="row">
             <div class="col-md-6 col-widget">
-                {% include "apparel/tools/widget_shop_edit.html" %}
+                {% include "apparel/tools/widget_shop_edit.html" with external_shop_id=external_shop_id %}
             </div>
 
             <div class="col-md-6 visible-md visible-lg">

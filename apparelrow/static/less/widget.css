@@ -163,6 +163,9 @@ html.look-type-C .collage {
   max-height: 240px;
   overflow-y: scroll;
 }
+#product-list .product-list.hide-captions .caption {
+  display: none;
+}
 .widget-footer {
   bottom: 0px;
   position: absolute;

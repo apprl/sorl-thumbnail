@@ -12,6 +12,10 @@
     <div class="body-header-col-right">
         {% if type == 'look_editor' or type == 'create_shop' %}
             <ul class="list-inline">
+                {% if type == 'create_shop' %}
+                    <a data-target="#modal_embed_shop" data-toggle="modal" data-slug="{{ object.pk }}" class="btn btn-primary btn-embed" href="{% url 'dialog-shop-embed' external_shop_id %}">Embed on your blog / site</a>
+                {% endif %}
+
                 {% if object and object.slug %}
                 <li><button class="btn btn-delete" name="look_delete">{% trans "Delete look" %}</button></li>
                 {% else %}

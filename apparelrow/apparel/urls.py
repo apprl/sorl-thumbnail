@@ -39,9 +39,11 @@ urlpatterns = patterns('',
     url(r'^shop/women/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
     url(r'^shop/create/$', 'apparelrow.apparel.views.shop.create_shop', name='create-shop'),
     url(r'^shop/edit/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.create_shop', name='create-shop'),
-    url(r'^shop/embed/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.embed_shop', name='embed-shop'),
+    url(r'^embed/shop/(?P<embed_shop_id>\d+)/$', 'apparelrow.apparel.views.shop.embed_shop', name='embed-shop'),
     url(r'^shop/create/api/$', ShopCreateView.as_view(), name='create_shop'),
     url(r'^shop/create/api/(?P<pk>\d+)/?$', ShopCreateView.as_view(), name='create_shop'),
+    url(r'^shop/widget/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.shop_widget', name='shop-widget'),
+    url(r'^dialog/embed/shop/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.dialog_embed', name='dialog-shop-embed'),
 
     # Shop embed - wardrobe
     url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),

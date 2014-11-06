@@ -215,18 +215,27 @@ class LookComponentAdmin(admin.ModelAdmin):
 
 admin.site.register(LookComponent, LookComponentAdmin)
 
-class ShopEmbedProductInline(admin.TabularInline):
-    model = ShopEmbedProduct
+class ShopProductInline(admin.TabularInline):
+    model = ShopProduct
+
+#
+# SHOP
+#
+
+class ShopAdmin(admin.ModelAdmin):
+    list_display = ('title', 'user', 'created')
+    inlines = [
+        ShopProductInline,
+    ]
+
+admin.site.register(Shop, ShopAdmin)
 
 #
 # SHOP EMBED
 #
 
 class ShopEmbedAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'width', 'created')
-    inlines = [
-        ShopEmbedProductInline,
-    ]
+    list_display = ('user', )
 
 admin.site.register(ShopEmbed, ShopEmbedAdmin)
 

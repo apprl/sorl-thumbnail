@@ -1,5 +1,5 @@
 {% spaceless %}
-<ul class="product-list list-unstyled row">
+<ul class="product-list list-unstyled row {% if not show_product_brand %}hide-captions{% endif %}">
     {% for html in current_page.html %}
     <li class="col-product-item">{{ html|safe }}</li>
     {% endfor %}
