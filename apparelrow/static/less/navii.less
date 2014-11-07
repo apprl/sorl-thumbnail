@@ -574,12 +574,17 @@ body {
 
 	&:hover {
 		text-decoration: none;
-		background: @apprl-primary-hover;
+		border-style: none;
+		//background: @apprl-primary-hover;
 	}
 	h3, h4 {
 		font-weight: bold;
 		span {
 			font-weight: normal;
+		}
+		&:hover {
+			cursor: pointer;
+			color: #eeeeee;
 		}
 	}
 	h4 {
@@ -588,9 +593,12 @@ body {
 }
 .apprl-facebook {
 	vertical-align:middle;
+	.facepile-container {
+		padding-top: 170px;
+	}
 	.fb-facepile {
-		margin: 150px 20px 20px;
-		padding: 20px;
+		margin-top: 10px;
+		margin-left: 0px;
 	}
 }
 
@@ -1417,6 +1425,11 @@ h6 {
 	.apprl-header-right {
 		float: right;
 		.apprl-header-right-row {
+			[class*="col-"] {
+				padding: 0px 20px 0 25px;
+			}
+		}
+        .apprl-header-right-row {
 			[class*="col-"] {
 				padding: 0px 20px 0 25px;
 			}

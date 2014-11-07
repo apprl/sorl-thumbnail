@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n compressed %}
 {% load static from staticfiles %}
 
 {% block body-scripts %}
@@ -8,12 +8,12 @@
 </script>
 {% endblock %}
 
+{% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
 {% block body-classes %}store-index-page{% endblock %}
 {% block full-body %}
 
 <div class="container-fluid apprl-content apprl-top">
-
-    <div class="row apprl-publishers-header apprl-header apprl-header-slim" style="visibility: hidden;">
+    <div class="row apprl-retailers-header apprl-header apprl-header-slim" style="visibility: hidden;">
         <div class="col-xs-12 apprl-header-wrap">
             <div class="container apprl-header-measurement"> <!-- Reference block for jQuery calculations, minimizes code -->
                 <div class="row">
@@ -27,12 +27,12 @@
                         <div class="row apprl-header-left-row">
                             <div class="col-xs-12">
                                 <h1 class="apprl-c-primary apprl-maintitle">For retailers</h1>
-                                <h1 class="apprl-c-light apprl-subtitle">Drive quality traffic and increase sales</h1>
+                                <h1 class="apprl-c-light apprl-subtitle">Increase your reach and generate more sales</h1>
                                 <a class="button btn btn-primary btn-lg" href="{% url 'retailer-form' %}">
                                     Apply here
                                 </a>
                                 <!--TODO scrolling thing is missing -->
-                                <a class="button btn btn-transparent btn-lg" href="#more_content">
+                                <a class="button btn btn-transparent btn-lg" id="apprl-scrollfromheader">
                                     or <b>Learn more</b>
                                 </a>
                             </div>
@@ -42,11 +42,11 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 apprl-header-right">
                         <div class="row apprl-header-right-row">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-primary apprl-publisher-puff apprl-clickable">
-                                <h3 class="apprl-c-dark">Are you a digital publisher / blogger?</h3>
+                                <h3 class="apprl-c-dark" style="margin-top:40px;">Are you a digital publisher / blogger?</h3>
                                 <a href="{% url 'index-publisher' %}"></a>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-darkgrey apprl-retailer-puff apprl-clickable">
-                                <h3 class="apprl-c-light">Want to shop the style of your favourite blogger?</h3>
+                                <h3 class="apprl-c-light"  style="margin-top:40px;">Want to shop the style of your favourite blogger?</h3>
                                 <a href="{% url 'index' %}"></a>
                             </div>
                             <div class="clearfix"></div>
@@ -59,7 +59,7 @@
 
 </div>
 
-<div class="container-fluid apprl-content" id="more_content">
+<div class="container-fluid apprl-content" id="apprl-scrolltarget">
     <div class="row">
         <div class="col-xs-12 apprl-bloggers">
             <h4 class="apprl-slash text-center"> Increase your reach through our partners </h4>
@@ -78,73 +78,94 @@
                         <div class="slider">
                             <div class="item apprl-clickable">
                                 <a style="display:none;" href="#"></a>
-                                <div class="image" style="background-image:url(http://www.navii.se/app/webroot/apprl/img/blog01.png);"></div>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/TessMontgomery_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Anja Forsnor</span>
-                                    </div>
-                                    <div class="button">
-                                       <img src="http://www.navii.se/app/webroot/apprl/img/slidebadge01.png" />
+                                        <span sty>Tess Montgomery</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="item apprl-clickable">
                                 <a style="display:none;" href="#"></a>
-                                <div class="image" style="background-image:url(http://www.navii.se/app/webroot/apprl/img/blog02.png);"></div>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ProjectRunway_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Project Runway</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/EmmaElwin_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span style="color: black;">Emma Elwin</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/Celine_Aaagard_Apprl_Front.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Celine Aagaard</span>
                                     </div>
                                     <div class="button">
-                                       <img src="http://www.navii.se/app/webroot/apprl/img/slidebadge02.png" />
+                                       <img src="{% static 'images/badges/StyleMagBadge.png' %}" />
                                     </div>
                                 </div>
                             </div>
                             <div class="item apprl-clickable">
                                 <a style="display:none;" href="#"></a>
-                                <div class="image" style="background-image:url(http://www.navii.se/app/webroot/apprl/img/blog03.png);"></div>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/LouisNicolasDarbon_ApprlHome.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Emma Elwin</span>
-                                    </div>
-                                    <div class="button">
-                                       <img src="http://www.navii.se/app/webroot/apprl/img/slidebadge03.png" />
+                                        <span>Louis-Nicolas Darbon</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="item apprl-clickable">
                                 <a style="display:none;" href="#"></a>
-                                <div class="image" style="background-image:url(http://www.navii.se/app/webroot/apprl/img/blog04.png);"></div>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ElzanaKadric_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Daniel Lindström</span>
+                                        <span>Elzana Kadric</span>
                                     </div>
                                     <div class="button">
-                                       <img src="http://www.navii.se/app/webroot/apprl/img/slidebadge01.png" />
+                                       <img src="{% static 'images/badges/TopModel_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>
                             <div class="item apprl-clickable">
                                 <a style="display:none;" href="#"></a>
-                                <div class="image" style="background-image:url(http://www.navii.se/app/webroot/apprl/img/blog01.png);"></div>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/CarolineSandstrom_Apprl_Front.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Anja Forsnor</span>
+                                        <span>Caroline Sandström</span>
                                     </div>
                                     <div class="button">
-                                       <img src="http://www.navii.se/app/webroot/apprl/img/slidebadge02.png" />
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>
                             <div class="item apprl-clickable">
                                 <a style="display:none;" href="#"></a>
-                                <div class="image" style="background-image:url(http://www.navii.se/app/webroot/apprl/img/blog02.png);"></div>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ElinKling_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Celine Aagaard</span>
+                                        <span>Elin Kling</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/MartinHansson_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Martin Hansson</span>
                                     </div>
                                     <div class="button">
-                                       <img src="http://www.navii.se/app/webroot/apprl/img/slidebadge03.png" />
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>
@@ -157,32 +178,36 @@
 </div>
 <!-- /retailers: Bloggers -->
 
-<!-- TODO -->
-<!-- Retailers: Featured in -->
 <div class="container-fluid apprl-content">
     <div class="row">
         <div class="container">
             <div class="col-xs-12">
                 <div class="row apprl-brands apprl-featured">
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="http://www.navii.se/app/webroot/apprl/img/dummylogo2.png" />
+                        <img src="{% static 'images/featured_logos/InternetWorld-logo-Apprl-home.png' %}"/>
                     </div>
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="http://www.navii.se/app/webroot/apprl/img/dummylogo2_01.png" />
+                        <img src="{% static 'images/featured_logos/DagensMedia-logo-Apprl-home.png' %}"/>
                     </div>
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="http://www.navii.se/app/webroot/apprl/img/dummylogo2_02.png" />
+                        <img src="{% static 'images/featured_logos/Resume-logo-Apprl-home.png' %}"/>
                     </div>
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="http://www.navii.se/app/webroot/apprl/img/dummylogo2_03.png" />
+                        <img src="{% static 'images/featured_logos/ComputerSweden-logo-Apprl-home.png' %}"/>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <a type="button" class="btn btn-default btn-apprldark btn-lg" href="{% url 'retailer-form' %}">
+                Apply to join
+            </a>
+        </div>
+    </div>
 </div>
 
-<!-- retailers: Example tools -->
 <div class="container-fluid apprl-content">
     <div class="row">
         <div class="col-xs-12 apprl-tools">
@@ -197,26 +222,27 @@
                             <div class="apprl-slider apprl-slider-tools">
                                 <div class="slider">
                                     <div class="item">
+                                        <br>
                                         <div class="image">
                                             <img src="{% static 'images/formats/Shop-tool-Apprl.png' %}" />
                                         </div>
+                                        <br>
                                         <div class="text">
                                             <div class="bg"></div>
                                             <div class="title">
                                                 <span>Shop</span>
                                             </div>
                                             <div class="desc">
-                                                <span>Text: Have your products featured in a shops on media sites</span>
+                                                <span>Have your products featured in a shops on media sites</span>
                                             </div>
-                                            <a href="http://www.tv3.se/top-model-sverige/top-model-shoppen" class="button btn btn-default btn-md">
-                                                See example
-                                            </a>
                                         </div>
                                     </div>
                                     <div class="item">
+                                        <br>
                                         <div class="image">
                                             <img src="{% static 'images/formats/Collage-tool-Apprl.png' %}" />
                                         </div>
+                                        <br>
                                         <div class="text">
                                             <div class="bg"></div>
                                             <div class="title">
@@ -225,15 +251,14 @@
                                             <div class="desc">
                                                 <span>A great format for contests where users create looks with your products</span>
                                             </div>
-                                            <a class="button btn btn-default btn-md" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                                                Get Started
-                                            </a>
                                         </div>
                                     </div>
                                     <div class="item">
+                                        <br>
                                         <div class="image">
                                             <img src="{% static 'images/formats/Tagged-photo-tool-Apprl.png' %}" />
                                         </div>
+                                        <br>
                                         <div class="text">
                                             <div class="bg"></div>
                                             <div class="title">
@@ -242,9 +267,6 @@
                                             <div class="desc">
                                                 <span>Tag your look book with products and spread it!</span>
                                             </div>
-                                            <a class="button btn btn-default btn-md" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                                                See example
-                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -256,16 +278,14 @@
                 </div>
             </div>
             <div class="col-xs-12 text-center">
-                <a type="button" class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                    Get started
+                <a type="button" class="btn btn-default btn-apprldark btn-lg" href="{% url 'retailer-form' %}">
+                    Apply to join
                 </a>
             </div>
         </div>
     </div>
 </div>
-<!-- /retailers: Example tools -->
 
-<!-- retailers: Brandgroup (dark background) -->
 <div class="container-fluid apprl-content">
     <div class="row">
         <div class="col-xs-12 apprl-brandgroup">
@@ -310,7 +330,7 @@
                 </div>
             </div>
             <p class="text-center">
-                <a type="button" class="btn btn-info btn-lg">
+                <a type="button" class="btn btn-info btn-lg"  href="{% url 'retailer-form' %}">
                     Apply to join
                 </a>
             </p>
@@ -323,55 +343,29 @@
 
 
 <script type="text/javascript">
-    $(window).load(function() {
+$(window).load(function() {
+    //Function below
+    resizeapprlheader();
+    loadSliders();
 
-        //Function below
-        resizeapprlheader();
+    //Clickable logic for divs containing inner links
+    $(".apprl-clickable").click(function(){
+         window.location=$(this).find("a").attr("href");
+         return false;
+    });
 
-        //Style is dictated in CSS/LESS
-        $('.apprl-slider-tools').iosSlider({
-            scrollbar: false,
-            snapToChildren: true,
-            desktopClickDrag: true,
-            navPrevSelector: $('.tools_prevButton'),
-            navNextSelector: $('.tools_nextButton'),
-            autoSlide: true,
-            infiniteSlider: true
-        });
-        $('.apprl-slider-publishers').iosSlider({
-            scrollbar: false,
-            snapToChildren: true,
-            desktopClickDrag: true,
-            navPrevSelector: $('.publishers_prevButton'),
-            navNextSelector: $('.publishers_nextButton'),
-            autoSlide: true,
-            infiniteSlider: true,
-        });
-        $('.apprl-slider-blocks').iosSlider({
-            scrollbar: false,
-            snapToChildren: true,
-            desktopClickDrag: true,
-            autoSlide: true,
-            infiniteSlider: true,
-        });
-        $('.apprl-slider-items').iosSlider({
-            scrollbar: false,
-            snapToChildren: true,
-            desktopClickDrag: true,
-            autoSlide: true,
-            infiniteSlider: true,
-        });
+    $(".imagelink").click(function(){
+         window.location=$(this).attr("href");
+         return false;
+    });
 
-        //Clickable logic for divs containing inner links
-        $(".apprl-clickable").click(function(){
-             window.location=$(this).find("a").attr("href");
-             return false;
-        });
+    $('.apprl-scroll').click(function(){
 
-        $(".imagelink").click(function(){
-             window.location=$(this).attr("href");
-             return false;
-        });
+        $('html, body').animate({
+            scrollTop: $(".apprl-scrolltarget").offset().top
+        }, 1000);
+
+    });
 
     });
 
@@ -386,9 +380,9 @@
         var headerLeftWidth = $('.apprl-header-measurement .col-lg-8').css('width');
         if(windowWidth <= 767) { //Responsive logic
             var headerLeftWidth = 'auto';
-        } /* else if(windowWidth <= 840) { //Responsive logic
-            var headerLeftWidth = parseInt(headerLeftWidth, 10) + 100;
-        } */
+        } else if(windowWidth <= 1300) { //Responsive logic
+            var headerLeftWidth = parseInt(headerLeftWidth, 10) - 30;
+        }
         //Step One: Calculate and change left side of the header
         var headerMarginValue = $('.apprl-header-measurement .row').position().left;
         if (headerMarginValue === 0) { //if misinterpreted as 0 (FF IE correction)
@@ -433,9 +427,58 @@
         $('.apprl-header').css('visibility', '');
     }
 
+    function loadSliders() {
+        //Style is dictated in CSS/LESS
+        $('.apprl-slider-tools').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            navPrevSelector: $('.tools_prevButton'),
+            navNextSelector: $('.tools_nextButton'),
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-publishers').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            navPrevSelector: $('.publishers_prevButton'),
+            navNextSelector: $('.publishers_nextButton'),
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-blocks').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-items').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+    }
+
     $(window).bind('resize', function(){
         resizeapprlheader();
     });
+
+    $(window).bind('orientationchange',function(e) {
+        resizeapprlheader();
+        loadSliders();
+    });
+</script>
+
+<script>
+$('#apprl-scrollfromheader').click(function(){ //Det elementet man klickar på
+    $('html, body').animate({ //Scrolla till målets avstånd från toppen av sidan
+        scrollTop: $("#apprl-scrolltarget").offset().top
+    }, 1000);
+});
 </script>
 
 {% endblock %}

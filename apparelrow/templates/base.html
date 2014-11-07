@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
-    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - Social Shopping{% endblock %}</title>
+    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -90,6 +90,16 @@
     </script>
 </head>
 <body class="{% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
+    <div id="fb-root"></div>
+    <script type="text/javascript">
+        (function(d){
+        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+        if (d.getElementById(id)) {return;}
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/sv_SE/all.js";
+            ref.parentNode.insertBefore(js, ref);
+        }(document));
+    </script>
 
     <div class="contest-bar">
         <div class="container">
@@ -217,7 +227,7 @@
                                 </ul>
                             </li>
                             <li><br></li>
-                            <li><a href="{% url 'index-store' %}"><i>{% trans "Do you have a store?" %}</i></a></li>
+                            <li><a href="{% url 'index-retailers' %}"><i>{% trans "Do you have a store?" %}</i></a></li>
                             <li><a href="{% url 'index-publisher' %}"><i>{% trans "Are you a blogger?" %}</i></a></li>
                         </ul>
                         <ul class="list-unstyled col-xs-6">
@@ -314,17 +324,6 @@
       $element.text(formatNumber(converted_price) + ' ' + current_currency);
   });
 }
-</script>
-
-<div id="fb-root"></div>
-<script type="text/javascript">
-  (function(d){
-     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement('script'); js.id = id; js.async = true;
-     js.src = "//connect.facebook.net/sv_SE/all.js";
-     ref.parentNode.insertBefore(js, ref);
-   }(document));
 </script>
 
 {% include 'mouseflow.html' only %}
