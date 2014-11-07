@@ -5,7 +5,7 @@ import logging
 import logging.config
 
 from settings_common import *
-DEBUG = True
+DEBUG = False
 EMAIL_DEBUG = True
 
 #SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')

@@ -80,7 +80,7 @@ def dev_aws_2():
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
 
 @task
-def dev_admin_aws():
+def dev_admin():
     common_aws()
     dev_settings()
     env.settings = "dev-admin"

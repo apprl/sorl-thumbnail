@@ -40,6 +40,10 @@ class QVCSpider(CSVFeedSpider, AffiliateMixin):
         item['description'] = row.get('DESCRIPTION')
         item['brand'] = row.get('MANUFACTURER')
         item['gender'] = 'U' if not row.get('THIRDPARTYCATEGORY') else row.get('THIRDPARTYCATEGORY')
+
+        if "Jewelry" in row.get('ADVERTISERCATEGORY'):
+            item['gender'] = 'W'
+
         item['colors'] = row.get('NAME') + row.get('DESCRIPTION')
         item['regular_price'] = row.get('PRICE')
         item['discount_price'] = row.get('SALEPRICE') if row.get('SALEPRICE') else row.get('PRICE')
