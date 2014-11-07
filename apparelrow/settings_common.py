@@ -279,6 +279,10 @@ PIPELINE_CSS = {
         'source_filenames': (
             'less/home.less',
         ),
+    'output_filename': 'css/home.css',
+        'extra_context': {
+            'media': 'screen,projection',
+            }
     }
 }
 #PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'

@@ -66,6 +66,7 @@ def dev_aws_1():
     env.restart = ['gunicorn','nginx']
     env.hostname="dev-aws1"
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
+    env.collectstatic = True
 
 @task
 def dev_aws_2():
@@ -78,6 +79,7 @@ def dev_aws_2():
     env.restart = ['gunicorn','nginx']
     env.hostname="dev-aws2"
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
+    env.collectstatic = True
 
 @task
 def dev_admin():
