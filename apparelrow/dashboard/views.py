@@ -546,8 +546,10 @@ def index_complete(request, view):
 
     return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
+def retailer(request):
+    return render(request, 'apparel/retailers.html')
 
-def store(request):
+def retailer_form(request):
     if request.method == 'POST':
         form = SignupForm(request.POST, is_store_form=True)
         if form.is_valid():
@@ -566,9 +568,12 @@ def store(request):
     else:
         form = SignupForm(is_store_form=True)
 
-    return render(request, 'apparel/store.html', {'form': form})
+    return render(request, 'apparel/retailer_contact.html', {'form': form})
 
 def index(request):
+    return render(request, 'dashboard/index.html')
+
+def publisher_contact(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -600,4 +605,4 @@ def index(request):
 
     referral_user = get_referral_user_from_cookie(request)
 
-    return render(request, 'dashboard/index.html', {'form': form, 'referral_user': referral_user})
+    return render(request, 'dashboard/publisher_contact.html', {'form': form, 'referral_user': referral_user})
