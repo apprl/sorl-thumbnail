@@ -277,7 +277,7 @@ PIPELINE_CSS = {
     },
     'homepage': {
         'source_filenames': (
-            'less/navii.less',
+            'less/home.less',
         ),
     }
 }
