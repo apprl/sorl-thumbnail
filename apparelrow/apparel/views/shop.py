@@ -99,13 +99,17 @@ def shop_instance_to_dict(shop):
         shop_dict['products'] = []
 
         for product in shop.products.all():
+            manufacturer_name = product.manufacturer.name if product.manufacturer else None
             shop_dict['products'].append({
                 'id': product.id,
                 'slug': product.slug,
                 'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
                 'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
                 'product_name': product.product_name,
-                'brand_name': 'test',
+                'brand_name': manufacturer_name,
+                'currency': product.default_vendor.currency,
+                'price': product.default_vendor.price,
+                'discount_price': product.default_vendor.discount_price,
             })
     return shop_dict
 

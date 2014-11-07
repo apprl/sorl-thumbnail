@@ -12,14 +12,12 @@
     {% endif %}
 
     <div id="content" class="row">
-        <div class="row">
-            <div class="col-md-6 col-widget">
-                {% include "apparel/tools/widget_shop_edit.html" with external_shop_id=external_shop_id %}
-            </div>
+        <div class="col-md-6 col-widget">
+            {% include "apparel/tools/widget_shop_edit.html" with external_shop_id=external_shop_id %}
+        </div>
 
-            <div class="col-md-6 visible-md visible-lg">
-                {% include "apparel/tools/product_picker.html" %}
-            </div>
+        <div class="col-md-6 visible-md visible-lg">
+            {% include "apparel/tools/product_picker.html" %}
         </div>
     </div>
 
