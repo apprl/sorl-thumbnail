@@ -1,59 +1,477 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n compressed%}
+{% load static from staticfiles %}
 
+{% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
 {% block body-classes %}publisher-index-page{% endblock %}
 {% block full-body %}
 
-<div class="background">
-    <div class="container">
-        <div class="body-header">
-            <div class="body-header-col-full">
-                <h1>{% trans "APPRL FOR BLOGGERS & MEDIA" %}</h1>
+<div class="container-fluid apprl-content apprl-top">
+<div class="row apprl-publishers-header apprl-header apprl-header-slim" style="visibility: hidden;">
+    <div class="col-xs-12 apprl-header-wrap">
+        <div class="container apprl-header-measurement"> <!-- Reference block for jQuery calculations, minimizes code -->
+            <div class="row">
+                <div class="col-lg-8">
+                </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="inner-content">
-                    {% if referral_user %}
-                    <div class="alert alert-warning">{% blocktrans with name=referral_user.display_name %}You have been invited by {{name}}. Therefore we will put €20 in your Apprl account to start with if you apply below.{% endblocktrans %}</div>
-                    {% endif %}
-                    <p>{% trans "Apprl can be used by online magazines and bloggers within fashion & beauty. We help you grow, earn money on your content and learn more about your readers. " %}</p>
-                    <p>{% trans "It’s free to apply for anyone, but we only accept new publishers at a rate that we can help and support in a good way. " %}</p>
-                    <p>{% trans "Apply to become an Apprl Publisher here:" %}</p>
-                    <form action="" method="post" class="form-horizontal">
-                        {% csrf_token %}
-                        <div class="form-group{% if form.name.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.name.html_name }}" class="col-sm-2 control-label">{{ form.name.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.name.html_name }}" type="text" class="form-control" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}" placeholder="{{ form.name.label }}">
-                                {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
-                            </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-8 apprl-header-left">
+                    <div class="row apprl-header-left-row">
+                        <div class="col-xs-12">
+                            <h1 class="apprl-c-primary apprl-maintitle">FOR PUBLISHERS & BLOGGERS</h1>
+                            <h1 class="apprl-c-light apprl-subtitle">CREATE GREAT CONTENT WITH OUR TOOLS AND EARN MONEY</h1>
+                            <a class="button btn btn-primary btn-lg" href="{% url 'publisher-contact' %}">
+                                Apply here
+                            </a>
+                            <a class="button btn btn-transparent btn-lg" id="apprl-scrollfromheader">
+                                or <b>Learn more</b>
+                            </a>
                         </div>
-                        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.email.html_name }}" class="col-sm-2 control-label">{{ form.email.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}">
-                                {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
-                            </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 apprl-header-right">
+                    <div class="row apprl-header-right-row">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-primary apprl-publisher-puff apprl-clickable">
+                            <h3 class="apprl-c-dark" style="margin-top:40px; ">Want to shop the style of your favourite blogger?</h3>
+                            <a href="{% url 'index' %}"></a>
                         </div>
-                        <div class="form-group{% if form.blog.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.blog.html_name }}" class="col-sm-2 control-label">{{ form.blog.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.blog.html_name }}" type="text" class="form-control" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}" placeholder="{{ form.blog.label }}">
-                                {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
-                            </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-darkgrey apprl-retailer-puff apprl-clickable">
+                            <h3 class="apprl-c-light" style="margin-top:40px;">Are you a retailer and want to drive more sales?</h3>
+                            <a href="{% url 'index-retailers' %}"></a>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-6">
-                                <button class="btn btn-primary btn-block btn-apply">{% trans "APPLY" %}</button>
-                            </div>
-                        </div>
-                    </form>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+</div>
+
+<div class="container-fluid apprl-content"  id="apprl-scrolltarget">
+    <div class="row">
+        <div class="col-xs-12 apprl-tools">
+            <div class="">
+                <div class="col-xs-12">
+                    <h4 class="apprl-slash text-center">Example tools</h4>
+                    <p class="text-center">Apprl offers a range of tools and formats for bloggers and other digital fashion & beauty media. Through our tools and the support from our team we help you grow, earn money on your content and learn more about your audience.<br />&nbsp;</p>
+                </div>
+                <div class="col-xs-12 apprl-fullcol">
+                    <div class="apprl-responsiveheight" style="padding-bottom:464px;">
+                        <div class="inner">
+                            <div class="apprl-slider apprl-slider-tools">
+                                <div class="slider">
+                                    <div class="item">
+                                        <div class="image">
+                                            <img src="{% static 'images/formats/Shop-tool-Apprl.png' %}" />
+                                        </div>
+                                        <div class="text">
+                                            <div class="bg"></div>
+                                            <div class="title">
+                                                <span>Shop</span>
+                                            </div>
+                                            <div class="desc">
+                                                <span>Create a shop for your site in just a few minutes</span>
+                                            </div>
+                                            <a class="button btn btn-default btn-md" href="{% url 'publisher-contact' %}">
+                                                Get Started
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="image">
+                                            <img src="{% static 'images/formats/Collage-tool-Apprl.png' %}" />
+                                        </div>
+                                        <div class="text">
+                                            <div class="bg"></div>
+                                            <div class="title">
+                                                <span>Collage</span>
+                                            </div>
+                                            <div class="desc">
+                                                <span>Share interactive collages with your audience </span>
+                                            </div>
+                                            <a class="button btn btn-default btn-md" href="{% url 'publisher-contact' %}">
+                                                Get Started
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="image">
+                                            <img src="{% static 'images/formats/Tagged-photo-tool-Apprl.png' %}" />
+                                        </div>
+                                        <div class="text">
+                                            <div class="bg"></div>
+                                            <div class="title">
+                                                <span>Tagged photos</span>
+                                            </div>
+                                            <div class="desc">
+                                                <span>Let your audience shop your photos</span>
+                                            </div>
+                                            <a class="button btn btn-default btn-md" href="{% url 'publisher-contact' %}">
+                                                Get Started
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tools_prevButton"><span class="glyphicon glyphicon-chevron-left"></span></div>
+                            <div class="tools_nextButton"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 text-center">
+                <a class="btn btn-default btn-apprldark btn-lg" href="{% url 'publisher-contact' %}">
+                    Apply to join
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid apprl-content">
+<div class="row">
+    <div class="col-xs-12 apprl-bloggers">
+        <h4 class="apprl-slash text-center"> APPRL IS USED BY LEADING DIGITAL PUBLISHERS & BLOGGERS</h4>
+        <p class="text-center">Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as by independent bloggers - They all share the products they love using Apprl.<br /></p>
+    </div>
+</div>
+</div>
+
+<!--TODO agregar esto una vez que lo termine en la pagina principal -->
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="col-xs-12 apprl-fullcol">
+            <div class="apprl-responsiveheight">
+                <div class="inner">
+                    <div class="apprl-slider apprl-slider-blocks">
+                        <div class="slider">
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/TessMontgomery_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Tess Montgomery</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ProjectRunway_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Project Runway</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/EmmaElwin_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span style="color: black;">Emma Elwin</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/Celine_Aaagard_Apprl_Front.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Celine Aagaard</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/StyleMagBadge.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/LouisNicolasDarbon_ApprlHome.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Louis-Nicolas Darbon</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ElzanaKadric_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Elzana Kadric</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/TopModel_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/CarolineSandstrom_Apprl_Front.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Caroline Sandström</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ElinKling_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Elin Kling</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/MartinHansson_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Martin Hansson</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <a type="button" class="btn btn-default btn-apprldark btn-lg" href="{% url 'publisher-contact' %}">
+                Apply to join
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="container">
+            <div class="col-xs-12">
+                <div class="row apprl-brands apprl-featured">
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/Elle-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/Cafe-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/PR-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/Metro-Mode-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/Nojesguiden-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/TopModel-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/AllerMedia-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/MTG-logo-Apprl-home.png' %}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="col-xs-12 apprl-brandgroup">
+            <h4 class="apprl-slash text-center"> ACCESS THE BEST RETAILERS & BRANDS</h4>
+            <p class="text-center">Get rewarded by featuring products from the world’s best online retailers, on your blog, social media profile or app.</p>
+            <div class="row apprl-brands">
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Net-A-Porter-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Asos-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Luisa-Viaroma-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Acne-Studios-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Mr-Porter-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Burberry-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/The-Outnet-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Alexander-Wang-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Nelly-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Saint-Laurent-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Isabel-Marant-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Alexander-McQueen-logo-Apprl-home.png' %}" />
+                </div>
+            </div>
+            <p class="text-center">
+                <a type="button" class="btn btn-info btn-lg" href="{% url 'publisher-contact' %}">
+                    Get access
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+$(window).load(function() {
+    //Function below
+    resizeapprlheader();
+    loadSliders();
+
+    //Clickable logic for divs containing inner links
+    $(".apprl-clickable").click(function(){
+         window.location=$(this).find("a").attr("href");
+         return false;
+    });
+
+    $(".imagelink").click(function(){
+         window.location=$(this).attr("href");
+         return false;
+    });
+
+    $('.apprl-scroll').click(function(){
+
+        $('html, body').animate({
+            scrollTop: $(".apprl-scrolltarget").offset().top
+        }, 1000);
+
+    });
+
+    });
+
+    //APPRL header logic rebuilt after first delivery of code (built 20141023), (modified 20141024, 20141030)
+    //This is used to create the header widths dynamically instead of complex CSS-logic in LESS files with values
+
+    //Set a value based on navbar margin left from auto css
+    //Function needs optimization by developer
+    function resizeapprlheader() {
+        //Set vars
+        var windowWidth = $(window).width();
+        var headerLeftWidth = $('.apprl-header-measurement .col-lg-8').css('width');
+        if(windowWidth <= 767) { //Responsive logic
+            var headerLeftWidth = 'auto';
+        } else if(windowWidth <= 1300) { //Responsive logic
+            var headerLeftWidth = parseInt(headerLeftWidth, 10) - 30;
+        }
+        //Step One: Calculate and change left side of the header
+        var headerMarginValue = $('.apprl-header-measurement .row').position().left;
+        if (headerMarginValue === 0) { //if misinterpreted as 0 (FF IE correction)
+            var headerMarginValue = $('.navbar .container').css('margin');
+            $('.apprl-header .apprl-header-left').css({
+                position: $('.navbar .container').css('position'),
+                margin: headerMarginValue,
+                width: headerLeftWidth
+            });
+        } else {
+            $('.apprl-header .apprl-header-left').css({
+                position: $('.navbar .container').css('position'),
+                marginLeft: headerMarginValue,
+                width: headerLeftWidth
+            });
+        }
+
+        //Correct the margin and values
+        $('.apprl-header .apprl-header-left').css('margin-right', 0);
+        $('.apprl-header .apprl-header-left').css('padding-right', 0);
+
+        //Step Two: calculate the heights if the right puffs and set
+        var homeHeaderHeight = $('.apprl-home-header .apprl-header-left').css('height');
+        var headerSlimHeight = $('.apprl-header-slim .apprl-header-left').css('height');
+        //Measure the left section height and use for the right puffs /2
+        var homeHeaderHalfHeight = parseInt(homeHeaderHeight, 10) * 0.5;
+        var headerSlimHalfHeight = parseInt(headerSlimHeight, 10) * 0.6;
+        if(windowWidth <= 767) {
+            var homeHeaderHalfHeight = 'auto';
+            var headerSlimHalfHeight = 'auto';
+            $('.apprl-header .apprl-header-left').css('margin-left', 0);
+        } else if(windowWidth <= 880) {
+            var headerSlimHalfHeight = parseInt(headerSlimHeight, 10);
+        } else if(windowWidth <= 1000) {
+            var headerSlimHalfHeight = parseInt(headerSlimHeight, 10) * 0.8;
+        }
+        //Set heights
+        $('.apprl-home-header .apprl-publisher-puff').css('height', homeHeaderHalfHeight);
+        $('.apprl-home-header .apprl-retailer-puff').css('height', homeHeaderHalfHeight);
+        $('.apprl-header-slim .apprl-publisher-puff').css('height', headerSlimHalfHeight);
+        $('.apprl-header-slim .apprl-retailer-puff').css('height', headerSlimHalfHeight);
+        $('.apprl-header').css('visibility', '');
+    }
+
+    function loadSliders() {
+        //Style is dictated in CSS/LESS
+        $('.apprl-slider-tools').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            navPrevSelector: $('.tools_prevButton'),
+            navNextSelector: $('.tools_nextButton'),
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-publishers').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            navPrevSelector: $('.publishers_prevButton'),
+            navNextSelector: $('.publishers_nextButton'),
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-blocks').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-items').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+    }
+
+    $(window).bind('resize', function(){
+        resizeapprlheader();
+    });
+
+    $(window).bind('orientationchange',function(e) {
+        resizeapprlheader();
+        loadSliders();
+    });
+</script>
+<script>
+$('#apprl-scrollfromheader').click(function(){ //Det elementet man klickar på
+    $('html, body').animate({ //Scrolla till målets avstånd från toppen av sidan
+        scrollTop: $("#apprl-scrolltarget").offset().top
+    }, 1000);
+});
+</script>
 {% endblock %}

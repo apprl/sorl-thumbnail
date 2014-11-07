@@ -1,0 +1,1820 @@
+// //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//
+// Apprl theme for bootstrap
+// Load after Bootstrap LESS
+// Built with:
+// Normalize: 3.0.1
+// Bootstrap: 3.1.1
+// jQuery: 2.1.1
+//
+
+//
+// Apprl dev settings
+// --------------------------------------------------
+
+/* h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+img,
+div {
+	border: 1px solid red;
+} */
+
+//
+// Apprl responsive extra debug settings, add / after * in titles to enable
+// --------------------------------------------------
+										/* Smartphones (portrait) *
+body { max-width: 320px; } /* */
+										/* Smartphones (landscape) *
+body { max-width: 480px; } /* */
+										/* iPads (portrait) *
+body { max-width: 768px; } /* */
+										/* iPads (landscape) *
+body { max-width: 1024px; } /* */
+										/* Desktops and laptops *
+body { max-width: 1224px; } /* */
+										/* Large screens *
+body { max-width: 1824px; } /* */
+
+//
+// Apprl server settings
+// --------------------------------------------------
+
+@import "./base.less";
+
+// lingon server 10.12.1.69:5678
+@app-url: 		"/";
+@app-img-url: 	"../images/"; //image-server
+@app-font-url: 	"http://10.12.1.69:8888/build/fonts/"; //font-server
+
+//
+// Apprl bootstrap variables
+// --------------------------------------------------
+
+//@icon-font-path:          "@{app-font-url}";
+//@icon-font-name:          "glyphicons-halflings-regular";
+//@icon-font-svg-id:        "glyphicons-halflings-regular";
+
+//
+// APPRL Defaults
+// --------------------------------------------------
+
+// Maxwidth used for inner max widths under lg.
+@apprl-content-maxwidth: 	1100px;
+
+// Animation and element styling
+@apprl-hover-time: 			0s;
+@apprl-rounded-edges: 		0;
+@apprl-hover-style: 		ease;
+
+// Colorset
+@apprl-primary: 			#67e2b8;
+@apprl-primary-rgba: 		rgba(103,226,184,1.0);
+@apprl-primary-hover: 		#28d499;
+
+@apprl-secondary: 			@apprl-primary;
+@apprl-secondary-hover: 	@apprl-primary-hover;
+
+@apprl-dark:				#000000;
+@apprl-darkgrey:			#222222;
+@apprl-light:				#ffffff;
+@apprl-light-hover:			#d9d9d9;
+@apprl-lightgrey: 			#eeeeee;
+
+@apprl-font-light: 			#ffffff;
+@apprl-font-dark: 			#000000;
+
+// Sizes will autorender APPRL slash from @apprl-slash-font
+// Default
+/* @apprl-h1-size: 			56px; 		//Calculated from 42pt in PSD (72dpi)
+@apprl-h2-size: 			48px; 		//Calculated from 36pt in PSD (72dpi)
+@apprl-h3-size: 			38px; 		//Calculated from 30pt in PSD (72dpi)
+@apprl-h4-size: 			32px; 		//Calculated from 24pt in PSD (72dpi) */
+@apprl-h1-size: 			42px; 		//Manual tweak
+@apprl-h1-subtitle: 		38px; 		//Manual tweak
+@apprl-h2-size: 			38px; 		//Manual tweak
+@apprl-h3-size: 			34px; 		//Manual tweak
+@apprl-h4-size: 			24px; 		//Manual tweak
+@apprl-h5-size: 			20px; 		//Manual tweak
+@apprl-h6-size: 			13px; 		//Calculated from 10pt in PSD (72dpi)
+
+@apprl-body-size: 			32px; 		//Calculated from 24pt in PSD (72dpi)
+
+@apprl-p-size: 				22px; 		//Manual tweak
+@apprl-p-md-size: 			22px;		//Manual tweak
+@apprl-p-sm-size: 			22px;		//Manual tweak
+
+// sm (<= iPadish)
+@apprl-h1-sm-size: 			48px; 		//Calculated from 36pt in PSD (72dpi)
+@apprl-h1-sm-subtitle: 		38.667px; 	//Manual tweak
+@apprl-h2-sm-size: 			42.667px; 	//Calculated from 32pt in PSD (72dpi)
+@apprl-h3-sm-size: 			34.667px; 	//Calculated from 26pt in PSD (72dpi)
+@apprl-h4-sm-size: 			26.667px; 	//Calculated from 20pt in PSD (72dpi)
+@apprl-h5-sm-size: 			24px; 		//Calculated from 18pt in PSD (72dpi)
+@apprl-h6-sm-size: 			13px; 		//Calculated from 10pt in PSD (72dpi)
+
+// md same as above
+@apprl-h1-md-size: 			@apprl-h1-sm-size;
+@apprl-h1-md-subtitle: 		@apprl-h1-sm-subtitle;
+@apprl-h2-md-size: 			@apprl-h2-sm-size;
+@apprl-h3-md-size: 			@apprl-h3-sm-size;
+@apprl-h4-md-size: 			@apprl-h4-sm-size;
+@apprl-h5-md-size: 			@apprl-h5-sm-size;
+@apprl-h6-md-size: 			@apprl-h6-sm-size;
+
+// xs (mobile)
+@apprl-h1-xs-size: 			28px; 		//Calculated from 24pt in PSD (72dpi)
+@apprl-h1-xs-subtitle: 		26px; 		//Manual tweak
+@apprl-h2-xs-size: 			32px; 		//Calculated from 24pt in PSD (72dpi)
+@apprl-h3-xs-size: 			24px; 		//Calculated from 18pt in PSD (72dpi)
+@apprl-h4-xs-size: 			24px; 		//Calculated from 18pt in PSD (72dpi)
+@apprl-h5-xs-size: 			24px; 		//Calculated from 18pt in PSD (72dpi)
+@apprl-h6-xs-size: 			13px; 		//Calculated from 10pt in PSD (72dpi)
+
+// Other fonts
+@apprl-slash-font: 			"Helvetica Neue",Helvetica,Arial,sans-serif;
+@apprl-slash-weight:		500;
+
+// Font settings
+@apprl-title-font: 			'Lato', sans-serif; //Google fonts
+@apprl-title-fontweight: 	400;
+@apprl-title-fontstyle: 	normal;
+@apprl-title-transform: 	uppercase;
+
+@apprl-content-font: 		"Helvetica Neue",Helvetica,Arial,sans-serif;
+@apprl-content-fontweight:	normal;
+@apprl-content-fontstyle:	normal;
+@apprl-content-transform: 	none;
+
+@apprl-quote-fontsize: 		20px;
+@apprl-quote-font: 			'IM Fell Great Primer', serif; //Google fonts
+@apprl-quote-fontweight: 	400;
+@apprl-quote-fontstyle: 	italic;
+@apprl-quote-transform: 	none;
+
+//Header values migrated to jquery
+
+//
+// Color classes
+// --------------------------------------------------
+.apprl-c-primary {
+	color: @apprl-primary;
+}
+.apprl-bg-primary {
+	background-color: @apprl-primary;
+}
+.apprl-c-secondary {
+	color: @apprl-primary;
+}
+.apprl-bg-secondary {
+	background-color: @apprl-primary;
+}
+.apprl-c-dark {
+	color: @apprl-dark;
+}
+.apprl-bg-dark {
+	background-color: @apprl-dark;
+}
+.apprl-c-darkgrey {
+	color: @apprl-darkgrey;
+}
+.apprl-bg-darkgrey {
+	background-color: @apprl-darkgrey;
+}
+.apprl-c-light {
+	color: @apprl-light;
+}
+.apprl-bg-light {
+	background-color: @apprl-light;
+}
+
+//
+// Fonts
+// --------------------------------------------------
+body {
+	font-family: @apprl-content-font;
+	font-weight: @apprl-content-fontweight;
+	font-style: @apprl-content-fontstyle;
+	text-transform: @apprl-content-transform;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    padding: 0;
+    margin: 0;
+    font-family: @apprl-title-font;
+    font-weight: @apprl-title-fontweight;
+    font-style: @apprl-title-fontstyle;
+}
+h1.apprl-maintitle {
+  font-size: @apprl-h1-size;
+}
+h1.apprl-subtitle {
+  font-size: @apprl-h1-subtitle;
+}
+h2 {
+  font-size: @apprl-h2-size;
+}
+h3 {
+  font-size: @apprl-h3-size;
+  border-bottom: 0px;
+}
+h4 {
+  font-size: @apprl-h4-size;
+}
+h5 {
+  font-size: @apprl-h5-size;
+}
+h6 {
+  font-size: @apprl-h6-size;
+}
+p {
+  font-size: @apprl-p-size;
+  font-weight: 300;
+}
+
+::selection {
+	color: @apprl-light;
+	background-color: @apprl-dark;
+}
+::-moz-selection {
+    color: @apprl-light;
+	background-color: @apprl-dark;
+}
+.apprl-brandgroup {
+	::selection {
+		background-color: @apprl-light;
+		color: @apprl-dark;
+	}
+	::-moz-selection {
+	    background-color: @apprl-light;
+		color: @apprl-dark;
+	}
+}
+.apprl-story {
+	::selection {
+		background-color: @apprl-darkgrey;
+		color: @apprl-light;
+	}
+	::-moz-selection {
+	    background-color: @apprl-darkgrey;
+		color: @apprl-light;
+	}
+}
+
+//APPRL "Slashgenerator" revisioned - basic version repeated for better LESS compatibility
+h1.apprl-slash {
+    font-size: @apprl-h1-size;
+    text-transform: @apprl-title-transform;
+	&::before {
+		font-family: @apprl-slash-font;
+		display: inline-block;
+		width: @apprl-h1-size;
+		font-weight: @apprl-slash-weight;
+		font-size: @apprl-h1-size * 2.133; // Value lifted form proportions in PSD
+		content: "\005C";
+	}
+}
+h2.apprl-slash {
+    font-size: @apprl-h2-size;
+    text-transform: @apprl-title-transform;
+	&::before {
+		font-family: @apprl-slash-font;
+		display: inline-block;
+		width: @apprl-h2-size;
+		font-weight: @apprl-slash-weight;
+		font-size: @apprl-h2-size * 2.133;
+		content: "\005C";
+	}
+}
+h3.apprl-slash {
+    font-size: @apprl-h3-size;
+    text-transform: @apprl-title-transform;
+	&::before {
+		font-family: @apprl-slash-font;
+		display: inline-block;
+		width: @apprl-h3-size;
+		font-weight: @apprl-slash-weight;
+		font-size: @apprl-h3-size * 2.133;
+		content: "\005C";
+	}
+}
+h4.apprl-slash {
+    font-size: @apprl-h4-size;
+    font-weight: 400;
+    text-transform: @apprl-title-transform;
+	&::before {
+		font-family: @apprl-slash-font;
+		display: inline-block;
+		width: @apprl-h4-size;
+		font-weight: @apprl-slash-weight;
+		font-size: @apprl-h4-size * 2.133;
+		content: "\005C";
+		margin-right: -2px;
+	}
+}
+
+//
+// Nav
+// --------------------------------------------------
+.apprl-body { // pick-me-up instead - for navbar
+	.navbar {
+		height: 51px;
+		padding: 0;
+		margin: 0;
+	}
+	.navbar-inverse {
+		background-image: -webkit-linear-gradient(top, @apprl-dark 0%, @apprl-dark 100%);
+		background-image: linear-gradient(to bottom, @apprl-dark 0%, @apprl-dark 100%);
+
+		border: 0px solid trasparent;
+		background-color: #000000;
+
+		-webkit-border-radius: 0px;
+		-moz-border-radius: 0px;
+		border-radius: 0px;
+	}
+	.navbar-nav {
+		> li > a {
+			color: @apprl-light;
+
+			&:hover,
+			&:focus {
+				color: @apprl-light;
+				background-color: transparent;
+			}
+		}
+		> .active > a {
+			&,
+			&:hover,
+			&:focus {
+				color: @apprl-light;
+				background-color: transparent;
+			}
+		}
+		> .disabled > a {
+			&,
+			&:hover,
+			&:focus {
+				color: @apprl-primary;
+				background-color: @apprl-primary;
+			}
+		}
+	}
+	.navbar-brand {
+		padding: 0;
+	}
+	.navbar-collapse {
+		background-color: @apprl-dark;
+	}
+}
+
+//
+// Globals
+// --------------------------------------------------
+
+
+.apprl-bg-fluid-height,
+.apprl-bg-fixed-height {
+    text-align: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.apprl-bg-fluid-height {
+	background: url('@{app-img-url}backgrounds/Apprl-home-bg.png') no-repeat center center scroll;
+    padding: 100px 0;
+}
+
+.apprl-bg-fixed-height {
+	background: url('@{app-img-url}backgrounds/Apprl-home-bg.png') no-repeat center center scroll;
+}
+
+.img-center {
+	margin: 0 auto;
+}
+
+//
+// Forms
+// ---------------------------------------------------
+.form-control {
+
+	color: #555555;
+	background-color: #ffffff;
+	background-image: none;
+	border: 1px solid #cccccc;
+
+	-webkit-border-radius: @apprl-rounded-edges;
+	-moz-border-radius: @apprl-rounded-edges;
+	border-radius: @apprl-rounded-edges;
+
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color @apprl-hover-style @apprl-hover-time, box-shadow @apprl-hover-style @apprl-hover-time;
+	transition: border-color @apprl-hover-style @apprl-hover-time, box-shadow @apprl-hover-style @apprl-hover-time;
+}
+
+//
+// Header
+// ---------------------------------------------------
+
+body {
+	.apprl-top { // First container spacing for fixed topbar
+		background-color: rgba(0,0,0,1.0);
+	}
+}
+
+.apprl-publishers-header {
+  background: url('@{app-img-url}backgrounds/Apprl-home-publisher-bg.png') no-repeat left top scroll;
+}
+.apprl-retailers-header {
+  background: url('@{app-img-url}backgrounds/Apprl-home-retailer-bg.png') no-repeat left top scroll;
+}
+.apprl-home-header {
+	background: url('@{app-img-url}backgrounds/Apprl-home-bg.png') no-repeat left top scroll;
+}
+.apprl-header-measurement { //Container to be catched by jQuery logic
+	height: 0;
+}
+.apprl-header-wrap {
+	.container-fluid {
+		padding: 0;
+	}
+	.row {
+		h1.apprl-maintitle {
+			text-transform: @apprl-title-transform;
+			font-family: @apprl-content-font;
+			font-weight: 300;
+			line-height: 60px;
+			margin-bottom: 0;
+			padding: 0;
+			letter-spacing: 0px;
+		}
+		h1.apprl-subtitle {
+			text-transform: @apprl-title-transform;
+			font-family: @apprl-content-font;
+			font-weight: 300;
+			line-height: 40px;
+			margin-bottom: 40px;
+			margin-top: 20px;
+			padding: 0;
+
+			letter-spacing: 0px;
+		}
+		h2, h3, h4 {
+
+			text-transform: none;
+			font-family: @apprl-content-font;
+		}
+		h4 {
+			margin-top: 10px;
+		}
+	}
+}
+.apprl-header-left {
+	background: url('@{app-img-url}backgrounds/Apprl-home-bg.png') no-repeat center center scroll;
+	padding-left: 0;
+}
+.apprl-header-left-row {
+	//background: rgba(0,0,0,0.8);
+	margin-right: 0;
+	margin-left: 0;
+}
+.apprl-header-right {
+	float: right;
+	.apprl-header-right-row {
+		[class*="col-"] {
+			padding: 0 40px 0 54px;
+		}
+	}
+}
+.apprl-header-wrap {
+	background-color: rgba(0,0,0,0.8);
+	/* float: none;
+	max-width: 1300px;
+	margin: 0 auto; */
+}
+.apprl-retailer-puff,
+.apprl-publisher-puff {
+	-webkit-transition: background-color @apprl-hover-style @apprl-hover-time;
+	-moz-transition: background-color @apprl-hover-style @apprl-hover-time;
+	transition: background-color @apprl-hover-style @apprl-hover-time;
+
+	display: inline-block;
+    vertical-align: middle;
+    &:hover {
+		text-decoration: none;
+	}
+	h3, h4 {
+		font-weight: bold;
+	}
+}
+.apprl-home-header {
+	.apprl-retailer-puff,
+	.apprl-publisher-puff {
+		&:before {
+			content: ' ';
+			display: inline-block;
+			vertical-align: middle;
+			height: 30%;
+		}
+	}
+}
+.apprl-header-slim {
+	.apprl-retailer-puff,
+	.apprl-publisher-puff {
+		&:before {
+			content: ' ';
+			display: inline-block;
+			vertical-align: middle;
+			height: 20%;
+		}
+	}
+}
+.apprl-retailer-puff {
+	&:hover {
+		cursor: pointer;
+		text-decoration: none;
+		background: @apprl-dark;
+	}
+}
+.apprl-publisher-puff {
+	&:hover {
+		cursor: pointer;
+		text-decoration: none;
+		background: @apprl-primary-hover;
+	}
+}
+.apprl-circle-link {
+	display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    margin-bottom: 20px;
+	width: 295px;
+	height: 295px;
+	border-radius: 295px;
+	text-align: center;
+
+	-webkit-transition: background-color @apprl-hover-style @apprl-hover-time;
+	-moz-transition: background-color @apprl-hover-style @apprl-hover-time;
+	transition: background-color @apprl-hover-style @apprl-hover-time;
+
+	&:hover {
+		text-decoration: none;
+		border-style: none;
+		//background: @apprl-primary-hover;
+	}
+	h3, h4 {
+		font-weight: bold;
+		span {
+			font-weight: normal;
+		}
+		&:hover {
+			cursor: pointer;
+			color: #eeeeee;
+		}
+	}
+	h4 {
+		font-size: @apprl-h5-size;
+	}
+}
+.apprl-facebook {
+	vertical-align:middle;
+	.facepile-container {
+		padding-top: 170px;
+	}
+	.fb-facepile {
+		margin-top: 10px;
+		margin-left: 0px;
+	}
+}
+
+//
+// APPRL content sections
+// ---------------------------------------------------
+.apprl-bloggers,
+.apprl-create,
+.apprl-brandgroup,
+.apprl-story,
+.apprl-tools {
+	padding-top: 70px;
+	h4 {
+		margin: 0 0 20px;
+	}
+	p {
+		max-width: @apprl-content-maxwidth;
+		margin: 0 auto;
+	}
+}
+.apprl-tools,
+.apprl-story {
+	padding-bottom: 0;
+	margin-bottom: 0px;
+	color: @apprl-dark;
+	background: @apprl-lightgrey;
+	.apprl-storyinner {
+		p.quote {
+			font-family: @apprl-quote-font;
+			font-weight: @apprl-quote-fontweight;
+			font-style: @apprl-quote-fontstyle;
+			font-size: @apprl-quote-fontsize;
+			text-transform: @apprl-quote-transform;
+		}
+		.story {
+			margin-top: 10px;
+			font-size: 18px;
+		}
+	}
+}
+.apprl-publishers,
+.apprl-tools {
+	padding-bottom: 40px;
+	padding-left: 0;
+	padding-right: 0;
+}
+.apprl-story {
+	margin-bottom: 40px;
+	padding-left: 0;
+	padding-right: 0;
+}
+.apprl-featured {
+	margin-bottom: 40px;
+}
+.apprl-brandgroup {
+	color: @apprl-light;
+	background: @apprl-dark;
+	/* padding-left: 15px;
+	padding-right: 15px; */
+}
+
+// Brand and logo groups
+.apprl-brands {
+	max-width: @apprl-content-maxwidth;
+	margin-left: auto;
+	margin-right: auto;
+	.apprl-brandimage {
+		text-align: center;
+		text-decoration: none;
+		img {
+			width: 100%;
+			border: 0;
+			outline: 0;
+			-webkit-transition: opacity @apprl-hover-style @apprl-hover-time;
+			-moz-transition: opacity @apprl-hover-style @apprl-hover-time;
+			transition: opacity @apprl-hover-style @apprl-hover-time;
+		}
+	}
+}
+//
+// APPRL buttons
+// ---------------------------------------------------
+.apprl-content {
+	.btn {
+		-webkit-transition: background-color @apprl-hover-style @apprl-hover-time;
+		-moz-transition: background-color @apprl-hover-style @apprl-hover-time;
+		transition: background-color @apprl-hover-style @apprl-hover-time;
+
+		background-image: none;
+
+
+		text-shadow: none;
+		font-weight: normal;
+		box-shadow: none;
+
+		outline: none;
+		border: 0px solid transparent;
+
+		-webkit-border-radius: @apprl-rounded-edges;
+		-moz-border-radius: @apprl-rounded-edges;
+		border-radius: @apprl-rounded-edges;
+	}
+	.btn-lg {
+		margin: 40px 0 40px;
+		padding: 12px 50px;
+		font-size: 24px;
+	}
+	.btn-md {
+		margin: 20px 0 20px;
+		padding: 10px 30px;
+		font-size: 18px;
+	}
+	.btn-default {
+		background-color: @apprl-dark !important;
+		background-image: @apprl-dark !important;
+		background: @apprl-dark !important;
+
+		color: @apprl-light;
+
+		&:hover {
+			background-color: @apprl-darkgrey !important;
+			background-image: @apprl-darkgrey !important;
+			background: @apprl-darkgrey !important;
+		}
+	}
+	.btn-primary {
+		background-color: @apprl-primary !important;
+		background-image: @apprl-primary !important;
+		background: @apprl-primary !important;
+
+		color: @apprl-light;
+
+		&:hover {
+			background-color: @apprl-primary-hover !important;
+			background-image: @apprl-primary-hover !important;
+			background: @apprl-primary-hover !important;
+		}
+	}
+	.btn-transparent {
+		background-color: transparent !important;
+		background-image: transparent !important;
+		background: transparent !important;
+
+		color: @apprl-light;
+
+		&:hover {
+			background-color: transparent !important;
+			background-image: transparent !important;
+			background: transparent !important;
+			color: @apprl-lightgrey;
+		}
+	}
+	.btn-info {
+		background-color: @apprl-light !important;
+		background-image: @apprl-light !important;
+		background: @apprl-light !important;
+
+		color: @apprl-dark;
+
+		&:hover {
+			background-color: @apprl-light-hover !important;
+			background-image: @apprl-light-hover !important;
+			background: @apprl-light-hover !important;
+		}
+	}
+}
+//
+// APPRL iosslider
+// ---------------------------------------------------
+.apprl-responsiveheight {
+	height: 0;
+	padding: 0 0 300px 0;
+	position: relative;
+	overflow: visible;
+	.inner {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+// Slider "blocks". Used for bloggers
+.apprl-slider-blocks {
+	position: relative;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	height: 100%;
+
+	::selection {
+		background-color: transparent;
+	}
+	::-moz-selection {
+	    background-color: transparent;
+	}
+
+	.prevButton {
+		display: none;
+		position: absolute;
+		top: 40%;
+		left: 0;
+		width: 20px;
+		height: 30px;
+		background: transparent;
+		z-index: 2;
+		vertical-align: middle;
+	}
+	.nextButton {
+		display: none;
+		position: absolute;
+		top: 40%;
+		right: 0;
+		width: 20px;
+		height: 30px;
+		background: transparent;
+		z-index: 2;
+		vertical-align: middle;
+	}
+	.prevButton,
+	.nextButton {
+		span {
+			font-family: @apprl-slash-font;
+			display: inline-block;
+			width: 30px;
+			font-weight: @apprl-slash-weight;
+			font-size: 30px;
+			color: @apprl-light;
+		}
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	.slider {
+		width: 100%;
+		height: 100%;
+		.item {
+			position: relative;
+			bottom: 0;
+			left: 0;
+			width: 284px;
+			height: 285px;
+			margin: 0;
+			.image {
+				-webkit-transition: opacity @apprl-hover-style @apprl-hover-time;
+				-moz-transition: opacity @apprl-hover-style @apprl-hover-time;
+				transition: opacity @apprl-hover-style @apprl-hover-time;
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 285px;
+				.bg {
+					height: 285px;
+					width: 285px;
+					opacity: 0.5;
+					display: none;
+				}
+			}
+			.text {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 70px;
+				padding: 0px;
+				.bg {
+					position: absolute;
+					top: 0;
+					right: 0;
+					width: 285px;
+					height: 285px;
+				}
+			}
+			.title {
+				position: relative;
+				top: 14px;
+				left: 20px;
+				text-indent: -1px;
+				span {
+					color: @apprl-light;
+					font-size: 19px;
+					font-weight: normal;
+					font-family: @apprl-content-font;
+				}
+
+			}
+			.button {
+				position: absolute;
+				right: 18px;
+				bottom: 15px;
+				padding: 0;
+				margin: 0;
+				cursor: pointer;
+			}
+			&:hover {
+				/*cursor: pointer;*/
+                cursor: default;
+				.image {
+					opacity: 0.8;
+				}
+			}
+			/* &:focus {
+				cursor: grab;
+			} */
+		}
+	}
+}
+
+// Slider "items". Used for Create and share slider
+.apprl-slider-items {
+	position: relative;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+
+	::selection {
+		background-color: transparent;
+	}
+	::-moz-selection {
+	    background-color: transparent;
+	}
+
+	.prevButton {
+		display: none;
+		position: absolute;
+		top: 40%;
+		left: 0;
+		width: 20px;
+		height: 30px;
+		background: transparent;
+		z-index: 2;
+		vertical-align: middle;
+	}
+	.nextButton {
+		display: none;
+		position: absolute;
+		top: 40%;
+		right: 0;
+		width: 20px;
+		height: 30px;
+		background: transparent;
+		z-index: 2;
+		vertical-align: middle;
+	}
+	.prevButton,
+	.nextButton {
+		span {
+			display: inline-block;
+			line-height: 56px;
+			width: 40px;
+			font-weight: @apprl-slash-weight;
+			font-size: 30px;
+			color: @apprl-light;
+		}
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	.slider {
+		width: 100%;
+		height: 100%;
+		img.imagelink {
+			-webkit-transition: opacity @apprl-hover-style @apprl-hover-time;
+			-moz-transition: opacity @apprl-hover-style @apprl-hover-time;
+			transition: opacity @apprl-hover-style @apprl-hover-time;
+			&:hover {
+				opacity: 0.8;
+				/*cursor: pointer;*/
+			}
+		}
+        img {
+          &:hover {
+            cursor: default;
+          }
+        }
+	}
+}
+
+// "Slider tools", used for Example tools slider and people
+.tools_prevButton {
+	position: absolute;
+	top: 40%;
+	left: 0px;
+	width: 60px;
+	height: 60px;
+	background: @apprl-light;
+	z-index: 2;
+	vertical-align: middle;
+	text-align: center;
+	color: @apprl-lightgrey;
+	&:focus {
+		background: @apprl-light;
+	}
+	&:active {
+		background: @apprl-light;
+	}
+}
+.tools_nextButton {
+	position: absolute;
+	top: 40%;
+	right: 0px;
+	width: 60px;
+	height: 60px;
+	background: @apprl-light;
+	z-index: 2;
+	vertical-align: middle;
+	text-align: center;
+	&:focus {
+		background: @apprl-light;
+	}
+	&:active {
+		background: @apprl-light;
+	}
+}
+.publishers_prevButton {
+	position: absolute;
+	top: 30%;
+	left: 0px;
+	width: 60px;
+	height: 60px;
+	background: @apprl-lightgrey;
+	z-index: 2;
+	vertical-align: middle;
+	text-align: center;
+	color: @apprl-lightgrey;
+	&:focus {
+		background: @apprl-lightgrey;
+	}
+	&:active {
+		background: @apprl-lightgrey;
+	}
+}
+.publishers_nextButton {
+	position: absolute;
+	top: 30%;
+	right: 0px;
+	width: 60px;
+	height: 60px;
+	background: @apprl-lightgrey;
+	z-index: 2;
+	vertical-align: middle;
+	text-align: center;
+	&:focus {
+		background: @apprl-lightgrey;
+	}
+	&:active {
+		background: @apprl-lightgrey;
+	}
+}
+.publishers_prevButton,
+.publishers_nextButton {
+	::selection {
+		background-color: transparent;
+	}
+	::-moz-selection {
+	    background-color: transparent;
+	}
+	span {
+		display: inline-block;
+		line-height: 56px;
+		width: 40px;
+		font-weight: @apprl-slash-weight;
+		font-size: 30px;
+		color: @apprl-darkgrey;
+	}
+	&:hover {
+		cursor: pointer;
+		background: @apprl-light;
+	}
+}
+.tools_prevButton,
+.tools_nextButton {
+	::selection {
+		background-color: transparent;
+	}
+	::-moz-selection {
+	    background-color: transparent;
+	}
+	span {
+		display: inline-block;
+		line-height: 56px;
+		width: 40px;
+		font-weight: @apprl-slash-weight;
+		font-size: 30px;
+		color: @apprl-darkgrey;
+	}
+	&:hover {
+		cursor: pointer;
+		background: @apprl-lightgrey;
+	}
+}
+
+.apprl-slider-tools {
+	position: relative;
+	margin: 0 auto;
+	overflow: hidden;
+	height: 100%;
+	max-width: @apprl-content-maxwidth;
+
+	::selection {
+		background-color: transparent;
+	}
+	::-moz-selection {
+	    background-color: transparent;
+	}
+
+	.slider {
+		width: 100%;
+		height: 100%;
+		.item {
+			position: relative;
+			bottom: 0;
+			left: 0;
+			width: 390px;
+			height: 464px;
+			margin: 0;
+			padding: 18px 20px 26px 20px;
+			background: @apprl-light;
+
+			::selection {
+				color: @apprl-light;
+				background-color: @apprl-dark;
+			}
+			::-moz-selection {
+			    color: @apprl-light;
+				background-color: @apprl-dark;
+			}
+			.image {
+				-webkit-transition: opacity @apprl-hover-style @apprl-hover-time;
+				-moz-transition: opacity @apprl-hover-style @apprl-hover-time;
+				transition: opacity @apprl-hover-style @apprl-hover-time;
+				img {
+					width: 320px;
+					height: 260px;
+				}
+			}
+			.text {
+				text-align: center;
+				font-size: 18px;
+				.desc {
+					min-height: 60px;
+				}
+			}
+			.title {
+				span {
+					color: @apprl-dark;
+					font-size: 20px;
+					font-weight: bold;
+					text-transform: uppercase;
+					font-family: @apprl-content-font;
+				}
+
+			}
+			.button {
+				cursor: pointer;
+			}
+			&:hover {
+				cursor: pointer;
+				.image {
+					opacity: 0.8;
+				}
+			}
+			/* &:focus {
+				cursor: grab;
+			} */
+		}
+	}
+}
+
+.apprl-slider-publishers {
+	position: relative;
+	margin: 0 auto;
+	overflow: hidden;
+	height: 100%;
+	max-width: @apprl-content-maxwidth;
+
+	.slider {
+		width: 100%;
+		height: 100%;
+		.item {
+			position: relative;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 464px;
+			margin: 0;
+			padding: 18px 20px 26px 20px;
+			background: @apprl-light;
+
+			::selection {
+				color: @apprl-light;
+				background-color: @apprl-dark;
+			}
+			::-moz-selection {
+			    color: @apprl-light;
+				background-color: @apprl-dark;
+			}
+			.image {
+				text-align: center;
+				-webkit-transition: opacity @apprl-hover-style @apprl-hover-time;
+				-moz-transition: opacity @apprl-hover-style @apprl-hover-time;
+				transition: opacity @apprl-hover-style @apprl-hover-time;
+				img {
+					max-width: 100%;
+				}
+			}
+			.text {
+				text-align: left;
+				font-size: 18px;
+				.desc {
+					margin-right: 40px;
+					font-family: @apprl-quote-font;
+					font-weight: @apprl-quote-fontweight;
+					font-style: @apprl-quote-fontstyle;
+					font-size: @apprl-quote-fontsize;
+					text-transform: @apprl-quote-transform;
+				}
+			}
+			.title {
+				margin-top: 20px;
+				margin-bottom: 20px;
+				span {
+					color: @apprl-dark;
+					font-size: 18px;
+					font-weight: bold;
+					text-transform: none;
+					font-family: @apprl-content-font;
+				}
+
+			}
+			/* &:focus {
+				cursor: grab;
+			} */
+		}
+	}
+}
+
+// Slider extras
+.iphoneUI .iosSlider .slider .item .text {
+	display: none;
+}
+.iphoneUI .iosSlider .slider .item .text .bg {
+	display: none;
+}
+
+//
+// APPRL responsive, defaults and media queries
+// ---------------------------------------------------
+
+/* Header extra logic */
+@media (max-width: 586px) {
+	.container-fluid .apprl-slider-tools {
+		.slider {
+			.item {
+				width: 100%;
+				padding: 0;
+				text-align: center;
+			}
+		}
+	}
+
+	.apprl-publishers-header {
+		.apprl-header-left {
+			text-align: center;
+		}
+		.apprl-header-wrap {
+			.row {
+				h1.apprl-maintitle {
+					line-height: 30px;
+					font-size: @apprl-h2-xs-size;
+					margin: 14px 0 16px;
+					text-align: center;
+				}
+				h1.apprl-subtitle {
+					line-height: 30px;
+					font-size: @apprl-h3-xs-size;
+					margin: 14px 0;
+					text-align: center;
+				}
+			}
+		}
+	}
+
+	.btn-lg {
+		min-width: 220px;
+	}
+
+	body {
+		.apprl-publishers {
+			.apprl-responsiveheight {
+				padding-bottom: 364px;
+				.apprl-slider-publishers {
+					width: 100%;
+					.slider {
+						.item {
+							padding: 0;
+							height: 364px;
+							.title,
+							.image,
+							.desc {
+								text-align: center;
+							}
+							.desc {
+								margin-right: 50px;
+								margin-left: 50px;
+								font-size: 16px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.apprl-fullcol {
+	padding-left: 0;
+	padding-right: 0;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+/* Small devices (sub 786px) */
+h1.apprl-maintitle {
+	font-size: @apprl-h1-xs-size;
+}
+h1.apprl-subtitle {
+	font-size: @apprl-h1-xs-subtitle;
+}
+h2 {
+	font-size: @apprl-h2-xs-size;
+}
+h3 {
+	font-size: @apprl-h3-xs-size;
+}
+h4 {
+	font-size: @apprl-h4-xs-size;
+}
+h5 {
+	font-size: @apprl-h5-xs-size;
+}
+h6 {
+	font-size: @apprl-h6-xs-size;
+}
+
+.apprl-header {
+	.apprl-header-left {
+		.apprl-link-wrap {
+			text-align: center;
+			.apprl-circle-link {
+				display: inline-block;
+				padding-top: 134px;
+				margin: 20px 0 40px;
+			}
+		}
+	}
+	.apprl-header-right {
+		background: @apprl-darkgrey;
+	}
+}
+
+.apprl-header-right {
+	h4.apprl-c-light {
+
+		border-bottom: 0px solid @apprl-light;
+	}
+	h4.apprl-c-primary {
+		border-bottom: 0px solid @apprl-primary;
+	}
+}
+
+@media (max-width: 767px) {
+	.tools_prevButton,
+	.tools_nextButton {
+		background: @apprl-lightgrey;;
+		&:hover {
+			cursor: pointer;
+			background: @apprl-lightgrey;
+		}
+	}
+	.apprl-slider-tools {
+		background: @apprl-light;
+		.slider {
+			.item {
+				width: 50%;
+				text-align: center;
+			}
+			.desc {
+				padding: 0 20px;
+			}
+		}
+	}
+	.apprl-storyinner {
+		img {
+			max-width: 100%;
+		}
+	}
+	.apprl-home-header {
+		.apprl-header-left {
+			.apprl-link-wrap {
+				.apprl-circle-link {
+					width: 250px;
+					height: 250px;
+					padding-top: 115px;
+					margin-top: 10px;
+					h4 {
+						font-size: 22px;
+					}
+				}
+			}
+		}
+	}
+	.apprl-content {
+		.btn-lg {
+			margin: 40px 0 40px;
+			padding: 10px 20px;
+			font-size: 22px;
+		}
+	}
+	.apprl-header-right {
+		float: right;
+		.apprl-header-right-row {
+			[class*="col-"] {
+				padding: 0px 20px 0 25px;
+			}
+		}
+        .apprl-header-right-row {
+			[class*="col-"] {
+				padding: 0px 20px 0 25px;
+			}
+		}
+	}
+	.apprl-header {
+		.apprl-header-wrap {
+			padding-top: 0px;
+			text-align: center;
+			.row {
+				h1.apprl-maintitle {
+					margin: 0;
+					line-height: 34px;
+					margin: 34px 0 16px;
+					text-align: center;
+				}
+				h1.apprl-subtitle {
+					margin: 0;
+					line-height: 34px;
+					margin: 0 0 14px;
+					text-align: center;
+				}
+			}
+			.apprl-publisher-puff,
+			.apprl-retailer-puff {
+				text-align: left;
+			}
+		}
+	}
+	body {
+		.apprl-header {
+			.apprl-retailer-puff,
+			.apprl-publisher-puff {
+				min-height: 160px;
+				&:after {
+					content: ' ';
+					display: inline-block;
+					vertical-align: middle;
+					height: 0%;
+				}
+				h3 {
+					padding: 0;
+					line-height: 34px;
+				}
+				h4 {
+					padding: 0;
+					margin-bottom: 0px;
+					line-height: 30px;
+					font-size: 20px;
+				}
+			}
+		}
+		.apprl-header-slim {
+			.apprl-retailer-puff,
+			.apprl-publisher-puff {
+				min-height: 160px;
+				&:after {
+					content: ' ';
+					display: inline-block;
+					vertical-align: middle;
+					height: 0%;
+				}
+				h3 {
+					padding: 0;
+				}
+				h4 {
+					padding: 0;
+					margin-bottom: 20px;
+					font-size: 20px;
+				}
+			}
+		}
+	}
+	.apprl-storyinner {
+		h3 {
+			text-align: center;
+		}
+		p.quote {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+		.apprl-founders {
+			text-align: center;
+		}
+	}
+	.apprl-header {
+		.btn-lg {
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+	}
+	.apprl-publishers {
+		.apprl-responsiveheight {
+			padding-bottom: 284px;
+			.apprl-slider-publishers {
+				width: 100%;
+				.slider {
+					.item {
+						padding: 0;
+						height: 284px;
+						.title,
+						.image,
+						.desc {
+							text-align: center;
+						}
+						.desc {
+							margin-right: 0;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: @screen-sm) {
+	h1.apprl-maintitle {
+		font-size: @apprl-h1-sm-size;
+	}
+	h1.apprl-subtitle {
+		font-size: @apprl-h1-sm-subtitle;
+	}
+	h2 {
+		font-size: @apprl-h2-sm-size;
+	}
+	h3 {
+		font-size: @apprl-h3-sm-size;
+	}
+	h4 {
+		font-size: @apprl-h4-sm-size;
+	}
+	h5 {
+		font-size: @apprl-h5-sm-size;
+	}
+	h6 {
+		font-size: @apprl-h6-sm-size;
+	}
+	.apprl-home-header {
+		.apprl-header-left {
+			padding-top: 40px;
+			.apprl-link-wrap {
+				margin: 20px 0;
+				text-align: left;
+			}
+		}
+		.apprl-header-right {
+			background: @apprl-darkgrey;
+		}
+	}
+	.apprl-header-slim {
+		.apprl-header-left {
+			padding-top: 20px;
+		}
+	}
+	.apprl-retailers-header,
+	.apprl-publishers-header {
+		.apprl-header-wrap {
+			.row {
+				h1.apprl-maintitle {
+					margin: 20px 0 0px 0;
+				}
+				h1.apprl-subtitle {
+					margin: 0px 0 20px 0;
+				}
+			}
+			.apprl-header-right {
+				background: @apprl-darkgrey;
+			}
+		}
+	}
+	.apprl-slider-tools {
+		max-width: 741px;
+		margin: 0 auto;
+	}
+	.apprl-header-left {
+		background: none;
+	}
+	.apprl-header-left-row {
+		background: none;
+	}
+	.apprl-publishers {
+		.apprl-responsiveheight {
+			padding-bottom: 264px;
+			.apprl-slider-publishers {
+				.slider {
+					.item {
+						padding: 0;
+						height: 264px;
+						.title,
+						.image,
+						.desc {
+							text-align: center;
+						}
+						.desc {
+							margin-right: 0;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: @screen-md) {
+
+	h1.apprl-maintitle {
+		font-size: @apprl-h1-md-size;
+	}
+	h1.apprl-subtitle {
+		font-size: @apprl-h1-md-subtitle;
+	}
+	h3 {
+		font-size: @apprl-h3-md-size;
+	}
+	h4 {
+		font-size: @apprl-h4-md-size;
+	}
+	h5 {
+		font-size: @apprl-h5-md-size;
+	}
+	h6 {
+		font-size: @apprl-h6-md-size;
+	}
+	body {
+		.apprl-header {
+			.apprl-header-wrap {
+				.apprl-header-right {
+					background: @apprl-darkgrey;
+				}
+			}
+			.apprl-header-right {
+				h4.apprl-c-light {
+					border-bottom: 0px solid transparent;
+				}
+				h4.apprl-c-primary {
+					border-bottom: 0px solid transparent;
+				}
+			}
+		}
+	}
+	.apprl-retailers-header,
+	.apprl-publishers-header {
+		.apprl-header-wrap {
+			.apprl-header-right {
+				background: @apprl-darkgrey;
+			}
+		}
+	}
+	.apprl-slider-tools {
+		max-width: @apprl-content-maxwidth;
+	}
+	.apprl-publishers {
+		.apprl-responsiveheight {
+			padding-bottom: 164px;
+			.apprl-slider-publishers {
+				.slider {
+					.item {
+						width: 100%;
+						height: 164px;
+						.title,
+						.desc {
+							text-align: left;
+						}
+						.desc {
+							margin-right: 40px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 1199px) {
+	.story {
+		text-align: center;
+	}
+}
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: @screen-lg) {
+	h1.apprl-maintitle {
+		font-size: @apprl-h1-size;
+	}
+	h1.apprl-subtitle {
+		font-size: @apprl-h1-subtitle;
+	}
+	h3 {
+		font-size: @apprl-h3-size;
+	}
+	h4 {
+		font-size: @apprl-h4-size;
+	}
+	h5 {
+		font-size: @apprl-h5-size;
+	}
+	h6 {
+		font-size: @apprl-h6-size;
+	}
+
+	.apprl-header-left {
+		padding-top: 40px;
+		/* padding-left: 0%;
+		padding-right: 3%; */
+	}
+
+	/* Apprl fullsize header grid */
+	.apprl-publishers-header,
+	.apprl-retailers-header {
+		.apprl-header-wrap {
+			.row {
+				h1 {
+					margin: 0px 0 0px 0;
+				}
+				h3 {
+					font-size: @apprl-h4-md-size;
+				}
+			}
+		}
+	}
+	.publishers_prevButton,
+	.tools_prevButton {
+		position: absolute;
+		left: 20px;
+	}
+	.publishers_nextButton,
+	.tools_nextButton {
+		position: absolute;
+		right: 20px;
+	}
+}
+
+
+@media only screen and (min-width: 768px) and (max-width: 990px) {
+	body {
+		.apprl-home-header {
+			.apprl-retailer-puff,
+			.apprl-publisher-puff {
+				&:before {
+					display: inline-block;
+					vertical-align: middle;
+					height: 20%;
+				}
+			}
+		}
+		.apprl-header-slim {
+			.apprl-retailer-puff,
+			.apprl-publisher-puff {
+				&:before {
+					display: inline-block;
+					vertical-align: middle;
+					height: 20%;
+				}
+			}
+		}
+	}
+}
+@media only screen and (min-width: 1200px) and (max-width: 1380px) {
+	body {
+		.apprl-home-header {
+			.apprl-retailer-puff,
+			.apprl-publisher-puff {
+				&:before {
+					display: inline-block;
+					vertical-align: middle;
+					height: 20%;
+				}
+			}
+		}
+		.apprl-header-slim {
+			.apprl-retailer-puff,
+			.apprl-publisher-puff {
+				&:before {
+					display: inline-block;
+					vertical-align: middle;
+					height: 0%;
+				}
+			}
+		}
+	}
+}
+
+footer {
+  h4 {
+
+  }
+}

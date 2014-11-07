@@ -5,18 +5,15 @@
 {% block body-scripts %}
 <script type="text/javascript">
     $('.feed-item .featured-feed-item a').attr({'href': '#', 'data-target': '#modal_become_member', 'data-toggle': 'modal'});
-</script>x
+</script>
 {% endblock %}
+
 {% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
-{% block body-classes %}index frontpage{% endblock %}
+{% block body-classes %}store-index-page{% endblock %}
 {% block full-body %}
 
-
-
-<!-- Home: Header -->
-<div class="container-fluid apprl-top apprl-content"> <!-- apprl-top only required for first container -->
-
-    <div class="row apprl-home-header apprl-header" style="visibility: hidden;">
+<div class="container-fluid apprl-content apprl-top">
+    <div class="row apprl-retailers-header apprl-header apprl-header-slim" style="visibility: hidden;">
         <div class="col-xs-12 apprl-header-wrap">
             <div class="container apprl-header-measurement"> <!-- Reference block for jQuery calculations, minimizes code -->
                 <div class="row">
@@ -29,21 +26,15 @@
                     <div class="col-xs-12 col-md-12 col-lg-8 apprl-header-left">
                         <div class="row apprl-header-left-row">
                             <div class="col-xs-12">
-                                <h1 class="apprl-c-light apprl-maintitle">SHOP THE STYLE OF YOUR <br />FAVOURITE bloggers, MAGAZINES, TV-SHOWS AND BRANDS.</h1>
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 apprl-link-wrap">
-                                        <a class="apprl-circle-link apprl-bg-primary">
-                                            <h3 class="apprl-c-light" data-toggle="modal" data-target="#modal_become_member">{% trans "Get Access" %}</h3>
-                                        </a>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <div class="hidden-xs col-sm-6 col-md-6 col-lg-6 apprl-facebook facepile-container">
-                                        <div class="facepile-container">
-                                            <h4 id="apprl-scrollfromheader" class="apprl-c-light"><span>or</span> Learn more</h4>
-                                            <div class="fb-facepile" data-app-id="{{ FACEBOOK_APP_ID }}" data-max-rows="2" data-colorscheme="dark" data-size="medium" data-show-count="true"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h1 class="apprl-c-primary apprl-maintitle">For retailers</h1>
+                                <h1 class="apprl-c-light apprl-subtitle">Increase your reach and generate more sales</h1>
+                                <a class="button btn btn-primary btn-lg" href="{% url 'retailer-form' %}">
+                                    Apply here
+                                </a>
+                                <!--TODO scrolling thing is missing -->
+                                <a class="button btn btn-transparent btn-lg" id="apprl-scrollfromheader">
+                                    or <b>Learn more</b>
+                                </a>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -51,14 +42,12 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 apprl-header-right">
                         <div class="row apprl-header-right-row">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-primary apprl-publisher-puff apprl-clickable">
-                                <h3 class="apprl-c-dark">Are you a blogger / digital publisher?</h3>
-                                <h4 class="apprl-c-light">Create great content and earn money using our tools</h4>
+                                <h3 class="apprl-c-dark" style="margin-top:40px;">Are you a digital publisher / blogger?</h3>
                                 <a href="{% url 'index-publisher' %}"></a>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-darkgrey apprl-retailer-puff apprl-clickable">
-                                <h3 class="apprl-c-light">Are you a retailer?</h3>
-                                <h4 class="apprl-c-primary">Increase your reach and drive sales through our network</h4>
-                                <a href="{% url 'index-retailers' %}"></a>
+                                <h3 class="apprl-c-light"  style="margin-top:40px;">Want to shop the style of your favourite blogger?</h3>
+                                <a href="{% url 'index' %}"></a>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -69,17 +58,17 @@
     </div>
 
 </div>
-<!-- /Home: Header -->
 
 <div class="container-fluid apprl-content" id="apprl-scrolltarget">
     <div class="row">
         <div class="col-xs-12 apprl-bloggers">
-            <h4 class="apprl-slash text-center">GET INSPIRED BY MAGAZINES, TV-SHOWS & BLOGGERS</h4>
-            <p class="text-center">Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as by independent bloggers - They all share the products they love using Apprl.<br/></p>
+            <h4 class="apprl-slash text-center"> Increase your reach through our partners </h4>
+            <p class="text-center">Apprl helps you as an online retailer to increase your reach through our network of bloggers, premium media partners, other style influencers as well as our members - Your products at the point of inspiration.<br /></p>
         </div>
     </div>
 </div>
 
+<!-- TODO una vez que termine todo en el index -->
 <div class="container-fluid apprl-content">
     <div class="row">
         <div class="col-xs-12 apprl-fullcol">
@@ -87,79 +76,36 @@
                 <div class="inner">
                     <div class="apprl-slider apprl-slider-blocks">
                         <div class="slider">
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style=" opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/TessMontgomery_ApprlFront.png);"></div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/TessMontgomery_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span sty>Tess Montgomery</span>
                                     </div>
-                                    <div class="button">
-                                       <img src="{% static 'images/badges/Stureplan_badge_apprl_home.png' %}" />
-                                    </div>
                                 </div>
                             </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/ProjectRunway_ApprlFront.png);"></div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ProjectRunway_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Project Runway</span>
                                     </div>
-                                    <div class="button">
-                                       <img src="{% static 'images/badges/ProjectRunway_badge_apprl_home.png' %}" />
-                                    </div>
                                 </div>
                             </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/LouisNicolasDarbon_ApprlHome.png);"></div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/EmmaElwin_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Louis-Nicolas Darbon</span>
+                                        <span style="color: black;">Emma Elwin</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/TopModel_Apprl_Front.png);"></div>
-                                <div class="text">
-                                    <div class="title">
-                                        <span>Top Model Sweden</span>
-                                    </div>
-                                    <div class="button">
-                                       <img src="{% static 'images/badges/TV3_badge_apprl_home.png' %}" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/CarolineSandstrom_Apprl_Front.png);"></div>
-                                <div class="text">
-                                    <div class="title">
-                                        <span>Caroline Sandström</span>
-                                    </div>
-                                    <div class="button">
-                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/ElinKling_ApprlFront.png);"></div>
-                                <div class="text">
-                                    <div class="title">
-                                        <span>Elin Kling</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/MartinHansson_ApprlFront.png);"></div>
-                                <div class="text">
-                                    <div class="title">
-                                        <span>Martin Hansson</span>
-                                    </div>
-                                    <div class="button">
-                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/Celine_Aaagard_Apprl_Front.png);"></div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/Celine_Aaagard_Apprl_Front.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Celine Aagaard</span>
@@ -169,16 +115,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/EmmaElwin_ApprlFront.png);"></div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/LouisNicolasDarbon_ApprlHome.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Emma Elwin</span>
+                                        <span>Louis-Nicolas Darbon</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="item apprl-bg-dark">
-                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}/images/publishers/ElzanaKadric_ApprlFront.png);"></div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ElzanaKadric_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Elzana Kadric</span>
@@ -188,7 +136,64 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/CarolineSandstrom_Apprl_Front.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Caroline Sandström</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/ElinKling_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Elin Kling</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-clickable">
+                                <a style="display:none;" href="#"></a>
+                                <div class="image" style="background-image:url({{ STATIC_URL }}/images/publishers/MartinHansson_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Martin Hansson</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /retailers: Bloggers -->
+
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="container">
+            <div class="col-xs-12">
+                <div class="row apprl-brands apprl-featured">
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/featured_logos/InternetWorld-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/featured_logos/DagensMedia-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/featured_logos/Resume-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/featured_logos/ComputerSweden-logo-Apprl-home.png' %}"/>
                     </div>
                 </div>
             </div>
@@ -196,20 +201,96 @@
     </div>
     <div class="row">
         <div class="col-xs-12 text-center">
-            <a type="button" class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                Shop their styles
+            <a type="button" class="btn btn-default btn-apprldark btn-lg" href="{% url 'retailer-form' %}">
+                Apply to join
             </a>
         </div>
     </div>
 </div>
-<!-- /Home: Bloggers -->
 
-<!-- Home: Brandgroup (dark background) -->
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="col-xs-12 apprl-tools">
+            <div class="">
+                <div class="col-xs-12">
+                    <h4 class="apprl-slash text-center">Example formats</h4>
+                    <p class="text-center">We have a range of different formats for publishers to feature your products. These tools can also be a part of your campaign with your existing media partners, for example showcase your collection in an interactive lookbook, pop-up shops with your products or having a media partner host a contest for its audience to create looks with your products.<br />&nbsp;</p>
+                </div>
+                <div class="col-xs-12 apprl-fullcol">
+                    <div class="apprl-responsiveheight" style="padding-bottom:464px;">
+                        <div class="inner">
+                            <div class="apprl-slider apprl-slider-tools">
+                                <div class="slider">
+                                    <div class="item">
+                                        <br>
+                                        <div class="image">
+                                            <img src="{% static 'images/formats/Shop-tool-Apprl.png' %}" />
+                                        </div>
+                                        <br>
+                                        <div class="text">
+                                            <div class="bg"></div>
+                                            <div class="title">
+                                                <span>Shop</span>
+                                            </div>
+                                            <div class="desc">
+                                                <span>Have your products featured in a shops on media sites</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <br>
+                                        <div class="image">
+                                            <img src="{% static 'images/formats/Collage-tool-Apprl.png' %}" />
+                                        </div>
+                                        <br>
+                                        <div class="text">
+                                            <div class="bg"></div>
+                                            <div class="title">
+                                                <span>Collage</span>
+                                            </div>
+                                            <div class="desc">
+                                                <span>A great format for contests where users create looks with your products</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <br>
+                                        <div class="image">
+                                            <img src="{% static 'images/formats/Tagged-photo-tool-Apprl.png' %}" />
+                                        </div>
+                                        <br>
+                                        <div class="text">
+                                            <div class="bg"></div>
+                                            <div class="title">
+                                                <span>Tagged photos</span>
+                                            </div>
+                                            <div class="desc">
+                                                <span>Tag your look book with products and spread it!</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tools_prevButton"><span class="glyphicon glyphicon-chevron-left"></span></div>
+                            <div class="tools_nextButton"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 text-center">
+                <a type="button" class="btn btn-default btn-apprldark btn-lg" href="{% url 'retailer-form' %}">
+                    Apply to join
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid apprl-content">
     <div class="row">
         <div class="col-xs-12 apprl-brandgroup">
-            <h4 class="apprl-slash text-center">  GET THE LATEST FROM YOUR FAVOURITE BRANDS AND RETAILERS </h4>
-            <p class="text-center">Discover fashion & beauty from the world’s best online retailers in one place, share them with your friends and save them to your profile to get alerts when the price drops.</p>
+            <h4 class="apprl-slash text-center"> Join some of the leading online retailers and brands on apprl</h4>
+            <p class="text-center">We are working with the best global and local retailers, big and small, multi- and monobrand. The most important thing for us is to only accept retailers that are in demand from our users & publishers so we know we can make a difference.</p>
             <div class="row apprl-brands">
                 <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
                     <img src="{% static 'images/retailers/Net-A-Porter-logo-Apprl-home.png' %}" />
@@ -249,119 +330,17 @@
                 </div>
             </div>
             <p class="text-center">
-                <a type="button" class="btn btn-info btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                    Shop brands
+                <a type="button" class="btn btn-info btn-lg"  href="{% url 'retailer-form' %}">
+                    Apply to join
                 </a>
             </p>
         </div>
     </div>
 </div>
-<!-- /Home: Brandgroup (dark background) -->
+<!-- /retailers: Brandgroup (dark background) -->
 
-<!-- Home: Create and share w/ slider -->
-<div class="container-fluid apprl-content">
-    <div class="row">
-        <div class="col-xs-12 apprl-create">
-            <h4 class="apprl-slash text-center"> CREATE LOOKS FOR YOUR BLOG & SHARE WITH OUR COMMUNITY</h4>
-            <p class="text-center">Easily create interactive mood boards, tag your photos with products and share looks with your blog readers, your friends and the Apprl community.</p>
-        </div>
-    </div>
-</div>
+{% include 'apparel/fragments/dialog_retailer.html' with request=request csrf_token=csrf_token form=form only %}
 
-<div class="container-fluid apprl-content">
-    <div class="row">
-        <div class="col-xs-12 apprl-fullcol">
-            <div class="apprl-responsiveheight">
-                <div class="inner">
-                    <div class="apprl-slider apprl-slider-items">
-                        <div class="slider">
-                            <img src="{% static 'images/looks/01-look-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/02-look-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/Celine-Aagard-look-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/look-apprl-home-IW.png' %}" />
-                            <img src="{% static 'images/looks/look-home-apprl-SW.png' %}" />
-                            <img src="{% static 'images/looks/look-home-kenzo.png' %}" />
-                            <img src="{% static 'images/looks/FilippaK-Emma-Elwin-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/Look-white-homepage-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/LQ25-Marina-Ballerina-look-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/03-look-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/LQ30-Marina-Ballerina-look-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/04-look-Apprl.png' %}" />
-                            <img src="{% static 'images/looks/Okra-Livia-Inkeri-Dimle-Look-Apprl-Home.png' %}" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 text-center">
-            <a type="button" class="btn btn-default btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                Create your look
-            </a>
-        </div>
-    </div>
-</div>
-<!-- /Home: Create and share w/ slider -->
-
-<!-- Home: Our story -->
-<div class="container-fluid apprl-content">
-    <div class="row">
-        <div class="col-xs-12 apprl-story">
-            <div class="container">
-                <div class="col-xs-12">
-                    <div class="row apprl-storyinner">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
-                                    <h3 class="apprl-slash">OUR STORY</h3>
-                                    <p class="quote">“ Our idea is to connect the best online retailers, bloggers, style makers and online magazines into a connected experience through smart & simple tools.” </p>
-                                </div>
-                                <div class="apprl-founders col-xs-12 col-sm-6 col-md-6 col-lg-7">
-                                    <img src="{% static 'images/story.png' %}"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
-                            <p class="story">
-                                Apprl was founded by Gustav Gisseldahl and Martin Landén who had the simple insight that shopping online is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that.
-                                <br /><a type="button" class="story-readmore btn btn-default btn-md" href="{% url 'about' %}">
-                                    Read more
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Home: Our story -->
-
-<!-- Home: Featured in -->
-<div class="container-fluid apprl-content">
-    <div class="row">
-        <div class="container">
-            <div class="col-xs-12">
-                <h4 class="apprl-slash text-center"> FEATURED IN</h4>
-                <div class="row apprl-brands apprl-featured">
-                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="{% static 'images/featured_logos/InternetWorld-logo-Apprl-home.png' %}"/>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="{% static 'images/featured_logos/DagensMedia-logo-Apprl-home.png' %}"/>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="{% static 'images/featured_logos/Resume-logo-Apprl-home.png' %}"/>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="{% static 'images/featured_logos/ComputerSweden-logo-Apprl-home.png' %}"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script type="text/javascript">
 $(window).load(function() {
@@ -493,6 +472,7 @@ $(window).load(function() {
         loadSliders();
     });
 </script>
+
 <script>
 $('#apprl-scrollfromheader').click(function(){ //Det elementet man klickar på
     $('html, body').animate({ //Scrolla till målets avstånd från toppen av sidan
@@ -500,4 +480,5 @@ $('#apprl-scrollfromheader').click(function(){ //Det elementet man klickar på
     }, 1000);
 });
 </script>
+
 {% endblock %}
