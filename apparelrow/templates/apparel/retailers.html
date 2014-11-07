@@ -339,8 +339,9 @@
 </div>
 <!-- /retailers: Brandgroup (dark background) -->
 
+{% comment %}
 {% include 'apparel/fragments/dialog_retailer.html' with request=request csrf_token=csrf_token form=form only %}
-
+{% endcomment %}
 
 <script type="text/javascript">
 $(window).load(function() {
