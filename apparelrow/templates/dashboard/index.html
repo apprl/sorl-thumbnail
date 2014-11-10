@@ -17,7 +17,7 @@
         </div>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-xs-12 col-md-12 col-lg-8 apprl-header-left">
+                <div class="col-xs-12 col-md-12 col-lg-8 apprl-header-left apprl-header-left-publisher">
                     <div class="row apprl-header-left-row">
                         <div class="col-xs-12">
                             <h1 class="apprl-c-primary apprl-maintitle">FOR PUBLISHERS & BLOGGERS</h1>
@@ -137,7 +137,7 @@
 <div class="row">
     <div class="col-xs-12 apprl-bloggers">
         <h4 class="apprl-slash text-center"> APPRL IS USED BY LEADING DIGITAL PUBLISHERS & BLOGGERS</h4>
-        <p class="text-center">Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as by independent bloggers - They all share the products they love using Apprl.<br /></p>
+        <p class="text-center">Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as independent bloggers - They all share the products they love using Apprl.<br /></p>
     </div>
 </div>
 </div>
@@ -150,62 +150,49 @@
                 <div class="inner">
                     <div class="apprl-slider apprl-slider-blocks">
                         <div class="slider">
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/TessMontgomery_ApprlFront.png);"></div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style=" opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/TessMontgomery_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Tess Montgomery</span>
+                                        <span sty>Tess Montgomery</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/Stureplan_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/ProjectRunway_ApprlFront.png);"></div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/ProjectRunway_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Project Runway</span>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/EmmaElwin_ApprlFront.png);"></div>
-                                <div class="text">
-                                    <div class="title">
-                                        <span style="color: black;">Emma Elwin</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/Celine_Aaagard_Apprl_Front.png);"></div>
-                                <div class="text">
-                                    <div class="title">
-                                        <span>Celine Aagaard</span>
-                                    </div>
                                     <div class="button">
-                                       <img src="{% static 'images/badges/StyleMagBadge.png' %}" />
+                                       <img src="{% static 'images/badges/ProjectRunway_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/LouisNicolasDarbon_ApprlHome.png);"></div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/LouisNicolasDarbon_ApprlHome.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Louis-Nicolas Darbon</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/ElzanaKadric_ApprlFront.png);"></div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/TopModel_Apprl_Front.png);"></div>
                                 <div class="text">
                                     <div class="title">
-                                        <span>Elzana Kadric</span>
+                                        <span>Top Model Sweden</span>
                                     </div>
                                     <div class="button">
-                                       <img src="{% static 'images/badges/TopModel_badge_apprl_home.png' %}" />
+                                       <img src="{% static 'images/badges/TV3_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/CarolineSandstrom_Apprl_Front.png);"></div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/CarolineSandstrom_Apprl_Front.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Caroline Sandström</span>
@@ -215,22 +202,52 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/ElinKling_ApprlFront.png);"></div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/ElinKling_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Elin Kling</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="image" style="background-image:url({{ STATIC_URL }}images/publishers/MartinHansson_ApprlFront.png);"></div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/MartinHansson_ApprlFront.png);"></div>
                                 <div class="text">
                                     <div class="title">
                                         <span>Martin Hansson</span>
                                     </div>
                                     <div class="button">
                                        <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/Celine_Aaagard_Apprl_Front.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Celine Aagaard</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/StyleMagBadge.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/EmmaElwin_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Emma Elwin</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/ElzanaKadric_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Elzana Kadric</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/TopModel_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>
@@ -242,8 +259,8 @@
     </div>
     <div class="row">
         <div class="col-xs-12 text-center">
-            <a type="button" class="btn btn-default btn-apprldark btn-lg" href="{% url 'publisher-contact' %}">
-                Apply to join
+            <a type="button" class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
+                Shop their styles
             </a>
         </div>
     </div>

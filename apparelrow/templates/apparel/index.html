@@ -5,7 +5,7 @@
 {% block body-scripts %}
 <script type="text/javascript">
     $('.feed-item .featured-feed-item a').attr({'href': '#', 'data-target': '#modal_become_member', 'data-toggle': 'modal'});
-</script>x
+</script>
 {% endblock %}
 {% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
 {% block body-classes %}index frontpage{% endblock %}
@@ -32,15 +32,15 @@
                                 <h1 class="apprl-c-light apprl-maintitle">SHOP THE STYLE OF YOUR <br />FAVOURITE bloggers, MAGAZINES, TV-SHOWS AND BRANDS.</h1>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 apprl-link-wrap">
-                                        <a class="apprl-circle-link apprl-bg-primary">
-                                            <h3 class="apprl-c-light" data-toggle="modal" data-target="#modal_become_member">{% trans "Get Access" %}</h3>
+                                        <a class="apprl-circle-link apprl-bg-primary" data-toggle="modal" data-target="#modal_become_member">
+                                            <h3 class="apprl-c-light">{% trans "Get Access" %}</h3>
                                         </a>
                                         <div class="clearfix"></div>
                                     </div>
-                                    <div class="hidden-xs col-sm-6 col-md-6 col-lg-6 apprl-facebook facepile-container">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 apprl-facebook facepile-container">
                                         <div class="facepile-container">
-                                            <h4 id="apprl-scrollfromheader" class="apprl-c-light"><span>or</span> Learn more</h4>
-                                            <div class="fb-facepile" data-app-id="{{ FACEBOOK_APP_ID }}" data-max-rows="2" data-colorscheme="dark" data-size="medium" data-show-count="true"></div>
+                                            <h4 id="apprl-scrollfromheader" class="apprl-c-light"><span>or</span> <b>Learn more</b></h4>
+                                            <div class="hidden-xs fb-facepile" data-app-id="{{ FACEBOOK_APP_ID }}" data-max-rows="1" data-colorscheme="dark" data-size="medium" data-show-count="true"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -75,7 +75,7 @@
     <div class="row">
         <div class="col-xs-12 apprl-bloggers">
             <h4 class="apprl-slash text-center">GET INSPIRED BY MAGAZINES, TV-SHOWS & BLOGGERS</h4>
-            <p class="text-center">Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as by independent bloggers - They all share the products they love using Apprl.<br/></p>
+            <p class="text-center">Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as independent bloggers - They all share the products they love using Apprl.<br/></p>
         </div>
     </div>
 </div>
