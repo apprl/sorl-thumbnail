@@ -443,6 +443,8 @@ body {
 .apprl-retailers-header {
   background: url('@{app-img-url}backgrounds/Apprl-home-retailer-bg.png') no-repeat left top scroll;
 }
+/*.apprl-publishers-header,
+.apprl-retailers-header,*/
 .apprl-home-header {
 	background: url('@{app-img-url}backgrounds/Apprl-home-bg.png') no-repeat left top scroll;
 }
@@ -458,7 +460,7 @@ body {
 			text-transform: @apprl-title-transform;
 			font-family: @apprl-content-font;
 			font-weight: 300;
-			line-height: 60px;
+			//line-height: 60px;
 			margin-bottom: 0;
 			padding: 0;
 			letter-spacing: 0px;
@@ -485,6 +487,10 @@ body {
         }
         h4#apprl-scrollfromheader{
           cursor: pointer;
+          margin-bottom:60px;
+          &:hover {
+            color: #eeeeee;
+          }
         }
 	}
 }
@@ -492,8 +498,19 @@ body {
 	background: url('@{app-img-url}backgrounds/Apprl-home-bg.png') no-repeat center center scroll;
 	padding-left: 0;
 }
+
+.apprl-header-left-publisher {
+	background: url('@{app-img-url}backgrounds/Apprl-home-publisher-bg.png') no-repeat center center scroll;
+    padding-left: 0;
+}
+
+.apprl-header-left-retailer {
+	background: url('@{app-img-url}backgrounds/Apprl-home-retailer-bg.png') no-repeat center center scroll;
+    padding-left: 0;
+}
+
 .apprl-header-left-row {
-	//background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.8);
 	margin-right: 0;
 	margin-left: 0;
 }
@@ -571,6 +588,7 @@ body {
 	height: 295px;
 	border-radius: 295px;
 	text-align: center;
+    cursor: pointer;
 
 	-webkit-transition: background-color @apprl-hover-style @apprl-hover-time;
 	-moz-transition: background-color @apprl-hover-style @apprl-hover-time;
@@ -579,16 +597,12 @@ body {
 	&:hover {
 		text-decoration: none;
 		border-style: none;
-		//background: @apprl-primary-hover;
+		background: @apprl-primary-hover;
 	}
 	h3, h4 {
 		font-weight: bold;
 		span {
 			font-weight: normal;
-		}
-		&:hover {
-			cursor: pointer;
-			color: #eeeeee;
 		}
 	}
 	h4 {
@@ -601,7 +615,6 @@ body {
 		padding-top: 170px;
 	}
 	.fb-facepile {
-		margin-top: 10px;
 		margin-left: 0px;
 	}
 }
@@ -896,7 +909,7 @@ body {
 				bottom: 15px;
 				padding: 0;
 				margin: 0;
-				cursor: pointer;
+				//cursor: pointer;
 			}
 			&:hover {
 				/*cursor: pointer;*/
@@ -1476,12 +1489,12 @@ h6 {
 				}
 				h3 {
 					padding: 0;
-					line-height: 34px;
+					//line-height: 34px;
 				}
 				h4 {
 					padding: 0;
 					margin-bottom: 0px;
-					line-height: 30px;
+					//line-height: 30px;
 					font-size: 20px;
 				}
 			}
@@ -1547,6 +1560,11 @@ h6 {
 			}
 		}
 	}
+    .apprl-facebook {
+	  .facepile-container {
+          padding-top: 0px;
+	  }
+    }
 }
 
 /* Small devices (tablets, 768px and up) */
@@ -1594,7 +1612,7 @@ h6 {
 		.apprl-header-wrap {
 			.row {
 				h1.apprl-maintitle {
-					margin: 20px 0 0px 0;
+					margin: 34px 0 16px;
 				}
 				h1.apprl-subtitle {
 					margin: 0px 0 20px 0;
@@ -1819,6 +1837,9 @@ h6 {
 
 footer {
   h4 {
-
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: @apprl-content-font;
+    font-weight: 500;
   }
 }
