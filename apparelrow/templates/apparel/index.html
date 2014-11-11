@@ -29,7 +29,7 @@
                     <div class="col-xs-12 col-md-12 col-lg-8 apprl-header-left">
                         <div class="row apprl-header-left-row">
                             <div class="col-xs-12">
-                                <h1 class="apprl-c-light apprl-maintitle">SHOP THE STYLE OF YOUR <br />FAVOURITE bloggers, MAGAZINES, TV-SHOWS AND BRANDS.</h1>
+                                <h1 class="apprl-c-light apprl-maintitle">{% trans "SHOP THE STYLE OF YOUR" %} <br />{% trans "FAVOURITE bloggers, MAGAZINES, TV-SHOWS AND BRANDS." %}</h1>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 apprl-link-wrap">
                                         <a class="apprl-circle-link apprl-bg-primary" data-toggle="modal" data-target="#modal_become_member">
@@ -51,13 +51,13 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 apprl-header-right">
                         <div class="row apprl-header-right-row">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-primary apprl-publisher-puff apprl-clickable">
-                                <h3 class="apprl-c-dark">Are you a blogger / digital publisher?</h3>
-                                <h4 class="apprl-c-light">Create great content and earn money using our tools</h4>
+                                <h3 class="apprl-c-dark">{% trans "Are you a blogger / digital publisher?" %}</h3>
+                                <h4 class="apprl-c-light">{% trans "Create great content and earn money using our tools" %}</h4>
                                 <a href="{% url 'index-publisher' %}"></a>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-darkgrey apprl-retailer-puff apprl-clickable">
-                                <h3 class="apprl-c-light">Are you a retailer?</h3>
-                                <h4 class="apprl-c-primary">Increase your reach and drive sales through our network</h4>
+                                <h3 class="apprl-c-light">{% trans "Are you a retailer?" %}</h3>
+                                <h4 class="apprl-c-primary">{% trans "Increase your reach and drive sales through our network" %}</h4>
                                 <a href="{% url 'index-retailers' %}"></a>
                             </div>
                             <div class="clearfix"></div>
@@ -74,8 +74,8 @@
 <div class="container-fluid apprl-content" id="apprl-scrolltarget">
     <div class="row">
         <div class="col-xs-12 apprl-bloggers">
-            <h4 class="apprl-slash text-center">GET INSPIRED BY MAGAZINES, TV-SHOWS & BLOGGERS</h4>
-            <p class="text-center">Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as independent bloggers - They all share the products they love using Apprl.<br/></p>
+            <h4 class="apprl-slash text-center">{% trans "GET INSPIRED BY MAGAZINES, TV-SHOWS & BLOGGERS" %}</h4>
+            <p class="text-center">{% trans "Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as independent bloggers - They all share the products they love using Apprl." %}<br/></p>
         </div>
     </div>
 </div>
@@ -197,7 +197,7 @@
     <div class="row">
         <div class="col-xs-12 text-center">
             <a type="button" class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                Shop their styles
+                {% trans "Shop their styles" %}
             </a>
         </div>
     </div>
@@ -208,8 +208,8 @@
 <div class="container-fluid apprl-content">
     <div class="row">
         <div class="col-xs-12 apprl-brandgroup">
-            <h4 class="apprl-slash text-center">  GET THE LATEST FROM YOUR FAVOURITE BRANDS AND RETAILERS </h4>
-            <p class="text-center">Discover fashion & beauty from the world’s best online retailers in one place, share them with your friends and save them to your profile to get alerts when the price drops.</p>
+            <h4 class="apprl-slash text-center">  {% trans "GET THE LATEST FROM YOUR FAVOURITE BRANDS AND RETAILERS" %} </h4>
+            <p class="text-center">{% trans "Discover fashion & beauty from the world’s best online retailers in one place, share them with your friends and save them to your profile to get alerts when the price drops." %}</p>
             <div class="row apprl-brands">
                 <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
                     <img src="{% static 'images/retailers/Net-A-Porter-logo-Apprl-home.png' %}" />
@@ -250,7 +250,7 @@
             </div>
             <p class="text-center">
                 <a type="button" class="btn btn-info btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                    Shop brands
+                    {% trans "Shop brands" %}
                 </a>
             </p>
         </div>
@@ -262,8 +262,8 @@
 <div class="container-fluid apprl-content">
     <div class="row">
         <div class="col-xs-12 apprl-create">
-            <h4 class="apprl-slash text-center"> CREATE LOOKS FOR YOUR BLOG & SHARE WITH OUR COMMUNITY</h4>
-            <p class="text-center">Easily create interactive mood boards, tag your photos with products and share looks with your blog readers, your friends and the Apprl community.</p>
+            <h4 class="apprl-slash text-center"> {% trans "CREATE LOOKS FOR YOUR BLOG & SHARE WITH OUR COMMUNITY" %}</h4>
+            <p class="text-center">{% trans "Easily create interactive mood boards, tag your photos with products and share looks with your blog readers, your friends and the Apprl community." %}</p>
         </div>
     </div>
 </div>
@@ -297,7 +297,7 @@
     <div class="row">
         <div class="col-xs-12 text-center">
             <a type="button" class="btn btn-default btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                Create your look
+                {% trans "Create your look" %}
             </a>
         </div>
     </div>
@@ -314,8 +314,8 @@
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
-                                    <h3 class="apprl-slash">OUR STORY</h3>
-                                    <p class="quote">“ Our idea is to connect the best online retailers, bloggers, style makers and online magazines into a connected experience through smart & simple tools.” </p>
+                                    <h3 class="apprl-slash">{% trans "OUR STORY" %}</h3>
+                                    <p class="quote">“ {% trans "Our idea is to connect the best online retailers, bloggers, style makers and online magazines into a connected experience through smart & simple tools." %}” </p>
                                 </div>
                                 <div class="apprl-founders col-xs-12 col-sm-6 col-md-6 col-lg-7">
                                     <img src="{% static 'images/story.png' %}"/>
@@ -324,9 +324,9 @@
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
                             <p class="story">
-                                Apprl was founded by Gustav Gisseldahl and Martin Landén who had the simple insight that shopping online is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that.
+                                {% trans "Apprl was founded by Gustav Gisseldahl and Martin Landén who had the simple insight that shopping online is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that." %}
                                 <br /><a type="button" class="story-readmore btn btn-default btn-md" href="{% url 'about' %}">
-                                    Read more
+                                    {% trans "Read more" %}
                                 </a>
                             </p>
                         </div>
@@ -343,7 +343,7 @@
     <div class="row">
         <div class="container">
             <div class="col-xs-12">
-                <h4 class="apprl-slash text-center"> FEATURED IN</h4>
+                <h4 class="apprl-slash text-center"> {% trans "FEATURED IN" %}</h4>
                 <div class="row apprl-brands apprl-featured">
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
                         <img src="{% static 'images/featured_logos/InternetWorld-logo-Apprl-home.png' %}"/>
