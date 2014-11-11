@@ -10,7 +10,7 @@ from django.core.cache import get_cache
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404, HttpResponseRedirect, HttpResponseNotAllowed
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model

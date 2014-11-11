@@ -184,7 +184,7 @@
                         {% endif %}
                         {% endcomment %}
 
-                        <a href="{% url 'dialog-look-embed' object.slug %}" class="btn btn-primary btn-block btn-embed" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
+                        <a class="btn btn-primary btn-block btn-embed" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
 
                         {% include 'apparel/fragments/share.html' %}
 
@@ -231,5 +231,11 @@
     {% include 'apparel/modal_look_delete.html' with look=object only %}
     {% include 'apparel/modal_look_publish.html' with look=object only %}
     {% include 'apparel/modal_look_unpublish.html' with look=object only %}
+
+    {% block body-scripts %}
+        <script>
+            $("#modal_embed_look").load("{% url 'dialog-look-embed' object.slug %}");
+        </script>
+    {% endblock body-scripts %}
 
 {% endblock %}
