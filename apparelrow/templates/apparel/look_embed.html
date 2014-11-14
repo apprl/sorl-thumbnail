@@ -2,10 +2,11 @@
 {% load thumbnail cache compressed buy_extras %}
 {% spaceless %}
 <!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE }}">
+<html lang="{{ request.LANGUAGE_CODE }}" class="look-type-{{ object.display_with_component }}">
   <head>
     <title>{{ object.title }} by {{ object.user.display_name }} | Apprl - Social Shopping</title>
     <link rel="stylesheet" href="{% static 'styles/widget.css' %}">
+    <link rel="stylesheet" href="{% static 'less/widget.css' %}">
     <link rel="canonical" href="{% url 'look-detail' object.slug %}">
     <script type="text/javascript">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -30,10 +31,10 @@
   <body class="look-embed">
     <div class="container">
       {% if object.display_with_component == 'C' %}
-        <div class="look collage" style="height: {{ height|add:"-2" }}px">
+        <div class="look collage">
           {% for component in components %}
             {% thumbnail component.product.product_image "694x524" crop="noop" format="PNG" transparent=True as im %}
-            <a rel="nofollow" target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid component.product.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }}">
+            <a rel="nofollow" target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid component.product.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }};">
               <img src="{{ im.url }}" title="{{ component.product }}" />
             </a>
             {% endthumbnail %}
@@ -45,21 +46,28 @@
       {% else %}
         <div id="photo-background" class="look look-photo"
         {% if object.image %}
-          {% thumbnail object.image width upscale=False as im %}
-          style="background-image: url('{{ im.url }}'); width: {{ im.width }}px; height: {{ im.height }}px"
+          {% thumbnail object.image "1000" upscale=False as im %}
+          style="background-image: url('{{ im.url }}'); padding-right: 100%; padding-bottom: {% widthratio im.height im.width 100  %}%; background-size: 100% auto; background-repeat: no-repeat"
           {% endthumbnail %}
         {% endif %}
         >
-        {% for component in components %}
-          <a rel="nofollow" target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" class="hotspot product btn-buy-external" id="hotspot-{{ component.product.id }}" data-sid="{% get_sid component.product.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }}"></a>
-          {% cache CACHE_TIMEOUT look_embed_tooltip component.product.id LANGUAGE_CODE %}
-            {% include "apparel/fragments/look_embed_tooltip.html" with owner=object.user product=component.product alternative=component.alternative only %}
-          {% endcache %}
-        {% endfor %}
+        </div>
+        <div id="photo-markers" class="photo-hotspots">
+            {% for component in components %}
+              <a rel="nofollow" target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" class="hotspot product btn-buy-external" id="hotspot-{{ component.product.id }}" data-sid="{% get_sid component.product.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }}"></a>
+              {% cache CACHE_TIMEOUT look_embed_tooltip component.product.id LANGUAGE_CODE %}
+                {% include "apparel/fragments/look_embed_tooltip.html" with owner=object.user product=component.product alternative=component.alternative only %}
+              {% endcache %}
+            {% endfor %}
         </div>
       {% endif %}
     </div>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        var embedWidth = {{ embed_width }};
+        var embedHeight = {{ embed_height }};
+        var embedId = '{{ embed_id }}';
+    </script>
     {% compressed_js 'embed' %}
   </body>
 </html>
