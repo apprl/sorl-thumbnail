@@ -169,6 +169,7 @@ def widget(request, slug):
                                                           width_type=content['width_type'],
                                                           defaults={'identifier': identifier})
     content['identifier'] = look_embed.identifier
+    content['STATIC_URL'] = settings.STATIC_URL
 
     return render(request, 'apparel/fragments/look_widget.html', content)
 
