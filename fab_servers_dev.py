@@ -20,7 +20,7 @@ def dev_settings():
     env.memcached_url = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
     env.redis_url = "ip-10-0-1-249.ec2.internal"
     env.solr_url = "ip-10-0-1-247.ec2.internal"
-    env.s3_url = "s-staging-us.apprl.com"
+    env.s3_url = "s-staging.apprl.com"
     env.gateway = 'deploy@dev-bastion'
     env.aws_key_id = 'AKIAJWFWCTRXKCOCRPTQ'
     env.aws_key = 'rCUAw8IwyysB3u3pgDi5nKLsqJyGe2pchBc1on1a'
