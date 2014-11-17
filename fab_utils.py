@@ -207,7 +207,7 @@ def restore(filename):
 @task
 def collectstatic():
     with project():
-        sudo("python manage.py collectstatic -v 0 --noinput", user="%(run_user)s" % env)
+        sudo("python manage.py collectstatic --noinput", user="%(run_user)s" % env)
 
 @task
 def scrape(vendor):

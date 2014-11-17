@@ -126,6 +126,7 @@ def prod_web_aws_2():
     env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.restart = ['gunicorn','nginx']
     env.hostname="web-aws2"
+    env.collectstatic = False
     env.sentry_url = 'https://2288cb94cf934fcdae0c14a483c3316f:1d37dd4c7153493e828b1e546e656c77@sentry.apprl.com/2'
 
 @task
