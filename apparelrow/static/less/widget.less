@@ -24,4 +24,22 @@ html.look-type-C {
   .container, .collage {
     box-sizing: border-box;
   }
+  // Fix for really small screens...
+  @media (max-width: 320px) {
+    .container .tooltip {
+      width: 240px;
+      .tooltip-container {
+        width: 220px;
+        .product-meta {
+           width: 120px;
+          .vendor_button {
+            width: 120px;
+            .alternative {
+              font-size: 9px;
+            }
+          }
+        }
+      }
+    }
+  }
 }
