@@ -57,12 +57,16 @@ h3 {
     display: none;
 }
 
-.container {
+.header, .content {
     display: none;
 }
 
-body.active .container {
+body.active .header, body.semi-active .header, body.active .content {
     display: block;
+}
+
+body.active .loading {
+    display: none;
 }
 
 .header {
@@ -74,6 +78,11 @@ body.active .container {
 }
 .header img {
     width: 90px;
+}
+
+.loading {
+    padding-top: 70px;
+    text-align: center;
 }
 
 .content {

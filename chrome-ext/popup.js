@@ -86,6 +86,8 @@ function run(response) {
   var productShortLink = document.querySelector('.product-short-link');
   var productShortLinkInput = document.querySelector('.product-short-link input');
 
+  body.className = 'semi-active';
+
   // Fetch product based on URL
   chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
 
