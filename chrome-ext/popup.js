@@ -81,7 +81,6 @@ function run(response) {
   var body = document.querySelector('body');
   var buttons = document.querySelector('.buttons');
   var likeButton = document.querySelector('.like-button');
-  var likeButtonText = document.querySelector('.like-button span:first-child');
   var productButton = document.querySelector('.product-button');
   var productLink = document.querySelector('.product-link');
   var productShortLink = document.querySelector('.product-short-link');
@@ -106,16 +105,14 @@ function run(response) {
         }
 
         if (response.product_liked) {
-          likeButtonText.innerText = 'Liked';
           likeButton.className = 'like-button liked' + likeButtonClass;
         } else {
-          likeButtonText.innerText = 'Like';
           likeButton.className = 'like-button' + likeButtonClass;
         }
         productButton.className = 'product-button';
 
         if (response.product_link) {
-          productLink.className = 'product-link bold-link';
+          productLink.className = 'product-link bold';
           productLink.href = response.product_link;
         }
         productShortLinkInput.value = response.product_short_link;
@@ -127,11 +124,9 @@ function run(response) {
               likeActive = true;
               if (response.product_liked) {
                 var action = 'unlike';
-                likeButtonText.innerText = 'Like';
                 likeButton.className = 'like-button';
               } else {
                 var action = 'like';
-                likeButtonText.innerText = 'Liked';
                 likeButton.className = 'like-button liked';
               }
               likeProductRequest(response.product_pk, action, function() {
@@ -150,7 +145,6 @@ function run(response) {
       } else {
         buttons.style.display = 'none';
         document.querySelector('.no-hit').className = 'no-hit';
-        likeButtonText.innerText = 'Like';
       }
     });
   });

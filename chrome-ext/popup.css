@@ -49,6 +49,10 @@ h3 {
     font-size: 18px;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 .disabled {
     display: none;
 }
@@ -77,11 +81,7 @@ body.active .container {
     padding: 15px;
 }
 
-.bold-link {
-    font-weight: bold;
-}
-
-.link {
+.footer-links {
     position: absolute;
     bottom: 15px;
 }
@@ -142,6 +142,26 @@ body.active .container {
     background-color: #000000;
     border-color: #000000;
     opacity: 0.65;
+}
+
+.like-button .unlike, .like-button .liked {
+    display: none;
+}
+
+.like-button.liked .liked {
+    display: inline;
+}
+
+.like-button.liked .like, .like-button.liked .unlike {
+    display: none;
+}
+
+.like-button:hover.liked .unlike {
+    display: inline;
+}
+
+.like-button:hover.liked .liked {
+    display: none;
 }
 
 .like-button {
