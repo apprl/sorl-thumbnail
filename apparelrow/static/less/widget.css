@@ -8,6 +8,10 @@
 #photo-markers .hotspot {
   background-image: url('../images/look-hotspot.png');
   position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 .container {
   position: static;
@@ -23,4 +27,21 @@ html.look-type-C .collage {
 html.look-type-C .container,
 html.look-type-C .collage {
   box-sizing: border-box;
+}
+@media (max-width: 320px) {
+  html.look-type-C .container .tooltip {
+    width: 240px;
+  }
+  html.look-type-C .container .tooltip .tooltip-container {
+    width: 220px;
+  }
+  html.look-type-C .container .tooltip .tooltip-container .product-meta {
+    width: 120px;
+  }
+  html.look-type-C .container .tooltip .tooltip-container .product-meta .vendor_button {
+    width: 120px;
+  }
+  html.look-type-C .container .tooltip .tooltip-container .product-meta .vendor_button .alternative {
+    font-size: 9px;
+  }
 }
