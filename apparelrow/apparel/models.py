@@ -1112,8 +1112,8 @@ class LookComponent(models.Model):
             if height is None:
                 height = self.height
 
-            s.append('width: %spx;' % (80,))
-            s.append('height: %spx;' % (80,))
+            #s.append('width: %spx;' % (80,))
+            #s.append('height: %spx;' % (80,))
             s.append('top: %s%%;' % ((self.top + self.height / 2) / float(self.look.height) * 100,))
             s.append('left: %s%%;' % ((self.left + self.width/2) / float(self.look.width) * 100,))
 
