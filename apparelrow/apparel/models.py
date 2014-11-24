@@ -1114,6 +1114,7 @@ class LookComponent(models.Model):
 
             #s.append('width: %spx;' % (80,))
             #s.append('height: %spx;' % (80,))
+            s.append('transform: translate(-50%, -50%); -webkit-transform: translate(-50%, -50%); -o-transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%);')
             s.append('top: %s%%;' % ((self.top + self.height / 2) / float(self.look.height) * 100,))
             s.append('left: %s%%;' % ((self.left + self.width/2) / float(self.look.width) * 100,))
 
