@@ -606,3 +606,6 @@ def publisher_contact(request):
     referral_user = get_referral_user_from_cookie(request)
 
     return render(request, 'dashboard/publisher_contact.html', {'form': form, 'referral_user': referral_user})
+
+def publisher_tools(request):
+    return render(request, 'dashboard/publisher_tools.html')
