@@ -49,16 +49,24 @@ h3 {
     font-size: 18px;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 .disabled {
     display: none;
 }
 
-.container {
+.header, .content {
     display: none;
 }
 
-body.active .container {
+body.active .header, body.semi-active .header, body.active .content {
     display: block;
+}
+
+body.active .loading {
+    display: none;
 }
 
 .header {
@@ -72,16 +80,17 @@ body.active .container {
     width: 90px;
 }
 
+.loading {
+    padding-top: 70px;
+    text-align: center;
+}
+
 .content {
     min-height: 300px;
     padding: 15px;
 }
 
-.bold-link {
-    font-weight: bold;
-}
-
-.link {
+.footer-links {
     position: absolute;
     bottom: 15px;
 }
@@ -142,6 +151,26 @@ body.active .container {
     background-color: #000000;
     border-color: #000000;
     opacity: 0.65;
+}
+
+.like-button .unlike, .like-button .liked {
+    display: none;
+}
+
+.like-button.liked .liked {
+    display: inline;
+}
+
+.like-button.liked .like, .like-button.liked .unlike {
+    display: none;
+}
+
+.like-button:hover.liked .unlike {
+    display: inline;
+}
+
+.like-button:hover.liked .liked {
+    display: none;
 }
 
 .like-button {
