@@ -1117,8 +1117,6 @@ class LookComponent(models.Model):
             s.append('top: %s%%;' % ((self.top + self.height / 2) / float(self.look.height) * 100,))
             s.append('left: %s%%;' % ((self.left + self.width/2) / float(self.look.width) * 100,))
 
-            ''' TODO: move to widget.css '''
-            s.append('transform: translateX(-50%) translateY(-50%);')
         else:
             s.append('width: %s%%;' % (self.width / float(self.look.width) * 100,))
             s.append('height: %s%%;' % (self.height / float(self.look.height) * 100,))
