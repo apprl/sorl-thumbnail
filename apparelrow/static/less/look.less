@@ -4,7 +4,13 @@
             display: none;
         }
         h2 {
-            .body-header-ul;
+          display: block;
+          margin-top: 10px;
+          a:hover {
+            border: 0;
+          }
+        }
+        h2.body-header-ul {
             display: block;
             margin-top: 10px;
             a:hover {
@@ -168,7 +174,7 @@
 }
 
 #collage {
-    border: 1px solid $easiest_color;
+    border: 1px solid @light_gray_color;
     .delete {
         display: none;
     }
@@ -233,7 +239,7 @@
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
-        a {
+        a{
             display: inline-block;
             padding: 0;
         }
