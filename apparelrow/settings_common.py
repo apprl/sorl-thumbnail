@@ -267,7 +267,6 @@ PIPELINE_CSS = {
     'bootstrap': {
         'source_filenames': (
             'less/base.less',
-            'less/normalize.css',
             'js/vendor/add2home.css',
         ),
         'output_filename': 'css/ender.css',
@@ -279,7 +278,16 @@ PIPELINE_CSS = {
         'source_filenames': (
             'less/home.less',
         ),
-    'output_filename': 'css/home.css',
+        'output_filename': 'css/home.css',
+        'extra_context': {
+            'media': 'screen,projection',
+            }
+    },
+    'normalize': {
+        'source_filenames': (
+            'less/normalize.css',
+        ),
+        'output_filename': 'css/normalize.css',
         'extra_context': {
             'media': 'screen,projection',
             }
