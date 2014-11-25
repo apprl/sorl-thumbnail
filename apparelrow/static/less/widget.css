@@ -38,19 +38,43 @@ html.look-type-C .collage {
   box-sizing: border-box;
 }
 @media (max-width: 320px) {
-  html.look-type-C .container .tooltip {
+  html.look-type-C .container .tooltip,
+  html.look-type-P .container .tooltip {
     width: 240px;
   }
-  html.look-type-C .container .tooltip .tooltip-container {
+  html.look-type-C .container .tooltip .tooltip-arrow,
+  html.look-type-P .container .tooltip .tooltip-arrow {
+    display: none;
+  }
+  html.look-type-C .container .tooltip .tooltip-container,
+  html.look-type-P .container .tooltip .tooltip-container {
     width: 220px;
   }
-  html.look-type-C .container .tooltip .tooltip-container .product-meta {
+  html.look-type-C .container .tooltip .tooltip-container .product-meta,
+  html.look-type-P .container .tooltip .tooltip-container .product-meta {
     width: 120px;
   }
-  html.look-type-C .container .tooltip .tooltip-container .product-meta .vendor_button {
+  html.look-type-C .container .tooltip .tooltip-container .product-meta .vendor_button,
+  html.look-type-P .container .tooltip .tooltip-container .product-meta .vendor_button {
     width: 120px;
   }
-  html.look-type-C .container .tooltip .tooltip-container .product-meta .vendor_button .alternative {
+  html.look-type-C .container .tooltip .tooltip-container .product-meta .vendor_button .alternative,
+  html.look-type-P .container .tooltip .tooltip-container .product-meta .vendor_button .alternative {
     font-size: 9px;
+  }
+  html.look-type-C .container .tooltip .tooltip-container .product-meta h2,
+  html.look-type-P .container .tooltip .tooltip-container .product-meta h2 {
+    margin-top: 5px;
+  }
+  html.look-type-C .container .tooltip .close,
+  html.look-type-P .container .tooltip .close {
+    background-image: url('../images/cross.png');
+    background-size: contain;
+    width: 18px;
+    height: 18px;
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
   }
 }
