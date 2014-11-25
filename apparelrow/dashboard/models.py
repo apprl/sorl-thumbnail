@@ -221,3 +221,18 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
         }
 
         instance, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
+
+PAYOUT_TYPES = (
+    ('referral_sale_commission', 'Referral Sale Commission'),
+    ('referral_signup_commission', 'Referral Signup Commission'),
+    ('publisher_sale_commission', 'Publisher Sale Commission'),
+    ('publisher_network_commission', 'Publisher Network Commission'),
+)
+
+class Payout(models.Model):
+    payout_type = models.CharField(max_length=100, null=False, blank=False)
+    sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
+    from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, blank=False, on_delete=models.PROTECT)
+    amount = models.DecimalField(null=False, blank=False, default='1.0', max_digits=10, decimal_places=3)
+    date = models.DateTimeField(_('Payout Date'), default=timezone.now, null=True, blank=True)
