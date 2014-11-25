@@ -8,7 +8,10 @@
 </script>
 {% endblock %}
 
-{% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
+{% block extra-styles %}
+    {% compressed_css 'homepage' %}
+    {% compressed_css 'normalize' %}
+{% endblock extra-styles %}
 {% block body-classes %}store-index-page{% endblock %}
 {% block full-body %}
 

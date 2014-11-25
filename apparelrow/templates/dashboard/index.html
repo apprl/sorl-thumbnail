@@ -2,7 +2,10 @@
 {% load i18n compressed%}
 {% load static from staticfiles %}
 
-{% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
+{% block extra-styles %}
+    {% compressed_css 'homepage' %}
+    {% compressed_css 'normalize' %}
+{% endblock extra-styles %}
 {% block body-classes %}publisher-index-page{% endblock %}
 {% block full-body %}
 
