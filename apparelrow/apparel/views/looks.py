@@ -45,7 +45,7 @@ def embed(request, slug, identifier=None):
     Display look for use in embedded iframe.
     """
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
-
+    look_embed = None
     try:
         look_embed = get_model('apparel', 'LookEmbed').objects.get(identifier=identifier)
         width = look_embed.width
