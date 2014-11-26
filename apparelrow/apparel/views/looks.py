@@ -32,9 +32,6 @@ from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_f
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
 from apparelrow.apparel.views import _product_like
 from apparelrow.apparel.search import ApparelSearch
-import logger
-
-log = logger.getLogger(__name__)
 
 def look_like_products(request, look_id):
     look = get_model('apparel', 'Look').objects.get(pk=look_id)
@@ -49,6 +46,9 @@ def embed(request, slug, identifier=None):
     """
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
     #look_embed = None
+    import logger
+    log = logger.getLogger(__name__)
+
     try:
 
         look_embed = get_model('apparel', 'LookEmbed').objects.get(identifier=identifier)
