@@ -46,8 +46,6 @@ def embed(request, slug, identifier=None):
     """
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
     #look_embed = None
-    import logger
-    log = logger.getLogger(__name__)
 
     try:
 
@@ -55,12 +53,12 @@ def embed(request, slug, identifier=None):
         width = look_embed.width
         language = look_embed.language
         nginx_key = reverse('look-embed-identifier', args=[identifier, slug])
-        log.info('Found LookEmbed with identifier: %s and slug: %s. Nginx key: %s' % (slug,identifier,nginx_key) )
+        print 'Found LookEmbed with identifier: %s and slug: %s. Nginx key: %s' % (slug,identifier,nginx_key)
     except get_model('apparel', 'LookEmbed').DoesNotExist:
         width = look.width
         language = 'en'
         nginx_key = reverse('look-embed', args=[slug])
-        log.info('No LookEmbed found with identifier: %s and slug: %s. Nginx key: %s' % (slug,identifier,nginx_key) )
+        print 'No LookEmbed found with identifier: %s and slug: %s. Nginx key: %s' % (slug,identifier,nginx_key)
 
     # Height
     scale = width / float(look.width)
