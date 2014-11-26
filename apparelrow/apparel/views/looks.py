@@ -32,6 +32,9 @@ from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_f
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
 from apparelrow.apparel.views import _product_like
 from apparelrow.apparel.search import ApparelSearch
+import logger
+
+log = logger.getLogger(__name__)
 
 def look_like_products(request, look_id):
     look = get_model('apparel', 'Look').objects.get(pk=look_id)
@@ -45,16 +48,19 @@ def embed(request, slug, identifier=None):
     Display look for use in embedded iframe.
     """
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
-    look_embed = None
+    #look_embed = None
     try:
+
         look_embed = get_model('apparel', 'LookEmbed').objects.get(identifier=identifier)
         width = look_embed.width
         language = look_embed.language
         nginx_key = reverse('look-embed-identifier', args=[identifier, slug])
+        log.info('Found LookEmbed with identifier: %s and slug: %s. Nginx key: %s' % (slug,identifier,nginx_key) )
     except get_model('apparel', 'LookEmbed').DoesNotExist:
         width = look.width
         language = 'en'
         nginx_key = reverse('look-embed', args=[slug])
+        log.info('No LookEmbed found with identifier: %s and slug: %s. Nginx key: %s' % (slug,identifier,nginx_key) )
 
     # Height
     scale = width / float(look.width)
