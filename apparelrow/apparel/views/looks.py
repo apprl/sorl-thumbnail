@@ -45,20 +45,16 @@ def embed(request, slug, identifier=None):
     Display look for use in embedded iframe.
     """
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
-    #look_embed = None
-
+    look_embed = None
     try:
-
         look_embed = get_model('apparel', 'LookEmbed').objects.get(identifier=identifier)
         width = look_embed.width
         language = look_embed.language
         nginx_key = reverse('look-embed-identifier', args=[identifier, slug])
-        print 'Found LookEmbed with identifier: %s and slug: %s. Nginx key: %s' % (slug,identifier,nginx_key)
     except get_model('apparel', 'LookEmbed').DoesNotExist:
         width = look.width
         language = 'en'
         nginx_key = reverse('look-embed', args=[slug])
-        print 'No LookEmbed found with identifier: %s and slug: %s. Nginx key: %s' % (slug,identifier,nginx_key)
 
     # Height
     scale = width / float(look.width)
@@ -111,7 +107,7 @@ def embed(request, slug, identifier=None):
                                                            'height': str(height),
                                                            'embed_width': settings.APPAREL_LOOK_SIZE[0],
                                                            'embed_height': settings.APPAREL_LOOK_SIZE[1],
-                                                           'embed_id': look_embed.identifier},)
+                                                           'embed_id': look_embed.identifier if look_embed else ''},)
     translation.deactivate()
 
     get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
