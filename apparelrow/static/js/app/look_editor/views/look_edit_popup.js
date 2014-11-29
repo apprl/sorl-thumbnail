@@ -2,7 +2,6 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
     id: 'popup-slim',
     template: _.template($('#look_edit_add_popup_template').html()),
-
     popup_template: _.template($('#popup_slim_template').html()),
 
     events: {
@@ -14,11 +13,14 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this.parent_view = options.parent_view;
 
         App.Events.on('look_edit:product:info', this.product_info, this);
-        App.Events.on('look_edit:product:add', this.product_add, this);
+        if (!isMobileDevice()) {
+            App.Events.on('look_edit:product:add', this.product_add, this);
+        }
 
         $(document).on('keydown', _.bind(function(e) { if(e.keyCode == 27) { this.hide() } }, this));
 
         this.$el.html(this.popup_template());
+        this.$el.addClass('popup-slim-lookedit-popup');
         $('body').append(this.$el);
     },
 
