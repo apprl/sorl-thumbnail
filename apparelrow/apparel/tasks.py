@@ -335,6 +335,8 @@ def build_static_look_image(look_id):
                 rotation = component_image.rotate(-component.rotation, Image.BICUBIC, 1)
                 blank = Image.new('RGBA', rotation.size, (255, 255, 255, 0))
                 component_image = Image.composite(rotation, blank, rotation)
+            if component.flipped:
+                component_image = component_image.transpose(Image.FLIP_LEFT_RIGHT)
 
         image.paste(component_image, (offset_left + component.left, offset_top + component.top), component_image)
 
