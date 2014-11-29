@@ -41,6 +41,8 @@ App.Views.PopupDispatcher =  Backbone.View.extend({
 
         this.$el.find('.title').text(dialog.title);
         this.$el.find('.content').html(dialog.render(name).el);
+        this.$el.removeClass().addClass('popup-slim-'+name);
+
         // TODO: ugly solution no/yes?
         dialog.delegateEvents();
         this._center();
