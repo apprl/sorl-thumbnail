@@ -7,8 +7,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
     active: false,
 
     initialize: function() {
-        App.Events.on('lookedit:update_measures', this.rescale, this);
-        //App.Views.LookComponent.__super__.initialize(this);
+        App.Events.on('lookedit:reposition', this.reposition, this);
+        App.Events.on('lookedit:rescale', this.rescale, this);
         this.$container = $('.look-container');
     },
 
@@ -32,7 +32,6 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         } else {
             this.$el.resizable("enable");
             this.$el.rotatable("enable");
-            this.$el.find('.delete').show();
         }
     },
 
@@ -45,42 +44,32 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         } else {
             this.$el.resizable("disable");
             this.$el.rotatable("disable");
-            this.$el.find('.delete').hide();
         }
     },
 
-    rescale: function(measures) {
-        var new_width = this.model.get('width_rel') * measures.width,
-            ratio = this.model.get('height')/this.model.get('width'),
-            new_height = ratio*new_width,
-            new_left = this.model.get('left_rel') * measures.width,
-            new_top = this.model.get('top_rel') * measures.height;
-
-        this.$el.css({
-            left: new_left,
-            top:  new_top,
-            width: new_width,
-            height: ratio*new_width
-        });
-
-        this.set_position(new_left, new_top, true);
-        this.set_size(new_width, new_height, true);
+    rescale: function(scale) {
+        var width = this.model.get('width'),
+            height = this.model.get('height');
+        this.$el.css({width: width*scale, height: height*scale});
+        this.set_size(width*scale, height*scale);
+        this.reposition({x:this.model.get('left')*(1-scale), y:this.model.get('top')*(1-scale)});
     },
 
-    set_size: function(width, height, rescaled) {
+    reposition: function(adjustments) {
+        var new_left = this.model.get('left') - adjustments.x,
+            new_top = this.model.get('top') - adjustments.y;
+
+        this.set_position(new_left, new_top);
+        this.$el.css({left: new_left, top: new_top});
+    },
+
+    set_size: function(width, height) {
         this.model.set({width: width, height: height}, {silent: true});
-        if (!rescaled) {
-
-            this.model.set('width_rel', width/this.$container.width());
-        }
         App.Events.trigger('look:dirty');
     },
 
-    set_position: function(left, top, rescaled) {
+    set_position: function(left, top) {
         this.model.set({left: left, top: top}, {silent: true});
-        if (!rescaled) {
-            this.model.set({left_rel: left/this.$container.width(), top_rel: top/this.height()});
-        }
         App.Events.trigger('look:dirty');
     },
 
@@ -129,8 +118,23 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         return current_max;
     },
 
+    _min_zindex: function() {
+        var current_min = 0;
+        $('.look-container .product').each(function(index, element) {
+            var current_value = parseInt($(element).css('z-index'), 10);
+            if (current_value < current_min) {
+                current_min = current_value;
+            }
+        });
+        return current_min;
+    },
+
     render: function() {
-        this.$el.css({'z-index': this.model.get('z_index'),
+        this.$el.css({'left': this.model.get('left'),
+                      'top': this.model.get('top'),
+                      'width': this.model.get('width'),
+                      'height': this.model.get('height'),
+                      'z-index': this.model.get('z_index'),
                       'transform': 'rotate(' + this.model.get('rotation') + 'deg)',
                       '-moz-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
                       '-webkit-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
@@ -138,9 +142,9 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                       '-ms-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
                       position: 'absolute'});
 
-
-        this.set_position(this.model.get('left'), this.model.get('top'), true);
-        this.set_size(this.model.get('width'), this.model.get('height'), true);
+        this.$el.toggleClass('flipped', this.model.get('flipped'));
+        this.set_position(this.model.get('left'), this.model.get('top'));
+        this.set_size(this.model.get('width'), this.model.get('height'));
 
         this.$el.html(this.template(this.model.toJSON()));
 
@@ -167,10 +171,11 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  containment: this.$container,
                  aspectRatio: true,
                  disabled: true,
-                 maxHeight: this.$conatainer.height(),
+                 maxHeight: this.$container.height(),
                  maxWidth: this.$container.width(),
                  minHeight: 50,
                  minWidth: 50,
+                 handles: "se",
                  create: _.bind(function (event, ui) {
                      var z_index = $(event.target).css('z-index');
                      if (!isNaN(parseInt(z_index))) {
@@ -199,7 +204,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
              });
 
              this.$el.rotatable({
-                 handles: 'nw',
+                 handles: 'n',
                  disabled: true,
                  stop: _.bind(function (event, ui) {
                      this.model.set({rotation: ui.rotation}, {silent: true});

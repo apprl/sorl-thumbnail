@@ -21,7 +21,6 @@ App.Views.LookComponentPhoto = App.Views.LookComponent.extend({
     rescale: function(measures) {
         var new_left = this.model.get('left_rel') * measures.width - this.model.get('width')/2,
             new_top = this.model.get('top_rel') * measures.height - this.model.get('height')/2;
-
         this.$el.css({
             left: new_left,
             top:  new_top
