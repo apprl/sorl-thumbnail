@@ -450,8 +450,8 @@ class ShortStoreLink(models.Model):
 
 class DomainDeepLinking(models.Model):
     vendor = models.ForeignKey(Vendor)
-    domain = models.CharField(max_length=100, blank=False, null=False, help='Should not contain http:// or https://')
-    template = models.CharField(max_length=512, blank=False, null=False, help='Use {url} and {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?stoe_id=somestore&custom={sid}&url={url}')
+    domain = models.CharField(max_length=100, blank=False, null=False, help_text='Should not contain http:// or https://')
+    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} and {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?stoe_id=somestore&custom={sid}&url={url}')
 
 
 class ShortDomainLinkManager(models.Manager):
