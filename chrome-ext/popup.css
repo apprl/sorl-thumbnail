@@ -150,14 +150,12 @@ body.active .loading {
 
 .like-button.disabled, .product-button.disabled {
     cursor: default;
-    background-color: #000000;
-    border-color: #000000;
-    opacity: 0.65;
+    background-color: #bfbfbf;
+    border-color: #bfbfbf;
 }
 .like-button:hover.disabled, .product-button:hover.disabled {
-    background-color: #000000;
-    border-color: #000000;
-    opacity: 0.65;
+    background-color: #bfbfbf;
+    border-color: #bfbfbf;
 }
 
 .like-button .unlike, .like-button .liked {
