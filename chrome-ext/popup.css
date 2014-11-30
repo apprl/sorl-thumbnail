@@ -95,6 +95,13 @@ body.active .loading {
     bottom: 15px;
 }
 
+.no-like {
+    display: none;
+}
+.no-like.show {
+    display: block;
+}
+
 .product-short-link {
     display: none;
     margin-bottom: 20px;
