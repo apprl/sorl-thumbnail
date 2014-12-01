@@ -88,6 +88,8 @@ class CustomUserAdmin(UserAdmin):
         (_('Brand'), {'fields': ('is_brand', 'brand')}),
         (_('Publisher'), {'fields': ('is_partner',
                                      'partner_group',
+                                     'is_subscriber',
+                                     'owner_network',
                                      'referral_partner',
                                      'referral_partner_code',
                                      'referral_partner_url',

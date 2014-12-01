@@ -17,6 +17,7 @@ class Migration(SchemaMigration):
             ('from_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['profile.User'], on_delete=models.PROTECT)),
             ('amount', self.gf('django.db.models.fields.DecimalField')(default='1.0', max_digits=10, decimal_places=3)),
             ('date', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
+            ('status', self.gf('django.db.models.fields.CharField')(default='0', max_length=1, db_index=True)),
         ))
         db.send_create_signal(u'dashboard', ['Payout'])
 
@@ -203,7 +204,8 @@ class Migration(SchemaMigration):
             'from_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'on_delete': 'models.PROTECT'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'payout_type': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'sale': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Sale']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'})
+            'sale': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Sale']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'}),
+            'status': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '1', 'db_index': 'True'})
         },
         u'dashboard.sale': {
             'Meta': {'ordering': "['-sale_date']", 'object_name': 'Sale'},

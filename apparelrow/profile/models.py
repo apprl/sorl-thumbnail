@@ -93,7 +93,7 @@ class User(AbstractUser):
     referral_partner_parent_date = models.DateTimeField(null=True, blank=True)
 
     # publisher network
-    publisher_network = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='publisher_network', help_text='Assign publisher to a Publisher Network.')
+    owner_network = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='publisher_network', help_text='Assign publisher to a Publisher Network.')
     is_subscriber = models.BooleanField(default=False, null=False, blank=False)
 
     # notification settings
