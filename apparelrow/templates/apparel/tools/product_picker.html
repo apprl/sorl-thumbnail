@@ -3,10 +3,10 @@
 
 <div id="product-chooser" data-reset-text="{% trans "Reset" %}">
     <ul id="product-tabs" class="nav nav-tabs nav-justified">
-        <li><a{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} class="tab-likes" href="#"><i class="glyphicon glyphicon-heart"></i> {% trans "My likes" %}</a></li>
-        <li class="active"><a class="tab-all" href="#"><i class="glyphicon glyphicon-list"></i> {% trans "All products" %}</a></li>
+        <li><a{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} class="tab-likes" href="#"><i class="glyphicon glyphicon-heart"></i> <span>{% trans "My likes" %}</span></a></li>
+        <li class="active"><a class="tab-all" href="#"><i class="glyphicon glyphicon-list"></i> <span>{% trans "All products" %}</span></a></li>
     </ul>
-
+    <a href="#" class="close-product-chooser"><img src="{% static "images/close.svg" %}"/></a>
     <div class="product-filter-container">
         <div id="product-filter" class="group">
             <div class="middle-filters group">

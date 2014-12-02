@@ -1,1 +1,1 @@
-window.App.Models.Facet = window.App.Models.WidgetModelBase.extend({});
+window.App.Models.Facet = Backbone.Model.extend({});

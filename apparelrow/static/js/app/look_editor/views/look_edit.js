@@ -8,9 +8,6 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         'touch .look-container': 'on_click'
     },
 
-    max_width: 694,
-    max_height: 524,
-
     initialize: function() {
         // Look component classes lookup
         this.component_view_classes = {
@@ -53,6 +50,9 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             }
         }, this);
 
+        // Create toolbar
+        this.toolbar = new App.Views.LookEditToolbar();
+
         // Listen on product add
         App.Events.on('look_edit:product:add', this.pending_add_component, this);
         this.pending_product = false;
@@ -64,6 +64,9 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         App.Events.on('widget:save', this.save_look, this);
         App.Events.on('widget:publish', this.publish_look, this);
         App.Events.on('widget:unpublish', this.unpublish_look, this);
+
+
+        $(window).on('resize', _.bind(this.update_sizes, this));
 
         App.Views.LookEdit.__super__.initialize(this);
     },
@@ -78,6 +81,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         var view_class = this.component_view_classes[external_look_type];
         var view = new view_class({model: model, collection: collection});
         this.$('.look-container').append(view.render().el);
+        // make sure startsplash is hidden
+        $('#startsplash').hide();
     },
 
     add_components: function(collection) {
@@ -125,14 +130,17 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     _create_photo_component: function(position) {
-        return new App.Models.LookComponent().set(_.extend({width: 80, height: 80}, position));
+        var $container = $('.look-container');
+        return new App.Models.LookComponent().set(_.extend({width: 80,
+            height: 80,
+            rel_left: (position.left+40)/$container.width(),
+            rel_top: (position.top+40)/$container.height()}, position));
     },
 
     _create_collage_component: function(product) {
         var self = this;
         var component = new App.Models.LookComponent().set({top: 0, left: 0});
         var $container = $('.look-container');
-
         // Load image to get width and height for look component
         var image = new Image();
         image.onload = function() {
@@ -142,9 +150,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
                            height: height,
                            left: ($container.width() / 2) - width / 2,
                            top: ($container.height() / 2) - height / 2});
+
             self.add_product_to_component(component, product);
             self.model.components.add(component);
         }
+
         image.src = product.get('image_look');
     },
 
@@ -198,13 +208,30 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     render: function() {
         this.$el.html(this.template({look_type: external_look_type, look: this.model.toJSON()}));
 
-        // TODO: this must be done here because it must happen after main
-        // template is rendered or else it will be wiped be the above html
-        // renderning call
-        this.add_components(this.model.components);
-
+        // Reposition some stuff before adding the components
+        var $container = $('.look-container');
         this.render_temporary_image();
         this.render_image();
+
+        this.update_sizes();
+
+        var adjust = Math.max(0, ($container.width() - this.model.get('width'))/2);
+        if (adjust) {
+            this.model.components.each(function(model) {model.set('left', model.get('left') + adjust)});
+        }
+        var adjust = Math.max(0, ($container.height() - this.model.get('height'))/2);
+        if (adjust) {
+            this.model.components.each(function(model) {model.set('top', model.get('top') + adjust)});
+        }
+
+        // TODO: this must be done here because it must happen after main
+        // template is rendered or else it will be wiped be the above html
+        // rendering call
+
+        this.add_components(this.model.components);
+
+
+        $(window).trigger('resize');
     },
 
     render_temporary_image: function() {
@@ -214,13 +241,25 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     render_image: function() {
-        this.update_sizes();
-
         if(this.model.has('image')) {
             // Enable product on image
             App.Events.trigger('product:enable');
             this.temporary_image_view.$el.hide();
             this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
+            this.local_image = new Image();
+            self = this;
+            this.local_image.onload = function() {
+                var image_width = this.width;
+                var image_height = this.height;
+                if (typeof this.naturalWidth !== 'undefined' && typeof this.naturalHeight !== 'undefined') {
+                    image_width = this.naturalWidth;
+                    image_height = this.naturalHeight;
+                }
+                self.image_ratio = image_width / image_height;
+                self.model.set({image_width: image_width, image_height: image_height});
+                self.update_sizes();
+            }
+            this.local_image.src = this.model.get('image');
         } else {
             this.temporary_image_view.$el.show();
             this.$el.find('.look-container').css('background-image', '');
@@ -228,35 +267,63 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     update_sizes: function() {
-        if(this.model.has('image')) {
-            var self = this;
-            this.local_image = new Image();
-            this.local_image.onload = function() {
-                var new_width = Math.min(self.max_width, this.width);
-                var new_height = new_width / (this.width / this.height);
-                if(new_height > self.max_height) {
-                    var temp_height = new_height;
-                    var new_height = self.max_height;
-                    var new_width = (new_width / temp_height) * new_height;
-                }
-                new_width = Math.round(new_width);
-                new_height = Math.round(new_height);
+        // Set container height for that responsive feeling
+        var window_height = $(window).height(),
+            new_height = window_height - this.$el.offset().top - 20,
+        $footer = $('.widget-footer:visible');
+        new_height -= $footer.length ? $footer.height() : 0;
+        this.$el.css('height', new_height);
+        $container = this.$el.children('.look-container');
 
-                self.$el.find('.look-container').css({width: new_width, height: new_height});
-                self.$el.css({width: new_width});
-
-                var image_width = this.width;
-                var image_height = this.height;
-                if(typeof this.naturalWidth !== 'undefined' && typeof this.naturalHeight !== 'undefined') {
-                    image_width = this.naturalWidth;
-                    image_height = this.naturalHeight;
+        // Set look type specific stuff
+        if(external_look_type == 'photo' && this.model.has('image')) {
+            // Set container width and height to center the image
+            if (this.image_ratio) {
+                if (this.image_ratio >= 1) {
+                    $container.height(this.$el.width() / this.image_ratio);
+                } else {
+                    var new_width = Math.min(this.$el.height() * this.image_ratio, $container.width());
+                    $container.width(new_width);
+                    $container.height(new_width / this.image_ratio);
                 }
-                self.model.set({width: new_width, height: new_height, image_width: image_width, image_height: image_height});
+
+                this.model.set({width: $container.width(), height: $container.height()});
+                App.Events.trigger('lookedit:rescale', {width: $container.width(), height: $container.height()});
             }
-            this.local_image.src = this.model.get('image');
         } else {
-            this.$el.find('.look-container').css({width: this.max_width, height: this.max_height});
-            this.$el.css({width: this.max_width});
+            // Don't do stuff if area is hidden
+            if (this.$el.parent().css('display') == 'none') return;
+            $container.height(this.$el.height());
+
+            // Get cropped area
+            var top = right = bottom = left = -1;
+            this.model.components.each(function(component) {
+                var component_left = component.get('left'),
+                    component_top = component.get('top');
+                top = top > -1 ? Math.min(top, component_top) : component_top;
+                right = right > -1 ? Math.max(right, component_left + component.get('width')) : component_left + component.get('width');
+                bottom = bottom > -1 ? Math.max(bottom, component_top + component.get('height')) : component_top + component.get('height');
+                left = left > -1 ? Math.min(left, component_left) : component_left;
+            });
+
+            // Reposition elements if the window is too small
+            var adjustX = Math.max(right - $container.width(), 0),
+                adjustY = Math.max(bottom - $container.height(), 0),
+                width = right - left,
+                height = bottom - top;
+
+            this.model.set({width: width, height: height});
+
+
+            if (adjustX > 0 || adjustY > 0) {
+                if (adjustX > left || adjustY > top) {
+                    var ratio = Math.min((Math.max(width - adjustX, $container.width()))/width, (Math.max(height - adjustY, $container.height()))/height);
+                    App.Events.trigger('lookedit:rescale', ratio);
+                } else {
+                    App.Events.trigger('lookedit:reposition', {x: adjustX, y: adjustY});
+                }
+            }
+
         }
     },
 
@@ -296,6 +363,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     _look_save: function() {
         // Remove components without products before saving
         this.model.components.each(_.bind(function(model) {
+            model.unset('rel_left');
+            model.unset('rel_top');
             if(!model.has('product') || !model.get('product')) {
                 this.model.components.remove(model);
                 model.destroy();

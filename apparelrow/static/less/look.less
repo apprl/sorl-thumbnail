@@ -150,13 +150,19 @@
     -khtml-user-select: none;
 }
 
-.look-collage .collage-image img {
+.look-collage .collage-image {
+  &.flipped img {
+    -webkit-transform: scale(-1, 1);
+    -ms-transform: scale(-1, 1); // IE9+
+    transform: scale(-1, 1);
+  }
+  img {
     width: 100% !important;
     height: auto !important;
+  }
 }
 
 #photo, #collage {
-    height: @look_height;
     position: relative;
     .product {
         position: absolute;
@@ -229,7 +235,7 @@
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
-        a {
+        a {
             display: inline-block;
             padding: 0;
         }
@@ -245,6 +251,82 @@
         left: 0;
     }
 }
+@media (min-width: @screen-tablet) {
+  .look-editor-page {
+    #popup-slim {
+      .body-header-col-right {
+        width: 100%;
+        > ul > li {
+          width: 100%;
+          .btn {
+            width: 100%;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+    .popup-slim-lookedit-popup {
+      display: none;
+    }
+  }
+}
+.look-editor-page {
+  .product {
+    border: 1px solid transparent;
+    .ui-resizable-handle, .ui-rotatable-handle, .delete {
+      display: none;
+    }
+    &.active {
+      border: 1px solid #67e2b8;
+      .ui-resizable-handle, .ui-rotatable-handle, .delete {
+        display: block;
+      }
+    }
+  }
+}
+.lookedit_toolbar {
+  display: none;
+  img {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 3px;
+  }
+  @media (max-width: @screen-xs-max) {
+    span {
+      display: none;
+    }
+  }
+}
+
+.look-editor-photo-page #startsplash {
+  display: none;
+}
+
+.look-editor-collage-page {
+  .lookedit_toolbar {
+    background: @lighter_gray_color;
+    overflow: hidden;
+    opacity: 0.7;
+    display: block;
+    &.active {
+      opacity: 1;
+    }
+    .section {
+      float: left;
+      a {
+        display:block;
+        padding: 6px 13px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+  }
+  .product.flipped img {
+    -webkit-transform: scale(-1, 1);
+      -ms-transform: scale(-1, 1); // IE9+
+          transform: scale(-1, 1);
+  }
+}
 
 .widget-page {
     background-color: #ffffff;
@@ -254,21 +336,35 @@
         padding-right: 15px;
     }
 
-    #edit-look {
+    #startsplash {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      text-align: center;
+      @media (min-width: @screen-md) {
+        top: 55%;
         width: 50%;
+      }
+    }
+
+    #edit-look {
+        width: 100%;
         float: left;
         position: relative;
         #collage {
             border: 1px solid @light_gray_color;
+          width: 100%;
+          height: 100%;
         }
         #image-form {
             position: absolute;
             top: 50%;
             left: 50%;
             width: 360px;
+            max-width: 80%;
             height: 120px;
             margin-top: -60px;
-            margin-left: -180px;
+            .translate(-50%, 0);
             .loading {
                 text-align: center;
                 img {
@@ -289,19 +385,36 @@
         }
 
         // Resizable
-        .ui-icon-gripsmall-diagonal-se {
+        .ui-resizable-handle {
+            width: 11px;
+            height: 11px;
+            background: #67e2b8;
             position: absolute;
-            bottom: -11px;
-            right: -11px;
-            width: 23px;
-            height: 23px;
-            background: transparent url("../images/resize.png") no-repeat scroll center center;
+        }
+
+        .ui-resizable-se {
+            bottom: -6px;
+            right: -6px;
+        }
+
+        .ui-resizable-sw {
+            bottom: -6px;
+            left: -6px;
+        }
+
+        .ui-resizable-ne {
+            top: -6px;
+            right: -6px;
+        }
+
+        .ui-resizable-nw {
+            top: -6px;
+            left: -6px;
         }
 
         .ui-rotatable-handle {
             position: absolute;
             z-index: 99999;
-            display: block;
         }
 
         .ui-rotatable-nw {
@@ -381,3 +494,4 @@
         display: none;
     }
 }
+

@@ -1,9 +1,9 @@
-App.Views.LookComponent = App.Views.WidgetBase.extend({
+App.Views.LookComponent = Backbone.View.extend({
 
     events: {
-        'click .delete': 'on_delete',
-        'mouseenter': 'on_enter',
-        'mouseleave': 'on_leave'
+        'click .delete': 'on_delete'
+       /* 'mouseenter': 'on_enter',
+        'mouseleave': 'on_leave'*/
     },
 
     initialize: function() {
@@ -13,8 +13,9 @@ App.Views.LookComponent = App.Views.WidgetBase.extend({
     on_delete: function(e) {
         this.remove();
         this.collection.remove(this.model);
-
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
     },
 
     on_enter: function(e) {

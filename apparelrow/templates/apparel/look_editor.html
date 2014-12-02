@@ -4,7 +4,8 @@
 
 {% block extra-title %}{% trans "Edit" %} {{ object.title }} {% trans "by" %} {{ object.user }} | {% trans "Looks" %} | {% endblock %}
 
-{% block body-classes %}look-editor-page widget-page{% endblock %}
+{% block body-classes %}look-editor-page widget-page look-editor-{{ component }}-page{% endblock %}
+
 {% block full-body %}
 
     {% include "apparel/tools/widget_header.html" with type='look_editor' %}
@@ -12,8 +13,26 @@
     <div id="content">
         <div class="row">
             <div class="col-md-6 col-widget">
+                <div class="lookedit_toolbar">
+                    <div class="section">
+                        <a href="#" class="component_clone"><img src="{% static "images/clone.svg" %}"/> <span>{% trans "Clone" %}</span></a>
+                    </div>
+                    <div class="section">
+                        <a href="#" class="component_forward"><img src="{% static "images/forward.svg" %}"/> <span>{% trans "Forward" %}</span></a>
+                    </div>
+                    <div class="section">
+                        <a href="#" class="component_back"><img src="{% static "images/back.svg" %}"/> <span>{% trans "Back" %}</span></a>
+                    </div>
+                    <div class="section">
+                        <a href="#" class="component_flip"><img src="{% static "images/flip.svg" %}"/> <span>{% trans "Flip" %}</span></a>
+                    </div>
+                    <div class="section">
+                        <a href="#" class="component_delete"><img src="{% static "images/close.svg" %}"/> <span>{% trans "Delete" %}</span></a>
+                    </div>
+                </div>
                 <div id="edit-look"></div>
             </div>
+            <div id="startsplash">{% trans "Start by adding the items here" %}</div>
             <div class="col-md-6 visible-md visible-lg">
                 {% include "apparel/tools/product_picker.html" %}
             </div>
@@ -29,6 +48,9 @@
         var external_has_liked = '{{ has_liked }}';
         var selected_gender = '{{ gender }}';
     </script>
+    <script src="/static/js/vendor/touch-emulator.js"></script>
+    <script>//TouchEmulator(); </script>
+
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     {% compressed_js 'look_editor' %}
 

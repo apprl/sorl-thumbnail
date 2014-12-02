@@ -175,7 +175,7 @@ recalculate_gender.short_description = 'Recalculate gender for marked looks'
 class LookComponentInline(admin.TabularInline):
     model = LookComponent
     extra = 0
-    readonly_fields = ('product', 'component_of', 'top', 'left', 'width', 'height', 'z_index', 'rotation', 'positioned')
+    readonly_fields = ('product', 'component_of', 'top', 'left', 'width', 'height', 'z_index', 'rotation', 'positioned', 'flipped')
     raw_id_fields = ('product',)
 
     def has_delete_permission(self, request, obj=None):

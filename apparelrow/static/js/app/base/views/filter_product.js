@@ -1,4 +1,4 @@
-App.Views.FilterProduct = App.Views.WidgetBase.extend({
+App.Views.FilterProduct =  Backbone.View.extend({
 
     el: '#product-chooser',
 

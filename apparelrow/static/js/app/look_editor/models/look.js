@@ -1,4 +1,4 @@
-window.App.Models.Look = window.App.Models.WidgetModelBase.extend({
+window.App.Models.Look = Backbone.Model.extend({
 
     urlRoot: look_api_base_url,
 
@@ -9,7 +9,9 @@ window.App.Models.Look = window.App.Models.WidgetModelBase.extend({
         'component': (external_look_type == 'photo') ? 'P' : 'C',
         'description': '',
         'title': '',
-        'id': external_look_type
+        'id': external_look_type,
+        'width': 0,
+        'height': 0
     },
 
     initialize: function() {

@@ -1,4 +1,4 @@
-App.Views.PopupDispatcher = App.Views.WidgetBase.extend({
+App.Views.PopupDispatcher =  Backbone.View.extend({
 
     id: 'popup-slim',
     template: _.template($('#popup_slim_template').html()),
@@ -41,6 +41,8 @@ App.Views.PopupDispatcher = App.Views.WidgetBase.extend({
 
         this.$el.find('.title').text(dialog.title);
         this.$el.find('.content').html(dialog.render(name).el);
+        this.$el.removeClass().addClass('popup-slim-'+name);
+
         // TODO: ugly solution no/yes?
         dialog.delegateEvents();
         this._center();

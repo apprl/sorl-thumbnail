@@ -1086,6 +1086,7 @@ class LookComponent(models.Model):
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
     rotation = models.IntegerField(_('CSS rotation'), blank=True, null=True)
     positioned = models.CharField(max_length=1, choices=LOOK_COMPONENT_POSITIONED, null=True, blank=True)
+    flipped = models.BooleanField(default=False, blank=True)
 
     # FIXME: Scale product image on initial save and store height and width
     # properties
