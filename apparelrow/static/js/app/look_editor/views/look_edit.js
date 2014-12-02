@@ -8,9 +8,6 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         'touch .look-container': 'on_click'
     },
 
-    max_width: 694,
-    max_height: 524,
-
     initialize: function() {
         // Look component classes lookup
         this.component_view_classes = {
@@ -70,16 +67,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
 
         $(window).on('resize', _.bind(this.update_sizes, this));
-        $(window).on('resize', _.bind(_.debounce(this.update_component_measures, 500), this));
-
-        this.update_sizes();
 
         App.Views.LookEdit.__super__.initialize(this);
-    },
-
-    update_component_measures: function() {
-        $container = this.$el.find('.look-container');
-        App.Events.trigger('lookedit:update_measures', {width: $container.width(), height: $container.height()});
     },
 
     login_popup: function() {
@@ -92,6 +81,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         var view_class = this.component_view_classes[external_look_type];
         var view = new view_class({model: model, collection: collection});
         this.$('.look-container').append(view.render().el);
+        // make sure startsplash is hidden
+        $('#startsplash').hide();
     },
 
     add_components: function(collection) {
@@ -139,14 +130,17 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     _create_photo_component: function(position) {
-        return new App.Models.LookComponent().set(_.extend({width: 80, height: 80}, position));
+        var $container = $('.look-container');
+        return new App.Models.LookComponent().set(_.extend({width: 80,
+            height: 80,
+            rel_left: (position.left+40)/$container.width(),
+            rel_top: (position.top+40)/$container.height()}, position));
     },
 
     _create_collage_component: function(product) {
         var self = this;
         var component = new App.Models.LookComponent().set({top: 0, left: 0});
         var $container = $('.look-container');
-
         // Load image to get width and height for look component
         var image = new Image();
         image.onload = function() {
@@ -157,7 +151,6 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
                            left: ($container.width() / 2) - width / 2,
                            top: ($container.height() / 2) - height / 2});
 
-            component.set({width_rel: width/$container.width(), left_rel: component.get('left')/$container.width(), top_rel: component.get('top')/$container.height()});
             self.add_product_to_component(component, product);
             self.model.components.add(component);
         }
@@ -215,25 +208,29 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     render: function() {
         this.$el.html(this.template({look_type: external_look_type, look: this.model.toJSON()}));
 
-        // TODO: this must be done here because it must happen after main
-        // template is rendered or else it will be wiped be the above html
-        // renderning call
-
         // Reposition some stuff before adding the components
-        if (this.model.get('width') < this.max_width) {
-            var adjust = (this.max_width - this.model.get('width'))/2;
+        var $container = $('.look-container');
+        this.render_temporary_image();
+        this.render_image();
+
+        this.update_sizes();
+
+        var adjust = Math.max(0, ($container.width() - this.model.get('width'))/2);
+        if (adjust) {
             this.model.components.each(function(model) {model.set('left', model.get('left') + adjust)});
         }
-        if (this.model.get('height') < this.max_height) {
-            var adjust = (this.max_height - this.model.get('height'))/2;
+        var adjust = Math.max(0, ($container.height() - this.model.get('height'))/2);
+        if (adjust) {
             this.model.components.each(function(model) {model.set('top', model.get('top') + adjust)});
         }
 
+        // TODO: this must be done here because it must happen after main
+        // template is rendered or else it will be wiped be the above html
+        // rendering call
 
         this.add_components(this.model.components);
 
-        this.render_temporary_image();
-        this.render_image();
+
         $(window).trigger('resize');
     },
 
@@ -270,23 +267,63 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     update_sizes: function() {
+        // Set container height for that responsive feeling
         var window_height = $(window).height(),
             new_height = window_height - this.$el.offset().top - 20,
         $footer = $('.widget-footer:visible');
         new_height -= $footer.length ? $footer.height() : 0;
         this.$el.css('height', new_height);
         $container = this.$el.children('.look-container');
+
+        // Set look type specific stuff
         if(external_look_type == 'photo' && this.model.has('image')) {
-            if (this.image_ratio >= 1) {
-                $container.height(this.$el.width()/this.image_ratio);
-            } else {
-                var new_width = Math.min(this.$el.height()*this.image_ratio, $container.width());
-                $container.width(new_width);
-                $container.height(new_width/this.image_ratio);
+            // Set container width and height to center the image
+            if (this.image_ratio) {
+                if (this.image_ratio >= 1) {
+                    $container.height(this.$el.width() / this.image_ratio);
+                } else {
+                    var new_width = Math.min(this.$el.height() * this.image_ratio, $container.width());
+                    $container.width(new_width);
+                    $container.height(new_width / this.image_ratio);
+                }
+
+                this.model.set({width: $container.width(), height: $container.height()});
+                App.Events.trigger('lookedit:rescale', {width: $container.width(), height: $container.height()});
             }
-            this.model.set({width: $container.width(), height: $container.height()});
         } else {
+            // Don't do stuff if area is hidden
+            if (this.$el.parent().css('display') == 'none') return;
             $container.height(this.$el.height());
+
+            // Get cropped area
+            var top = right = bottom = left = -1;
+            this.model.components.each(function(component) {
+                var component_left = component.get('left'),
+                    component_top = component.get('top');
+                top = top > -1 ? Math.min(top, component_top) : component_top;
+                right = right > -1 ? Math.max(right, component_left + component.get('width')) : component_left + component.get('width');
+                bottom = bottom > -1 ? Math.max(bottom, component_top + component.get('height')) : component_top + component.get('height');
+                left = left > -1 ? Math.min(left, component_left) : component_left;
+            });
+
+            // Reposition elements if the window is too small
+            var adjustX = Math.max(right - $container.width(), 0),
+                adjustY = Math.max(bottom - $container.height(), 0),
+                width = right - left,
+                height = bottom - top;
+
+            this.model.set({width: width, height: height});
+
+
+            if (adjustX > 0 || adjustY > 0) {
+                if (adjustX > left || adjustY > top) {
+                    var ratio = Math.min((Math.max(width - adjustX, $container.width()))/width, (Math.max(height - adjustY, $container.height()))/height);
+                    App.Events.trigger('lookedit:rescale', ratio);
+                } else {
+                    App.Events.trigger('lookedit:reposition', {x: adjustX, y: adjustY});
+                }
+            }
+
         }
     },
 
@@ -326,9 +363,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     _look_save: function() {
         // Remove components without products before saving
         this.model.components.each(_.bind(function(model) {
-            if (model.has('width_rel')) model.unset('width_rel');
-            if (model.has('left_rel')) model.unset('left_rel');
-            if (model.has('top_rel')) model.unset('top_rel');
+            model.unset('rel_left');
+            model.unset('rel_top');
             if(!model.has('product') || !model.get('product')) {
                 this.model.components.remove(model);
                 model.destroy();

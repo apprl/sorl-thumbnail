@@ -37,6 +37,7 @@ html.look-type-C {
     position: relative;
     overflow: hidden;
     width: 100%;
+
     #product-tabs > li {
         background-color: @lighter_gray_color;
         > a {
@@ -45,6 +46,34 @@ html.look-type-C {
             font-weight: bold;
         }
         font-size: 16px;
+        display: table-cell;
+        width: 1%;
+        &:last-child {
+          padding-right: 38px;
+
+          @media (min-width: @screen-md) {
+            padding-right: 0px;
+          }
+        }
+        @media (max-width: @screen-xs-max) {
+          span {
+            display: none;
+          }
+          &.active span {
+            display: inline;
+          }
+        }
+    }
+
+    a.close-product-chooser {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: 10px;
+      top: 7px;
+      @media (min-width: @screen-md) {
+        display: none;
+      }
     }
 
     #product-filter {

@@ -5,7 +5,7 @@ App.Views.LookComponentPhoto = App.Views.LookComponent.extend({
     template: _.template($('#look_component_photo').html()),
 
     initialize: function() {
-        App.Events.on('lookedit:update_measures', this.rescale, this);
+        App.Events.on('lookedit:rescale', this.rescale, this);
         App.Views.LookComponent.__super__.initialize(this);
     },
 
@@ -19,8 +19,8 @@ App.Views.LookComponentPhoto = App.Views.LookComponent.extend({
     },
 
     rescale: function(measures) {
-        var new_left = this.model.get('left_rel') * measures.width - this.model.get('width')/2,
-            new_top = this.model.get('top_rel') * measures.height - this.model.get('height')/2;
+        var new_left = this.model.get('rel_left') * measures.width - this.model.get('width')/2,
+            new_top = this.model.get('rel_top') * measures.height - this.model.get('height')/2;
         this.$el.css({
             left: new_left,
             top:  new_top

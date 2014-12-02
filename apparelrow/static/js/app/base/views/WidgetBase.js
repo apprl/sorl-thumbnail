@@ -7,6 +7,7 @@ App.Views.WidgetBase = Backbone.View.extend({
         // Header - send model so we can fetch title and publish info - should always be available (set default values otherwise)
         var header = new App.Views.Header({model: obj.model});
         $('#content-container').prepend(header.render().el);
+        $('.close-product-chooser').on('click', _.bind(this.hide_product_filter, this));
 
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_mobile_menu', new App.Views.DialogHeaderMobile({model:obj.model}));
@@ -22,6 +23,7 @@ App.Views.WidgetBase = Backbone.View.extend({
         $('.widget-footer').css('visibility', 'hidden');
         $('.col-widget').addClass('visible-md').addClass('visible-lg');
         $('#product-chooser').parent().addClass('visible-xs').addClass('visible-sm');
+        $('#startsplash').hide();
         // trigger resize so the product chooser adapts properly
         $(window).trigger('resize');
     },

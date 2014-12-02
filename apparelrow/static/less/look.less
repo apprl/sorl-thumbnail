@@ -150,9 +150,16 @@
     -khtml-user-select: none;
 }
 
-.look-collage .collage-image img {
+.look-collage .collage-image {
+  &.flipped img {
+    -webkit-transform: scale(-1, 1);
+    -ms-transform: scale(-1, 1); // IE9+
+    transform: scale(-1, 1);
+  }
+  img {
     width: 100% !important;
     height: auto !important;
+  }
 }
 
 #photo, #collage {
@@ -244,7 +251,25 @@
         left: 0;
     }
 }
-
+@media (min-width: @screen-tablet) {
+  .look-editor-page {
+    #popup-slim {
+      .body-header-col-right {
+        width: 100%;
+        > ul > li {
+          width: 100%;
+          .btn {
+            width: 100%;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+    .popup-slim-lookedit-popup {
+      display: none;
+    }
+  }
+}
 .look-editor-page {
   .product {
     border: 1px solid transparent;
@@ -261,23 +286,45 @@
 }
 .lookedit_toolbar {
   display: none;
+  img {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 3px;
+  }
+  @media (max-width: @screen-xs-max) {
+    span {
+      display: none;
+    }
+  }
 }
+
+.look-editor-photo-page #startsplash {
+  display: none;
+}
+
 .look-editor-collage-page {
   .lookedit_toolbar {
     background: @lighter_gray_color;
     overflow: hidden;
     opacity: 0.7;
+    display: block;
     &.active {
       opacity: 1;
     }
     .section {
       float: left;
-      padding: 6px 13px;
       a {
+        display:block;
+        padding: 6px 13px;
         font-size: 16px;
         font-weight: bold;
       }
     }
+  }
+  .product.flipped img {
+    -webkit-transform: scale(-1, 1);
+      -ms-transform: scale(-1, 1); // IE9+
+          transform: scale(-1, 1);
   }
 }
 
@@ -287,6 +334,17 @@
         padding-bottom: 0px;
         padding-left: 15px;
         padding-right: 15px;
+    }
+
+    #startsplash {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      text-align: center;
+      @media (min-width: @screen-md) {
+        top: 55%;
+        width: 50%;
+      }
     }
 
     #edit-look {
@@ -307,7 +365,6 @@
             height: 120px;
             margin-top: -60px;
             .translate(-50%, 0);
-            margin-left: -40px;
             .loading {
                 text-align: center;
                 img {
@@ -328,13 +385,31 @@
         }
 
         // Resizable
-        .ui-icon-gripsmall-diagonal-se {
+        .ui-resizable-handle {
+            width: 11px;
+            height: 11px;
+            background: #67e2b8;
             position: absolute;
-            bottom: -11px;
-            right: -11px;
-            width: 23px;
-            height: 23px;
-            background: transparent url("../images/resize.png") no-repeat scroll center center;
+        }
+
+        .ui-resizable-se {
+            bottom: -6px;
+            right: -6px;
+        }
+
+        .ui-resizable-sw {
+            bottom: -6px;
+            left: -6px;
+        }
+
+        .ui-resizable-ne {
+            top: -6px;
+            right: -6px;
+        }
+
+        .ui-resizable-nw {
+            top: -6px;
+            left: -6px;
         }
 
         .ui-rotatable-handle {
@@ -419,3 +494,4 @@
         display: none;
     }
 }
+

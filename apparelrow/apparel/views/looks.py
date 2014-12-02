@@ -300,9 +300,9 @@ def look_instance_to_dict(look):
                 'height': component.height,
                 'z_index': component.z_index,
                 'rotation': component.rotation,
-                'left_rel': float(component.left + component.width/2 if look.component == 'P' else 0)/look.width,
-                'top_rel': float(component.top + component.height/2 if look.component == 'P' else 0)/look.height,
-                'width_rel': float(component.width)/look.width,
+                'flipped': component.flipped,
+                'rel_left': float(component.left + (component.width/2 if look.component == 'P' else 0))/look.width,
+                'rel_top': float(component.top + (component.height/2 if look.component == 'P' else 0))/look.height,
                 'product': {
                     'id': component.product.id,
                     'slug': component.product.slug,
@@ -428,7 +428,7 @@ class LookView(View):
         look.save()
 
         # Send look saved signal
-        #look_saved.send(sender=get_model('apparel', 'Look'), look=look)
+        look_saved.send(sender=get_model('apparel', 'Look'), look=look)
 
         # Automatically like all products in the published look
         if look.published:

@@ -619,7 +619,6 @@ def look_list(request, search=None, contains=None, gender=None):
 
 def look_detail(request, slug):
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
-
     # Only show unpublished looks to creator
     if not look.published and look.user != request.user:
         raise Http404()
@@ -660,16 +659,15 @@ def look_detail(request, slug):
         components = look.collage_components.select_related('product')
         # look image is responsible for scaling the look view. Since the look width and height might not be different we need to rescale
         if float(look.height)/look.image_height > float(look.width)/look.image_width:
-            wrapper_element['width'] = 100*float(look.image_height)/look.height*float(look.width)/look.image_width
+            wrapper_element['width'] = str(100*float(look.image_height)/look.height*float(look.width)/look.image_width)
         else:
-            wrapper_element['height'] = 100*float(look.image_width)/look.width*float(look.height)/look.image_height
+            wrapper_element['height'] = str(100*float(look.image_width)/look.width*float(look.height)/look.image_height)
 
     elif look.display_with_component == 'P':
         components = look.photo_components.select_related('product')
 
     for component in components:
         component.style_embed = component._style(min(694, look.image_width) / float(look.width))
-
     # Build static image if it is missing
     if not look.static_image:
         build_static_look_image(look.pk)
