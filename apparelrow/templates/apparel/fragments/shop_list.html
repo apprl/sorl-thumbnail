@@ -1,0 +1,13 @@
+{% load i18n %}
+<ul class="look-list list-unstyled row">
+    {% for object in current_page.object_list %}
+        <li class="col-sm-6"><a href="{% url 'create-shop' object.pk %}">{{ object.title }}</a></li>
+    {% empty %}
+    {% if current_page.number == 1 %}
+    <li class="col-lg-12">{% trans "No results" %}</li>
+    {% endif %}
+    {% endfor %}
+</ul>
+<div class="pagination">
+    {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page only %}
+</div>

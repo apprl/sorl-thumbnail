@@ -302,10 +302,12 @@ $(document).ready(function() {
         if(!element.data('load_data')) {
             like_element = element.find('.btn-product-like');
             $.getJSON(product_popup_url + '?id=' + product_id, function(json) {
-                if(json[0].liked == true) {
-                    likeElement(like_element);
-                } else {
-                    unlikeElement(like_element);
+                if(json.length) {
+                    if (json[0].liked == true) {
+                        likeElement(like_element);
+                    } else {
+                        unlikeElement(like_element);
+                    }
                 }
             });
         }

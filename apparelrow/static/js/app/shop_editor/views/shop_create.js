@@ -1,12 +1,12 @@
 App.Views.ShopCreate = App.Views.WidgetBase.extend({
     el: '#shop-preview',
     template: _.template($('#shop_component_product').html()),
+
     initialize: function() {
         this.model.fetch({
             error: _.bind(function() { this.init_products(); }, this),
             success: _.bind(function() { this.init_products(); }, this)
         });
-
 
         App.Events.on('widget:delete', this.delete_shop, this);
         App.Events.on('widget:reset', this.render, this);
@@ -14,7 +14,14 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:publish', this.publish_shop, this);
         App.Events.on('widget:unpublish', this.unpublish_shop, this);
 
-        App.Events.on('look_edit:product:add', this.pending_add_component, this)
+        // Popup dispatcher
+        this.popup_dispatcher = new App.Views.PopupDispatcher();
+        this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
+
+        // Shop editor popup
+        this.shop_edit_popup = new App.Views.ShopEditPopup({parent_view: this});
+
+        App.Events.on('widget:product:add', this.pending_add_component, this)
         this.model.components.on('add', this.add_component, this);
 
         App.Views.ShopCreate.__super__.initialize(this);
@@ -46,11 +53,16 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.model._dirty = true;
     },
     add_component: function(model, collection) {
+        this.update_title(1);
         var view = new App.Views.ShopComponentProduct({ model: model, collection: collection });
-        this.$('#shop-product-list').append(view.render().el);
+        this.$('#shop-product-list .product-list').append(view.render().el);
     },
-
-
+    update_title: function(delta) {
+        var $title = $('#shop-product-list').find('h3');
+        var currentTitle = $title.html().split(' ');
+        var newTitle = parseInt(currentTitle[0], 10) + delta +' '+ currentTitle[1];
+        $title.html(newTitle);
+    },
     publish_shop: function(values) {
         this.model.set('published', true);
         this.save_shop(values);
@@ -103,6 +115,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
 
     save_success: function() {
         this.model._dirty = false;
+        // TODO: Can we get this value from elsewhere?
         window.location.replace('/shop/edit/' + this.model.get('id'));
     },
 });

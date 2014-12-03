@@ -24,7 +24,7 @@ from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
 from apparelrow.apparel.utils import currency_exchange, get_brand_and_category
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
-from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache
+from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache
 
 from apparelrow.profile.notifications import process_sale_alert
 
@@ -406,6 +406,8 @@ def product_like_post_save(sender, instance, **kwargs):
         get_model('activity_feed', 'activity').objects.push_activity(instance.user, 'like_product', instance.product, instance.product.gender)
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
+
+    empty_embed_shop_cache.apply_async(args=[instance.user.pk], countdown=1)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -940,20 +942,19 @@ models.signals.post_save.connect(invalidate_model_handler, sender=Look)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Look)
 
 #
-# ShopEmbed
+# Shop
 #
 
-class ShopEmbed(models.Model):
+class Shop(models.Model):
     created     = models.DateTimeField(_("Time created"), auto_now_add=True)
     modified    = models.DateTimeField(_("Time modified"), auto_now=True)
     title       = models.CharField(_('Title'), max_length=200, validators=[validate_not_spaces])
     slug        = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
                     help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description = models.TextField(_('Look description'), null=True, blank=True)
-    user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='shop_embed')
-    products    = models.ManyToManyField(Product, through='ShopEmbedProduct')
-    width       = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0])
-    height      = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1])
+    user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='shop')
+    show_liked  = models.BooleanField(default=False) # If true the products field will be ignored
+    products    = models.ManyToManyField(Product, through='ShopProduct')
     published   = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -961,22 +962,35 @@ class ShopEmbed(models.Model):
 
     def save(self, *args, **kwargs):
         logger.debug('User shop save: %s %s %s' % (self.pk, self.user, self.published))
-        super(ShopEmbed, self).save(*args, **kwargs)
+        super(Shop, self).save(*args, **kwargs)
 
     @models.permalink
     def get_absolute_url(self):
-        url = ('shop', [str(self.pk)])
-        print url
-        return url
+        return ('create_shop', [str(self.pk)])
+
+class ShopEmbed(models.Model):
+    shop                    = models.ForeignKey(Shop, related_name='parent_shop')
+    user                    = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='shop_embed')
+    width                   = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0])
+    height                  = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1])
+    width_type              = models.CharField(max_length=2, null=False, blank=False, default='px')
+    language                = models.CharField(max_length=3, null=False, blank=False)
+    show_product_brand      = models.BooleanField(default=True)
+    show_filters            = models.BooleanField(default=True)
+    show_filters_collapsed  = models.BooleanField(default=True)
+
 
 #
-# ShopEmbedProduct
+# ShopProduct
 #
 
-class ShopEmbedProduct(models.Model):
-    shop_embed = models.ForeignKey(ShopEmbed, on_delete=models.CASCADE)
-    product     = models.ForeignKey(Product, on_delete=models.CASCADE)
+class ShopProduct(models.Model):
+    shop_embed = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    product    = models.ForeignKey(Product, on_delete=models.CASCADE)
 
+@receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save_cache')
+def shop_product_save(instance, **kwargs):
+    empty_embed_shop_cache.apply_async(args=[instance.shop_embed.user.pk], countdown=1)
 
 @receiver(look_saved, sender=Look, dispatch_uid='look_saved')
 def look_saved_handler(sender, look, **kwargs):

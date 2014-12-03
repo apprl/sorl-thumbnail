@@ -11,6 +11,14 @@ App.Views.ShopComponent = App.Views.WidgetBase.extend({
     },
 
     on_delete: function(e) {
+        var $title = $('#shop-product-list').find('h3');
+
+        if($title.length) {
+            var currentTitle = $title.html().split(' ');
+            var newTitle = parseInt(currentTitle[0], 10) - 1 + ' ' + currentTitle[1];
+            $title.html(newTitle);
+        }
+
         this.remove();
         this.collection.remove(this.model);
 

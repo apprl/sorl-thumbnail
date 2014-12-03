@@ -25,7 +25,7 @@
                 <small>{% blocktrans with object.default_vendor.original_currency as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}</small>
                 {% endif %}
             </div>
-            <a href="#" class="btn btn-success btn-add">{% trans "Add to look" %}</a>
+            <a href="#" class="btn btn-success btn-add">{% if type == 'shop' %}{% trans "Add to shop" %}{% else %}{% trans "Add to look" %}{% endif %}</a>
         </div>
     </div>
     {% endcache %}

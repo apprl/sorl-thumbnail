@@ -1,7 +1,8 @@
-App.Views.LookEditPopup = Backbone.View.extend({
+App.Views.ShopEditPopup = App.Views.WidgetBase.extend({
 
     id: 'popup-slim',
     template: _.template($('#look_edit_add_popup_template').html()),
+
     popup_template: _.template($('#popup_slim_template').html()),
 
     events: {
@@ -13,14 +14,11 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this.parent_view = options.parent_view;
 
         App.Events.on('widget:product:info', this.product_info, this);
-        if (!isMobileDevice()) {
-            App.Events.on('widget:product:add', this.product_add, this);
-        }
+        App.Events.on('widget:product:add', this.product_add, this);
 
         $(document).on('keydown', _.bind(function(e) { if(e.keyCode == 27) { this.hide() } }, this));
 
         this.$el.html(this.popup_template());
-        this.$el.addClass('popup-slim-lookedit-popup');
         $('body').append(this.$el);
     },
 
@@ -29,18 +27,11 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this.show(model);
         this.render_info();
     },
-
     product_add: function(model) {
         // Do not show add product popup if we have a pending component waiting
         // for this click or if the look type is collage
-        if(!this.parent_view.pending_component && external_look_type == 'photo' && !isMobileDevice()) {
-            this.active_type = 'add';
-            this.show(model);
-            this.render_add();
-            $('.look-container').css('cursor', 'pointer');
-        } else if(external_look_type == 'collage') {
-            this.hide();
-        }
+        this.active_type = 'add';
+        this.show(model);
     },
 
     show: function(model) {
@@ -72,6 +63,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
     add_product: function() {
         App.Events.trigger('widget:product:add', this.model);
+        this.hide();
 
         return false;
     },
@@ -81,7 +73,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
         this.delegateEvents();
 
-        var url = '/products/' + this.model.get('id') + '/popup/';
+        var url = '/products/' + this.model.get('id') + '/popup/?type=shop';
         // TODO: why this width?
         this.$el.css('width', 594);
         this.$el.find('.title').text($('#popup_slim_template').data('title'));
@@ -97,19 +89,6 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this._center();
         this.$el.show();
     },
-
-    render_add: function() {
-        App.Events.trigger('product:disable');
-
-        this.delegateEvents();
-
-        this.$el.find('.title').text($('#look_edit_add_popup_template').data('title'));
-        this.$el.find('.content').html(this.template(this.model.toJSON()));
-        this.$el.css('width', 'auto');
-        this._center();
-        this.$el.show();
-    },
-
     _center: function(){
         var width = this.$el.width();
         var height = this.$el.height();

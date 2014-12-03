@@ -8,15 +8,39 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'ShopEmbed.published'
-        db.add_column(u'apparel_shopembed', 'published',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
+        # Adding field 'ShopEmbed.width_type'
+        db.add_column(u'apparel_shopembed', 'width_type',
+                      self.gf('django.db.models.fields.CharField')(default='px', max_length=2),
+                      keep_default=False)
+
+        # Adding field 'ShopEmbed.show_product_brand'
+        db.add_column(u'apparel_shopembed', 'show_product_brand',
+                      self.gf('django.db.models.fields.BooleanField')(default=True),
+                      keep_default=False)
+
+        # Adding field 'ShopEmbed.show_filters'
+        db.add_column(u'apparel_shopembed', 'show_filters',
+                      self.gf('django.db.models.fields.BooleanField')(default=True),
+                      keep_default=False)
+
+        # Adding field 'ShopEmbed.show_filters_collapsed'
+        db.add_column(u'apparel_shopembed', 'show_filters_collapsed',
+                      self.gf('django.db.models.fields.BooleanField')(default=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'ShopEmbed.published'
-        db.delete_column(u'apparel_shopembed', 'published')
+        # Deleting field 'ShopEmbed.width_type'
+        db.delete_column(u'apparel_shopembed', 'width_type')
+
+        # Deleting field 'ShopEmbed.show_product_brand'
+        db.delete_column(u'apparel_shopembed', 'show_product_brand')
+
+        # Deleting field 'ShopEmbed.show_filters'
+        db.delete_column(u'apparel_shopembed', 'show_filters')
+
+        # Deleting field 'ShopEmbed.show_filters_collapsed'
+        db.delete_column(u'apparel_shopembed', 'show_filters_collapsed')
 
 
     models = {
@@ -196,25 +220,37 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"})
         },
-        u'apparel.shopembed': {
-            'Meta': {'object_name': 'ShopEmbed'},
+        u'apparel.shop': {
+            'Meta': {'object_name': 'Shop'},
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'height': ('django.db.models.fields.IntegerField', [], {'default': '526'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Product']", 'through': u"orm['apparel.ShopEmbedProduct']", 'symmetrical': 'False'}),
+            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Product']", 'through': u"orm['apparel.ShopProduct']", 'symmetrical': 'False'}),
             'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'show_liked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('title',)", 'overwrite': 'False'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop_embed'", 'to': u"orm['profile.User']"}),
-            'width': ('django.db.models.fields.IntegerField', [], {'default': '696'})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop'", 'to': u"orm['profile.User']"})
         },
-        u'apparel.shopembedproduct': {
-            'Meta': {'object_name': 'ShopEmbedProduct'},
+        u'apparel.shopembed': {
+            'Meta': {'object_name': 'ShopEmbed'},
+            'height': ('django.db.models.fields.IntegerField', [], {'default': '526'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'language': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
+            'shop': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'parent_shop'", 'to': u"orm['apparel.Shop']"}),
+            'show_filters': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'show_filters_collapsed': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'show_product_brand': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop_embed'", 'to': u"orm['profile.User']"}),
+            'width': ('django.db.models.fields.IntegerField', [], {'default': '696'}),
+            'width_type': ('django.db.models.fields.CharField', [], {'default': "'px'", 'max_length': '2'})
+        },
+        u'apparel.shopproduct': {
+            'Meta': {'object_name': 'ShopProduct'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"}),
-            'shop_embed': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.ShopEmbed']"})
+            'shop_embed': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Shop']"})
         },
         u'apparel.shortdomainlink': {
             'Meta': {'unique_together': "(('url', 'user'),)", 'object_name': 'ShortDomainLink'},

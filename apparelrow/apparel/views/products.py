@@ -95,7 +95,9 @@ FACET_PRICE_TRANSLATION = {
 def product_detail_popup(request, pk):
     product = get_object_or_404(get_model('apparel', 'Product'), pk=pk)
 
-    return render(request, 'apparel/fragments/product_popup.html', {'object': product})
+    type = request.GET.get('type', 'look')
+
+    return render(request, 'apparel/fragments/product_popup.html', {'object': product, 'type': type})
 
 
 class ProductList(View):

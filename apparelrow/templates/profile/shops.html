@@ -1,0 +1,22 @@
+{% extends "profile/base_profile.html" %}
+{% load i18n %}
+
+{% block extra-title %}{{ profile.display_name }} - {% trans "Shops" %} | {% endblock %}
+
+{% block body-classes %}profile-page profile-looks{% endblock body-classes %}
+{% block content %}
+    {% if current_page.object_list %}
+        {% include 'apparel/fragments/shop_list.html' with is_profile=True %}
+    {% else %}
+        <div class="empty">
+        {% if profile == request.user %}
+            <div class="message warning">
+                <p>{% trans "All shops that you create end up here." %}</p>
+                <a class="btn btn-block btn-positive btn-upper" href="{% url 'shop_create' %}">{% trans "+ Create shop!" %}</a>
+            </div>
+        {% else %}
+            <div class="message warning">{% blocktrans with profile.display_name as display_name %}{{ display_name }} has not created any shops yet.{% endblocktrans %}</div>
+        {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

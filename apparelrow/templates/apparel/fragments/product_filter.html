@@ -164,3 +164,13 @@
     {% endif %}
 
 </div>
+
+{% if show_filters_collapsed %}
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        setTimeout(function() {
+            jQuery('.accordion-toggle').click();
+        }, 500);
+    });
+</script>
+{% endif %}

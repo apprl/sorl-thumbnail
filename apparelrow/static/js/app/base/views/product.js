@@ -20,13 +20,12 @@ App.Views.Product = Backbone.View.extend({
     },
 
     info: function(e) {
-        App.Events.trigger('look_edit:product:info', this.model);
-
+        App.Events.trigger('widget:product:info', this.model);
         return false;
     },
 
     add: function(e) {
-        App.Events.trigger('look_edit:product:add', this.model);
+        App.Events.trigger('widget:product:add', this.model);
         return false;
     },
 

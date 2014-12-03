@@ -20,9 +20,9 @@ from django.template.loader import render_to_string
 from django.db.models.loading import get_model
 from django.utils import translation
 
-from apparelrow.apparel.models import Product, ProductLike, Look
+from apparelrow.apparel.models import Product, ProductLike, Look, ShopProduct
 from apparelrow.apparel.utils import select_from_multi_gender
-from apparelrow.apparel.tasks import product_popularity, empty_embed_shop_cache
+from apparelrow.apparel.tasks import product_popularity
 from sorl.thumbnail import get_thumbnail
 
 from pysolr import Solr
@@ -206,10 +206,17 @@ def product_delete(instance, **kwargs):
 @receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
 def product_like_save(instance, **kwargs):
     product_save(instance.product)
-    empty_embed_shop_cache.apply_async(args=[instance.user.pk], countdown=1)
 
 @receiver(post_delete, sender=ProductLike, dispatch_uid='product_like_delete')
 def product_like_delete(instance, **kwargs):
+    product_save(instance.product)
+
+@receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save')
+def shop_product_save(instance, **kwargs):
+    product_save(instance.product)
+
+@receiver(post_delete, sender=ShopProduct, dispatch_uid='shop_product_delete')
+def shop_product_delete(instance, **kwargs):
     product_save(instance.product)
 
 
@@ -317,6 +324,12 @@ def get_product_document(instance, rebuild=False):
         document['user_likes'] = [x[0] for x in likes]
         for x in likes:
             document['%s_uld' % (x[0],)] = x[1]
+
+        # Shops and their products
+        shops = list(get_model('apparel', 'ShopProduct').objects.filter(product=instance, shop_embed__published=True).values_list('shop_embed__id', 'shop_embed__modified'))
+        document['shop_products'] = [x[0] for x in shops]
+        for x in shops:
+            document['%s_spd' % (x[0],)] = x[1]
 
         # Templates
         has_looks = get_model('apparel', 'Look').published_objects.filter(components__product=instance).exists()

@@ -8,38 +8,49 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'ShopEmbedProduct'
-        db.create_table(u'apparel_shopembedproduct', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('shop_embed', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.ShopEmbed'])),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Product'])),
-        ))
-        db.send_create_signal(u'apparel', ['ShopEmbedProduct'])
-
         # Adding model 'ShopEmbed'
         db.create_table(u'apparel_shopembed', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('shop', self.gf('django.db.models.fields.related.ForeignKey')(related_name='parent_shop', to=orm['apparel.Shop'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='shop_embed', to=orm['profile.User'])),
+            ('width', self.gf('django.db.models.fields.IntegerField')(default=696)),
+            ('height', self.gf('django.db.models.fields.IntegerField')(default=526)),
+            ('language', self.gf('django.db.models.fields.CharField')(max_length=3)),
+        ))
+        db.send_create_signal(u'apparel', ['ShopEmbed'])
+
+        # Adding model 'ShopProduct'
+        db.create_table(u'apparel_shopproduct', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('shop_embed', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Shop'])),
+            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Product'])),
+        ))
+        db.send_create_signal(u'apparel', ['ShopProduct'])
+
+        # Adding model 'Shop'
+        db.create_table(u'apparel_shop', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('slug', self.gf('django_extensions.db.fields.AutoSlugField')(allow_duplicates=False, max_length=80, separator=u'-', blank=True, populate_from=('title',), overwrite=False)),
             ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='shop_embed', to=orm['profile.User'])),
-            ('width', self.gf('django.db.models.fields.IntegerField')(default=696)),
-            ('height', self.gf('django.db.models.fields.IntegerField')(default=526)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='shop', to=orm['profile.User'])),
+            ('show_liked', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('published', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal(u'apparel', ['ShopEmbed'])
+        db.send_create_signal(u'apparel', ['Shop'])
 
 
     def backwards(self, orm):
-        # Deleting model 'ShopEmbedProduct'
-        db.delete_table(u'apparel_shopembedproduct')
-
         # Deleting model 'ShopEmbed'
         db.delete_table(u'apparel_shopembed')
 
-        # Deleting field 'LookEmbed.width_type'
-        db.delete_column(u'apparel_lookembed', 'width_type')
+        # Deleting model 'ShopProduct'
+        db.delete_table(u'apparel_shopproduct')
+
+        # Deleting model 'Shop'
+        db.delete_table(u'apparel_shop')
 
 
     models = {
@@ -219,24 +230,33 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"})
         },
-        u'apparel.shopembed': {
-            'Meta': {'object_name': 'ShopEmbed'},
+        u'apparel.shop': {
+            'Meta': {'object_name': 'Shop'},
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'height': ('django.db.models.fields.IntegerField', [], {'default': '526'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Product']", 'through': u"orm['apparel.ShopEmbedProduct']", 'symmetrical': 'False'}),
+            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Product']", 'through': u"orm['apparel.ShopProduct']", 'symmetrical': 'False'}),
+            'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'show_liked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('title',)", 'overwrite': 'False'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop'", 'to': u"orm['profile.User']"})
+        },
+        u'apparel.shopembed': {
+            'Meta': {'object_name': 'ShopEmbed'},
+            'height': ('django.db.models.fields.IntegerField', [], {'default': '526'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'language': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
+            'shop': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'parent_shop'", 'to': u"orm['apparel.Shop']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop_embed'", 'to': u"orm['profile.User']"}),
             'width': ('django.db.models.fields.IntegerField', [], {'default': '696'})
         },
-        u'apparel.shopembedproduct': {
-            'Meta': {'object_name': 'ShopEmbedProduct'},
+        u'apparel.shopproduct': {
+            'Meta': {'object_name': 'ShopProduct'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"}),
-            'shop_embed': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.ShopEmbed']"})
+            'shop_embed': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Shop']"})
         },
         u'apparel.shortdomainlink': {
             'Meta': {'unique_together': "(('url', 'user'),)", 'object_name': 'ShortDomainLink'},

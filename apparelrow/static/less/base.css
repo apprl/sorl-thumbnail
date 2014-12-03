@@ -9302,23 +9302,23 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   bottom: 60px;
   left: 0;
 }
-.look-editor-page {
+.widget-page {
   background-color: #ffffff;
 }
-.look-editor-page #content-container {
+.widget-page #content-container {
   padding-bottom: 0px;
   padding-left: 15px;
   padding-right: 15px;
 }
-.look-editor-page #edit-look {
+.widget-page #edit-look {
   width: 50%;
   float: left;
   position: relative;
 }
-.look-editor-page #edit-look #collage {
+.widget-page #edit-look #collage {
   border: 1px solid #d9d9d9;
 }
-.look-editor-page #edit-look #image-form {
+.widget-page #edit-look #image-form {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -9327,22 +9327,22 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   margin-top: -60px;
   margin-left: -180px;
 }
-.look-editor-page #edit-look #image-form .loading {
+.widget-page #edit-look #image-form .loading {
   text-align: center;
 }
-.look-editor-page #edit-look #image-form .loading img {
+.widget-page #edit-look #image-form .loading img {
   vertical-align: middle;
 }
-.look-editor-page #edit-look #image-form .upload-field {
+.widget-page #edit-look #image-form .upload-field {
   width: auto;
   height: auto;
   position: relative;
 }
-.look-editor-page #edit-look .ui-icon {
+.widget-page #edit-look .ui-icon {
   background-image: none;
   background-position: 0 0;
 }
-.look-editor-page #edit-look .ui-icon-gripsmall-diagonal-se {
+.widget-page #edit-look .ui-icon-gripsmall-diagonal-se {
   position: absolute;
   bottom: -11px;
   right: -11px;
@@ -9350,33 +9350,33 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   height: 23px;
   background: transparent url("../images/resize.png") no-repeat scroll center center;
 }
-.look-editor-page #edit-look .ui-rotatable-handle {
+.widget-page #edit-look .ui-rotatable-handle {
   position: absolute;
   z-index: 99999;
   display: block;
 }
-.look-editor-page #edit-look .ui-rotatable-nw {
+.widget-page #edit-look .ui-rotatable-nw {
   top: -11px;
   left: -11px;
   width: 23px;
   height: 23px;
   background: transparent url("../images/rotate-nw.png") no-repeat scroll center center;
 }
-.look-editor-page #edit-look .ui-rotatable-ne {
+.widget-page #edit-look .ui-rotatable-ne {
   top: -11px;
   right: -11px;
   width: 23px;
   height: 23px;
   background: transparent url("../images/rotate-cw.png") no-repeat scroll center center;
 }
-.look-editor-page #edit-look .ui-rotatable-sw {
+.widget-page #edit-look .ui-rotatable-sw {
   bottom: -11px;
   left: -11px;
   width: 23px;
   height: 23px;
   background: transparent url("../images/rotate-ccw.png") no-repeat scroll center center;
 }
-.look-editor-page #popup-slim {
+.widget-page #popup-slim {
   display: none;
   position: absolute;
   top: 50%;
@@ -9387,18 +9387,18 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   min-width: 320px;
   max-width: 520px;
 }
-.look-editor-page #popup-slim .header {
+.widget-page #popup-slim .header {
   height: 40px;
   line-height: 40px;
   background-color: #000000;
 }
-.look-editor-page #popup-slim .header h5 {
+.widget-page #popup-slim .header h5 {
   font-size: 1.3em;
   color: #fff;
   padding: 0 10px;
   float: left;
 }
-.look-editor-page #popup-slim .header .close {
+.widget-page #popup-slim .header .close {
   float: right;
   background-position: 0 0;
   background-image: url('../images/apprl_kryss.png');
@@ -9409,25 +9409,25 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   margin-bottom: 6px;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (min-resolution: 1.5dppx) {
-  .look-editor-page #popup-slim .header .close {
+  .widget-page #popup-slim .header .close {
     background-image: url("../images/apprl_kryss@2x.png");
     background-size: 28px 28px;
   }
 }
-.look-editor-page #popup-slim .content-container {
+.widget-page #popup-slim .content-container {
   background-color: #ffffff;
   padding: 10px;
 }
-.look-editor-page #popup-slim .content-container .content.center {
+.widget-page #popup-slim .content-container .content.center {
   text-align: center;
 }
-.look-editor-page #popup-slim .content-container .content .privacy {
+.widget-page #popup-slim .content-container .content .privacy {
   font-size: 11px;
 }
-.look-editor-page #popup-slim .content-container .loading {
+.widget-page #popup-slim .content-container .loading {
   margin: 20px;
 }
-.look-editor-page footer {
+.widget-page footer {
   display: none;
 }
 .create-store-page #shop-preview {
@@ -9603,6 +9603,17 @@ html.look-type-C .collage {
 #product-chooser .product-filter-container .hidden-filters .dropdown-menu {
   max-height: 240px;
   overflow-y: scroll;
+}
+#shop-product-list .product-image-container {
+  height: 245px;
+}
+#shop-product-list .product-image-container .product-image {
+  opacity: 1;
+  max-width: 100%;
+  max-height: 100%;
+}
+#product-list .product-list.hide-captions .caption {
+  display: none;
 }
 .widget-footer {
   bottom: 0px;
