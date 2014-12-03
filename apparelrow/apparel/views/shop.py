@@ -79,7 +79,7 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
     translation.deactivate()
     # Todo: how real data do we need here?
     return render(request, template, {
-        'gender': gender,
+        'gender': gender if gender is not None else 'A',
         'pricerange': {'min': 0, 'max': 10000},
         'external_shop_id': shop_id,
     })
