@@ -214,7 +214,13 @@ class ShopCreateView(View):
         components = json_data['components']
         del json_data['components']
 
+        show_liked = False
+        if 'show_liked' in json_data:
+            show_liked = json_data['show_liked']
+            del json_data['show_liked']
+
         shop = get_model('apparel', 'Shop')(**json_data)
+        shop.show_liked = show_liked
         shop.save()
 
         for component in components:
