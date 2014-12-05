@@ -18,6 +18,11 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
+        # Adding field 'User.owner_network_cut'
+        db.add_column('profile_user', 'owner_network_cut',
+                      self.gf('django.db.models.fields.DecimalField')(default='1.00', null=True, max_digits=10, decimal_places=3, blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
         # Deleting field 'User.owner_network'
@@ -25,6 +30,9 @@ class Migration(SchemaMigration):
 
         # Deleting field 'User.is_subscriber'
         db.delete_column('profile_user', 'is_subscriber')
+
+        # Deleting field 'User.owner_network_cut'
+        db.delete_column('profile_user', 'owner_network_cut')
 
 
     models = {
@@ -147,6 +155,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'newsletter': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'owner_network': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'publisher_network'", 'null': 'True', 'to': u"orm['profile.User']"}),
+            'owner_network_cut': ('django.db.models.fields.DecimalField', [], {'default': "'1.00'", 'null': 'True', 'max_digits': '10', 'decimal_places': '3', 'blank': 'True'}),
             'partner_group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Group']", 'null': 'True', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),

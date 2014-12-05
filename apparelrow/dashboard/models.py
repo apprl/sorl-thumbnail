@@ -13,34 +13,34 @@ import logging
 
 log = logging.getLogger( __name__ )
 
-INCOMPLETE = '0'
-DECLINED = '1'
-PENDING = '2'
-CONFIRMED = '3'
-READY = '4' # not used
-PAID = '5' # not used
-STATUS_CHOICES = (
-    (INCOMPLETE, 'Incomplete'),
-    (DECLINED, 'Declined'),
-    (PENDING, 'Pending'),
-    (CONFIRMED, 'Confirmed'),
-    (READY, 'Ready (payment received)'),
-    (PAID, 'Paid'),
-)
-
-PAID_PENDING = '0'
-PAID_READY = '1'
-PAID_COMPLETE = '2'
-PAID_STATUS_CHOICES = (
-    (PAID_PENDING, 'Pending payment'),
-    (PAID_READY, 'Ready for payment'),
-    (PAID_COMPLETE, 'Payment complete'),
-)
 
 class Sale(models.Model):
     """
     Sale
     """
+    INCOMPLETE = '0'
+    DECLINED = '1'
+    PENDING = '2'
+    CONFIRMED = '3'
+    READY = '4' # not used
+    PAID = '5' # not used
+    STATUS_CHOICES = (
+        (INCOMPLETE, 'Incomplete'),
+        (DECLINED, 'Declined'),
+        (PENDING, 'Pending'),
+        (CONFIRMED, 'Confirmed'),
+        (READY, 'Ready (payment received)'),
+        (PAID, 'Paid'),
+    )
+
+    PAID_PENDING = '0'
+    PAID_READY = '1'
+    PAID_COMPLETE = '2'
+    PAID_STATUS_CHOICES = (
+        (PAID_PENDING, 'Pending payment'),
+        (PAID_READY, 'Ready for payment'),
+        (PAID_COMPLETE, 'Payment complete'),
+    )
     original_sale_id = models.CharField(max_length=100)
     affiliate = models.CharField(max_length=100, null=False, blank=False)
     vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True, on_delete=models.PROTECT)
@@ -184,6 +184,7 @@ class StoreCommission(models.Model):
                                            {'standard_from':standard_from,
                                             'standard_to':standard_to,
                                             'sale':sale})
+                print self.commission
         except Exception,msg:
             log.warn('Unable to convert store commissions for %s. [%s]' % (self,msg))
         return self
@@ -222,18 +223,19 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
 
         instance, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
 
-PAYOUT_TYPES = (
+USER_EARNING_TYPES = (
+    ('apprl_commission', 'APPRL Commission'),
     ('referral_sale_commission', 'Referral Sale Commission'),
     ('referral_signup_commission', 'Referral Signup Commission'),
     ('publisher_sale_commission', 'Publisher Sale Commission'),
     ('publisher_network_commission', 'Publisher Network Commission'),
 )
 
-class Payout(models.Model):
-    payout_type = models.CharField(max_length=100, null=False, blank=False)
+class UserEarning(models.Model):
+    user_earning_type = models.CharField(max_length=100, null=False, blank=False, choices=USER_EARNING_TYPES)
     sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, blank=False, on_delete=models.PROTECT)
     amount = models.DecimalField(null=False, blank=False, default='1.0', max_digits=10, decimal_places=3)
     date = models.DateTimeField(_('Payout Date'), default=timezone.now, null=True, blank=True)
-    status = models.CharField(max_length=1, default=INCOMPLETE, choices=STATUS_CHOICES, null=False, blank=False, db_index=True)
+    status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, null=False, blank=False, db_index=True)

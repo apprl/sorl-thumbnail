@@ -94,7 +94,11 @@ class User(AbstractUser):
 
     # publisher network
     owner_network = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='publisher_network', help_text='Assign publisher to a Publisher Network.')
+
+    # for publisher network owners
     is_subscriber = models.BooleanField(default=False, null=False, blank=False)
+    owner_network_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
+                                    help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',

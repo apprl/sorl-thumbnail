@@ -90,6 +90,7 @@ class CustomUserAdmin(UserAdmin):
                                      'partner_group',
                                      'is_subscriber',
                                      'owner_network',
+                                     'owner_network_cut',
                                      'referral_partner',
                                      'referral_partner_code',
                                      'referral_partner_url',
