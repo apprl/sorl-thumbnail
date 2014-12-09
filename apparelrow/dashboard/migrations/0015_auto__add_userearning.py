@@ -11,10 +11,11 @@ class Migration(SchemaMigration):
         # Adding model 'UserEarning'
         db.create_table(u'dashboard_userearning', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='earning_user', null=True, on_delete=models.PROTECT, to=orm['profile.User'])),
             ('user_earning_type', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('sale', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dashboard.Sale'], null=True, on_delete=models.PROTECT, blank=True)),
             ('from_product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Product'], null=True, on_delete=models.PROTECT, blank=True)),
-            ('from_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['profile.User'], on_delete=models.PROTECT)),
+            ('from_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['profile.User'], null=True, on_delete=models.PROTECT)),
             ('amount', self.gf('django.db.models.fields.DecimalField')(default='1.0', max_digits=10, decimal_places=3)),
             ('date', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
             ('status', self.gf('django.db.models.fields.CharField')(default='0', max_length=1, db_index=True)),
@@ -249,10 +250,11 @@ class Migration(SchemaMigration):
             'amount': ('django.db.models.fields.DecimalField', [], {'default': "'1.0'", 'max_digits': '10', 'decimal_places': '3'}),
             'date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'from_product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'}),
-            'from_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'on_delete': 'models.PROTECT'}),
+            'from_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'null': 'True', 'on_delete': 'models.PROTECT'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'sale': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Sale']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '1', 'db_index': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'earning_user'", 'null': 'True', 'on_delete': 'models.PROTECT', 'to': u"orm['profile.User']"}),
             'user_earning_type': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'profile.paymentdetail': {
@@ -318,6 +320,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'newsletter': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'owner_network': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'publisher_network'", 'null': 'True', 'to': u"orm['profile.User']"}),
+            'owner_network_cut': ('django.db.models.fields.DecimalField', [], {'default': "'1.00'", 'null': 'True', 'max_digits': '10', 'decimal_places': '3', 'blank': 'True'}),
             'partner_group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Group']", 'null': 'True', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
