@@ -2,7 +2,8 @@ import datetime
 
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models import get_model
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -184,7 +185,6 @@ class StoreCommission(models.Model):
                                            {'standard_from':standard_from,
                                             'standard_to':standard_to,
                                             'sale':sale})
-                print self.commission
         except Exception,msg:
             log.warn('Unable to convert store commissions for %s. [%s]' % (self,msg))
         return self
@@ -228,14 +228,77 @@ USER_EARNING_TYPES = (
     ('referral_sale_commission', 'Referral Sale Commission'),
     ('referral_signup_commission', 'Referral Signup Commission'),
     ('publisher_sale_commission', 'Publisher Sale Commission'),
-    ('publisher_network_commission', 'Publisher Network Commission'),
+    ('publisher_network_tribute', 'Publisher Network Tribute'),
 )
 
 class UserEarning(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, blank=False, on_delete=models.PROTECT)
     user_earning_type = models.CharField(max_length=100, null=False, blank=False, choices=USER_EARNING_TYPES)
     sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
-    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, blank=False, on_delete=models.PROTECT)
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=False, on_delete=models.PROTECT)
     amount = models.DecimalField(null=False, blank=False, default='1.0', max_digits=10, decimal_places=3)
     date = models.DateTimeField(_('Payout Date'), default=timezone.now, null=True, blank=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, null=False, blank=False, db_index=True)
+
+@receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
+def sale_post_save(sender, instance, created, **kwargs):
+    if created:
+        create_user_earnings(instance)
+    else:
+        status = instance.status
+        earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=instance)
+        if len(earnings) == 0:
+            create_user_earnings(instance)
+        else:
+            for earning in earnings:
+                earning.status = instance.status
+                earning.save()
+
+def create_user_earnings(sale):
+    total_commission = sale.original_commission
+    product = None
+    user = get_model('profile', 'User').objects.get(id=sale.user_id)
+
+    sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+    commission_group = user.partner_group
+
+    if sale_product:
+        product = sale_product
+
+    if commission_group:
+        commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+        cut = commission_group_cut.cut
+        if cut:
+            publisher_commission = total_commission * cut
+            apprl_commission = total_commission - publisher_commission
+
+            apprl_user_earning = get_model('dashboard', 'UserEarning').objects.create( user_earning_type='apprl_commission',
+                                                                                       sale=sale, from_product=product,
+                                                                                       from_user=user, amount=apprl_commission,
+                                                                                       date=sale.sale_date, status=sale.status)
+
+            if user.owner_network:
+                publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
+
+            apprl_user_earning = get_model('dashboard', 'UserEarning').objects.create( user=user,
+                user_earning_type='publisher_sale_commission', sale=sale, from_product=product,
+                   amount=publisher_commission, date=sale.sale_date, status=sale.status)
+        else:
+            logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
+    else:
+        logging.warning('User %s should have assigned a comission group'%user)
+
+def create_earnings_publisher_network(user, publisher_commission, sale, product):
+    owner = user.owner_network
+    owner_tribute = owner.owner_network_cut
+    owner_earning = publisher_commission * owner_tribute
+    publisher_commission = publisher_commission - owner_earning
+
+    if owner.owner_network:
+        owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product)
+
+    owner_network_earning = get_model('dashboard', 'UserEarning').objects.create( user=owner,
+        user_earning_type='publisher_network_tribute', sale=sale, from_product=product, from_user=user,
+        amount=owner_earning, date=sale.sale_date, status=sale.status)
+    return publisher_commission
