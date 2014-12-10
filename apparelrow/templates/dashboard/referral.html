@@ -9,16 +9,16 @@
     <h2>{% trans "Earn money by inviting publishers/bloggers" %}</h2>
     <p>{% blocktrans %}
         As one of our top members, we want to reward you when inviting other bloggers/publishers to APPRL, by just
-        entering their e-mail addresses and sending invites below. Also, every blogger you invite gets €20 to start
-        with!{% endblocktrans %}
+        entering their e-mail addresses and sending invites below. Moreover, every blogger you invite gets €20 on their
+        Apprl account to start with!{% endblocktrans %}
     </p>
 
     <p>
-    <h5>{% trans "This is how it works" %}</h5>
+    <strong>{% trans "This is how it works" %}</strong>
     <ol>
-    <li>{% trans "Send invites to bloggers you know below" %}</li>
-    <li>{% trans "Every blogger that joins Apprl via the link in your invite will directly get €20 on their Apprl account" %}</li>
-    <li>{% trans "You will now make ca. 2-4% of all orders that the one you have invited drives for 6 months" %}</li>
+        <li>{% trans "Send invites to bloggers using the form or link below" %}</li>
+        <li>{% trans "Every blogger that joins Apprl via the link in your invite will instantly get €20 on their Apprl account" %}</li>
+        <li>{% trans "You will then make 2-4% of all sales the person you have invited generates for a 6 month period without any effort at all" %}</li>
     </ol>
     </p>
 
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <p><strong>{% trans "This is how it works:" %}</strong></p>
+    <!-- p><strong>{% trans "This is how it works:" %}</strong></p>
     <ol>
         <li>{% trans "Share your invitation link with the person you wish to invite and ask them to click it and apply to APPRL." %}</li>
         <li>{% trans "For every publisher/blogger that signs up to APPRL via your invitation link, they will become a “referral publisher” to you for 6 months." %}</li>
@@ -65,7 +65,7 @@
             <a href="{{ dashboard_url }}">your statistics</a>.{% endblocktrans %}</li>
     </ol>
 
-    <br>
+    <br-->
     <p><strong>{% trans "The following have applied to Apprl via your link:" %}</strong></p>
     <ul class="list-unstyled">
         {% for referral in referrals %}
