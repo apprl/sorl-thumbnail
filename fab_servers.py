@@ -22,6 +22,8 @@ def prod_settings():
     env.solr_url =  "ip-10-0-1-38.eu-west-1.compute.internal"
     env.s3_url = "s.apprl.com"
     env.gateway = 'deploy@bastion'
+    env.aws_key_id = 'AKIAJWFWCTRXKCOCRPTQ'
+    env.aws_key = 'rCUAw8IwyysB3u3pgDi5nKLsqJyGe2pchBc1on1a'
     env.collectstatic = True
 
 def localhost():
