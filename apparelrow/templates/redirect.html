@@ -45,15 +45,5 @@
     </script>
 </head>
 <body>
-    <div style="position:fixed;top:42%;left:50%;width:400px;margin-left:-200px;height:140px;margin-top:-70px;text-align:center;font-family:'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;">
-        <!-- div style="width:100%;background-color:#000000;margin:0;height:40px;line-height:40px;"><img style="vertical-align:middle;" src="{% static "images/small_logo.png" %}" alt="Apprl"></div-->
-        <div style="width:100%;border:1px solid #eee;height:100px;line-height:100px;box-sizing:border-box;font-weight:bold;">
-            {% if store %}
-            <a style="color:#000000;text-decoration:none;" href="{{ redirect_url }}">{% blocktrans %}Redirecting you to {{store}}{% endblocktrans %}</a> <img style="padding-left:10px;" src="{% static "images/loading_white.gif" %}">
-            {% else %}
-            {% trans "The product URL is no longer valid." %}
-            {% endif %}
-        </div>
-    </div>
 </body>
 </html>

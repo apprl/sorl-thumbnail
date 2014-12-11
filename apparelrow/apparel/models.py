@@ -450,8 +450,8 @@ class ShortStoreLink(models.Model):
 
 class DomainDeepLinking(models.Model):
     vendor = models.ForeignKey(Vendor)
-    domain = models.CharField(max_length=100, blank=False, null=False)
-    template = models.CharField(max_length=512, blank=False, null=False)
+    domain = models.CharField(max_length=100, blank=False, null=False, help_text='Should not contain http:// or https://')
+    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} and {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?stoe_id=somestore&custom={sid}&url={url}')
 
 
 class ShortDomainLinkManager(models.Manager):
@@ -1113,13 +1113,12 @@ class LookComponent(models.Model):
             if height is None:
                 height = self.height
 
-            s.append('width: %spx;' % (80,))
-            s.append('height: %spx;' % (80,))
+            #s.append('width: %spx;' % (80,))
+            #s.append('height: %spx;' % (80,))
+            s.append('transform: translate(-50%, -50%); -webkit-transform: translate(-50%, -50%); -o-transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%);')
             s.append('top: %s%%;' % ((self.top + self.height / 2) / float(self.look.height) * 100,))
             s.append('left: %s%%;' % ((self.left + self.width/2) / float(self.look.width) * 100,))
 
-            ''' TODO: move to widget.css '''
-            s.append('transform: translateX(-50%) translateY(-50%);')
         else:
             s.append('width: %s%%;' % (self.width / float(self.look.width) * 100,))
             s.append('height: %s%%;' % (self.height / float(self.look.height) * 100,))

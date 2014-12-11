@@ -68,6 +68,11 @@ templates = {
         "remote_path": "/etc/supervisor/conf.d/celery.conf",
         "reload_command": supervisor_reload_commands,
     },
+    "supervisor-sentry-celery": {
+        "local_path": "etc/v2/supervisor-sentry-celery.conf",
+        "remote_path": "/etc/supervisor/conf.d/celery.conf",
+        "reload_command": supervisor_reload_commands,
+    },
 }
 
 def common_aws():
@@ -95,6 +100,7 @@ def common_aws():
     env.manage = "%(venv_path)s/bin/python %(project_path)s/manage.py" % env
     env.reqs_path = 'etc/requirements.pip'
     env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
+    env.sentry_url = ''
 
 def common_local():
     env.settings = 'local_dev'

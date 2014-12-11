@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
     url(r'^$', 'apparelrow.dashboard.views.index', name='index-publisher'),
+    url(r'^apply/$', 'apparelrow.dashboard.views.publisher_contact', name='publisher-contact'),
     url(r'^dashboard/$', 'apparelrow.dashboard.views.dashboard', name='dashboard'),
     url(r'^referral/$', 'apparelrow.dashboard.views.referral', name='dashboard-referral'),
     url(r'^complete/$', 'apparelrow.dashboard.views.index_complete', {'view': 'dashboard'}, name='index-dashboard-complete'),

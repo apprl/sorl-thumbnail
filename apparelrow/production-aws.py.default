@@ -26,6 +26,8 @@ CONN_MAX_AGE = 600
 # Storage
 STATIC_URL = 'http://{{ s3_url }}/'
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = '{{ s3_url }}'
+AWS_ACCESS_KEY_ID = '{{ aws_key_id }}'
+AWS_SECRET_ACCESS_KEY = '{{ aws_key }}'
 
 APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/bin/gunzip',
@@ -61,10 +63,10 @@ djcelery.setup_loader()
 # to ensure it is executed only *once* and after all settings has been evaluated
 
 RAVEN_CONFIG = {
-    'dsn': 'https://0cd745f71e1f4cedb80adf2fda0a79e8:019c2b33e6904e2ab1d6cca01f3e2a83@sentry.wordex.se/7',
+    'dsn': '{{ sentry_url }}',
 }
 
-SENTRY_DSN='https://0cd745f71e1f4cedb80adf2fda0a79e8:019c2b33e6904e2ab1d6cca01f3e2a83@sentry.wordex.se/7'
+SENTRY_DSN='{{ sentry_url }}'
 
 # Locale paths
 LOCALE_PATHS = (

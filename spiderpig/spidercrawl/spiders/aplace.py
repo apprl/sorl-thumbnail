@@ -25,6 +25,12 @@ class AplaceSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorMixin)
             discount_price = ''
 
         key = node.xpath('link/text()').extract()[0]
+        google_category = node.xpath('g:google_product_category/text()').extract()
+        google_category = google_category[0] if google_category else ''
+        product_type = node.xpath('g:product_type/text()').extract()
+        product_type = product_type[0] if product_type else ''
+
+        category = ' > '.join([x for x in [google_category, product_type] if x])
 
         l = ProductLoader(item=Product(), selector=node)
         l.add_value('key', self.get_url_last(key))
@@ -33,7 +39,7 @@ class AplaceSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorMixin)
         l.add_value('vendor', self.name)
         l.add_xpath('url', 'link/text()')
         l.add_value('affiliate', self.AFFILIATE_AAN)
-        l.add_xpath('category', 'g:product_type/text()')
+        l.add_xpath('category', category)
         l.add_xpath('description', 'description/text()')
         l.add_xpath('brand', 'g:brand/text()')
         l.add_xpath('gender', 'g:gender/text()')
@@ -42,7 +48,7 @@ class AplaceSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorMixin)
         l.add_value('discount_price', discount_price if discount_price else regular_price)
         l.add_value('currency', currency)
         l.add_value('in_stock', True if in_stock == 'in stock' else False)
-        l.add_value('stock', '')
+        l.add_value('stock', '-')
         l.add_xpath('image_urls', 'g:image_link/text()')
 
         return l.load_item()

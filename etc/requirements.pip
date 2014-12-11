@@ -38,4 +38,4 @@ git+git://github.com/jbohman/django-localeurl.git#egg=localeurl
 newrelic
 #eventlet==0.14.0
 django-rosetta==0.7.4
-raven==3.3.12
+raven==5.1.1

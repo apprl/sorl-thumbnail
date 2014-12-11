@@ -35,8 +35,10 @@ class NastyGalSpider(CSVFeedSpider, AffiliateMixin):
     def parse_row(self, response, row):
         item = Product()
         key = key_regex1.search(row.get('BUYURL'))
+
         if key:
-            item['key'] = urllib.unquote(force_bytes(key.group(1)))
+            shortened_url = urllib.unquote(force_bytes(key.group(1))).split("?")[0]
+            item['key'] = shortened_url
         item['sku'] = row.get('SKU')
         item['name'] = row.get('NAME')
         item['vendor'] = self.name
