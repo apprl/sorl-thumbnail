@@ -3,6 +3,7 @@
 
 <div id="shop-preview">
     <div class="product-list-container">
+        <div class="row">
         <div class="col-product-filter">
             <h3>{% trans "Filter products" %}</h3>
             <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
@@ -12,6 +13,7 @@
         <div id="shop-product-list" class="col-product-list">
             <h3>0 {% trans 'products' %}</h3>
             <ul class="product-list list-unstyled row"></ul>
+        </div>
         </div>
     </div>
 </div>

@@ -24,6 +24,10 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:product:add', this.pending_add_component, this)
         this.model.components.on('add', this.add_component, this);
 
+        $(window).on('resize', _.bind(this.resize, this));
+
+        this.$container = this.$el.find('.product-list-container');
+        this.resize();
         App.Views.ShopCreate.__super__.initialize(this);
     },
     init_products: function() {
@@ -36,6 +40,13 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                 self.model.components.add(component);
             }
         }
+    },
+    resize: function() {
+        var window_height = $(window).height(),
+            new_height = window_height - this.$el.offset().top - 20,
+        $footer = $('.widget-footer:visible');
+        new_height -= $footer.length ? $footer.height() : 0;
+        this.$container.css('height', new_height);
     },
     pending_add_component: function(product) {
         this._create_product_component(product);
