@@ -269,8 +269,10 @@ def get_product_document(instance, rebuild=False):
             # If availability is true but product has no default vendor we do
             # not need to add the product to solr, return None and 0
             if availability:
-                logger.error('Availability is true, but product have no vendorproduct [PID: %s]' % (instance.pk,))
+                logger.error('Availability is true, but product has no vendorproduct [PID: %s]' % (instance.pk,))
                 availability = False
+                # Supposed to be..?
+                #instance.availability = False
                 return None, 0
 
         color_names = []
