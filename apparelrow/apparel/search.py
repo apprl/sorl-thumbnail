@@ -299,7 +299,9 @@ def get_product_document(instance, rebuild=False):
         document['category_names'] = category_names
 
         # Facets
-        vendor_markets = settings.VENDOR_MARKET_MAPPING.get(instance.default_vendor.vendor.name,None)
+        vendor_markets = None
+        if instance.default_vendor:
+            vendor_markets = settings.VENDOR_MARKET_MAPPING.get(instance.default_vendor.vendor.name,None)
         document['color'] = color_ids
         document['market'] =  vendor_markets if vendor_markets else settings.VENDOR_MARKET_MAPPING.get("default")
         document['price'] = '%s,%s' % (price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
