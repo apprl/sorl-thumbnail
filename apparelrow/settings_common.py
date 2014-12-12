@@ -748,3 +748,8 @@ LOGGING = {
         },
     }
 }
+
+VENDOR_MARKET_MAPPING = {
+    "Shirtonomy":["ALL","SE"],
+    "default":["ALL"],
+}
