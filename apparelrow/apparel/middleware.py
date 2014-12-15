@@ -56,6 +56,22 @@ class GenderMiddleware(object):
 
         return response
 
+class LocationMiddleware(object):
+    """
+    Read market cookie and add it to request object
+    """
+    def process_request(self, request):
+        cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
+        request.location = cookie_value if cookie_value else 'ALL'
+
+    def process_response(self, request, response):
+        if hasattr(request, 'location'):
+            try:
+                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value='ALL', max_age=365 * 24 * 60 * 60)
+            except:
+                pass
+
+        return response
 
 class InternalReferralMiddleware(object):
     def process_response(self, request, response):

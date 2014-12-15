@@ -194,6 +194,7 @@ MIDDLEWARE_CLASSES = (
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
     'apparelrow.apparel.middleware.GenderMiddleware',
+    'apparelrow.apparel.middleware.LocationMiddleware',
     'apparelrow.dashboard.middleware.ReferralMiddleware',
 )
 
@@ -505,6 +506,7 @@ APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '20'
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MULTI_GENDER_COOKIE = 'multigender'
+APPAREL_LOCATION_COOKIE = 'location'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
@@ -751,5 +753,6 @@ LOGGING = {
 
 VENDOR_MARKET_MAPPING = {
     "Shirtonomy":["ALL","SE"],
+    "MQ":["NO"],
     "default":["ALL"],
 }

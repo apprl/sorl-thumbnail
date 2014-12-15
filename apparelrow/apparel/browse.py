@@ -79,6 +79,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
 
     query_arguments['fq'].append('published:true')
     query_arguments['fq'].append('django_ct:apparel.product')
+    #query_arguments['fq'].append('market_ss:%s' % request.location)
 
     # Category
     if 'category' in request.GET:
