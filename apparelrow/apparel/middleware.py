@@ -62,7 +62,8 @@ class LocationMiddleware(object):
     """
     def process_request(self, request):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
-        request.location = cookie_value if cookie_value else 'ALL'
+        if cookie_value:
+            request.location = cookie_value if cookie_value else 'ALL'
 
     def process_response(self, request, response):
         if not hasattr(request, 'location'):
