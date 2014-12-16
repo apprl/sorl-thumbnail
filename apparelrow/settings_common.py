@@ -63,10 +63,12 @@ LANGUAGES = (
     ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
 )
+
+# These languages get static templates in solr
 LANGUAGES_DISPLAY = (
     ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
-    #('no', gettext(u'Norwegian (NOK)')),
+    ('no', gettext(u'Norwegian (NOK)')),
 )
 SHORT_LANGUAGES = (
     ('en', gettext(u'Eng ($)')),
@@ -77,9 +79,9 @@ SHORT_LANGUAGES = (
 SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
-    ('da', gettext(u'Danish (DKK)')),
+    ('no', gettext(u'Nor (NOK)')),
 )
-SHORT_LANGUAGES_LIST_DISPLAY = ('en', 'sv')
+SHORT_LANGUAGES_LIST_DISPLAY = ('en','sv','no')
 LANGUAGE_TO_CURRENCY = {
     'en': 'USD',
     'sv': 'SEK',
@@ -92,6 +94,19 @@ MAX_MIN_CURRENCY = {
     'da': 10000,
     'no': 10000,
 }
+
+VENDOR_LOCATION_MAPPING = {
+    "Shirtonomy":["ALL","SE"],
+    "MQ":["NO"],
+    "default":["ALL"],
+}
+
+LOCATION_LANGUAGE_MAPPING = (
+                             ("SE", gettext("Sverige"), LANGUAGES_DISPLAY[1]),
+                             ("NO", gettext("Norge"), LANGUAGES_DISPLAY[2]),
+                             ("US", gettext("USA"), LANGUAGES_DISPLAY[0]),
+                             ("ALL", gettext("International"), LANGUAGES_DISPLAY[0]),
+)
 
 # Locale url plugin
 LOCALEURL_USE_ACCEPT_LANGUAGE = True
@@ -754,8 +769,5 @@ LOGGING = {
     }
 }
 
-VENDOR_MARKET_MAPPING = {
-    "Shirtonomy":["ALL","SE"],
-    "MQ":["NO"],
-    "default":["ALL"],
-}
+
+
