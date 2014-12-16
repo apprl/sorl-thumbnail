@@ -16,6 +16,7 @@ def exposed_settings(request):
         'LANGUAGES_DISPLAY': django_settings.LANGUAGES_DISPLAY,
         'SHORT_LANGUAGES_DISPLAY': django_settings.SHORT_LANGUAGES_DISPLAY,
         'SHORT_LANGUAGES_LIST_DISPLAY': django_settings.SHORT_LANGUAGES_LIST_DISPLAY,
+        'LOCATION_LANGUAGE_MAPPING': django_settings.LOCATION_LANGUAGE_MAPPING,
         'CURRENT_DOMAIN': current_site.domain,
         'CURRENT_NAME': current_site.name,
         'FACEBOOK_APP_ID': django_settings.FACEBOOK_APP_ID,
