@@ -426,7 +426,15 @@
             position: absolute;
             z-index: 99999;
         }
-
+        .ui-rotatable-n {
+          background: transparent url("../images/rotate.png") no-repeat scroll center center;
+          width: 16px;
+          height: 16px;
+          background-size: contain;
+          .translate(-50%, 0);
+          top: -18px;
+          left: 50%;
+        }
         .ui-rotatable-nw {
             top: -11px;
             left: -11px;
@@ -457,9 +465,7 @@
         position: relative;
         overflow: hidden;
         max-width: 834px; // 6 columns of products
-        min-width: 418px; // 3 columns of products
         min-height: 400px;
-        padding-left: 20px;
         #product-tabs > li {
             > a {
                 border-radius: 0;

@@ -82,15 +82,16 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             if (new_width >= 50 && new_height >= 50) {
                 this.$el.css({width: new_width, height: new_height});
             }
-            this.$el.css({'transform': 'rotate(' + event.rotation + 'deg)'});
-            if (event.isFinal) {
-                new_width = Math.min(new_width, this.$container.width() - this.$el.position().left);
-                new_height = Math.min(new_height, this.$container.height() - this.$el.position().top);
+            this.rotate(event.rotation);
+        }, this));
 
-                this.$el.css({width: new_width, height: new_height});
-                this.model.set_size(new_width, new_height);
-                this.model.set({rotation: event.rotation}, {silent: true});
-            }
+        this.hammertime.on('pinchend', _.bind(function(event) {
+            var new_width = this.model.get('width') * event.scale;
+            var new_height = this.model.get('height') * event.scale;
+            new_width = Math.min(new_width, this.$container.width() - this.$el.position().left);
+            new_height = Math.min(new_height, this.$container.height() - this.$el.position().top);
+
+            this.model.set({width: new_width, height: new_height, rotation: event.rotation}, {silent: true});
         }, this));
     },
 
@@ -129,18 +130,25 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         return current_min;
     },
 
+    rotate: function(deg) {
+        this.$el.css({
+            'transform': 'rotate(' + deg +'deg)',
+            '-moz-transform': 'rotate(' + deg + 'deg)',
+            '-webkit-transform': 'rotate(' + deg + 'deg)',
+            '-o-transform': 'rotate(' + deg + 'deg)',
+            '-ms-transform': 'rotate(' + deg + 'deg)'
+        });
+    },
+
     render: function() {
         this.$el.css({'left': this.model.get('left'),
                       'top': this.model.get('top'),
                       'width': this.model.get('width'),
                       'height': this.model.get('height'),
                       'z-index': this.model.get('z_index'),
-                      'transform': 'rotate(' + this.model.get('rotation') + 'deg)',
-                      '-moz-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
-                      '-webkit-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
-                      '-o-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
-                      '-ms-transform': 'rotate(' + this.model.get('rotation') + 'deg)',
                       position: 'absolute'});
+
+        this.rotate(this.model.get('rotation'));
 
         this.$el.toggleClass('flipped', this.model.get('flipped'));
         this.set_position(this.model.get('left'), this.model.get('top'));
@@ -205,7 +213,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
 
              this.$el.rotatable({
                  handles: 'n',
-                 disabled: true,
+                 disabled: false,
                  stop: _.bind(function (event, ui) {
                      this.model.set({rotation: ui.rotation}, {silent: true});
                      App.Events.trigger('look:dirty');

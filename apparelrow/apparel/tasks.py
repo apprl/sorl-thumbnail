@@ -310,8 +310,8 @@ def build_static_look_image(look_id):
         offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
         offset_top = (settings.APPAREL_LOOK_SIZE[1] - thumbnail.height) / 2
         image.paste(background, (offset_left, offset_top))
-        look.width = thumbnail.width
-        look.height = thumbnail.height
+        #look.width = thumbnail.width
+        #look.height = thumbnail.height
     else:
         offset_left = (settings.APPAREL_LOOK_SIZE[0] - look.width)/2
         offset_top = (settings.APPAREL_LOOK_SIZE[1] - look.height)/2
