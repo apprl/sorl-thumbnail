@@ -79,8 +79,6 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
 
     query_arguments['fq'].append('published:true')
     query_arguments['fq'].append('django_ct:apparel.product')
-    # Todo! This should be moved to all places where "likes" are not included
-    query_arguments['fq'].append('market_ss:%s' % request.location)
 
     # Category
     if 'category' in request.GET:
@@ -195,6 +193,8 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
                 query_arguments['fq'].append(generate_gender_field(dict(gender=user_gender)))
         else:
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
+            # Todo! This should be moved to all places where "likes" are not included
+            query_arguments['fq'].append('market_ss:%s' % request.location)
 
     # Query string
     query_string = request.GET.get('q')
