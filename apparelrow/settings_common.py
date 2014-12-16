@@ -66,6 +66,7 @@ LANGUAGES = (
 LANGUAGES_DISPLAY = (
     ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
+    #('no', gettext(u'Norwegian (NOK)')),
 )
 SHORT_LANGUAGES = (
     ('en', gettext(u'Eng ($)')),
@@ -76,6 +77,7 @@ SHORT_LANGUAGES = (
 SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
+    ('da', gettext(u'Danish (DKK)')),
 )
 SHORT_LANGUAGES_LIST_DISPLAY = ('en', 'sv')
 LANGUAGE_TO_CURRENCY = {
@@ -324,6 +326,7 @@ PIPELINE_JS = {
                              'js/vendor/jquery-ui-1.9.2.custom.js',
                              'js/vendor/add2home.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
+                             'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
                              'bootstrap/js/transition.js',
                              'bootstrap/js/alert.js',

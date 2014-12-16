@@ -330,6 +330,23 @@
       $element.text(formatNumber(converted_price) + ' ' + current_currency);
   });
 }
+
+  $('#language-dropdown > li > a').click(function(event){
+      console.log(event);
+      var $this = $(this);
+      var language = $this.data("language");
+      $.removeCookie('location');
+      if( language == "sv" ) {
+          //alert( "Set language to SE" );
+          $.cookie('location', 'SE', { expires: 45, path: '/' });
+      } else
+        if( language == "en" ) {
+          //alert( "Set language to ALL" );
+          $.cookie('location', 'ALL', { expires: 45, path: '/' });
+        }
+      //return false;
+  } );
+
 </script>
 
 {% include 'mouseflow.html' only %}

@@ -65,11 +65,12 @@ class LocationMiddleware(object):
         request.location = cookie_value if cookie_value else 'ALL'
 
     def process_response(self, request, response):
-        if hasattr(request, 'location'):
+        if not hasattr(request, 'location'):
             try:
-                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value='ALL', max_age=365 * 24 * 60 * 60)
+                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value='ALL', max_age=45 * 24 * 60 * 60)
             except:
                 pass
+        #else:
 
         return response
 
