@@ -2,12 +2,13 @@ import logging
 import datetime
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import mail_managers
 from django.core.urlresolvers import reverse
 
-from apparelrow.dashboard.models import Payment, Sale
+from apparelrow.dashboard.models import Payment, Sale, UserEarning
 
 
 logger = logging.getLogger('dashboard.payment')
@@ -19,36 +20,24 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         today = datetime.date.today()
-
         sales_per_user = {}
         sales_per_user_ids = {}
-        for sale in Sale.objects.filter(status__gte=Sale.CONFIRMED, paid__lte=Sale.PAID_READY, user_id__gt=0):
-            if sale.user_id not in sales_per_user:
-                sales_per_user[sale.user_id] = 0
-                sales_per_user_ids[sale.user_id] = []
+        for earning in UserEarning.objects.filter(status__gte=Sale.CONFIRMED, paid__lte=Sale.PAID_READY, user_id__gt=0):
+            if earning.user:
+                if earning.user.id not in sales_per_user:
+                    sales_per_user[earning.user.id] = 0
+                    sales_per_user_ids[earning.user.id] = []
 
-            sales_per_user[sale.user_id] += sale.commission
-            sales_per_user_ids[sale.user_id].append(sale.pk)
+                sales_per_user[earning.user.id] += earning.amount
+                sales_per_user_ids[earning.user.id].append(earning.pk)
 
         for key, value in sales_per_user.items():
             if value > settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT:
-                try:
-                    details = get_model('profile', 'PaymentDetail').objects.get(user=key)
-                except get_model('profile', 'PaymentDetail').DoesNotExist:
-                    logger.error('No payment details exist for user with id: %s' % (key,))
-                    continue
-
-                if details.company:
-                    if not details.name or not details.orgnr:
-                        logger.error('Payment details is for a company but is missing name or orgnr')
-                        continue
-                else:
-                    if not details.name or not details.orgnr or not details.clearingnr or not details.banknr:
-                        logger.error('Payment details is for a person but is missing name, orgnr or banknr')
-                        continue
+                user = get_user_model().objects.get(pk=key)
+                details, created = get_model('profile', 'PaymentDetail').objects.get_or_create(user=user)
 
                 # Update sale transactions to ready for payment
-                Sale.objects.filter(pk__in=sales_per_user_ids[key]).update(paid=Sale.PAID_READY)
+                UserEarning.objects.filter(pk__in=sales_per_user_ids[key]).update(paid=Sale.PAID_READY)
 
                 # Cancel previous payments
                 Payment.objects.filter(user_id=key).update(cancelled=True)

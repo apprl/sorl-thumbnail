@@ -24,7 +24,6 @@ from apparelrow.apparel.utils import roundrobin
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 from apparelrow.profile.tasks import mail_managers_task
 
-
 EVENT_CHOICES = (
     ('A', _('All')),
     ('F', _('Those I follow')),
@@ -84,7 +83,7 @@ class User(AbstractUser):
     # partner
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
     is_top_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Top partner user'))
-    partner_group = models.ForeignKey('dashboard.Group', null=True, blank=True)
+    partner_group = models.ForeignKey('dashboard.Group', verbose_name=_('Commission group'), null=True, blank=True)
 
     # referral partner
     referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Referral partner user'))
@@ -93,12 +92,12 @@ class User(AbstractUser):
     referral_partner_parent_date = models.DateTimeField(null=True, blank=True)
 
     # publisher network
-    owner_network = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='publisher_network', help_text='Assign publisher to a Publisher Network.')
+    owner_network = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='publisher_network', verbose_name=_("Belongs to Publisher Network"), help_text="Assign publisher to another user's Publisher Network.")
 
     # for publisher network owners
     is_subscriber = models.BooleanField(default=False, null=False, blank=False)
-    owner_network_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
-                                    help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
+    owner_network_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3, verbose_name=_("Owner's cut"),
+                                    help_text="If user is owner of a publisher network, set the owner's cut.Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)")
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',

@@ -19,6 +19,7 @@ class Migration(SchemaMigration):
             ('amount', self.gf('django.db.models.fields.DecimalField')(default='1.0', max_digits=10, decimal_places=3)),
             ('date', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
             ('status', self.gf('django.db.models.fields.CharField')(default='0', max_length=1, db_index=True)),
+            ('paid', self.gf('django.db.models.fields.CharField')(default='0', max_length=1)),
         ))
         db.send_create_signal(u'dashboard', ['UserEarning'])
 
@@ -174,7 +175,7 @@ class Migration(SchemaMigration):
             'cut': ('django.db.models.fields.DecimalField', [], {'default': "'0.67'", 'max_digits': '10', 'decimal_places': '3'}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'cuts'", 'on_delete': 'models.PROTECT', 'to': u"orm['dashboard.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'referral_cut': ('django.db.models.fields.DecimalField', [], {'default': "'0.33'", 'max_digits': '10', 'decimal_places': '3'}),
+            'referral_cut': ('django.db.models.fields.DecimalField', [], {'default': "'0.15'", 'max_digits': '10', 'decimal_places': '3'}),
             'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
         },
         u'dashboard.group': {
@@ -252,6 +253,7 @@ class Migration(SchemaMigration):
             'from_product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'}),
             'from_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'null': 'True', 'on_delete': 'models.PROTECT'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'paid': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '1'}),
             'sale': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Sale']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '1', 'db_index': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'earning_user'", 'null': 'True', 'on_delete': 'models.PROTECT', 'to': u"orm['profile.User']"}),

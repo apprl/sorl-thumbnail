@@ -221,7 +221,9 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
             'status': Sale.CONFIRMED,
         }
 
-        instance, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
+        sale, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
+        get_model('dashboard', 'UserEarning').objects.create(user=instance, user_earning_type='referral_signup_commission',
+            sale=sale, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=sale.sale_date, status=sale.status)
 
 USER_EARNING_TYPES = (
     ('apprl_commission', 'APPRL Commission'),
@@ -240,13 +242,17 @@ class UserEarning(models.Model):
     amount = models.DecimalField(null=False, blank=False, default='1.0', max_digits=10, decimal_places=3)
     date = models.DateTimeField(_('Payout Date'), default=timezone.now, null=True, blank=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, null=False, blank=False, db_index=True)
+    paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES, null=False, blank=False)
 
 @receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
 def sale_post_save(sender, instance, created, **kwargs):
     if created:
-        create_user_earnings(instance)
+        if not instance.is_promo:
+            create_user_earnings(instance)
+            if instance.is_referral_sale:
+                create_referral_earning(instance)
+
     else:
-        status = instance.status
         earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=instance)
         if len(earnings) == 0:
             create_user_earnings(instance)
@@ -255,35 +261,66 @@ def sale_post_save(sender, instance, created, **kwargs):
                 earning.status = instance.status
                 earning.save()
 
+def create_referral_earning(sale):
+    total_commission = sale.original_commission
+    referral_user = sale.referral_user
+    user = get_model('profile', 'User').objects.get(id=sale.user_id)
+    commission_group = referral_user.partner_group
+    product = None
+
+    sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+
+    if not len(sale_product) == 0:
+        product = sale_product(0)
+
+    if commission_group:
+        commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+        referral_cut = commission_group_cut.referral_cut
+        if referral_cut:
+            referral_commission = total_commission * referral_cut
+            get_model('dashboard', 'UserEarning').objects.create(user=referral_user,
+                                                                 user_earning_type='referral_sale_commission',
+                                                                 sale=sale, from_product=product, from_user=user,
+                                                                 amount=referral_commission, date=sale.sale_date,
+                                                                 status=sale.status)
+        else:
+            logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
+    else:
+        logging.warning('User %s should have assigned a comission group'%user)
+
 def create_user_earnings(sale):
     total_commission = sale.original_commission
     product = None
-    user = get_model('profile', 'User').objects.get(id=sale.user_id)
 
+    user = get_model('profile', 'User').objects.get(id=sale.user_id)
     sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
     commission_group = user.partner_group
 
-    if sale_product:
-        product = sale_product
+    if not len(sale_product) == 0:
+        product = sale_product(0)
 
     if commission_group:
         commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
         cut = commission_group_cut.cut
+
         if cut:
             publisher_commission = total_commission * cut
             apprl_commission = total_commission - publisher_commission
 
-            apprl_user_earning = get_model('dashboard', 'UserEarning').objects.create( user_earning_type='apprl_commission',
-                                                                                       sale=sale, from_product=product,
-                                                                                       from_user=user, amount=apprl_commission,
-                                                                                       date=sale.sale_date, status=sale.status)
+            get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                                                                 from_product=product, from_user=user,
+                                                                 amount=apprl_commission, date=sale.sale_date,
+                                                                 status=sale.status)
 
             if user.owner_network:
                 publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
 
-            apprl_user_earning = get_model('dashboard', 'UserEarning').objects.create( user=user,
-                user_earning_type='publisher_sale_commission', sale=sale, from_product=product,
-                   amount=publisher_commission, date=sale.sale_date, status=sale.status)
+            get_model('dashboard', 'UserEarning').objects.create( user=user,
+                                                                  user_earning_type='publisher_sale_commission',
+                                                                  sale=sale, from_product=product,
+                                                                  amount=publisher_commission, date=sale.sale_date,
+                                                                  status=sale.status)
+
         else:
             logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
     else:
@@ -293,12 +330,12 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product)
     owner = user.owner_network
     owner_tribute = owner.owner_network_cut
     owner_earning = publisher_commission * owner_tribute
-    publisher_commission = publisher_commission - owner_earning
+    publisher_commission -= owner_earning
 
     if owner.owner_network:
         owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product)
 
-    owner_network_earning = get_model('dashboard', 'UserEarning').objects.create( user=owner,
-        user_earning_type='publisher_network_tribute', sale=sale, from_product=product, from_user=user,
-        amount=owner_earning, date=sale.sale_date, status=sale.status)
+    get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type='publisher_network_tribute',
+                                                          sale=sale, from_product=product, from_user=user,
+                                                          amount=owner_earning, date=sale.sale_date, status=sale.status)
     return publisher_commission
