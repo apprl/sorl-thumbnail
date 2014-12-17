@@ -97,13 +97,13 @@ MAX_MIN_CURRENCY = {
 
 VENDOR_LOCATION_MAPPING = {
     "Shirtonomy":["ALL","SE"],
-    "MQ":["NO"],
+    "MQ":["NO","SE"],
     "default":["ALL"],
 }
 
 LOCATION_LANGUAGE_MAPPING = (
-                             ("SE", gettext("Sverige"), LANGUAGES_DISPLAY[1]),
-                             ("NO", gettext("Norge"), LANGUAGES_DISPLAY[2]),
+                             ("SE", gettext("Sweden"), LANGUAGES_DISPLAY[1]),
+                             ("NO", gettext("Norway"), LANGUAGES_DISPLAY[2]),
                              ("US", gettext("USA"), LANGUAGES_DISPLAY[0]),
                              ("ALL", gettext("International"), LANGUAGES_DISPLAY[0]),
 )
