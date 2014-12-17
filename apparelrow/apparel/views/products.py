@@ -3,6 +3,7 @@ import json
 import decimal
 
 from django.conf import settings
+from django.http import HttpResponseBadRequest
 from django.views.generic import View
 from django.utils.translation import get_language
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -44,19 +45,26 @@ for ident, name, parent_id, order in get_model('apparel', 'Category').objects.va
 
 FACET_PRICE_MAP_ID = {
     'en': {
-        1: '{!key=1 tag=price}price:[*,EUR TO 50,EUR]',
-        2: '{!key=2 tag=price}price:[50,EUR TO 100,EUR]',
-        3: '{!key=3 tag=price}price:[100,EUR TO 250,EUR]',
-        4: '{!key=4 tag=price}price:[250,EUR TO 500,EUR]',
-        5: '{!key=5 tag=price}price:[500,EUR TO 1000,EUR]',
-        6: '{!key=6 tag=price}price:[1000,EUR TO *,EUR]'},
+        1: '{!key=1 tag=price}price:[*,USD TO 50,USD]',
+        2: '{!key=2 tag=price}price:[50,USD TO 100,USD]',
+        3: '{!key=3 tag=price}price:[100,USD TO 250,USD]',
+        4: '{!key=4 tag=price}price:[250,USD TO 500,USD]',
+        5: '{!key=5 tag=price}price:[500,USD TO 1000,USD]',
+        6: '{!key=6 tag=price}price:[1000,USD TO *,USD]'},
     'sv': {
         1: '{!key=1 tag=price}price:[*,SEK TO 500,SEK]',
         2: '{!key=2 tag=price}price:[500,SEK TO 1000,SEK]',
         3: '{!key=3 tag=price}price:[1000,SEK TO 2500,SEK]',
         4: '{!key=4 tag=price}price:[2500,SEK TO 5000,SEK]',
         5: '{!key=5 tag=price}price:[5000,SEK TO 10000,SEK]',
-        6: '{!key=6 tag=price}price:[10000,SEK TO *,SEK]'}
+        6: '{!key=6 tag=price}price:[10000,SEK TO *,SEK]'},
+    'no': {
+        1: '{!key=1 tag=price}price:[*,NOK TO 500,NOK]',
+        2: '{!key=2 tag=price}price:[500,NOK TO 1000,NOK]',
+        3: '{!key=3 tag=price}price:[1000,NOK TO 2500,NOK]',
+        4: '{!key=4 tag=price}price:[2500,NOK TO 5000,NOK]',
+        5: '{!key=5 tag=price}price:[5000,NOK TO 10000,NOK]',
+        6: '{!key=6 tag=price}price:[10000,NOK TO *,NOK]'}
     }
 
 FACET_PRICE_MAP = {
@@ -64,6 +72,9 @@ FACET_PRICE_MAP = {
 
         },
     'sv': {
+
+        },
+    'no': {
 
         }
     }
@@ -83,7 +94,14 @@ FACET_PRICE_TRANSLATION = {
         3: u'1000-2500 SEK',
         4: u'2500-5000 SEK',
         5: u'5000-10000 SEK',
-        6: u'över 10000 SEK'}
+        6: u'över 10000 SEK'},
+    'no': {
+        1: u'nedenfor 500 NOK',
+        2: u'500-1000 NOK',
+        3: u'1000-2500 NOK',
+        4: u'2500-5000 NOK',
+        5: u'5000-10000 NOK',
+        6: u'over 10000 NOK'}
     }
 
 
@@ -188,6 +206,9 @@ class ProductList(View):
             query_arguments['sort'] = ', '.join(['availability desc', '%s_uld desc' % (user_id,), request.GET.get('sort', 'created desc')])
         else:
             query_arguments['fq'].append('availability:true')
+
+            # Todo! This should be moved to all places where "user likes" are not included
+            query_arguments['fq'].append('market_ss:%s' % request.location)
 
 
 
