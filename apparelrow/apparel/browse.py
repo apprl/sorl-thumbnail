@@ -194,7 +194,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         else:
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
             # Todo! This should be moved to all places where "likes" are not included
-            query_arguments['fq'].append('market_ss:%s' % request.location)
+            query_arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
 
     # Query string
     query_string = request.GET.get('q')

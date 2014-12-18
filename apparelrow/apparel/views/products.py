@@ -208,7 +208,7 @@ class ProductList(View):
             query_arguments['fq'].append('availability:true')
 
             # Todo! This should be moved to all places where "user likes" are not included
-            query_arguments['fq'].append('market_ss:%s' % request.location)
+            query_arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
 
 
 
