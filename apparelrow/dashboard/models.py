@@ -222,8 +222,6 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
         }
 
         sale, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
-        get_model('dashboard', 'UserEarning').objects.create(user=instance, user_earning_type='referral_signup_commission',
-            sale=sale, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=sale.sale_date, status=sale.status)
 
 USER_EARNING_TYPES = (
     ('apprl_commission', 'APPRL Commission'),
@@ -247,19 +245,25 @@ class UserEarning(models.Model):
 @receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
 def sale_post_save(sender, instance, created, **kwargs):
     if created:
-        if not instance.is_promo:
-            create_user_earnings(instance)
-            if instance.is_referral_sale:
-                create_referral_earning(instance)
-
+        create_earnings(instance)
     else:
         earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=instance)
         if len(earnings) == 0:
-            create_user_earnings(instance)
+            create_earnings(instance)
         else:
             for earning in earnings:
                 earning.status = instance.status
                 earning.save()
+
+def create_earnings(instance):
+    if not instance.is_promo:
+        create_user_earnings(instance)
+        if instance.is_referral_sale:
+            create_referral_earning(instance)
+    else:
+        user = get_model('profile', 'User').objects.get(id=instance.user_id)
+        get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
+            sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
 
 def create_referral_earning(sale):
     total_commission = sale.original_commission
