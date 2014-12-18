@@ -33,6 +33,7 @@ from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
 from apparelrow.apparel.models import ShopEmbed
+from apparelrow.apparel.models import ShopProduct
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 
@@ -58,8 +59,13 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
     if not request.user.is_authenticated():
         return HttpResponse('Unauthorized', status=401)
 
+    likes = []
     if shop_id is not None and shop_id is not 0:
         shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
+
+        if shop.show_liked:
+            likes = shop.user.product_likes.all()
+            show_liked = True
 
         if request.user.pk is not shop.user.pk:
             return HttpResponse('Unauthorized', status=401)
@@ -67,6 +73,7 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
     else:
         shop = False
         shop_id = 0
+        show_liked = True
 
     if not language:
         language = get_language()
@@ -80,6 +87,9 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
     # Todo: how real data do we need here?
     return render(request, template, {
         'gender': gender,
+        'show_liked': str(show_liked).lower(),
+        'product_picker': not show_liked,
+        'likes': likes,
         'pricerange': {'min': 0, 'max': 10000},
         'external_shop_id': shop_id,
     })
@@ -213,11 +223,15 @@ class ShopCreateView(View):
         # Exclude components, handle later
         components = json_data['components']
         del json_data['components']
+        del json_data['0']
 
         show_liked = False
         if 'show_liked' in json_data:
             show_liked = json_data['show_liked']
             del json_data['show_liked']
+
+        if show_liked:
+            components = []
 
         shop = get_model('apparel', 'Shop')(**json_data)
         shop.show_liked = show_liked

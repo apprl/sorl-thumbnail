@@ -12,7 +12,7 @@
     <div class="body-header-col-right">
         {% if type == 'look_editor' or type == 'create_shop' %}
             <ul class="list-inline">
-                {% if type == 'create_shop' %}
+                {% if type == 'create_shop' and external_shop_id != 0 %}
                     <a data-target="#modal_embed_shop" data-toggle="modal" data-slug="{{ object.pk }}" class="btn btn-primary btn-embed" href="{% url 'dialog-shop-embed' external_shop_id %}">Embed on your blog / site</a>
                 {% endif %}
 
