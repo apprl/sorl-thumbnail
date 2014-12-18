@@ -45,7 +45,7 @@ App.Views.PopupDispatcher =  Backbone.View.extend({
 
         // TODO: ugly solution no/yes?
         dialog.delegateEvents();
-        this._center();
+        //this._center();
 
         if(hide_animation) {
             this.$overlay.show();
@@ -56,7 +56,7 @@ App.Views.PopupDispatcher =  Backbone.View.extend({
         }
 
         // Listen to window resize for repositioning
-        $(window).on('resize.dialog', _.bind(this._center, this));
+        //$(window).on('resize.dialog', _.bind(this._center, this));
 
         this.active = name;
     },
