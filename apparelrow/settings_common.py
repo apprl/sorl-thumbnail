@@ -98,7 +98,16 @@ MAX_MIN_CURRENCY = {
 VENDOR_LOCATION_MAPPING = {
     "Shirtonomy":["ALL","SE"],
     "MQ":["NO","SE"],
-    "default":["ALL"],
+    "ALDO": ["US"],
+    "ASOS": ["SE","ALL"],
+    "Eleven": ["SE","ALL"],
+    "Elevenfiftynine": ["SE"],
+    "JC": ["SE"],
+    "Nelly":["SE"],
+    "Nelly No":["NO"],
+    "Panos Emporio":["SE"],
+    "QVC":["US"],
+    "default":["ALL","SE","NO","US"],
 }
 
 LOCATION_LANGUAGE_MAPPING = (
