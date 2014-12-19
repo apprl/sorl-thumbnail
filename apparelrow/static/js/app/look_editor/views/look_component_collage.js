@@ -9,6 +9,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
     initialize: function() {
         App.Events.on('lookedit:reposition', this.reposition, this);
         App.Events.on('lookedit:rescale', this.rescale, this);
+        App.Events.on('lookedit:clicked', this.set_inactive, this);
         this.$container = $('.look-container');
     },
 
@@ -33,6 +34,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             this.$el.resizable("enable");
             this.$el.rotatable("enable");
         }
+        e.stopPropagation();
     },
 
     set_inactive: function(e) {
@@ -82,7 +84,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             if (new_width >= 50 && new_height >= 50) {
                 this.$el.css({width: new_width, height: new_height});
             }
-            this.rotate(event.rotation);
+            this.rotate(event.rotation + this.model.get('rotation'));
         }, this));
 
         this.hammertime.on('pinchend', _.bind(function(event) {
@@ -92,6 +94,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             new_height = Math.min(new_height, this.$container.height() - this.$el.position().top);
 
             this.model.set({width: new_width, height: new_height, rotation: event.rotation}, {silent: true});
+            App.Events.trigger('look:dirty');
         }, this));
     },
 
@@ -165,14 +168,13 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                     new_top = this.model.get('top') + event.deltaY;
 
                 this.$el.css({'left':new_left, 'top':new_top});
-                if (event.isFinal) {
-                    new_left = Math.min(Math.max(0, new_left), this.$container.width() - this.$el.width());
-                    new_top = Math.min(Math.max(0, new_top), this.$container.height() - this.$el.height());
-                    this.$el.css({'left':new_left, 'top':new_top});
-                    this.set_position(new_left, new_top);
-                }
-
             }, this));
+            this.hammertime.on('panend', _.bind(function(event) {
+                new_left = Math.min(Math.max(0, new_left), this.$container.width() - this.$el.width());
+                new_top = Math.min(Math.max(0, new_top), this.$container.height() - this.$el.height());
+                this.$el.css({'left':new_left, 'top':new_top});
+                this.set_position(new_left, new_top);
+            },this));
         } else {
 
              this.$el.resizable({
@@ -183,7 +185,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  maxWidth: this.$container.width(),
                  minHeight: 50,
                  minWidth: 50,
-                 handles: "se",
+                 handles: "se, ne, sw, nw",
                  create: _.bind(function (event, ui) {
                      var z_index = $(event.target).css('z-index');
                      if (!isNaN(parseInt(z_index))) {
@@ -214,13 +216,16 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
              this.$el.rotatable({
                  handles: 'n',
                  disabled: false,
+                 rotate: _.bind(function (event, ui) {
+                     this.rotate(ui.rotation);
+                 }, this),
                  stop: _.bind(function (event, ui) {
                      this.model.set({rotation: ui.rotation}, {silent: true});
                      App.Events.trigger('look:dirty');
                  }, this)
              });
         }
-        this.$el.on('click', _.bind(this.toggle_active, this));
+        this.$el.on('mousedown click', _.bind(this.set_active, this));
 
 
 

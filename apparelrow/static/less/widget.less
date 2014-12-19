@@ -48,15 +48,19 @@ html.look-type-C {
     position: relative;
     overflow: hidden;
     width: 100%;
-
+    background: #FFF;
     #product-tabs > li {
-        background-color: @lighter_gray_color;
+        background-color: #FFF;
         > a {
             border-radius: 0;
-            padding: 6px 13px;
-            font-weight: bold;
+            border: 2px solid @lighter_gray_color;
+            border-bottom: 0px;
+            padding: 8px 13px;
         }
-        font-size: 16px;
+        &.active a {
+          background-color: @lighter_gray_color;
+        }
+        font-size: 15px;
         display: table-cell;
         width: 1%;
         &:last-child {
@@ -88,7 +92,6 @@ html.look-type-C {
     }
 
     #product-filter {
-        border-bottom: 3px solid #000000;
         .middle-filters {
             padding: 10px 0;
             .form-control-wrapper {
@@ -112,9 +115,11 @@ html.look-type-C {
 
     .product-list-container {
         padding: 0 10px;
-        border-left: 1px solid @light_gray_color;
-        border-right: 1px solid @light_gray_color;
-        border-bottom: 1px solid @light_gray_color;
+        @media (min-width: @screen-md) {
+          border-left: 2px solid @light_gray_color;
+          border-right: 2px solid @light_gray_color;
+          border-bottom: 2px solid @light_gray_color;
+        }
         #product-list-empty, #product-list-unauthenticated {
             padding: 10px;
             display: none;
@@ -130,6 +135,7 @@ html.look-type-C {
             padding: 10px;
             height: 340px;
             overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
             > li {
                 .product-small {
                     position: relative;
@@ -149,11 +155,11 @@ html.look-type-C {
                     }
                     .hover {
                         position: absolute;
-                        width: 92px;
+                        width: 112px;
                         height: 82;
                         top: 32px;
-                        left: 10px;
-                        right: 10px;
+                        left: 0px;
+                        right: 0px;
                         display: none;
                         a {
                             margin-bottom: 10px;
@@ -182,9 +188,17 @@ html.look-type-C {
     }
     .product-filter-container {
         padding: 0 10px;
-        border-left: 1px solid @light_gray_color;
-        border-right: 1px solid @light_gray_color;
+        @media (min-width: @screen-md) {
+          border-left: 2px solid @light_gray_color;
+          border-right: 2px solid @light_gray_color;
+        }
+        .btn {
+          padding-top: 7px;
+          padding-bottom: 7px;
+          min-width: 100px;
+        }
         .hidden-filters {
+          margin-bottom: 0px;
             li:first-child {
                 padding-left: 0;
             }

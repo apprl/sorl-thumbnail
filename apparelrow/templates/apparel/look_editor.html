@@ -10,26 +10,29 @@
     {% include "apparel/tools/widget_header.html" %}
 
     <div id="content">
-        <div class="row">
+        <div class="row content-row">
             <div class="col-md-6 col-widget">
-                <div class="lookedit_toolbar">
-                    <div class="section">
-                        <a href="#" class="component_clone"><img src="{% static "images/clone.svg" %}"/> <span>{% trans "Clone" %}</span></a>
-                    </div>
-                    <div class="section">
-                        <a href="#" class="component_forward"><img src="{% static "images/forward.svg" %}"/> <span>{% trans "Forward" %}</span></a>
-                    </div>
-                    <div class="section">
-                        <a href="#" class="component_back"><img src="{% static "images/back.svg" %}"/> <span>{% trans "Back" %}</span></a>
-                    </div>
-                    <div class="section">
-                        <a href="#" class="component_flip"><img src="{% static "images/flip.svg" %}"/> <span>{% trans "Flip" %}</span></a>
-                    </div>
-                    <div class="section">
-                        <a href="#" class="component_delete"><img src="{% static "images/close.svg" %}"/> <span>{% trans "Delete" %}</span></a>
+                <div style="position: relative">
+                    <div class="lookedit_toolbar">
+                        <div class="section">
+                            <a href="#" class="component_clone"><img src="{% static "images/clone.svg" %}"/> <span>{% trans "Clone" %}</span></a>
+                        </div>
+                        <div class="section">
+                            <a href="#" class="component_forward"><img src="{% static "images/forward.svg" %}"/> <span>{% trans "Forward" %}</span></a>
+                        </div>
+                        <div class="section">
+                            <a href="#" class="component_back"><img src="{% static "images/back.svg" %}"/> <span>{% trans "Back" %}</span></a>
+                        </div>
+                        <div class="section">
+                            <a href="#" class="component_flip"><img src="{% static "images/flip.svg" %}"/> <span>{% trans "Flip" %}</span></a>
+                        </div>
+                        <div class="section">
+                            <a href="#" class="component_delete"><img src="{% static "images/close.svg" %}"/> <span>{% trans "Delete" %}</span></a>
+                        </div>
                     </div>
                 </div>
                 <div id="edit-look"></div>
+
             </div>
             <div id="startsplash">{% trans "Start by adding the items here" %}</div>
             <div class="col-md-6 visible-md visible-lg">
