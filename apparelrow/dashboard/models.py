@@ -119,6 +119,9 @@ class Group(models.Model):
                                     help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
     is_subscriber = models.BooleanField(default=False, null=False, blank=False)
 
+    class Meta:
+        verbose_name = 'Commission Group'
+
     def __unicode__(self):
         return u'%s' % (self.name,)
 
@@ -127,9 +130,9 @@ class Cut(models.Model):
     group = models.ForeignKey('dashboard.Group', null=False, blank=False, on_delete=models.PROTECT, related_name='cuts')
     vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, on_delete=models.CASCADE)
     cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_CUT_DEFAULT), max_digits=10, decimal_places=3,
-                              help_text='Between 1 and 0, default %s' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
+                              help_text='Between 1 and 0, default %s. Determines the percentage that goes to the Publisher (and possible Publisher Network owner, if applies)' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
     referral_cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
-                                       help_text='Between 1 and 0, default %s' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
+                                       help_text='Between 1 and 0, default %s. Determines the percentage that goes to the referral partner parent.' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
 
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
@@ -228,7 +231,7 @@ USER_EARNING_TYPES = (
     ('referral_sale_commission', 'Referral Sale Commission'),
     ('referral_signup_commission', 'Referral Signup Commission'),
     ('publisher_sale_commission', 'Publisher Sale Commission'),
-    ('publisher_network_tribute', 'Publisher Network Tribute'),
+    ('publisher_network_tribute', 'Network Commission'),
 )
 
 class UserEarning(models.Model):
@@ -237,7 +240,7 @@ class UserEarning(models.Model):
     sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=False, on_delete=models.PROTECT)
-    amount = models.DecimalField(null=False, blank=False, default='1.0', max_digits=10, decimal_places=3)
+    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2)
     date = models.DateTimeField(_('Payout Date'), default=timezone.now, null=True, blank=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, null=False, blank=False, db_index=True)
     paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES, null=False, blank=False)
@@ -333,6 +336,9 @@ def create_user_earnings(sale):
 def create_earnings_publisher_network(user, publisher_commission, sale, product):
     owner = user.owner_network
     owner_tribute = owner.owner_network_cut
+    if owner_tribute > 1:
+        owner_tribute = 1
+        logging.warning('Owner network cut must be a value between 0 and 1')
     owner_earning = publisher_commission * owner_tribute
     publisher_commission -= owner_earning
 

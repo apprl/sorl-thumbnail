@@ -4,7 +4,7 @@ import datetime
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.core.mail import mail_managers
 from django.core.urlresolvers import reverse
 

@@ -97,7 +97,7 @@ class User(AbstractUser):
     # for publisher network owners
     is_subscriber = models.BooleanField(default=False, null=False, blank=False)
     owner_network_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3, verbose_name=_("Owner's cut"),
-                                    help_text="If user is owner of a publisher network, set the owner's cut.Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)")
+                                    help_text="If this user is owner of a publisher network, set the owner's cut. Between 0 and 1, determines the percentage that the user will receive from every sale in the network (1 equals 100%)")
 
     # notification settings
     comment_product_wardrobe = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
