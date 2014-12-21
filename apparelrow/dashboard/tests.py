@@ -14,9 +14,11 @@ from django.core import management
 
 from localeurl.utils import locale_url
 from apparelrow.apparel.models import Vendor
-from apparelrow.dashboard.models import Group, StoreCommission, Cut
+from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
+from apparelrow.dashboard.admin import PaymentAdmin
+
 
 
 def reverse(*args, **kwargs):
@@ -105,7 +107,7 @@ class TestDashboard(TransactionTestCase):
         normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
 
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        response = self.client.post(reverse('index-publisher'), {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
+        response = self.client.post(reverse('publisher-contact'), {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
 
         instance = get_model('dashboard', 'Signup').objects.get()
         self.assertEqual(instance.name, 'test')
@@ -127,7 +129,7 @@ class TestDashboard(TransactionTestCase):
         self.assertTrue(is_logged_in)
 
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        response = self.client.post(reverse('index-publisher'), {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
+        response = self.client.post(reverse('publisher-contact'), {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
 
         instance = get_model('dashboard', 'Signup').objects.get()
         self.assertEqual(instance.name, 'test')
@@ -315,34 +317,24 @@ class TestDashboard(TransactionTestCase):
         # Import the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
 
-        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 3)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 2)
 
         # Verify it
-        normal_sale = get_model('dashboard', 'Sale').objects.get(is_promo=False, is_referral_sale=False)
-        self.assertFalse(normal_sale.is_referral_sale)
-        self.assertIsNone(normal_sale.referral_user)
-        self.assertEqual(normal_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
-
-        referral_user_sale = get_model('dashboard', 'Sale').objects.get(is_referral_sale=True)
+        referral_user_sale = get_model('dashboard', 'Sale').objects.get(is_referral_sale=True, is_promo=False,)
         self.assertTrue(referral_user_sale.is_referral_sale)
-        self.assertEqual(referral_user_sale.referral_user, registered_user)
-        self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT))
+        self.assertEqual(referral_user_sale.referral_user, referral_user)
+        self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
         # Repeat the import of the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
 
-        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 3)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 2)
 
         # Verify it
-        normal_sale = get_model('dashboard', 'Sale').objects.get(is_promo=False, is_referral_sale=False)
-        self.assertFalse(normal_sale.is_referral_sale)
-        self.assertIsNone(normal_sale.referral_user)
-        self.assertEqual(normal_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
-
-        referral_user_sale = get_model('dashboard', 'Sale').objects.get(is_referral_sale=True)
+        referral_user_sale = get_model('dashboard', 'Sale').objects.get(is_promo=False, is_referral_sale=True)
         self.assertTrue(referral_user_sale.is_referral_sale)
-        self.assertEqual(referral_user_sale.referral_user, registered_user)
-        self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT))
+        self.assertEqual(referral_user_sale.referral_user, referral_user)
+        self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
     def test_referred_user_get_20_eur(self):
         pass
@@ -491,7 +483,7 @@ class TestDashboardCuts(TransactionTestCase):
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
         sale = get_model('dashboard', 'Sale').objects.get()
-        self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        #self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         self.assertEqual(sale.status, get_model('dashboard', 'Sale').CONFIRMED)
         self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_PENDING)
 
@@ -508,7 +500,7 @@ class TestDashboardCuts(TransactionTestCase):
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
         sale = get_model('dashboard', 'Sale').objects.get()
-        self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        #self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         self.assertEqual(sale.status, get_model('dashboard', 'Sale').CONFIRMED)
         self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_READY)
 
@@ -527,9 +519,9 @@ class TestDashboardCuts(TransactionTestCase):
         user_remote, normal_cut, referral_cut = get_cuts_for_user_and_vendor(user.id,vendor)
         self.assertEquals(user,user_remote)
         self.assertEquals(normal_cut, Decimal('0.67'))
-        self.assertEquals(referral_cut,Decimal('0.33'))
+        self.assertEquals(referral_cut,Decimal('0.15'))
 
-        store_commission.calculated_commission()
+        #store_commission.calculated_commission()
 
         print "Finished parse cuts from store commission test!"
 
@@ -566,3 +558,554 @@ class TestDashboardUtils(TransactionTestCase):
         self.assertIsNotNone(user)
         self.assertEqual(normal_cut, decimal.Decimal('0.5'))
         self.assertEqual(referral_cut, decimal.Decimal('0.3'))
+
+
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
+class TestUserEarnings(TransactionTestCase):
+    '''
+        Tests UserEarnings that are generated when the user belongs to a Publisher Network and the Publisher Network
+        owner doesn't belong to a Publisher Network
+    '''
+    def test_commissions_publisher_network(self):
+        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        owner_user.owner_network_cut = 0.1
+        owner_user.save()
+
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        temp_user.partner_group = group
+        temp_user.owner_network = owner_user
+        temp_user.save()
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.original_commission, 100)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 3)
+
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+
+        for earning in earnings:
+            if earning.user_earning_type == 'apprl_commission':
+                self.assertEqual(earning.amount, 40.000)
+            elif earning.user_earning_type == 'publisher_network_tribute':
+                self.assertEqual(earning.amount, 6.000)
+            elif earning.user_earning_type == 'publisher_sale_commission':
+                self.assertEqual(earning.amount, 54.000)
+
+        #Update a sales transaction
+        for earning in earnings:
+            self.assertEqual(earning.status, get_model('dashboard', 'Sale').PENDING)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
+        sale.status = get_model('dashboard', 'Sale').CONFIRMED
+        sale.save()
+
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+        for earning in earnings:
+            self.assertEqual(earning.status, get_model('dashboard', 'Sale').CONFIRMED)
+
+    '''
+        Tests UserEarnings that are generated when the user doesn't belong to a Publisher Network
+    '''
+    def test_commissions_no_publisher_network(self):
+        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        owner_user.owner_network_cut = 0.1
+        owner_user.save()
+
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        temp_user.partner_group = group
+        temp_user.save()
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.original_commission, 100)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 2)
+
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+
+        for earning in earnings:
+            if earning.user_earning_type == 'apprl_commission':
+                self.assertEqual(earning.amount, 40.000)
+            elif earning.user_earning_type == 'publisher_sale_commission':
+                self.assertEqual(earning.amount, 60.000)
+
+        #Update a sales transaction
+        for earning in earnings:
+            self.assertEqual(earning.status, get_model('dashboard', 'Sale').PENDING)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
+        sale.status = get_model('dashboard', 'Sale').CONFIRMED
+        sale.save()
+
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+        for earning in earnings:
+            self.assertEqual(earning.status, get_model('dashboard', 'Sale').CONFIRMED)
+
+    '''
+        Tests UserEarnings that are generated when the user belongs to a Publisher Network and the Publisher Network
+        owner belongs to a Publisher Network recursively
+    '''
+    def test_commissions_recursive_publisher_network(self):
+
+        super_master_owner = get_user_model().objects.create_user('super_master_owner', 'super_master_owner@xvid.se', 'super_master_owner')
+        super_master_owner.owner_network_cut = 0.5
+        super_master_owner.save()
+
+        master_owner = get_user_model().objects.create_user('master_owner', 'master_owner@xvid.se', 'master_owner')
+        master_owner.owner_network_cut = 0.2
+        master_owner.owner_network = super_master_owner
+        master_owner.save()
+
+        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        owner_user.owner_network_cut = 0.5
+        owner_user.owner_network = master_owner
+        owner_user.save()
+
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        temp_user.partner_group = group
+        temp_user.owner_network = owner_user
+        temp_user.save()
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.original_commission, 100)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 5)
+
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+
+        for earning in earnings:
+            if earning.user_earning_type == 'apprl_commission':
+                self.assertEqual(earning.amount, 40.000)
+            elif earning.user_earning_type == 'publisher_sale_tribute' and earning.user == owner_user:
+                self.assertEqual(earning.amount, 24.000)
+            elif earning.user_earning_type == 'publisher_sale_tribute' and earning.user == master_owner:
+                self.assertEqual(earning.amount, 3.000)
+            elif earning.user_earning_type == 'publisher_sale_tribute' and earning.user == super_master_owner:
+                self.assertEqual(earning.amount, 3.000)
+            elif earning.user_earning_type == 'publisher_sale_commission':
+                self.assertEqual(earning.amount, 30.000)
+
+        #Update a sales transaction
+        for earning in earnings:
+            self.assertEqual(earning.status, get_model('dashboard', 'Sale').PENDING)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
+        sale.status = get_model('dashboard', 'Sale').CONFIRMED
+        sale.save()
+
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+        for earning in earnings:
+            self.assertEqual(earning.status, get_model('dashboard', 'Sale').CONFIRMED)
+
+    '''
+        Tests UserEarnings when user doesn't belong to a Commission Group
+    '''
+    def test_commissions_no_commission_group(self):
+        # User has no Commission Group assigned
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        # One Sale is generated, no UserEarnings generated
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.original_commission, 100)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 0)
+
+        # Create a group and assign it to user
+        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        owner_user.owner_network_cut = 0.5
+        owner_user.save()
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
+
+        temp_user.partner_group = group
+        temp_user.save()
+
+        # Update Sale status
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
+        sale.status = get_model('dashboard', 'Sale').CONFIRMED
+        sale.save()
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 2)
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+
+        for earning in earnings:
+            self.assertEqual(earning.status, get_model('dashboard', 'Sale').CONFIRMED)
+            if earning.user_earning_type == 'apprl_commission':
+                self.assertEqual(earning.amount, 40.000)
+            elif earning.user_earning_type == 'publisher_sale_commission':
+                self.assertEqual(earning.amount, 60.000)
+
+    '''
+        Tests UserEarnings when a referral Sale is made
+    '''
+    def test_commissions_referral_sale(self):
+        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        owner_user.owner_network_cut = 0.5
+        owner_user.save()
+
+        referral_group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+
+        referral_user = get_user_model().objects.create_user('referral', 'referral@xvid.se', 'referral')
+        referral_user.partner_group = referral_group
+        referral_user.referral_partner = True
+        referral_user.is_partner = True
+        referral_user.save()
+
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        temp_user.partner_group = group
+        temp_user.referral_partner_parent = referral_user
+        temp_user.is_partner = True
+        temp_user.save()
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        referral_cut = get_model('dashboard', 'Cut').objects.create(group=referral_group, vendor=vendor, cut=0.7)
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 2)
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 4)
+
+        sales = get_model('dashboard', 'Sale').objects.all()
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertTrue(sale.is_referral_sale)
+
+        self.assertEqual(sale.referral_user, referral_user)
+        self.assertEqual(sale.original_commission, 100)
+
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+
+        for earning in earnings:
+            if earning.user_earning_type == 'apprl_commission':
+                self.assertEqual(earning.amount, 40.000)
+            elif earning.user_earning_type == 'referral_sale_commission':
+                self.assertEqual(earning.amount, 15.000)
+            elif earning.user_earning_type == 'publisher_sale_commission':
+                self.assertEqual(earning.amount, 60.000)
+
+        #Update sales status
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(earning.status, get_model('dashboard', 'Sale').PENDING)
+
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
+        sale.status = get_model('dashboard', 'Sale').CONFIRMED
+        sale.save()
+
+        earnings = get_model('dashboard', 'UserEarning').objects.all()
+        for earning in earnings:
+            self.assertEqual(earning.status, get_model('dashboard', 'Sale').CONFIRMED)
+
+    def test_payments(self):
+        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        owner_user.owner_network_cut = 0.1
+        owner_user.save()
+
+        payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=owner_user)
+
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        temp_user.partner_group = group
+        temp_user.owner_network = owner_user
+        temp_user.save()
+
+        payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=temp_user)
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+
+        #Update a sales transaction
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
+        sale.status = get_model('dashboard', 'Sale').CONFIRMED
+        sale.save()
+
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Payment').objects.count(), 2)
+
+        publisher_payment = get_model('dashboard', 'Payment').objects.get(user=temp_user)
+        self.assertEqual(publisher_payment.amount, 540)
+
+        owner_payment = get_model('dashboard', 'Payment').objects.get(user=owner_user)
+        self.assertEqual(owner_payment.amount, 60)
+
+        for earning in get_model('dashboard', 'UserEarning').objects.exclude(user_earning_type='apprl_commission'):
+            self.assertEqual(earning.paid, get_model('dashboard', 'Sale').PAID_READY)
+
+        owner_set = get_model('dashboard', 'Payment').objects.filter(user=owner_user)
+
+    def test_payments_referral_sale(self):
+        referral_group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+        referral_user = get_user_model().objects.create_user('referral', 'referral@xvid.se', 'referral')
+        referral_user.partner_group = referral_group
+        referral_user.referral_partner = True
+        referral_user.is_partner = True
+        referral_user.save()
+
+        get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c',
+                                                                              user=referral_user)
+
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        temp_user.partner_group = group
+        temp_user.referral_partner_parent = referral_user
+        temp_user.is_partner = True
+        temp_user.save()
+
+        payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c',
+                                                                              user=temp_user)
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        referral_cut = get_model('dashboard', 'Cut').objects.create(group=referral_group, vendor=vendor, cut=0.7)
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 2)
+
+        for sale in get_model('dashboard', 'Sale').objects.all():
+            # Update a sales transaction
+            sale.status = get_model('dashboard', 'Sale').CONFIRMED
+            sale.save()
+
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Payment').objects.count(), 2)
+
+        publisher_payment = get_model('dashboard', 'Payment').objects.get(user=temp_user)
+        self.assertEqual(publisher_payment.amount, 620)
+
+        referral_payment = get_model('dashboard', 'Payment').objects.get(user=referral_user)
+        self.assertEqual(referral_payment.amount, 150)
+
+    def test_payments_recursive_publisher_network(self):
+
+        super_master_owner = get_user_model().objects.create_user('super_master_owner', 'super_master_owner@xvid.se', 'super_master_owner')
+        super_master_owner.owner_network_cut = 0.5
+        super_master_owner.save()
+
+        master_owner = get_user_model().objects.create_user('master_owner', 'master_owner@xvid.se', 'master_owner')
+        master_owner.owner_network_cut = 0.2
+        master_owner.owner_network = super_master_owner
+        master_owner.save()
+
+        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        owner_user.owner_network_cut = 0.5
+        owner_user.owner_network = master_owner
+        owner_user.save()
+
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        temp_user.partner_group = group
+        temp_user.owner_network = owner_user
+        temp_user.save()
+
+        get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c',
+                                                                              user=super_master_owner)
+        get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c',
+                                                                                      user=master_owner)
+        get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c',
+                                                                                      user=owner_user)
+        get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c',
+                                                                                      user=temp_user)
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+        self.assertEqual(sale.original_commission, 1000)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 5)
+
+        for sale in get_model('dashboard', 'Sale').objects.all():
+            # Update a sales transaction
+            sale.status = get_model('dashboard', 'Sale').CONFIRMED
+            sale.save()
+
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Payment').objects.count(), 2)
+
+        publisher_payment = get_model('dashboard', 'Payment').objects.get(user=temp_user)
+        self.assertEqual(publisher_payment.amount, 300)
+
+        owner_payment = get_model('dashboard', 'Payment').objects.get(user=owner_user)
+        self.assertEqual(owner_payment.amount, 240)
