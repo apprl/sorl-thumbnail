@@ -106,6 +106,9 @@ VENDOR_LOCATION_MAPPING = {
     "Nelly":["SE"],
     "Nelly No":["NO"],
     "Panos Emporio":["SE"],
+    "Boozt se":["SE"],
+    "Boozt no":["NO"],
+    "ASOS no":["NO"],
     "QVC":["US"],
     "default":["ALL","SE","NO","US"],
 }
