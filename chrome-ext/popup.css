@@ -95,6 +95,13 @@ body.active .loading {
     bottom: 15px;
 }
 
+.no-like {
+    display: none;
+}
+.no-like.show {
+    display: block;
+}
+
 .product-short-link {
     display: none;
     margin-bottom: 20px;
@@ -143,14 +150,12 @@ body.active .loading {
 
 .like-button.disabled, .product-button.disabled {
     cursor: default;
-    background-color: #000000;
-    border-color: #000000;
-    opacity: 0.65;
+    background-color: #bfbfbf;
+    border-color: #bfbfbf;
 }
 .like-button:hover.disabled, .product-button:hover.disabled {
-    background-color: #000000;
-    border-color: #000000;
-    opacity: 0.65;
+    background-color: #bfbfbf;
+    border-color: #bfbfbf;
 }
 
 .like-button .unlike, .like-button .liked {

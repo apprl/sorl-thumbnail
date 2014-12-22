@@ -63,9 +63,12 @@ LANGUAGES = (
     ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
 )
+
+# These languages get static templates in solr
 LANGUAGES_DISPLAY = (
     ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
+    ('no', gettext(u'Norwegian (NOK)')),
 )
 SHORT_LANGUAGES = (
     ('en', gettext(u'Eng ($)')),
@@ -76,8 +79,9 @@ SHORT_LANGUAGES = (
 SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
+    ('no', gettext(u'Nor (NOK)')),
 )
-SHORT_LANGUAGES_LIST_DISPLAY = ('en', 'sv')
+SHORT_LANGUAGES_LIST_DISPLAY = ('en','sv','no')
 LANGUAGE_TO_CURRENCY = {
     'en': 'USD',
     'sv': 'SEK',
@@ -90,6 +94,31 @@ MAX_MIN_CURRENCY = {
     'da': 10000,
     'no': 10000,
 }
+
+VENDOR_LOCATION_MAPPING = {
+    "Shirtonomy":["ALL","SE"],
+    "MQ":["NO","SE"],
+    "ALDO": ["US"],
+    "ASOS": ["SE","ALL"],
+    "Eleven": ["SE","ALL"],
+    "Elevenfiftynine": ["SE"],
+    "JC": ["SE"],
+    "Nelly":["SE"],
+    "Nelly No":["NO"],
+    "Panos Emporio":["SE"],
+    "Boozt se":["SE"],
+    "Boozt no":["NO"],
+    "ASOS no":["NO"],
+    "QVC":["US"],
+    "default":["ALL","SE","NO","US"],
+}
+
+LOCATION_LANGUAGE_MAPPING = (
+                             ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
+                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[2]),
+                             ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
+                             ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
+)
 
 # Locale url plugin
 LOCALEURL_USE_ACCEPT_LANGUAGE = True
@@ -194,6 +223,7 @@ MIDDLEWARE_CLASSES = (
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
     'apparelrow.apparel.middleware.GenderMiddleware',
+    'apparelrow.apparel.middleware.LocationMiddleware',
     'apparelrow.dashboard.middleware.ReferralMiddleware',
 )
 
@@ -323,6 +353,7 @@ PIPELINE_JS = {
                              'js/vendor/jquery-ui-1.9.2.custom.js',
                              'js/vendor/add2home.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
+                             'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
                              'bootstrap/js/transition.js',
                              'bootstrap/js/alert.js',
@@ -498,13 +529,14 @@ SOLR_RELOAD_URL = 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=col
 # DASHBOARD
 APPAREL_DASHBOARD_CUT_DEFAULT = '0.67'
 APPAREL_DASHBOARD_MINIMUM_PAYOUT = 50 # EUR
-APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT = '0.33'
+APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT = '0.15'
 APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME = 'referral_cookie'
 APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '20'
 
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MULTI_GENDER_COOKIE = 'multigender'
+APPAREL_LOCATION_COOKIE = 'location'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
@@ -748,3 +780,6 @@ LOGGING = {
         },
     }
 }
+
+
+

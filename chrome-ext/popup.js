@@ -1,3 +1,14 @@
+// Standard Google Universal Analytics code
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // Note: https protocol here
+
+ga('create', 'UA-21990268-2', 'auto');
+ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+ga('require', 'displayfeatures');
+ga('send', 'pageview', '/chrome-extension.html');
+
 
 var DOMAIN = 'http://apprl.com';
 
@@ -85,6 +96,7 @@ function run(response) {
   var productLink = document.querySelector('.product-link');
   var productShortLink = document.querySelector('.product-short-link');
   var productShortLinkInput = document.querySelector('.product-short-link input');
+  var noLikeText = document.querySelector('.no-like');
 
   body.className = 'semi-active';
 
@@ -103,7 +115,11 @@ function run(response) {
 
         var likeButtonClass = ' disabled';
         if (response.product_link) {
+          ga('send', 'event', 'ChromeExtension', 'LoadURL', tabs[0].url); // Send event to GA on product link load
           likeButtonClass = '';
+        } else {
+          ga('send', 'event', 'ChromeExtension', 'LoadDomain', hostname); // Send event to GA on domain load
+          noLikeText.className = 'no-like show'; // Show no-like text
         }
 
         if (response.product_liked) {
@@ -122,6 +138,7 @@ function run(response) {
         if (response.product_link) {
           var likeActive = false;
           likeButton.onclick = function() {
+            ga('send', 'event', 'ChromeExtension', 'ProductLike', tabs[0].url); // Send event to GA on like button click
             if (likeActive === false) {
               likeActive = true;
               if (response.product_liked) {
@@ -140,6 +157,8 @@ function run(response) {
         }
 
         productButton.onclick = function() {
+          ga('send', 'event', 'ChromeExtension', 'ClickGetLinkButton', tabs[0].url); // Send event to GA on product link button click
+          noLikeText.className = 'no-like'; // Hide no-like text
           if (productShortLinkInput.value) {
             productShortLink.style.display = 'block';
           }

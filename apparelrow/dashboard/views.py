@@ -135,6 +135,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             apprl_commission = decimal.Decimal('0')
 
         temp = {
+            'id': sale.id,
             'is_promo': sale.is_promo,
             'is_referral_sale': sale.is_referral_sale,
             'referral_user': referral_user,
@@ -369,12 +370,12 @@ def dashboard(request, year=None, month=None):
 
         # Total sales counts
         sales_total = decimal.Decimal('0')
-        sales_pending = Sale.objects.filter(user_id=request.user.pk, status=Sale.PENDING, paid=Sale.PAID_PENDING).aggregate(total=Sum('commission'))['total']
+        sales_pending = get_model('dashboard', 'UserEarning').objects.filter(user=request.user, status=Sale.PENDING, paid=Sale.PAID_PENDING).aggregate(total=Sum('amount'))['total']
         if sales_pending:
             sales_total += sales_pending
         else:
             sales_pending = decimal.Decimal('0')
-        sales_confirmed = Sale.objects.filter(user_id=request.user.pk, status=Sale.CONFIRMED, paid=Sale.PAID_PENDING).aggregate(total=Sum('commission'))['total']
+        sales_confirmed = get_model('dashboard', 'UserEarning').objects.filter(user=request.user, status=Sale.CONFIRMED, paid=Sale.PAID_PENDING).aggregate(total=Sum('amount'))['total']
         if sales_confirmed:
             sales_total += sales_confirmed
         else:
@@ -386,28 +387,51 @@ def dashboard(request, year=None, month=None):
         if payments:
             pending_payment = payments[0].amount
 
+        total_earned = 0
+        payments = Payment.objects.filter(paid=True, user=request.user)
+        for pay in payments:
+            total_earned += pay.amount
+
         # Sales and most sold products
         sales, most_sold_products = get_sales(start_date_query, end_date_query, user_id=request.user.pk)
 
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
 
+        # User Earnings
+        user_earnings = get_model('dashboard', 'UserEarning').objects.filter(user=request.user)
+        for earning in user_earnings:
+            for sale in sales:
+                if earning.sale.id == sale['id']:
+                    earning.extra_sale = sale
+            if earning.from_user:
+                earning.from_user_name = earning.from_user.slug
+                earning.from_user_avatar = earning.from_user.avatar_small
+                if earning.from_user.name:
+                    earning.from_user_name = earning.from_user.name
+                earning.type = earning.get_user_earning_type_display()
         # Sales count
         sales_count = 0
         referral_sales_count = 0
+        tribute_sales_count = 0
 
         # Sales and commission per day
         data_per_day = {}
         for day in range(1, (end_date - start_date).days + 2):
-            data_per_day[start_date.replace(day=day)] = [0, 0, 0]
+            data_per_day[start_date.replace(day=day)] = [0, 0, 0, 0]
 
-        for sale in sales:
-            if sale['is_referral_sale']:
-                data_per_day[sale['created'].date()][2] += sale['commission']
-                referral_sales_count += 1
-            else:
-                data_per_day[sale['created'].date()][0] += sale['commission']
+        for earning in user_earnings:
+            if earning.user_earning_type == "publisher_sale_commission":
+                data_per_day[earning.date.date()][0] += earning.amount
                 sales_count += 1
+            elif earning.user_earning_type == "referral_signup_commission" or earning.user_earning_type == "referral_sale_commission":
+                data_per_day[earning.date.date()][2] += earning.amount
+                referral_sales_count += 1
+            elif earning.user_earning_type == "publisher_network_tribute":
+                data_per_day[earning.date.date()][3] += earning.amount
+                tribute_sales_count += 1
+
+
 
         # Clicks per day
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
@@ -428,9 +452,10 @@ def dashboard(request, year=None, month=None):
 
         return render(request, 'dashboard/publisher.html', {'data_per_day': data_per_day,
                                                             'total_sales': sales_total,
+                                                            'sales_pending': sales_pending,
                                                             'total_confirmed': sales_confirmed,
                                                             'pending_payment': pending_payment,
-                                                            'month_commission': sum([x[0] for x in data_per_day.values()]),
+                                                            'month_commission': ('%.2f' % sum([x[0] for x in data_per_day.values()])),
                                                             'month_clicks': month_clicks,
                                                             'month_sales': sales_count,
                                                             'month_conversion_rate': conversion_rate,
@@ -438,11 +463,15 @@ def dashboard(request, year=None, month=None):
                                                             'year': year,
                                                             'month': month,
                                                             'sales': sales,
+                                                            'user_earnings': user_earnings,
+                                                            'total_earned': total_earned,
                                                             'is_after_june': is_after_june,
                                                             'most_sold_products': most_sold_products,
                                                             'most_clicked_products': most_clicked_products,
                                                             'referral_sales': referral_sales_count,
-                                                            'referral_commission': sum([x[2] for x in data_per_day.values()]),
+                                                            'network_sales': tribute_sales_count,
+                                                            'network_commission': ('%.2f' % sum([x[3] for x in data_per_day.values()])),
+                                                            'referral_commission': ('%.2f' % sum([x[2] for x in data_per_day.values()])),
                                                             'currency': 'EUR'})
 
 

@@ -23,6 +23,12 @@
     <script src="//cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
+    <!-- TradeDoubler site verification 2463884 -->
+    <!-- TradeDoubler site verification 2463889 -->
+    <!-- TradeDoubler site verification 2463894 -->
+    <!-- TradeDoubler site verification 2463896 -->
+    <!-- TradeDoubler site verification 1897050 -->
+    <!-- TradeDoubler site verification 1897442 -->
     <script type="text/javascript">
         var language_code = '{{ LANGUAGE_CODE }}';
         var product_popup_url = '{% url "product-popup" %}';
@@ -184,11 +190,16 @@
 
                 <ul class="nav navbar-nav navbar-nav-language visible-xs">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                         <ul id="language-dropdown" class="dropdown-menu">
+                            {% for location in LOCATION_LANGUAGE_MAPPING %}
+                                <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
+                            {% endfor %}
+                            {% comment %}
                             {% for language in LANGUAGES_DISPLAY %}
                             <li><a data-language="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">{% trans language.1 %}</a></li>
                             {% endfor %}
+                            {% endcomment %}
                         </ul>
                     </li>
                 </ul>
@@ -217,12 +228,17 @@
                 <div class="col-md-4">
                     <div class="row">
                         <ul class="list-unstyled col-xs-6">
-                            <li><h4>{% trans "Language" %}</h4></li>
+                            <li><h4>{% trans "Your Location" %}</h4></li>
                             <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                                 <ul id="language-dropdown" class="dropdown-menu">
+                                    {% comment %}
                                     {% for language in LANGUAGES_DISPLAY %}
                                     <li><a data-language="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">{% trans language.1 %}</a></li>
+                                    {% endfor %}
+                                    {% endcomment %}
+                                    {% for location in LOCATION_LANGUAGE_MAPPING %}
+                                    <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
                                     {% endfor %}
                                 </ul>
                             </li>
@@ -324,6 +340,14 @@
       $element.text(formatNumber(converted_price) + ' ' + current_currency);
   });
 }
+
+  $('#language-dropdown > li > a').click(function(event){
+      var $this = $(this);
+      var location = $this.data("location");
+      $.removeCookie('location');
+      $.cookie('location', location, { expires: 60, path: '/' });
+  } );
+
 </script>
 
 {% include 'mouseflow.html' only %}
