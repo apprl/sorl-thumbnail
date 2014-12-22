@@ -767,7 +767,7 @@ def authenticated_backend(request):
     return JSONResponse({'authenticated': request.user and request.user.is_authenticated(), 'profile': profile})
 
 def product_lookup_by_domain(request, domain, key):
-    instance = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain=domain)
+    instance = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain__startswith=domain)
     if instance.template:
         user_id = request.user.pk
         return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=key), instance.vendor
