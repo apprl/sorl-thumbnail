@@ -106,15 +106,18 @@ VENDOR_LOCATION_MAPPING = {
     "Nelly":["SE"],
     "Nelly No":["NO"],
     "Panos Emporio":["SE"],
+    "Boozt se":["SE"],
+    "Boozt no":["NO"],
+    "ASOS no":["NO"],
     "QVC":["US"],
     "default":["ALL","SE","NO","US"],
 }
 
 LOCATION_LANGUAGE_MAPPING = (
-                             ("SE", gettext("Sweden"), LANGUAGES_DISPLAY[1]),
-                             ("NO", gettext("Norway"), LANGUAGES_DISPLAY[2]),
-                             ("US", gettext("USA"), LANGUAGES_DISPLAY[0]),
-                             ("ALL", gettext("International"), LANGUAGES_DISPLAY[0]),
+                             ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
+                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[2]),
+                             ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
+                             ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
 )
 
 # Locale url plugin

@@ -15,7 +15,7 @@ import datetime
 
 crawl_group = datetime.datetime.today().day % 2
 
-suspended_group = ['qvc']
+suspended_group = ['']
 
 for i, spider in enumerate(spiders):
     if spider not in pending_spiders and spider not in suspended_group:
