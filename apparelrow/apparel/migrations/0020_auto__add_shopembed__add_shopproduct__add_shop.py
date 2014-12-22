@@ -8,39 +8,53 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'ShopEmbed.width_type'
-        db.add_column(u'apparel_shopembed', 'width_type',
-                      self.gf('django.db.models.fields.CharField')(default='px', max_length=2),
-                      keep_default=False)
+        # Adding model 'ShopEmbed'
+        db.create_table(u'apparel_shopembed', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('shop', self.gf('django.db.models.fields.related.ForeignKey')(related_name='parent_shop', to=orm['apparel.Shop'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='shop_embed', to=orm['profile.User'])),
+            ('width', self.gf('django.db.models.fields.IntegerField')(default=696)),
+            ('height', self.gf('django.db.models.fields.IntegerField')(default=526)),
+            ('width_type', self.gf('django.db.models.fields.CharField')(default='px', max_length=2)),
+            ('language', self.gf('django.db.models.fields.CharField')(max_length=3)),
+            ('show_product_brand', self.gf('django.db.models.fields.BooleanField')(default=True)),
+            ('show_filters', self.gf('django.db.models.fields.BooleanField')(default=True)),
+            ('show_filters_collapsed', self.gf('django.db.models.fields.BooleanField')(default=True)),
+        ))
+        db.send_create_signal(u'apparel', ['ShopEmbed'])
 
-        # Adding field 'ShopEmbed.show_product_brand'
-        db.add_column(u'apparel_shopembed', 'show_product_brand',
-                      self.gf('django.db.models.fields.BooleanField')(default=True),
-                      keep_default=False)
+        # Adding model 'ShopProduct'
+        db.create_table(u'apparel_shopproduct', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('shop_embed', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Shop'])),
+            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Product'])),
+        ))
+        db.send_create_signal(u'apparel', ['ShopProduct'])
 
-        # Adding field 'ShopEmbed.show_filters'
-        db.add_column(u'apparel_shopembed', 'show_filters',
-                      self.gf('django.db.models.fields.BooleanField')(default=True),
-                      keep_default=False)
-
-        # Adding field 'ShopEmbed.show_filters_collapsed'
-        db.add_column(u'apparel_shopembed', 'show_filters_collapsed',
-                      self.gf('django.db.models.fields.BooleanField')(default=True),
-                      keep_default=False)
+        # Adding model 'Shop'
+        db.create_table(u'apparel_shop', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('slug', self.gf('django_extensions.db.fields.AutoSlugField')(allow_duplicates=False, max_length=80, separator=u'-', blank=True, populate_from=('title',), overwrite=False)),
+            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='shop', to=orm['profile.User'])),
+            ('show_liked', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('published', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal(u'apparel', ['Shop'])
 
 
     def backwards(self, orm):
-        # Deleting field 'ShopEmbed.width_type'
-        db.delete_column(u'apparel_shopembed', 'width_type')
+        # Deleting model 'ShopEmbed'
+        db.delete_table(u'apparel_shopembed')
 
-        # Deleting field 'ShopEmbed.show_product_brand'
-        db.delete_column(u'apparel_shopembed', 'show_product_brand')
+        # Deleting model 'ShopProduct'
+        db.delete_table(u'apparel_shopproduct')
 
-        # Deleting field 'ShopEmbed.show_filters'
-        db.delete_column(u'apparel_shopembed', 'show_filters')
-
-        # Deleting field 'ShopEmbed.show_filters_collapsed'
-        db.delete_column(u'apparel_shopembed', 'show_filters_collapsed')
+        # Deleting model 'Shop'
+        db.delete_table(u'apparel_shop')
 
 
     models = {
@@ -135,6 +149,7 @@ class Migration(SchemaMigration):
         u'apparel.lookcomponent': {
             'Meta': {'object_name': 'LookComponent'},
             'component_of': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
+            'flipped': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'height': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'left': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
@@ -362,6 +377,7 @@ class Migration(SchemaMigration):
         u'dashboard.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_subscriber': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'owner': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'owner_group'", 'null': 'True', 'to': u"orm['profile.User']"}),
             'owner_cut': ('django.db.models.fields.DecimalField', [], {'default': "'1.00'", 'null': 'True', 'max_digits': '10', 'decimal_places': '3', 'blank': 'True'})

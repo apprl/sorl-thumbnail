@@ -8,49 +8,26 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'ShopEmbed'
-        db.create_table(u'apparel_shopembed', (
+        # Adding model 'ShortDomainLink'
+        db.create_table(u'apparel_shortdomainlink', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('shop', self.gf('django.db.models.fields.related.ForeignKey')(related_name='parent_shop', to=orm['apparel.Shop'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='shop_embed', to=orm['profile.User'])),
-            ('width', self.gf('django.db.models.fields.IntegerField')(default=696)),
-            ('height', self.gf('django.db.models.fields.IntegerField')(default=526)),
-            ('language', self.gf('django.db.models.fields.CharField')(max_length=3)),
+            ('url', self.gf('django.db.models.fields.CharField')(max_length=512)),
+            ('vendor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Vendor'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='short_domain_links', to=orm['profile.User'])),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
         ))
-        db.send_create_signal(u'apparel', ['ShopEmbed'])
+        db.send_create_signal(u'apparel', ['ShortDomainLink'])
 
-        # Adding model 'ShopProduct'
-        db.create_table(u'apparel_shopproduct', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('shop_embed', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Shop'])),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Product'])),
-        ))
-        db.send_create_signal(u'apparel', ['ShopProduct'])
-
-        # Adding model 'Shop'
-        db.create_table(u'apparel_shop', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('slug', self.gf('django_extensions.db.fields.AutoSlugField')(allow_duplicates=False, max_length=80, separator=u'-', blank=True, populate_from=('title',), overwrite=False)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='shop', to=orm['profile.User'])),
-            ('show_liked', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('published', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal(u'apparel', ['Shop'])
+        # Adding unique constraint on 'ShortDomainLink', fields ['url', 'user']
+        db.create_unique(u'apparel_shortdomainlink', ['url', 'user_id'])
 
 
     def backwards(self, orm):
-        # Deleting model 'ShopEmbed'
-        db.delete_table(u'apparel_shopembed')
+        # Removing unique constraint on 'ShortDomainLink', fields ['url', 'user']
+        db.delete_unique(u'apparel_shortdomainlink', ['url', 'user_id'])
 
-        # Deleting model 'ShopProduct'
-        db.delete_table(u'apparel_shopproduct')
-
-        # Deleting model 'Shop'
-        db.delete_table(u'apparel_shop')
+        # Deleting model 'ShortDomainLink'
+        db.delete_table(u'apparel_shortdomainlink')
 
 
     models = {
@@ -164,8 +141,7 @@ class Migration(SchemaMigration):
             'language': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
             'look': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'embeds'", 'to': u"orm['apparel.Look']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'look_embeds'", 'to': u"orm['profile.User']"}),
-            'width': ('django.db.models.fields.IntegerField', [], {}),
-            'width_type': ('django.db.models.fields.CharField', [], {'default': "'px'", 'max_length': '2'})
+            'width': ('django.db.models.fields.IntegerField', [], {})
         },
         u'apparel.looklike': {
             'Meta': {'unique_together': "(('look', 'user'),)", 'object_name': 'LookLike'},
@@ -229,34 +205,6 @@ class Migration(SchemaMigration):
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"})
-        },
-        u'apparel.shop': {
-            'Meta': {'object_name': 'Shop'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Product']", 'through': u"orm['apparel.ShopProduct']", 'symmetrical': 'False'}),
-            'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'show_liked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('title',)", 'overwrite': 'False'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop'", 'to': u"orm['profile.User']"})
-        },
-        u'apparel.shopembed': {
-            'Meta': {'object_name': 'ShopEmbed'},
-            'height': ('django.db.models.fields.IntegerField', [], {'default': '526'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
-            'shop': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'parent_shop'", 'to': u"orm['apparel.Shop']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop_embed'", 'to': u"orm['profile.User']"}),
-            'width': ('django.db.models.fields.IntegerField', [], {'default': '696'})
-        },
-        u'apparel.shopproduct': {
-            'Meta': {'object_name': 'ShopProduct'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"}),
-            'shop_embed': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Shop']"})
         },
         u'apparel.shortdomainlink': {
             'Meta': {'unique_together': "(('url', 'user'),)", 'object_name': 'ShortDomainLink'},
@@ -402,7 +350,6 @@ class Migration(SchemaMigration):
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_brand': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_hidden': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_partner': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
