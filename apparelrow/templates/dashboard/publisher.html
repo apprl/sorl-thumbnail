@@ -219,6 +219,7 @@
                         <th>{% trans "From" %}</th>
                         <th class="center">{% trans "Clicks" %}</th>
                         <th>{% trans "Commission" %}</th>
+                        <th>{% trans "Sale Value" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -235,21 +236,24 @@
                         <td>{% trans "Welcome to APPRL" %}</td>
                         <td class="center"></td>
                         {% else %}
-                            {% if earning.from_user %}
-                                <td><a href="#"><img src="{{ earning.from_user_avatar }}"></a></td>
-                                <td class="hidden-xs"><a href="#">{% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}</a></td>
-                            {% elif earning.from_product %}
-                                <td><a href="{{ earning.extra_sale.product_link }}"><img src="{{ earning.extra_sale.product_image }}"></a></td>
-                                <td class="hidden-xs">{% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}</td>
+                            <td><a href="{{ earning.extra_sale.product_link }}"><img src="{{ earning.extra_sale.product_image }}"></a></td>
+                            <td class="hidden-xs">{% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}</td>
+                        <td>
+                            {% if earning.extra_sale.link %}
+                                {{ earning.extra_sale.link }}
                             {% else %}
-                                <td></td>
-                                <td></td>
+                                {% if earning.type == 'Network Commission' %}
+                                    Sale by {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}
+                                {% else %}
+                                    {{ earning.type}}
+                                {% endif %}
                             {% endif %}
-                        <td>{% if earning.extra_sale.link %}{{ earning.extra_sale.link }}{% else %}{{ earning.type}}{% endif %}</td>
+                        </td>
                         <td class="center">{{ earning.extra_sale.clicks }}</td>
                         {% endif %}
 
                         <td data-sort="{{ earning.amount }}">{{ earning.amount|floatformat:2 }} {{ currency }}</td>
+                        <td data-sort="{{ earning.amount }}">{{ earning.sale.amount|floatformat:2 }} {{ currency }}</td>
                     </tr>
                     {% empty %}
                     <tr>
