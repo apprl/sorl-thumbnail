@@ -114,10 +114,10 @@ VENDOR_LOCATION_MAPPING = {
 }
 
 LOCATION_LANGUAGE_MAPPING = (
-                             ("SE", gettext("Sweden"), LANGUAGES_DISPLAY[1]),
-                             ("NO", gettext("Norway"), LANGUAGES_DISPLAY[2]),
-                             ("US", gettext("USA"), LANGUAGES_DISPLAY[0]),
-                             ("ALL", gettext("International"), LANGUAGES_DISPLAY[0]),
+                             ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
+                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[2]),
+                             ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
+                             ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
 )
 
 # Locale url plugin
