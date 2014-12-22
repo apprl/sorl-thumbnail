@@ -13,7 +13,8 @@ urlpatterns = patterns('',
     url(r'^$', 'apparelrow.apparel.views.index', {'gender': 'A'}, name='index'),
     url(r'^men/$', 'apparelrow.apparel.views.index', {'gender': 'M'}, name='index-men'),
     url(r'^women/$', 'apparelrow.apparel.views.index', {'gender': 'W'}, name='index-women'),
-    url(r'^store/$', 'apparelrow.dashboard.views.store', name='index-store'),
+    url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),
+    url(r'^retailer/apply/$', 'apparelrow.dashboard.views.retailer_form', name='retailer-form'),
     url(r'^store/complete/$', 'apparelrow.dashboard.views.index_complete', {'view': 'store'}, name='index-store-complete'),
 
     # Contests

@@ -14,12 +14,12 @@
                 <div class="form-group">
                     <label class="control-label" for="id_look_width">{% trans "Width" %}</label>
                     <div class="input-group">
-                        <input id="id_look_width" type="text" name="width" class="form-control" placeholder="600">
+                        <input id="id_look_width" type="text" name="width" class="form-control" placeholder="100">
                          <div class="input-group-btn">
-                            <button id="width_type" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="text">{% trans "pixels" %}</span> <span class="caret"></span></button>
+                            <button id="width_type" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="text">%</span> <span class="caret"></span></button>
                             <ul id="width_dropdown" class="dropdown-menu">
-                                <li><a href="#" data-text="{% trans "pixels" %}" data-value="px">{% trans "pixels" %}</a></li>
                                 <li><a href="#" data-text="%" data-value="%">%</a></li>
+                                <li><a href="#" data-text="{% trans "pixels" %}" data-value="px">{% trans "pixels" %}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
         }
     }
 $(document).ready(function() {
-        var width_type = 'px';
+        var width_type = '%';
 
         $('#width_dropdown a').on('click', function(e) {
             e.preventDefault();

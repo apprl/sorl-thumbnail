@@ -273,6 +273,24 @@ PIPELINE_CSS = {
         'extra_context': {
             'media': 'screen,projection',
         },
+    },
+    'homepage': {
+        'source_filenames': (
+            'less/home.less',
+        ),
+        'output_filename': 'css/home.css',
+        'extra_context': {
+            'media': 'screen,projection',
+            }
+    },
+    'normalize': {
+        'source_filenames': (
+            'less/normalize.css',
+        ),
+        'output_filename': 'css/normalize.css',
+        'extra_context': {
+            'media': 'screen,projection',
+            }
     }
 }
 #PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
@@ -301,7 +319,7 @@ PIPELINE_JS = {
     },
     'main': {
         'source_filenames': ('js/vendor/underscore.js',
-                             'js/vendor/jquery-1.9.1.js',
+                             'js/vendor/jquery-2.1.1.js',
                              'js/vendor/jquery-ui-1.9.2.custom.js',
                              'js/vendor/add2home.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
@@ -324,6 +342,7 @@ PIPELINE_JS = {
                              #'js/jquery/jquery.html5-placeholder-shim.js',
                              #'js/jquery/jquery.autosize-min.js',
                              #'js/jquery/jquery.scrollable.js',
+                             'js/jquery/jquery.iosslider.js',
                              'js/jquery/jquery.apprl-sticky.js',
                              'js/jquery/jquery.apprl-tooltip.js',
                              'js/jquery/jquery.textarea.js',
@@ -334,7 +353,7 @@ PIPELINE_JS = {
         'output_filename': 'js/compiled/main.js',
     },
     'shop': {
-        'source_filenames': ('js/vendor/jquery-1.9.1.js',
+        'source_filenames': ('js/vendor/jquery-2.1.1.js',
                              'js/vendor/jquery-ui-1.9.2.custom.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
                              'js/vendor/jquery.history.js',
@@ -655,10 +674,10 @@ CELERY_ROUTES = ({
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
-    #'root': {
-    #    'level': 'DEBUG',
-    #    'handlers': ['sentry'],
-    #},
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['sentry'],
+    },
 
     'formatters': {
         'simple': {

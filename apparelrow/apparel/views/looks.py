@@ -10,7 +10,7 @@ from django.core.cache import get_cache
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseForbidden, Http404, HttpResponseRedirect, HttpResponseNotAllowed
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
@@ -45,7 +45,7 @@ def embed(request, slug, identifier=None):
     Display look for use in embedded iframe.
     """
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
-
+    look_embed = None
     try:
         look_embed = get_model('apparel', 'LookEmbed').objects.get(identifier=identifier)
         width = look_embed.width
@@ -107,7 +107,8 @@ def embed(request, slug, identifier=None):
                                                            'height': str(height),
                                                            'embed_width': str(width) or settings.APPAREL_LOOK_SIZE[0],
                                                            'embed_height': str(height) or settings.APPAREL_LOOK_SIZE[1],
-                                                           'embed_id': look_embed.identifier},)
+                                                           'embed_id': look_embed.identifier if look_embed else ''},)
+
     translation.deactivate()
 
     get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
@@ -169,6 +170,7 @@ def widget(request, slug):
                                                           width_type=content['width_type'],
                                                           defaults={'identifier': identifier})
     content['identifier'] = look_embed.identifier
+    content['STATIC_URL'] = settings.STATIC_URL.replace('http://','')
 
     return render(request, 'apparel/fragments/look_widget.html', content)
 

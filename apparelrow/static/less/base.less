@@ -164,6 +164,7 @@ a {
     border-radius: 0;
     > li > a:hover, > li > a:focus {
         background-color: #000000;
+        color: white;
     }
 }
 
@@ -171,6 +172,10 @@ a {
     z-index: 10040;
     .modal-content {
         border-radius: 0;
+        p {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+          }
     }
     .modal-header {
         background-color: #000000;
@@ -184,6 +189,10 @@ a {
                 opacity: 1.0;
             }
         }
+        h4 {
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: 18px;
+        }
     }
     .modal-footer {
         padding: 10px;
@@ -191,13 +200,16 @@ a {
     }
 }
 .modal-backdrop {
-    z-index: 10035;
+    //z-index: 10035;
 }
 
 .default-form input {
-    .form-control;
+    .form-control .custom-form {
+        width: 95%;
+    };
 }
 
+/*
 .facepile-container {
     &.ar-facepile {
         background: transparent url('../images/facepile.jpg') no-repeat center top;
@@ -208,6 +220,7 @@ a {
         }
     }
 }
+*/
 
 .list-likes > li {
     padding-bottom: 10px;
@@ -317,6 +330,7 @@ body {
 
     h1 { .body-header-h1; }
     h1 + ul, h1 + h2 { .body-header-ul; }
+    h2 { .body-header-ul; }
 
     .btn-gender {
         .btn-primary;
@@ -1026,7 +1040,7 @@ footer {
         text-align: center;
         font-size: 14px;
         margin: 0;
-        a {
+        a {
             display: inline-block;
             padding: 0;
             white-space: nowrap;

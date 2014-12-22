@@ -22,6 +22,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from django.views.generic.base import RedirectView
 from django.utils import translation, timezone
+from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
 
@@ -518,6 +519,16 @@ def _product_like(request, product, action):
         product_like.active = default_active
         product_like.save()
 
+    if request.user.partner_group:
+        partner_group = request.user.partner_group
+        owner_group = partner_group.owner
+        if not owner_group == request.user and partner_group.is_subscriber:
+            product_like, created = ProductLike.objects.get_or_create(user=owner_group, product=product,
+                                                              defaults={'active': default_active})
+            if not created:
+                product_like.active = default_active
+                product_like.save()
+
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
 
@@ -779,9 +790,9 @@ def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
 
-    key = urllib.unquote(request.GET.get('key', '')).decode('utf8')
+    key = smart_unicode(urllib.unquote(request.GET.get('key', '')))
     try:
-        product_pk = long(urllib.unquote(request.GET.get('pk', '')).decode('utf8'))
+        product_pk = long(smart_unicode(urllib.unquote(request.GET.get('pk', ''))))
     except ValueError:
         product_pk = None
 
@@ -790,7 +801,7 @@ def product_lookup(request):
         product_pk = product_lookup_by_theimp(request, key)
 
     # TODO: must go through theimp database right now to fetch site product by real url
-    #key = urllib.unquote(request.GET.get('key', '')).decode('utf8')
+    #key = smart_unicode(urllib.unquote(request.GET.get('key', '')))
     #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
 
     #json_data = json.loads(imported_product.json)
@@ -806,7 +817,7 @@ def product_lookup(request):
         product_short_link = request.build_absolute_uri(product_short_link)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
     else:
-        domain = urllib.unquote(request.GET.get('domain', '')).decode('utf8')
+        domain = smart_unicode(urllib.unquote(request.GET.get('domain', '')))
         product_short_link, vendor = product_lookup_by_domain(request, domain, key)
         if product_short_link is not None:
             product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link, user=request.user, vendor=vendor)

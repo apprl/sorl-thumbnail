@@ -47,7 +47,7 @@ class ElevenSpider(CSVFeedSpider, AffiliateMixin):
         item['sku'] = row.get('Tillverkarens prod.nr./SKU') if row.get('Tillverkarens prod.nr./SKU',None) else row.get('Produktnummer')
         item['name'] = row.get('Produkttitel')
         item['vendor'] = self.name
-        item['url'] = row.get(u'Länk')
+        item['url'] = row.get(u'Länk') + "?utm_source=apprl&utm_medium=affiliate&utm_campaign=apprl"
         item['affiliate'] = self.AFFILIATE_AAN
         item['category'] = "%s -> %s" % (row.get(u'MAN, WOMAN, UNISEX'),row.get('Grupp') )
         item['description'] = row.get('Beskrivning')

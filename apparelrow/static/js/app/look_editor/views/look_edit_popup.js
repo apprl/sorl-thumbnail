@@ -83,7 +83,8 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
         var url = '/products/' + this.model.get('id') + '/popup/';
         // TODO: why this width?
-        this.$el.css('width', 594);
+        this.$el.css('width', '100%');
+
         this.$el.find('.title').text($('#popup_slim_template').data('title'));
         var content = this.$el.find('.content');
         content.empty();
@@ -91,10 +92,10 @@ App.Views.LookEditPopup = Backbone.View.extend({
         content.addClass('center');
         content.load(url, _.bind(function() {
             content.removeClass('center');
-            this._center();
+            //this._center();
         }, this));
 
-        this._center();
+        //this._center();
         this.$el.show();
     },
 
@@ -106,7 +107,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this.$el.find('.title').text($('#look_edit_add_popup_template').data('title'));
         this.$el.find('.content').html(this.template(this.model.toJSON()));
         this.$el.css('width', 'auto');
-        this._center();
+        //this._center();
         this.$el.show();
     },
 

@@ -35,6 +35,11 @@ window.App.Models.Look = Backbone.Model.extend({
                 return 'You have unsaved changes that will be deleted if you leave this page without saving.';
             }
         }, this));
+        $(document).on('pagecontainerhide',  _.bind(function(e) {
+            if (look_model._dirty) {
+                return 'You have unsaved changes that will be deleted if you leave this page without saving.';
+            }
+        }, this));
 
         App.Events.on('look:dirty', this.dirty, this);
         App.Events.on('look:reset', this.reset, this);

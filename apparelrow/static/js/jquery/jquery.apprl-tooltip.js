@@ -75,6 +75,12 @@
                 tooltip_top += padding;
             }
 
+            if (tooltip_h + padding + tooltip_top > container_h) {
+                tooltip_top -= tooltip_h + padding + tooltip_top - container_h + 30;
+                tooltip_arrow.removeClass('tooltip-arrow-top').addClass('tooltip-arrow-bottom')
+            }
+
+
             if(tooltip_left < 5) {
                 tooltip_arrow.css('left', 135 - (5 - tooltip_left));
                 tooltip_left = 5;

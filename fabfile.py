@@ -7,7 +7,7 @@ from fabric.api import *
 from fabric.colors import green, red
 
 vm_bridge = True
-env.solr_download_url = 'http://apache.cs.uu.nl/dist/lucene/solr/4.8.0/solr-4.8.0.tgz'
+env.solr_download_url = 'http://apache.cs.uu.nl/dist/lucene/solr/4.8.1/solr-4.8.1.tgz'
 env.project_name = 'apparelrow' # no spaces!
 env.app_name = 'apparelrow' # no spaces!
 # environments
@@ -69,7 +69,7 @@ def deploy_app():
             sudo("chmod -R 770 %(venv_path)s/logs;" % env)
             sudo("mkdir -p %(project_path)s/%(app_name)s/media/" % env)
             sudo("chown -R %(run_user)s:%(user)s %(project_path)s/%(app_name)s/media;" % env)
-            sudo("chmod -R 740 %(project_path)s/%(app_name)s/media;" % env)
+            sudo("chmod -R 770 %(project_path)s/%(app_name)s/media;" % env)
 
     for name in get_templates():
         if not env.installed_apps or (env.installed_apps and name in env.installed_apps):
@@ -104,7 +104,8 @@ def deploy_app():
         with update_changed_requirements():
             run("git pull origin master -f")
         # Todo reactivate this
-        manage("collectstatic -v 0 --noinput")
+        if not "dev" in env.settings and env.collectstatic:
+            manage("collectstatic --noinput")
 
         #sudo("chown -R %(run_user)s:%(user)s %(static_dir)s;sudo chmod -R 770 %(static_dir)s" % env)
         #sudo("chown -R %(run_user)s:%(user)s .;sudo chmod -R 770 ." % env)

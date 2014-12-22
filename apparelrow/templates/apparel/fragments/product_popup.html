@@ -1,16 +1,17 @@
 {% load i18n thumbnail apparel_extras buy_extras cache thumbnail_extras %}
 
 <div class="product-container row">
-
-    <div class="product-image col-xs-4">
+    <div class="col-xs-12">
+        <h4>{{ object.manufacturer }} - {{ object.product_name }}</h4>
+    </div>
+    <div class="product-image col-sm-4 col-cs-12">
         {% thumbnail object.product_image "224x291" crop=False as im %}
         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" style="margin:{{ im|positive_margin:'224x291' }}" class="img-responsive">
         {% endthumbnail %}
     </div>
 
     {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}
-    <div class="product-info col-xs-8">
-        <h4>{{ object.manufacturer }} - {{ object.product_name }}</h4>
+    <div class="col-xs-12 col-sm-8">
         <p class="bodycopy description">{{ object.description }}</p>
         <div class="product-vendors group">
             <div class="product-vendor">
@@ -27,6 +28,9 @@
             </div>
             <a href="#" class="btn btn-success btn-add">{% if type == 'shop' %}{% trans "Add to shop" %}{% else %}{% trans "Add to look" %}{% endif %}</a>
         </div>
+    </div>
+    <div class="col-xs-12">
+        <a href="#" class="btn btn-success btn-add">{% trans "Add to look" %}</a>
     </div>
     {% endcache %}
 

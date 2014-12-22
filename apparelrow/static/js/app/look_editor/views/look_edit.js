@@ -66,8 +66,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         App.Events.on('widget:unpublish', this.unpublish_look, this);
 
 
-        $(window).on('resize', _.bind(this.update_sizes, this));
-
+        $(window).on('resize onorientationchange', _.bind(this.update_sizes, this));
         App.Views.LookEdit.__super__.initialize(this);
     },
 
@@ -159,6 +158,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     on_click: function(e) {
+        App.Events.trigger("lookedit:clicked");
         if(!this.model.has('image') || !this.model.get('image')) {
             return true;
         }
@@ -190,6 +190,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         //}
 
         this.model._dirty = true;
+
         e.preventDefault();
     },
 

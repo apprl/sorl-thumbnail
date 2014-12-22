@@ -58,7 +58,7 @@ App.Views.LookComponentPhoto = App.Views.LookComponent.extend({
                 this.$el.css('top', this.model.get('top') + event.deltaY);
             }, this));
             this.hammertime.on('panend', _.bind(function(event) {
-                this.model.set({left: this.$el.position().left, top: this.$el.position().top}, {silent: true});
+                this.set_position(this.$el.position().left, this.$el.position().top);
             }, this));
         } else {
             this.$el.draggable({

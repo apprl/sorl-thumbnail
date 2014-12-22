@@ -234,12 +234,13 @@ class IsMappedCategoryListFilter(admin.SimpleListFilter):
 
 
 class CategoryMappingAdmin(admin.ModelAdmin):
-    list_display = ('category', 'vendor', 'mapped_category', 'category_ancestors', 'num_products')
+    list_display = ('category', 'vendor', 'mapped_category', 'category_ancestors',)
     list_filter = (IsMappedCategoryListFilter, 'vendor')
+    #list_filter = ('vendor',)
     readonly_fields = ('vendor', 'category', 'created', 'modified')
     search_fields = ('category',)
     list_editable = ('mapped_category',)
-    list_per_page = 20
+    list_per_page = 50
 
     def category_ancestors(self, category):
         result = []
@@ -248,9 +249,9 @@ class CategoryMappingAdmin(admin.ModelAdmin):
 
         return ' > '.join(result)
 
-    def queryset(self, request):
-        qs = super(CategoryMappingAdmin, self).queryset(request)
-        return qs.annotate(Count('products'))
+    #def queryset(self, request):
+    #    qs = super(CategoryMappingAdmin, self).queryset(request)
+    #    return qs.annotate(Count('products'))
 
     def num_products(self, category):
         return category.products.count()
