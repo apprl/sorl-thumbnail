@@ -7,3 +7,21 @@
   padding-left: 15px;
   padding-right: 15px;
 }
+.shop-list .shop:nth-child(3n+1) {
+  clear: left;
+}
+.shop-list .shop .shop-title {
+  margin-bottom: 2px;
+}
+.shop-list .shop .shop-title a {
+  font-weight: 800;
+}
+.shop-list .shop .status {
+  font-size: 90%;
+}
+.shop-list .shop .status.published {
+  color: green;
+}
+.shop-list .shop .status.unpublished {
+  color: red;
+}
