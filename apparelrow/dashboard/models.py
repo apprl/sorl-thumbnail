@@ -269,7 +269,7 @@ def create_earnings(instance):
             sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
 
 def create_referral_earning(sale):
-    total_commission = sale.commission
+    total_commission = sale.converted_commission
     referral_user = sale.referral_user
     user = get_model('profile', 'User').objects.get(id=sale.user_id)
     commission_group = referral_user.partner_group
@@ -296,7 +296,7 @@ def create_referral_earning(sale):
         logging.warning('User %s should have assigned a comission group'%user)
 
 def create_user_earnings(sale):
-    total_commission = sale.commission
+    total_commission = sale.converted_commission
     product = None
 
     user = get_model('profile', 'User').objects.get(id=sale.user_id)

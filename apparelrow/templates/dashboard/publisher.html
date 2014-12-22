@@ -253,7 +253,7 @@
                         {% endif %}
 
                         <td data-sort="{{ earning.amount }}">{{ earning.amount|floatformat:2 }} {{ currency }}</td>
-                        <td data-sort="{{ earning.amount }}">{{ earning.sale.amount|floatformat:2 }} {{ currency }}</td>
+                        <td data-sort="{{ earning.amount }}">{{ earning.sale.converted_amount|floatformat:2 }} {{ currency }}</td>
                     </tr>
                     {% empty %}
                     <tr>
