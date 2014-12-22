@@ -13,6 +13,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:save', this.save_shop, this);
         App.Events.on('widget:publish', this.publish_shop, this);
         App.Events.on('widget:unpublish', this.unpublish_shop, this);
+        App.Events.on('widget:product_display', this.product_display, this);
 
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
@@ -78,7 +79,17 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.model.set('published', true);
         this.save_shop(values);
     },
+    product_display: function(show_liked) {
+        this.model.set('show_liked', show_liked);
 
+        if(show_liked) {
+            this.save_shop({ title: "My latest likes" });
+            $('#shop-display-settings').find('.buttons').hide();
+        } else {
+            $('#product-chooser').find('.disabled').hide();
+            $('#shop-display-settings').hide();
+        }
+    },
     unpublish_shop: function() {
         this.model.set('published', false);
         this.model.save();

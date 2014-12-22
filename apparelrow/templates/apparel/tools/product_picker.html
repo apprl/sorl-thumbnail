@@ -2,6 +2,7 @@
 {% load i18n compressed %}
 
 <div id="product-chooser" data-reset-text="{% trans "Reset" %}">
+    {% if not enabled %}<div class="disabled"></div>{% endif %}
     <ul id="product-tabs" class="nav nav-tabs nav-justified">
         <li><a{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} class="tab-likes" href="#"><i class="glyphicon glyphicon-heart"></i> <span>{% trans "My likes" %}</span></a></li>
         <li class="active"><a class="tab-all" href="#"><i class="glyphicon glyphicon-list"></i> <span>{% trans "All products" %}</span></a></li>
