@@ -455,7 +455,7 @@ def dashboard(request, year=None, month=None):
                                                             'sales_pending': sales_pending,
                                                             'total_confirmed': sales_confirmed,
                                                             'pending_payment': pending_payment,
-                                                            'month_commission': sum([x[0] for x in data_per_day.values()]),
+                                                            'month_commission': ('%.2f' % sum([x[0] for x in data_per_day.values()])),
                                                             'month_clicks': month_clicks,
                                                             'month_sales': sales_count,
                                                             'month_conversion_rate': conversion_rate,
@@ -470,8 +470,8 @@ def dashboard(request, year=None, month=None):
                                                             'most_clicked_products': most_clicked_products,
                                                             'referral_sales': referral_sales_count,
                                                             'network_sales': tribute_sales_count,
-                                                            'network_commission': sum([x[3] for x in data_per_day.values()]),
-                                                            'referral_commission': sum([x[2] for x in data_per_day.values()]),
+                                                            'network_commission': ('%.2f' % sum([x[3] for x in data_per_day.values()])),
+                                                            'referral_commission': ('%.2f' % sum([x[2] for x in data_per_day.values()])),
                                                             'currency': 'EUR'})
 
 
