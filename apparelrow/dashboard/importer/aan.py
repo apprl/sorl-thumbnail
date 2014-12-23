@@ -24,7 +24,10 @@ class Importer(BaseImporter):
         Store = get_model('advertiser', 'Store')
         transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
                                           .filter(created__gte=start_date_query, created__lte=end_date_query)
+        if transactions:
+            logger.debug('Found %s transactions for AAN' % transactions.count())
         for transaction in transactions:
+            logger.debug('Found transaction %s.' % transaction.id)
             data_row = {}
             data_row['original_sale_id'] = '%s-%s' % (transaction.pk, transaction.order_id)
             data_row['affiliate'] = self.name
