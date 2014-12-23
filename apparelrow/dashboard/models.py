@@ -299,7 +299,12 @@ def create_user_earnings(sale):
     total_commission = sale.converted_commission
     product = None
 
-    user = get_model('profile', 'User').objects.get(id=sale.user_id)
+    user = None
+    try:
+        user = get_model('profile', 'User').objects.get(id=sale.user_id)
+    except get_model('profile', 'User').DoesNotExist:
+        logging.warning('Sale %s is connected to a User %s that does not exist.' % (sale.id,sale.user_id))
+        return
     sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
     commission_group = user.partner_group
 
