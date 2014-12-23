@@ -399,7 +399,7 @@ def dashboard(request, year=None, month=None):
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
 
         # User Earnings
-        user_earnings = get_model('dashboard', 'UserEarning').objects.filter(user=request.user).order_by('-date')
+        user_earnings = get_model('dashboard', 'UserEarning').objects.filter(user=request.user,date__range=(start_date_query, end_date_query)).order_by('-date')
         for earning in user_earnings:
             for sale in sales:
                 if earning.sale.id == sale['id']:
