@@ -312,7 +312,12 @@ def create_user_earnings(sale):
         product = sale_product(0)
 
     if commission_group:
-        commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+        commission_group_cut = None
+        try:
+            commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+        except Cut.DoesNotExist:
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id,sale.vendor))
+            return
         cut = commission_group_cut.cut
 
         if cut:
