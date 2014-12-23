@@ -278,7 +278,7 @@ def create_referral_earning(sale):
     sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
 
     if not len(sale_product) == 0:
-        product = sale_product(0)
+        product = sale_product[0]
 
     if commission_group:
         commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
@@ -309,7 +309,7 @@ def create_user_earnings(sale):
     commission_group = user.partner_group
 
     if not len(sale_product) == 0:
-        product = sale_product(0)
+        product = sale_product[0]
 
     if commission_group:
         commission_group_cut = None
