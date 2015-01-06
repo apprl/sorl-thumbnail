@@ -54,7 +54,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         this.toolbar = new App.Views.LookEditToolbar();
 
         // Listen on product add
-        App.Events.on('look_edit:product:add', this.pending_add_component, this);
+        App.Events.on('widget:product:add', this.pending_add_component, this);
         this.pending_product = false;
         this.pending_component = false;
 
@@ -231,7 +231,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
         this.add_components(this.model.components);
 
-
+        $('#product-chooser').find('.disabled').hide();
         $(window).trigger('resize');
     },
 

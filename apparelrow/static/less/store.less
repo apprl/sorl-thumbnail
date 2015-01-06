@@ -1,17 +1,101 @@
+@import "./../bootstrap/less/variables.less";
+@import "./variables.less";
+@import "./retina.less";
+@import "./utils.less";
+
 .create-store-page {
   #shop-preview {
     width: 100%;
     float: left;
+    position: relative;
     .product-list-container {
-      overflow: hidden;
-      border-bottom: 1px solid @light_gray_color;
+      overflow: auto;
+      border: 2px solid @light_gray_color;
+      border-top: 0px;
+      > div {
+        padding-top: 10px;
+      }
+    }
+
+    &.splash {
+      .product-list-container {
+        border-top: 2px solid @light_gray_color;
+      }
+      .col-product-list {
+        h3 {
+          display: none;
+        }
+      }
+      .preview-header {
+        display: none;
+      }
+    }
+    &.no-filter {
+      .col-product-filter {
+        display: none;
+      }
+    }
+    .preview-header {
+      background: @lighter_gray_color;
+      width: 100%;
+      text-align: center;
+      padding: 9px 0px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+    @media (min-width: @screen-lg) {
+      .product-list .col-product-item {
+        width: 25%;
+      }
     }
   }
+  #shop-display-settings {
+    display: none;
+    position: absolute;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    .translate(-50%, -50%);
+    @media (min-width: @screen-sm) {
+      width: 50%;
+    }
+  }
+}
 
-  #content-container {
-    padding-bottom: 0px;
-    padding-left: 15px;
-    padding-right: 15px;
+#shop-product-list {
+  .no-filter & {
+    width: 100%;
+  }
+
+  &.liked-products {
+    .hover {
+      display: none !important;
+    }
+  }
+  .product-image-container {
+    position: relative;
+    .product-image {
+      opacity: 1;
+      max-width: 100%;
+      max-height: 100%;
+      &.product-image-actual {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        .translate(-50%, -50%);
+      }
+    }
+    .hover {
+      bottom: auto;
+      top: 50%;
+      z-index: 2;
+      .translate(0, -50%);
+      .btn {
+        margin-bottom: 10px;
+      }
+    }
   }
 }
 

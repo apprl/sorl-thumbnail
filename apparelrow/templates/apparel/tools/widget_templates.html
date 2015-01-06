@@ -89,10 +89,10 @@
 <script type="text/template" id="shop_component_product">
     <div class="thumbnail product-medium">
         <div class="product-image-container">
-            <a href="#"><img class="product-image" src="<%= product.image_look %>"></a>
+            <a href="#"><img class="product-image" src="{% static "images/fake_product.png" %}"/></a>
 
             <div class="hover" style="display: none;">
-                <div class="btn-group btn-group-justified">
+                <!--<div class="btn-group btn-group-justified">-->
                     <a href="#" class="btn btn-primary btn-block btn-danger delete">
                         <span class="glyphicon glyphicon-remove"></span>&nbsp;<span>{% trans 'Remove' %}</span>
                     </a>
@@ -100,9 +100,11 @@
                     <a href="#" class="btn btn-primary btn-block btn-product-info" rel="nofollow">
                         {% trans 'Info' %}
                     </a>
-                </div>
+                <!--</div>-->
             </div>
+            <img class="product-image product-image-actual" src="<%= product.image_look %>"/>
         </div>
+
 
         <div class="caption">
             <h4><a href="#"><%= product.brand_name %></a></h4>
@@ -111,7 +113,7 @@
                 <li class="price">
                     <% if(product.price != product.discount_price && product.discount_price != 0) { %>
                         <span class="discount-price"><%= formatNumber(product.discount_price) %> <%= product.currency %></span>
-                        <span class="price discounted"><%= formatNumber(product.price) %>9 <%= product.currency %></span>
+                        <span class="price discounted"><%= formatNumber(product.price) %> <%= product.currency %></span>
                     <% } else { %>
                         <%= formatNumber(product.price) %> <%= product.currency %>
                     <% } %>

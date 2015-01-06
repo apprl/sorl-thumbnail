@@ -55,11 +55,11 @@ def _to_int(s):
         return None
 
 def create_shop(request, template='apparel/create_shop.html', shop_id=None, gender=None, user_gender=None, user_id=None, language=None, **kwargs):
-
     if not request.user.is_authenticated():
         return HttpResponse('Unauthorized', status=401)
 
     likes = []
+    show_liked = False
     if shop_id is not None and shop_id is not 0:
         shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
 
@@ -77,13 +77,9 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
 
     if not language:
         language = get_language()
+
     translation.activate(language)
 
-    currency = settings.APPAREL_BASE_CURRENCY
-    if language in settings.LANGUAGE_TO_CURRENCY:
-        currency = settings.LANGUAGE_TO_CURRENCY.get(language)
-
-    translation.deactivate()
     # Todo: how real data do we need here?
     return render(request, template, {
         'gender': gender if gender is not None else 'A',
@@ -92,12 +88,14 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
         'likes': likes,
         'pricerange': {'min': 0, 'max': 10000},
         'external_shop_id': shop_id,
+        'object': shop
     })
 
 def shop_instance_to_dict(shop):
     shop_dict = {
         'id': shop.id,
         'title': shop.title,
+        'show_liked': shop.show_liked,
         'user': shop.user.display_name,
         'url': shop.get_absolute_url(),
         'slug': shop.slug,
@@ -105,9 +103,23 @@ def shop_instance_to_dict(shop):
         'published': shop.published,
     }
 
-    if shop.products:
-        shop_dict['products'] = []
-
+    shop_dict['products'] = []
+    if shop.show_liked:
+        for like in shop.user.product_likes.select_related('product').all():
+            product = like.product
+            manufacturer_name = product.manufacturer.name if product.manufacturer else None
+            shop_dict['products'].append({
+                'id': product.id,
+                'slug': product.slug,
+                'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
+                'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                'product_name': product.product_name,
+                'brand_name': manufacturer_name,
+                'currency': product.default_vendor.locale_currency,
+                'price': product.default_vendor.locale_price,
+                'discount_price': product.default_vendor.locale_discount_price,
+            })
+    else:
         for product in shop.products.all():
             manufacturer_name = product.manufacturer.name if product.manufacturer else None
             shop_dict['products'].append({
@@ -117,10 +129,11 @@ def shop_instance_to_dict(shop):
                 'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
                 'product_name': product.product_name,
                 'brand_name': manufacturer_name,
-                'currency': product.default_vendor.currency,
-                'price': product.default_vendor.price,
-                'discount_price': product.default_vendor.discount_price,
+                'currency': product.default_vendor.locale_currency,
+                'price': product.default_vendor.locale_price,
+                'discount_price': product.default_vendor.locale_discount_price,
             })
+
     return shop_dict
 
 class ShopCreateView(View):
@@ -164,6 +177,11 @@ class ShopCreateView(View):
 
         if json_data['published']:
             request.session['shop_saved'] = True
+
+        shop.published = json_data['published']
+
+        print shop.published
+        print shop.published
 
         if json_data['components']:
 
@@ -220,10 +238,12 @@ class ShopCreateView(View):
         if json_data['published']:
             request.session['shop_saved'] = True
 
-        # Exclude components, handle later
-        components = json_data['components']
-        del json_data['components']
-        del json_data['0']
+        if 'components' in json_data:
+            # Exclude components, handle later
+            components = json_data['components']
+            del json_data['components']
+        if '0' in json_data:
+            del json_data['0']
 
         show_liked = False
         if 'show_liked' in json_data:
@@ -232,8 +252,13 @@ class ShopCreateView(View):
 
         if show_liked:
             components = []
+            try:
+                shop = get_model('apparel', 'Shop').objects.filter(user=request.user, show_liked=True)[0]
+            except:
+                shop = get_model('apparel', 'Shop')(**json_data)
+        else:
+            shop = get_model('apparel', 'Shop')(**json_data)
 
-        shop = get_model('apparel', 'Shop')(**json_data)
         shop.show_liked = show_liked
         shop.save()
 
@@ -319,8 +344,8 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
     embed_shop = get_object_or_404(get_model('apparel', 'ShopEmbed'), pk=embed_shop_id)
     shop = embed_shop.shop
 
-    if shop.published is not True:
-        return HttpResponse('Unauthorized', status=401)
+    #if shop.published is not True:
+    #    return HttpResponse('Unauthorized', status=401)
 
     language = embed_shop.language
 

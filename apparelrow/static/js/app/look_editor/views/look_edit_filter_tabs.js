@@ -15,20 +15,21 @@ App.Views.LookEditFilterTabs = Backbone.View.extend({
 
     filter: function(e) {
         var $target = $(e.currentTarget);
-        var user = $target.data('user');
-        if ($target.hasClass('tab-likes') && user) {
-            this.model.set('user_id', user);
-        } else if($target.hasClass('tab-likes') && !isAuthenticated) {
-            App.Events.trigger('product_list:unauthenticated', true);
-        } else {
-            App.Events.trigger('product_list:unauthenticated', false);
-            this.model.unset('user_id');
+        if (!$target.hasClass('active')) {
+            var user = $target.data('user');
+            if ($target.hasClass('tab-likes') && user) {
+                this.model.set('user_id', user);
+            } else if ($target.hasClass('tab-likes') && !isAuthenticated) {
+                App.Events.trigger('product_list:unauthenticated', true);
+            } else {
+                App.Events.trigger('product_list:unauthenticated', false);
+                this.model.unset('user_id');
+            }
+
+            $target.parent().siblings().removeClass('active');
+            //$target.parent().siblings().find('a').removeClass('selected');
+            $target.parent().addClass('active');
         }
-
-        $target.parent().siblings().removeClass('active');
-        //$target.parent().siblings().find('a').removeClass('selected');
-        $target.parent().addClass('active');
-
         e.preventDefault();
     }
 

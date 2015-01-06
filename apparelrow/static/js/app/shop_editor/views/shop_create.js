@@ -32,11 +32,19 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         App.Views.ShopCreate.__super__.initialize(this);
     },
     init_products: function() {
+        if (!this.model.attributes.id) {
+            $('#shop-display-settings').show();
+        } else {
+            this.product_display(this.model.get('show_liked'));
+        }
         if(this.model.attributes.hasOwnProperty('products')) {
             for (var i = 0; i < this.model.attributes.products.length; i++) {
                 var product = this.model.attributes.products[i];
                 var self = this;
                 var component = new App.Models.ShopComponent();
+                if (product.discount_price == null) {
+                    product.discount_price = 0;
+                }
                 component.set('product', product);
                 self.model.components.add(component);
             }
@@ -46,7 +54,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         var window_height = $(window).height(),
             new_height = window_height - this.$el.offset().top - 20,
         $footer = $('.widget-footer:visible');
-        new_height -= $footer.length ? $footer.height() : 0;
+        $header = $('#preview-header:visible')
+        new_height -= ($header.length ? $header.height() + 16 : 0)+ ($footer.length ? $footer.height() : 0);
         this.$container.css('height', new_height);
     },
     pending_add_component: function(product) {
@@ -81,14 +90,18 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     },
     product_display: function(show_liked) {
         this.model.set('show_liked', show_liked);
-
         if(show_liked) {
-            this.save_shop({ title: "My latest likes" });
+            if (!this.model.attributes.id) {
+                this.save_shop({ title: "My latest likes" });
+            }
             $('#shop-display-settings').find('.buttons').hide();
         } else {
             $('#product-chooser').find('.disabled').hide();
             $('#shop-display-settings').hide();
+            $('#shop-product-list').removeClass('liked-products');
         }
+        $('#shop-preview').removeClass('splash');
+        this.resize();
     },
     unpublish_shop: function() {
         this.model.set('published', false);
@@ -139,5 +152,5 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.model._dirty = false;
         // TODO: Can we get this value from elsewhere?
         window.location.replace('/shop/edit/' + this.model.get('id'));
-    },
+    }
 });

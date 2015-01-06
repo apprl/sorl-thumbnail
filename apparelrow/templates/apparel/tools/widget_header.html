@@ -19,11 +19,15 @@
                 {% if object and object.slug %}
                 <li><button class="btn btn-delete" name="look_delete">{% trans "Delete look" %}</button></li>
                 {% else %}
+                {% if type == 'create_shop' %}
+                <li><button class="btn btn-reset" name="look_reset">{% trans "Reset" %}</button></li>
+                {% else %}
                 <li><button class="btn btn-reset" name="look_reset">{% trans "Reset look" %}</button></li>
+                {% endif %}
                 {% endif %}
                 <li><button class="btn btn-save" name="look_save" data-save-draft-text="{% trans "Save draft" %}">{% if object and object.published %}{% trans "Save" %}{% else %}{% trans "Save draft" %}{% endif %}</button></li>
                 {% if object and object.published %}
-                <li><button class="btn btn-unpublish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Unpublish" %}</button></li>
+                <li><button class="btn btn-unpublish" name="look_publish" data-publish-text="{% trans "Unpublish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Unpublish" %}</button></li>
                 {% else %}
                 <li><button class="btn btn-publish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Publish" %}</button></li>
                 {% endif %}

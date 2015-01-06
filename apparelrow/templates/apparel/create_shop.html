@@ -11,13 +11,15 @@
         {% include "apparel/tools/widget_header.html" with title='Create a shop' type='create_shop' external_shop_id=external_shop_id %}
     {% endif %}
 
-    <div id="content" class="row">
-        <div class="col-md-6 col-widget">
-            {% include "apparel/tools/widget_shop_edit.html" with external_shop_id=external_shop_id show_liked=show_liked %}
-        </div>
+    <div id="content">
+        <div class="row content-row">
+            <div class="col-md-6 col-widget">
+                {% include "apparel/tools/widget_shop_edit.html" with external_shop_id=external_shop_id show_liked=show_liked %}
+            </div>
 
-        <div class="col-md-6 visible-md visible-lg">
-            {% include "apparel/tools/product_picker.html" with enabled=product_picker %}
+            <div class="col-md-6 visible-md visible-lg">
+                {% include "apparel/tools/product_picker.html" with enabled=product_picker %}
+            </div>
         </div>
     </div>
 

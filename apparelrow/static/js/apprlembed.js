@@ -12,13 +12,12 @@ var ApprlEmbed = ApprlEmbed || function(p, id, n, w, h, o, t) {
     } else if(t == 'shop') {
         iframeSrc = '//'+ o +'/embed/'+ t +'/'+id+'/?host='+ encodeURIComponent(host)
     }
-
 	self.container = document.createElement('div');
     self.container.setAttribute('style', 'width: ' + w + ';margin: 0 auto;');
 	self.frame = document.createElement('iframe');
 	self.frame.setAttribute('src', iframeSrc);
 	self.frame.setAttribute('width', w);
-    self.frame.setAttribute('scrolling', 'no');
+    self.frame.setAttribute('scrolling', t == 'shop' ? 'yes' : 'no');
 	self.frame.setAttribute('height', h);
     self.frame.setAttribute('frameborder', 0);
 	self.container.appendChild(self.frame);
