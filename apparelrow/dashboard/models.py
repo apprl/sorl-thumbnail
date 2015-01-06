@@ -1,4 +1,6 @@
 import datetime
+import json
+import decimal
 
 from django.conf import settings
 from django.db import models
@@ -133,6 +135,8 @@ class Cut(models.Model):
                               help_text='Between 1 and 0, default %s. Determines the percentage that goes to the Publisher (and possible Publisher Network owner, if applies)' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
     referral_cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
                                        help_text='Between 1 and 0, default %s. Determines the percentage that goes to the referral partner parent.' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
+    rules_exceptions = models.TextField(null=True, blank=True,
+                                        help_text='Create exceptions for rules using the following format: [{"id": 1, "cut": 0.90, "tribute":0.50}, {"id": 2, "cut": 0.90, "tribute":0.5}] where "id" is the user id.')
 
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
@@ -317,9 +321,18 @@ def create_user_earnings(sale):
         try:
             commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
         except Cut.DoesNotExist:
-            logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id,sale.vendor))
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
             return
         cut = commission_group_cut.cut
+
+         # Handle exceptions for publisher cuts
+        try:
+            data_exceptions = json.loads(commission_group_cut.rules_exceptions)
+            for data in data_exceptions:
+                if data['id'] == user.id:
+                    cut = decimal.Decimal(data['cut'])
+        except:
+            pass
 
         if cut:
             publisher_commission = total_commission * cut
@@ -350,6 +363,24 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product)
     if owner_tribute > 1:
         owner_tribute = 1
         logging.warning('Owner network cut must be a value between 0 and 1')
+    commission_group = owner.partner_group
+
+    if commission_group:
+        try:
+            commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+        except Cut.DoesNotExist:
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
+            return
+
+         # Handle exceptions for owner cuts
+        try:
+            data_exceptions = json.loads(commission_group_cut.rules_exceptions)
+            for data in data_exceptions:
+                if data['id'] == owner.id:
+                    owner_tribute = decimal.Decimal(data['tribute'])
+        except:
+            pass
+
     owner_earning = publisher_commission * owner_tribute
     publisher_commission -= owner_earning
 

@@ -1,4 +1,5 @@
 import decimal
+import json
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -29,11 +30,26 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                 normal_cut = cuts.cut
                 referral_cut = cuts.referral_cut
 
-                if user.owner_network:
-                    if user.owner_network.owner_network_cut > 1:
-                        user.owner_network.owner_network_cut = 1
-                    publisher_cut -= user.owner_network.owner_network_cut
+                # Handle exceptions for publisher cuts
+                data_exceptions = json.loads(cuts.rules_exceptions)
+                for data in data_exceptions:
+                    if data['id'] == user.id:
+                        normal_cut = decimal.Decimal(data['cut'])
 
+                if user.owner_network:
+                    owner = user.owner_network
+                    if owner.owner_network_cut > 1:
+                        owner.owner_network_cut = 1
+                    publisher_cut -= owner.owner_network_cut
+
+                    # Handle exceptions for Publisher Network owner
+                    if owner.partner_group:
+                        cuts = owner.partner_group.cuts.get(vendor=vendor)
+                        if cuts.rules_exceptions:
+                            data_exceptions = json.loads(cuts.rules_exceptions)
+                            for data in data_exceptions:
+                                if data['id'] == owner.id:
+                                    publisher_cut = 1 - decimal.Decimal(data['tribute'])
             except:
                 pass
     except get_user_model().DoesNotExist:
