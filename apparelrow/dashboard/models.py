@@ -162,14 +162,15 @@ class StoreCommission(models.Model):
         commission_array = commission.split("/")
         normal_cut = args[1]
         referral_cut = args[2]
+        publisher_cut = args[3]
 
         try:
             if not len(commission_array) == 3 or commission_array[0] == '0':
                 log.warn('Store commission %s is invalidly structured. Needs to be in the format [X/Y/Z] where X <> 0!' % self.vendor)
             else:
-                standard_from = (Decimal(commission_array[0])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
-                standard_to = (Decimal(commission_array[1])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
-                sale = (Decimal(commission_array[2])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                standard_from = (Decimal(commission_array[0])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                standard_to = (Decimal(commission_array[1])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                sale = (Decimal(commission_array[2])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
                 if standard_from == standard_to:
                     commission_array[1] = '0'
 

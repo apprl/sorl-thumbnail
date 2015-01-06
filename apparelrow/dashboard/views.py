@@ -529,7 +529,8 @@ def referral_signup(request, code):
     response = redirect(reverse('index-publisher'))
     if user_id:
         expires_datetime = timezone.now() + datetime.timedelta(days=15)
-        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime, httponly=True)
+        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime,
+                                   httponly=True)
 
     return response
 
@@ -544,12 +545,14 @@ def commissions(request):
         raise Http404
 
     if not request.user.partner_group:
-        log.error('User %s is partner but has no partner group. Disallowing viewing of store commissions page.' % request.user)
+        log.error('User %s is partner but has no partner group. Disallowing viewing of store commissions page.'
+                  % request.user)
         raise Http404
 
     stores = list(get_model('dashboard', 'StoreCommission').objects.select_related('vendor').order_by('vendor__name'))
     user_id = request.user.id
-    stores = [store.calculated_commissions(store.commission,*get_cuts_for_user_and_vendor(user_id,store.vendor)) for store in stores]
+    stores = [store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
+              for store in stores]
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):

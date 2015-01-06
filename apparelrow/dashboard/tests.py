@@ -509,19 +509,25 @@ class TestDashboardCuts(TransactionTestCase):
         print "Initiating parse cuts from store commission test"
         user = self._create_partner_user('bluebeltch')
         partner_user = self._create_partner_user()
-        group = Group.objects.create(name="TestGroup",owner=partner_user,owner_cut='0.67')
+        group = Group.objects.create(name="TestGroup")
+        user.owner_network = partner_user
+        partner_user.owner_network_cut = 0.1
+        partner_user.save()
         user.partner_group = group
         user.save()
         vendor = Vendor.objects.create(name="TestVendor",homepage="http://www.example.com",provider="aaa")
-        cut = Cut.objects.create(vendor=vendor,group=group)
-        store_commission = StoreCommission.objects.create(vendor=vendor,commission='10/10/10')
+        cut = Cut.objects.create(vendor=vendor, group=group, cut=0.9)
+        store_commission = StoreCommission.objects.create(vendor=vendor,commission="6/10/0")
 
-        user_remote, normal_cut, referral_cut = get_cuts_for_user_and_vendor(user.id,vendor)
+        user_remote, normal_cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id,vendor)
         self.assertEquals(user,user_remote)
-        self.assertEquals(normal_cut, Decimal('0.67'))
+        self.assertEquals(normal_cut, Decimal('0.9'))
         self.assertEquals(referral_cut,Decimal('0.15'))
+        self.assertEquals(publisher_cut,Decimal('0.9'))
 
-        #store_commission.calculated_commission()
+        store_commission.calculated_commissions(store_commission.commission, *get_cuts_for_user_and_vendor(user.id,vendor))
+
+        self.assertEquals(store_commission.commission, "5-8%")
 
         print "Finished parse cuts from store commission test!"
 
@@ -533,13 +539,13 @@ class TestDashboardUtils(TransactionTestCase):
     def test_cuts(self):
         temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
 
-        user, normal_cut, referral_cut = get_cuts_for_user_and_vendor(temp_user.pk, None)
+        user, normal_cut, referral_cut, _ = get_cuts_for_user_and_vendor(temp_user.pk, None)
 
         self.assertIsNotNone(user)
         self.assertEqual(normal_cut, decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         self.assertEqual(referral_cut, decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT))
 
-        user, normal_cut, referral_cut = get_cuts_for_user_and_vendor(20321323, None)
+        user, normal_cut, referral_cut, _ = get_cuts_for_user_and_vendor(20321323, None)
 
         self.assertIsNone(user)
         self.assertEqual(normal_cut, decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
@@ -553,7 +559,7 @@ class TestDashboardUtils(TransactionTestCase):
         temp_user.partner_group = group
         temp_user.save()
 
-        user, normal_cut, referral_cut = get_cuts_for_user_and_vendor(temp_user.pk, vendor)
+        user, normal_cut, referral_cut, _ = get_cuts_for_user_and_vendor(temp_user.pk, vendor)
 
         self.assertIsNotNone(user)
         self.assertEqual(normal_cut, decimal.Decimal('0.5'))
