@@ -72,11 +72,15 @@
             chart.draw();
         }
         $(document).ready(function() {
-            $('.date-select').change(function() {
-                var $selected = $(this).find(':selected');
-                var year = $selected.data('year');
-                var month = $selected.data('month');
+            $('.month-select').change(function() {
+                var month = $('.month-select').find(':selected').data('month');
+                var year = $('.year-select').find(':selected').data('year');
+                window.location.href = '/publisher/dashboard/' + year + '/' + month + '/';
 
+            });
+            $('.year-select').change(function() {
+                var month = $('.month-select').find(':selected').data('month');
+                var year = $('.year-select').find(':selected').data('year');
                 window.location.href = '/publisher/dashboard/' + year + '/' + month + '/';
             });
             new Tablesort($('table.sortable').get(0));
@@ -102,9 +106,14 @@
             <ul class="list-inline monthly-list">
                 <li>
                 <label>{% trans "Show statistics for: " %}
-                    <select class="date-select">
-                        {% for date in dates %}
-                        <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
+                    <select class="month-select">
+                        {% for item_month in months_choices %}
+                        <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="year-select">
+                        {% for item_year in years_choices %}
+                        <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
                         {% endfor %}
                     </select>
                 </label>

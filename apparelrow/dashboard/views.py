@@ -345,28 +345,36 @@ def dashboard(request, year=None, month=None):
     Display publisher data per month for logged in user.
     """
     if request.user.is_authenticated() and request.user.is_partner:
-        if year is not None and month is not None:
-            start_date = datetime.date(int(year), int(month), 1)
-        else:
+        if year is None and month is None:
             start_date = datetime.date.today().replace(day=1)
+            end_date = start_date
+            end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+        else:
+            start_date = datetime.date(int(year), int(1), 1)
+            end_date = start_date
+            end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
+
+            if month != "0":
+                start_date = datetime.date(int(year), int(month), 1)
+
+                end_date = start_date
+                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
 
         year = start_date.year
         month = start_date.month
 
-        end_date = start_date
-        end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+
 
         # Enumerate months
         dt1 = request.user.date_joined.date()
         dt2 = datetime.date.today()
-        start_month = dt1.month
-        end_months = (dt2.year - dt1.year) * 12 + dt2.month + 1
-        dates = [datetime.datetime(year=yr, month=mn, day=1) for (yr, mn) in (
-            ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
-        )]
+        years_choices = range(dt1.year, dt2.year+1)
+
+        months_choices = [(0, _('All year'))]
+        for i in range(1,13):
+            months_choices.append((i, datetime.date(2008, i, 1).strftime('%B')))
 
         # Total sales counts
         sales_total = decimal.Decimal('0')
@@ -418,7 +426,7 @@ def dashboard(request, year=None, month=None):
         # Sales and commission per day
         data_per_day = {}
         for day in range(1, (end_date - start_date).days + 2):
-            data_per_day[start_date.replace(day=day)] = [0, 0, 0, 0]
+            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
 
         for earning in user_earnings:
             if earning.user_earning_type == "publisher_sale_commission":
@@ -459,7 +467,8 @@ def dashboard(request, year=None, month=None):
                                                             'month_clicks': month_clicks,
                                                             'month_sales': sales_count,
                                                             'month_conversion_rate': conversion_rate,
-                                                            'dates': dates,
+                                                            'years_choices': years_choices,
+                                                            'months_choices': months_choices,
                                                             'year': year,
                                                             'month': month,
                                                             'sales': sales,
