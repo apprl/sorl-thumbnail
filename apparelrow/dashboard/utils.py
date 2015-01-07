@@ -22,6 +22,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
     normal_cut = decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)
     referral_cut = decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
     publisher_cut = 1
+
     try:
         user = get_user_model().objects.get(pk=user_id)
         if user.partner_group:
@@ -31,11 +32,13 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                 referral_cut = cuts.referral_cut
 
                 # Handle exceptions for publisher cuts
-                data_exceptions = json.loads(cuts.rules_exceptions)
-                for data in data_exceptions:
-                    if data['id'] == user.id:
-                        normal_cut = decimal.Decimal(data['cut'])
-
+                try:
+                    data_exceptions = json.loads(cuts.rules_exceptions)
+                    for data in data_exceptions:
+                        if data['id'] == user.id:
+                            normal_cut = decimal.Decimal(data['cut'])
+                except:
+                    pass
                 if user.owner_network:
                     owner = user.owner_network
                     if owner.owner_network_cut > 1:
