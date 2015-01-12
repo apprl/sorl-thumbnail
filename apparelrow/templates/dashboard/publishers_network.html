@@ -94,7 +94,7 @@
             <tbody>
                 {% for publisher in top_publishers %}
                 <tr>
-                    <td class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
+                    <td data-sort="{{ publisher.user }}" class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
                     <td class="col2 hidden-xs"><a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a></td>
                     <td class="col3 center hidden-xs">{{ publisher.clicks }}</td>
                     <td class="center">{{ publisher.sales }}</td>

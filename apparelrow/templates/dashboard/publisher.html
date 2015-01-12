@@ -185,7 +185,7 @@
                 <tbody>
                     {% for product in most_sold_products %}
                     <tr>
-                        <td class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                        <td data-sort="{{ product.product }}" class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
                         <td class="col2 hidden-xs"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
                         <td class="col3 center hidden-xs">{{ product.clicks }}</td>
                         <td class="center">{{ product.sales }}</td>
@@ -227,7 +227,7 @@
                     <tbody>
                         {% for publisher in top_publishers %}
                         <tr>
-                            <td class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
+                            <td data-sort="{{ publisher.user }}" class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
                             <td class="col2 hidden-xs"><a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a></td>
                             <td class="col3 center hidden-xs">{{ publisher.clicks }}</td>
                             <td class="center">{{ publisher.sales }}</td>
@@ -268,8 +268,8 @@
                         <tr>
                             <td class="hidden-xs" data-sort="{{ earning.date|date:"U" }}">{{ earning.date.date }}</td>
 
-                            {% if earning.extra_sale.is_referral_sale %}
-                                <td>{% trans "Referral sale by" %} <a href="{{ earning.from_user }}">{{ earning.from_user }}</a></td>
+                            {% if earning.user_earning_type == "referral_sale_commission" %}
+                                <td data-sort="{{ earning.from_user }}">{% trans "Referral sale by" %} <a href="{{ earning.from_user }}">{{ earning.from_user }}</a></td>
                                 <td class="hidden-xs">{% trans "Referral" %}</td>
                                 <td class="center hidden-xs"></td>
                                 <td class="center hidden-xs"></td>
@@ -279,8 +279,8 @@
                                 <td>{% trans "Welcome to APPRL" %}</td>
                                 <td class="center hidden-xs"></td>
                             {% else %}
-                                <td><a href="{{ earning.extra_sale.product_link }}"><img src="{{ earning.extra_sale.product_image }}"></a></td>
-                                <td class="hidden-xs">{% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}</td>
+                                <td data-sort="{{ earning.product_name }}"><a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a></td>
+                                <td class="hidden-xs">{% if earning.product_link %}<a href="{{ earning.product_link }}">{{ earning.product_name }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.product_name }}{% endif %}{% endif %}</td>
                                 <td class="hidden-xs">
                                     {% if earning.extra_sale.link %}
                                         {{ earning.extra_sale.link }}
@@ -288,7 +288,7 @@
                                         {% if earning.type == 'Network Commission' %}
                                             Sale by {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}
                                         {% else %}
-                                            {{ earning.type}}
+                                            {{ earning.get_user_earning_type_display }}
                                         {% endif %}
                                     {% endif %}
                                 </td>

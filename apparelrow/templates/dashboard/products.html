@@ -96,7 +96,7 @@
             <tbody>
                 {% for product in most_sold_products %}
                 <tr>
-                    <td class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                    <td data-sort="{{ product.product }}" class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
                     <td class="col2 hidden-xs"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
                     <td class="col3 center hidden-xs">{{ product.clicks }}</td>
                     <td class="center">{{ product.sales }}</td>

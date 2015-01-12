@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n l10n cache %}
+{% load i18n l10n cache dashboard_extras %}
 {% load static from staticfiles %}
 
 {% block extra-title %}{% trans "Publisher Admin" %} | {% endblock %}
@@ -38,16 +38,22 @@
         var clicksChart = new google.visualization.LineChart(document.getElementById('clicks_chart'));
         clicksChart.draw(clicksData, {});
       }
-        $(document).ready(function() {
-            $('.publisher-admin select').change(function() {
-                var $selected = $(this).find(':selected');
-                var year = $selected.data('year');
-                var month = $selected.data('month');
+      $(document).ready(function() {
+        $('.month-select').change(function() {
+            var month = $('.month-select').find(':selected').data('month');
+            var year = $('.year-select').find(':selected').data('year');
+            window.location.href = '/publisher/admin/' + year + '/' + month + '/';
 
-                window.location.href = '/publisher/admin/' + year + '/' + month + '/';
-            });
-            new Tablesort($('table.sortable').get(0));
         });
+        $('.year-select').change(function() {
+            var month = $('.month-select').find(':selected').data('month');
+            var year = $('.year-select').find(':selected').data('year');
+            window.location.href = '/publisher/admin/' + year + '/' + month + '/';
+        });
+        new Tablesort($('table#all-earnings').get(0));
+        new Tablesort($('table#top-products').get(0));
+        new Tablesort($('table#top-publishers').get(0));
+      });
     </script>
 {% endblock %}
 
@@ -60,9 +66,14 @@
         <div class="col-lg-12">
             <p>
                 <label>{% trans "Show: " %}
-                    <select>
-                        {% for date in dates %}
-                        <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
+                    <select class="month-select">
+                        {% for item_month in months_choices %}
+                        <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="year-select">
+                        {% for item_year in years_choices %}
+                        <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
                         {% endfor %}
                     </select>
                 </label>
@@ -145,43 +156,109 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <h2>{% trans "All sales" %}</h2>
-            <table class="sortable table">
+        <div class="row">
+        <div class="col-lg-12 table-responsive">
+            <h2>{% trans "Top products" %}</h2>
+            <table id="top-products" class="sortable table">
                 <thead>
                     <tr>
-                        <th>{% trans "Date" %}</th>
-                        <th>{% trans "Product" %}</th>
-                        <th></th>
-                        <th>{% trans "User" %}</th>
-                        <th>{% trans "From" %}</th>
-                        <th class="center">{% trans "Clicks" %}</th>
-                        <th>{% trans "Our Comm" %}</th>
-                        <th>{% trans "Publisher Comm" %}</th>
+                        <th class="col1 product-image center">{% trans "Product" %}</th>
+                        <th class="col2 hidden-xs center"></th>
+                        <th class="col3 center hidden-xs center">{% trans "Clicks" %}</th>
+                        <th class="center">{% trans "Sales" %}</th>
+                        <th class="center">{% trans "Conversion rate" %}</th>
+                        <th class="hidden-xs center">{% trans "Sales generated" %}</th>
+                        <th class="hidden-xs center">{% trans "Earnings" %}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for sale in sales_table %}
+                    {% for product in most_sold_products %}
                     <tr>
-                        <td data-sort="{{ sale.created|date:"U" }}">{{ sale.created.date }}</td>
+                        <td data-sort="{{ product.product }}" class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
+                        <td class="col2 hidden-xs"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
+                        <td class="col3 center hidden-xs">{{ product.clicks }}</td>
+                        <td class="center">{{ product.sales }}</td>
+                        <td class="center">{{ product.sales|commission_rate:product.clicks }}</td>
+                        <td class="hidden-xs center">{{ product.converted_amount }} {{ currency }}</td>
+                        <td class="hidden-xs center">{{ product.publisher_earnings }} {{ currency }}</td>
 
-                        {% if sale.is_referral_sale %}
-                        <td><a href="{{ sale.referral_user.get_absolute_url }}"><img src="{{ sale.referral_user.avatar_small }}"></a></td>
-                        <td><a href="{{ sale.referral_user.get_absolute_url }}">{{ sale.referral_user.display_name }}</a></td>
-                        <td>{{ sale.user }}</td>
-                        <td>{% trans "Referral" %}</td>
-                        <td class="center"></td>
-                        {% else %}
-                        <td><a href="{{ sale.product_link }}"><img src="{{ sale.product_image }}"></a></td>
-                        <td><a href="{{ sale.product_link }}">{{ sale.product }}</a></td>
-                        <td>{{ sale.user }}</td>
-                        <td>{{ sale.link }}</td>
-                        <td class="center">{{ sale.clicks }}</td>
-                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                        <td data-sort="{{ sale.apprl_commission }}">{{ sale.apprl_commission }} {{ sale.currency }}</td>
-                        <td data-sort="{{ sale.commission }}">{{ sale.commission }} {{ sale.currency }}</td>
+    <div class="row">
+        <div class="col-lg-12 table-responsive">
+            <h2>{% trans "Top Publishers" %}</h2>
+            <table id="top-publishers" class="sortable table">
+                <thead>
+                    <tr>
+                        <th class="col1 product-image center">{% trans "User" %}</th>
+                        <th class="col2 hidden-xs center"></th>
+                        <th class="col3 center hidden-xs">{% trans "Clicks" %}</th>
+                        <th class="center">{% trans "Sales" %}</th>
+                        <th class="center">{% trans "Conversion rate" %}</th>
+                        <th class="hidden-xs center">{% trans "Sales generated" %}</th>
+                        <th class="hidden-xs center">{% trans "Earnings" %}</th>
+                        <th class="center">{% trans "Network earnings" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for publisher in top_publishers %}
+                    <tr>
+                        <td data-sort="{{ publisher.user }}" class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
+                        <td class="col2 hidden-xs"><a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a></td>
+                        <td class="col3 center hidden-xs">{{ publisher.clicks }}</td>
+                        <td class="center">{{ publisher.sales }}</td>
+                        <td class="center">{{ publisher.sales|commission_rate:publisher.clicks }}</td>
+                        <td class="hidden-xs center">{{ publisher.converted_amount }} {{ currency }}</td>
+                        <td class="hidden-xs center">{{ publisher.publisher_earnings }} {{ currency }}</td>
+                        <td class="center">{{ publisher.network_earnings }} {{ currency }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{% trans "All earnings" %}</h2>
+            <table class="sortable table" id="all-earnings">
+                <thead>
+                    <tr>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Sale id" %}</th>
+                        <th>{% trans "Product" %}</th>
+                        <th></th>
+                        <th>{% trans "User" %}</th>
+                        <th></th>
+                        <th>{% trans "From" %}</th>
+                        <th>{% trans "Earnings" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for earning in earnings %}
+                    <tr>
+                        <td data-sort="{{ earning.date|date:"U" }}">{{ earning.date.date }}</td>
+                        <td data-sort="{{ earning.sale }}">{{ earning.sale.id }}</td>
+                        <td data-sort="{{ earning.product_name }}">{% if earning.product_image %}<a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a>{% endif %}</td>
+                        <td><a href="{{ earning.product_link }}">{{ earning.product_name }}</a></td>
+                        <td data-sort="{{ earning.from_user_name }}">{% if earning.from_user_avatar %}<a href="{{ earning.from_user_link }}"><img src="{{ earning.from_user_avatar }}"></a>{% endif %}</td>
+                        <td><a href="{{ earning.from_user_link }}">{{ earning.from_user_name }}</a></td>
+                        <td data-sort="{{ earning.get_user_earning_type_display }}">{{ earning.get_user_earning_type_display }}</td>
+                        <td data-sort="{{ earning.amount }}">{{ earning.amount }} {{ currency }}</td>
                     </tr>
                     {% empty %}
                     <tr>
