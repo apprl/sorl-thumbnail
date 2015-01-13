@@ -70,7 +70,7 @@
                 </ol>
 
                 <div class="product-image">
-                    {% thumbnail object.product_image "600" upscale=False crop="noop" format="PNG" as im %}
+                    {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
                     <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" class="img-responsive" />
                     {% endthumbnail %}
                 </div>
