@@ -206,7 +206,6 @@
                         <th class="center">{% trans "Conversion rate" %}</th>
                         <th class="hidden-xs center">{% trans "Sales generated" %}</th>
                         <th class="hidden-xs center">{% trans "Earnings" %}</th>
-                        <th class="center">{% trans "Network earnings" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -219,7 +218,6 @@
                         <td class="center">{{ publisher.sales|commission_rate:publisher.clicks }}</td>
                         <td class="hidden-xs center">{{ publisher.converted_amount }} {{ currency }}</td>
                         <td class="hidden-xs center">{{ publisher.publisher_earnings }} {{ currency }}</td>
-                        <td class="center">{{ publisher.network_earnings }} {{ currency }}</td>
                     </tr>
                     {% empty %}
                     <tr>

@@ -34,46 +34,22 @@
         <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 45px;">{% trans "In total, " %}<strong>{{ total_earned }} {{ currency }}</strong> {% trans "has been paid out to you" %}</div>
     </div>
     <div class="row">
-        <div class="col-lg-12">
-            <ul class="list-inline monthly-list">
-                <li>
-                <label>{% trans "Show statistics for: " %}
-                    <select class="month-select">
-                        {% for item_month in months_choices %}
-                        <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
-                        {% endfor %}
-                    </select>
-                    <select class="year-select">
-                        {% for item_year in years_choices %}
-                        <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
-                        {% endfor %}
-                    </select>
-                </label>
-                </li>
-            </ul>
-            <ul class="list-inline monthly-list">
-                <li>{% blocktrans %}Your commission: {{ month_commission }} {{ currency }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Clicks: {{month_clicks}}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Sales: {{month_sales}}{% endblocktrans %}</li>
-                <li>{% blocktrans with conversion_rate=month_conversion_rate|floatformat:2 %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</li>
-            </ul>
-
-
-            {% if request.user.referral_partner %}
-            <ul class="list-inline monthly-list">
-                <li>{% blocktrans %}Referral commission: {{ referral_commission }} {{ currency }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Referrals: {{referral_sales}}{% endblocktrans %}</li>
-            </ul>
-            {% endif %}
-            {% if network_sales %}
-            <ul class="list-inline monthly-list">
-                <li>{% blocktrans %}Network commission: {{ network_commission }} {{ currency }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Network sales: {{ network_sales }}{% endblocktrans %}</li>
-            </ul>
-            {% endif %}
-
-
-        </div>
+        <ul class="list-inline monthly-list date-dropdown   ">
+            <li>
+            <label>{% trans "Show statistics for: " %}
+                <select class="month-select">
+                    {% for item_month in months_choices %}
+                    <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                    {% endfor %}
+                </select>
+                <select class="year-select">
+                    {% for item_year in years_choices %}
+                    <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            </li>
+        </ul>
     </div>
     <div class="row">
         <div class="col-lg-10 col-md-6 col-sm-6"><h2>{% trans "All products" %}</h2></div>
@@ -87,10 +63,7 @@
                     <th class="center">{% trans "Sales" %}</th>
                     <th class="center">{% trans "Conversion rate" %}</th>
                     <th class="hidden-xs center">{% trans "Sales generated" %}</th>
-                    <th class="hidden-xs center">{% trans "Earnings" %}</th>
-                    {% if is_owner %}
-                        <th class="center">{% trans "Network earnings" %}</th>
-                    {% endif %}
+                    <th class="center">{% trans "Total earnings" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -102,10 +75,7 @@
                     <td class="center">{{ product.sales }}</td>
                     <td class="center">{{ product.sales|commission_rate:product.clicks }}</td>
                     <td class="hidden-xs center">{{ product.converted_amount }} {{ currency }}</td>
-                    <td class="hidden-xs center">{{ product.publisher_earnings }} {{ currency }}</td>
-                    {% if is_owner %}
-                        <td class="center">{{ product.network_earnings }} {{ currency }}</td>
-                    {% endif %}
+                    <td class="center">{{ product.total_earnings }} {{ currency }}</td>
                 </tr>
                 {% empty %}
                 <tr>

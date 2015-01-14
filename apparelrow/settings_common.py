@@ -265,6 +265,7 @@ INSTALLED_APPS = (
     'djrill',
     'crispy_forms',
     'localeurl',
+    'jsonfield',
 
     # Internal
     'theimp',

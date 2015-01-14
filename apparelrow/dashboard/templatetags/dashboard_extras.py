@@ -9,3 +9,7 @@ def commission_rate(value, arg):
         return "-"
     else:
         return str(100 * int(value) / int(arg))+"%"
+
+@register.filter(name='top_five')
+def top_five(value):
+    return value[:5]

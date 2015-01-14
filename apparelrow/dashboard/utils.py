@@ -33,9 +33,9 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
 
                 # Handle exceptions for publisher cuts
                 try:
-                    data_exceptions = json.loads(cuts.rules_exceptions)
+                    data_exceptions = cuts.rules_exceptions
                     for data in data_exceptions:
-                        if data['id'] == user.id:
+                        if data['sid'] == user.id:
                             normal_cut = decimal.Decimal(data['cut'])
                 except:
                     pass
@@ -49,9 +49,9 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                     if owner.partner_group:
                         cuts = owner.partner_group.cuts.get(vendor=vendor)
                         if cuts.rules_exceptions:
-                            data_exceptions = json.loads(cuts.rules_exceptions)
+                            data_exceptions = cuts.rules_exceptions
                             for data in data_exceptions:
-                                if data['id'] == owner.id:
+                                if data['sid'] == owner.id:
                                     publisher_cut = 1 - decimal.Decimal(data['tribute'])
             except:
                 pass

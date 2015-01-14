@@ -1,0 +1,48 @@
+{% extends 'dialog_base.html' %}
+{% load i18n dashboard_extras %}
+
+{% block modal_id %}modal_top_publishers{% endblock %}
+{% block modal_extra_class %}full_modal{% endblock %}
+{% block modal_title %}&nbsp;{% endblock %}
+{% block modal_content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{% trans "Top publishers in" %} {{ month }} {{ year }}</h2>
+            <table id="top-publishers-more" class="sortable table">
+                <thead>
+                    <tr>
+                        <th class="col1 product-image center">{% trans "User" %}</th>
+                        <th class="col2 hidden-xs center"></th>
+                        <th class="col3 center hidden-xs">{% trans "Clicks" %}</th>
+                        <th class="center">{% trans "Sales" %}</th>
+                        <th class="hidden-xs center">{% trans "Conversion rate" %}</th>
+                        <th class="hidden-xs center">{% trans "Sales generated" %}</th>
+                        <th class="center">{% trans "Network earnings" %}</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                      <td colspan="7"><i>Showing until 50 publishers ranked by network earnings</i></td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for publisher in top_publishers %}
+                    <tr>
+                        <td data-sort="{{ publisher.user }}" class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
+                        <td class="col2 hidden-xs"><a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a></td>
+                        <td class="col3 center hidden-xs">{{ publisher.clicks }}</td>
+                        <td class="center">{{ publisher.sales }}</td>
+                        <td class="hidden-xs center">{{ publisher.sales|commission_rate:publisher.clicks }}</td>
+                        <td class="hidden-xs center">{{ publisher.converted_amount }} {{ currency }}</td>
+                        <td class="center">{{ publisher.network_earnings }} {{ currency }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

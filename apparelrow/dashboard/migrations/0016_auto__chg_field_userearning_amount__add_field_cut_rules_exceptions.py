@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
         db.alter_column(u'dashboard_userearning', 'amount', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=2))
         # Adding field 'Cut.rules_exceptions'
         db.add_column(u'dashboard_cut', 'rules_exceptions',
-                      self.gf('django.db.models.fields.TextField')(null=True, blank=True),
+                      self.gf('jsonfield.fields.JSONField')(null=True, blank=True),
                       keep_default=False)
 
 
@@ -172,7 +172,7 @@ class Migration(SchemaMigration):
             'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'cuts'", 'on_delete': 'models.PROTECT', 'to': u"orm['dashboard.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'referral_cut': ('django.db.models.fields.DecimalField', [], {'default': "'0.15'", 'max_digits': '10', 'decimal_places': '3'}),
-            'rules_exceptions': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'rules_exceptions': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
             'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
         },
         u'dashboard.group': {
