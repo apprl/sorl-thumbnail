@@ -992,6 +992,52 @@ class ShopProduct(models.Model):
 def shop_product_save(instance, **kwargs):
     empty_embed_shop_cache.apply_async(args=[instance.shop_embed.user.pk], countdown=1)
 
+#
+# Shop
+#
+
+class ProductWidget(models.Model):
+    created     = models.DateTimeField(_("Time created"), auto_now_add=True)
+    modified    = models.DateTimeField(_("Time modified"), auto_now=True)
+    title       = models.CharField(_('Title'), max_length=200, validators=[validate_not_spaces])
+    slug        = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
+                    help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
+    description = models.TextField(_('Description'), null=True, blank=True)
+    user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='product_widget')
+    products    = models.ManyToManyField(Product, through='ProductWidgetProduct')
+    published   = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return u'%s' % (self.title,)
+
+    def save(self, *args, **kwargs):
+        logger.debug('Product widget save: %s %s %s' % (self.pk, self.user, self.published))
+        super(ProductWidget, self).save(*args, **kwargs)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('edit-product-widget', [str(self.pk)])
+
+class ProductWidgetEmbed(models.Model):
+    product_widget          = models.ForeignKey(ProductWidget, related_name='parent_widget')
+    user                    = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='product_widget_embed')
+    width                   = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0])
+    width_type              = models.CharField(max_length=2, null=False, blank=False, default='px')
+    language                = models.CharField(max_length=3, null=False, blank=False)
+
+#
+# ShopProduct
+#
+
+class ProductWidgetProduct(models.Model):
+    product_widget_embed = models.ForeignKey(ProductWidget, on_delete=models.CASCADE)
+    product    = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+#@receiver(post_save, sender=ProductWidgetProduct, dispatch_uid='product_widget_product_save_cache')
+#def shop_product_save(instance, **kwargs):
+#    empty_embed_shop_cache.apply_async(args=[instance.shop_embed.user.pk], countdown=1)
+
+
 @receiver(look_saved, sender=Look, dispatch_uid='look_saved')
 def look_saved_handler(sender, look, **kwargs):
     if not hasattr(look, 'user'):
