@@ -42,7 +42,7 @@ window.App.Models.Look = Backbone.Model.extend({
         }, this));
 
         App.Events.on('look:dirty', this.dirty, this);
-        App.Events.on('look:reset', this.reset, this);
+        App.Events.on('widget:reset', this.reset, this);
     },
 
     dirty: function() {

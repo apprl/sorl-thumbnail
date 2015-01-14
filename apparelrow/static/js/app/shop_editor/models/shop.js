@@ -28,7 +28,7 @@ window.App.Models.Shop = window.App.Models.WidgetModelBase.extend({
         }, this));
 
         App.Events.on('shop:dirty', this.dirty, this);
-        App.Events.on('shop:reset', this.reset, this);
+        App.Events.on('widget:reset', this.reset, this);
     },
 
     dirty: function() {
