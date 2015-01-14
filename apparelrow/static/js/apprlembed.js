@@ -11,6 +11,8 @@ var ApprlEmbed = ApprlEmbed || function(p, id, n, w, h, o, t) {
         iframeSrc = '//'+ o +'/embed/'+ t +'/'+id+'/'+n+'/?host='+ encodeURIComponent(host);
     } else if(t == 'shop') {
         iframeSrc = '//'+ o +'/embed/'+ t +'/'+id+'/?host='+ encodeURIComponent(host)
+    } else if (t == 'productwidget') {
+        iframeSrc = '//'+ o +'/embed/'+ t +'/'+id+'/?host='+ encodeURIComponent(host)
     }
 	self.container = document.createElement('div');
     self.container.setAttribute('style', 'width: ' + w + ';margin: 0 auto;');

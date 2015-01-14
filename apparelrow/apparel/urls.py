@@ -6,6 +6,7 @@ from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
 from apparelrow.apparel.views.shop import ShopCreateView
+from apparelrow.apparel.views.product_widget import ProductWidgetView
 from apparelrow.apparel.views import BrandRedirectView
 
 urlpatterns = patterns('',
@@ -49,6 +50,14 @@ urlpatterns = patterns('',
     # Shop embed - wardrobe
     url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
     url(r'^widget/shop/$', 'apparelrow.apparel.browse.shop_widget', name='shop-widget'),
+
+    # Product widget
+    url(r'^productwidget/create/$', 'apparelrow.apparel.views.product_widget.create', name='create-product-widget'),
+    url(r'^productwidget/edit/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.editor', name='edit-product-widget'),
+    url(r'^productwidget/widget/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.product_widget_widget', name='product-widget'),
+    url(r'^productwidget/api/$', ProductWidgetView.as_view(), name='product_widget-api'),
+    url(r'^productwidget/api/(?P<pk>\d+)/?$', ProductWidgetView.as_view(), name='product_widget-api'),
+    url(r'^embed/productwidget/(?P<embed_product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.embed_product_widget', name='embed-product-widget'),
 
     # About pages
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),

@@ -239,6 +239,30 @@ class ShopEmbedAdmin(admin.ModelAdmin):
 
 admin.site.register(ShopEmbed, ShopEmbedAdmin)
 
+class ProductWidgetProductInline(admin.TabularInline):
+    model = ProductWidgetProduct
+
+#
+# SHOP
+#
+
+class ProductWidgetAdmin(admin.ModelAdmin):
+    list_display = ('title', 'user', 'created')
+    inlines = [
+        ProductWidgetProductInline,
+    ]
+
+admin.site.register(ProductWidget, ProductWidgetAdmin)
+
+#
+# SHOP EMBED
+#
+
+class ProductWidgetEmbedAdmin(admin.ModelAdmin):
+    list_display = ('user', )
+
+admin.site.register(ProductWidgetEmbed, ProductWidgetEmbedAdmin)
+
 
 #
 # BRAND
