@@ -64,6 +64,8 @@ jQuery(document).ready(function() {
 
     $('.previous').on('click', function() { slide(1); });
     $('.next').on('click', function() { slide(-1); });
+    var mc = new Hammer($('.slidecontainer')[0]);
+    mc.on('swipeleft swiperight', function(e) { slide(e.type == 'swipeleft' ? -1 : 1); });
 
     function resize() {
         var containerwidth = $('.slidecontainer').width();
