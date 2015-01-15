@@ -52,7 +52,9 @@
         });
         new Tablesort($('table#all-earnings').get(0));
         new Tablesort($('table#top-products').get(0));
+        new Tablesort($('table#top-products-more').get(0));
         new Tablesort($('table#top-publishers').get(0));
+        new Tablesort($('table#top-publishers-more').get(0))
       });
     </script>
 {% endblock %}
@@ -158,7 +160,8 @@
 
         <div class="row">
         <div class="col-lg-12 table-responsive">
-            <h2>{% trans "Top products" %}</h2>
+            <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top products" %}</h2></div>
+            <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a></small></h2></div>
             <table id="top-products" class="sortable table">
                 <thead>
                     <tr>
@@ -172,7 +175,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for product in most_sold_products %}
+                    {% for product in most_sold_products|top_five %}
                     <tr>
                         <td data-sort="{{ product.product }}" class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
                         <td class="col2 hidden-xs"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
@@ -180,7 +183,7 @@
                         <td class="center">{{ product.sales }}</td>
                         <td class="center">{{ product.sales|commission_rate:product.clicks }}</td>
                         <td class="hidden-xs center">{{ product.converted_amount }} {{ currency }}</td>
-                        <td class="hidden-xs center">{{ product.publisher_earnings }} {{ currency }}</td>
+                        <td class="hidden-xs center">{{ product.total_commission }} {{ currency }}</td>
 
                     </tr>
                     {% empty %}
@@ -195,7 +198,8 @@
 
     <div class="row">
         <div class="col-lg-12 table-responsive">
-            <h2>{% trans "Top Publishers" %}</h2>
+            <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top Publishers" %}</h2></div>
+            <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a></small></h2></div>
             <table id="top-publishers" class="sortable table">
                 <thead>
                     <tr>
@@ -209,7 +213,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for publisher in top_publishers %}
+                    {% for publisher in top_publishers|top_five %}
                     <tr>
                         <td data-sort="{{ publisher.user }}" class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
                         <td class="col2 hidden-xs"><a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a></td>
@@ -267,5 +271,6 @@
             </table>
         </div>
     </div>
-
+{% include 'dashboard/fragments/dialog_top_products.html' with request=request csrf_token=csrf_token next=next most_sold_products=most_sold_products month=month_display year=year is_admin=True currency=currency only %}
+{% include 'dashboard/fragments/dialog_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers month=month_display year=year is_admin=True currency=currency only %}
 {% endblock body %}

@@ -17,7 +17,11 @@
                         <th class="center">{% trans "Sales" %}</th>
                         <th class="hidden-xs center">{% trans "Conversion rate" %}</th>
                         <th class="hidden-xs center">{% trans "Sales generated" %}</th>
-                        <th class="center">{% trans "Network earnings" %}</th>
+                        {% if is_admin %}
+                            <th class="center">{% trans "Publisher earnings" %}</th>
+                        {% else %}
+                            <th class="center">{% trans "Network earnings" %}</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tfoot>
@@ -34,7 +38,11 @@
                         <td class="center">{{ publisher.sales }}</td>
                         <td class="hidden-xs center">{{ publisher.sales|commission_rate:publisher.clicks }}</td>
                         <td class="hidden-xs center">{{ publisher.converted_amount }} {{ currency }}</td>
-                        <td class="center">{{ publisher.network_earnings }} {{ currency }}</td>
+                        {% if is_admin %}
+                            <td class="center">{{ publisher.publisher_earnings }} {{ currency }}</td>
+                        {% else %}
+                            <td class="center">{{ publisher.network_earnings }} {{ currency }}</td>
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>

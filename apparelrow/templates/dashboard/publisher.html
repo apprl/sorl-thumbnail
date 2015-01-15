@@ -299,7 +299,7 @@
     </div>
     {% endif %}
 
-{% include 'dashboard/fragments/dialog_top_products.html' with request=request csrf_token=csrf_token next=next most_sold_products=most_sold_products month=month_display year=year only %}
-{% include 'dashboard/fragments/dialog_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers month=month_display year=year only %}
+{% include 'dashboard/fragments/dialog_top_products.html' with request=request csrf_token=csrf_token next=next most_sold_products=most_sold_products is_admin=False currency=currency only %}
+{% include 'dashboard/fragments/dialog_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency only %}
 {% include 'dashboard/modal_more_info.html' %}
 {% endblock body %}
