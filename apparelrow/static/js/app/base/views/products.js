@@ -28,8 +28,6 @@ App.Views.Products = Backbone.View.extend({
 
     reset: function() {
         this.filter.reset();
-        this.$product_list_empty.hide();
-        this.$product_list_unauthenticated.hide();
     },
 
     infinite_scroll: function() {

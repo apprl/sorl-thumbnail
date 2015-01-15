@@ -158,7 +158,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     on_click: function(e) {
-        App.Events.trigger("lookedit:clicked");
+        //App.Events.trigger("lookedit:clicked");
+
         if(!this.model.has('image') || !this.model.get('image')) {
             return true;
         }

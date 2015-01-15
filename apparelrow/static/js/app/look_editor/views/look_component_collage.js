@@ -9,7 +9,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
     initialize: function() {
         App.Events.on('lookedit:reposition', this.reposition, this);
         App.Events.on('lookedit:rescale', this.rescale, this);
-        App.Events.on('lookedit:clicked', this.set_inactive, this);
+        //App.Events.on('lookedit:clicked', this.set_inactive, this);
         this.$container = $('.look-container');
     },
 
