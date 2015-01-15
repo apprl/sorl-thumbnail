@@ -5,7 +5,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     events: {
         'click .look-container': 'on_click',
-        'touch .look-container': 'on_click'
+        'touch .look-container': 'on_click',
+        'mousedown .look-container': 'inactivate'
     },
 
     initialize: function() {
@@ -156,9 +157,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
         image.src = product.get('image_look');
     },
+    inactivate: function() {
+      App.Events.trigger("lookedit:clicked");
+    },
 
     on_click: function(e) {
-        //App.Events.trigger("lookedit:clicked");
 
         if(!this.model.has('image') || !this.model.get('image')) {
             return true;
@@ -174,6 +177,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             this.add_product_to_component(new_component, this.pending_product);
             this.model.components.add(new_component);
             this.pending_product = false;
+        } else {
+            this.show_product_filter();
         }
 
         // XXX: this code might be used in the future when we want to allow a

@@ -12,7 +12,7 @@ App.Views.WidgetBase = Backbone.View.extend({
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_mobile_menu', new App.Views.DialogHeaderMobile({model:obj.model}));
 
-        App.Events.on('look_edit:product:add', this.hide_product_filter, this);
+        App.Events.on('widget:product:add', this.hide_product_filter, this);
     },
 
     show_touch_menu: function() {
