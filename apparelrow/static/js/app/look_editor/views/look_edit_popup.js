@@ -20,7 +20,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
         $(document).on('keydown', _.bind(function(e) { if(e.keyCode == 27) { this.hide() } }, this));
 
         this.$el.html(this.popup_template());
-        this.$el.addClass('popup-slim-lookedit-popup');
+        this.$el.addClass('popup-slim-widget-popup');
         $('body').append(this.$el);
     },
 

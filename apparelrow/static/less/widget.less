@@ -28,6 +28,28 @@
     }
   }
 }
+
+@media (min-width: @screen-tablet) {
+  .widget-page {
+    #popup-slim {
+      .body-header-col-right {
+        width: 100%;
+        > ul > li {
+          width: 100%;
+          .btn {
+            width: 100%;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+    .popup-slim-widget-popup {
+      display: none;
+    }
+  }
+}
+
+
 .container {
   position: static;
 }

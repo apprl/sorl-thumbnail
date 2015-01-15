@@ -75,7 +75,7 @@ App.Views.ShopEditPopup = App.Views.WidgetBase.extend({
 
         var url = '/products/' + this.model.get('id') + '/popup/?type=shop';
         // TODO: why this width?
-        this.$el.css('width', 594);
+        this.$el.css('width', '100%');
         this.$el.find('.title').text($('#popup_slim_template').data('title'));
         var content = this.$el.find('.content');
         content.empty();
@@ -83,10 +83,10 @@ App.Views.ShopEditPopup = App.Views.WidgetBase.extend({
         content.addClass('center');
         content.load(url, _.bind(function() {
             content.removeClass('center');
-            this._center();
+            //this._center();
         }, this));
 
-        this._center();
+        //this._center();
         this.$el.show();
     },
     _center: function(){

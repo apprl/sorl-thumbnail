@@ -12,7 +12,7 @@
 
     {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}
     <div class="col-xs-12 col-sm-8">
-        <p class="bodycopy description">{{ object.description }}</p>
+        <p class="bodycopy description hidden-xs">{{ object.description }}</p>
         <div class="product-vendors group">
             <div class="product-vendor">
                 <div class="computed-price">
@@ -26,11 +26,10 @@
                 <small>{% blocktrans with object.default_vendor.original_currency as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}</small>
                 {% endif %}
             </div>
-            <a href="#" class="btn btn-success btn-add">{% if type == 'shop' %}{% trans "Add to shop" %}{% else %}{% trans "Add to look" %}{% endif %}</a>
         </div>
     </div>
     <div class="col-xs-12">
-        <a href="#" class="btn btn-success btn-add">{% trans "Add to look" %}</a>
+        <a href="#" class="btn btn-success btn-add">{% trans "Add product" %}</a>
     </div>
     {% endcache %}
 
