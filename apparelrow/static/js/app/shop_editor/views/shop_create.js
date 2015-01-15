@@ -107,7 +107,12 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.model.set('published', false);
         this.model.save();
     },
-
+    delete_shop: function() {
+        this.model._dirty = false;
+        this.model.destroy({success: function() {
+            window.location.replace('/shop/create');
+        }});
+    },
     save_shop: function(values) {
         if (values) {
             this.model.set('title', values.title);

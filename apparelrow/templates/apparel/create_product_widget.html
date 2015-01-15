@@ -6,9 +6,9 @@
 {% block full-body %}
 
     {% if external_product_widget_id %}
-        {% include "apparel/tools/widget_header.html" with title='Edit product widget' type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+        {% include "apparel/tools/widget_header.html" with title='Edit widget' type='create_product_widget' external_product_widget_id=external_product_widget_id %}
     {% else %}
-        {% include "apparel/tools/widget_header.html" with title='Create a product widget' type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+        {% include "apparel/tools/widget_header.html" with title='Create widget' type='create_product_widget' external_product_widget_id=external_product_widget_id %}
     {% endif %}
 
     <div id="content">

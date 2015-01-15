@@ -24,6 +24,8 @@ class Migration(SchemaMigration):
             ('width', self.gf('django.db.models.fields.IntegerField')(default=696)),
             ('width_type', self.gf('django.db.models.fields.CharField')(default='px', max_length=2)),
             ('language', self.gf('django.db.models.fields.CharField')(max_length=3)),
+            ('nrproducts', self.gf('django.db.models.fields.IntegerField')(default=1)),
+            ('autoplay', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal(u'apparel', ['ProductWidgetEmbed'])
 
@@ -244,8 +246,10 @@ class Migration(SchemaMigration):
         },
         u'apparel.productwidgetembed': {
             'Meta': {'object_name': 'ProductWidgetEmbed'},
+            'autoplay': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'language': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
+            'nrproducts': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
             'product_widget': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'parent_widget'", 'to': u"orm['apparel.ProductWidget']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'product_widget_embed'", 'to': u"orm['profile.User']"}),
             'width': ('django.db.models.fields.IntegerField', [], {'default': '696'}),

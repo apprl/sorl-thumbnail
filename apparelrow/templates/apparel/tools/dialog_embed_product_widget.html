@@ -24,13 +24,7 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="form-group">
-                        <label class="control-label" for="id_height">{% trans "Height" %}</label>
-                        <div class="input-group">
-                            <input id="id_height" type="text" name="height" class="form-control" placeholder="600">
-                            <span class="input-group-addon">{% trans "pixels" %}</span>
-                        </div>
-                    </div>-->
+
                     <div class="form-group">
                         <label class="control-label" for="id_language">{% trans "Language" %}</label>
                         <select id="id_language" name="language" class="form-control">
@@ -39,27 +33,24 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <!--<div class="form-group">
-                        <label>{% trans "Show" %}</label>
-                        <div class="checkbox">
+                    <div class="form-group">
+                        <label>{% trans "Number of products" %}</label>
+                        <div class="controls">
                             <label>
-                                <input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked>
-                                {% trans "Include product brand and price" %}
+                                <select name="nrproducts" id="id_nrproducts" class="form-control">
+                                    <option value="1" selected="selected">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
                             </label>
                         </div>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="show_filters" id="id_show_filters" value="1">
-                                {% trans "Show filters" %}
+                                <input type="checkbox" name="autoplay" id="id_autoplay">
+                                {% trans "Auto play" %}
                             </label>
                         </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1">
-                                {% trans "Show filters as collapsed" %}
-                            </label>
-                        </div>
-                    </div>-->
+                    </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">{% trans "Get embed code" %}</button>
                     </div>
@@ -115,7 +106,8 @@
                 width: $('#id_width').val(),
                 width_type: width_type,
                 language: $('#id_language').val(),
-
+                nrproducts: $('#id_nrproducts').val(),
+                autoplay: $('#id_autoplay').prop("checked") ? 1 : 0
             };
 
 

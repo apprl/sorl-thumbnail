@@ -251,7 +251,8 @@ def product_widget_widget(request, product_widget_id=None):
     content['width'] = int(request.POST.get('width', 100))
     content['width_type'] = request.POST.get('width_type', '%')
     content['language'] = request.POST.get('language', 'sv')
-    #show_product_brand = bool(int(request.POST.get('show_product_brand', 1)))
+    content['nrproducts'] = int(request.POST.get('nrproducts', 1))
+    content['autoplay'] = bool(int(request.POST.get('autoplay', 1)))
 
     if content['width_type'] == '%' and int(content['width']) > 100:
         content['width'] = 100
@@ -267,6 +268,8 @@ def product_widget_widget(request, product_widget_id=None):
         width=content['width'],
         width_type=content['width_type'],
         language=content['language'],
+        nrproducts=content['nrproducts'],
+        autoplay=content['autoplay']
     )
 
     product_widget_embed.save()
@@ -299,14 +302,10 @@ def embed_product_widget(request, template='apparel/product_widget_embed.html', 
         product_widget_embed = get_model('apparel', 'ProductWidgetEmbed').objects.get(pk=embed_product_widget_id)
         width = product_widget_embed.width
         language = product_widget_embed.language
-        #nginx_key = reverse('look-embed-identifier', args=[identifier, slug])
+        nginx_key = reverse('embed-product-widget', args=[embed_product_widget_id])
     except get_model('apparel', 'ProductWidgetEmbed').DoesNotExist:
         #nginx_key = reverse('look-embed', args=[slug])
         pass
-
-    # Height
-    #scale = 280/320;
-    #height = int(math.ceil(look.height * scale))
 
     # TODO: replace alternative code with get_product_alternative from apparel.utils
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
@@ -314,41 +313,16 @@ def embed_product_widget(request, template='apparel/product_widget_embed.html', 
                        'fl': 'price,discount_price',
                        'sort': 'price asc, popularity desc, created desc'}
     components = product_widget_embed.product_widget.products.select_related('product')
-    for component in components:
-        print component
-        #component.style_embed = component.style_percentage()
-
-        #colors_pk = list(map(str, component.product.options.filter(option_type__name='color').values_list('pk', flat=True)))
-        #query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
-        #query_arguments['fq'].append('gender:(%s OR U)' % (component.product.gender,))
-        #query_arguments['fq'].append('category:%s' % (component.product.category_id))
-        #if colors_pk:
-        #    query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
-        #search = ApparelSearch('*:*', **query_arguments)
-        #docs = search.get_docs()
-        #if docs:
-        #    shop_reverse = 'shop-men' if component.product.gender == 'M' else 'shop-women'
-        #    shop_url = '%s?aid=%s&alink=Ext-Look&category=%s' % (reverse(shop_reverse), look.user.pk, component.product.category_id)
-        #    if colors_pk:
-        #        shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
-
-        #    price, currency = docs[0].price.split(',')
-        #    rate = currency_exchange(language_currency, currency)
-        #    price = rate * decimal.Decimal(price)
-        #    price = price.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
-
-        #    component.alternative = (shop_url, price, language_currency)
-        pass
 
     translation.activate(language)
     response = render(request, 'apparel/product_widget_embed.html', {'object': product_widget_embed,
                                                            'components': components,
                                                            'width': str(width),
-                                                           #'height': str(height),
+                                                           'autoplay': int(product_widget_embed.autoplay),
                                                            'embed_id': embed_product_widget_id},)
 
     translation.deactivate()
 
-    #get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
+    get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
 
     return response

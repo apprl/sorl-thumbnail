@@ -19,45 +19,67 @@ jQuery(document).ready(function() {
     var parentHost = getParameterByName('host');
 
     var $ul = $('ul');
+    var $items = $ul.children('li');
     var childwidth;
+    var index = 0;
+    var running = false;
+    var doplay = true;
 
     function sendHeight() {
         if(parent && parent.postMessage && parentHost) {
-            var bodywidth = $('body').width();
-            childwidth = bodywidth/1;
-            $ul.children('li').width(bodywidth/1);
-            $ul.width($ul.children.length * bodywidth/1);
+            var containerwidth = $('.slidecontainer').width();
+            childwidth = containerwidth/nrchildren;
+            $items.width(childwidth);
+            $ul.width($items.length * childwidth);
             var maxheight = 0;
             $ul.find('li img').each(function() {
                 maxheight = Math.max(maxheight, $(this).attr('height'));
             });
+
             if (maxheight) {
-                height = Math.ceil(bodywidth * maxheight/600);
+                height = Math.ceil(containerwidth * maxheight/600/nrchildren);
                 parent.postMessage(height + "|" + embedId, parentHost);
             }
         }
     }
 
-    function slideLeft() {
-        $ul.animate({'left': '-=' + childwidth})
+    function slide(direction) {
+        if (running) return;
+        running = true;
+        index -= direction;
+        if (index < 0) {
+            $items.last().detach().prependTo($ul);
+            $ul.css('left', ($ul.position().left - childwidth) + 'px');
+            index = 0;
+            $items = $ul.children('li');
+        } else if (index + nrchildren > $items.length) {
+            $items.first().detach().appendTo($ul);
+            $ul.css('left', ($ul.position().left + childwidth) + 'px');
+            index -= 1;
+            $items = $ul.children('li');
+        }
+
+        $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { running = false; }});
     }
 
-    function slideRight() {
-        $ul.animate({'left': '+=' + childwidth});
-    }
-
-    $('.previous').on('click', slideLeft);
-    $('.next').on('click', slideRight);
+    $('.previous').on('click', function() { slide(1); });
+    $('.next').on('click', function() { slide(-1); });
 
     function resize() {
-        var bodywidth = $('body').width();
-        $ul.children('li').width(bodywidth/1);
-        $ul.width($ul.children.length * bodywidth/1);
+        var containerwidth = $('.slidecontainer').width();
+        childwidth = containerwidth/nrchildren;
+        $ul.css('left', -1*index*childwidth);
+        $ul.children('li').width(childwidth);
+        $ul.width($items.length * childwidth);
     }
 
     $(window).on('resize', resize);
-
     $(window).on('message', sendHeight).trigger('message');
+
+    if (autoplay) {
+        setInterval(function() { if (doplay) { slide(-1); } }, 4000);
+        $('.slidecontainer').on('mouseover', function() { doplay = false; }).on('mouseout', function() { doplay = true;});
+    }
 
     function trackEvent(category, action) {
         return function() {

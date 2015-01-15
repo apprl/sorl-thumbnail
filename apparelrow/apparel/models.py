@@ -1024,7 +1024,8 @@ class ProductWidgetEmbed(models.Model):
     width                   = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0])
     width_type              = models.CharField(max_length=2, null=False, blank=False, default='px')
     language                = models.CharField(max_length=3, null=False, blank=False)
-
+    nrproducts              = models.IntegerField(blank=False, null=False, default=1)
+    autoplay                = models.BooleanField(default=False)
 #
 # ShopProduct
 #

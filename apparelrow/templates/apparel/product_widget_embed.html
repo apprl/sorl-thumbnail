@@ -28,7 +28,7 @@
         })();
     </script>
     <style>
-        .container {
+        .slidecontainer {
             overflow: hidden;
             position: relative;
         }
@@ -39,6 +39,7 @@
             position: relative;
             top: 0px;
             left: 0px;
+            list-style: none;
         }
         ul li {
             float: left;
@@ -52,7 +53,7 @@
   </head>
   <body class="product-widget-embed">
     <div><a href="#" class="previous"><< Previous</a><a href="#" class="next">Next >></a></div>
-    <div class="container">
+    <div class="slidecontainer">
 
         <ul>
           {% for component in components %}
@@ -68,7 +69,8 @@
     </div>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript">
-        //var embedWidth = {{ embed_width }};
+        var nrchildren = {{ object.nrproducts }};
+        var autoplay = {{ autoplay }};
         var embedId = '{{ embed_id }}';
     </script>
     {% compressed_js 'product_widget' %}

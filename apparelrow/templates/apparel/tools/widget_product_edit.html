@@ -3,14 +3,13 @@
 
 <div id="product-widget-preview">
     <div id="preview-header" class="preview-header">
-        {%  trans 'My shop preview' %}
+        {%  trans 'My widget preview' %}
     </div>
     <div class="product-list-container">
-        <div>
-            <div id="shop-product-list" class="col-product-list{% if show_liked == 'true' %} liked-products{% endif %}">
-                <h3>0 {% trans 'products' %}</h3>
-                <ul class="product-list list-unstyled"></ul>
-            </div>
+        <div id="product-widget-product-list" class="">
+            <a class="previous">Previous</a>
+            <a class="next">Next</a>
+            <ul class="product-list list-unstyled"></ul>
         </div>
     </div>
 </div>
