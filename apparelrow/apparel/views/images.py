@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from apparelrow.apparel.models import TemporaryImage
 from apparelrow.apparel.utils import JSONResponse
 
+from PIL import Image
+from PIL.ExifTags import TAGS
 
 class TemporaryImageView(View):
 
@@ -19,6 +21,22 @@ class TemporaryImageView(View):
 
         temp_image = TemporaryImage(image=f)
         temp_image.save()
+
+        image = Image.open(temp_image.image.path)
+
+        exifdict = image._getexif()
+        if exifdict is not None and len(exifdict):
+            for k in exifdict.keys():
+                if k in TAGS.keys() and TAGS[k] == 'Orientation':
+                    print exifdict[k]
+                    if exifdict[k] == 6:
+                        image = image.transpose(Image.ROTATE_270)
+                    elif exifdict[k] == 8:
+                        image = image.transpose(Image.ROTATE_90)
+                    elif exifdict[k] == 3:
+                        image = image.transpose(Image.ROTATE_180)
+
+                    image.save(temp_image.image.path)
 
         data = [{'id': temp_image.pk,
                  'name': f.name,
