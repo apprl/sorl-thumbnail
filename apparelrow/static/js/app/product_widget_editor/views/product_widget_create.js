@@ -27,11 +27,19 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.model.components.on('add', this.add_component, this);
 
         $(window).on('resize', _.bind(this.resize, this));
+
         this.$el.find('.previous').on('click', _.bind(function() { this.slide(1); }, this));
         this.$el.find('.next').on('click', _.bind(function() { this.slide(-1); }, this));
+
         this.$container = this.$el.find('.product-list-container');
+
         this.$productlist = this.$el.find('#product-widget-product-list');
+
+        var mc = new Hammer(this.$productlist[0]);
+        mc.on('swipeleft swiperight', _.bind(function(e) { this.slide(e.type == 'swipeleft' ? -1 : 1); }, this));
+
         $('#product-chooser').find('.disabled').hide();
+
         this.resize();
 
         App.Views.ProductWidgetCreate.__super__.initialize(this);

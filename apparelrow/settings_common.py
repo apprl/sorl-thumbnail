@@ -426,6 +426,7 @@ PIPELINE_JS = {
             'js/vendor/jquery.iframe-transport.js',
             'js/vendor/jquery.fileupload.js',
             'js/jquery/jquery.ui.rotatable.js',
+            'js/vendor/hammer.min.js',
             'js/app/main.js',
 
             'js/app/base/models/WidgetModelBase.js',
