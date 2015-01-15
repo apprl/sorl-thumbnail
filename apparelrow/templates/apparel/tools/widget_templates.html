@@ -2,7 +2,7 @@
 {% load i18n compressed %}
 
 <script type="text/template" id="dialog_login_template" data-title="{% trans "Login" %}">
-    <p>{% trans "Do you want to save this look before logging in with Facebook?" %}</p>
+    <p>{% trans "Do you want to save before logging in with Facebook?" %}</p>
     <a href="#" class="btn btn-primary btn-block btn-cancel">{% trans "Cancel" %}</a>
     <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
     <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
@@ -14,14 +14,14 @@
     <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
 </script>
 
-<script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete look?" %}">
-    <p>{% trans "Are you sure you want to permanently delete your look?" %}</p>
+<script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
+    <p>{% trans "Are you sure you want to permanently delete?" %}</p>
     <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
     <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
 </script>
 
-<script type="text/template" id="dialog_unpublish_template" data-title="{% trans "Unpublish look?" %}">
-    <p>{% trans "Are you sure you want to unpublish this look so that no one can see it?" %}</p>
+<script type="text/template" id="dialog_unpublish_template" data-title="{% trans "Unpublish?" %}">
+    <p>{% trans "Are you sure you want to unpublish this so that no one can see it?" %}</p>
     <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
     <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
 </script>
@@ -41,9 +41,9 @@
     <a href="#" class="btn btn-block btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
 </script>
 
-<script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish look" %}">
+<script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish" %}">
     <div class="form-group">
-        <label for="look_title">{% trans "Your look title" %} *</label>
+        <label for="look_title">{% trans "Your title" %} *</label>
         <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
     </div>
 
@@ -89,7 +89,7 @@
 <script type="text/template" id="shop_component_product">
     <div class="thumbnail product-medium">
         <div class="product-image-container">
-            <a href="#"><img class="product-image" src="{% static "images/fake_product.png" %}"/></a>
+            <a href="#"><img class="product-image fake-product-image" src="{% static "images/fake_product.png" %}"/></a>
 
             <div class="hover" style="display: none;">
                 <!--<div class="btn-group btn-group-justified">-->
