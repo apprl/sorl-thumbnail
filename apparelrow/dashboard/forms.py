@@ -21,3 +21,4 @@ class CutAdminForm(ModelForm):
                     else:
                         raise ValidationError("JSON key is not valid: %s."%(key))
         return rules_exceptions
+        
