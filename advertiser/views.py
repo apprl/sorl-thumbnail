@@ -55,7 +55,7 @@ def pixel(request):
         order_value = decimal.Decimal(order_value)
     except Exception as e:
         email_body = render_to_string('advertiser/email_default_error.txt', locals())
-        mail_superusers('Advertiser Pixel Error: order value must be a number', email_body)
+        logger.warn('Advertiser Pixel Error: order value must be a number %s' % email_body)
 
         return HttpResponseBadRequest('Order value must be a number.')
 
