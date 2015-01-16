@@ -39,3 +39,5 @@ newrelic
 #eventlet==0.14.0
 django-rosetta==0.7.4
 raven==5.1.1
+jsonfield==1.0.0
+
