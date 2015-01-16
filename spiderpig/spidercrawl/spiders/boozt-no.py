@@ -15,7 +15,7 @@ key_regex1 = re.compile(r'url\((.+)\)')
 class BooztNOSpider(CSVFeedSpider, AffiliateMixin):
     name = 'boozt-no'
     allowed_domains = ['boozt.com']
-    start_urls = ['http://pf.tradedoubler.com/export/export?myFeed=14186390252463884&myFormat=12919846971897050']
+    start_urls = ['http://pf.tradedoubler.com/export/export?myFeed=14211385642463884&myFormat=12919846971897050']
     delimiter = '|'
 
     def parse_rows(self, response):
@@ -39,7 +39,7 @@ class BooztNOSpider(CSVFeedSpider, AffiliateMixin):
         item['category'] = '%s > %s' % (row.get('TDCategoryName'), row.get('merchantCategoryName'))
         item['description'] = row.get('description')
         item['brand'] = row.get('brand')
-        item['gender'] = row.get('TDCategoryName')
+        item['gender'] = item['category']
         item['colors'] = row.get('color')
         item['regular_price'] = row.get('previousPrice')
         item['discount_price'] = row.get('price')
