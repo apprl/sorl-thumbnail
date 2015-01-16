@@ -647,7 +647,10 @@ def dashboard_admin(request, year=None, month=None):
                 if earning.sale.id == sale['id']:
                     earning.extra_sale = sale
             sale = get_model('dashboard', 'Sale').objects.get(id=earning.sale.id)
-            if sale.product_id:
+            earning.product_image = ''
+            earning.product_link = ''
+            earning.product_name= ''
+            try:
                 product = get_model('apparel', 'Product').objects.get(id=sale.product_id)
                 product_image = ''
                 product_link = ''
@@ -658,6 +661,8 @@ def dashboard_admin(request, year=None, month=None):
                 earning.product_image = product_image
                 earning.product_link = product_link
                 earning.product_name = product.product_name
+            except get_model('apparel', 'Product').DoesNotExist:
+                pass
             earning.from_user_link = ''
             if earning.user:
                 earning.from_user_link = reverse('profile-likes', args=[earning.user.slug])
@@ -771,7 +776,6 @@ def dashboard(request, year=None, month=None):
 
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
-
         # User Earnings
         user_earnings = get_model('dashboard', 'UserEarning').objects.filter(user=request.user,date__range=(start_date_query, end_date_query)).order_by('-date')
         for earning in user_earnings:
@@ -780,7 +784,10 @@ def dashboard(request, year=None, month=None):
                 if earning.sale.id == sale['id']:
                     earning.extra_sale = sale
             sale = get_model('dashboard', 'Sale').objects.get(id=earning.sale.id)
-            if sale.product_id:
+            earning.product_image = ''
+            earning.product_link = ''
+            earning.product_name = ''
+            try:
                 product = get_model('apparel', 'Product').objects.get(id=sale.product_id)
                 product_image = ''
                 product_link = ''
@@ -791,11 +798,19 @@ def dashboard(request, year=None, month=None):
                 earning.product_image = product_image
                 earning.product_link = product_link
                 earning.product_name = product.product_name
-            if earning.from_user:
+            except get_model('apparel', 'Product').DoesNotExist:
+                pass
+
+            earning.from_user_name = ''
+            earning.from_user_avatar = ''
+            try:
                 earning.from_user_name = earning.from_user.slug
                 earning.from_user_avatar = earning.from_user.avatar_small
                 if earning.from_user.name:
                     earning.from_user_name = earning.from_user.name
+            except get_user_model().DoesNotExist:
+                pass
+
         # Sales count
         sales_count = 0
         referral_sales_count = 0
