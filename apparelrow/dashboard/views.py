@@ -801,15 +801,11 @@ def dashboard(request, year=None, month=None):
             except get_model('apparel', 'Product').DoesNotExist:
                 pass
 
-            earning.from_user_name = ''
-            earning.from_user_avatar = ''
-            try:
+            if earning.from_user:
                 earning.from_user_name = earning.from_user.slug
                 earning.from_user_avatar = earning.from_user.avatar_small
                 if earning.from_user.name:
                     earning.from_user_name = earning.from_user.name
-            except get_user_model().DoesNotExist:
-                pass
 
         # Sales count
         sales_count = 0
