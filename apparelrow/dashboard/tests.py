@@ -566,7 +566,7 @@ class TestUserEarnings(TransactionTestCase):
         Tests UserEarnings that are generated when the user belongs to a Publisher Network and the Publisher Network
         owner doesn't belong to a Publisher Network
     '''
-    def test_commissions_publisher_network(self):
+    def test_user_earnings_publisher_network(self):
         owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
         owner_user.owner_network_cut = 0.1
         owner_user.save()
@@ -632,12 +632,8 @@ class TestUserEarnings(TransactionTestCase):
     '''
         Tests UserEarnings that are generated when the user doesn't belong to a Publisher Network
     '''
-    def test_commissions_no_publisher_network(self):
-        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
-        owner_user.owner_network_cut = 0.1
-        owner_user.save()
-
-        group = get_model('dashboard', 'Group').objects.create(name='mygroup', owner=owner_user)
+    def test_user_earnings_no_publisher_network(self):
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup')
 
         temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
         temp_user.partner_group = group
@@ -696,7 +692,7 @@ class TestUserEarnings(TransactionTestCase):
         Tests UserEarnings that are generated when the user belongs to a Publisher Network and the Publisher Network
         owner belongs to a Publisher Network recursively
     '''
-    def test_commissions_recursive_publisher_network(self):
+    def test_user_earnings_recursive_publisher_network(self):
 
         super_master_owner = get_user_model().objects.create_user('super_master_owner', 'super_master_owner@xvid.se', 'super_master_owner')
         super_master_owner.owner_network_cut = 0.5
@@ -777,7 +773,7 @@ class TestUserEarnings(TransactionTestCase):
     '''
         Tests UserEarnings when user doesn't belong to a Commission Group
     '''
-    def test_commissions_no_commission_group(self):
+    def test_user_earnings_no_commission_group(self):
         # User has no Commission Group assigned
         temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
 
@@ -836,7 +832,7 @@ class TestUserEarnings(TransactionTestCase):
     '''
         Tests UserEarnings when a referral Sale is made
     '''
-    def test_commissions_referral_sale(self):
+    def test_user_earnings_referral_sale(self):
         owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
         owner_user.owner_network_cut = 0.5
         owner_user.save()
@@ -910,6 +906,40 @@ class TestUserEarnings(TransactionTestCase):
         earnings = get_model('dashboard', 'UserEarning').objects.all()
         for earning in earnings:
             self.assertEqual(earning.status, get_model('dashboard', 'Sale').CONFIRMED)
+
+    '''
+        Tests UserEarnings when a direct sales is generated on APPRL.com
+    '''
+    def test_user_earning_apprl_direct_sale(self):
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = ''
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        sale = get_model('dashboard', 'Sale').objects.get(vendor=vendor)
+        self.assertEqual(sale.original_commission, 100)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 1)
+
+        earning = get_model('dashboard', 'UserEarning').objects.all()[0]
+
+        self.assertEqual(earning.user_earning_type, 'apprl_commission')
+        self.assertEqual(earning.amount, 100)
 
     def test_payments(self):
         owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
