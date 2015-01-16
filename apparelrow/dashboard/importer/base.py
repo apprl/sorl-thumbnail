@@ -80,7 +80,7 @@ class BaseImporter:
         if 'user_id' in data and data['user_id']:
             logger.debug('Running calculate cut for user id: %s' % (data['user_id'],))
 
-            user, cut, referral_cut = get_cuts_for_user_and_vendor(data['user_id'], data['vendor'])
+            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(data['user_id'], data['vendor'])
 
             self.create_referral_sale(data, user, referral_cut)
 

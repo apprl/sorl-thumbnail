@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.core import urlresolvers
 
 from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning
+from apparelrow.dashboard.forms import CutAdminForm
 
 class SaleAdmin(admin.ModelAdmin):
     list_display = ('id', 'affiliate', 'vendor', 'status', 'user_id', 'product_id', 'placement', 'cut', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')
@@ -41,6 +42,7 @@ class PaymentAdmin(admin.ModelAdmin):
 admin.site.register(Payment, PaymentAdmin)
 
 class CutAdmin(admin.ModelAdmin):
+    form = CutAdminForm
     list_display = ('group', 'vendor', 'cut')
     list_filter = ('group',)
 
