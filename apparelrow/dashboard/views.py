@@ -584,7 +584,7 @@ def dashboard_admin(request, year=None, month=None):
 
         # Per month
         data_per_month = {}
-        for day in range(1, (end_date - start_date).days + 2):
+        for day in range(0, (end_date - start_date).days + 2):
             data_per_month[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
@@ -814,7 +814,7 @@ def dashboard(request, year=None, month=None):
 
         # Sales and commission per day
         data_per_day = {}
-        for day in range(1, (end_date - start_date).days + 2):
+        for day in range(0, (end_date - start_date).days + 2):
             data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
 
         for earning in user_earnings:
