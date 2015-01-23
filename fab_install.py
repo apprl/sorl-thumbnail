@@ -103,7 +103,7 @@ def install_gunicorn_admin():
 @task
 def install_celery():
     upload_template('etc/v2/supervisor-celery.conf','/etc/supervisor/conf.d/celery.conf' % env,context=env, use_sudo=True)
-    upload_template('etc/v2/supervisor-celery-background.conf','/etc/supervisor/conf.d/celery-background.conf' % env,context=env, use_sudo=True)
+    #upload_template('etc/v2/supervisor-celery-background.conf','/etc/supervisor/conf.d/celery-background.conf' % env,context=env, use_sudo=True)
     upload_template('etc/v2/supervisor-celery-beat.conf','/etc/supervisor/conf.d/celery-beat.conf' % env,context=env, use_sudo=True)
     sudo('mkdir /var/run/celery;chown %(run_user)s /var/run/celery' % env)
     #sudo('mkdir -p %(venv_path)s/var/run;chown -R %(run_user)s:%(user)s %(venv_path)s/var' % env, pty=True)
