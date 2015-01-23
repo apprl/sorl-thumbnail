@@ -184,7 +184,7 @@ def postgres(command):
     return run("%s" % command)
     #return run("sudo -u root sudo -u postgres %s" % command)
 
-
+@task
 def backup(filename=None):
     """
     Backs up the database.
@@ -240,3 +240,9 @@ def scrapingstatus():
 def importer(vendor):
     with project():
         sudo ("python manage.py run_importer --vendor=%(vendor)s" % {"vendor":vendor}, user="%(run_user)s" % env)
+
+@task
+def fetchall():
+    with project():
+        run("git fetch --all")
+
