@@ -1,4 +1,6 @@
 import datetime
+import json
+import decimal
 
 from django.conf import settings
 from django.db import models
@@ -8,6 +10,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
+from jsonfield import JSONField
+
 
 from apparelrow.apparel.base_62_converter import dehydrate
 import logging
@@ -133,7 +137,11 @@ class Cut(models.Model):
                               help_text='Between 1 and 0, default %s. Determines the percentage that goes to the Publisher (and possible Publisher Network owner, if applies)' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
     referral_cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
                                        help_text='Between 1 and 0, default %s. Determines the percentage that goes to the referral partner parent.' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
-
+    rules_exceptions = JSONField(null=True, blank=True,
+                                 help_text='Creates exceptions for Cuts using the following format: [{"sid": 1, "cut": '
+                                           '0.90, "tribute":0.50}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
+                                           'is the User id. Cut replaces the cut value for the user and the current cut'
+                                           ' and Tribute replaces the user\'s tribute value defined in the user model.')
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
 
@@ -162,14 +170,15 @@ class StoreCommission(models.Model):
         commission_array = commission.split("/")
         normal_cut = args[1]
         referral_cut = args[2]
+        publisher_cut = args[3]
 
         try:
             if not len(commission_array) == 3 or commission_array[0] == '0':
                 log.warn('Store commission %s is invalidly structured. Needs to be in the format [X/Y/Z] where X <> 0!' % self.vendor)
             else:
-                standard_from = (Decimal(commission_array[0])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
-                standard_to = (Decimal(commission_array[1])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
-                sale = (Decimal(commission_array[2])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                standard_from = (Decimal(commission_array[0])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                standard_to = (Decimal(commission_array[1])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                sale = (Decimal(commission_array[2])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
                 if standard_from == standard_to:
                     commission_array[1] = '0'
 
@@ -227,11 +236,11 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
         sale, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
 
 USER_EARNING_TYPES = (
-    ('apprl_commission', 'APPRL Commission'),
-    ('referral_sale_commission', 'Referral Sale Commission'),
-    ('referral_signup_commission', 'Referral Signup Commission'),
-    ('publisher_sale_commission', 'Publisher Sale Commission'),
-    ('publisher_network_tribute', 'Network Commission'),
+    ('apprl_commission', 'APPRL Earnings'),
+    ('referral_sale_commission', 'Referral Sale Earnings'),
+    ('referral_signup_commission', 'Referral Signup Earnings'),
+    ('publisher_sale_commission', 'Publisher Sale Earnings'),
+    ('publisher_network_tribute', 'Network Earnings'),
 )
 
 class UserEarning(models.Model):
@@ -299,65 +308,58 @@ def create_user_earnings(sale):
     total_commission = sale.converted_commission
     product = None
 
+    user = None
+    try:
+        user = get_model('profile', 'User').objects.get(id=sale.user_id)
+    except get_model('profile', 'User').DoesNotExist:
+        logging.warning('Sale %s is connected to a User %s that does not exist.' % (sale.id,sale.user_id))
+        return
     sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+    commission_group = user.partner_group
+
     if not len(sale_product) == 0:
         product = sale_product[0]
 
-    user = None
-    if sale.user_id:
+    if commission_group:
+        commission_group_cut = None
         try:
-            user = get_model('profile', 'User').objects.get(id=sale.user_id)
-        except get_model('profile', 'User').DoesNotExist:
-            logging.warning('Sale %s is connected to a User %s that does not exist.' % (sale.id,sale.user_id))
+            commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+        except Cut.DoesNotExist:
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
             return
+        cut = commission_group_cut.cut
 
-        commission_group = user.partner_group
+         # Handle exceptions for publisher cuts
+        try:
+            data_exceptions = commission_group_cut.rules_exceptions
+            for data in data_exceptions:
+                if data['sid'] == user.id:
+                    cut = decimal.Decimal(data['cut'])
+        except:
+            pass
 
-        if commission_group:
-            commission_group_cut = None
-            try:
-                commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
-            except Cut.DoesNotExist:
-                logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
-                return
-            cut = commission_group_cut.cut
+        if cut:
+            publisher_commission = total_commission * cut
+            apprl_commission = total_commission - publisher_commission
 
-             # Handle exceptions for publisher cuts
-            try:
-                data_exceptions = commission_group_cut.rules_exceptions
-                for data in data_exceptions:
-                    if data['sid'] == user.id:
-                        cut = decimal.Decimal(data['cut'])
-            except:
-                pass
-            if cut:
-                publisher_commission = total_commission * cut
-                apprl_commission = total_commission - publisher_commission
+            get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                                                                 from_product=product, from_user=user,
+                                                                 amount=apprl_commission, date=sale.sale_date,
+                                                                 status=sale.status)
 
-                get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
-                                                                     from_product=product, from_user=user,
-                                                                     amount=apprl_commission, date=sale.sale_date,
-                                                                     status=sale.status)
+            if user.owner_network:
+                publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
 
-                if user.owner_network:
-                    publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
+            get_model('dashboard', 'UserEarning').objects.create( user=user,
+                                                                  user_earning_type='publisher_sale_commission',
+                                                                  sale=sale, from_product=product,
+                                                                  amount=publisher_commission, date=sale.sale_date,
+                                                                  status=sale.status)
 
-                get_model('dashboard', 'UserEarning').objects.create( user=user,
-                                                                      user_earning_type='publisher_sale_commission',
-                                                                      sale=sale, from_product=product,
-                                                                      amount=publisher_commission, date=sale.sale_date,
-                                                                      status=sale.status)
-
-            else:
-                logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
         else:
-            logging.warning('User %s should have assigned a comission group'%user)
+            logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
     else:
-        # The sale was generated from APPRL.com
-        get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
-                                                                     from_product=product, amount=total_commission,
-                                                                     date=sale.sale_date, status=sale.status)
-
+        logging.warning('User %s should have assigned a comission group'%user)
 
 def create_earnings_publisher_network(user, publisher_commission, sale, product):
     owner = user.owner_network
@@ -365,6 +367,24 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product)
     if owner_tribute > 1:
         owner_tribute = 1
         logging.warning('Owner network cut must be a value between 0 and 1')
+    commission_group = owner.partner_group
+
+    if commission_group:
+        try:
+            commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+        except Cut.DoesNotExist:
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
+            return
+
+         # Handle exceptions for owner cuts
+        try:
+            data_exceptions = commission_group_cut.rules_exceptions
+            for data in data_exceptions:
+                if data['sid'] == owner.id:
+                    owner_tribute = decimal.Decimal(data['tribute'])
+        except:
+            pass
+
     owner_earning = publisher_commission * owner_tribute
     publisher_commission -= owner_earning
 
