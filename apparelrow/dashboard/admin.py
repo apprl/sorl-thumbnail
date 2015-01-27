@@ -55,7 +55,7 @@ class GroupAdmin(admin.ModelAdmin):
 admin.site.register(Group, GroupAdmin)
 
 class SignupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'blog', 'store', 'referral_user', 'created')
+    list_display = ('name', 'email', 'blog', 'traffic', 'store', 'referral_user', 'created')
     raw_id_fields = ('referral_user',)
 
 admin.site.register(Signup, SignupAdmin)

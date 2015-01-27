@@ -485,7 +485,7 @@ class SignupForm(ModelForm):
 
     class Meta:
         model = Signup
-        fields = ('name', 'email', 'blog')
+        fields = ('name', 'email', 'blog', 'traffic')
 
 def dashboard_group_admin(request, pk):
     if request.user.is_authenticated() and (request.user.is_superuser or request.user.pk == int(pk)):
