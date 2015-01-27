@@ -23,7 +23,7 @@ class PhilipBSpider(CSVFeedSpider, AffiliateMixin):
         item['description'] = row.get('Product Text Description')
         item['brand'] = row.get('Brand Name')
         item['gender'] = 'U'
-        item['colors'] = ''
+        item['colors'] = 'white'
         item['regular_price'] = row.get('Price')
         item['discount_price'] = ''
         item['currency'] = 'USD'

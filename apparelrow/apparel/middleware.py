@@ -10,6 +10,7 @@ from django.db.models import get_model
 from django.http import HttpResponseRedirect
 from django.utils import timezone, translation
 from localeurl import utils
+from apparelrow.statistics.utils import get_country_by_ip
 
 
 REFERRAL_COOKIE_NAME = 'aid_cookie'
@@ -65,13 +66,15 @@ class LocationMiddleware(object):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
         if cookie_value:
             request.session['location'] = cookie_value
+        elif not request.user_agent.is_bot:
+            request.session['location'] = get_country_by_ip(request)
         request.location = request.session.get('location','ALL')
 
     def process_response(self, request, response):
         if not request.session.get('location',None):
             try:
                 # Depending on localeurl strip path method
-                location_choice = 'ALL'
+                location_choice = get_country_by_ip(request) if not request.user_agent.is_bot else 'ALL'
                 locale, path = utils.strip_path(request.path)
                 if locale:
                     for location, location_text, lang in settings.LOCATION_LANGUAGE_MAPPING:

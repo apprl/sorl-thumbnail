@@ -17,4 +17,15 @@ def get_client_ip(request):
 def get_user_agent(request):
     return request.META.get('HTTP_USER_AGENT', '')
 
-#def get_country_by_ip(request):
+def get_country_by_ip(request):
+    import requests
+    from apparelrow.settings import GEOIP_URL
+    import logging
+    log = logging.getLogger(__name__)
+    resp = requests.get(GEOIP_URL % get_client_ip(request))
+    json_obj = resp.json()
+    if hasattr(json_obj,"iso_code"):
+        return json_obj.get("iso_code","ALL")
+    else:
+        log.warning('No country found for ip %s.' % get_client_ip(request))
+        return "ALL"
