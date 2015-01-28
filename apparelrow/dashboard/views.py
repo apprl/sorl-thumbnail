@@ -925,8 +925,7 @@ def referral_signup(request, code):
         user_id = user.pk
     except:
         pass
-
-    response = redirect(reverse('index-publisher'))
+    response = redirect(reverse('publisher-contact'))
     if user_id:
         expires_datetime = timezone.now() + datetime.timedelta(days=15)
         response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime,
