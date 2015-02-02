@@ -292,33 +292,32 @@ def get_publishers_admin(start_date, end_date, limit=5, see_all=True):
                             publisher_image = get_thumbnail(ImageField().to_python(earning_user.image), '50', crop='noop').url
                         except:
                             pass
-                        clicks = get_model('statistics', 'ProductStat').objects.\
-                            filter(user_id=earning_user.id, product=product.slug).aggregate(total=Count('user_id'))['total']
-
                         temp['publisher_earnings'] = publisher_earnings
                         temp['publisher_image'] = publisher_image
                         temp['publisher_link'] = reverse('profile-likes', args=[earning_user.username])
-                        temp['clicks'] = clicks
+                        temp['clicks'] = 0
                         temp['user'] = earning_user.name if earning_user.name else '%s' % (earning_user.username)
 
+                        # save publisher data
                         if temp['user'] in top_publishers:
                             if earning.user_earning_type == "publisher_sale_commission":
                                 top_publishers[temp['user']]['sales'] += 1
                             top_publishers[temp['user']]['converted_amount'] += temp['converted_amount']
                             top_publishers[temp['user']]['publisher_earnings'] += temp['publisher_earnings']
-                            if temp['user']:
-                                if not temp['user'] in temp_users and earning.user_earning_type == "publisher_sale_commission":
-                                    top_publishers[temp['user']]['clicks'] += temp['clicks']
-                                    temp_users.append(temp['user'])
-                        else:
-                            if temp['clicks'] > 0:
+                            if not temp['user'] in temp_users and earning.user_earning_type == "publisher_sale_commission":
                                 temp_users.append(temp['user'])
+                        else:
+                            temp_users.append(temp['user'])
                             top_publishers[temp['user']] = dict(temp)
+                            publisher_clicks = get_model('statistics', 'ProductStat').objects.\
+                            filter(user_id=earning_user.id, created__range=(start_date, end_date)).aggregate(total=Count('user_id'))['total']
+                            top_publishers[temp['user']]['clicks'] = publisher_clicks
                             if earning.user_earning_type == "publisher_sale_commission":
                                 top_publishers[temp['user']]['sales'] = 1
                             else:
                                 top_publishers[temp['user']]['sales'] = 0
 
+                # if product, save product information
                 if product.product_name:
                     if temp['product'] in most_sold:
                         if earnings:
@@ -326,12 +325,13 @@ def get_publishers_admin(start_date, end_date, limit=5, see_all=True):
                             most_sold[temp['product']]['converted_amount'] += temp['converted_amount']
                             most_sold[temp['product']]['publisher_earnings'] += temp['publisher_earnings']
                             most_sold[temp['product']]['total_earnings'] += temp['total_earnings']
-                            if temp['product']:
-                                if not temp['product'] in temp_product_prod:
-                                    most_sold[temp['product']]['clicks'] += temp['clicks']
-                                    temp_product_prod.append(temp['product'])
+                            if not temp['product'] in temp_product_prod:
+                                temp_product_prod.append(temp['product'])
                     else:
                         most_sold[temp['product']] = dict(temp)
+                        product_clicks = get_model('statistics', 'ProductStat').objects.\
+                            filter(product=product.slug, created__range=(start_date, end_date)).aggregate(total=Count('product'))['total']
+                        most_sold[temp['product']]['clicks'] = product_clicks
                         if earnings:
                             most_sold[temp['product']]['sales'] = 1
                         else:
