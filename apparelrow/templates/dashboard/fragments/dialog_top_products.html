@@ -22,19 +22,33 @@
                 </thead>
                 <tfoot>
                     <tr>
-                      <td colspan="7"><i>Showing until 50 products ranked by number of sales</i></td>
+                      <td colspan="7"><i>Showing a maximum of 50 products</i></td>
                     </tr>
                 </tfoot>
                 <tbody>
                     {% for product in most_sold_products %}
                     <tr>
-                        <td data-sort="{{ product.product }}" class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
-                        <td class="col2 hidden-xs"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
-                        <td class="col3 center hidden-xs">{{ product.clicks }}</td>
-                        <td class="center">{{ product.sales }}</td>
-                        <td class="hidden-xs center">{{ product.sales|commission_rate:product.clicks }}</td>
-                        <td class="hidden-xs center">{{ product.converted_amount }} {{ currency }}</td>
-                        <td class="center">{{ product.total_earnings }} {{ currency }}</td>
+                        <td data-sort="{{ product.product }}" class="col1 product-image center">
+                            <a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a>
+                        </td>
+                        <td class="col2 hidden-xs">
+                            <a href="{{ product.product_link }}">{{ product.product }}</a>
+                        </td>
+                        <td class="col3 center hidden-xs"  data-sort="{{ product.clicks }}">
+                            {{ product.clicks }}
+                        </td>
+                        <td class="center" data-sort="{{ product.sales }}">
+                            {{ product.sales }}
+                        </td>
+                        <td class="hidden-xs center">
+                            {{ product.sales|commission_rate:product.clicks }}
+                        </td>
+                        <td class="hidden-xs center" data-sort="{{ product.converted_amount }}">
+                            {{ product.converted_amount }} {{ currency }}
+                        </td>
+                        <td class="center" data-sort="{{ product.total_earnings }}">
+                            {{ product.total_earnings }} {{ currency }}
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
