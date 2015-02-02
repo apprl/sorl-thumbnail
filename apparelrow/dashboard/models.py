@@ -141,7 +141,8 @@ class Cut(models.Model):
                                  help_text='Creates exceptions for Cuts using the following format: [{"sid": 1, "cut": '
                                            '0.90, "tribute":0.50}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
                                            'is the User id. Cut replaces the cut value for the user and the current cut'
-                                           ' and Tribute replaces the user\'s tribute value defined in the user model.')
+                                           ' and Tribute replaces the tribute value the user has to pay to the network '
+                                           'owner')
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
 
@@ -369,20 +370,20 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product)
     if owner_tribute > 1:
         owner_tribute = 1
         logging.warning('Owner network cut must be a value between 0 and 1')
-    commission_group = owner.partner_group
+    commission_group_user = user.partner_group
 
-    if commission_group:
+    if commission_group_user:
         try:
-            commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+            commission_group_cut = Cut.objects.get(group=commission_group_user, vendor=sale.vendor)
         except Cut.DoesNotExist:
-            logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group_user, sale.vendor))
             return
 
          # Handle exceptions for owner cuts
         try:
             data_exceptions = commission_group_cut.rules_exceptions
             for data in data_exceptions:
-                if data['sid'] == owner.id:
+                if data['sid'] == user.id:
                     owner_tribute = decimal.Decimal(data['tribute'])
         except:
             pass

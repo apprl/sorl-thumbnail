@@ -1154,7 +1154,7 @@ class TestUserEarnings(TransactionTestCase):
 
         owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
         owner_user.partner_group = group
-        owner_user.owner_network_cut = 0.1
+        owner_user.owner_network_cut = 0.5
         owner_user.save()
 
         temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
@@ -1170,7 +1170,7 @@ class TestUserEarnings(TransactionTestCase):
                                                                 commission_percentage='0.2',
                                                                 vendor=vendor)
 
-        rules = [{"sid": temp_user.id, "cut": 0.90, "tribute": 0.50}, {"sid": owner_user.id, "cut": 0.90, "tribute": 0.5}]
+        rules = [{"sid": temp_user.id, "cut": 1, "tribute": 0}]
         #TODO quizas se debe crear un JSON field o algo
         cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2, rules_exceptions=rules)
 
@@ -1196,11 +1196,11 @@ class TestUserEarnings(TransactionTestCase):
 
         for earning in earnings:
             if earning.user_earning_type == 'apprl_commission':
-                self.assertEqual(earning.amount, 10.000)
+                self.assertEqual(earning.amount, 0.000)
             elif earning.user_earning_type == 'publisher_network_tribute':
-                self.assertEqual(earning.amount, 45.000)
+                self.assertEqual(earning.amount, 0.000)
             elif earning.user_earning_type == 'publisher_sale_commission':
-                self.assertEqual(earning.amount, 45.000)
+                self.assertEqual(earning.amount, 100.000)
 
         #Update a sales transaction
         for earning in earnings:

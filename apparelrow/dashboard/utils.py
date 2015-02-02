@@ -30,6 +30,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                 cuts = user.partner_group.cuts.get(vendor=vendor)
                 normal_cut = cuts.cut
                 referral_cut = cuts.referral_cut
+                data_exceptions = None
 
                 # Handle exceptions for publisher cuts
                 try:
@@ -46,13 +47,13 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                     publisher_cut -= owner.owner_network_cut
 
                     # Handle exceptions for Publisher Network owner
-                    if owner.partner_group:
-                        cuts = owner.partner_group.cuts.get(vendor=vendor)
-                        if cuts.rules_exceptions:
-                            data_exceptions = cuts.rules_exceptions
-                            for data in data_exceptions:
-                                if data['sid'] == owner.id:
-                                    publisher_cut = 1 - decimal.Decimal(data['tribute'])
+                    #if owner.partner_group:
+                    #    cuts = owner.partner_group.cuts.get(vendor=vendor)
+                    if data_exceptions:
+                        data_exceptions = cuts.rules_exceptions
+                        for data in data_exceptions:
+                            if data['sid'] == user.id:
+                                publisher_cut = 1 - decimal.Decimal(data['tribute'])
             except:
                 pass
     except get_user_model().DoesNotExist:
