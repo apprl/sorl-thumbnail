@@ -5,7 +5,7 @@ import logging
 import logging.config
 
 from settings_common import *
-DEBUG = False
+DEBUG = True
 EMAIL_DEBUG = True
 
 #SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')
@@ -51,7 +51,7 @@ CELERY_REDIS_HOST = "{{ redis_url }}"
 CELERY_REDIS_PORT = 6380
 CELERY_REDIS_DB = 0
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-CELERY_ALWAYS_EAGER=False
+CELERY_ALWAYS_EAGER=True
 CELERY_TIMEZONE = 'Europe/Stockholm'
 
 import djcelery
@@ -78,6 +78,7 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '{{ memcached_url }}:11211',
         'TIMEOUT': 60 * 60 * 12,
+        'KEY_PREFIX': 'PRESTAGE_2'
     },
     'nginx': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -94,3 +95,5 @@ if EMAIL_DEBUG:
 
 
 ALLOWED_HOSTS = ['{{ hostname }}.apprl.com','{{ internal_ip }}']
+
+GEOIP_URL = 'http://prestage-geoip.apprl.com/ip/%s'

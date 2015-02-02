@@ -60,7 +60,7 @@ templates = {
     },
     "supervisor-gunicorn-norelic": {
         "local_path": "etc/v2/supervisor-gunicorn-norelic.conf",
-        "remote_path": "/etc/supervisor/conf.d/gunicorn.conf",
+        "remote_path": "/etc/supervisor/conf.d/gunicorn-%(project_name)s.conf",
         "reload_command": supervisor_reload_commands,
     },
     "gunicorn-admin": {
