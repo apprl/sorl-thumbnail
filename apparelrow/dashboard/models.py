@@ -311,58 +311,65 @@ def create_user_earnings(sale):
     total_commission = sale.converted_commission
     product = None
 
-    user = None
-    try:
-        user = get_model('profile', 'User').objects.get(id=sale.user_id)
-    except get_model('profile', 'User').DoesNotExist:
-        logging.warning('Sale %s is connected to a User %s that does not exist.' % (sale.id,sale.user_id))
-        return
     sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
-    commission_group = user.partner_group
-
     if not len(sale_product) == 0:
         product = sale_product[0]
 
-    if commission_group:
-        commission_group_cut = None
+    user = None
+    if sale.user_id:
         try:
-            commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
-        except Cut.DoesNotExist:
-            logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
+            user = get_model('profile', 'User').objects.get(id=sale.user_id)
+        except get_model('profile', 'User').DoesNotExist:
+            logging.warning('Sale %s is connected to a User %s that does not exist.' % (sale.id,sale.user_id))
             return
-        cut = commission_group_cut.cut
 
-         # Handle exceptions for publisher cuts
-        try:
-            data_exceptions = commission_group_cut.rules_exceptions
-            for data in data_exceptions:
-                if data['sid'] == user.id:
-                    cut = decimal.Decimal(data['cut'])
-        except:
-            pass
+        commission_group = user.partner_group
 
-        if cut:
-            publisher_commission = total_commission * cut
-            apprl_commission = total_commission - publisher_commission
+        if commission_group:
+            commission_group_cut = None
+            try:
+                commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+            except Cut.DoesNotExist:
+                logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
+                return
+            cut = commission_group_cut.cut
 
-            get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
-                                                                 from_product=product, from_user=user,
-                                                                 amount=apprl_commission, date=sale.sale_date,
-                                                                 status=sale.status)
+             # Handle exceptions for publisher cuts
+            try:
+                data_exceptions = commission_group_cut.rules_exceptions
+                for data in data_exceptions:
+                    if data['sid'] == user.id:
+                        cut = decimal.Decimal(data['cut'])
+            except:
+                pass
+            if cut:
+                publisher_commission = total_commission * cut
+                apprl_commission = total_commission - publisher_commission
 
-            if user.owner_network:
-                publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
+                get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                                                                     from_product=product, from_user=user,
+                                                                     amount=apprl_commission, date=sale.sale_date,
+                                                                     status=sale.status)
 
-            get_model('dashboard', 'UserEarning').objects.create( user=user,
-                                                                  user_earning_type='publisher_sale_commission',
-                                                                  sale=sale, from_product=product,
-                                                                  amount=publisher_commission, date=sale.sale_date,
-                                                                  status=sale.status)
+                if user.owner_network:
+                    publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
 
+                get_model('dashboard', 'UserEarning').objects.create( user=user,
+                                                                      user_earning_type='publisher_sale_commission',
+                                                                      sale=sale, from_product=product,
+                                                                      amount=publisher_commission, date=sale.sale_date,
+                                                                      status=sale.status)
+
+            else:
+                logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
         else:
-            logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
+            logging.warning('User %s should have assigned a comission group'%user)
     else:
-        logging.warning('User %s should have assigned a comission group'%user)
+        # The sale was generated from APPRL.com
+        get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                                                                     from_product=product, amount=total_commission,
+                                                                     date=sale.sale_date, status=sale.status)
+
 
 def create_earnings_publisher_network(user, publisher_commission, sale, product):
     owner = user.owner_network
