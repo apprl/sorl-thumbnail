@@ -133,6 +133,18 @@
                         <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn btn-primary btn-block btn-short-link">{% trans "Get product link" %}</a>
                         {% endif %}
 
+                        {% if object.default_vendor and earning_cut%}
+                        <p class="earning-box">You will earn approx.
+                            {% if object.default_vendor.locale_discount_price %}
+                                {% multiply object.default_vendor.locale_discount_price earning_cut %}
+                            {% else %}
+                                {% multiply object.default_vendor.locale_price earning_cut %}
+                            {% endif %}
+                            <span class="currency">{{ object.default_vendor.locale_currency }}</span>
+                            per generated sale of this item</p>
+                            <br>
+                        {% endif %}
+
                         {% include 'apparel/fragments/share.html' %}
 
                     </div>

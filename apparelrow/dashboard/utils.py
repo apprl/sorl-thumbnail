@@ -47,8 +47,6 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                     publisher_cut -= owner.owner_network_cut
 
                     # Handle exceptions for Publisher Network owner
-                    #if owner.partner_group:
-                    #    cuts = owner.partner_group.cuts.get(vendor=vendor)
                     if data_exceptions:
                         data_exceptions = cuts.rules_exceptions
                         for data in data_exceptions:
