@@ -316,11 +316,16 @@ def product_detail(request, slug):
                 commission_array = stores[0].commission.split("/")
                 standard_from = decimal.Decimal(commission_array[0])
                 standard_to = decimal.Decimal(commission_array[1])
-                if standard_from == '0':
-                    standard_from = standard_to
-                if standard_to == '0':
-                    standard_to = standard_from
-                store_commission = (standard_from + standard_to)/(2*100)
+                sale = decimal.Decimal(commission_array[2])
+                vendorprod = get_model('apparel', 'VendorProduct').objects.filter(vendor=vendor, product=product)
+                if sale != '0' and product.default_vendor.locale_discount_price:
+                    store_commission = sale / 100
+                else:
+                    if standard_from == 0:
+                        standard_from = standard_to
+                    if standard_to == 0:
+                        standard_to = standard_from
+                    store_commission = (standard_from + standard_to)/(2*100)
         if store_commission > 0:
             user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, vendor)
             earning_cut = store_commission*cut*publisher_cut
