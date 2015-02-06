@@ -154,7 +154,7 @@ class Signup(models.Model):
     store = models.BooleanField(default=False)
     referral_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
-    traffic = models.CharField(_('Site traffic'), max_length=255, null=True, blank=True,
+    traffic = models.CharField(_('Site traffic'), max_length=100, null=True, blank=True,
                                help_text=_('Unique visitors / month'))
 
     def __unicode__(self):

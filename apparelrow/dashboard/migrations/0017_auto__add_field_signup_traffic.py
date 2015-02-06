@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Signup.traffic'
         db.add_column(u'dashboard_signup', 'traffic',
-                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True),
+                      self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True),
                       keep_default=False)
 
 
