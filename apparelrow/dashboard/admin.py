@@ -55,7 +55,7 @@ class GroupAdmin(admin.ModelAdmin):
 admin.site.register(Group, GroupAdmin)
 
 class SignupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'blog', 'store', 'referral_user', 'created')
+    list_display = ('name', 'email', 'blog', 'traffic', 'store', 'referral_user', 'created')
     raw_id_fields = ('referral_user',)
 
 admin.site.register(Signup, SignupAdmin)
@@ -68,8 +68,7 @@ admin.site.register(StoreCommission, StoreCommissionAdmin)
 
 
 class UserEarningAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'user_earning_type', 'from_product', 'from_user', 'amount', 'date', 'status',
-                    'paid')
-    list_filter = ('user_earning_type', 'status', 'paid')
+    list_display = ('id',   'user', 'user_earning_type', 'from_product', 'from_user', 'amount', 'date', 'status', 'paid')
+    search_fields = ('user__name', 'user_earning_type', 'status', 'paid')
 
 admin.site.register(UserEarning, UserEarningAdmin)

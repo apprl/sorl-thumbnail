@@ -1,0 +1,46 @@
+{% extends 'dialog_base.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block modal_id %}modal_test_purchase{% endblock %}
+{% block modal_title %}Make a test purchase{% endblock %}
+{% block modal_content %}
+    <p>{% trans "Input the URL to the page you want to send the test visit." %}</p>
+    <div class="form-group">
+        <label class="control-label" for="id_url_shop">{% trans "URL" %}</label>
+        <input id="id_url_shop" type="text" name="url" class="form-control" placeholder="URL">
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary btn-block get-link">{% trans "Get purchase test link" %}</button>
+    </div>
+
+    <div id="show_link"style="display:none;">
+        <p>Click the link below, and make a test purchase on your site:</p>
+        <a id="purchase_link" href="#"></a>
+    </div>
+
+{% endblock %}
+{% block modal_footer %}
+<button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+<script type="text/javascript">
+
+function startsWith(word, str){
+    return word.indexOf(str) == 0;
+};
+
+function addHttp(url) {
+    if (!startsWith(url, "http://")){
+        url = "http://" + url;
+    }
+    return url;
+}
+$('.get-link').click( function() {
+    var url_shop = $('#id_url_shop').val();
+    url_shop = addHttp(url_shop);
+    var url = "http://{{ request.META.HTTP_HOST }}/a/link/?store_id={{ store.identifier }}&url="+url_shop;
+    $('#show_link').css("display", "block");
+    $('#purchase_link').attr("href", url);
+    $('#purchase_link').html(url)
+});
+</script>
+{% endblock %}

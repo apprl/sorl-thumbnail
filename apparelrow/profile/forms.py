@@ -96,10 +96,10 @@ class FacebookSettingsForm(forms.ModelForm):
 
 class PartnerPaymentDetailForm(forms.ModelForm):
     name = forms.CharField(label=_('Name'))
-    orgnr = forms.CharField(label=_('Personal/organization number'))
+    orgnr = forms.CharField(label=_('Personal / Organization number'))
     clearingnr = forms.CharField(label=_('Bank clearing number'))
     banknr = forms.CharField(label=_('Bank account number'))
-    notes = forms.CharField(label=_('Other notes'), widget=forms.Textarea(attrs={'rows':4, 'cols': 30}))
+    notes = forms.CharField(label=_('Other notes'), widget=forms.Textarea(attrs={'rows':4, 'cols': 30}), required=False)
 
     class Meta:
         model = get_model('profile', 'PaymentDetail')

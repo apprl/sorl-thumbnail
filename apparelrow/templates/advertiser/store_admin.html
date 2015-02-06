@@ -6,7 +6,7 @@
 {% block 'extra-scripts' %}
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
     <script type='text/javascript'>
-        google.load('visualization', '1', {'packages':['LineChart']});
+        google.load('visualization', '1', {'packages':['corechart']});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
             var data = new google.visualization.DataTable();
@@ -14,14 +14,46 @@
             data.addColumn('number', '{% trans "Transactions" %}');
             data.addColumn('number', '{% trans "Clicks" %}');
             data.addRows([
-                {% for date, amount in data_per_month.items %}
-                [new Date({{ date.year }}, {{ date.month }} - 1, {{ date.day }}), {{ amount.0 }}, {{ amount.1 }}],
-                {% endfor %}
+            {% for date, amount in data_per_month.items %}
+            [new Date({{ date.year }}, {{ date.month }} - 1, {{ date.day }}), {{ amount.0 }}, {{ amount.1 }}],
+            {% endfor %}
             ]);
             data.sort(0);
-            var chart = new google.visualization.LineChart(document.getElementById('transaction_chart'));
-            var options = {legend: {position: 'none'}};
-            chart.draw(data, options);
+
+            var left = data.getColumnRange(1);
+            var right = data.getColumnRange(2);
+            var view = new google.visualization.DataView(data);
+            //var chart = new google.visualization.LineChart(document.getElementById('transaction_chart'));
+            //var options = {legend: {position: 'none'}};
+            var series = {
+                0: {targetAxisIndex: 0},
+                1: {targetAxisIndex: 1, color: '#dc3912'}
+            };
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'LineChart',
+                containerId: 'transaction_chart',
+                dataTable: view,
+                options: {
+                    vAxes: {
+                        0: {
+                            minValue: 0,
+                            maxValue: (left.min == 0 && left.max == 0) ? 1 : null,
+                            title: '{% trans "Earnings" %} ({{ currency }})',
+                            textStyle: {color: '#3366cc'},
+                            titleTextStyle: {color: '#3366cc'}
+                        },
+                        1: {
+                            minValue: 0,
+                            maxValue: (right.min == 0 && right.max == 0) ? 1 : null,
+                            title: '{% trans "Clicks" %}',
+                            textStyle: {color: '#dc3912'},
+                            titleTextStyle: {color: '#dc3912'}
+                        }
+                    },
+                    series: series
+                }
+            });
+            chart.draw();
         }
         $(document).ready(function() {
             $('.monthly-list select').change(function() {
@@ -41,12 +73,16 @@
     <div class="body-header">
         <div class="body-header-col-full">
             <h1>{% trans "Your store" %}</h1>
+            <br>
+            <br>
+            <a class="btn btn-primary" data-toggle="modal" data-target="#modal_test_purchase">{% trans "Make a test purchase" %}</a>
         </div>
     </div>
 
-    <div class="row subnav-page">
-        <div class="col-md-6">{% trans "Balance:" %} <strong>{{ store.balance }} EUR</strong></div>
-        <div class="col-md-6">{% trans "Total accepted commission:" %} <strong>{{ total_accepted_commission|floatformat:2|intcomma }} EUR</strong></div>
+    <div class="row subnav-page" style="margin-bottom: 10px;">
+        <div class="col-md-12">{% trans "Balance:" %} <strong>{{ store.balance }} EUR</strong></div>
+        <div class="col-md-12">{% trans "Total accepted commission:" %} <strong>{{ total_accepted_commission|floatformat:2|intcomma }} EUR</strong></div>
+        <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 10px;"></div>
     </div>
 
     <div class="row">
@@ -61,6 +97,8 @@
                         </select>
                     </label>
                 </li>
+            </ul>
+            <ul class="list-inline monthly-list">
                 <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatformat:2|intcomma }} EUR</li>
             </ul>
         </div>
@@ -118,4 +156,6 @@
     {% include 'advertiser/modal_reject.html' with transaction=transaction only %}
     {% endif %}
 {% endfor %}
+
+{% include 'advertiser/modal_test_purchase.html' with store=store%}
 {% endblock body %}

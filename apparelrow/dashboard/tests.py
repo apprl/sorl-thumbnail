@@ -1,6 +1,7 @@
 import re
 import urllib
 import decimal
+import json
 
 from django.conf import settings
 from django.core import mail
@@ -18,6 +19,7 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
 from apparelrow.dashboard.admin import PaymentAdmin
+from jsonfield import JSONField
 
 
 
@@ -73,7 +75,7 @@ class TestDashboard(TransactionTestCase):
         self.assertRegexpMatches(referral_url, r'\/i\/\w{4,16}')
 
         response = self.client.get(referral_url, follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, reverse('publisher-contact'))
         self.assertIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
         # decode cookie manually and verify content
@@ -95,7 +97,7 @@ class TestDashboard(TransactionTestCase):
         referral_user.save()
 
         response = self.client.get(referral_url, follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, reverse('publisher-contact'))
         self.assertNotIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
     def test_publisher_signup_from_referral_link(self):
@@ -148,7 +150,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, reverse('publisher-contact'))
 
         # Register by email
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
@@ -193,7 +195,7 @@ class TestDashboard(TransactionTestCase):
         self.assertTrue(is_logged_in)
 
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, reverse('publisher-contact'))
 
         referral_user = get_user_model().objects.get(username='referral_user')
         self.assertIsNone(referral_user.referral_partner_parent)
@@ -208,7 +210,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        self.assertRedirects(response, reverse('index-publisher'))
+        self.assertRedirects(response, reverse('publisher-contact'))
 
         referral_user.referral_partner = False
         referral_user.save()
@@ -1152,7 +1154,7 @@ class TestUserEarnings(TransactionTestCase):
 
         owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
         owner_user.partner_group = group
-        owner_user.owner_network_cut = 0.1
+        owner_user.owner_network_cut = 0.5
         owner_user.save()
 
         temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
@@ -1168,7 +1170,7 @@ class TestUserEarnings(TransactionTestCase):
                                                                 commission_percentage='0.2',
                                                                 vendor=vendor)
 
-        rules = [{"sid": temp_user.id, "cut": 0.90, "tribute":0.50}, {"sid": owner_user.id, "cut": 0.90, "tribute":0.5}]
+        rules = [{"sid": temp_user.id, "cut": 1, "tribute": 0}]
         cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2, rules_exceptions=rules)
 
         store_id = 'mystore'
@@ -1193,11 +1195,11 @@ class TestUserEarnings(TransactionTestCase):
 
         for earning in earnings:
             if earning.user_earning_type == 'apprl_commission':
-                self.assertEqual(earning.amount, 10.000)
+                self.assertEqual(earning.amount, 0.000)
             elif earning.user_earning_type == 'publisher_network_tribute':
-                self.assertEqual(earning.amount, 45.000)
+                self.assertEqual(earning.amount, 0.000)
             elif earning.user_earning_type == 'publisher_sale_commission':
-                self.assertEqual(earning.amount, 45.000)
+                self.assertEqual(earning.amount, 100.000)
 
         #Update a sales transaction
         for earning in earnings:
@@ -1244,7 +1246,7 @@ class TestUserEarnings(TransactionTestCase):
                                                                 commission_percentage='0.2',
                                                                 vendor=vendor)
 
-        rules = [{"sid": temp_user.id, "cut": 0.90, "tribute":0.50}, {"sid": owner_user.id, "cut": 0.90, "tribute":0.5}, {"sid": master_owner.id, "cut": 0.90, "tribute": 1}]
+        rules = [{"sid": temp_user.id, "cut": 0.90, "tribute": 0.50}, {"sid": owner_user.id, "cut": 0.90, "tribute": 0.5}, {"sid": master_owner.id, "cut": 0.90, "tribute": 1}]
         cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2, rules_exceptions=rules)
 
         store_id = 'mystore'

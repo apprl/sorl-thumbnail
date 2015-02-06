@@ -115,7 +115,6 @@ def embed(request, slug, identifier=None):
     return response
 
 
-@login_required
 def dialog_embed(request, slug):
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
 
@@ -129,7 +128,6 @@ def dialog_embed(request, slug):
                                                               'max_width': max_width})
 
 
-@login_required
 def widget(request, slug):
     if request.method != 'POST':
         return HttpResponseNotAllowed()
@@ -160,17 +158,18 @@ def widget(request, slug):
         content['height'] = min(thumbnail.height, content['height'])
         content['width'] = min(thumbnail.width, content['width'])
 
+    # User
+    embed_user = look.user
+    if request.user.is_authenticated():
+        embed_user = request.user
+
     LookEmbed = get_model('apparel', 'LookEmbed')
     identifier = uuid.uuid4().hex
-    look_embed, created = LookEmbed.objects.get_or_create(look=look,
-                                                          user=request.user,
-                                                          language=content['language'],
-                                                          width=content['width'],
-                                                          width_type=content['width_type'],
+    look_embed, created = LookEmbed.objects.get_or_create(look=look, user=embed_user, language=content['language'],
+                                                          width=content['width'], width_type=content['width_type'],
                                                           defaults={'identifier': identifier})
     content['identifier'] = look_embed.identifier
     content['STATIC_URL'] = settings.STATIC_URL.replace('http://','')
-
     return render(request, 'apparel/fragments/look_widget.html', content)
 
 

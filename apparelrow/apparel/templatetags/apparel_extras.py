@@ -1,5 +1,6 @@
 import logging
 import json
+import decimal
 from pprint import pformat
 
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
@@ -431,3 +432,8 @@ def internal_referral_url(url, sid):
 @register.simple_tag
 def look_component_style(component, width, height):
     return component.style_percentage(width, height)
+
+@register.simple_tag
+def multiply(value, arg):
+    result = value*arg
+    return "%s" % (format(result, '.2f'))
