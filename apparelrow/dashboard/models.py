@@ -3,7 +3,7 @@ import json
 import decimal
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.db.models import get_model
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -268,14 +268,15 @@ def sale_post_save(sender, instance, created, **kwargs):
                 earning.save()
 
 def create_earnings(instance):
-    if not instance.is_promo:
-        create_user_earnings(instance)
-        if instance.is_referral_sale:
-            create_referral_earning(instance)
-    else:
-        user = get_model('profile', 'User').objects.get(id=instance.user_id)
-        get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
-            sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
+    with transaction.atomic():
+        if not instance.is_promo:
+            create_user_earnings(instance)
+            if instance.is_referral_sale:
+                create_referral_earning(instance)
+        else:
+            user = get_model('profile', 'User').objects.get(id=instance.user_id)
+            get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
+                sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
 
 def create_referral_earning(sale):
     total_commission = sale.converted_commission
@@ -300,7 +301,7 @@ def create_referral_earning(sale):
                                                                  amount=referral_commission, date=sale.sale_date,
                                                                  status=sale.status)
         else:
-            logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group, sale.vendor))
     else:
         logging.warning('User %s should have assigned a comission group'%user)
 
@@ -327,7 +328,7 @@ def create_user_earnings(sale):
             try:
                 commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
             except Cut.DoesNotExist:
-                logging.warning('Cut matching query does not exist %s - %s' % (commission_group.id, sale.vendor))
+                logging.warning('Cut matching query does not exist %s - %s' % (commission_group, sale.vendor))
                 return
             cut = commission_group_cut.cut
 
@@ -338,25 +339,29 @@ def create_user_earnings(sale):
                     if data['sid'] == user.id:
                         cut = decimal.Decimal(data['cut'])
             except:
-                pass
+                logging.info("No exceptions for cuts defined for commission group %s and store %s"%(commission_group,
+                                                                                                    sale.vendor))
             if cut:
-                publisher_commission = total_commission * cut
-                apprl_commission = total_commission - publisher_commission
+                try:
+                    publisher_commission = total_commission * cut
+                    apprl_commission = total_commission - publisher_commission
 
-                get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
-                                                                     from_product=product, from_user=user,
-                                                                     amount=apprl_commission, date=sale.sale_date,
-                                                                     status=sale.status)
 
-                if user.owner_network:
-                    publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
+                    if user.owner_network:
+                        publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
 
-                get_model('dashboard', 'UserEarning').objects.create( user=user,
-                                                                      user_earning_type='publisher_sale_commission',
-                                                                      sale=sale, from_product=product,
-                                                                      amount=publisher_commission, date=sale.sale_date,
-                                                                      status=sale.status)
+                    get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                                                                         from_product=product, from_user=user,
+                                                                         amount=apprl_commission, date=sale.sale_date,
+                                                                         status=sale.status)
 
+                    get_model('dashboard', 'UserEarning').objects.create( user=user,
+                                                                          user_earning_type='publisher_sale_commission',
+                                                                          sale=sale, from_product=product,
+                                                                          amount=publisher_commission, date=sale.sale_date,
+                                                                          status=sale.status)
+                except:
+                    logging.error("Error creating earnings within the publisher network")
             else:
                 logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
         else:
@@ -367,13 +372,12 @@ def create_user_earnings(sale):
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
 
-
 def create_earnings_publisher_network(user, publisher_commission, sale, product):
     owner = user.owner_network
     owner_tribute = owner.owner_network_cut
-    if owner_tribute > 1:
-        owner_tribute = 1
-        logging.warning('Owner network cut must be a value between 0 and 1')
+    if owner_tribute > 1 or owner_tribute < 0:
+        logging.warning('Owner network cut must be a value between 0 and 1 for user %s'%(owner))
+        raise
     commission_group = owner.partner_group
 
     if commission_group:

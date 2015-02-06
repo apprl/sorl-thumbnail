@@ -1168,7 +1168,7 @@ class TestUserEarnings(TransactionTestCase):
                                                                 commission_percentage='0.2',
                                                                 vendor=vendor)
 
-        rules = '[{"id": %s, "cut": 0.90, "tribute":0.50}, {"id": %s, "cut": 0.90, "tribute":0.5}]'%(temp_user.id, owner_user.id)
+        rules = [{"sid": temp_user.id, "cut": 0.90, "tribute":0.50}, {"sid": owner_user.id, "cut": 0.90, "tribute":0.5}]
         cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2, rules_exceptions=rules)
 
         store_id = 'mystore'
@@ -1244,7 +1244,7 @@ class TestUserEarnings(TransactionTestCase):
                                                                 commission_percentage='0.2',
                                                                 vendor=vendor)
 
-        rules = '[{"id": %s, "cut": 0.90, "tribute":0.50}, {"id": %s, "cut": 0.90, "tribute":0.5}, {"id": %s, "cut": 0.90, "tribute":1}]'%(temp_user.id, owner_user.id, master_owner.id)
+        rules = [{"sid": temp_user.id, "cut": 0.90, "tribute":0.50}, {"sid": owner_user.id, "cut": 0.90, "tribute":0.5}, {"sid": master_owner.id, "cut": 0.90, "tribute": 1}]
         cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2, rules_exceptions=rules)
 
         store_id = 'mystore'
