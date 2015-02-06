@@ -130,27 +130,25 @@ def dev_importer():
     env.restart = []
     env.hostname="importer"
 
-@task
-def prestage():
-    env.settings = 'prestage'
-    env.hosts = ['%(settings)s.apprl.com' % env]
-    env.hostname="prestage"
+def prestaging_common(settings=None):
+    env.settings = settings
     env.forward_agent = True
     env.use_ssh_config = True
     env.user = 'deploy'
     env.group = env.user
     env.run_user = 'www-data'
     env.installed_apps = ['supervisor-gunicorn-norelic','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',]
-                            # Mostly involves shared servers when for example memacached is already installed.
     env.venv_home = "/home/%(user)s" % env
-    env.venv_path = "%(venv_home)s/%(project_name)s" % env
+    env.venv_path = "%(venv_home)s/%(project_name)s-%(settings)s" % env
     env.path = env.venv_path
     env.home_path = '/home/%(user)s' % env
+    env.project_name = "%s-%s" % (env.project_name,env.settings)
     env.project_dirname = 'project'
     env.project_path = "%(venv_path)s/%(project_dirname)s" % env
     env.celery_processes = '0'
     env.celery_processes_background = '0'
     env.gunicorn_admin_processes = '0'
+    env.gunicorn_processes = '1'
     env.gunicorn_port = 8090
     #env.gunicorn_admin_port = 8095
     env.locale = "en_US.UTF-8"
@@ -158,19 +156,41 @@ def prestage():
     env.manage = "%(venv_path)s/bin/python %(project_path)s/manage.py" % env
     env.reqs_path = 'etc/requirements.pip'
     env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
-    env.collectstatic = True
-    env.db_name = 'apparel_prestage_1'
-    env.db_user = 'apparel'
-    env.db_pass = 'mAY06EfQJA'
-    env.db_url = 'sentry.apprl.com'
     env.memcached_url = "sentry.apprl.com"
     env.redis_url = "sentry.apprl.com"
     env.solr_url = "localhost"
     env.s3_url = "s-prestage.apprl.com"
     #env.gateway = 'no gateway'
+    #env.aws_key_id = 'AKIAJ2AF5IHPHTQH4QUA'
+    #env.aws_key = '0xyH+ANAXckDhEHxOntnlLKAh/ONC4g6KB3hpHKX'
     env.aws_key_id = 'AKIAJWFWCTRXKCOCRPTQ'
     env.aws_key = 'rCUAw8IwyysB3u3pgDi5nKLsqJyGe2pchBc1on1a'
     env.sentry_url = 'https://fe5edd11a20c49d3bfe2d67933d7a515:affbc917003d4805b75141508941963d@sentry.apprl.com/5'
-    env.restart = ['gunicorn']
-    env.reload_scrapy = True
+    env.restart = ['gunicorn_%(settings)s' % env]
+    env.reload_scrapy = False
+    env.db_user = 'apparel'
+    env.db_pass = 'mAY06EfQJA'
+    env.db_url = 'sentry.apprl.com'
+    env.collectstatic = True
+
+@task
+def prestaging_1():
+    env.settings = 'prestaging-1'
+    env.hostname="prestaging-1"
+    prestaging_common(env.settings)
+    env.gunicorn_port = 8090
+    env.hosts = ['%(settings)s.apprl.com' % env]
+    env.db_name = 'apparel_%s' % env.settings.replace("-","_")
     env.branch = "feat-create_shop"
+    env.collectstatic = False
+
+@task
+def prestaging_2():
+    env.settings = 'prestaging-2'
+    env.hostname="prestaging-2"
+    prestaging_common(env.settings)
+    env.gunicorn_port = 8091
+    env.hosts = ['%(settings)s.apprl.com' % env]
+    env.db_name = 'apparel_%s' % env.settings.replace("-","_")
+    env.branch = "feat-product_widget"
+    env.collectstatic = False
