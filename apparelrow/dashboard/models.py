@@ -3,7 +3,7 @@ import json
 import decimal
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.db.models import get_model
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -268,14 +268,15 @@ def sale_post_save(sender, instance, created, **kwargs):
                 earning.save()
 
 def create_earnings(instance):
-    if not instance.is_promo:
-        create_user_earnings(instance)
-        if instance.is_referral_sale:
-            create_referral_earning(instance)
-    else:
-        user = get_model('profile', 'User').objects.get(id=instance.user_id)
-        get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
-            sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
+    with transaction.atomic():
+        if not instance.is_promo:
+            create_user_earnings(instance)
+            if instance.is_referral_sale:
+                create_referral_earning(instance)
+        else:
+            user = get_model('profile', 'User').objects.get(id=instance.user_id)
+            get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
+                sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
 
 def create_referral_earning(sale):
     total_commission = sale.converted_commission
@@ -338,7 +339,8 @@ def create_user_earnings(sale):
                     if data['sid'] == user.id:
                         cut = decimal.Decimal(data['cut'])
             except:
-                pass
+                logging.info("No exceptions for cuts defined for commission group %s and store %s"%(commission_group,
+                                                                                                    sale.vendor))
             if cut:
                 try:
                     publisher_commission = total_commission * cut
@@ -359,7 +361,7 @@ def create_user_earnings(sale):
                                                                           amount=publisher_commission, date=sale.sale_date,
                                                                           status=sale.status)
                 except:
-                    pass
+                    logging.error("Error creating earnings within the publisher network")
             else:
                 logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
         else:
