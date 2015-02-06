@@ -60,7 +60,7 @@ templates = {
     },
     "supervisor-gunicorn-norelic": {
         "local_path": "etc/v2/supervisor-gunicorn-norelic.conf",
-        "remote_path": "/etc/supervisor/conf.d/gunicorn.conf",
+        "remote_path": "/etc/supervisor/conf.d/gunicorn-%(project_name)s.conf",
         "reload_command": supervisor_reload_commands,
     },
     "gunicorn-admin": {
@@ -98,6 +98,7 @@ def common_aws():
     env.celery_processes = '0'
     env.celery_processes_background = '0'
     env.gunicorn_admin_processes = '2'
+    env.gunicorn_processes = '3'
     env.gunicorn_port = 8090
     env.gunicorn_admin_port = 8095
     env.locale = "en_US.UTF-8"
