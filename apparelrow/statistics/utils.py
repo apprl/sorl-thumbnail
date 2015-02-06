@@ -36,8 +36,10 @@ def get_country_by_ip(request):
     except Exception,msg:
         log.warning('Reply from geoip service not complient with json? [%s]' % msg)
 
-    if hasattr(json_obj,"iso_code"):
-        return json_obj.get("iso_code","ALL")
+    if json_obj and json_obj.get("iso_code",None):
+        code = json_obj.get("iso_code","ALL")
+        code = code if code in ["SE","NO","US"] else "ALL"
+        return code
     else:
         log.warning('No country found for ip %s.' % get_client_ip(request))
         return "ALL"
