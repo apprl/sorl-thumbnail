@@ -40,4 +40,6 @@ newrelic
 django-rosetta==0.7.4
 raven==5.1.1
 jsonfield==1.0.0
-
+django_user_agents==0.3.0
+ua-parser==0.3.6
+user-agents==-0.3.1

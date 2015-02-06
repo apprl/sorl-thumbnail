@@ -169,8 +169,8 @@ STATICFILES_FINDERS = (
 
 # Django-storages
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
-AWS_SECRET_ACCESS_KEY = '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'
+#AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
+#AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
 AWS_HEADERS = {
         'Expires': 'Sat, Nov 01 2015 20:00:00 GMT',
@@ -223,6 +223,7 @@ MIDDLEWARE_CLASSES = (
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
     'apparelrow.apparel.middleware.GenderMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware'
     'apparelrow.apparel.middleware.LocationMiddleware',
     'apparelrow.dashboard.middleware.ReferralMiddleware',
 )
@@ -278,7 +279,8 @@ INSTALLED_APPS = (
     'apparelrow.activity_feed',
     'apparelrow.scheduledjobs',
     'rosetta',
-    'raven.contrib.django.raven_compat'
+    'raven.contrib.django.raven_compat',
+    'django_user_agents'
 )
 
 # - STATIC SITEMAP -
@@ -782,5 +784,6 @@ LOGGING = {
     }
 }
 
+GEOIP_URL = 'http://geoip.apprl.com:4999/ip/%s'
 
 
