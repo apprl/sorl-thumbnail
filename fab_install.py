@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from fabric.colors import green
+from fabric.colors import green, red
 
 __author__ = 'klaswikblad'
 import os

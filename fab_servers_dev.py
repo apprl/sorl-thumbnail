@@ -148,6 +148,7 @@ def prestaging_common(settings=None):
     env.celery_processes = '0'
     env.celery_processes_background = '0'
     env.gunicorn_admin_processes = '0'
+    env.gunicorn_processes = '1'
     env.gunicorn_port = 8090
     #env.gunicorn_admin_port = 8095
     env.locale = "en_US.UTF-8"
@@ -170,22 +171,26 @@ def prestaging_common(settings=None):
     env.db_user = 'apparel'
     env.db_pass = 'mAY06EfQJA'
     env.db_url = 'sentry.apprl.com'
-    env.collectstatic = False
+    env.collectstatic = True
 
 @task
 def prestaging_1():
     env.settings = 'prestaging-1'
     env.hostname="prestaging-1"
     prestaging_common(env.settings)
+    env.gunicorn_port = 8090
     env.hosts = ['%(settings)s.apprl.com' % env]
     env.db_name = 'apparel_%s' % env.settings.replace("-","_")
     env.branch = "feat-create_shop"
+    env.collectstatic = False
 
 @task
 def prestaging_2():
     env.settings = 'prestaging-2'
     env.hostname="prestaging-2"
     prestaging_common(env.settings)
+    env.gunicorn_port = 8091
     env.hosts = ['%(settings)s.apprl.com' % env]
     env.db_name = 'apparel_%s' % env.settings.replace("-","_")
     env.branch = "feat-product_widget"
+    env.collectstatic = False
