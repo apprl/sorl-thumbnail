@@ -1,9 +1,13 @@
 import requests
 import xmltodict
 import dateutil.parser
+import logging
 
 from apparelrow.dashboard.models import Sale
 from apparelrow.dashboard.importer.base import BaseImporter
+
+logger = logging.getLogger('affiliate_networks')
+
 
 class Importer(BaseImporter):
     """
@@ -32,31 +36,36 @@ class Importer(BaseImporter):
         return Sale.INCOMPLETE
 
     def get_data(self, start_date, end_date):
+        logger.info("Tradedoubler - Start importing from Affiliate Network")
         url = self.url % (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
-        response = requests.get(url)
-        data = xmltodict.parse(response.text.encode('utf-8'))
+        try:
+            response = requests.get(url)
+            logger.debug("Tradedoubler - Request sent successfully with status code %s"%(response.status_code))
+            data = xmltodict.parse(response.text.encode('utf-8'))
 
-        row_count = int(data['report']['matrix']['@rowcount'])
-        if row_count > 1:
-            if row_count == 2:
-                row_data = [data['report']['matrix']['rows']['row']]
-            else:
-                row_data = data['report']['matrix']['rows']['row']
+            row_count = int(data['report']['matrix']['@rowcount'])
+            if row_count > 1:
+                if row_count == 2:
+                    row_data = [data['report']['matrix']['rows']['row']]
+                else:
+                    row_data = data['report']['matrix']['rows']['row']
 
-            for row in row_data:
-                data_row = {}
-                data_row['original_sale_id'] = row['orderNR']
-                data_row['affiliate'] = self.name
-                _, data_row['vendor'] = self.map_vendor(row.get('programName', None))
-                data_row['original_commission'] = row['affiliateCommission']
-                data_row['original_currency'] = 'SEK'
-                data_row['original_amount'] = row['orderValue']
-                data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['epi1'])
-                data_row['status'] = self.map_status(row['pendingStatus'])
-                data_row['sale_date'] = dateutil.parser.parse(row.get('timeOfEvent', '') or '')
+                for row in row_data:
+                    data_row = {}
+                    data_row['original_sale_id'] = row['orderNR']
+                    data_row['affiliate'] = self.name
+                    _, data_row['vendor'] = self.map_vendor(row.get('programName', None))
+                    data_row['original_commission'] = row['affiliateCommission']
+                    data_row['original_currency'] = 'SEK'
+                    data_row['original_amount'] = row['orderValue']
+                    data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['epi1'])
+                    data_row['status'] = self.map_status(row['pendingStatus'])
+                    data_row['sale_date'] = dateutil.parser.parse(row.get('timeOfEvent', '') or '')
 
-                data_row = self.validate(data_row)
-                if not data_row:
-                    continue
+                    data_row = self.validate(data_row)
+                    if not data_row:
+                        continue
 
-                yield data_row
+                    yield data_row
+        except requests.exceptions.RequestException as e:
+            logger.warning("Tradedoubler - Connection error %s"%e)
