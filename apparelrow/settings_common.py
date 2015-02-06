@@ -223,7 +223,7 @@ MIDDLEWARE_CLASSES = (
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
     'apparelrow.apparel.middleware.GenderMiddleware',
-    'django_user_agents.middleware.UserAgentMiddleware'
+    'django_user_agents.middleware.UserAgentMiddleware',
     'apparelrow.apparel.middleware.LocationMiddleware',
     'apparelrow.dashboard.middleware.ReferralMiddleware',
 )
