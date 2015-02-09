@@ -23,7 +23,7 @@
                     <span class="currency">{{ object.default_vendor.locale_currency }}</span>
                 </div>
                 {% if object.default_vendor.original_currency != object.default_vendor.locale_currency %}
-                <small>{% blocktrans with object.default_vendor.original_currency as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}</small>
+                <small class="hidden-xs">{% blocktrans with object.default_vendor.original_currency as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}</small>
                 {% endif %}
             </div>
         </div>
