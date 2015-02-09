@@ -151,7 +151,13 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             '-ms-transform': 'rotate(' + deg + 'deg)'
         });
     },
-
+    getRecoup: function(position) {
+        var left = parseInt(this.model.get('left'),10);
+        left = isNaN(left) ? 0 : left;
+        var top = parseInt(this.model.get('top'),10);
+        top = isNaN(top) ? 0 : top;
+        return {'left': left - position.left, 'top': top - position.top};
+    },
     render: function() {
         this.$el.css({'left': this.model.get('left'),
                       'top': this.model.get('top'),
@@ -204,8 +210,11 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                      $(event.target).find('.ui-resizable-handle').css('display', '');
 
                  }, this),
+                 start: _.bind(function(event, ui) {
+                 }, this),
                  stop: _.bind(function (event, ui) {
                      this.set_size(ui.size.width, ui.size.height);
+                     this.set_position(ui.position.left, ui.position.top);
                  }, this)
              });
 
@@ -213,11 +222,21 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  stack: '.product',
                  cancel: '.ui-rotatable-handle',
                  containment: this.$container,
+                 start: _.bind(function (event, ui) {
+                     var recoup = this.getRecoup(ui.position);
+                     recoupLeft = recoup['left'];
+                     recoupTop = recoup['top'];
+                 }, this),
+                 drag: function (event, ui) {
+                    ui.position.left += recoupLeft;
+                    ui.position.top += recoupTop;
+                 },
                  stop: _.bind(function (event, ui) {
                      var z_index = $(event.target).css('z-index');
                      if (!isNaN(parseInt(z_index))) {
                          this.model.set({z_index: z_index}, {silent: true});
                      }
+
                      this.set_position(ui.position.left, ui.position.top);
                  }, this)
              });
