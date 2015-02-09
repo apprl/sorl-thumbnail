@@ -24,7 +24,7 @@ class TemporaryImageView(View):
 
         image = Image.open(temp_image.image.path)
 
-        exifdict = image._getexif()
+        exifdict = image._getexif() if hasattr(image, '_getexif') else None
         if exifdict is not None and len(exifdict):
             for k in exifdict.keys():
                 if k in TAGS.keys() and TAGS[k] == 'Orientation':
