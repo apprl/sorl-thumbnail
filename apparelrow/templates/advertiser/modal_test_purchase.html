@@ -3,20 +3,24 @@
 {% load i18n %}
 
 {% block modal_id %}modal_test_purchase{% endblock %}
-{% block modal_title %}Make a test purchase{% endblock %}
+{% block modal_title %}{% trans "Make a test purchase" %}{% endblock %}
 {% block modal_content %}
-    <p>{% trans "Input the URL to the page you want to send the test visit." %}</p>
+    <p>{% trans "Here you can make a test purchase to make sure that the Apprl tracking is implemented correctly and is reporting sales that are generated via Apprl back to the Apprl system. This is what you need to do:" %}</p>
+    <p>1. {% trans "Input the URL to the page of your store to be tested. This could be for example to the home page or a product page. The tracking should work for any page on your site:" %}</p>
     <div class="form-group">
         <label class="control-label" for="id_url_shop">{% trans "URL" %}</label>
         <input id="id_url_shop" type="text" name="url" class="form-control" placeholder="URL">
     </div>
+    <p>2. {% trans "Click Get test link." %}</p>
+
     <div class="form-group">
-        <button class="btn btn-primary btn-block get-link">{% trans "Get purchase test link" %}</button>
+        <button class="btn btn-primary btn-block get-link">{% trans "Get test link" %}</button>
     </div>
 
     <div id="show_link"style="display:none;">
-        <p>Click the link below, and make a test purchase on your site:</p>
-        <a id="purchase_link" href="#"></a>
+        <p>3. {% trans "Click the link below and buy a product on your site:" %}</p>
+        <p><a id="purchase_link" href="#" target="_blank"></a></p>
+        <p>{% trans "If the Apprl tracking has been correctly implemented on your site, a sale will appear here on your dashboard (apprl.com/a/admin). If you need help with implementing the Apprl tracking or anything else, just contact support@apprl.com." %}</p>
     </div>
 
 {% endblock %}
@@ -40,7 +44,7 @@ $('.get-link').click( function() {
     var url = "http://{{ request.META.HTTP_HOST }}/a/link/?store_id={{ store.identifier }}&url="+url_shop;
     $('#show_link').css("display", "block");
     $('#purchase_link').attr("href", url);
-    $('#purchase_link').html(url)
+    $('#purchase_link').html("<b>"+url+"</b>")
 });
 </script>
 {% endblock %}
