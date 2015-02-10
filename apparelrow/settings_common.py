@@ -729,11 +729,11 @@ LOGGING = {
         },
         'affiliate_networks': {
             'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'affiliate_networks.log'),
-            'maxBytes': 50000000,
-            'backupCount': 10,
+            'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'affiliate_networks.log'),
+            'backupCount': 30,
         },
     },
     'loggers': {
@@ -789,7 +789,7 @@ LOGGING = {
         },
         'affiliate_networks': {
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
             'handlers': ['affiliate_networks'],
         }
     }
