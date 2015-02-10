@@ -148,7 +148,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
     update_size: function() {
         // TODO: 40 offset?
         var window_height = $(window).height(),
-            new_height = window_height - this.$el.find('.product-list-container').offset().top - 40;
+            new_height = window_height - this.$el.find('.product-list-container').offset().top -  ($(window).width() <= 644 ? 20 : 40);
 
         if(new_height < 220) {
             new_height = 220;
