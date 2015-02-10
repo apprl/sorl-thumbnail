@@ -7,6 +7,7 @@ import os.path
 import string
 import urllib
 import decimal
+from decimal import Decimal,ROUND_HALF_UP
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
@@ -328,7 +329,7 @@ def product_detail(request, slug):
                     store_commission = (standard_from + standard_to)/(2*100)
         if store_commission > 0:
             user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, vendor)
-            earning_cut = store_commission*cut*publisher_cut
+            earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
         else:
             logging.warning('No commission percentage defined for the store %s'%(product_vendors[0]))
 
