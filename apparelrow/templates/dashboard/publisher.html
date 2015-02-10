@@ -279,26 +279,34 @@
                     <tbody>
                         {% for earning in user_earnings %}
                         <tr>
+                            <!-- Date -->
                             <td class="hidden-xs" data-sort="{{ earning.date|date:"U" }}">{{ earning.date.date }}</td>
 
                             {% if earning.user_earning_type == "referral_sale_commission" %}
+                                <!-- If referral, show user -->
                                 <td data-sort="{{ earning.from_user }}">{% trans "Referral sale by" %} <a href="{{ earning.from_user }}">{{ earning.from_user }}</a></td>
                                 <td class="hidden-xs">{% trans "Referral" %}</td>
                                 <td class="center hidden-xs"></td>
                                 <td class="center hidden-xs"></td>
                             {% elif earning.extra_sale.is_promo %}
+                                <!-- Referral Signup -->
                                 <td class="hidden-xs"></td>
                                 <td class="hidden-xs"></td>
                                 <td>{% trans "Welcome to APPRL" %}</td>
                             {% else %}
+                                <!-- Product Information -->
                                 <td data-sort="{{ earning.product_name }}"><a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a></td>
                                 <td class="hidden-xs">{% if earning.product_link %}<a href="{{ earning.product_link }}">{{ earning.product_name }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.product_name }}{% endif %}{% endif %}</td>
+
+                                <!-- FROM -->
                                 <td class="hidden-xs">
                                     {% if earning.extra_sale.link %}
                                         {{ earning.extra_sale.link }}
                                     {% else %}
                                         {% if earning.user_earning_type == 'publisher_network_tribute' %}
                                             Sale by {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}
+                                        {% elif earning.user_earning_type == 'publisher_sale_commission' %}
+                                            <td class="hidden-xs">{% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}</td>
                                         {% else %}
                                             {{ earning.get_user_earning_type_display }}
                                         {% endif %}
