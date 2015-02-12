@@ -153,10 +153,9 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
 
         this.transform = {
             'translate': {'x':0, 'y':0},
-            'angle': this.model.get('rotation'),
+            'angle': this.model.get('rotation') ? this.model.get('rotation') : 0,
             'scale': 1
         };
-
         this.applyTransform();
 
         if (isMobileDevice()) {
@@ -264,7 +263,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  }, this)
              });
         }
-        this.$el.on('mousedown click', _.bind(this.set_active, this));
+        this.$el.on('mousedown click touchstart', _.bind(this.set_active, this));
 
 
 
