@@ -38,7 +38,6 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         // TODO: cannot use backbone events because click event must bind after
         // draggable events
         if (this.hammertime) {
-            this.enableTouchGestures();
         } else {
             this.$el.resizable("enable");
             this.$el.rotatable("enable");
@@ -51,7 +50,6 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         this.active = false;
         App.Events.trigger('look_edit:product:inactive', this);
         if (this.hammertime) {
-             this.disableTouchGestures();
         } else {
             this.$el.resizable("disable");
             this.$el.rotatable("disable");
@@ -71,7 +69,6 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             new_top = this.model.get('top') - adjustments.y;
 
         this.set_position(new_left, new_top);
-        this.$el.css({left: new_left, top: new_top});
     },
 
     set_size: function(width, height) {
@@ -81,35 +78,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
 
     set_position: function(left, top) {
         this.model.set({left: left, top: top}, {silent: true});
+        this.$el.css({'left': left, 'top': top});
         App.Events.trigger('look:dirty');
-    },
-
-    enableTouchGestures: function() {
-        this.hammertime.get('pinch').set({ enable: true });
-
-        this.hammertime.on('pinch', _.bind(function (event) {
-            var new_width = this.model.get('width') * event.scale;
-            var new_height = this.model.get('height') * event.scale;
-            if (new_width >= 50 && new_height >= 50) {
-                this.$el.css({width: new_width, height: new_height});
-            }
-            this.rotate(event.rotation + this.model.get('rotation'));
-        }, this));
-
-        this.hammertime.on('pinchend', _.bind(function(event) {
-            var new_width = this.model.get('width') * event.scale;
-            var new_height = this.model.get('height') * event.scale;
-            new_width = Math.min(new_width, this.$container.width() - this.$el.position().left);
-            new_height = Math.min(new_height, this.$container.height() - this.$el.position().top);
-
-            this.model.set({width: new_width, height: new_height, rotation: event.rotation}, {silent: true});
-            App.Events.trigger('look:dirty');
-        }, this));
-    },
-
-    disableTouchGestures: function() {
-        this.hammertime.off('pinch pinchend');
-        this.hammertime.get('pinch').set({ enable: false });
     },
 
     toggle_active: function(e) {
@@ -142,15 +112,17 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         return current_min;
     },
 
-    rotate: function(deg) {
-        this.$el.css({
-            'transform': 'rotate(' + deg +'deg)',
-            '-moz-transform': 'rotate(' + deg + 'deg)',
-            '-webkit-transform': 'rotate(' + deg + 'deg)',
-            '-o-transform': 'rotate(' + deg + 'deg)',
-            '-ms-transform': 'rotate(' + deg + 'deg)'
-        });
+    applyTransform: function() {
+        var value = [
+            'translate3d(' + this.transform.translate.x + 'px, ' + this.transform.translate.y + 'px, 0)',
+            'scale(' + this.transform.scale + ', ' + this.transform.scale + ')',
+            'rotate('+ this.transform.angle + 'deg)'
+        ];
+
+        value = value.join(" ");
+        this.$el.css({'-webkit-transform': value, '-moz-transform': value, 'transform': value});
     },
+
     getRecoup: function(position) {
         var left = parseInt(this.model.get('left'),10);
         left = isNaN(left) ? 0 : left;
@@ -158,6 +130,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         top = isNaN(top) ? 0 : top;
         return {'left': left - position.left, 'top': top - position.top};
     },
+
     render: function() {
         this.$el.css({'left': this.model.get('left'),
                       'top': this.model.get('top'),
@@ -166,30 +139,67 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                       'z-index': this.model.get('z_index'),
                       position: 'absolute'});
 
-        this.rotate(this.model.get('rotation'));
+
 
         this.$el.toggleClass('flipped', this.model.get('flipped'));
+
         this.set_position(this.model.get('left'), this.model.get('top'));
+
         this.set_size(this.model.get('width'), this.model.get('height'));
 
         this.$el.html(this.template(this.model.toJSON()));
 
         this.$el.css('z-index', this._max_zindex() + 1);
 
-         if (isMobileDevice()) {
-            this.hammertime = new Hammer(this.$el[0]);
-            this.hammertime.on('pan', _.bind(function(event) {
-                var new_left = this.model.get('left') + event.deltaX,
-                    new_top = this.model.get('top') + event.deltaY;
+        this.transform = {
+            'translate': {'x':0, 'y':0},
+            'angle': this.model.get('rotation'),
+            'scale': 1
+        };
 
-                this.$el.css({'left':new_left, 'top':new_top});
+        this.applyTransform();
+
+        if (isMobileDevice()) {
+            this.hammertime = new Hammer.Manager(this.$el.children('img')[0]);
+
+            this.hammertime.add(new Hammer.Pan({ threshold: 0, pointers: 0 }));
+
+            this.hammertime.add(new Hammer.Pinch({ threshold: 0 })).recognizeWith(this.hammertime.get('pan'));
+            this.hammertime.add(new Hammer.Rotate({ threshold: 0 })).recognizeWith([this.hammertime.get('pan'), this.hammertime.get('pinch')]);
+
+            this.hammertime.on("panstart panmove", _.bind(function(event) {
+                this.transform.translate = {'x': event.deltaX, 'y': event.deltaY};
+                this.applyTransform();
             }, this));
-            this.hammertime.on('panend', _.bind(function(event) {
-                new_left = Math.min(Math.max(0, new_left), this.$container.width() - this.$el.width());
-                new_top = Math.min(Math.max(0, new_top), this.$container.height() - this.$el.height());
-                this.$el.css({'left':new_left, 'top':new_top});
-                this.set_position(new_left, new_top);
-            },this));
+            this.hammertime.on("panend",_.bind(function(event) {
+                this.set_position(this.$el.position().left + (this.recoup ? this.recoup.left : 0), this.$el.position().top + (this.recoup ? this.recoup.top : 0));
+                this.transform.translate = {'x': 0, 'y': 0};
+                this.applyTransform();
+            }, this));
+            this.hammertime.on("rotatestart rotatemove", _.bind(function(event) {
+                this.recoup = false;
+                this.transform.angle = event.rotation;
+                this.applyTransform();
+            }, this));
+            this.hammertime.on("rotateend", _.bind(function(event) {
+                this.transform.angle = event.rotation;
+                this.model.set('rotation', event.rotation);
+                this.applyTransform();
+                this.recoup = this.getRecoup(this.$el.position());
+                this.$el.css({'left': this.recoup.left + this.model.get('left'), 'top': this.recoup.top + this.model.get('top')});
+            }, this));
+            this.hammertime.on("pinchstart pinchmove", _.bind(function (event) {
+                this.transform.scale = event.scale;
+                this.applyTransform();
+            }, this));
+            this.hammertime.on("pinchend", _.bind(function(event) {
+                var new_width = this.model.get('width') * this.transform.scale;
+                var new_height = this.model.get('height') * this.transform.scale;
+                this.set_size(new_width, new_height);
+                this.$el.css({'width': new_width, 'height': new_height});
+                this.transform.scale = 1;
+                this.applyTransform();
+            }, this));
         } else {
 
              this.$el.resizable({
@@ -245,7 +255,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  handles: 'n',
                  disabled: false,
                  rotate: _.bind(function (event, ui) {
-                     this.rotate(ui.rotation);
+                     this.transform.angle = ui.rotation;
+                     this.applyTransform();
                  }, this),
                  stop: _.bind(function (event, ui) {
                      this.model.set({rotation: ui.rotation}, {silent: true});
