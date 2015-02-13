@@ -114,6 +114,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             this._create_collage_component(product);
         } else {
             this.pending_product = product;
+            if (this.pending_event) {
+                window.setTimeout(_.bind(function() {
+                    this.on_click(this.pending_event);
+                }, this), 500);
+            }
         }
     },
 
@@ -124,7 +129,6 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             container_offset = $container.offset(),
             container_width = $container.width() - size,
             container_height = $container.height() - size;
-
         return {top: Math.min(container_height, Math.max(0, e.pageY - container_offset.top - (size / 2))),
                 left: Math.min(container_width, Math.max(0, e.pageX - container_offset.left - (size / 2)))};
     },
@@ -177,8 +181,12 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             this.add_product_to_component(new_component, this.pending_product);
             this.model.components.add(new_component);
             this.pending_product = false;
+            this.pending_event = false;
         } else {
-            this.show_product_filter();
+            if ($(window).width() < 992) {
+                this.pending_event = e;
+                this.show_product_filter();
+            }
         }
 
         // XXX: this code might be used in the future when we want to allow a
@@ -276,7 +284,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     update_sizes: function() {
         // Set container height for that responsive feeling
         var window_height = $(window).height(),
-            new_height = window_height - this.$el.offset().top - 20,
+            new_height = window_height - this.$el.offset().top - ($(window).width() >= 992 ? 20 : 0),
         $footer = $('.widget-footer:visible');
         new_height -= $footer.length ? $footer.height() : 0;
         this.$el.css('height', new_height);
@@ -286,10 +294,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         if(external_look_type == 'photo' && this.model.has('image')) {
             // Set container width and height to center the image
             if (this.image_ratio) {
-                if (this.image_ratio >= 1) {
-                    $container.height(this.$el.width() / this.image_ratio);
+                if (this.image_ratio >= this.$el.width()/this.$el.height()) {
+                    var new_height = Math.min(this.$el.width() / this.image_ratio, this.$el.height());
+                    $container.height(new_height);
                 } else {
-                    var new_width = Math.min(this.$el.height() * this.image_ratio, $container.width());
+                    var new_width = Math.min(this.$el.height() * this.image_ratio, this.$el.width());
                     $container.width(new_width);
                     $container.height(new_width / this.image_ratio);
                 }

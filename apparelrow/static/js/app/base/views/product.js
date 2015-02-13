@@ -8,10 +8,7 @@ App.Views.Product = Backbone.View.extend({
         'mouseleave .image-small, .hover': 'mouseleave',
         'click .btn-product-info': 'info',
         'click .btn-add': 'add',
-        'click .product-small': 'mouseenter',
-        'touchstart .image-small': 'mouseenter',
-        'touchstart .btn-product-info': 'info',
-        'touchstart .btn-add': 'add'
+        'click .product-small': 'mouseenter'
     },
 
     mouseenter: function(e) {

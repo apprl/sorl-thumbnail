@@ -57,8 +57,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
     },
 
     rescale: function(scale) {
-        var width = this.model.get('width'),
-            height = this.model.get('height');
+        var new_width = Math.round(this.model.get('width')*scale),
+            new_height = Math.round(this.model.get('height')*scale);
         this.$el.css({width: width*scale, height: height*scale});
         this.set_size(width*scale, height*scale);
         this.reposition({x:this.model.get('left')*(1-scale), y:this.model.get('top')*(1-scale)});
@@ -192,8 +192,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                 this.applyTransform();
             }, this));
             this.hammertime.on("pinchend", _.bind(function(event) {
-                var new_width = this.model.get('width') * this.transform.scale;
-                var new_height = this.model.get('height') * this.transform.scale;
+                var new_width = Math.round(this.model.get('width') * this.transform.scale);
+                var new_height = Math.round(this.model.get('height') * this.transform.scale);
                 this.set_size(new_width, new_height);
                 this.$el.css({'width': new_width, 'height': new_height});
                 this.transform.scale = 1;
