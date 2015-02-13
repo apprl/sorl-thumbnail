@@ -784,6 +784,6 @@ LOGGING = {
     }
 }
 
-GEOIP_URL = 'http://geoip.apprl.com:4999/ip/%s'
+GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
 
 
