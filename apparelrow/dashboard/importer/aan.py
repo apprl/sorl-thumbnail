@@ -1,5 +1,3 @@
-import decimal
-import dateutil.parser
 import datetime
 import logging
 
@@ -15,6 +13,7 @@ class Importer(BaseImporter):
     name = 'APPRL Advertiser Network'
 
     def get_data(self, start_date, end_date):
+        logger.info("AAN - Start importing from Transaction")
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
@@ -24,6 +23,9 @@ class Importer(BaseImporter):
                                           .filter(created__gte=start_date_query, created__lte=end_date_query)
         if transactions:
             logger.debug('Found %s transactions for AAN' % transactions.count())
+        else:
+            logger.debug('No transactions were found for AAN')
+
         for transaction in transactions:
             logger.debug('Found transaction %s.' % transaction.id)
             data_row = {}

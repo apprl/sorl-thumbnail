@@ -99,6 +99,9 @@ class PartnerPaymentDetailForm(forms.ModelForm):
     orgnr = forms.CharField(label=_('Personal / Organization number'))
     clearingnr = forms.CharField(label=_('Bank clearing number'))
     banknr = forms.CharField(label=_('Bank account number'))
+    address = forms.CharField(label=_('Address'))
+    postal_code = forms.CharField(label=_('Postal code'))
+    city = forms.CharField(label=_('City'))
     notes = forms.CharField(label=_('Other notes'), widget=forms.Textarea(attrs={'rows':4, 'cols': 30}), required=False)
 
     class Meta:

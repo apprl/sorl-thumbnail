@@ -327,7 +327,6 @@ def create_user_earnings(sale):
         commission_group = user.partner_group
 
         if commission_group:
-            commission_group_cut = None
             try:
                 commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
             except Cut.DoesNotExist:

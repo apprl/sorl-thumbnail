@@ -6,9 +6,12 @@ import uuid
 import requests
 import dateutil.parser
 import time
+import logging
 
 from apparelrow.dashboard.models import Sale
 from apparelrow.dashboard.importer.base import BaseImporter
+
+logger = logging.getLogger('affiliate_networks')
 
 
 class GMT(datetime.tzinfo):
@@ -70,36 +73,41 @@ class Importer(BaseImporter):
         return Sale.PENDING
 
     def get_data(self, start_date, end_date):
+        logger.info("Zanox - Start importing from Affiliate Network")
         for start_date, end_date in self.generate_subdates(start_date, end_date, 1):
             signature, timestamp, nonce = self.get_signature('GET', '/reports/sales/date/%s' % (end_date.strftime('%Y-%m-%d')))
             url = 'http://api.zanox.com/json/2011-03-01/reports/sales/date/%s' % (end_date.strftime('%Y-%m-%d'))
             headers = {'Date': timestamp,
                        'Nonce': nonce,
                        'Authorization': 'ZXWS %s:%s' % (self.connect_id, signature)}
-            response = requests.get(url, headers=headers)
+            try:
+                response = requests.get(url, headers=headers)
+                logger.debug("Zanox - Request sent successfully with status code %s"%(response.status_code))
 
-            if 'saleItems' in response.json():
-                for row in response.json()['saleItems']['saleItem']:
-                    data_row = {}
-                    data_row['original_sale_id'] = row['@id']
-                    data_row['affiliate'] = self.name
-                    _, data_row['vendor'] = self.map_vendor(row['program']['$'])
-                    data_row['original_commission'] = row['commission']
-                    data_row['original_currency'] = row['currency']
-                    data_row['original_amount'] = row['amount']
-                    if 'gpps' in row:
-                        sid = row['gpps']['gpp']['$']
-                    else:
-                        sid = ''
-                    data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(sid)
-                    data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
-                    data_row['status'] = self.map_status(row['reviewState'])
+                if 'saleItems' in response.json():
+                    for row in response.json()['saleItems']['saleItem']:
+                        data_row = {}
+                        data_row['original_sale_id'] = row['@id']
+                        data_row['affiliate'] = self.name
+                        _, data_row['vendor'] = self.map_vendor(row['program']['$'])
+                        data_row['original_commission'] = row['commission']
+                        data_row['original_currency'] = row['currency']
+                        data_row['original_amount'] = row['amount']
+                        if 'gpps' in row:
+                            sid = row['gpps']['gpp']['$']
+                        else:
+                            sid = ''
+                        data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(sid)
+                        data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
+                        data_row['status'] = self.map_status(row['reviewState'])
 
-                    data_row = self.validate(data_row)
-                    if not data_row:
-                        continue
+                        data_row = self.validate(data_row)
+                        if not data_row:
+                            continue
 
-                    yield data_row
+                        yield data_row
 
+            except requests.exceptions.RequestException as e:
+                logger.warning("Zanox - Connection error %s"%e)
             # Be kind to zanox servers
             time.sleep(1)

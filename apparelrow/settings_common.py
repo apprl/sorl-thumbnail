@@ -729,6 +729,14 @@ LOGGING = {
             'maxBytes': 50000000,
             'backupCount': 10,
         },
+        'affiliate_networks': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
+            'formatter': 'simple',
+            'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'affiliate_networks.log'),
+            'backupCount': 30,
+        },
     },
     'loggers': {
         '': {
@@ -781,6 +789,11 @@ LOGGING = {
             'propagate': True,
             'handlers': ['theimp'],
         },
+        'affiliate_networks': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'handlers': ['affiliate_networks'],
+        }
     }
 }
 
