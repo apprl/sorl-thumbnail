@@ -121,7 +121,17 @@ def pixel(request):
         'custom': custom
     }
 
-    transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
+    created = False
+    transaction = None
+
+    # Handle exception when there is more than one transaction retrieved from the query
+    try:
+        transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
+    except Transaction.MultipleObjectsReturned, ex:
+        duplicates = Transaction.objects.filter(store_id=store_id, order_id=order_id)
+        logger.warning('Multiple transactions returned for store %s and order %'%(store_id, order_id))
+        #transaction = duplicates[0]
+
     if not created:
         for attr, val in defaults.items():
             if hasattr(transaction, attr):

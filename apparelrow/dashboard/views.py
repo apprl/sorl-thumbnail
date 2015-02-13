@@ -1021,7 +1021,14 @@ def commissions(request):
                   % request.user)
         raise Http404
 
-    stores = list(get_model('dashboard', 'StoreCommission').objects.select_related('vendor').order_by('vendor__name'))
+    cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) \
+        if request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) else request.session.get('location','ALL')
+    vendors = []
+    for data in settings.VENDOR_LOCATION_MAPPING:
+        if cookie_value in settings.VENDOR_LOCATION_MAPPING[data]:
+            vendors.append(data)
+
+    stores = list(get_model('dashboard', 'StoreCommission').objects.filter(vendor__name__in=vendors).select_related('vendor').order_by('vendor__name'))
     user_id = request.user.id
     stores = [store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
               for store in stores]
