@@ -129,7 +129,13 @@ def pixel(request):
         transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
     except Transaction.MultipleObjectsReturned, ex:
         duplicates = Transaction.objects.filter(store_id=store_id, order_id=order_id)
-        logger.warning('Multiple transactions returned for store %s and order %'%(store_id, order_id))
+        logger.warning('Multiple transactions returned for store %s and order %s. Ids for duplicates are [%s].' % (store_id, order_id, duplicates.values_list('id',flat=True).join(',')))
+            # Return 1x1 transparent pixel
+        content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'
+        response = HttpResponse(content, mimetype='image/gif')
+        response['Cache-Control'] = 'no-cache'
+        response['Content-Length'] = len(content)
+        return response
         #transaction = duplicates[0]
 
     if not created:
