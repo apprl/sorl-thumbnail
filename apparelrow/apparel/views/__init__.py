@@ -6,6 +6,7 @@ import datetime
 import os.path
 import string
 import urllib
+import urlparse
 import decimal
 from decimal import Decimal,ROUND_HALF_UP
 
@@ -803,13 +804,20 @@ def authenticated_backend(request):
     return JSONResponse({'authenticated': request.user and request.user.is_authenticated(), 'profile': profile})
 
 def product_lookup_by_domain(request, domain, key):
-    instance = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain__startswith=domain)
+    model = get_model('apparel', 'DomainDeepLinking')
+    results = model.objects.extra(where=["%s LIKE domain||'%%'"], params=[domain])
+    if not results:
+        raise Http404
+
+    instance = results[0]
     if instance.template:
         user_id = request.user.pk
 
-        # TODO: handle ulp instead of url (url minus domain...)
+        key_split = urlparse.urlsplit(key)
+        ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
+        url = key
 
-        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=key), instance.vendor
+        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
     return None, None
 
 def product_lookup_by_theimp(request, key):
