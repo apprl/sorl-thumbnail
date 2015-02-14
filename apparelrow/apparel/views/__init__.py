@@ -821,7 +821,7 @@ def product_lookup_by_domain(request, domain, key):
     return None, None
 
 def product_lookup_by_theimp(request, key):
-    products = get_model('theimp', 'Product').objects.filter(key__startswith=key)
+    products = get_model('theimp', 'Product').objects.extra(where=["%s LIKE key||'%%'"], params=[key])
     if len(products) < 1:
         return None
     json_data = json.loads(products[0].json)
