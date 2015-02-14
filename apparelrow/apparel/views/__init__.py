@@ -806,6 +806,9 @@ def product_lookup_by_domain(request, domain, key):
     instance = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain__startswith=domain)
     if instance.template:
         user_id = request.user.pk
+
+        # TODO: handle ulp instead of url (url minus domain...)
+
         return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=key), instance.vendor
     return None, None
 
@@ -829,6 +832,15 @@ def product_lookup(request):
 
     if key and not product_pk:
         product_pk = product_lookup_by_theimp(request, key)
+        if not product_pk:
+            if key.startswith('https'):
+                key = key.replace('https', 'http')
+            elif key.startswith('http'):
+                temp = list(key)
+                temp.insert(4, 's')
+                key = ''.join(temp)
+
+            product_pk = product_lookup_by_theimp(request, key)
 
     # TODO: must go through theimp database right now to fetch site product by real url
     #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
