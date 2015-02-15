@@ -9,7 +9,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         });
 
         App.Events.on('widget:delete', this.delete_shop, this);
-        App.Events.on('widget:reset', this.render, this);
+        App.Events.on('widget:reset', this.reset, this);
         App.Events.on('widget:save', this.save_shop, this);
         App.Events.on('widget:publish', this.publish_shop, this);
         App.Events.on('widget:unpublish', this.unpublish_shop, this);
@@ -30,6 +30,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.$container = this.$el.find('.product-list-container');
         this.resize();
         App.Views.ShopCreate.__super__.initialize(this);
+        $('.body-header-col-right ul').hide();
     },
     init_products: function() {
         if (!this.model.attributes.id) {
@@ -37,6 +38,13 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         } else {
             this.product_display(this.model.get('show_liked'));
         }
+        $('.body-header-col-right ul').show();
+
+        if (this.model.get('show_liked')) {
+            $('#modal_embed_shop #id_name').parent().hide();
+        }
+        $('.body-header-col-right .btn-delete').parent().show();
+        $('.body-header-col-right .btn-reset').parent().hide();
         if(this.model.attributes.hasOwnProperty('products')) {
             for (var i = 0; i < this.model.attributes.products.length; i++) {
                 var product = this.model.attributes.products[i];
@@ -49,6 +57,14 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                 self.model.components.add(component);
             }
         }
+    },
+    reset: function() {
+        this.model.components.each(_.bind(function(model) {
+            this.model.components.remove(model);
+            model.destroy();
+        }), this);
+        this.update_title(0, 0);
+        this.$container.find('ul').children().remove();
     },
     resize: function() {
         var window_height = $(window).height(),
@@ -78,11 +94,12 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         var view = new App.Views.ShopComponentProduct({ model: model, collection: collection });
         this.$('#shop-product-list .product-list').append(view.render().el);
     },
-    update_title: function(delta) {
-        var $title = $('#shop-product-list').find('h3');
-        var currentTitle = $title.html().split(' ');
-        var newTitle = parseInt(currentTitle[0], 10) + delta +' '+ currentTitle[1];
-        $title.html(newTitle);
+    update_title: function(delta, val) {
+        var $title = this.$el.find('#preview-header');
+        var nr = parseInt(/\d/.exec($title.html()), 10);
+        val = val == undefined ? nr + delta : val;
+
+        $title.html($title.html().replace(nr, val));
     },
     publish_shop: function(values) {
         this.model.set('published', true);
@@ -90,6 +107,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     },
     product_display: function(show_liked) {
         this.model.set('show_liked', show_liked);
+
         if(show_liked) {
             if (!this.model.attributes.id) {
                 this.save_shop({ title: "My latest likes" });
@@ -99,6 +117,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             $('#product-chooser').find('.disabled').hide();
             $('#shop-display-settings').hide();
             $('#shop-product-list').removeClass('liked-products');
+            $('.body-header-col-right ul').show();
+            $('.body-header-col-right .btn-delete').parent().hide();
         }
         $('#shop-preview').removeClass('splash');
         this.resize();
@@ -130,13 +150,13 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                 }
             }, this), {scope: facebook_scope});
         } else {
-            this._shop_save();
+            this._shop_save(values.callback);
         }
 
         return false;
     },
 
-    _shop_save: function() {
+    _shop_save: function(callback) {
         // Remove components without products before saving
         this.model.components.each(_.bind(function(model) {
             if(!model.has('product') || !model.get('product')) {
@@ -150,12 +170,16 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             this.model.unset('id', {silent: true});
         }
 
-        this.model.save({}, {success: _.bind(this.save_success, this)});
+        this.model.save({}, {success: _.bind(function() { this.save_success(callback);}, this)});
     },
 
-    save_success: function() {
+    save_success: function(callback) {
         this.model._dirty = false;
         // TODO: Can we get this value from elsewhere?
-        window.location.replace('/shop/edit/' + this.model.get('id'));
+        if (callback) {
+            callback(this.model.get('id'));
+        } else {
+            window.location.replace('/shop/edit/' + this.model.get('id'));
+        }
     }
 });

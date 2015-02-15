@@ -11,15 +11,15 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function() {
-           $('#show_liked, #pick_products').click(function(e) {
-               e.preventDefault();
-               var show_liked = ($(this).attr('data-value') == 'likes');
-               App.Events.trigger('widget:product_display', show_liked);
-           });
+            $('#show_liked, #pick_products').click(function(e) {
+                e.preventDefault();
+                var show_liked = ($(this).attr('data-value') == 'likes');
+                App.Events.trigger('widget:product_display', show_liked);
+            });
         });
     </script>
     <div id="preview-header" class="preview-header">
-        {%  trans 'My shop preview' %}
+        {%  trans 'My product selection' %} (0)
     </div>
     <div class="product-list-container">
         <div>
@@ -30,11 +30,10 @@
             </div>
 
             <div id="shop-product-list" class="col-product-list{% if show_liked == 'true' %} liked-products{% endif %}">
-                <h3>0 {% trans 'products' %}</h3>
                 <ul class="product-list list-unstyled"></ul>
             </div>
         </div>
     </div>
 </div>
 
-{% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES external_shop_id=external_shop_id only %}
+{% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES title=title external_shop_id=external_shop_id only %}

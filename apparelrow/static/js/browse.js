@@ -452,7 +452,6 @@ function filter(query, callback, path) {
 }
 
 function doFilter(callback, url, page) {
-    $('#product-list').css('opacity', 0.3);
 
     var callback = callback || renderProducts;
     var page = page || 1;

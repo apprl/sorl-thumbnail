@@ -12,6 +12,10 @@
 
                 <form id="embed_shop_form" class="form">
                     <div class="form-group">
+                        <label class="control-label" for="id_name">{% trans "Name" %}</label>
+                        <input id="id_name" type="text" class="form-control" placeholder="Name" value="{{ title }}"/>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="id_width">{% trans "Width" %}</label>
                         <div class="input-group">
                             <input id="id_width" type="text" name="width" class="form-control" placeholder="100">
@@ -32,7 +36,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="id_language">{% trans "Language" %}</label>
+                        <label class="control-label" for="id_language">{% trans "Language & currency" %}</label>
                         <select id="id_language" name="language" class="form-control">
                             {% for language in LANGUAGES %}
                             <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
@@ -40,11 +44,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>{% trans "Show" %}</label>
+                        <label>{% trans "Advanced options" %}</label>
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked>
-                                {% trans "Include product brand and price" %}
+                                {% trans "Show prices and brands" %}
                             </label>
                         </div>
                         <div class="checkbox">
@@ -53,7 +57,7 @@
                                 {% trans "Show filters" %}
                             </label>
                         </div>
-                        <div class="checkbox">
+                        <div class="checkbox filter-collapsed">
                             <label>
                                 <input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1">
                                 {% trans "Show filters as collapsed" %}
@@ -71,14 +75,14 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Continue editing" %}</button>
+                <button type="button" class="btn btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
     function updateQueryStringParameter(uri, key, value) {
-        console.log('Called update');
         var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
         var separator = uri.indexOf('?') !== -1 ? "&" : "?";
         if (uri.match(re)) {
@@ -87,6 +91,7 @@
             return uri + separator + key + "=" + value;
         }
     }
+    var shop_id = {{external_shop_id}};
     $(document).ready(function() {
         $('#modal_embed_shop').on('show.bs.modal', function () {
             $('#id_embed_code').parent().hide();
@@ -96,6 +101,23 @@
             .mouseup(function(e) { e.preventDefault() });
 
         var width_type = '%';
+
+        $('.filter-collapsed').hide();
+        $('#id_show_filters').on('click', function() {
+            console.log('1');
+            console.log($(this).prop('checked'));
+            if($(this).prop('checked')) {
+                $('.filter-collapsed').show();
+            } else {
+                $('.filter-collapsed').hide();
+                $('#id_show_filters_collapsed').prop('checked', '');
+            }
+        });
+
+        $('.btn-save-exit').on('click', function(e) {
+            e.preventDefault();
+            App.Events.trigger('widget:save', {title: $('#embed_shop_form #id_name').val()});
+        });
 
         $('#width_dropdown a').on('click', function(e) {
             e.preventDefault();
@@ -112,7 +134,19 @@
         });
 
         $('#embed_shop_form').on('submit', function() {
+            if (!external_shop_id) {
+                App.Events.trigger('widget:save', {title: '', callback: get_embed});
+            } else {
+                get_embed(external_shop_id);
+            }
+
+            return false;
+        });
+
+        function get_embed(external_shop_id) {
+            shop_id = external_shop_id;
             var data = {
+                name: $('#id_name').val(),
                 width: $('#id_width').val(),
                 width_type: width_type,
                 height: $('#id_height').val(),
@@ -137,13 +171,11 @@
                 }
             }
 
-            $.post("{% url 'shop-widget' external_shop_id %}", data, function(response) {
+            $.post("{% url 'shop-widget' external_shop_id %}".replace('/0/', '/'+external_shop_id+'/'), data, function(response) {
                 $('#id_embed_code').val(response);
                 $('#id_embed_code').parents('.form-group').show();
                 $('#modal_embed_shop').animate({scrollTop: 800});
             });
-
-            return false;
-        });
+        }
     });
 </script>
