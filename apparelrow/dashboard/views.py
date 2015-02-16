@@ -648,13 +648,13 @@ def dashboard_admin(request, year=None, month=None):
         month_commission = decimal.Decimal('0.0')
         partner_commission = decimal.Decimal('0.0')
         result = Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                             .filter(created__range=(start_date_query, end_date_query)) \
-                             .order_by('created') \
-                             .values('created', 'converted_commission', 'commission', 'user_id')
+                             .filter(sale_date__range=(start_date_query, end_date_query)) \
+                             .order_by('sale_date') \
+                             .values('sale_date', 'converted_commission', 'commission', 'user_id')
         for sale in result:
-            data_per_month[sale['created'].date()][0] += sale['converted_commission']
+            data_per_month[sale['sale_date'].date()][0] += sale['converted_commission']
             if sale['user_id']:
-                data_per_month[sale['created'].date()][1] += sale['commission']
+                data_per_month[sale['sale_date'].date()][1] += sale['commission']
                 partner_commission += sale['commission']
             month_commission += sale['converted_commission']
 
