@@ -27,6 +27,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.model.components.on('add', this.add_component, this);
 
         $(window).on('resize', _.bind(this.resize, this));
+        $(window).on('resize onorientationchange', _.bind(this.resize, this));
 
         this.$el.find('.previous').on('click', _.bind(function() { this.slide(1); }, this));
         this.$el.find('.next').on('click', _.bind(function() { this.slide(-1); }, this));

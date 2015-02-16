@@ -135,11 +135,10 @@
     <form enctype="multipart/form-data" action="{% url 'temporary-image' %}" method="POST" id="temporaryimage">
         {% csrf_token %}
         <div class="form-group">
-            <p>{% trans "Start by uploading a photo" %}</p>
             <div class="form-group upload-field">
                 <span><input class="form-control" type="file" accept="image/*" capture="camera" name="image_file"></span>
             </div>
-            <button class="btn btn-primary" type="submit">{% trans "Upload" %}</button>
+            <button class="btn btn-primary">{% trans "Add your photo" %}</button>
         </div>
     </form>
 </script>

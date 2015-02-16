@@ -26,6 +26,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.model.components.on('add', this.add_component, this);
 
         $(window).on('resize', _.bind(this.resize, this));
+        $(window).on('resize onorientationchange', _.bind(this.resize, this));
 
         this.$container = this.$el.find('.product-list-container');
 

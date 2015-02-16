@@ -10,7 +10,8 @@ App.Views.TemporaryImageUploadForm = Backbone.View.extend({
 
     click_button: function(e) {
         e.preventDefault();
-        this.$el.fileupload('add', {fileInput: this.$el.find('input.class-control')});
+        this.$el.fileupload('add', {fileInput: this.$el.find('input.form-control')});
+        this.$el.find('input.form-control').click();
     },
 
     upload_start: function(e, data) {
@@ -29,7 +30,7 @@ App.Views.TemporaryImageUploadForm = Backbone.View.extend({
         this.$el.fileupload({
             submit: _.bind(this.upload_start, this),
             done: _.bind(this.upload_complete, this)
-        });
+        }).find('div.upload-field').hide();
 
         return this;
     }

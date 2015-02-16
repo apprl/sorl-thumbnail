@@ -1,29 +1,21 @@
-{% load i18n %}
+{% load i18n apparel_extras %}
 <ul class="shop-list list-unstyled row">
     {% for object in current_page.object_list %}
         <li class="shop col-sm-4">
             <h4 class="shop-title"><a href="{% url 'create-shop' object.pk %}">{{ object.title }}</a></h4>
             <div class="description">
-                    {% if object.published %}
-                        <span class="status published">{% trans 'Published' %}</span>
-                    {% else %}
-                        <span class="status unpublished">{% trans 'Unpublished' %}</span>
-                    {% endif %}
 
-                    {% if object.description %}
-                        {{ object.description }}
-                    {% endif %}
             </div>
 
-            <small>
+            <p>
                 {% if object.show_liked %}
-                    {% trans 'Contains your liked items' %}
+                    {% trans 'Your liked products' %}
                 {% else %}
-                   {% trans 'Contains' %} <strong>{{ object.products.count }}</strong> {% trans 'selected products' %}
+                   {% trans 'Contains' %} <strong>{{ object.products.count }}</strong>
                 {% endif %}
                 <br/>
-                {% trans 'Last modified:' %} {{ object.modified|date:'Y-m-d H:i' }}
-            </small>
+                {% trans 'Last modified:' %} {{ object.modified|since }}
+            </p>
         </li>
     {% empty %}
     {% if current_page.number == 1 %}
