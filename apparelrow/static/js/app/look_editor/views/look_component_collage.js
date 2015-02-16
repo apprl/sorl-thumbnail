@@ -175,15 +175,20 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                 this.transform.translate = {'x': 0, 'y': 0};
                 this.applyTransform();
             }, this));
+            var rotatestart = false;
             this.hammertime.on("rotatestart rotatemove", _.bind(function(event) {
                 this.recoup = false;
-                this.transform.angle = event.rotation;
+                if (rotatestart === false) {
+                    rotatestart = this.transform.angle;
+                }
+                this.transform.angle = event.rotation + rotatestart;
                 this.applyTransform();
             }, this));
             this.hammertime.on("rotateend", _.bind(function(event) {
-                this.transform.angle = event.rotation;
+                this.transform.angle = event.rotation + rotatestart;
                 this.model.set('rotation', event.rotation);
                 this.applyTransform();
+                rotatestart = false;
                 this.recoup = this.getRecoup(this.$el.position());
                 this.$el.css({'left': this.recoup.left + this.model.get('left'), 'top': this.recoup.top + this.model.get('top')});
             }, this));
