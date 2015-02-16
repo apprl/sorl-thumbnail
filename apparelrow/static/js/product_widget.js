@@ -78,11 +78,6 @@ jQuery(document).ready(function() {
     $(window).on('resize', resize);
     $(window).on('message', sendHeight).trigger('message');
 
-    if (autoplay) {
-        setInterval(function() { if (doplay) { slide(-1); } }, 4000);
-        $('.slidecontainer').on('mouseover', function() { doplay = false; }).on('mouseout', function() { doplay = true;});
-    }
-
     function trackEvent(category, action) {
         return function() {
             var el = $(this),
