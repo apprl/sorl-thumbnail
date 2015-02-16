@@ -52,7 +52,8 @@ urlpatterns = patterns('',
     url(r'^widget/shop/$', 'apparelrow.apparel.browse.shop_widget', name='shop-widget'),
 
     # Product widget
-    url(r'^productwidget/create/$', 'apparelrow.apparel.views.product_widget.create', name='create-product-widget'),
+    url(r'^productwidget/create/single/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'single'}, name='create-product-widget-single'),
+    url(r'^productwidget/create/multiple/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'multiple'}, name='create-product-widget-multiple'),
     url(r'^productwidget/edit/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.editor', name='edit-product-widget'),
     url(r'^productwidget/widget/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.product_widget_widget', name='product-widget'),
     url(r'^productwidget/api/$', ProductWidgetView.as_view(), name='product_widget-api'),

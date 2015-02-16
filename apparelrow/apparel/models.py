@@ -1004,8 +1004,10 @@ class ProductWidget(models.Model):
                     help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
     description = models.TextField(_('Description'), null=True, blank=True)
     user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='product_widget')
+    show_liked  = models.BooleanField(default=False) # If true the products field will be ignored
     products    = models.ManyToManyField(Product, through='ProductWidgetProduct')
     published   = models.BooleanField(default=False)
+    type        = models.CharField(_('Type'), max_length=10, default='single')
 
     def __unicode__(self):
         return u'%s' % (self.title,)
@@ -1022,10 +1024,12 @@ class ProductWidgetEmbed(models.Model):
     product_widget          = models.ForeignKey(ProductWidget, related_name='parent_widget')
     user                    = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='product_widget_embed')
     width                   = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0])
+    height                  = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1])
     width_type              = models.CharField(max_length=2, null=False, blank=False, default='px')
     language                = models.CharField(max_length=3, null=False, blank=False)
-    nrproducts              = models.IntegerField(blank=False, null=False, default=1)
-    autoplay                = models.BooleanField(default=False)
+    show_product_brand      = models.BooleanField(default=True)
+    show_filters            = models.BooleanField(default=True)
+    show_filters_collapsed  = models.BooleanField(default=True)
 #
 # ShopProduct
 #

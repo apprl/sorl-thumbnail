@@ -9,7 +9,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         });
 
         App.Events.on('widget:delete', this.delete_product_widget, this);
-        App.Events.on('widget:reset', this.render, this);
+        App.Events.on('widget:reset', this.reset, this);
         App.Events.on('widget:save', this.save_product_widget, this);
         App.Events.on('widget:publish', this.publish_product_widget, this);
         App.Events.on('widget:unpublish', this.unpublish_product_widget, this);
@@ -43,6 +43,13 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.resize();
 
         App.Views.ProductWidgetCreate.__super__.initialize(this);
+
+        if (this.model.get('id')) {
+            $('.body-header-col-right .btn-reset').parent().hide();
+        } else {
+            $('.body-header-col-right .btn-delete').parent().hide();
+
+        }
     },
     init_products: function() {
         if(this.model.attributes.hasOwnProperty('products')) {
@@ -58,6 +65,13 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             }
             this.resize();
         }
+    },
+    reset: function() {
+        this.model.components.each(_.bind(function (model) {
+            this.model.components.remove(model);
+            model.destroy();
+        }), this);
+        this.$container.find('ul').children().remove();
     },
     resize: function() {
         var window_height = $(window).height(),
@@ -142,13 +156,13 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
                 }
             }, this), {scope: facebook_scope});
         } else {
-            this._product_widget_save();
+            this._product_widget_save(values.callback);
         }
 
         return false;
     },
 
-    _product_widget_save: function() {
+    _product_widget_save: function(callback) {
         // Remove components without products before saving
         this.model.components.each(_.bind(function(model) {
             if(!model.has('product') || !model.get('product')) {
@@ -162,11 +176,15 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             this.model.unset('id', {silent: true});
         }
 
-        this.model.save({}, {success: _.bind(this.save_success, this)});
+        this.model.save({}, {success: _.bind(function() { this.save_success(callback); }, this)});
     },
 
-    save_success: function() {
+    save_success: function(callback) {
         this.model._dirty = false;
-        window.location.replace('/productwidget/edit/' + this.model.get('id'));
+        if (callback) {
+            callback(this.model.get('id'));
+        } else {
+            window.location.replace('/productwidget/edit/' + this.model.get('id'));
+        }
     }
 });

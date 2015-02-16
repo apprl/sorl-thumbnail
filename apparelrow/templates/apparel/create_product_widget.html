@@ -14,7 +14,7 @@
     <div id="content">
         <div class="row content-row">
             <div class="col-md-6 col-widget">
-                {% include "apparel/tools/widget_product_edit.html" with external_product_widget_id=external_product_widget_id %}
+                {% include "apparel/tools/widget_product_edit.html" with external_product_widget_id=external_product_widget_id type=type %}
             </div>
 
             <div class="col-md-6 visible-md visible-lg">
@@ -29,6 +29,7 @@
     <script type="text/javascript">
         var external_product_widget_id = {% if external_product_widget_id %}{{ external_product_widget_id }}{% else %}0{% endif %};
         var selected_gender = 'A';
+        var external_product_widget_type = '{{  type }}';
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     {% compressed_js 'create_product_widget' %}

@@ -12,6 +12,10 @@
 
                 <form id="embed_product_widget_form" class="form">
                     <div class="form-group">
+                        <label class="control-label" for="id_name">{% trans "Name" %}</label>
+                        <input id="id_name" type="text" class="form-control" placeholder="Name" value="{{ title }}"/>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="id_width">{% trans "Width" %}</label>
                         <div class="input-group">
                             <input id="id_width" type="text" name="width" class="form-control" placeholder="100">
@@ -24,9 +28,15 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <label class="control-label" for="id_language">{% trans "Language" %}</label>
+                        <label class="control-label" for="id_height">{% trans "Height" %}</label>
+                        <div class="input-group">
+                            <input id="id_height" type="text" name="height" class="form-control" placeholder="600">
+                            <span class="input-group-addon">{% trans "pixels" %}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="id_language">{% trans "Language & currency" %}</label>
                         <select id="id_language" name="language" class="form-control">
                             {% for language in LANGUAGES %}
                             <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
@@ -34,20 +44,23 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>{% trans "Number of products" %}</label>
-                        <div class="controls">
+                        <label>{% trans "Advanced options" %}</label>
+                        <div class="checkbox">
                             <label>
-                                <select name="nrproducts" id="id_nrproducts" class="form-control">
-                                    <option value="1" selected="selected">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
+                                <input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked>
+                                {% trans "Show prices and brands" %}
                             </label>
                         </div>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="autoplay" id="id_autoplay">
-                                {% trans "Auto play" %}
+                                <input type="checkbox" name="show_filters" id="id_show_filters" value="1">
+                                {% trans "Show filters" %}
+                            </label>
+                        </div>
+                        <div class="checkbox filter-collapsed">
+                            <label>
+                                <input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1">
+                                {% trans "Show filters as collapsed" %}
                             </label>
                         </div>
                     </div>
@@ -62,7 +75,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Continue editing" %}</button>
+                <button type="button" class="btn btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
             </div>
         </div>
     </div>
@@ -87,6 +101,23 @@
 
         var width_type = '%';
 
+        var widget_id = {{ external_product_widget_id }};
+
+        $('.filter-collapsed').hide();
+        $('#id_show_filters').on('click', function() {
+            if($(this).prop('checked')) {
+                $('.filter-collapsed').show();
+            } else {
+                $('.filter-collapsed').hide();
+                $('#id_show_filters_collapsed').prop('checked', '');
+            }
+        });
+
+        $('.btn-save-exit').on('click', function(e) {
+            e.preventDefault();
+            App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val()});
+        });
+
         $('#width_dropdown a').on('click', function(e) {
             e.preventDefault();
             var value = $(this).data('value');
@@ -100,14 +131,25 @@
                 $('#id_width').attr('placeholder', '100');
             }
         });
-
         $('#embed_product_widget_form').on('submit', function() {
+            if (!widget_id) {
+                App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val(), callback: get_embed});
+            } else {
+                get_embed(widget_id);
+            }
+
+            return false;
+        });
+
+        function get_embed(widget_id) {
             var data = {
                 width: $('#id_width').val(),
                 width_type: width_type,
+                height: $('#id_height').val(),
                 language: $('#id_language').val(),
-                nrproducts: $('#id_nrproducts').val(),
-                autoplay: $('#id_autoplay').prop("checked") ? 1 : 0
+                show_product_brand: $('#id_show_brand_price').is(':checked') ? 1 : 0,
+                show_filters: $('#id_show_filters').is(':checked') ? 1 : 0,
+                show_filters_collapsed: $('#id_show_filters_collapsed').is(':checked') ? 1 : 0
             };
 
 
@@ -122,13 +164,13 @@
                 }
             }
 
-            $.post("{% url 'product-widget' external_product_widget_id %}", data, function(response) {
+            $.post("{% url 'product-widget' external_product_widget_id %}".replace('/0/', '/'+widget_id+'/'), data, function(response) {
                 $('#id_embed_code').val(response);
                 $('#id_embed_code').parents('.form-group').show();
                 $('#modal_embed_product_widget').animate({scrollTop: 800});
             });
 
             return false;
-        });
+        }
     });
 </script>
