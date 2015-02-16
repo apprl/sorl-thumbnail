@@ -104,8 +104,6 @@
 
         $('.filter-collapsed').hide();
         $('#id_show_filters').on('click', function() {
-            console.log('1');
-            console.log($(this).prop('checked'));
             if($(this).prop('checked')) {
                 $('.filter-collapsed').show();
             } else {
@@ -134,8 +132,8 @@
         });
 
         $('#embed_shop_form').on('submit', function() {
-            if (!external_shop_id) {
-                App.Events.trigger('widget:save', {title: '', callback: get_embed});
+            if (!shop_id) {
+                App.Events.trigger('widget:save', {title: $('#embed_shop_form #id_name').val(), callback: get_embed});
             } else {
                 get_embed(external_shop_id);
             }
