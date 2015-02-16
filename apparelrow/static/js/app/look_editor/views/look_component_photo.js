@@ -33,7 +33,7 @@ App.Views.LookComponentPhoto = App.Views.LookComponent.extend({
         this.model.set({left: left, top: top}, {silent: true});
         if (!rescaled) {
             var $container = $('.look-container');
-            this.model.set({left_rel: (left+this.model.get('width')/2)/$container.width(), top_rel: (top+this.model.get('height')/2)/$container.height()});
+            this.model.set({rel_left: (left+this.model.get('width')/2)/$container.width(), rel_top: (top+this.model.get('height')/2)/$container.height()});
         }
         App.Events.trigger('look:dirty');
     },
