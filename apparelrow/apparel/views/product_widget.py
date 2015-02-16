@@ -51,11 +51,11 @@ def _to_int(s):
     except ValueError:
         return None
 
-def create(request):
+def create(request, type):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
 
-    return render(request, 'apparel/create_product_widget.html', {'external_product_widget_id': 0})
+    return render(request, 'apparel/create_product_widget.html', {'external_product_widget_id': 0, 'type': type})
 
 def editor(request, template='apparel/create_product_widget.html', product_widget_id=None, **kwargs):
     if not request.user.is_authenticated():
@@ -79,6 +79,7 @@ def product_widget_instance_to_dict(product_widget):
         'url': product_widget.get_absolute_url(),
         'description': product_widget.description,
         'published': product_widget.published,
+        'type': product_widget.type
     }
 
     product_widget_dict['products'] = []
@@ -250,9 +251,11 @@ def product_widget_widget(request, product_widget_id=None):
     content = {}
     content['width'] = int(request.POST.get('width', 100))
     content['width_type'] = request.POST.get('width_type', '%')
-    content['language'] = request.POST.get('language', 'sv')
-    content['nrproducts'] = int(request.POST.get('nrproducts', 1))
-    content['autoplay'] = bool(int(request.POST.get('autoplay', 1)))
+    content['height'] = int(request.POST.get('height', 600));
+    content['language'] = request.POST.get('language', 'sv'),
+    show_product_brand = bool(int(request.POST.get('show_product_brand', 1)))
+    show_filters = bool(int(request.POST.get('show_filters', 1)))
+    show_filters_collapsed = bool(int(request.POST.get('show_filters_collapsed', 1)))
 
     if content['width_type'] == '%' and int(content['width']) > 100:
         content['width'] = 100
@@ -267,9 +270,11 @@ def product_widget_widget(request, product_widget_id=None):
         user=product_widget.user,
         width=content['width'],
         width_type=content['width_type'],
-        language=content['language'],
-        nrproducts=content['nrproducts'],
-        autoplay=content['autoplay']
+        height=content['height'],
+        language=content['language'][0],
+        show_product_brand=show_product_brand,
+        show_filters=show_filters,
+        show_filters_collapsed=show_filters_collapsed
     )
 
     product_widget_embed.save()
