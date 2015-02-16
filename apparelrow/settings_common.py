@@ -708,11 +708,11 @@ LOGGING = {
             'maxBytes': 8000000,
             'backupCount': 10
         },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
+        #'mail_admins': {
+        #    'level': 'ERROR',
+        #    'filters': ['require_debug_false'],
+        #    'class': 'django.utils.log.AdminEmailHandler',
+        #},
         'dashboard': {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
