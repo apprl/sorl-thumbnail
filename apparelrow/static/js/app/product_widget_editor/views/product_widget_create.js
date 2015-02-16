@@ -48,8 +48,8 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             $('.body-header-col-right .btn-reset').parent().hide();
         } else {
             $('.body-header-col-right .btn-delete').parent().hide();
-
         }
+        this.init_footer();
     },
     init_products: function() {
         if(this.model.attributes.hasOwnProperty('products')) {

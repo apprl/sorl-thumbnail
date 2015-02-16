@@ -69,6 +69,9 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
         $(window).on('resize onorientationchange', _.bind(this.update_sizes, this));
         App.Views.LookEdit.__super__.initialize(this);
+        if (external_look_type == 'collage') {
+            this.disable_footer();
+        }
     },
 
     login_popup: function() {
@@ -258,6 +261,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     render_image: function() {
         if(this.model.has('image')) {
             // Enable product on image
+            this.init_footer();
             App.Events.trigger('product:enable');
             this.temporary_image_view.$el.hide();
             this.$el.find('.look-container').css('background-image', 'url(' + this.model.get('image') + ')');
@@ -276,6 +280,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             }
             this.local_image.src = this.model.get('image');
         } else {
+            this.disable_footer();
             this.temporary_image_view.$el.show();
             this.$el.find('.look-container').css('background-image', '');
         }

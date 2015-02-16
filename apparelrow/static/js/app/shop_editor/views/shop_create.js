@@ -28,9 +28,10 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         $(window).on('resize', _.bind(this.resize, this));
 
         this.$container = this.$el.find('.product-list-container');
-        this.resize();
+
         App.Views.ShopCreate.__super__.initialize(this);
         $('.body-header-col-right ul').hide();
+        this.resize();
     },
     init_products: function() {
         if (!this.model.attributes.id) {
@@ -120,6 +121,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             $('#shop-product-list').removeClass('liked-products');
             $('.body-header-col-right ul').show();
             $('.body-header-col-right .btn-delete').parent().hide();
+            this.init_footer();
         }
         $('#shop-preview').removeClass('splash');
         this.resize();
