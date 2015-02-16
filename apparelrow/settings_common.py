@@ -708,11 +708,11 @@ LOGGING = {
             'maxBytes': 8000000,
             'backupCount': 10
         },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
+        #'mail_admins': {
+        #    'level': 'ERROR',
+        #    'filters': ['require_debug_false'],
+        #    'class': 'django.utils.log.AdminEmailHandler',
+        #},
         'dashboard': {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -762,7 +762,7 @@ LOGGING = {
         'django.request': {
             'level': 'ERROR',
             'propagate': False,
-            'handlers': ['mail_admins', 'app_core'],
+            'handlers': ['app_core'],
         },
         'apparel.debug': {
             'level': 'DEBUG',
