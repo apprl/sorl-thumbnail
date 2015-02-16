@@ -4,6 +4,7 @@ import base64
 import datetime
 import uuid
 import requests
+from requests.exceptions import RequestException
 import dateutil.parser
 import time
 import logging
@@ -107,7 +108,7 @@ class Importer(BaseImporter):
 
                         yield data_row
 
-            except requests.exceptions.RequestException as e:
-                logger.warning("Zanox - Connection error %s"%e)
+            except RequestException as e:
+                logger.warning("Zanox - Connection error %s " % e)
             # Be kind to zanox servers
             time.sleep(1)
