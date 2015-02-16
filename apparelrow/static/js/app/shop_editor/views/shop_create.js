@@ -42,6 +42,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
 
         if (this.model.get('show_liked')) {
             $('#modal_embed_shop #id_name').parent().hide();
+            $('.body-header-col-right .btn-embed').click();
         }
         $('.body-header-col-right .btn-delete').parent().show();
         $('.body-header-col-right .btn-reset').parent().hide();
