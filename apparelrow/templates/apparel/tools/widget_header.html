@@ -29,13 +29,9 @@
             <li><button class="btn btn-delete" name="look_delete">{% trans "Delete" %}</button></li>
             <li><button class="btn btn-reset" name="look_reset">{% trans "Reset shop" %}</button></li>
         {% else %}
-            <li></li><a data-target="#modal_embed_product_widget" data-toggle="modal" data-slug="{{ object.pk }}" class="btn btn-primary btn-embed" href="#">Embed on your blog / site</a></li>
-            {% if object %}
+            <li><a data-target="#modal_embed_product_widget" data-toggle="modal" data-slug="{{ object.pk }}" class="btn btn-primary btn-success btn-embed" href="#">Customize & save</a></li>
             <li><button class="btn btn-delete" name="look_delete">{% trans "Delete" %}</button></li>
-            <li><button class="btn btn-save" name="look_save" data-save-draft-text="{% trans "Save draft" %}">{% trans 'Save & continue' %}</button></li>
-            {% else %}
             <li><button class="btn btn-reset" name="look_reset">{% trans "Reset widget" %}</button></li>
-            {% endif %}
         {% endif %}
 
         </ul>
