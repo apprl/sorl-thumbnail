@@ -762,7 +762,7 @@ LOGGING = {
         'django.request': {
             'level': 'ERROR',
             'propagate': False,
-            'handlers': ['mail_admins', 'app_core'],
+            'handlers': ['app_core'],
         },
         'apparel.debug': {
             'level': 'DEBUG',
