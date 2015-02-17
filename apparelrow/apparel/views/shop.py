@@ -178,10 +178,7 @@ class ShopCreateView(View):
         if json_data['published']:
             request.session['shop_saved'] = True
 
-        shop.published = json_data['published']
-
-        print shop.published
-        print shop.published
+        shop.published = True
 
         if json_data['components']:
 
@@ -259,6 +256,7 @@ class ShopCreateView(View):
         else:
             shop = get_model('apparel', 'Shop')(**json_data)
 
+        shop.published = True
         shop.show_liked = show_liked
         shop.save()
 
