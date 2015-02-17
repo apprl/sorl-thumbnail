@@ -46,7 +46,7 @@ App.Views.PopupDispatcher =  Backbone.View.extend({
         // TODO: ugly solution no/yes?
         dialog.delegateEvents();
         //this._center();
-
+        this.$overlay.css('height', $(document).height());
         if(hide_animation) {
             this.$overlay.show();
             this.$el.show();
