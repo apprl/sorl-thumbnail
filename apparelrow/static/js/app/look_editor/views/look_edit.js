@@ -69,10 +69,13 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
         $(window).on('resize onorientationchange', _.bind(this.update_sizes, this));
         App.Views.LookEdit.__super__.initialize(this);
-        $(window).trigger('resize');
-        if (external_look_type == 'collage') {
+
+        if (external_look_type == 'photo') {
             this.disable_footer();
+        } else {
+            this.init_footer();
         }
+        $(window).trigger('resize');
     },
 
     login_popup: function() {
@@ -345,7 +348,6 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
                     App.Events.trigger('lookedit:reposition', {x: adjustX, y: adjustY});
                 }
             }
-
         }
     },
 
