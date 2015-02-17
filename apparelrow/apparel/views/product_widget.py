@@ -323,7 +323,6 @@ def embed_product_widget(request, template='apparel/product_widget_embed.html', 
     response = render(request, 'apparel/product_widget_embed.html', {'object': product_widget_embed,
                                                            'components': components,
                                                            'width': str(width),
-                                                           'autoplay': int(product_widget_embed.autoplay),
                                                            'embed_id': embed_product_widget_id},)
 
     translation.deactivate()
