@@ -7,7 +7,6 @@ import os.path
 import string
 import urllib
 import decimal
-from decimal import Decimal,ROUND_HALF_UP
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
@@ -42,8 +41,6 @@ from apparelrow.apparel.forms import LookForm, LookComponentForm
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender, JSONResponse, JSONPResponse
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
-
-from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
 
 from apparelrow.activity_feed.views import user_feed
 
@@ -302,36 +299,7 @@ def product_detail(request, slug):
     except (TypeError, ValueError, AttributeError):
         sid = 0
 
-    product_vendors = product.vendors.all()
-    earning_cut = None
-    store_commission = 0
-
-    # products_vendor should contain just one vendor
-    for vendor in product_vendors:
-        stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
-        if len(stores) > 0:
-            store_commission = stores[0].commission_percentage
-        else:
-            stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
-            if len(stores) > 0:
-                commission_array = stores[0].commission.split("/")
-                standard_from = decimal.Decimal(commission_array[0])
-                standard_to = decimal.Decimal(commission_array[1])
-                sale = decimal.Decimal(commission_array[2])
-                vendorprod = get_model('apparel', 'VendorProduct').objects.filter(vendor=vendor, product=product)
-                if sale != '0' and product.default_vendor.locale_discount_price:
-                    store_commission = sale / 100
-                else:
-                    if standard_from == 0:
-                        standard_from = standard_to
-                    if standard_to == 0:
-                        standard_to = standard_from
-                    store_commission = (standard_from + standard_to)/(2*100)
-        if store_commission > 0:
-            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, vendor)
-            earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
-        else:
-            logging.warning('No commission percentage defined for the store %s'%(product_vendors[0]))
+    earning_cut = product.get_product_earning(request.user)
 
     return render_to_response(
         'apparel/product_detail.html',
@@ -353,7 +321,6 @@ def product_detail(request, slug):
             'earning_cut': earning_cut,
         }, context_instance=RequestContext(request),
     )
-
 
 def product_generate_short_link(request, slug):
     """

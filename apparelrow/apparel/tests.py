@@ -4,6 +4,9 @@ from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from django.test import TestCase
 from django.test.utils import override_settings
+from decimal import Decimal
+from django.conf import settings
+
 
 """ CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -87,3 +90,82 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/en/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
+
+
+class TestProductDetails(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+        self.product = product = get_model('apparel', 'Product').objects.create()
+
+        get_model('apparel', 'VendorProduct').objects.create(product=self.product, vendor=self.vendor)
+        get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=self.vendor,
+                                                           cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                           referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+
+    def test_product_details_aan_user_is_publisher(self):
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+        self.user.is_partner = True
+        self.user.partner_group = self.group
+        self.user.save()
+
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=self.vendor)
+
+        earning_product = self.product.get_product_earning(self.user)
+        self.assertAlmostEqual(earning_product,
+                               Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)*Decimal(store.commission_percentage),
+                               places=2)
+
+    def test_product_details_aan_user_is_not_publisher(self):
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=self.vendor)
+        earning_product = self.product.get_product_earning(self.user)
+        self.assertIsNone(earning_product)
+
+    def test_product_details_external_user_is_publisher(self):
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+        self.user.is_partner = True
+        self.user.partner_group = self.group
+        self.user.save()
+
+        get_model('dashboard', 'StoreCommission').objects.create(vendor=self.vendor,commission="6/10/0")
+
+        earning_product = self.product.get_product_earning(self.user)
+        self.assertAlmostEqual(earning_product,
+                               Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)*Decimal(0.08),
+                               places=2)
+
+
+    def test_product_details_external_user_is_not_publisher(self):
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+        get_model('dashboard', 'StoreCommission').objects.create(vendor=self.vendor,commission="6/10/0")
+
+        earning_product = self.product.get_product_earning(self.user)
+        self.assertIsNone(earning_product)
+
+    def test_product_details_user_is_not_publisher_no_commission(self):
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+
+        self.user.is_partner = True
+        self.user.save()
+
+        get_model('dashboard', 'StoreCommission').objects.create(vendor=self.vendor,commission="6/10/0")
+
+        earning_product = self.product.get_product_earning(self.user)
+        self.assertIsNone(earning_product)
+
