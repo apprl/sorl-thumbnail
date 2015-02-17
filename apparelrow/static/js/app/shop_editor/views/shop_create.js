@@ -60,6 +60,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                 self.model.components.add(component);
             }
         }
+        $(window).trigger('resize');
     },
     reset: function() {
         this.model.components.each(_.bind(function(model) {

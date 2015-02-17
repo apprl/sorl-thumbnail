@@ -69,6 +69,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
         $(window).on('resize onorientationchange', _.bind(this.update_sizes, this));
         App.Views.LookEdit.__super__.initialize(this);
+        $(window).trigger('resize');
         if (external_look_type == 'collage') {
             this.disable_footer();
         }

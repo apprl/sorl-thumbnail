@@ -11,6 +11,7 @@ App.Views.WidgetBase = Backbone.View.extend({
 
         App.Events.on('widget:product:add', this.hide_product_filter, this);
         this.disable_footer();
+
     },
 
     init_footer: function() {
