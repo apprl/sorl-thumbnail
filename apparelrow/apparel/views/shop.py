@@ -286,9 +286,9 @@ def shop_widget(request, shop_id=None):
 
 
     content = {}
-    content['width'] = int(request.POST.get('width', 100))
+    content['width'] = request.POST.get('width', 100)
     content['width_type'] = request.POST.get('width_type', '%')
-    content['height'] = int(request.POST.get('height', 600))
+    content['height'] = request.POST.get('height', 600)
     content['language'] = request.POST.get('language', 'sv')
     show_product_brand = bool(int(request.POST.get('show_product_brand', 1)))
     show_filters = bool(int(request.POST.get('show_filters', 1)))
@@ -297,10 +297,13 @@ def shop_widget(request, shop_id=None):
     if content['width_type'] == '%' and int(content['width']) > 100:
         content['width'] = 100
     elif content['width_type'] == 'px':
-        if content['width'] < 600:
+        if content['width'] < 600 or content['width'] == '':
             content['width'] = 600
         elif content['width'] > 1200:
             content['width'] = 1200
+
+    if content['height'] < 400 or content['height'] == '':
+        content['height'] = 400
 
     shop_embed = ShopEmbed(
         shop=shop,
