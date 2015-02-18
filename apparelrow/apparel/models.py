@@ -336,7 +336,8 @@ class Product(models.Model):
         """
         vendor = self.default_vendor.vendor
         earning_cut = None
-        if user.is_partner:
+        store_commission = 0
+        if hasattr(user,"is_partner") and user.is_partner:
             if user.partner_group and get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor):
                 if vendor:
                     stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
@@ -353,16 +354,18 @@ class Product(models.Model):
                             if sale != 0 and self.default_vendor.locale_discount_price:
                                 store_commission = sale / 100
                             else:
-                                if standard_from == 0:
-                                    standard_from = standard_to
-                                if standard_to == 0:
-                                    standard_to = standard_from
+                                standard_from = standard_to if not standard_from else standard_from
+                                standard_to = standard_from if not standard_to else standard_to
                                 store_commission = (standard_from + standard_to)/(2*100)
                     if store_commission > 0:
                         user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
                         earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
                     else:
                         logging.warning('No commission percentage defined for the store %s'%(vendor))
+                else:
+                    return None
+            else:
+                return None
         return earning_cut
 
     def save(self, *args, **kwargs):
