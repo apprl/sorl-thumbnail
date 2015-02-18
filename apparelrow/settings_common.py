@@ -97,11 +97,12 @@ MAX_MIN_CURRENCY = {
 
 VENDOR_LOCATION_MAPPING = {
     "Shirtonomy":["ALL","SE"],
-    "MQ":["NO","SE"],
+    "MQ":["SE"],
     "ALDO": ["US"],
     "ASOS": ["SE","NO","ALL"],
     "Eleven": ["SE","ALL"],
     "Elevenfiftynine": ["SE"],
+    "Filippa K": ["SE"],
     "JC": ["SE"],
     "Nelly":["SE"],
     "Nelly No":["NO"],
