@@ -52,7 +52,7 @@ class BioForm(forms.ModelForm):
 
 
 class EmailForm(forms.ModelForm):
-    email = forms.EmailField(label=_('New e-mail address'))
+    email = forms.EmailField(label=_('New e-mail address'), required=False)
 
     class Meta:
         model = get_user_model()
