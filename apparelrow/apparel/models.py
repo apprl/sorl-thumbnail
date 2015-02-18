@@ -36,6 +36,8 @@ from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 
+from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
+from decimal import Decimal, ROUND_HALF_UP
 
 PRODUCT_GENDERS = (
     ('W', 'Women',),
@@ -327,6 +329,41 @@ class Product(models.Model):
             c = c.parent
 
         return categories
+
+    def get_product_earning(self, user):
+        """
+        Calculates earnings percentage for the user based on the store and commission group
+        """
+        vendor = self.default_vendor.vendor
+        earning_cut = None
+        if user.is_partner:
+            if user.partner_group and get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor):
+                if vendor:
+                    stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
+                    if len(stores) > 0:
+                        store_commission = stores[0].commission_percentage
+                    else:
+                        stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
+
+                        if len(stores) > 0:
+                            commission_array = stores[0].commission.split("/")
+                            standard_from = Decimal(commission_array[0])
+                            standard_to = Decimal(commission_array[1])
+                            sale = Decimal(commission_array[2])
+                            if sale != 0 and self.default_vendor.locale_discount_price:
+                                store_commission = sale / 100
+                            else:
+                                if standard_from == 0:
+                                    standard_from = standard_to
+                                if standard_to == 0:
+                                    standard_to = standard_from
+                                store_commission = (standard_from + standard_to)/(2*100)
+                    if store_commission > 0:
+                        user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
+                        earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
+                    else:
+                        logging.warning('No commission percentage defined for the store %s'%(vendor))
+        return earning_cut
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -680,20 +717,20 @@ models.signals.post_delete.connect(invalidate_model_handler, sender=VendorProduc
 @receiver(pre_save, sender=VendorProduct, dispatch_uid='vendor_product_pre_save')
 def vendor_product_pre_save(sender, instance, **kwargs):
 
-    if hasattr(instance, 'previous_original_discount_price') and instance.original_discount_price and instance.original_discount_price > decimal.Decimal('0.0'):
+    if hasattr(instance, 'previous_original_discount_price') and instance.original_discount_price and instance.original_discount_price > Decimal('0.0'):
         price = discount_price = None
 
         # First discount observed
         if instance.previous_original_discount_price is None and instance.original_price is not None:
-            price = decimal.Decimal(instance.original_price)
-            discount_price = decimal.Decimal(instance.original_discount_price)
+            price = Decimal(instance.original_price)
+            discount_price = Decimal(instance.original_discount_price)
             first = True
 
         # Another discount observered if the change is larger than 10% of the
         # previous value
-        elif instance.previous_original_discount_price > decimal.Decimal('0.0') and instance.previous_original_discount_price > decimal.Decimal('1.1') * decimal.Decimal(instance.original_discount_price):
-            price = decimal.Decimal(instance.previous_original_discount_price)
-            discount_price = decimal.Decimal(instance.original_discount_price)
+        elif instance.previous_original_discount_price > Decimal('0.0') and instance.previous_original_discount_price > Decimal('1.1') * Decimal(instance.original_discount_price):
+            price = Decimal(instance.previous_original_discount_price)
+            discount_price = Decimal(instance.original_discount_price)
             first = False
 
         # Only process sale alerts if price and discount price is set and the
@@ -854,7 +891,7 @@ class Look(models.Model):
         Returns the total price of the given component, or default if none specified
         To get the price of all components, specify A
         """
-        total = decimal.Decimal('0.0')
+        total = Decimal('0.0')
         for component in self.display_components:
             if component.product.default_vendor:
                 if component.product.default_vendor.locale_discount_price:
