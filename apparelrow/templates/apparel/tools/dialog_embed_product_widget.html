@@ -51,18 +51,6 @@
                                 {% trans "Show prices and brands" %}
                             </label>
                         </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="show_filters" id="id_show_filters" value="1">
-                                {% trans "Show filters" %}
-                            </label>
-                        </div>
-                        <div class="checkbox filter-collapsed">
-                            <label>
-                                <input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1">
-                                {% trans "Show filters as collapsed" %}
-                            </label>
-                        </div>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">{% trans "Get embed code" %}</button>
@@ -103,16 +91,6 @@
 
         var widget_id = {{ external_product_widget_id }};
 
-        $('.filter-collapsed').hide();
-        $('#id_show_filters').on('click', function() {
-            if($(this).prop('checked')) {
-                $('.filter-collapsed').show();
-            } else {
-                $('.filter-collapsed').hide();
-                $('#id_show_filters_collapsed').prop('checked', '');
-            }
-        });
-
         $('.btn-save-exit').on('click', function(e) {
             e.preventDefault();
             App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val()});
@@ -147,9 +125,7 @@
                 width_type: width_type,
                 height: $('#id_height').val(),
                 language: $('#id_language').val(),
-                show_product_brand: $('#id_show_brand_price').is(':checked') ? 1 : 0,
-                show_filters: $('#id_show_filters').is(':checked') ? 1 : 0,
-                show_filters_collapsed: $('#id_show_filters_collapsed').is(':checked') ? 1 : 0
+                show_product_brand: $('#id_show_brand_price').is(':checked') ? 1 : 0
             };
 
 

@@ -23,25 +23,7 @@ jQuery(document).ready(function() {
     var childwidth;
     var index = 0;
     var running = false;
-    var doplay = true;
-
-    function sendHeight() {
-        if(parent && parent.postMessage && parentHost) {
-            var containerwidth = $('.slidecontainer').width();
-            childwidth = containerwidth/nrchildren;
-            $items.width(childwidth);
-            $ul.width($items.length * childwidth);
-            var maxheight = 0;
-            $ul.find('li img').each(function() {
-                maxheight = Math.max(maxheight, $(this).attr('height'));
-            });
-
-            if (maxheight) {
-                height = Math.ceil(containerwidth * maxheight/600/nrchildren);
-                parent.postMessage(height + "|" + embedId, parentHost);
-            }
-        }
-    }
+    nrchildren = 1;
 
     function slide(direction) {
         if (running) return;
@@ -76,7 +58,6 @@ jQuery(document).ready(function() {
     }
 
     $(window).on('resize', resize);
-    $(window).on('message', sendHeight).trigger('message');
 
     function trackEvent(category, action) {
         return function() {
