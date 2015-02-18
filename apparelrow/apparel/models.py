@@ -334,36 +334,34 @@ class Product(models.Model):
         """
         Calculates earnings percentage for the user based on the store and commission group
         """
-        vendor = self.default_vendor.vendor
+        vendor = self.default_vendor.vendor if self.default_vendor else None
+        if not vendor:
+            return None
         earning_cut = None
         store_commission = 0
         if hasattr(user,"is_partner") and user.is_partner:
             if user.partner_group and get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor):
-                if vendor:
-                    stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
-                    if len(stores) > 0:
-                        store_commission = stores[0].commission_percentage
-                    else:
-                        stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
-
-                        if len(stores) > 0:
-                            commission_array = stores[0].commission.split("/")
-                            standard_from = Decimal(commission_array[0])
-                            standard_to = Decimal(commission_array[1])
-                            sale = Decimal(commission_array[2])
-                            if sale != 0 and self.default_vendor.locale_discount_price:
-                                store_commission = sale / 100
-                            else:
-                                standard_from = standard_to if not standard_from else standard_from
-                                standard_to = standard_from if not standard_to else standard_to
-                                store_commission = (standard_from + standard_to)/(2*100)
-                    if store_commission > 0:
-                        user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
-                        earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
-                    else:
-                        logging.warning('No commission percentage defined for the store %s'%(vendor))
+                stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
+                if len(stores) > 0:
+                    store_commission = stores[0].commission_percentage
                 else:
-                    return None
+                    stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
+                    if len(stores) > 0:
+                        commission_array = stores[0].commission.split("/")
+                        standard_from = Decimal(commission_array[0])
+                        standard_to = Decimal(commission_array[1])
+                        sale = Decimal(commission_array[2])
+                        if sale != 0 and self.default_vendor.locale_discount_price:
+                            store_commission = sale / 100
+                        else:
+                            standard_from = standard_to if not standard_from else standard_from
+                            standard_to = standard_from if not standard_to else standard_to
+                            store_commission = (standard_from + standard_to)/(2*100)
+                if store_commission > 0:
+                    user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
+                    earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
+                else:
+                    logging.warning('No commission percentage defined for the store %s'%(vendor))
             else:
                 return None
         return earning_cut
