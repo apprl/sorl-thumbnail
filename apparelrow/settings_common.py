@@ -99,7 +99,7 @@ VENDOR_LOCATION_MAPPING = {
     "Shirtonomy":["ALL","SE"],
     "MQ":["NO","SE"],
     "ALDO": ["US"],
-    "ASOS": ["SE","ALL"],
+    "ASOS": ["SE","NO","ALL"],
     "Eleven": ["SE","ALL"],
     "Elevenfiftynine": ["SE"],
     "JC": ["SE"],
