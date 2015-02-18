@@ -1025,7 +1025,8 @@ def commissions(request):
         if request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) else request.session.get('location','ALL')
     vendors = []
     for data in settings.VENDOR_LOCATION_MAPPING:
-        if cookie_value in settings.VENDOR_LOCATION_MAPPING[data]:
+        location_array = settings.VENDOR_LOCATION_MAPPING[data]
+        if cookie_value in location_array or 'ALL' in location_array:
             vendors.append(data)
 
     stores = list(get_model('dashboard', 'StoreCommission').objects.filter(vendor__name__in=vendors).select_related('vendor').order_by('vendor__name'))
