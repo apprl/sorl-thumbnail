@@ -3,7 +3,7 @@ import xmltodict
 import decimal
 import dateutil.parser
 import logging
-
+from requests.exceptions import RequestException
 from apparelrow.dashboard.models import Sale
 from apparelrow.dashboard.importer.base import BaseImporter
 
@@ -72,5 +72,5 @@ class Importer(BaseImporter):
                             continue
 
                         yield data_row
-            except requests.exceptions.RequestException as e:
+            except RequestException as e:
                 logger.warning("CJ - Connection error %s"%e)

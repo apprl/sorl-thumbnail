@@ -49,11 +49,11 @@ class TestChromeExtension(TestCase):
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         get_model('apparel', 'DomainDeepLinking').objects.create(
             vendor=vendor,
-            domain='example.com',
+            domain='example.com/se',
             template='http://example.com/my-template'
         )
 
-        response = self.client.get('/backend/product/lookup/?key=something&domain=example.com')
+        response = self.client.get('/backend/product/lookup/?key=example.com/se/shoes?product=123&domain=example.com/se/shoes')
         json_content = json.loads(response.content)
 
         self.assertEqual(json_content['product_pk'], None)

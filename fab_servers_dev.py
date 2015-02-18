@@ -193,4 +193,4 @@ def prestaging_2():
     env.hosts = ['%(settings)s.apprl.com' % env]
     env.db_name = 'apparel_%s' % env.settings.replace("-","_")
     env.branch = "feat-product_widget"
-    env.collectstatic = False
+    env.collectstatic = True

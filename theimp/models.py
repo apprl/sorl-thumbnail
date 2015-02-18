@@ -103,6 +103,7 @@ class CategoryMapping(BaseModel):
     vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
     category = models.CharField(max_length=1024)
     mapped_category = TreeForeignKey('apparel.Category', null=True, blank=True)
+    products_counter = models.IntegerField(_("Number of Products"), default=0, null=False, blank= False)
 
     def __unicode__(self):
         if self.mapped_category:

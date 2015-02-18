@@ -98,10 +98,10 @@ class NetAPorterSpider(CSVFeedSpider, AffiliateMixin):
         item['gender'] = row.get('gender')
         item['colors'] = row.get('color')
         item['regular_price'] = row.get('retail-price')
-        item['discount_price'] = row.get('discount-price')
+        item['discount_price'] = row.get('discount-price') or row.get('retail-price')
         item['currency'] = row.get('currency')
         item['in_stock'] = True #Not working anymoreif row.get('availability', '').lower() == 'in stock' else False
-        item['stock'] = ''
+        item['stock'] = '10'
         item['image_urls'] = [row.get('image-url').replace("in_l","in_xl") if row.get('image-url',None) else '']
 
         return item

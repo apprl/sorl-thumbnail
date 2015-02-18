@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.db.models import Count
-from django.forms import Form, CharField, MultipleHiddenInput, ModelChoiceField, ModelMultipleChoiceField
+from django.forms import Form, CharField, MultipleHiddenInput, ModelChoiceField, ModelMultipleChoiceField, TextInput
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
@@ -115,6 +115,9 @@ admin.site.register(Product, ProductAdmin)
 
 class ShortStoreLinkAdmin(admin.ModelAdmin):
     list_display = ('vendor', 'template', 'link')
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':'200'})},
+    }
 
     def link(self, instance):
         current_site = Site.objects.get_current()
@@ -154,6 +157,9 @@ admin.site.register(ShortDomainLink, ShortDomainLinkAdmin)
 
 class DomainDeepLinkingAdmin(admin.ModelAdmin):
     list_display = ('vendor', 'domain', 'template')
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':'200'})},
+    }
 
 admin.site.register(DomainDeepLinking, DomainDeepLinkingAdmin)
 
