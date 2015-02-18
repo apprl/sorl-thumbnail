@@ -103,8 +103,8 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-sm-6">
-                    <a class="btn btn-primary" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
-                    <ul class="dropdown-menu">
+                    <a class="dropdown-toggle btn btn-primary" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
+                    <ul id="language-dropdown" class="dropdown-menu">
                         {% for location in LOCATION_LANGUAGE_MAPPING %}
                         <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
                         {% endfor %}
