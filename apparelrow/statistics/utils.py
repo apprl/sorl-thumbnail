@@ -41,5 +41,5 @@ def get_country_by_ip(request):
         code = code if code in ["SE","NO","US"] else "ALL"
         return code
     else:
-        log.warning('No country found for ip %s.' % get_client_ip(request))
+        log.info('No country found for ip %s.' % get_client_ip(request))
         return "ALL"
