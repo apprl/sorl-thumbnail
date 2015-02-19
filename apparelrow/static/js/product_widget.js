@@ -15,7 +15,6 @@ function getParameterByName(name) {
 }
 
 jQuery(document).ready(function() {
-
     var parentHost = getParameterByName('host');
 
     var $ul = $('ul');
@@ -23,8 +22,9 @@ jQuery(document).ready(function() {
     var childwidth;
     var index = 0;
     var running = false;
-    nrchildren = 1;
-
+    var ratio = 112/145;
+    var visiblechildren;
+    var doslide = true;
     function slide(direction) {
         if (running) return;
         running = true;
@@ -34,30 +34,74 @@ jQuery(document).ready(function() {
             $ul.css('left', ($ul.position().left - childwidth) + 'px');
             index = 0;
             $items = $ul.children('li');
-        } else if (index + nrchildren > $items.length) {
+        } else if (index + visiblechildren > $items.length) {
             $items.first().detach().appendTo($ul);
             $ul.css('left', ($ul.position().left + childwidth) + 'px');
             index -= 1;
             $items = $ul.children('li');
         }
-
+        running = false;
         $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { running = false; }});
     }
 
-    $('.previous').on('click', function() { slide(1); });
-    $('.next').on('click', function() { slide(-1); });
     var mc = new Hammer($('.slidecontainer')[0]);
-    mc.on('swipeleft swiperight', function(e) { slide(e.type == 'swipeleft' ? -1 : 1); });
+    mc.on('swipeleft swiperight', function(e) { if (!doslide) return; slide(e.type == 'swipeleft' ? -1 : 1); });
 
-    function resize() {
-        var containerwidth = $('.slidecontainer').width();
-        childwidth = containerwidth/nrchildren;
-        $ul.css('left', -1*index*childwidth);
-        $ul.children('li').width(childwidth);
-        $ul.width($items.length * childwidth);
+    function enableslide() {
+        $('.previous').on('click', function() { slide(1); });
+        $('.next').on('click', function() { slide(-1); }).parent().show();
+        doslide = true;
     }
 
+    function disableslide() {
+        $('.previous').off('click');
+        $('.next').off('click').parent().hide();
+        doslide = false;
+    }
+
+    function resize() {
+        var $window = $(window);
+        var $container = $('.slidecontainer');
+        childwidth;
+
+        if ($window.width()/$window.height() > ratio) {
+            var $refitem;
+            var maxheight = 0;
+            var $images = $('a.product img');
+            $images.each(function(item, i) {
+                if ($(this).attr('height') > maxheight) {
+                    maxheight = $(this).attr('height');
+                    $refitem = $(this);
+                }
+            });
+
+            childwidth = $refitem.attr('width')*$window.height()/maxheight;
+            $images.each(function(item, i) {
+                $(this).css({'vertical-align': 'middle', 'width': childwidth, height: $(this).attr('height')/$(this).attr('width')*childwidth});
+            });
+            $items.css({'line-height': $refitem.height()+'px'});
+        }
+
+        $ul.css('left', -1*index*childwidth);
+        $ul.width($items.length * childwidth);
+
+        if (nrchildren == 0) {
+            $container.width(childwidth);
+            visiblechildren = 1;
+        } else {
+            if (Math.floor($window.width()/childwidth) < $items.length) {
+                visiblechildren = Math.floor($window.width()/childwidth);
+                $container.width(visiblechildren*childwidth);
+            } else {
+                visiblechildren = $items.length;
+                $container.width($items.length*childwidth);
+                disableslide()
+            }
+        }
+    }
+    enableslide();
     $(window).on('resize', resize);
+    resize();
 
     function trackEvent(category, action) {
         return function() {
@@ -74,5 +118,5 @@ jQuery(document).ready(function() {
         }
     }
 
-    //$(document).on('click', 'body.look-embed a.btn-buy-external', trackEvent('Ext-Look', 'BuyReferral'));
+    $(document).on('click', 'body.product-widget-embed a.btn-buy-external', trackEvent('Ext-Look', 'BuyReferral'));
 });
