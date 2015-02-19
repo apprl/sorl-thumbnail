@@ -85,7 +85,7 @@ jQuery(document).ready(function() {
         $ul.css('left', -1*index*childwidth);
         $ul.width($items.length * childwidth);
 
-        if (nrchildren == 0) {
+        if (embed_type == 'single') {
             $container.width(childwidth);
             visiblechildren = 1;
         } else {

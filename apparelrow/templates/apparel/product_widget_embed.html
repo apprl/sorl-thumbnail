@@ -58,7 +58,7 @@
         <ul>
           {% for component in components %}
           <li>
-            {% thumbnail component.product_image "400" upscale="False" crop="noop" format="PNG" transparent=True as im %}
+            {% thumbnail component.product_image "300" upscale="False" crop="noop" format="PNG" transparent=True as im %}
             <a rel="nofollow" target="_blank" href="{% if component.default_vendor and component.default_vendor.availability != 0 %}{% buy_url component.id component.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid component.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.slug }}" data-vendor="{{ component.default_vendor.vendor }}" data-price="{{ component.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }};">
               <img src="{{ im.url }}" title="{{ component }}" width="{{ im.width }}" height="{{ im.height }}"/>
             </a>
@@ -71,6 +71,7 @@
     <script type="text/javascript">
         var nrchildren = 1;
         var embedId = '{{ embed_id }}';
+        var embed_type = '{{ object.product_widget.type }}';
     </script>
     {% compressed_js 'product_widget' %}
   </body>
