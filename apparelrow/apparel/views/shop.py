@@ -88,7 +88,8 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
         'likes': likes,
         'pricerange': {'min': 0, 'max': 10000},
         'external_shop_id': shop_id,
-        'object': shop
+        'object': shop,
+        'shops_url': request.user.url_shops
     })
 
 def shop_instance_to_dict(shop):

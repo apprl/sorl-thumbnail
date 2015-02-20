@@ -32,7 +32,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
 
         App.Views.ShopCreate.__super__.initialize(this);
         $('.body-header-col-right ul').hide();
-        this.resize();
+        $(window).trigger('resize');
     },
     init_products: function() {
         if (!this.model.attributes.id) {
@@ -184,7 +184,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         if (callback) {
             callback(this.model.get('id'));
         } else {
-            window.location.replace('/shop/edit/' + this.model.get('id'));
+            window.location.replace(external_shops_url);
         }
     }
 });
