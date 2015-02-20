@@ -1,6 +1,7 @@
 {% load i18n thumbnail thumbnail_extras apparel_extras buy_extras %}
 <div id="tooltip-{{ product.id }}" class="tooltip">
     <div class="tooltip-container">
+        <a class="close" href="#"></a>
         <a rel="nofollow" target="_blank" {% if product.default_vendor and product.default_vendor.availability != 0 %}href="{% buy_url product.id product.default_vendor owner.pk 'Ext-Look' %}" class="product-image btn-buy-external" data-sid="{% get_sid product.id owner.pk 'Ext-Look' %}" data-slug="{{ product.slug }}" data-vendor="{{ product.default_vendor.vendor }}" data-price="{{ product.default_vendor.lowest_price_in_sek|floatformat:0 }}"{% else %}href="{% internal_referral_url product.get_absolute_url owner.pk %}" class="product-image"{% endif %} title="{{ product }}">
             {% thumbnail product.product_image "90x115" crop=False as im %}
             <img src="{{ im.url }}" alt="{{ product.alt_text }}" width="{{ im.width }}" height="{{ im.height }}" style="margin:{{ im|positive_margin:'90x115' }}">

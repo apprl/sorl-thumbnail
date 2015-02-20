@@ -6,6 +6,8 @@ import datetime
 import os.path
 import string
 import urllib
+import urlparse
+import decimal
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
@@ -22,6 +24,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from django.views.generic.base import RedirectView
 from django.utils import translation, timezone
+from django.utils.encoding import smart_unicode, smart_str
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
 
@@ -297,6 +300,8 @@ def product_detail(request, slug):
     except (TypeError, ValueError, AttributeError):
         sid = 0
 
+    earning_cut = product.get_product_earning(request.user)
+
     return render_to_response(
         'apparel/product_detail.html',
         {
@@ -314,9 +319,9 @@ def product_detail(request, slug):
             'referral_sid': referral_sid,
             'alternative': alternative,
             'alternative_url': alternative_url,
+            'earning_cut': earning_cut,
         }, context_instance=RequestContext(request),
     )
-
 
 def product_generate_short_link(request, slug):
     """
@@ -517,6 +522,16 @@ def _product_like(request, product, action):
     if not created:
         product_like.active = default_active
         product_like.save()
+
+    if request.user.owner_network:
+        owner_user = request.user.owner_network
+        print owner_user.is_subscriber
+        if owner_user.is_subscriber:
+            product_like, created = ProductLike.objects.get_or_create(user=owner_user, product=product,
+                                                              defaults={'active': default_active})
+            if not created:
+                product_like.active = default_active
+                product_like.save()
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
 
@@ -756,14 +771,24 @@ def authenticated_backend(request):
     return JSONResponse({'authenticated': request.user and request.user.is_authenticated(), 'profile': profile})
 
 def product_lookup_by_domain(request, domain, key):
-    instance = get_object_or_404(get_model('apparel', 'DomainDeepLinking'), domain=domain)
+    model = get_model('apparel', 'DomainDeepLinking')
+    results = model.objects.extra(where=["%s LIKE domain||'%%'"], params=[domain])
+    if not results:
+        raise Http404
+
+    instance = results[0]
     if instance.template:
         user_id = request.user.pk
-        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=key), instance.vendor
+
+        key_split = urlparse.urlsplit(key)
+        ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
+        url = key
+
+        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
     return None, None
 
 def product_lookup_by_theimp(request, key):
-    products = get_model('theimp', 'Product').objects.filter(key__startswith=key)
+    products = get_model('theimp', 'Product').objects.extra(where=["%s LIKE key||'%%'"], params=[key])
     if len(products) < 1:
         return None
     json_data = json.loads(products[0].json)
@@ -773,18 +798,27 @@ def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
 
-    key = urllib.unquote(request.GET.get('key', '')).decode('utf8')
+    key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
     try:
-        product_pk = long(urllib.unquote(request.GET.get('pk', '')).decode('utf8'))
+        product_pk = long(smart_unicode(urllib.unquote(smart_str(request.GET.get('pk', '')))))
     except ValueError:
         product_pk = None
 
 
     if key and not product_pk:
         product_pk = product_lookup_by_theimp(request, key)
+        if not product_pk:
+            if key.startswith('https'):
+                key = key.replace('https', 'http')
+            elif key.startswith('http'):
+                temp = list(key)
+                temp.insert(4, 's')
+                key = ''.join(temp)
+
+            product_pk = product_lookup_by_theimp(request, key)
 
     # TODO: must go through theimp database right now to fetch site product by real url
-    #key = urllib.unquote(request.GET.get('key', '')).decode('utf8')
+    #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
     #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
 
     #json_data = json.loads(imported_product.json)
@@ -800,7 +834,7 @@ def product_lookup(request):
         product_short_link = request.build_absolute_uri(product_short_link)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
     else:
-        domain = urllib.unquote(request.GET.get('domain', '')).decode('utf8')
+        domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
         product_short_link, vendor = product_lookup_by_domain(request, domain, key)
         if product_short_link is not None:
             product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link, user=request.user, vendor=vendor)

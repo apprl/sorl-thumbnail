@@ -80,7 +80,7 @@ class BaseImporter:
         if 'user_id' in data and data['user_id']:
             logger.debug('Running calculate cut for user id: %s' % (data['user_id'],))
 
-            user, cut, referral_cut = get_cuts_for_user_and_vendor(data['user_id'], data['vendor'])
+            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(data['user_id'], data['vendor'])
 
             self.create_referral_sale(data, user, referral_cut)
 
@@ -96,20 +96,9 @@ class BaseImporter:
 
     def create_referral_sale(self, data, user, referral_cut):
         if user and user.is_referral_parent_valid():
-            temp_data = data.copy()
-
-            temp_data['original_sale_id'] = '%s-%s' % (temp_data['original_sale_id'], user.referral_partner_parent_id)
-            temp_data['is_referral_sale'] = True
-            temp_data['referral_user'] = user
-            temp_data['user_id'] = user.referral_partner_parent_id
-
-            temp_data['commission'] = referral_cut * decimal.Decimal(temp_data['commission'])
-            if temp_data['currency'] != temp_data['original_currency']:
-                temp_data['commission'] = temp_data['commission'] * decimal.Decimal('0.95')
-
-            instance, created = get_model('dashboard', 'Sale').objects.get_or_create(original_sale_id=temp_data['original_sale_id'], defaults=temp_data)
-            if created:
-                logger.debug('Created referral sale object: %s' % (instance,))
+            data['is_referral_sale'] = True
+            data['referral_user'] = user.referral_partner_parent
+            data['user_id'] = user.id
 
     def exchange_commission(self, data, instance):
         # Use saved exchange rate

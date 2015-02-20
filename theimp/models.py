@@ -54,6 +54,23 @@ class Vendor(BaseModel):
     def __repr__(self):
         return ('Vendor(%s)' % (self.name,)).encode('utf-8')
 
+    def to_json(self):
+        import simplejson
+        assigned_timezone = timezone.get_current_timezone()
+        fmt = '%Y-%m-%d %H:%M:%S %Z%z'
+        return simplejson.dumps({
+            "id":self.id,
+            "name":self.name,
+            "affiliate_identifier":self.affiliate_identifier,
+            "is_active":self.is_active,
+            "comment":self.comment,
+            "apprl_vendor":self.vendor.name if self.vendor else None,
+            "apprl_vendor_id":self.vendor_id,
+            "last_imported_date": assigned_timezone.localize(self.last_imported_date).strftime(fmt) if self.last_imported_date else None,
+            "created": assigned_timezone.localize(self.created).strftime(fmt) if self.created else None,
+            "modified": assigned_timezone.localize(self.modified).strftime(fmt) if self.modified else None,
+        })
+
     class Meta:
         ordering = ('name',)
 
@@ -69,17 +86,43 @@ class BrandMapping(BaseModel):
 
         return '%s: "%s" is unmapped' % (self.vendor_id, self.brand)
 
+    def to_json(self):
+        import simplejson
+        assigned_timezone = timezone.get_current_timezone()
+        fmt = '%Y-%m-%d %H:%M:%S %Z%z'
+        return simplejson.dumps({
+            "id":self.id,
+            "vendor_id":self.vendor_id,
+            "brand":self.brand,
+            "apparel_mapped_brand_id":self.mapped_brand_id,
+            "created": assigned_timezone.localize(self.created).strftime(fmt) if self.created else None,
+            "modified": assigned_timezone.localize(self.modified).strftime(fmt) if self.modified else None,
+        })
 
 class CategoryMapping(BaseModel):
     vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
     category = models.CharField(max_length=1024)
     mapped_category = TreeForeignKey('apparel.Category', null=True, blank=True)
+    products_counter = models.IntegerField(_("Number of Products"), default=0, null=False, blank= False)
 
     def __unicode__(self):
         if self.mapped_category:
             return '%s: "%s" mapped to "%s"' % (self.vendor_id, self.category, self.mapped_category)
 
         return '%s: "%s" is unmapped' % (self.vendor_id, self.category)
+
+    def to_json(self):
+        import simplejson
+        assigned_timezone = timezone.get_current_timezone()
+        fmt = '%Y-%m-%d %H:%M:%S %Z%z'
+        return simplejson.dumps({
+            "id":self.id,
+            "vendor_id":self.vendor_id,
+            "category":self.category,
+            "apparel_mapped_category_id":self.mapped_category_id,
+            "created": assigned_timezone.localize(self.created).strftime(fmt) if self.created else None,
+            "modified": assigned_timezone.localize(self.modified).strftime(fmt) if self.modified else None,
+        })
 
 
 MAPPING_CHOICES = (
@@ -99,3 +142,12 @@ class Mapping(models.Model):
 
     def __unicode__(self):
         return u'%s: %s' % (self.mapping_key, self.mapping_aliases)
+
+    def to_json(self):
+        import simplejson
+        return simplejson.dumps({
+            "id":self.id,
+            "mapping_type":self.mapping_type,
+            "mapping_key":self.mapping_key,
+            "mapping_aliases":self.mapping_aliases,
+        })

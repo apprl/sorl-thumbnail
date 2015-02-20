@@ -47,8 +47,7 @@ def pixel(request):
 
     if not store_id or not order_id or not order_value or not currency:
         email_body = render_to_string('advertiser/email_default_error.txt', locals())
-        mail_superusers('Advertiser Pixel Error: missing required parameters', email_body)
-
+        logger.warn('Advertiser Pixel Error: missing required parameters: %s' % email_body)
         return HttpResponseBadRequest('Missing required parameters.')
 
     # Verify that order_value is a decimal value
@@ -56,7 +55,7 @@ def pixel(request):
         order_value = decimal.Decimal(order_value)
     except Exception as e:
         email_body = render_to_string('advertiser/email_default_error.txt', locals())
-        mail_superusers('Advertiser Pixel Error: order value must be a number', email_body)
+        logger.warn('Advertiser Pixel Error: order value must be a number %s' % email_body)
 
         return HttpResponseBadRequest('Order value must be a number.')
 
@@ -122,7 +121,23 @@ def pixel(request):
         'custom': custom
     }
 
-    transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
+    created = False
+    transaction = None
+
+    # Handle exception when there is more than one transaction retrieved from the query
+    try:
+        transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
+    except Transaction.MultipleObjectsReturned, ex:
+        duplicates = Transaction.objects.filter(store_id=store_id, order_id=order_id)
+        logger.warning('Multiple transactions returned for store %s and order %s. Ids for duplicates are [%s].' % (store_id, order_id, ",".join(duplicates.values_list('id',flat=True))) )
+            # Return 1x1 transparent pixel
+        content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'
+        response = HttpResponse(content, mimetype='image/gif')
+        response['Cache-Control'] = 'no-cache'
+        response['Content-Length'] = len(content)
+        return response
+        #transaction = duplicates[0]
+
     if not created:
         for attr, val in defaults.items():
             if hasattr(transaction, attr):
@@ -147,14 +162,14 @@ def pixel(request):
         prices = product_price.split('^')
         if not (len(skus) == len(quantities) == len(prices)):
             email_body = render_to_string('advertiser/email_default_error.txt', locals())
-            mail_superusers('Advertiser Pixel Warning: length of every product parameter is not consistent', email_body)
+            logger.warn('Advertiser Pixel Warning: length of every product parameter is not consistent: %s' % email_body)
 
         try:
             prices = [decimal.Decimal(x) for x in prices if x]
             quantities = [int(x) for x in quantities if x]
         except Exception as e:
             email_body = render_to_string('advertiser/email_default_error.txt', locals())
-            mail_superusers('Advertiser Pixel Error: could not convert price or quantity', email_body)
+            logger.warn('Advertiser Pixel Error: could not convert price or quantity. %s' %  email_body)
         else:
             calculated_order_value = decimal.Decimal(sum([x*y for x, y in zip(quantities, prices)]))
             calculated_order_value = calculated_order_value.quantize(decimal.Decimal('0.01'))
@@ -172,7 +187,7 @@ def pixel(request):
 
     elif any(product_list) and not all(product_list):
         email_body = render_to_string('advertiser/email_default_error.txt', locals())
-        mail_superusers('Advertiser Pixel Error: missing one or more product parameters', email_body)
+        logger.warn('Advertiser Pixel Error: missing one or more product parameters: %s' % email_body)
 
     # Return 1x1 transparent pixel
     content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'

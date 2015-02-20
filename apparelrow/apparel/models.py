@@ -36,6 +36,8 @@ from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 
+from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
+from decimal import Decimal, ROUND_HALF_UP
 
 PRODUCT_GENDERS = (
     ('W', 'Women',),
@@ -328,6 +330,42 @@ class Product(models.Model):
 
         return categories
 
+    def get_product_earning(self, user):
+        """
+        Calculates earnings percentage for the user based on the store and commission group
+        """
+        vendor = self.default_vendor.vendor if self.default_vendor else None
+        if not vendor:
+            return None
+        earning_cut = None
+        store_commission = 0
+        if hasattr(user,"is_partner") and user.is_partner:
+            if user.partner_group and get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor):
+                stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
+                if len(stores) > 0:
+                    store_commission = stores[0].commission_percentage
+                else:
+                    stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
+                    if len(stores) > 0:
+                        commission_array = stores[0].commission.split("/")
+                        standard_from = Decimal(commission_array[0])
+                        standard_to = Decimal(commission_array[1])
+                        sale = Decimal(commission_array[2])
+                        if sale != 0 and self.default_vendor.locale_discount_price:
+                            store_commission = sale / 100
+                        else:
+                            standard_from = standard_to if not standard_from else standard_from
+                            standard_to = standard_from if not standard_to else standard_to
+                            store_commission = (standard_from + standard_to)/(2*100)
+                if store_commission > 0:
+                    user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
+                    earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
+                else:
+                    logging.warning('No commission percentage defined for the store %s'%(vendor))
+            else:
+                return None
+        return earning_cut
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.date_added = datetime.datetime.now()
@@ -450,8 +488,8 @@ class ShortStoreLink(models.Model):
 
 class DomainDeepLinking(models.Model):
     vendor = models.ForeignKey(Vendor)
-    domain = models.CharField(max_length=100, blank=False, null=False)
-    template = models.CharField(max_length=512, blank=False, null=False)
+    domain = models.CharField(max_length=100, blank=False, null=False, help_text='Should not contain http:// or https:// but can contain path, example: "nelly.com/se"')
+    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} or {ulp} together with {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?stoe_id=somestore&custom={sid}&url={url}')
 
 
 class ShortDomainLinkManager(models.Manager):
@@ -680,20 +718,20 @@ models.signals.post_delete.connect(invalidate_model_handler, sender=VendorProduc
 @receiver(pre_save, sender=VendorProduct, dispatch_uid='vendor_product_pre_save')
 def vendor_product_pre_save(sender, instance, **kwargs):
 
-    if hasattr(instance, 'previous_original_discount_price') and instance.original_discount_price and instance.original_discount_price > decimal.Decimal('0.0'):
+    if hasattr(instance, 'previous_original_discount_price') and instance.original_discount_price and instance.original_discount_price > Decimal('0.0'):
         price = discount_price = None
 
         # First discount observed
         if instance.previous_original_discount_price is None and instance.original_price is not None:
-            price = decimal.Decimal(instance.original_price)
-            discount_price = decimal.Decimal(instance.original_discount_price)
+            price = Decimal(instance.original_price)
+            discount_price = Decimal(instance.original_discount_price)
             first = True
 
         # Another discount observered if the change is larger than 10% of the
         # previous value
-        elif instance.previous_original_discount_price > decimal.Decimal('0.0') and instance.previous_original_discount_price > decimal.Decimal('1.1') * decimal.Decimal(instance.original_discount_price):
-            price = decimal.Decimal(instance.previous_original_discount_price)
-            discount_price = decimal.Decimal(instance.original_discount_price)
+        elif instance.previous_original_discount_price > Decimal('0.0') and instance.previous_original_discount_price > Decimal('1.1') * Decimal(instance.original_discount_price):
+            price = Decimal(instance.previous_original_discount_price)
+            discount_price = Decimal(instance.original_discount_price)
             first = False
 
         # Only process sale alerts if price and discount price is set and the
@@ -854,7 +892,7 @@ class Look(models.Model):
         Returns the total price of the given component, or default if none specified
         To get the price of all components, specify A
         """
-        total = decimal.Decimal('0.0')
+        total = Decimal('0.0')
         for component in self.display_components:
             if component.product.default_vendor:
                 if component.product.default_vendor.locale_discount_price:
@@ -979,6 +1017,7 @@ class LookEmbed(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='look_embeds')
     language = models.CharField(max_length=3, null=False, blank=False)
     width = models.IntegerField(null=False, blank=False)
+    width_type = models.CharField(max_length=2, null=False, blank=False, default='px')
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
 
     class Meta:
@@ -1111,23 +1150,12 @@ class LookComponent(models.Model):
             if height is None:
                 height = self.height
 
-            look_width = self.look.width
-            look_height = self.look.height
+            #s.append('width: %spx;' % (80,))
+            #s.append('height: %spx;' % (80,))
+            s.append('transform: translate(-50%, -50%); -webkit-transform: translate(-50%, -50%); -o-transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%);')
+            s.append('top: %s%%;' % ((self.top + self.height / 2) / float(self.look.height) * 100,))
+            s.append('left: %s%%;' % ((self.left + self.width/2) / float(self.look.width) * 100,))
 
-            if width < look_width:
-                look_width = width
-                look_height = height
-
-            canvas_width = self.width / float(look_width) * 100
-            canvas_height = self.height / float(look_height) * 100
-
-            real_width = self.width / float(width) * 100
-            real_height = self.height / float(height) * 100
-
-            s.append('width: %s%%;' % (real_width,))
-            s.append('height: %s%%;' % (real_height,))
-            s.append('top: %s%%;' % ((self.top / float(look_height) * 100) + canvas_height / 2 - real_height / 2,))
-            s.append('left: %s%%;' % ((self.left / float(look_width) * 100) + canvas_width / 2 - real_width / 2,))
         else:
             s.append('width: %s%%;' % (self.width / float(self.look.width) * 100,))
             s.append('height: %s%%;' % (self.height / float(self.look.height) * 100,))

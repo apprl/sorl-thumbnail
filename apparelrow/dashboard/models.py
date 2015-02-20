@@ -1,17 +1,23 @@
 import datetime
+import json
+import decimal
 
 from django.conf import settings
-from django.db import models
-from django.db.models.signals import pre_save
+from django.db import models, transaction
+from django.db.models import get_model
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
+from jsonfield import JSONField
+
 
 from apparelrow.apparel.base_62_converter import dehydrate
 import logging
 
 log = logging.getLogger( __name__ )
+
 
 class Sale(models.Model):
     """
@@ -40,7 +46,6 @@ class Sale(models.Model):
         (PAID_READY, 'Ready for payment'),
         (PAID_COMPLETE, 'Payment complete'),
     )
-
     original_sale_id = models.CharField(max_length=100)
     affiliate = models.CharField(max_length=100, null=False, blank=False)
     vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True, on_delete=models.PROTECT)
@@ -116,6 +121,10 @@ class Group(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='owner_group', help_text='Assign a group owner if publishers of this group will belong to an owner, for example a blog network.')
     owner_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
                                     help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
+    is_subscriber = models.BooleanField(default=False, null=False, blank=False)
+
+    class Meta:
+        verbose_name = 'Commission Group'
 
     def __unicode__(self):
         return u'%s' % (self.name,)
@@ -125,10 +134,15 @@ class Cut(models.Model):
     group = models.ForeignKey('dashboard.Group', null=False, blank=False, on_delete=models.PROTECT, related_name='cuts')
     vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, on_delete=models.CASCADE)
     cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_CUT_DEFAULT), max_digits=10, decimal_places=3,
-                              help_text='Between 1 and 0, default %s' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
+                              help_text='Between 1 and 0, default %s. Determines the percentage that goes to the Publisher (and possible Publisher Network owner, if applies)' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
     referral_cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
-                                       help_text='Between 1 and 0, default %s' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
-
+                                       help_text='Between 1 and 0, default %s. Determines the percentage that goes to the referral partner parent.' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
+    rules_exceptions = JSONField(null=True, blank=True,
+                                 help_text='Creates exceptions for Cuts using the following format: [{"sid": 1, "cut": '
+                                           '0.90, "tribute":0.50}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
+                                           'is the User id. Cut replaces the cut value for the user and the current cut'
+                                           ' and Tribute replaces the tribute value the user has to pay to the network '
+                                           'owner')
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
 
@@ -140,6 +154,8 @@ class Signup(models.Model):
     store = models.BooleanField(default=False)
     referral_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
+    traffic = models.CharField(_('Site traffic'), max_length=100, null=True, blank=True,
+                               help_text=_('Unique visitors / month'))
 
     def __unicode__(self):
         return '%s' % (self.name,)
@@ -157,14 +173,15 @@ class StoreCommission(models.Model):
         commission_array = commission.split("/")
         normal_cut = args[1]
         referral_cut = args[2]
+        publisher_cut = args[3]
 
         try:
             if not len(commission_array) == 3 or commission_array[0] == '0':
                 log.warn('Store commission %s is invalidly structured. Needs to be in the format [X/Y/Z] where X <> 0!' % self.vendor)
             else:
-                standard_from = (Decimal(commission_array[0])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
-                standard_to = (Decimal(commission_array[1])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
-                sale = (Decimal(commission_array[2])*normal_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                standard_from = (Decimal(commission_array[0])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                standard_to = (Decimal(commission_array[1])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                sale = (Decimal(commission_array[2])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
                 if standard_from == standard_to:
                     commission_array[1] = '0'
 
@@ -219,4 +236,176 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
             'status': Sale.CONFIRMED,
         }
 
-        instance, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
+        sale, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
+
+USER_EARNING_TYPES = (
+    ('apprl_commission', 'APPRL Earnings'),
+    ('referral_sale_commission', 'Referral Sale Earnings'),
+    ('referral_signup_commission', 'Referral Signup Earnings'),
+    ('publisher_sale_commission', 'Publisher Sale Earnings'),
+    ('publisher_network_tribute', 'Network Earnings'),
+)
+
+class UserEarning(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, blank=False, on_delete=models.PROTECT)
+    user_earning_type = models.CharField(max_length=100, null=False, blank=False, choices=USER_EARNING_TYPES)
+    sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
+    from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=False, on_delete=models.PROTECT)
+    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2)
+    date = models.DateTimeField(_('Payout Date'), default=timezone.now, null=True, blank=True)
+    status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, null=False, blank=False, db_index=True)
+    paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES, null=False, blank=False)
+
+@receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
+def sale_post_save(sender, instance, created, **kwargs):
+    if created:
+        create_earnings(instance)
+    else:
+        earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=instance)
+        if len(earnings) == 0:
+            create_earnings(instance)
+        else:
+            for earning in earnings:
+                earning.status = instance.status
+                earning.save()
+
+def create_earnings(instance):
+    with transaction.atomic():
+        if not instance.is_promo:
+            create_user_earnings(instance)
+            if instance.is_referral_sale:
+                create_referral_earning(instance)
+        else:
+            user = get_model('profile', 'User').objects.get(id=instance.user_id)
+            get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
+                sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
+
+def create_referral_earning(sale):
+    total_commission = sale.converted_commission
+    referral_user = sale.referral_user
+    user = get_model('profile', 'User').objects.get(id=sale.user_id)
+    commission_group = referral_user.partner_group
+    product = None
+
+    sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+
+    if not len(sale_product) == 0:
+        product = sale_product[0]
+
+    if commission_group:
+        commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+        referral_cut = commission_group_cut.referral_cut
+        if referral_cut:
+            referral_commission = total_commission * referral_cut
+            get_model('dashboard', 'UserEarning').objects.create(user=referral_user,
+                                                                 user_earning_type='referral_sale_commission',
+                                                                 sale=sale, from_product=product, from_user=user,
+                                                                 amount=referral_commission, date=sale.sale_date,
+                                                                 status=sale.status)
+        else:
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group, sale.vendor))
+    else:
+        logging.warning('User %s should have assigned a comission group'%user)
+
+def create_user_earnings(sale):
+    total_commission = sale.converted_commission
+    product = None
+
+    sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+    if not len(sale_product) == 0:
+        product = sale_product[0]
+
+    user = None
+    if sale.user_id:
+        try:
+            user = get_model('profile', 'User').objects.get(id=sale.user_id)
+        except get_model('profile', 'User').DoesNotExist:
+            logging.warning('Sale %s is connected to a User %s that does not exist.' % (sale.id,sale.user_id))
+            return
+
+        commission_group = user.partner_group
+
+        if commission_group:
+            try:
+                commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+            except Cut.DoesNotExist:
+                logging.warning('Cut matching query does not exist %s - %s' % (commission_group, sale.vendor))
+                return
+            cut = commission_group_cut.cut
+
+             # Handle exceptions for publisher cuts
+            try:
+                data_exceptions = commission_group_cut.rules_exceptions
+                for data in data_exceptions:
+                    if data['sid'] == user.id:
+                        cut = decimal.Decimal(data['cut'])
+            except:
+                logging.info("No exceptions for cuts defined for commission group %s and store %s"%(commission_group,
+                                                                                                    sale.vendor))
+            if cut:
+                try:
+                    publisher_commission = total_commission * cut
+                    apprl_commission = total_commission - publisher_commission
+
+                
+                    if user.owner_network:
+                        publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
+
+                    get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                                                                         from_product=product, from_user=user,
+                                                                         amount=apprl_commission, date=sale.sale_date,
+                                                                         status=sale.status)
+
+                    get_model('dashboard', 'UserEarning').objects.create( user=user,
+                                                                          user_earning_type='publisher_sale_commission',
+                                                                          sale=sale, from_product=product,
+                                                                          amount=publisher_commission, date=sale.sale_date,
+                                                                          status=sale.status)
+                except:
+                    logging.error("Error creating earnings within the publisher network")
+            else:
+                logging.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
+        else:
+            logging.warning('User %s should have assigned a comission group'%user)
+    else:
+        # The sale was generated from APPRL.com
+        get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                                                                     from_product=product, amount=total_commission,
+                                                                     date=sale.sale_date, status=sale.status)
+
+
+def create_earnings_publisher_network(user, publisher_commission, sale, product):
+    owner = user.owner_network
+    owner_tribute = owner.owner_network_cut
+    if owner_tribute > 1 or owner_tribute < 0:
+        logging.warning('Owner network cut must be a value between 0 and 1 for user %s'%(owner))
+        raise
+    commission_group_user = user.partner_group
+
+    if commission_group_user:
+        try:
+            commission_group_cut = Cut.objects.get(group=commission_group_user, vendor=sale.vendor)
+        except Cut.DoesNotExist:
+            logging.warning('Cut matching query does not exist %s - %s' % (commission_group_user, sale.vendor))
+            return
+
+         # Handle exceptions for owner cuts
+        try:
+            data_exceptions = commission_group_cut.rules_exceptions
+            for data in data_exceptions:
+                if data['sid'] == user.id:
+                    owner_tribute = decimal.Decimal(data['tribute'])
+        except:
+            pass
+
+    owner_earning = publisher_commission * owner_tribute
+    publisher_commission -= owner_earning
+
+    if owner.owner_network:
+        owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product)
+
+    get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type='publisher_network_tribute',
+                                                          sale=sale, from_product=product, from_user=user,
+                                                          amount=owner_earning, date=sale.sale_date, status=sale.status)
+    return publisher_commission

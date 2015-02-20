@@ -9,6 +9,9 @@ from django.core.urlresolvers import reverse, resolve
 from django.db.models import get_model
 from django.http import HttpResponseRedirect
 from django.utils import timezone, translation
+from localeurl import utils
+from apparelrow.apparel.utils import user_is_bot
+from apparelrow.statistics.utils import get_country_by_ip
 
 
 REFERRAL_COOKIE_NAME = 'aid_cookie'
@@ -21,8 +24,8 @@ class UpdateLocaleSessionMiddleware(object):
     def process_request(self, request):
         if request.path.startswith('/da/'):
             return HttpResponseRedirect(request.get_full_path().replace('/da/', '/en/'))
-        elif request.path.startswith('/no/'):
-            return HttpResponseRedirect(request.get_full_path().replace('/no/', '/en/'))
+        #elif request.path.startswith('/no/'):
+        #    return HttpResponseRedirect(request.get_full_path().replace('/no/', '/en/'))
 
         try:
             language = request.LANGUAGE_CODE
@@ -56,6 +59,39 @@ class GenderMiddleware(object):
 
         return response
 
+class LocationMiddleware(object):
+    """
+    Read market cookie and add it to request object
+    """
+    def process_request(self, request):
+        cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
+        if cookie_value:
+            request.session['location'] = cookie_value
+        elif not user_is_bot(request):
+            request.session['location'] = get_country_by_ip(request)
+        request.location = request.session.get('location','ALL')
+
+    def process_response(self, request, response):
+        if not request.session.get('location',None):
+            try:
+                # Depending on localeurl strip path method
+                location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
+                locale, path = utils.strip_path(request.path)
+                if locale:
+                    for location, location_text, lang in settings.LOCATION_LANGUAGE_MAPPING:
+                        if lang[0] == locale:
+                            location_choice = location
+                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
+            except:
+                pass
+        elif not request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None):
+            response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session.get('location'), max_age=45 * 24 * 60 * 60)
+        else:
+            cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
+            if not cookie_value == request.session.get('location'):
+                request.session['location'] = cookie_value
+
+        return response
 
 class InternalReferralMiddleware(object):
     def process_response(self, request, response):

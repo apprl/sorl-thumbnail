@@ -15,7 +15,8 @@ import datetime
 
 crawl_group = datetime.datetime.today().day % 2
 
+suspended_group = ['']
+
 for i, spider in enumerate(spiders):
-    if spider not in pending_spiders:
-        #if i % 2 == crawl_group:
+    if spider not in pending_spiders and spider not in suspended_group:
         result = requests.post(schedule, data={'project': 'spidercrawl', 'spider': spider})

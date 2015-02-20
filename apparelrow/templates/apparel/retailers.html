@@ -8,7 +8,10 @@
 </script>
 {% endblock %}
 
-{% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
+{% block extra-styles %}
+    {% compressed_css 'homepage' %}
+    {% compressed_css 'normalize' %}
+{% endblock extra-styles %}
 {% block body-classes %}store-index-page{% endblock %}
 {% block full-body %}
 
@@ -81,7 +84,7 @@
                                         <span sty>Tess Montgomery</span>
                                     </div>
                                     <div class="button">
-                                       <img src="{% static 'images/badges/Stureplan_badge_apprl_home.png' %}" />
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>
@@ -181,13 +184,6 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-12 text-center">
-            <a type="button" class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
-                {% trans "Shop their styles" %}
-            </a>
-        </div>
-    </div>
 </div>
 <!-- /retailers: Bloggers -->
 
@@ -195,18 +191,30 @@
     <div class="row">
         <div class="container">
             <div class="col-xs-12">
-                <div class="row apprl-brands apprl-featured">
+                <div class="row apprl-brands apprl-featured" style="margin-top:20px; margin-bottom:20px;">
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="{% static 'images/featured_logos/InternetWorld-logo-Apprl-home.png' %}"/>
+                        <img src="{% static 'images/publisher_logos/Elle-logo-Apprl-home.png' %}"/>
                     </div>
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="{% static 'images/featured_logos/DagensMedia-logo-Apprl-home.png' %}"/>
+                        <img src="{% static 'images/publisher_logos/Cafe-logo-Apprl-home.png' %}"/>
                     </div>
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="{% static 'images/featured_logos/Resume-logo-Apprl-home.png' %}"/>
+                        <img src="{% static 'images/publisher_logos/PR-logo-Apprl-home.png' %}"/>
                     </div>
                     <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
-                        <img src="{% static 'images/featured_logos/ComputerSweden-logo-Apprl-home.png' %}"/>
+                        <img src="{% static 'images/publisher_logos/Metro-Mode-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/Nojesguiden-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/TopModel-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/AllerMedia-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/publisher_logos/MTG-logo-Apprl-home.png' %}"/>
                     </div>
                 </div>
             </div>

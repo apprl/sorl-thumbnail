@@ -7,7 +7,10 @@
     $('.feed-item .featured-feed-item a').attr({'href': '#', 'data-target': '#modal_become_member', 'data-toggle': 'modal'});
 </script>
 {% endblock %}
-{% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
+{% block extra-styles %}
+    {% compressed_css 'homepage' %}
+    {% compressed_css 'normalize' %}
+{% endblock extra-styles %}
 {% block body-classes %}index frontpage{% endblock %}
 {% block full-body %}
 
@@ -94,7 +97,7 @@
                                         <span sty>Tess Montgomery</span>
                                     </div>
                                     <div class="button">
-                                       <img src="{% static 'images/badges/Stureplan_badge_apprl_home.png' %}" />
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
                                     </div>
                                 </div>
                             </div>

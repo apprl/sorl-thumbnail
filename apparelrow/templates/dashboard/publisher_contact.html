@@ -43,6 +43,13 @@
                                 {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
                             </div>
                         </div>
+                        <div class="form-group{% if form.traffic.errors %} has-error{% endif %}">
+                            <label for="id_{{ form.traffic.html_name }}" class="col-sm-2 control-label">{{ form.traffic.label }}</label>
+                            <div class="col-sm-6">
+                                <input name="{{ form.traffic.html_name }}" type="text" class="form-control" id="id_{{ form.traffic.html_name }}" value="{% if form.traffic.value %}{{ form.traffic.value }}{% endif %}" placeholder="{{ form.traffic.help_text }}">
+                                {% if form.traffic.errors %}<span class="help-block">{{ form.traffic.errors.as_text }}</span>{% endif %}
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-6">
                                 <button class="btn btn-primary btn-block btn-apply">{% trans "APPLY" %}</button>

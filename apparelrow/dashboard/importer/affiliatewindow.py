@@ -1,12 +1,15 @@
 from suds.client import Client
 from suds.xsd.doctor import ImportDoctor, Import
-import hashlib
-import math
-import datetime
 import dateutil.parser
+import logging
+import requests
+from requests.exceptions import RequestException
 
 from apparelrow.dashboard.models import Sale
 from apparelrow.dashboard.importer.base import BaseImporter
+
+logger = logging.getLogger('affiliate_networks')
+
 
 class Importer(BaseImporter):
     """
@@ -28,6 +31,7 @@ class Importer(BaseImporter):
         return Sale.PENDING
 
     def get_data(self, start_date, end_date):
+        logger.info("AffiliateWindow - Start importing from Affiliate Network")
         url = 'http://api.affiliatewindow.com/v4/AffiliateService?wsdl'
         imp = Import('http://schemas.xmlsoap.org/soap/encoding/')
         d = ImportDoctor(imp)
@@ -38,31 +42,35 @@ class Importer(BaseImporter):
         auth.sPassword = self.auth_password
         auth.sType = 'affiliate'
 
-        for start_date, end_date in self.generate_subdates(start_date, end_date, 30):
-            client.set_options(soapheaders=auth)
-            response = client.service.getTransactionList(sDateType='transaction',
-                                                         dStartDate=start_date.strftime('%Y-%m-%dT00:00:00'),
-                                                         dEndDate=end_date.strftime('%Y-%m-%dT23:59:59'))
+        try:
+            for start_date, end_date in self.generate_subdates(start_date, end_date, 30):
+                client.set_options(soapheaders=auth)
+                response = client.service.getTransactionList(sDateType='transaction',
+                                                             dStartDate=start_date.strftime('%Y-%m-%dT00:00:00'),
+                                                             dEndDate=end_date.strftime('%Y-%m-%dT23:59:59'))
+                logger.debug("AffiliateWindow - Request sent successfully with status code %s"%(response.status_code))
 
-            response_count = response.getTransactionListCountReturn
-            if response_count.iRowsReturned > 0:
-                for row in response.getTransactionListReturn.Transaction:
-                    data_row = {}
-                    merchants = client.factory.create('ArrayOfMerchant')
-                    merchants.item = [row.iMerchantId[0]]
-                    merchant_response = client.service.getMerchant(aMerchantIds=merchants)
-                    data_row['original_sale_id'] = row.iId[0]
-                    data_row['affiliate'] = self.name
-                    _, data_row['vendor'] = self.map_vendor(merchant_response.Merchant[0].sName[0])
-                    data_row['original_commission'] = row.mCommissionAmount[0].dAmount[0]
-                    data_row['original_currency'] = row.mCommissionAmount[0].sCurrency[0]
-                    data_row['original_amount'] = row.mSaleAmount[0].dAmount[0]
-                    data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row.sClickref[0])
-                    data_row['status'] = self.map_status(row.sStatus[0])
-                    data_row['sale_date'] = dateutil.parser.parse(row.dTransactionDate[0])
+                response_count = response.getTransactionListCountReturn
+                if response_count.iRowsReturned > 0:
+                    for row in response.getTransactionListReturn.Transaction:
+                        data_row = {}
+                        merchants = client.factory.create('ArrayOfMerchant')
+                        merchants.item = [row.iMerchantId[0]]
+                        merchant_response = client.service.getMerchant(aMerchantIds=merchants)
+                        data_row['original_sale_id'] = row.iId[0]
+                        data_row['affiliate'] = self.name
+                        _, data_row['vendor'] = self.map_vendor(merchant_response.Merchant[0].sName[0])
+                        data_row['original_commission'] = row.mCommissionAmount[0].dAmount[0]
+                        data_row['original_currency'] = row.mCommissionAmount[0].sCurrency[0]
+                        data_row['original_amount'] = row.mSaleAmount[0].dAmount[0]
+                        data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row.sClickref[0])
+                        data_row['status'] = self.map_status(row.sStatus[0])
+                        data_row['sale_date'] = dateutil.parser.parse(row.dTransactionDate[0])
 
-                    data_row = self.validate(data_row)
-                    if not data_row:
-                        continue
+                        data_row = self.validate(data_row)
+                        if not data_row:
+                            continue
 
-                    yield data_row
+                        yield data_row
+        except RequestException as e:
+            logger.warning("AffiliateWindow - Connection error %s"%e)

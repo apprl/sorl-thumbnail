@@ -1,0 +1,74 @@
+#photo-markers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  .hotspot {
+    background-image: url('../images/look-hotspot.png');
+    position: absolute;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background-size: contain;
+    width: 80px;
+    height: 80px;
+    @media (max-width: 480px) {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+.container {
+  position: static;
+}
+
+html.look-type-C {
+  height: 100%;
+
+  body, .container, .collage {
+    height: 100%;
+  }
+
+  .container, .collage {
+    box-sizing: border-box;
+  }
+}
+html.look-type-C, html.look-type-P {
+  // Fix for really small screens...
+  @media (max-width: 320px) {
+    .container .tooltip {
+      width: 240px;
+      .tooltip-arrow {
+        display: none;
+      }
+      .tooltip-container {
+        width: 220px;
+        .product-meta {
+          width: 120px;
+          .vendor_button {
+            width: 120px;
+            .alternative {
+              font-size: 9px;
+            }
+          }
+          h2 {
+            margin-top: 5px;
+          }
+        }
+      }
+      .close {
+        background-image: url('../images/cross.png');
+        background-size: contain;
+        width: 18px;
+        height: 18px;
+        display: block;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+      }
+    }
+  }
+}

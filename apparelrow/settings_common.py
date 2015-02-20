@@ -63,9 +63,12 @@ LANGUAGES = (
     ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
 )
+
+# These languages get static templates in solr
 LANGUAGES_DISPLAY = (
     ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
+    ('no', gettext(u'Norwegian (NOK)')),
 )
 SHORT_LANGUAGES = (
     ('en', gettext(u'Eng ($)')),
@@ -76,8 +79,9 @@ SHORT_LANGUAGES = (
 SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
+    ('no', gettext(u'Nor (NOK)')),
 )
-SHORT_LANGUAGES_LIST_DISPLAY = ('en', 'sv')
+SHORT_LANGUAGES_LIST_DISPLAY = ('en','sv','no')
 LANGUAGE_TO_CURRENCY = {
     'en': 'USD',
     'sv': 'SEK',
@@ -90,6 +94,32 @@ MAX_MIN_CURRENCY = {
     'da': 10000,
     'no': 10000,
 }
+
+VENDOR_LOCATION_MAPPING = {
+    "Shirtonomy":["ALL","SE"],
+    "MQ":["SE"],
+    "ALDO": ["US"],
+    "ASOS": ["SE","NO","ALL"],
+    "Eleven": ["SE","ALL"],
+    "Elevenfiftynine": ["SE"],
+    "Filippa K": ["SE"],
+    "JC": ["SE"],
+    "Nelly":["SE"],
+    "Nelly No":["NO"],
+    "Panos Emporio":["SE"],
+    "Boozt se":["SE"],
+    "Boozt no":["NO"],
+    "ASOS no":["NO"],
+    "QVC":["US"],
+    "default":["ALL","SE","NO","US"],
+}
+
+LOCATION_LANGUAGE_MAPPING = (
+                             ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
+                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[2]),
+                             ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
+                             ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
+)
 
 # Locale url plugin
 LOCALEURL_USE_ACCEPT_LANGUAGE = True
@@ -140,8 +170,8 @@ STATICFILES_FINDERS = (
 
 # Django-storages
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
-AWS_SECRET_ACCESS_KEY = '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'
+#AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
+#AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
 AWS_HEADERS = {
         'Expires': 'Sat, Nov 01 2015 20:00:00 GMT',
@@ -194,6 +224,8 @@ MIDDLEWARE_CLASSES = (
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
     'apparelrow.apparel.middleware.GenderMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
+    'apparelrow.apparel.middleware.LocationMiddleware',
     'apparelrow.dashboard.middleware.ReferralMiddleware',
 )
 
@@ -235,6 +267,7 @@ INSTALLED_APPS = (
     'djrill',
     'crispy_forms',
     'localeurl',
+    'jsonfield',
 
     # Internal
     'theimp',
@@ -247,7 +280,8 @@ INSTALLED_APPS = (
     'apparelrow.activity_feed',
     'apparelrow.scheduledjobs',
     'rosetta',
-    'raven.contrib.django.raven_compat'
+    'raven.contrib.django.raven_compat',
+    'django_user_agents'
 )
 
 # - STATIC SITEMAP -
@@ -267,7 +301,6 @@ PIPELINE_CSS = {
     'bootstrap': {
         'source_filenames': (
             'less/base.less',
-            'less/normalize.css',
             'js/vendor/add2home.css',
         ),
         'output_filename': 'css/ender.css',
@@ -279,7 +312,16 @@ PIPELINE_CSS = {
         'source_filenames': (
             'less/home.less',
         ),
-    'output_filename': 'css/home.css',
+        'output_filename': 'css/home.css',
+        'extra_context': {
+            'media': 'screen,projection',
+            }
+    },
+    'normalize': {
+        'source_filenames': (
+            'less/normalize.css',
+        ),
+        'output_filename': 'css/normalize.css',
         'extra_context': {
             'media': 'screen,projection',
             }
@@ -315,6 +357,7 @@ PIPELINE_JS = {
                              'js/vendor/jquery-ui-1.9.2.custom.js',
                              'js/vendor/add2home.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
+                             'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
                              'bootstrap/js/transition.js',
                              'bootstrap/js/alert.js',
@@ -490,13 +533,14 @@ SOLR_RELOAD_URL = 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=col
 # DASHBOARD
 APPAREL_DASHBOARD_CUT_DEFAULT = '0.67'
 APPAREL_DASHBOARD_MINIMUM_PAYOUT = 50 # EUR
-APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT = '0.33'
+APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT = '0.15'
 APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME = 'referral_cookie'
 APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '20'
 
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MULTI_GENDER_COOKIE = 'multigender'
+APPAREL_LOCATION_COOKIE = 'location'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
@@ -665,11 +709,11 @@ LOGGING = {
             'maxBytes': 8000000,
             'backupCount': 10
         },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
+        #'mail_admins': {
+        #    'level': 'ERROR',
+        #    'filters': ['require_debug_false'],
+        #    'class': 'django.utils.log.AdminEmailHandler',
+        #},
         'dashboard': {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -685,6 +729,14 @@ LOGGING = {
             'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'theimp.log'),
             'maxBytes': 50000000,
             'backupCount': 10,
+        },
+        'affiliate_networks': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
+            'formatter': 'simple',
+            'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'affiliate_networks.log'),
+            'backupCount': 30,
         },
     },
     'loggers': {
@@ -711,7 +763,7 @@ LOGGING = {
         'django.request': {
             'level': 'ERROR',
             'propagate': False,
-            'handlers': ['mail_admins', 'app_core'],
+            'handlers': ['app_core'],
         },
         'apparel.debug': {
             'level': 'DEBUG',
@@ -738,5 +790,14 @@ LOGGING = {
             'propagate': True,
             'handlers': ['theimp'],
         },
+        'affiliate_networks': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'handlers': ['affiliate_networks'],
+        }
     }
 }
+
+GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
+
+
