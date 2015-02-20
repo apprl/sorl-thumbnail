@@ -196,11 +196,16 @@
 
                 <ul class="nav navbar-nav navbar-nav-language visible-xs">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                         <ul id="language-dropdown" class="dropdown-menu">
+                            {% for location in LOCATION_LANGUAGE_MAPPING %}
+                                <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
+                            {% endfor %}
+                            {% comment %}
                             {% for language in LANGUAGES_DISPLAY %}
                             <li><a data-language="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">{% trans language.1 %}</a></li>
                             {% endfor %}
+                            {% endcomment %}
                         </ul>
                     </li>
                 </ul>
@@ -229,12 +234,17 @@
                 <div class="col-md-4">
                     <div class="row">
                         <ul class="list-unstyled col-xs-6">
-                            <li><h4>{% trans "Language" %}</h4></li>
+                            <li><h4>{% trans "Your Location" %}</h4></li>
                             <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_language_text LANGUAGE_CODE %} <b class="caret"></b></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                                 <ul id="language-dropdown" class="dropdown-menu">
+                                    {% comment %}
                                     {% for language in LANGUAGES_DISPLAY %}
                                     <li><a data-language="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">{% trans language.1 %}</a></li>
+                                    {% endfor %}
+                                    {% endcomment %}
+                                    {% for location in LOCATION_LANGUAGE_MAPPING %}
+                                    <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
                                     {% endfor %}
                                 </ul>
                             </li>
@@ -301,9 +311,11 @@
     {% include 'apparel/fragments/dialog_follow_user.html' with request=request csrf_token=csrf_token next=next only %}
     {% include 'apparel/fragments/dialog_become_member.html' with request=request csrf_token=csrf_token next=next only %}
     {% include 'apparel/fragments/dialog_contest_rules.html' with request=request LANGUAGES=LANGUAGES only %}
+    <div class="modal fade" id="modal_embed_look" tabindex="-1"></div>
     {% if request.user.is_authenticated %}
     <div class="modal fade" id="modal_embed_look" tabindex="-1"></div>
     <div class="modal fade" id="modal_embed_shop" tabindex="-1"></div>
+
     <script type="text/html" id="user_like_template">
         <li data-user-id="{{ request.user.pk }}"><a href="{{ request.user.get_absolute_url }}" title="{{ request.user.display_name }}"><img class="img-circle" alt="{{ request.user.display_name }}" title="{{ request.user.display_name }}" src="{{ request.user.avatar }}"></a></li>
     </script>
@@ -336,6 +348,14 @@
       $element.text(formatNumber(converted_price) + ' ' + current_currency);
   });
 }
+
+  $('#language-dropdown > li > a').click(function(event){
+      var $this = $(this);
+      var location = $this.data("location");
+      $.removeCookie('location');
+      $.cookie('location', location, { expires: 60, path: '/' });
+  } );
+
 </script>
 
 {% include 'mouseflow.html' only %}

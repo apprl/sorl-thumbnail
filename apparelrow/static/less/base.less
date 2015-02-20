@@ -209,6 +209,10 @@ a {
     };
 }
 
+.sortable th {
+    cursor: pointer;
+}
+
 /*
 .facepile-container {
     &.ar-facepile {
@@ -961,7 +965,7 @@ body:not(.authenticated) .featured-container .feed-item .panel-body .hover { dis
 // ----------------------------------------------------------------------------
 
 footer {
-    padding: 20px 0;
+    padding: 20px 0 60px 0;
     background-color: @footer_bg_color;
     h4 {
         font-size: 14px;
@@ -1474,6 +1478,24 @@ body.shop, body.profile-likes {
         margin-top: 10px;
         margin-bottom: 10px;
     }
+}
+
+
+//
+// Dashboard
+// ----------------------------------------------------------------------------
+
+.date-dropdown {
+  font-size: 16px; // At least nav-bar font size
+}
+
+.nopadding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.full_modal {
+  width: 90%;
 }
 
 //

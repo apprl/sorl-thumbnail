@@ -55,7 +55,7 @@ def pixel(request):
         order_value = decimal.Decimal(order_value)
     except Exception as e:
         email_body = render_to_string('advertiser/email_default_error.txt', locals())
-        mail_superusers('Advertiser Pixel Error: order value must be a number', email_body)
+        logger.warn('Advertiser Pixel Error: order value must be a number %s' % email_body)
 
         return HttpResponseBadRequest('Order value must be a number.')
 
@@ -121,7 +121,23 @@ def pixel(request):
         'custom': custom
     }
 
-    transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
+    created = False
+    transaction = None
+
+    # Handle exception when there is more than one transaction retrieved from the query
+    try:
+        transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
+    except Transaction.MultipleObjectsReturned, ex:
+        duplicates = Transaction.objects.filter(store_id=store_id, order_id=order_id)
+        logger.warning('Multiple transactions returned for store %s and order %s. Ids for duplicates are [%s].' % (store_id, order_id, ",".join(duplicates.values_list('id',flat=True))) )
+            # Return 1x1 transparent pixel
+        content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'
+        response = HttpResponse(content, mimetype='image/gif')
+        response['Cache-Control'] = 'no-cache'
+        response['Content-Length'] = len(content)
+        return response
+        #transaction = duplicates[0]
+
     if not created:
         for attr, val in defaults.items():
             if hasattr(transaction, attr):

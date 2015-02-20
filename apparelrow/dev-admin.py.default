@@ -97,3 +97,5 @@ if EMAIL_DEBUG:
 
 
 ALLOWED_HOSTS = ['{{ hostname }}s.apprl.com',]
+
+GEOIP_URL = 'http://localhost:4999/ip/%s'

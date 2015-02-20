@@ -106,7 +106,7 @@ function run(response) {
     var hostname = '';
     var url = new URL(tabs[0].url)
     if (url) {
-      hostname = url.hostname;
+      hostname = url.hostname + url.pathname;
     }
 
     fetchProduct(tabs[0].url, hostname, function(response) {

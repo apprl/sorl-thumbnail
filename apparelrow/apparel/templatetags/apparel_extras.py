@@ -1,5 +1,6 @@
 import logging
 import json
+import decimal
 from pprint import pformat
 
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
@@ -351,6 +352,16 @@ def get_language_text(language_code):
     return settings.SHORT_LANGUAGES_DISPLAY[0][1]
 
 @register.simple_tag
+def get_location_text(location_code):
+
+    for location, location_text, lang in settings.LOCATION_LANGUAGE_MAPPING:
+        if location == location_code:
+            return location_text
+    # Todo needs some additional work when properly redone, sets default to ALL / International if no value.
+    return settings.LOCATION_LANGUAGE_MAPPING[3][1]
+
+
+@register.simple_tag
 def selected_url(request, *args):
     path = request.path[3:]
     for pattern in args:
@@ -421,3 +432,8 @@ def internal_referral_url(url, sid):
 @register.simple_tag
 def look_component_style(component, width, height):
     return component.style_percentage(width, height)
+
+@register.simple_tag
+def multiply(value, arg):
+    result = int(value)*arg
+    return "%s" % (format(result, '.2f'))

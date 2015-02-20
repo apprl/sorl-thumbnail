@@ -2,7 +2,8 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.core import urlresolvers
 
-from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission
+from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning
+from apparelrow.dashboard.forms import CutAdminForm
 
 class SaleAdmin(admin.ModelAdmin):
     list_display = ('id', 'affiliate', 'vendor', 'status', 'user_id', 'product_id', 'placement', 'cut', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')
@@ -27,7 +28,7 @@ class PaymentAdmin(admin.ModelAdmin):
 
     def mark_as_paid(self, request, queryset):
         for payment in queryset.filter(cancelled=False):
-            Sale.objects.filter(user_id=payment.user.pk, paid=Sale.PAID_READY).update(paid=Sale.PAID_COMPLETE)
+            UserEarning.objects.filter(user=payment.user, paid=Sale.PAID_READY).update(paid=Sale.PAID_COMPLETE)
             payment.paid = True
             payment.save()
 
@@ -41,15 +42,20 @@ class PaymentAdmin(admin.ModelAdmin):
 admin.site.register(Payment, PaymentAdmin)
 
 class CutAdmin(admin.ModelAdmin):
+    form = CutAdminForm
     list_display = ('group', 'vendor', 'cut')
     list_filter = ('group',)
 
 admin.site.register(Cut, CutAdmin)
 
-admin.site.register(Group)
+
+class GroupAdmin(admin.ModelAdmin):
+    exclude = ('owner', 'owner_cut', 'is_subscriber')
+
+admin.site.register(Group, GroupAdmin)
 
 class SignupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'blog', 'store', 'referral_user', 'created')
+    list_display = ('name', 'email', 'blog', 'traffic', 'store', 'referral_user', 'created')
     raw_id_fields = ('referral_user',)
 
 admin.site.register(Signup, SignupAdmin)
@@ -59,3 +65,10 @@ class StoreCommissionAdmin(admin.ModelAdmin):
     list_display = ('vendor', 'commission', 'link')
 
 admin.site.register(StoreCommission, StoreCommissionAdmin)
+
+
+class UserEarningAdmin(admin.ModelAdmin):
+    list_display = ('id',   'user', 'user_earning_type', 'from_product', 'from_user', 'amount', 'date', 'status', 'paid')
+    search_fields = ('user__name', 'user_earning_type', 'status', 'paid')
+
+admin.site.register(UserEarning, UserEarningAdmin)

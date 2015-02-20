@@ -456,3 +456,7 @@ class JSONPResponse(HttpResponse):
             callback = 'callback'
 
         super(JSONPResponse, self).__init__('%s(%s)' % (callback, json.dumps(obj, cls=CustomEncoder, **json_opts)), mimetype, *args, **kwargs)
+
+
+def user_is_bot(request):
+    return request.user_agent.is_bot or "ELB" in request.user_agent.ua_string

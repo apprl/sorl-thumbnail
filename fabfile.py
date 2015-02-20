@@ -102,7 +102,10 @@ def deploy_app():
         last_commit = "git rev-parse HEAD" if git else "hg id -i"
         run("%s > last.commit" % last_commit)
         with update_changed_requirements():
-            run("git pull origin master -f")
+            if hasattr(env,"branch") and env.branch:
+                run("git checkout %(branch)s;git pull origin %(branch)s" % env)
+            else:
+                run("git checkout master;git pull origin master -f")
         # Todo reactivate this
         if not "dev" in env.settings and env.collectstatic:
             manage("collectstatic --noinput")

@@ -1,21 +1,15 @@
-import re
-import math
-import os.path
 import decimal
 import json
+import logging
 
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.shortcuts import render
-from django.db.models import Max
-from django.db.models import Min
 from django.db.models.loading import get_model
 from django.template import RequestContext
 from django.template import loader
 from django.core.cache import get_cache
-from django.core.paginator import Paginator
-from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
 from django.core.urlresolvers import reverse
 from django.utils import translation
@@ -24,14 +18,13 @@ from django.contrib.auth.decorators import login_required
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
 from apparelrow.apparel.search import ApparelSearch
-from apparelrow.apparel.models import Product
 from apparelrow.apparel.models import Brand
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
 
-from apparelrow.profile.models import Follow
+logger = logging.getLogger('apparel.debug')
 
 BROWSE_PAGE_SIZE = 30
 
@@ -193,6 +186,8 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
                 query_arguments['fq'].append(generate_gender_field(dict(gender=user_gender)))
         else:
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
+            # Todo! This should be moved to all places where "likes" are not included
+            query_arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
 
     # Query string
     query_string = request.GET.get('q')
@@ -301,8 +296,11 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     # Update selected
     selected_colors = request.GET.get('color', None)
     if selected_colors:
-        selected_colors = map(int, selected_colors.split(','))
-
+        try:
+            selected_colors = map(int, selected_colors.split(','))
+        except ValueError:
+            selected_colors = ''
+            logger.warning("Trying to access with wrong URL parameters for Embed Shop")
     selected_patterns = request.GET.get('pattern', None)
     if selected_patterns:
         selected_patterns = map(int, selected_patterns.split(','))

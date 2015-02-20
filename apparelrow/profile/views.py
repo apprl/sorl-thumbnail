@@ -4,8 +4,8 @@ import urlparse
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
-from django.template import Context, Template
-from django.shortcuts import render, get_object_or_404
+from django.template import Context, Template, RequestContext
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib import messages
 from django.contrib import auth
@@ -335,14 +335,20 @@ def settings_publisher(request):
 
     if request.method == 'POST':
         form = PartnerSettingsForm(request.POST, request.FILES, instance=request.user)
+        details_form = PartnerPaymentDetailForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             form.save()
+        else:
+            return render_to_response('profile/settings_publisher.html', {'form': form, 'form': form, 'details_form': details_form }, context_instance=RequestContext(request))
 
-        details_form = PartnerPaymentDetailForm(request.POST, request.FILES, instance=instance)
+
         if details_form.is_valid():
             instance = details_form.save(commit=False)
             instance.user = request.user
             instance.save()
+        else:
+            form_errors = details_form.errors
+            return render_to_response('profile/settings_publisher.html', {'form': form, 'details_form': details_form, 'form_errors': form_errors}, context_instance=RequestContext(request))
 
         return HttpResponseRedirect(reverse('settings-publisher'))
 

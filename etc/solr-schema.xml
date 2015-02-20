@@ -116,6 +116,7 @@
     <field name="color" type="string" indexed="true" stored="false" multiValued="true"/>
     <field name="price" type="currency" indexed="true" stored="true" multiValued="false"/>
     <field name="gender" type="string" indexed="true" stored="false" multiValued="false"/>
+    <field name="market" type="string" indexed="true" stored="false" multiValued="true"/>
 
     <!-- Boolean filters -->
     <field name="availability" type="boolean" indexed="true" stored="true" multiValued="false"/>
@@ -260,7 +261,7 @@
   <copyField source="name" dest="text"/>
   <copyField source="description" dest="text"/>
   <copyField source="manufacturer_name" dest="text"/>
-
+  <copyField source="market" dest="market_ss"/>
   <copyField source="color" dest="color_ss"/>
   <copyField source="category" dest="category_ss"/>
 

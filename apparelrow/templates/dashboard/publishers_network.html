@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load i18n l10n cache dashboard_extras %}
+{% load static from staticfiles %}
+
+{% block extra-title %}{% trans "Publisher" %} | {% endblock %}
+{% block 'extra-scripts' %}
+    <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('.month-select').change(function() {
+                var month = $('.month-select').find(':selected').data('month');
+                var year = $('.year-select').find(':selected').data('year');
+                window.location.href = '/publisher/network/' + year + '/' + month + '/';
+
+            });
+            $('.year-select').change(function() {
+                var month = $('.month-select').find(':selected').data('month');
+                var year = $('.year-select').find(':selected').data('year');
+                window.location.href = '/publisher/network/' + year + '/' + month + '/';
+            });
+            new Tablesort($('table#top-publishers').get(0));
+        });
+    </script>
+{% endblock %}
+
+{% block body-classes %}publisher-page{% endblock body-classes %}
+{% block body %}
+    {% include 'dashboard/body_header.html' %}
+    <div class="row subnav-page">
+        <div class="col-sm-3">{% trans "Pending commission: " %}<strong>{{ sales_pending|floatformat:2 }} {{ currency }}</strong></div>
+        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Confirmed commission: " %}<strong>{{ total_confirmed|floatformat:2 }} {{ currency }}</strong></div>
+        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Pending payment: " %}<strong>{{ pending_payment|floatformat:2 }} {{ currency }}</strong></div>
+        <div class="col-sm-3"><a data-toggle="modal" href="#modal_publisher_info">{% trans "How payments work" %}</a></div>
+        <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 45px;">{% trans "In total, " %}<strong>{{ total_earned }} {{ currency }}</strong> {% trans "has been paid out to you" %}</div>
+    </div>
+    <div class="row">
+        <ul class="list-inline monthly-list date-dropdown">
+            <li>
+            <label>{% trans "Show statistics for: " %}
+                <select class="month-select">
+                    {% for item_month in months_choices %}
+                    <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                    {% endfor %}
+                </select>
+                <select class="year-select">
+                    {% for item_year in years_choices %}
+                    <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-lg-10 col-md-6 col-sm-6"><h2>{% trans "All publishers" %}</h2></div>
+        <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs"><h2><small><a href="{% url 'dashboard' %}">{% trans "Back to dashboard" %}</a></small></h2></div>
+        <table id="top-publishers" class="sortable table">
+            <thead>
+                <tr>
+                    <th class="col1 product-image center">{% trans "User" %}</th>
+                    <th class="col2 hidden-xs center"></th>
+                    <th class="col3 center hidden-xs">{% trans "Clicks" %}</th>
+                    <th class="center">{% trans "Sales" %}</th>
+                    <th class="center">{% trans "Conversion rate" %}</th>
+                    <th class="hidden-xs center">{% trans "Sales generated" %}</th>
+                    <th class="center">{% trans "Network earnings" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for publisher in top_publishers %}
+                <tr>
+                    <td class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
+                    <td class="col2 hidden-xs"><a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a></td>
+                    <td class="col3 center hidden-xs">{{ publisher.clicks }}</td>
+                    <td class="center">{{ publisher.sales }}</td>
+                    <td class="center">{{ publisher.sales|commission_rate:publisher.clicks }}</td>
+                    <td class="hidden-xs center">{{ publisher.converted_amount }} {{ currency }}</td>
+                    <td class="center">{{ publisher.network_earnings }} {{ currency }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">{% trans "No sales yet." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% include 'dashboard/modal_more_info.html' %}
+{% endblock body %}

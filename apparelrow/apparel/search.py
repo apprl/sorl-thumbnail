@@ -276,8 +276,10 @@ def get_product_document(instance, rebuild=False):
             # If availability is true but product has no default vendor we do
             # not need to add the product to solr, return None and 0
             if availability:
-                logger.error('Availability is true, but product have no vendorproduct [PID: %s]' % (instance.pk,))
+                logger.error('Availability is true, but product has no vendorproduct [PID: %s]' % (instance.pk,))
                 availability = False
+                # Supposed to be..?
+                #instance.availability = False
                 return None, 0
 
         color_names = []
@@ -304,7 +306,11 @@ def get_product_document(instance, rebuild=False):
         document['category_names'] = category_names
 
         # Facets
+        vendor_markets = None
+        if instance.default_vendor:
+            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(instance.default_vendor.vendor.name,None)
         document['color'] = color_ids
+        document['market'] =  vendor_markets if vendor_markets else settings.VENDOR_LOCATION_MAPPING.get("default")
         document['price'] = '%s,%s' % (price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['category'] = category_ids
         document['manufacturer_id'] = instance.manufacturer_id

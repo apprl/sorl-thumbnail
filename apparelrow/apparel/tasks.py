@@ -301,7 +301,11 @@ def build_static_look_image(look_id):
 
     if look.display_with_component == 'P' and look.image:
         # Reuse photo image
-        thumbnail = get_thumbnail(look.image, '694x524', upscale=False)
+        thumbnail = ''
+        try:
+            thumbnail = get_thumbnail(look.image, '694x524', upscale=False)
+        except:
+            logger.warning('No thumbnail found for %s '%look.image)
         # TODO: better solution?
         if thumbnail.url.startswith('http'):
             background = Image.open(StringIO(requests.get(thumbnail.url).content))
@@ -324,7 +328,11 @@ def build_static_look_image(look_id):
                 continue
 
             # Reuse transparent thumbnail image
-            thumbnail = get_thumbnail(component.product.product_image, '%s' % (settings.APPAREL_LOOK_MAX_SIZE,), format='PNG', transparent=True)
+            try:
+                thumbnail = get_thumbnail(component.product.product_image, '%s' % (settings.APPAREL_LOOK_MAX_SIZE,), format='PNG', transparent=True)
+            except:
+                logger.warning('No thumbnail found for %s '%component.product.product_image)
+
             # TODO: better solution?
             if thumbnail.url.startswith('http'):
                 component_image = Image.open(StringIO(requests.get(thumbnail.url).content))
@@ -353,6 +361,9 @@ def build_static_look_image(look_id):
     look.static_image = filename
 
     # refresh thumbnail in mails
-    get_thumbnail(look.static_image, '576', crop='noop')
+    try:
+        get_thumbnail(look.static_image, '576', crop='noop')
+    except:
+        logger.warning('No thumbnail found for %s '%look.static_image)
 
     look.save(update_fields=['static_image', 'width', 'height', 'modified'])

@@ -62,7 +62,8 @@ class EmailForm(forms.ModelForm):
 class NotificationForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
+        fields = ('like_look_created', 'follow_user', 'facebook_friends')
+        #fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
         widgets = {
             'comment_product_wardrobe': forms.RadioSelect,
             'comment_product_comment': forms.RadioSelect,
@@ -96,10 +97,13 @@ class FacebookSettingsForm(forms.ModelForm):
 
 class PartnerPaymentDetailForm(forms.ModelForm):
     name = forms.CharField(label=_('Name'))
-    orgnr = forms.CharField(label=_('Personal/organization number'))
+    orgnr = forms.CharField(label=_('Personal / Organization number'))
     clearingnr = forms.CharField(label=_('Bank clearing number'))
     banknr = forms.CharField(label=_('Bank account number'))
-    notes = forms.CharField(label=_('Other notes'), widget=forms.Textarea(attrs={'rows':4, 'cols': 30}))
+    address = forms.CharField(label=_('Address'))
+    postal_code = forms.CharField(label=_('Postal code'))
+    city = forms.CharField(label=_('City'))
+    notes = forms.CharField(label=_('Other notes'), widget=forms.Textarea(attrs={'rows':4, 'cols': 30}), required=False)
 
     class Meta:
         model = get_model('profile', 'PaymentDetail')
