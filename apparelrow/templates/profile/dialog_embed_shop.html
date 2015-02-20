@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">{% trans "Create a shop for your site/blog" %}</h4>
+                <h4 class="modal-title">{% trans "Customize, embed & save your shop" %}</h4>
             </div>
             <div class="modal-body">
 
@@ -12,8 +12,8 @@
 
                 <form id="embed_shop_form" class="form">
                     <div class="form-group">
-                        <label class="control-label" for="id_name">{% trans "Name" %}</label>
-                        <input id="id_name" type="text" class="form-control" placeholder="Name" value="{{ title }}"/>
+                        <label class="control-label" for="id_name">{% trans "Shop name" %}</label>
+                        <input id="id_name" type="text" required class="form-control" placeholder="Shop name" value="{{ title }}"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="id_width">{% trans "Width" %}</label>
@@ -48,7 +48,7 @@
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked>
-                                {% trans "Show prices and brands" %}
+                                {% trans "Show brands & prices" %}
                             </label>
                         </div>
                         <div class="checkbox">
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">{% trans "Get embed code" %}</button>
+                        <button type="submit" class="btn btn-success btn-block">{% trans "Customize, embed & save your shop" %}</button>
                     </div>
                     <div class="form-group" style="display:none;">
                         <label class="control-label" for="id_embed_code">{% trans "Copy and paste this code (in HTML-mode) into your site/blog" %}</label>
@@ -75,8 +75,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Continue editing" %}</button>
-                <button type="button" class="btn btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
+                <button type="button" class="btn btn-primary pull-left" data-dismiss="modal">{% trans "Continue editing" %}</button>
+                <button type="button" class="btn btn-primary btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
             </div>
         </div>
     </div>
@@ -114,6 +114,7 @@
 
         $('.btn-save-exit').on('click', function(e) {
             e.preventDefault();
+            if (!$('#embed_shop_form #id_name').val().length) return false;
             App.Events.trigger('widget:save', {title: $('#embed_shop_form #id_name').val()});
         });
 
@@ -132,6 +133,9 @@
         });
 
         $('#embed_shop_form').on('submit', function() {
+            if (!$('#embed_shop_form #id_name').val().length) {
+                return false;
+            }
             if (!shop_id) {
                 App.Events.trigger('widget:save', {title: $('#embed_shop_form #id_name').val(), callback: get_embed});
             } else {

@@ -59,15 +59,14 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
     rescale: function(scale) {
         var new_width = Math.round(this.model.get('width')*scale),
             new_height = Math.round(this.model.get('height')*scale);
-        this.$el.css({width: width*scale, height: height*scale});
-        this.set_size(width*scale, height*scale);
+        this.$el.css({width: new_width, height: new_height});
+        this.set_size(new_width, new_height);
         this.reposition({x:this.model.get('left')*(1-scale), y:this.model.get('top')*(1-scale)});
     },
 
     reposition: function(adjustments) {
         var new_left = this.model.get('left') - adjustments.x,
             new_top = this.model.get('top') - adjustments.y;
-
         this.set_position(new_left, new_top);
     },
 
@@ -134,8 +133,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
     render: function() {
         this.$el.css({'left': this.model.get('left'),
                       'top': this.model.get('top'),
-                      'width': this.model.get('width'),
-                      'height': this.model.get('height'),
+                      'width': Math.round(this.model.get('width')),
+                      'height': Math.round(this.model.get('height')),
                       'z-index': this.model.get('z_index'),
                       position: 'absolute'});
 
@@ -227,7 +226,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  start: _.bind(function(event, ui) {
                  }, this),
                  stop: _.bind(function (event, ui) {
-                     this.set_size(ui.size.width, ui.size.height);
+                     this.$el.css({width: Math.round(ui.size.width), height: Math.round(ui.size.height)});
+                     this.set_size(Math.round(ui.size.width), Math.round(ui.size.height));
                      this.set_position(ui.position.left, ui.position.top);
                  }, this)
              });

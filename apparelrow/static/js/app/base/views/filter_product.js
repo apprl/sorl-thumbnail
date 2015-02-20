@@ -7,6 +7,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
         'click input[name="q"]': 'filter',
         'keyup input[name="q"]': 'timed_filter',
         'click #product-filter-gender a': 'filter_gender',
+        'click .btn-show-filters': 'toggle_filters'
     },
 
     initialize: function(options) {
@@ -76,6 +77,14 @@ App.Views.FilterProduct =  Backbone.View.extend({
             this.$overlay.remove();
             this.$el.css('opacity', 1);
             this.disabled_view = false;
+        }
+    },
+
+    toggle_filters: function() {
+        this.$el.find('.hidden-filters').toggle();
+        this.$el.find('.btn-show-filters b').toggleClass('caret').toggleClass('caret-up');
+        if (this.$el.find('.hidden-filters').css('display') == 'none') {
+            $(window).trigger('resize');
         }
     },
 

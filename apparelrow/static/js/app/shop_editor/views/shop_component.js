@@ -21,7 +21,7 @@ App.Views.ShopComponent = App.Views.WidgetBase.extend({
 
         this.remove();
         this.collection.remove(this.model);
-
+        App.Events.trigger('product:delete');
         e.preventDefault();
     },
 

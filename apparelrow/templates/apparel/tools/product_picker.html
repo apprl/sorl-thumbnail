@@ -18,7 +18,8 @@
                 <div class="form-control-wrapper"><input class="form-control" id="product-search" type="search" name="q" placeholder="{% trans "Search products & brands here…" %}"></div>
                 <a class="btn btn-primary btn-sm btn-product-reset" style="display:none;" href="#">{% trans "Reset" %}</a>
             </div>
-            <div class="hidden-filters-container hidden-xs">
+            <div class="hidden-filters-container">
+                <a class="btn btn-primary btn-show-filters"><span>{% trans "Filter products" %}</span> <b class="caret"></b></a>
                 <ul class="hidden-filters list-inline">
                     <li id="product-filter-category" class="dropdown left">
                         <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose category" %}</span> <b class="caret"></b></a>

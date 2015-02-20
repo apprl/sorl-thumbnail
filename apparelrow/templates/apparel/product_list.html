@@ -10,7 +10,7 @@
     {% endif %}
 
     <div id="product-list" class="col-product-list">
-        <h3>{{ browse_text }}</h3>
+        {% if show_filters %}<h3>{{ browse_text }}</h3>{% endif %}
         {% if extra_html %}
             {{ extra_html }}
         {% else %}

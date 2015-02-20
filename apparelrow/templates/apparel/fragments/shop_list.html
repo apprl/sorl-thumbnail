@@ -11,10 +11,12 @@
                 {% if object.show_liked %}
                     {% trans 'Your liked products' %}
                 {% else %}
-                   {% trans 'Contains' %} <strong>{{ object.products.count }}</strong>
+                   {% trans 'Contains' %} {{ object.products.count }} {% trans 'products' %}
                 {% endif %}
                 <br/>
                 {% trans 'Last modified:' %} {{ object.modified|since }}
+                <br/>
+                <a class="btn btn-success" href="{% url 'create-shop' object.pk %}">Edit</a>
             </p>
         </li>
     {% empty %}

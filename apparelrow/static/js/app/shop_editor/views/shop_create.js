@@ -23,6 +23,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.shop_edit_popup = new App.Views.ShopEditPopup({parent_view: this});
 
         App.Events.on('widget:product:add', this.pending_add_component, this)
+        App.Events.on('product:delete', function() { this.update_title(-1); }, this);
         this.model.components.on('add', this.add_component, this);
 
         $(window).on('resize', _.bind(this.resize, this));
@@ -71,11 +72,12 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.$container.find('ul').children().remove();
     },
     resize: function() {
+        console.log(this.$el.offset().top);
+        console.log($(window).height());
         var window_height = $(window).height(),
-            new_height = window_height - this.$el.offset().top - 20,
+            new_height = window_height - this.$el.offset().top - ($(window).width() >= 992 ? 20 : 0),
         $footer = $('.widget-footer:visible');
-        $header = $('#preview-header:visible')
-        new_height -= ($header.length ? $header.height() + 16 : 0)+ ($footer.length ? $footer.height() : 0);
+        new_height -= $footer.length ? $footer.height() : 0;
         this.$container.css('height', new_height);
     },
     pending_add_component: function(product) {
@@ -100,7 +102,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     },
     update_title: function(delta, val) {
         var $title = this.$el.find('#preview-header');
-        var nr = parseInt(/\d/.exec($title.html()), 10);
+        var nr = parseInt(/\d+/.exec($title.html()), 10);
         val = val == undefined ? nr + delta : val;
 
         $title.html($title.html().replace(nr, val));
