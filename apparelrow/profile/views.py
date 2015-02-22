@@ -134,7 +134,7 @@ def looks(request, profile, form, page=0):
 @avatar_change
 def shops(request, profile, form, page=0):
     if profile == request.user:
-        queryset = profile.shop.order_by('-created')
+        queryset = profile.shop.order_by('-modified')
     else:
         return HttpResponse('Unauthorized', status=401)
 
