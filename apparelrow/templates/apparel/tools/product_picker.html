@@ -16,7 +16,7 @@
                     <li><a href="#" data-value="M"{% if gender == 'M' %} class="selected"{% endif %}>{% trans "Men" %}</a></li>
                 </ul>
                 <div class="form-control-wrapper"><input class="form-control" id="product-search" type="search" name="q" placeholder="{% trans "Search products & brands here…" %}"></div>
-                <a class="btn btn-primary btn-sm btn-product-reset" style="display:none;" href="#">{% trans "Reset" %}</a>
+                <a class="btn btn-primary btn-sm btn-product-reset hidden-xs" style="display:none;" href="#">{% trans "Reset" %}</a>
             </div>
             <div class="hidden-filters-container">
                 <a class="btn btn-primary btn-show-filters"><span>{% trans "Filter products" %}</span> <b class="caret"></b></a>
@@ -32,6 +32,9 @@
                     </li>
                     <li id="product-filter-price" class="dropdown">
                         <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Price" %}"><span>{% trans "Price" %}</span> <b class="caret"></b></a>
+                    </li>
+                    <li class="btn-product-reset hidden-sm hidden-md hidden-lg dropdown">
+                        <a class="btn btn-primary btn-sm btn-product-reset" style="display:none;" href="#">{% trans "Reset" %}</a>
                     </li>
                 </ul>
             </div>
