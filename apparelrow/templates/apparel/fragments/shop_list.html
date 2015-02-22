@@ -14,7 +14,7 @@
                    {% trans 'Contains' %} {{ object.products.count }} {% trans 'products' %}
                 {% endif %}
                 <br/>
-                {% trans 'Last modified:' %} {{ object.modified|since }}
+                {% trans 'Last modified' %}: {{ object.created|since }}
                 <br/>
                 <a class="btn btn-success" href="{% url 'create-shop' object.pk %}">Edit</a>
             </p>
