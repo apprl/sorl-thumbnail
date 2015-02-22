@@ -19,12 +19,12 @@ jQuery(document).ready(function() {
 
     var $ul = $('ul');
     var $items = $ul.children('li');
-    var childwidth;
+    var childwidth = 0;
     var index = 0;
     var running = false;
     var ratio = 112/145;
     var visiblechildren;
-    var doslide = true;
+    var doslide = false;
     function slide(direction) {
         if (running) return;
         running = true;
@@ -40,6 +40,7 @@ jQuery(document).ready(function() {
             index -= 1;
             $items = $ul.children('li');
         }
+
         running = false;
         $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { running = false; }});
     }
@@ -48,8 +49,15 @@ jQuery(document).ready(function() {
     mc.on('swipeleft swiperight', function(e) { if (!doslide) return; slide(e.type == 'swipeleft' ? -1 : 1); });
 
     function enableslide() {
-        $('.previous').on('click', function() { slide(1); });
-        $('.next').on('click', function() { slide(-1); }).parent().show();
+        if (!doslide) {
+            $('.previous').on('click', function () {
+                slide(1);
+            });
+            $('.next').on('click', function () {
+                slide(-1);
+            });
+        }
+        $('.next').parent().show();
         doslide = true;
     }
 
@@ -62,42 +70,53 @@ jQuery(document).ready(function() {
     function resize() {
         var $window = $(window);
         var $container = $('.slidecontainer');
-        childwidth;
+        var ratio = 112/145;
+        var $this;
+        var imgratio;
+        var maxheight;
+        var $images = $('a.product img');
+        $images.each(function(item, i) {
+            $this = $(this);
+            imgratio = $this.attr('width')/$this.attr('height');
+            if (imgratio > ratio) {
+                $this.css({width: Math.round($window.height()*ratio), height: Math.round($(this).attr('height')/$(this).attr('width')*$window.height()*ratio)});
+            } else {
+                $this.css({height: $window.height(), width: Math.round($(this).attr('width')/$(this).attr('height')*$window.height())});
+            }
 
-        if ($window.width()/$window.height() > ratio) {
-            var $refitem;
-            var maxheight = 0;
-            var $images = $('a.product img');
-            $images.each(function(item, i) {
-                if ($(this).attr('height') > maxheight) {
-                    maxheight = $(this).attr('height');
-                    $refitem = $(this);
-                }
-            });
+            maxheight = Math.max(maxheight, $this.height());
+            childwidth = Math.max(childwidth, $this.width());
+        });
 
-            childwidth = $refitem.attr('width')*$window.height()/maxheight;
-            $images.each(function(item, i) {
-                $(this).css({'vertical-align': 'middle', 'width': childwidth, height: $(this).attr('height')/$(this).attr('width')*childwidth});
-            });
-            $items.css({'line-height': $refitem.height()+'px'});
-        }
+        $images.each(function(item, i) {
+            $this = $(this);
+            if ($this.width() < childwidth) {
+                $this.css('padding', '0 '+Math.round((childwidth-$this.width())/2)+'px');
+            }
+        });
 
+        $items.css({'line-height': maxheight});
         $ul.css('left', -1*index*childwidth);
         $ul.width($items.length * childwidth);
 
         if (embed_type == 'single') {
             $container.width(childwidth);
             visiblechildren = 1;
+            disableslide()
         } else {
             if (Math.floor($window.width()/childwidth) < $items.length) {
                 visiblechildren = Math.floor($window.width()/childwidth);
                 $container.width(visiblechildren*childwidth);
+                enableslide();
             } else {
                 visiblechildren = $items.length;
                 $container.width($items.length*childwidth);
                 disableslide()
             }
         }
+
+        $('.previous').css({left: $container[0].offsetLeft+'px', top: ($container.height()/2-20)+'px'});
+        $('.next').css({left: ($container[0].offsetLeft + $container.width() - 58)+'px', top: ($container.height()/2-20)+'px'});
     }
     enableslide();
     $(window).on('resize', resize);
