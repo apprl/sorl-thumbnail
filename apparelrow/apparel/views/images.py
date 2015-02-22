@@ -10,6 +10,7 @@ from apparelrow.apparel.utils import JSONResponse
 from StringIO import StringIO
 from PIL import Image
 from PIL.ExifTags import TAGS
+from time import time
 
 class TemporaryImageView(View):
 
@@ -38,7 +39,7 @@ class TemporaryImageView(View):
                         image = image.transpose(Image.ROTATE_180)
                     tmp_io = StringIO()
                     image.save(tmp_io, 'JPEG')
-                    temp_image.image.save(temp_image.image.name, ContentFile(tmp_io.getvalue()))
+                    temp_image.image.save('%s_%d' % (temp_image.image.name, time()), ContentFile(tmp_io.getvalue()))
                     temp_image.save()
 
         data = [{'id': temp_image.pk,
