@@ -1091,6 +1091,14 @@ footer {
                 .make-sm-column(6);
             }
         }
+         &.no-filters {
+          .col-product-list {
+            .make-sm-column(12);
+            .col-product-item {
+              .make-sm-column(4);
+            }
+          }
+        }
     }
     @media (min-width: @screen-desktop) {
         .col-product-filter { .make-sm-column(4); }
@@ -1099,6 +1107,14 @@ footer {
             .col-product-item {
                 .make-sm-column(4);
             }
+        }
+         &.no-filters {
+          .col-product-list {
+            .make-sm-column(12);
+            .col-product-item {
+              .make-sm-column(3);
+            }
+          }
         }
     }
     @media (min-width: @screen-lg-desktop) {
@@ -1109,7 +1125,16 @@ footer {
                 .make-sm-column(4);
             }
         }
+        &.no-filters {
+          .col-product-list {
+            .make-sm-column(12);
+            .col-product-item {
+              .make-sm-column(3);
+            }
+          }
+        }
     }
+
     #reset {
         position: absolute;
         top: -2px;
