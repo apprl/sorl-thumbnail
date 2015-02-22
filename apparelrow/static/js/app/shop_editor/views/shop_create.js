@@ -72,8 +72,6 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.$container.find('ul').children().remove();
     },
     resize: function() {
-        console.log(this.$el.offset().top);
-        console.log($(window).height());
         var window_height = $(window).height(),
             new_height = window_height - this.$el.offset().top - ($(window).width() >= 992 ? 20 : 0),
         $footer = $('.widget-footer:visible');
@@ -116,7 +114,10 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
 
         if(show_liked) {
             if (!this.model.attributes.id) {
-                this.save_shop({ title: "My latest likes" });
+                this.save_shop({ title: "My latest likes", 'callback': function() {
+                    console.log(window.shop_create);
+                    window.shop_create.init_products();
+                }});
             }
             $('#shop-display-settings').find('.buttons').hide();
         } else {
