@@ -116,7 +116,7 @@ jQuery(document).ready(function() {
         }
 
         $('.previous').css({left: $container[0].offsetLeft+'px', top: ($container.height()/2-20)+'px'});
-        $('.next').css({left: ($container[0].offsetLeft + $container.width() - 58)+'px', top: ($container.height()/2-20)+'px'});
+        $('.next').css({left: ($container[0].offsetLeft + $container.width() - 58)+'px', top: ($container.height()/2-10)+'px'});
     }
     enableslide();
     $(window).on('resize', resize);
