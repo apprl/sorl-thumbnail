@@ -78,8 +78,10 @@ jQuery(document).ready(function() {
         $images.each(function(item, i) {
             $this = $(this);
             imgratio = $this.attr('width')/$this.attr('height');
-            if (imgratio > ratio) {
-                $this.css({width: Math.round($window.height()*ratio), height: Math.round($(this).attr('height')/$(this).attr('width')*$window.height()*ratio)});
+            if (imgratio > ratio || $window.width()/$window.height() < ratio) {
+                var width = Math.round($window.height()*ratio);
+                if (width > $window.width()) width = $window.width();
+                $this.css({'width': width, height: Math.round($(this).attr('height')/$(this).attr('width')*width)});
             } else {
                 $this.css({height: $window.height(), width: Math.round($(this).attr('width')/$(this).attr('height')*$window.height())});
             }
