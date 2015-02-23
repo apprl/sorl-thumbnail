@@ -79,24 +79,40 @@ def product_widget_instance_to_dict(product_widget):
         'url': product_widget.get_absolute_url(),
         'description': product_widget.description,
         'published': product_widget.published,
-        'type': product_widget.type
+        'type': product_widget.type,
+        'show_liked': product_widget.show_liked
     }
 
     product_widget_dict['products'] = []
-
-    for product in product_widget.products.all():
-        manufacturer_name = product.manufacturer.name if product.manufacturer else None
-        product_widget_dict['products'].append({
-            'id': product.id,
-            'slug': product.slug,
-            'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
-            'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
-            'product_name': product.product_name,
-            'brand_name': manufacturer_name,
-            'currency': product.default_vendor.locale_currency,
-            'price': product.default_vendor.locale_price,
-            'discount_price': product.default_vendor.locale_discount_price,
-        })
+    if product_widget.show_liked:
+        for like in product_widget.user.product_likes.select_related('product').all():
+            product = like.product
+            manufacturer_name = product.manufacturer.name if product.manufacturer else None
+            product_widget_dict['products'].append({
+                'id': product.id,
+                'slug': product.slug,
+                'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
+                'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                'product_name': product.product_name,
+                'brand_name': manufacturer_name,
+                'currency': product.default_vendor.locale_currency,
+                'price': product.default_vendor.locale_price,
+                'discount_price': product.default_vendor.locale_discount_price,
+            })
+    else:
+        for product in product_widget.products.all():
+            manufacturer_name = product.manufacturer.name if product.manufacturer else None
+            product_widget_dict['products'].append({
+                'id': product.id,
+                'slug': product.slug,
+                'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
+                'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                'product_name': product.product_name,
+                'brand_name': manufacturer_name,
+                'currency': product.default_vendor.locale_currency,
+                'price': product.default_vendor.locale_price,
+                'discount_price': product.default_vendor.locale_discount_price,
+            })
 
     return product_widget_dict
 
