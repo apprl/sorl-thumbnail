@@ -46,7 +46,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
 
         $(window).on('resize', _.bind(this.update_size, this));
 
-        this.$el.find('li.product-filter-gender').on('click', 'a', function(e) {
+        this.$el.find('li#product-filter-gender-2').on('click', 'a', function(e) {
              $(this).next().toggle();
         });
 
