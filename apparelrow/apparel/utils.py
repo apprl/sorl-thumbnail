@@ -466,4 +466,4 @@ def save_location(request, location):
     request.user.save(update_fields=['location'])
 
 def has_user_location(request):
-    return hasattr(request, 'user') and hasattr(request.user, 'location')
+    return hasattr(request, 'user') and hasattr(request.user, 'location') and request.user.location
