@@ -1023,11 +1023,18 @@ def commissions(request):
 
     cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) \
         if request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) else request.session.get('location','ALL')
+
+    all_stores = get_model('dashboard', 'StoreCommission').objects.all()
     vendors = []
-    for data in settings.VENDOR_LOCATION_MAPPING:
-        location_array = settings.VENDOR_LOCATION_MAPPING[data]
-        if cookie_value in location_array or 'ALL' in location_array:
-            vendors.append(data)
+    for store in all_stores:
+        store_name = store.vendor.name
+        try:
+            if cookie_value in settings.VENDOR_LOCATION_MAPPING[store_name]:
+                settings.VENDOR_LOCATION_MAPPING[store_name]
+                vendors.append(store_name)
+        except KeyError:
+            vendors.append(store_name)
+            pass
 
     stores = list(get_model('dashboard', 'StoreCommission').objects.filter(vendor__name__in=vendors).select_related('vendor').order_by('vendor__name'))
     user_id = request.user.id
