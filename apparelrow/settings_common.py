@@ -97,11 +97,12 @@ MAX_MIN_CURRENCY = {
 
 VENDOR_LOCATION_MAPPING = {
     "Shirtonomy":["ALL","SE"],
-    "MQ":["NO","SE"],
+    "MQ":["SE"],
     "ALDO": ["US"],
-    "ASOS": ["SE","ALL"],
+    "ASOS": ["SE","NO","ALL"],
     "Eleven": ["SE","ALL"],
     "Elevenfiftynine": ["SE"],
+    "Filippa K": ["SE"],
     "JC": ["SE"],
     "Nelly":["SE"],
     "Nelly No":["NO"],
@@ -176,8 +177,8 @@ STATICFILES_FINDERS = (
 
 # Django-storages
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
-AWS_SECRET_ACCESS_KEY = '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'
+#AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
+#AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
 AWS_HEADERS = {
         'Expires': 'Sat, Nov 01 2015 20:00:00 GMT',
@@ -230,6 +231,7 @@ MIDDLEWARE_CLASSES = (
     'apparelrow.statistics.middleware.ActiveUsersMiddleware',
     'apparelrow.apparel.middleware.InternalReferralMiddleware',
     'apparelrow.apparel.middleware.GenderMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
     'apparelrow.apparel.middleware.LocationMiddleware',
     'apparelrow.dashboard.middleware.ReferralMiddleware',
 )
@@ -285,7 +287,8 @@ INSTALLED_APPS = (
     'apparelrow.activity_feed',
     'apparelrow.scheduledjobs',
     'rosetta',
-    'raven.contrib.django.raven_compat'
+    'raven.contrib.django.raven_compat',
+    'django_user_agents'
 )
 
 # - STATIC SITEMAP -
@@ -713,11 +716,11 @@ LOGGING = {
             'maxBytes': 8000000,
             'backupCount': 10
         },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
+        #'mail_admins': {
+        #    'level': 'ERROR',
+        #    'filters': ['require_debug_false'],
+        #    'class': 'django.utils.log.AdminEmailHandler',
+        #},
         'dashboard': {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -767,7 +770,7 @@ LOGGING = {
         'django.request': {
             'level': 'ERROR',
             'propagate': False,
-            'handlers': ['mail_admins', 'app_core'],
+            'handlers': ['app_core'],
         },
         'apparel.debug': {
             'level': 'DEBUG',
@@ -802,5 +805,6 @@ LOGGING = {
     }
 }
 
+GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
 
 

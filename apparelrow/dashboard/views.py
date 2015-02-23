@@ -648,13 +648,13 @@ def dashboard_admin(request, year=None, month=None):
         month_commission = decimal.Decimal('0.0')
         partner_commission = decimal.Decimal('0.0')
         result = Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                             .filter(created__range=(start_date_query, end_date_query)) \
-                             .order_by('created') \
-                             .values('created', 'converted_commission', 'commission', 'user_id')
+                             .filter(sale_date__range=(start_date_query, end_date_query)) \
+                             .order_by('sale_date') \
+                             .values('sale_date', 'converted_commission', 'commission', 'user_id')
         for sale in result:
-            data_per_month[sale['created'].date()][0] += sale['converted_commission']
+            data_per_month[sale['sale_date'].date()][0] += sale['converted_commission']
             if sale['user_id']:
-                data_per_month[sale['created'].date()][1] += sale['commission']
+                data_per_month[sale['sale_date'].date()][1] += sale['commission']
                 partner_commission += sale['commission']
             month_commission += sale['converted_commission']
 
@@ -1021,7 +1021,15 @@ def commissions(request):
                   % request.user)
         raise Http404
 
-    stores = list(get_model('dashboard', 'StoreCommission').objects.select_related('vendor').order_by('vendor__name'))
+    cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) \
+        if request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) else request.session.get('location','ALL')
+    vendors = []
+    for data in settings.VENDOR_LOCATION_MAPPING:
+        location_array = settings.VENDOR_LOCATION_MAPPING[data]
+        if cookie_value in location_array or 'ALL' in location_array:
+            vendors.append(data)
+
+    stores = list(get_model('dashboard', 'StoreCommission').objects.filter(vendor__name__in=vendors).select_related('vendor').order_by('vendor__name'))
     user_id = request.user.id
     stores = [store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
               for store in stores]

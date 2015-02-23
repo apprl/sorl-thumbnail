@@ -10,6 +10,8 @@ from django.db.models import get_model
 from django.http import HttpResponseRedirect
 from django.utils import timezone, translation
 from localeurl import utils
+from apparelrow.apparel.utils import user_is_bot
+from apparelrow.statistics.utils import get_country_by_ip
 
 
 REFERRAL_COOKIE_NAME = 'aid_cookie'
@@ -65,21 +67,25 @@ class LocationMiddleware(object):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
         if cookie_value:
             request.session['location'] = cookie_value
+        elif not user_is_bot(request):
             # No location has been stored in the user model
             if hasattr(request.user, 'location') and request.user.location:
                 request.user.location = cookie_value
                 request.user.save()
+            else:
+                request.session['location'] = get_country_by_ip(request)
         request.location = request.session.get('location','ALL')
 
     def process_response(self, request, response):
+        cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
         if not request.session.get('location',None):
-            if hasattr(request, 'user') and hasattr(request.user, 'location') and request.user.location:
+            if hasattr(request.user, 'location') and request.user.location:
                 response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.user.location,
                                     max_age=45 * 24 * 60 * 60)
             else:
                 try:
                     # Depending on localeurl strip path method
-                    location_choice = 'ALL'
+                    location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
                     locale, path = utils.strip_path(request.path)
                     if locale:
                         for location, location_text, lang in settings.LOCATION_LANGUAGE_MAPPING:
@@ -88,16 +94,14 @@ class LocationMiddleware(object):
                     response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
                 except:
                     pass
-        elif not request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None):
+        elif not cookie_value:
             response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session.get('location'), max_age=45 * 24 * 60 * 60)
-        else:
-            cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
-            if not cookie_value == request.session.get('location'):
+        elif not request.session.get('location') == cookie_value:
                 request.session['location'] = cookie_value
 
-        if hasattr(request, 'user') and hasattr(request.user, 'location'):
-            if not request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) == request.user.location:
-                request.user.location = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
+        if hasattr(request.user, 'location'):
+            if not request.user.location == cookie_value:
+                request.user.location = cookie_value
                 request.user.save()
 
         return response

@@ -129,7 +129,7 @@
                         </div>
                         {% endcache %}
 
-                        {% if request.user.is_authenticated and request.user.is_partner %}
+                        {% if request.user.is_authenticated and request.user.is_partner and object.default_vendor %}
                         <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn btn-primary btn-block btn-short-link">{% trans "Get product link" %}</a>
                         {% endif %}
 
