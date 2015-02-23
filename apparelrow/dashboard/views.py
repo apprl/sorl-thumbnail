@@ -1045,6 +1045,7 @@ def commissions(request):
 
     vendors = get_available_stores(cookie_value)
 
+
     stores = list(get_model('dashboard', 'StoreCommission').objects.filter(vendor__name__in=vendors).select_related('vendor').order_by('vendor__name'))
     user_id = request.user.id
     stores = [store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
