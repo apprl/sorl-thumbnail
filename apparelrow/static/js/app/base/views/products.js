@@ -15,7 +15,7 @@ App.Views.Products = Backbone.View.extend({
         this.infinite_scroll();
 
         this.$product_list_empty = this.$el.parent().find('#product-list-empty');
-        this.$product_list_empty.on('click', '.btn-reset', _.bind(this.reset, this));
+        this.$product_list_empty.on('click', '.btn-reset', _.bind(function() { this.reset(); $('li.btn-product-reset').hide(); }, this));
 
         this.$product_list_unauthenticated = this.$el.parent().find('#product-list-unauthenticated');
         App.Events.on('product_list:unauthenticated', _.bind(this.handle_unauthenticated, this));

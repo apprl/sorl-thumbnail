@@ -132,11 +132,12 @@ html.look-type-C {
 
     #product-filter {
         .middle-filters {
-            padding: 10px 0;
-            .form-control-wrapper {
-              overflow: hidden;
-            }
-            #product-filter-gender {
+          padding: 10px 0;
+          .form-control-wrapper {
+            overflow: hidden;
+          }
+        }
+        #product-filter-gender {
                 padding-top: 5px;
                 padding-bottom: 5px;
                 margin-bottom: 0;
@@ -149,6 +150,21 @@ html.look-type-C {
                     .custom-radiobutton(1px 5px);
                 }
             }
+
+        .btn-show-filters {
+          background-color: #666;
+          border-color: #666;
+          &:hover {
+            border-color: #666;
+          }
+        }
+        li.btn-product-reset {
+          a {
+            background-color: #d65180;
+            border-color: #d65180;
+            margin-bottom: 10px;
+          }
+          margin-bottom: 0px;
         }
         ul.hidden-filters {
           margin-left: 0px;
@@ -455,3 +471,64 @@ html.look-type-C, html.look-type-P {
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
   }
+
+.create-product-widget-page {
+  #product-widget-preview {
+    width: 100%;
+    float: left;
+    position: relative;
+    .product-list-container {
+      overflow: auto;
+      border: 2px solid @light_gray_color;
+      border-top: 0px;
+      > div {
+        padding-top: 10px;
+      }
+    }
+
+    &.splash {
+      .product-list-container {
+        border-top: 2px solid @light_gray_color;
+      }
+      .col-product-list {
+        h3 {
+          display: none;
+        }
+      }
+      .preview-header {
+        display: none;
+      }
+    }
+    &.no-filter {
+      .col-product-filter {
+        display: none;
+      }
+    }
+    .preview-header {
+      background: @lighter_gray_color;
+      width: 100%;
+      text-align: center;
+      padding: 9px 0px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+    @media (min-width: @screen-lg) {
+      .product-list .col-product-item {
+        width: 25%;
+      }
+    }
+  }
+  #product-widget-display-settings {
+    display: none;
+    position: absolute;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    .translate(-50%, -50%);
+    @media (min-width: @screen-sm) {
+      width: 50%;
+    }
+  }
+}

@@ -46,6 +46,10 @@ App.Views.FilterProduct =  Backbone.View.extend({
 
         $(window).on('resize', _.bind(this.update_size, this));
 
+        this.$el.find('li.product-filter-gender').on('click', 'a', function(e) {
+             $(this).next().toggle();
+        });
+
         this.render();
     },
 
@@ -82,7 +86,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
 
     toggle_filters: function() {
         this.$el.find('.hidden-filters').toggle();
-        this.$el.find('.btn-show-filters b').toggleClass('caret').toggleClass('caret-up');
+        this.$el.find('.btn-show-filters b').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-up');
         if (this.$el.find('.hidden-filters').css('display') == 'none') {
             $(window).trigger('resize');
         }
