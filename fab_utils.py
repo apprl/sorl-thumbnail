@@ -34,7 +34,8 @@ def manage(command):
     """
     Runs a Django management command.
     """
-    return run("%s %s" % (env.manage, command))
+    #return run("%s %s" % (env.manage, command))
+    sudo ("%s %s" % (env.manage, command), user="%(run_user)s" % env)
 
 @task
 def python(code, show=True):
