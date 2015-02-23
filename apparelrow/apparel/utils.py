@@ -460,3 +460,10 @@ class JSONPResponse(HttpResponse):
 
 def user_is_bot(request):
     return request.user_agent.is_bot or "ELB" in request.user_agent.ua_string
+
+def save_location(request, location):
+    request.user.location = location
+    request.user.save(update_fields=['location'])
+
+def has_user_location(request):
+    return hasattr(request, 'user') and hasattr(request.user, 'location')

@@ -10,7 +10,7 @@ from django.db.models import get_model
 from django.http import HttpResponseRedirect
 from django.utils import timezone, translation
 from localeurl import utils
-from apparelrow.apparel.utils import user_is_bot
+from apparelrow.apparel.utils import user_is_bot, save_location, has_user_location
 from apparelrow.statistics.utils import get_country_by_ip
 
 
@@ -69,9 +69,8 @@ class LocationMiddleware(object):
             request.session['location'] = cookie_value
         elif not user_is_bot(request):
             # No location has been stored in the user model
-            if hasattr(request.user, 'location') and request.user.location:
-                request.user.location = cookie_value
-                request.user.save()
+            if has_user_location(request) and request.user.location:
+                save_location(request, cookie_value)
             else:
                 request.session['location'] = get_country_by_ip(request)
         request.location = request.session.get('location','ALL')
@@ -79,7 +78,7 @@ class LocationMiddleware(object):
     def process_response(self, request, response):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
         if not request.session.get('location',None):
-            if hasattr(request.user, 'location') and request.user.location:
+            if has_user_location(request) and request.user.location:
                 response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.user.location,
                                     max_age=45 * 24 * 60 * 60)
             else:
@@ -99,10 +98,9 @@ class LocationMiddleware(object):
         elif not request.session.get('location') == cookie_value:
                 request.session['location'] = cookie_value
 
-        if hasattr(request.user, 'location'):
+        if has_user_location(request):
             if not request.user.location == cookie_value:
-                request.user.location = cookie_value
-                request.user.save()
+                save_location(request, cookie_value)
 
         return response
 
