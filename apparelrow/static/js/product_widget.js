@@ -73,12 +73,12 @@ jQuery(document).ready(function() {
         var ratio = 112/145;
         var $this;
         var imgratio;
-        var maxheight;
+        var maxheight = 0;
         var $images = $('a.product img');
         $images.each(function(item, i) {
             $this = $(this);
             imgratio = $this.attr('width')/$this.attr('height');
-            if (imgratio > ratio || $window.width()/$window.height() < ratio) {
+            if (imgratio > ratio && $window.width()/$window.height() < ratio) {
                 var width = Math.round($window.height()*ratio);
                 if (width > $window.width()) width = $window.width();
                 $this.css({'width': width, height: Math.round($(this).attr('height')/$(this).attr('width')*width)});
@@ -93,18 +93,17 @@ jQuery(document).ready(function() {
         $images.each(function(item, i) {
             $this = $(this);
             if ($this.width() < childwidth) {
-                $this.css('padding', '0 '+Math.round((childwidth-$this.width())/2)+'px');
+                $this.css('padding', '0 '+Math.floor((childwidth-$this.width())/2)+'px');
             }
         });
 
-        $items.css({'line-height': maxheight});
+        $items.css({'line-height': maxheight + 'px'});
         $ul.css('left', -1*index*childwidth);
         $ul.width($items.length * childwidth);
 
         if (embed_type == 'single') {
             $container.width(childwidth);
             visiblechildren = 1;
-            disableslide()
         } else {
             if (Math.floor($window.width()/childwidth) < $items.length) {
                 visiblechildren = Math.floor($window.width()/childwidth);
