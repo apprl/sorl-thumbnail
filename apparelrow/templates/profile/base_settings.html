@@ -14,15 +14,12 @@
     <div class="row">
         <div class="col-sm-3">
             <ul class="list-group">
+                <li class="list-group-item"><a href="{% url 'settings-email' %}">{% trans "Account Settings" %}</a></li>
                 <li class="list-group-item"><a href="{% url 'settings-notification' %}">{% trans "E-mail Notifications & Newsletters" %}</a></li>
-                <li class="list-group-item"><a href="{% url 'settings-email' %}">{% trans "E-mail Address" %}</a></li>
                 {% if request.user.is_authenticated and request.user.is_partner %}
-                <li class="list-group-item"><a href="{% url 'settings-facebook' %}">{% trans "Facebook" %}</a></li>
                 <li class="list-group-item"><a href="{% url 'settings-publisher' %}">{% trans "Publisher" %}</a></li>
                 {% else %}
-                <li class="list-group-item"><a href="{% url 'settings-facebook' %}">{% trans "Facebook" %}</a></li>
                 {% endif %}
-                <li class="list-group-item"><a href="{% url 'settings-password' %}">{% trans "Password" %}</a></li>
             </ul>
         </div>
         <div class="col-sm-9">

@@ -114,6 +114,13 @@ VENDOR_LOCATION_MAPPING = {
     "default":["ALL","SE","NO","US"],
 }
 
+LOCATION_MAPPING = (
+    ('SE', gettext('Sweden (SEK)')),
+    ('NO', gettext('Norway (NOK)')),
+    ('US', gettext('USA (USD)')),
+    ('ALL', gettext('International (USD)')),
+)
+
 LOCATION_LANGUAGE_MAPPING = (
                              ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
                              ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[2]),
