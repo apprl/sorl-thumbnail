@@ -65,43 +65,45 @@ class LocationMiddleware(object):
     """
     def process_request(self, request):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
-        if cookie_value:
-            request.session['location'] = cookie_value
-        elif not user_is_bot(request):
-            # No location has been stored in the user model
+        # If user is authenticated and has a stored location
+        if request.user.is_authenticated():
             if has_user_location(request):
-                save_location(request, cookie_value)
+                # When user logs in
+                if request.session['location'] != request.user.location and \
+                        request.session['location'] == cookie_value:
+                    request.session['location'] = request.user.location
+                # When user change location on settings
+                elif request.session['location'] != cookie_value and \
+                        request.session['location'] == request.user.location:
+                    request.session['location'] = cookie_value
+                    save_location(request, cookie_value)
             else:
+                save_location(request, cookie_value)
+        else:
+            if cookie_value:
+                request.session['location'] = cookie_value
+            elif not user_is_bot(request):
                 request.session['location'] = get_country_by_ip(request)
         request.location = request.session.get('location','ALL')
 
     def process_response(self, request, response):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
         if not request.session.get('location',None):
-            if has_user_location(request):
-                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.user.location,
-                                    max_age=45 * 24 * 60 * 60)
-            else:
-                try:
-                    # Depending on localeurl strip path method
-                    location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
-                    locale, path = utils.strip_path(request.path)
-                    if locale:
-                        for location, location_text, lang in settings.LOCATION_LANGUAGE_MAPPING:
-                            if lang[0] == locale:
-                                location_choice = location
-                    response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
-                except:
-                    pass
+            try:
+                # Depending on localeurl strip path method
+                location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
+                locale, path = utils.strip_path(request.path)
+                if locale:
+                    for location, location_text, lang in settings.LOCATION_LANGUAGE_MAPPING:
+                        if lang[0] == locale:
+                            location_choice = location
+                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
+            except:
+                pass
         elif not cookie_value:
             response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session.get('location'), max_age=45 * 24 * 60 * 60)
         elif not request.session.get('location') == cookie_value:
-                request.session['location'] = cookie_value
-
-        if has_user_location(request):
-            if not request.user.location == cookie_value:
-                save_location(request, cookie_value)
-
+            response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session['location'], max_age=45 * 24 * 60 * 60)
         return response
 
 class InternalReferralMiddleware(object):
