@@ -10,7 +10,7 @@
     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9"><h1 class="body-header-h1" >{% trans "TAGGED PHOTOS TOOL" %}</h1></div>
     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
         <a class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_tool_shop">
-            {% trans "Get Started" %}
+            {% trans "Create tagged photo" %}
         </a>
     </div>
 
@@ -19,11 +19,6 @@
             <div class="slider-container">
                 <div class = 'iosSlider'>
                     <div class = 'slider'>
-                        <div class='item'><img src="{% static 'images/tools/PublisherToolSliderShop.jpg' %}" /></div>
-                        <div class='item'><img src="{% static 'images/tools/PublisherToolSliderShop.jpg' %}" /></div>
-                        <div class='item'><img src="{% static 'images/tools/PublisherToolSliderShop.jpg' %}" /></div>
-                        <div class='item'><img src="{% static 'images/tools/PublisherToolSliderShop.jpg' %}" /></div>
-                        <div class='item'><img src="{% static 'images/tools/PublisherToolSliderShop.jpg' %}" /></div>
                         <div class='item'><img src="{% static 'images/tools/PublisherToolSliderShop.jpg' %}" /></div>
                         <div class='item'><img src="{% static 'images/tools/PublisherToolSliderShop.jpg' %}" /></div>
                     </div>
@@ -35,10 +30,42 @@
 
             <div class="modal-tools-description">
                 <h4 class="modal-tools-font"><b>{% trans "DESCRIPTION" %}</b></h4>
-                <p class="modal-tools-font">{% trans "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pharetra id urna vitae iaculis. Duis ultrices lectus sed magna tincidunt viverra. Sed pellentesque porta nunc nec tincidunt." %}</p>
+                <p class="modal-tools-font">
+                {% blocktrans %}
+                    Help your readers find the products you’re wearing! Your readers can simply click the products in
+                    your photo and buy them directly at the online retailer. You can also use this tagging tool to if
+                    you have for example made a collage i photoshop and want to make it interactive with
+                    products.
+                {% endblocktrans %}
+                </p>
                 <br>
                 <h4 class="modal-tools-font"><b>{% trans "KEY FEATURES" %}</b></h4>
-                <p class="modal-tools-font">{% trans "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pharetra id urna vitae iaculis. Duis ultrices lectus sed magna tincidunt viverra. Sed pellentesque porta nunc nec tincidunt." %}</p>
+                <ul>
+                    <li>
+                        <p class="modal-tools-font">
+                        {% blocktrans %}
+                            Easy to use: Add your photo by taking a photo with your mobile phone or a picture, choose
+                            products and click where you want to place them in the picture.
+                        {% endblocktrans %}
+                        </p>
+                    </li>
+                    <li>
+                        <p class="modal-tools-font">
+                        {% blocktrans %}
+                            To put a tagged photo on your site, just get the embed code and paste it in your
+                            CMS/Blogging admin. (Note: you need to insert the code in HTML mode)
+                        {% endblocktrans %}
+                        </p>
+                    </li>
+                    <li>
+                        <p class="modal-tools-font">
+                        {% blocktrans %}
+                            You earn money on all sales generated from your tagged photos - both on your site and on
+                            apprl.com.
+                        {% endblocktrans %}
+                        </p>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
