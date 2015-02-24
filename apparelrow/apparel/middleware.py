@@ -69,14 +69,17 @@ class LocationMiddleware(object):
         if request.user.is_authenticated():
             if has_user_location(request):
                 # When user logs in
-                if request.session['location'] != request.user.location and \
-                        request.session['location'] == cookie_value:
-                    request.session['location'] = request.user.location
-                # When user change location on settings
-                elif request.session['location'] != cookie_value and \
-                        request.session['location'] == request.user.location:
-                    request.session['location'] = cookie_value
-                    save_location(request, cookie_value)
+                try:
+                    if request.session['location'] != request.user.location and \
+                            request.session['location'] == cookie_value:
+                        request.session['location'] = request.user.location
+                    # When user change location on settings
+                    elif request.session['location'] != cookie_value and \
+                            request.session['location'] == request.user.location:
+                        request.session['location'] = cookie_value
+                        save_location(request, cookie_value)
+                except KeyError:
+                    pass
             else:
                 save_location(request, cookie_value)
         else:
