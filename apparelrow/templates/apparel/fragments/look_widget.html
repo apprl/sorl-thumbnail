@@ -1,6 +1,6 @@
 {% spaceless %}
-<script>(function(d, i, n, w, h, o, o2) {
-    var ss = d.getElementsByTagName('script'), st = ss[ss.length - 1];
+<script id="embed-{{ identifier }}">(function(d, i, n, w, h, o, o2) {
+    var ss = d.getElementsByTagName('script'), st = d.getElementById('embed-'+ i);
     var s = d.createElement('script');
     s.src = '//'+ o2 +'js/apprlembed.js';
     s.addEventListener('load', function() {
