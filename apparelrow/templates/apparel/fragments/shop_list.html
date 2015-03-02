@@ -16,7 +16,7 @@
                 <br/>
                 {% trans 'Last modified' %}: {{ object.created|since }}
                 <br/>
-                <a class="btn btn-success" href="{% url 'create-shop' object.pk %}">Edit</a>
+                <a class="btn btn-success" href="{% url 'create-shop' object.pk %}">Edit</a> <a class="btn btn-danger" href="#" data-toggle="modal" data-shopid="{{ object.pk }}" data-shoptitle="{{ object.title }}" data-target="#modal_shop_delete">Delete</a>
             </p>
         </li>
     {% empty %}
@@ -28,3 +28,4 @@
 <div class="pagination">
     {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page only %}
 </div>
+{% include 'apparel/fragments/modal_shop_delete.html' %}
