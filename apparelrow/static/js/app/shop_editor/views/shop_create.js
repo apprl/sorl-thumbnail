@@ -75,6 +75,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         var window_height = $(window).height(),
             new_height = window_height - this.$el.offset().top - ($(window).width() >= 992 ? 20 : 0),
         $footer = $('.widget-footer:visible');
+        $header = $('#preview-header:visible');
+        new_height -= $header.length ? 39 : 0;
         new_height -= $footer.length ? $footer.height() : 0;
         this.$container.css('height', new_height);
     },
@@ -119,6 +121,10 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                     window.shop_create.init_products();
                 }});
             }
+            this.$el.find('#preview-header').html(liked_title);
+            $('#modal_embed_shop .modal-footer').find('.btn.hidden').removeClass('hidden');
+            $('#modal_embed_shop .modal-footer').find('.btn:first').addClass('hidden');
+            $(document).off('mouseenter', '.product-medium > .product-image-container');
             $('#shop-display-settings').find('.buttons').hide();
         } else {
             $('#product-chooser').find('.disabled').hide();
@@ -183,7 +189,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
 
     save_success: function(callback) {
         this.model._dirty = false;
-        // TODO: Can we get this value from elsewhere?
+        // Update title
+        $('.body-header h1 span').html('Edit ' + this.model.get('title'));
         if (callback) {
             callback(this.model.get('id'));
         } else {

@@ -137,6 +137,18 @@ def shop_instance_to_dict(shop):
 
     return shop_dict
 
+
+
+
+def delete_shop(request, shop_id):
+    shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
+    print HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+    if request.user.is_authenticated() and request.user == shop.user:
+        shop.delete()
+        return HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+    else:
+        return HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+
 class ShopCreateView(View):
     def get(self, request, pk, *args, **kwargs):
         if pk is not None:
@@ -173,6 +185,8 @@ class ShopCreateView(View):
         for key in required_keys:
             if key not in json_data:
                 return JSONResponse({ 'message': 'Missing key %s' % (key,) }, status=400)
+
+        shop.title = json_data['title']
 
         json_data['user'] = request.user
 
