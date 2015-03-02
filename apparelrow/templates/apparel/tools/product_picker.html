@@ -19,29 +19,29 @@
                 <a class="btn btn-primary btn-sm btn-product-reset hidden-xs" style="display:none;" href="#">{% trans "Reset" %}</a>
             </div>
             <div class="hidden-filters-container">
-                <a class="btn btn-primary btn-show-filters btn-sm"><span>{% trans "Filter products" %}</span> <b class="glyphicon glyphicon-chevron-down pull-right"></b></a>
+                <a class="btn btn-primary btn-show-filters btn-sm"><span>{% trans "Filter products" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
                 <ul class="hidden-filters list-inline">
                     <li class="btn-product-reset hidden-sm hidden-md hidden-lg dropdown" style="display:none">
-                        <a class="btn btn-primary btn-sm btn-product-reset" style="display:none;" href="#">{% trans "Reset filtering" %}</a>
+                        <a class="btn btn-primary btn-sm btn-product-reset" style="display:none;" href="#"><span>{% trans "Reset filtering" %}</span> <b class="glyphicon glyphicon-remove"></b></a>
                     </li>
                     <li id="product-filter-gender-2" class="dropdown left hidden-sm hidden-md hidden-lg">
-                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose gender" %}</span> <b class="glyphicon glyphicon-chevron-down pull-right"></b></a>
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose gender" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
                         <ul id="product-filter-gender" class="list-inline" style="display:none">
                             <li><a href="#" data-value="W"{% if gender == 'W' %} class="selected"{% endif %}>{% trans "Women" %}</a></li>
                             <li><a href="#" data-value="M"{% if gender == 'M' %} class="selected"{% endif %}>{% trans "Men" %}</a></li>
                         </ul>
                     </li>
                     <li id="product-filter-category" class="dropdown left">
-                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose category" %}</span> <b class="glyphicon glyphicon-chevron-down pull-right"></b></a>
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose category" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
                     </li>
                     <li id="product-filter-subcategory" class="dropdown left">
-                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Subcategory" %}"><span>{% trans "Subcategory" %}</span> <b class="glyphicon glyphicon-chevron-down pull-right"></b></a>
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Subcategory" %}"><span>{% trans "Subcategory" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
                     </li>
                     <li id="product-filter-color" class="dropdown">
-                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Color" %}"><span>{% trans "Color" %}</span> <b class="glyphicon glyphicon-chevron-down pull-right"></b></a>
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Color" %}"><span>{% trans "Color" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
                     </li>
                     <li id="product-filter-price" class="dropdown">
-                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Price" %}"><span>{% trans "Price" %}</span> <b class="glyphicon glyphicon-chevron-down pull-right"></b></a>
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Price" %}"><span>{% trans "Price" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
                     </li>
 
                 </ul>

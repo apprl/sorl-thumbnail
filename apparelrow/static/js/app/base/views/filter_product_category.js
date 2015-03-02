@@ -40,9 +40,9 @@ App.Views.FilterProductCategory = Backbone.View.extend({
 
     open: function(e) {
         if(this.sub_open) {
-            this.$el.removeClass('open');
+            this.$el.removeClass('open').find('.glyphicon').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
         } else {
-            this.$el.addClass('open');
+            this.$el.addClass('open').find('.glyphicon').addClass('glyphicon-chevron-up').removeClass('glyphicon-chevron-down');
         }
         this.sub_open = !this.sub_open;
 
@@ -55,7 +55,7 @@ App.Views.FilterProductCategory = Backbone.View.extend({
         var $pptarget = $ptarget.parent();
 
         if(!$target.is(this.$el) && !$ptarget.is(this.$el) && !$pptarget.is(this.$el)) {
-            this.$el.removeClass('open');
+            this.$el.removeClass('open').find('.glyphicon').addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-up');
             this.sub_open = false;
         }
     },

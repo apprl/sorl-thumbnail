@@ -121,10 +121,13 @@ html.look-type-C {
     a.close-product-chooser {
       width: 40px;
       height: 40px;
-      padding: 9px;
+      padding: 12px;
       position: absolute;
       right: 0px;
       top: 0px;
+      img {
+        vertical-align: baseline;
+      }
       @media (min-width: @screen-md) {
         display: none;
       }
@@ -137,31 +140,40 @@ html.look-type-C {
             overflow: hidden;
           }
         }
+        #product-filter-gender-2 {
+          ul {
+            float:none;
+            margin: 0 auto;
+          }
+        }
         #product-filter-gender {
-                padding-top: 5px;
-                padding-bottom: 5px;
-                margin-bottom: 0;
-                float:left;
-                width: 150px;
-                li {
-                    padding: 0;
-                }
-                li > a {
-                    .custom-radiobutton(1px 5px);
-                }
+            padding-top: 5px;
+            padding-bottom: 5px;
+            margin-bottom: 0;
+            float:left;
+            width: 150px;
+            li {
+                padding: 0;
             }
+            li > a {
+                .custom-radiobutton(1px 5px);
+            }
+        }
 
         .btn-show-filters {
           background-color: #666;
           border-color: #666;
+          padding-left:0px;
+          padding-right: 0px;
+          border-left: 0px;
+          border-right: 0px;
+          position: relative;
           &:hover {
             border-color: #666;
           }
         }
         li.btn-product-reset {
           a {
-            background-color: #d65180;
-            border-color: #d65180;
             margin-bottom: 10px;
           }
           margin-bottom: 0px;
@@ -265,7 +277,7 @@ html.look-type-C {
 
     }
     .product-filter-container {
-        padding: 0 10px 10px;
+        padding: 0 10px 0px;
         @media (min-width: @screen-md) {
           border-left: 2px solid @light_gray_color;
           border-right: 2px solid @light_gray_color;
@@ -274,15 +286,22 @@ html.look-type-C {
           padding-top: 7px;
           padding-bottom: 7px;
           min-width: 100px;
+          span {
+            display: block;
+            margin: 0px 17px;
+          }
+          .glyphicon {
+            position: absolute;
+            right: 13px;
+            top: 9px;
+          }
         }
         .hidden-filters {
           margin-bottom: 0px;
             li:first-child {
                 padding-left: 0;
             }
-            li:last-child {
-                padding-right: 0;
-            }
+
             .dropdown-menu {
                 max-height: 240px;
                 overflow-y: scroll;
