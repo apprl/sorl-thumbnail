@@ -213,7 +213,7 @@ class BrandMappingAdmin(admin.ModelAdmin):
     def num_products(self, brand):
         key = '%s_sum_brandmapping_products' % brand.id
         if not cache.get(key,None):
-            cache.set(key,brand.products.count(),60*10)
+            cache.set(key,brand.products.count(),60*60*24)
         return cache.get(key)
     num_products.admin_order_field = 'products__count'
 
