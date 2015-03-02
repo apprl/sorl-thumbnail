@@ -5,7 +5,7 @@ import optparse
 from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand, CommandError
 
-logger = logging.getLogger('dashboard.import')
+logger = logging.getLogger('affiliate_networks')
 
 
 class Command(BaseCommand):
