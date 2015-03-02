@@ -207,7 +207,8 @@ class BrandMappingAdmin(admin.ModelAdmin):
 
     def queryset(self, request):
         qs = super(BrandMappingAdmin, self).queryset(request)
-        return qs.annotate(Count('products'))
+        return qs
+        #return qs.annotate(Count('products'))
 
     def num_products(self, brand):
         key = '%s_sum_brandmapping_products' % brand.id
