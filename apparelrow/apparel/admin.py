@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.db.models import Count
-from django.forms import Form, CharField, MultipleHiddenInput, ModelChoiceField, ModelMultipleChoiceField, TextInput
+from django.forms import ModelForm, Form, CharField, MultipleHiddenInput, ModelChoiceField, ModelMultipleChoiceField, TextInput
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
@@ -155,7 +155,17 @@ admin.site.register(ShortDomainLink, ShortDomainLinkAdmin)
 # DOMAIN DEEP LINKING
 #
 
+class DomainDeepLinkingAdminForm(ModelForm):
+    def clean_template(self):
+        try:
+            self.cleaned_data['template'].format(sid='a', url='b', ulp='c')
+        except:
+            raise ValidationError('Broken template, check your variables')
+
+        return self.cleaned_data['template']
+
 class DomainDeepLinkingAdmin(admin.ModelAdmin):
+    form = DomainDeepLinkingAdminForm
     list_display = ('vendor', 'domain', 'template')
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size':'200'})},
