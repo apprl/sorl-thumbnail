@@ -124,6 +124,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             this.$el.find('#preview-header').html(liked_title);
             $('#modal_embed_shop .modal-footer').find('.btn.hidden').removeClass('hidden');
             $('#modal_embed_shop .modal-footer').find('.btn:first').addClass('hidden');
+            $('#product-chooser .disabled .info').show();
             $(document).off('mouseenter', '.product-medium > .product-image-container');
             $('#shop-display-settings').find('.buttons').hide();
         } else {
