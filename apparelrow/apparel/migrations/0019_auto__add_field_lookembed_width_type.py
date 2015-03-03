@@ -8,6 +8,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+
         # Adding field 'LookEmbed.width_type'
         db.add_column(u'apparel_lookembed', 'width_type',
                       self.gf('django.db.models.fields.CharField')(default='px', max_length=2),
@@ -15,6 +16,7 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+
         # Deleting field 'LookEmbed.width_type'
         db.delete_column(u'apparel_lookembed', 'width_type')
 

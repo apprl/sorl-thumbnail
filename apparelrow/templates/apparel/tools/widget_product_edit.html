@@ -1,0 +1,33 @@
+{% load i18n compressed %}
+{% load static from staticfiles %}
+
+<div id="product-widget-preview">
+    <div id="product-widget-display-settings">
+        <div class="buttons">
+            <p>{% trans 'What products do you want to include in your widget?' %}</p>
+            <a id="show_liked" data-value="likes" href="#" class="btn btn-primary btn-block">{% trans 'My latest likes' %}</a>
+            <a id="pick_products" data-value="pick" href="#" class="btn btn-primary btn-block">{% trans 'Choose products manually' %}</a>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#show_liked, #pick_products').click(function(e) {
+                e.preventDefault();
+                var show_liked = ($(this).attr('data-value') == 'likes');
+                App.Events.trigger('widget:product_display', show_liked);
+            });
+        });
+    </script>
+    <div id="preview-header" class="preview-header">
+        {%  trans 'My widget preview' %}
+    </div>
+    <div class="product-list-container">
+        <div id="product-widget-product-list" class="">
+            <a class="previous">Previous</a>
+            <a class="next">Next</a>
+            <ul class="product-list list-unstyled"></ul>
+        </div>
+    </div>
+</div>
+
+{% include 'apparel/tools/dialog_embed_product_widget.html' with request=request LANGUAGES=LANGUAGES external_product_widget_id=external_product_widget_id only %}

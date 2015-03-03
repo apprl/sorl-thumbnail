@@ -105,9 +105,10 @@ def embed(request, slug, identifier=None):
                                                            'components': components,
                                                            'width': str(width),
                                                            'height': str(height),
-                                                           'embed_width': settings.APPAREL_LOOK_SIZE[0],
-                                                           'embed_height': settings.APPAREL_LOOK_SIZE[1],
+                                                           'embed_width': str(width) or settings.APPAREL_LOOK_SIZE[0],
+                                                           'embed_height': str(height) or settings.APPAREL_LOOK_SIZE[1],
                                                            'embed_id': look_embed.identifier if look_embed else ''},)
+
     translation.deactivate()
 
     get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
@@ -283,6 +284,8 @@ def look_instance_to_dict(look):
         'component': look.component,
         'description': look.description,
         'published': look.published,
+        'width': look.width,
+        'height': look.height
     }
 
     if look.components:
@@ -298,6 +301,9 @@ def look_instance_to_dict(look):
                 'height': component.height,
                 'z_index': component.z_index,
                 'rotation': component.rotation,
+                'flipped': component.flipped,
+                'rel_left': float(component.left + (component.width/2 if look.component == 'P' else 0))/look.width,
+                'rel_top': float(component.top + (component.height/2 if look.component == 'P' else 0))/look.height,
                 'product': {
                     'id': component.product.id,
                     'slug': component.product.slug,
@@ -312,6 +318,24 @@ def look_instance_to_dict(look):
         look_dict['image'] = look.image.url
 
     return look_dict
+
+def crop_look(json_data):
+    padding = 20
+    top = left = width = height = None
+    if json_data['components']:
+        for component in json_data['components']:
+            top = component['top'] if component['top'] < top or top is None else top
+            width = (component['left'] + component['width']) if (component['left'] + component['width']) > width or width is None else width
+            height = (component['top'] + component['height']) if (component['top'] + component['height']) > height or height is None else height
+            left = component['left'] if component['left'] < left or left is None else left
+
+        for component in json_data['components']:
+            component['top'] = component['top'] - top
+            component['left'] = component['left'] - left
+
+        json_data['width'] = width - left
+        json_data['height'] = height - top
+
 
 
 class LookView(View):
@@ -360,6 +384,10 @@ class LookView(View):
         if json_data['published']:
             request.session['look_saved'] = True
 
+        # Crop area and adjust positions if we have a collage
+        if json_data['component'] == 'C':
+            crop_look(json_data)
+
         # Look components
         if json_data['components']:
 
@@ -377,7 +405,6 @@ class LookView(View):
                 if 'id' in component:
                     component_id = component['id']
                     del component['id']
-
                 product_id = component['product']['id']
                 del component['product']
 
@@ -457,6 +484,10 @@ class LookView(View):
             json_data['image'] = InMemoryUploadedFile(empty_image_io, None, '%s.png' % (uuid.uuid4().hex,), 'image/png', empty_image_io.len, None)
             json_data['image'].seek(0)
 
+         # Crop area and adjust positions if we have a collage
+        if json_data['component'] == 'C':
+            crop_look(json_data)
+
         # Add user
         json_data['user'] = request.user
 
@@ -505,7 +536,6 @@ class LookView(View):
         """
         if pk is not None:
             look = get_object_or_404(get_model('apparel', 'Look'), pk=pk)
-
             return JSONResponse(look_instance_to_dict(look))
 
         try:
