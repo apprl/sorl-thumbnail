@@ -17,13 +17,14 @@ class Importer(BaseImporter):
     token = '0827283ef88124a6ee4ef36b88a58dd030332d0e6fbb9b207a27020481a3817a'
     network_id = 3
 
-    def get_data(self, start_date, end_date):
+    def get_data(self, start_date, end_date, data=None):
         logger.info("Linkshare - Start importing from Affiliate Network")
         url = 'https://reportws.linksynergy.com/downloadreport.php?bdate=%s&edate=%s&token=%s&nid=%s&reportid=12' % (start_date.strftime('%Y%m%d'), end_date.strftime('%Y%m%d'), self.token, self.network_id)
         try:
-            response = requests.get(url)
-            logger.debug("Linkshare - Request sent successfully with status code %s"%(response.status_code))
-            data = response.text.encode('utf-8').splitlines()
+            if not data:
+                response = requests.get(url)
+                logger.debug("Linkshare - Request sent successfully with status code %s"%(response.status_code))
+                data = response.text.encode('utf-8').splitlines()
             reader = csv.DictReader(data, delimiter=',', quoting=csv.QUOTE_MINIMAL)
             for row in reader:
                 old_sale_id = '%s-%s' % (row['Order ID'], row['SKU Number'])
@@ -31,7 +32,6 @@ class Importer(BaseImporter):
                 # If it is not an old format sale record proceed
                 if not Sale.objects.filter(original_sale_id=old_sale_id).exists():
                     data_row = {}
-                    update = True
 
                     # Now sale ID is just based on Order ID, to handle the multiple products on the sale
                     # Common attributes
@@ -43,7 +43,7 @@ class Importer(BaseImporter):
                     data_row['original_commission'] = row['Commissions($)'].replace(',', '')
                     # TODO: same commission and amount for both USD and GBP from two
                     # diffrent reports, set GBP for now, can change when we know more.
-                    data_row['original_currency'] = 'GBP'
+                    data_row['original_currency'] = 'GBP' if not 'Currency' in row else row['Currency']
                     data_row['original_amount'] = row['Sales($)'].replace(',', '')
                     data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['Member ID'])
                     data_row['sale_date'] = dateutil.parser.parse('%s %s' % (row['Transaction Date'], row['Transaction Time']))
@@ -59,7 +59,6 @@ class Importer(BaseImporter):
                     data_row['original_commission'] = decimal.Decimal(data_row['original_commission'])
                     data_row['original_commission'] = decimal.Decimal("%.2f"%(round(data_row['original_commission'],2)))
                     data_row['original_amount'] = decimal.Decimal(data_row['original_amount'])
-
                     # Check if sale already exists
                     if Sale.objects.filter(original_sale_id=data_row['original_sale_id']).exists():
                         try:
@@ -106,7 +105,6 @@ class Importer(BaseImporter):
                     data_row = self.validate(data_row)
                     if not data_row:
                         continue
-                    if update:
-                        yield data_row
+                    yield data_row
         except RequestException as e:
             logger.warning("Linkshare - Connection error %s"%e)

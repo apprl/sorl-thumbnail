@@ -1,7 +1,7 @@
 import re
 import urllib
 import decimal
-import json
+import os
 
 from django.conf import settings
 from django.core import mail
@@ -1309,3 +1309,49 @@ class TestUserEarnings(TransactionTestCase):
         for earning in earnings:
             self.assertEqual(earning.status, get_model('dashboard', 'Sale').CONFIRMED)
 
+class TestAffiliateNetworks(TransactionTestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        self.user.location = 'SE'
+        self.user.save()
+
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+
+        for i in range(1, 10):
+            get_model('apparel', 'Product').objects.create(sku=str(i))
+
+    def test_linkshare_parser(self):
+        text = open(os.path.join(settings.PROJECT_ROOT, 'static/test_files/linkshare_test.csv')).read()
+        data = text.splitlines()
+        management.call_command('dashboard_import', 'linkshare', data=data, verbosity=0, interactive=False)
+
+        sale_model = get_model('dashboard', 'Sale')
+
+        self.assertEqual(sale_model.objects.count(), 42)
+        # Test one sale is generated if contains  multiple products
+        sale = sale_model.objects.filter(original_sale_id='500953651').count()
+        self.assertEqual(sale, 1)
+
+        sale = sale_model.objects.get(original_sale_id='500953651')
+        # Test when a sale is cancelled
+        self.assertAlmostEqual(sale.original_amount, 0)
+        self.assertAlmostEqual(sale.original_commission, 0)
+        self.assertEqual(sale.status, sale_model.DECLINED)
+
+        sale = sale_model.objects.get(original_sale_id='4105550')
+        # Test products are being summarized in the sale
+        self.assertAlmostEqual(sale.original_amount, decimal.Decimal('119.88'))
+        self.assertAlmostEqual(sale.original_commission, decimal.Decimal('7.20'))
+        self.assertGreater(sale.status, sale_model.PENDING)
+
+        sale = sale_model.objects.get(original_sale_id='500873991')
+        # Multiple products, all  were cancelled
+        self.assertAlmostEqual(sale.original_amount, 0)
+        self.assertAlmostEqual(sale.original_commission, 0)
+        self.assertEqual(sale.status, sale_model.DECLINED)
+
+        sale = sale_model.objects.get(original_sale_id='500864773')
+        # Multiple products, some  were cancelled
+        self.assertAlmostEqual(sale.original_amount, decimal.Decimal('150.55'))
+        self.assertAlmostEqual(sale.original_commission, decimal.Decimal('9.03'))
+        self.assertGreater(sale.status, sale_model.PENDING)

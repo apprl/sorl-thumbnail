@@ -35,7 +35,7 @@ class Importer(BaseImporter):
 
         return Sale.INCOMPLETE
 
-    def get_data(self, start_date, end_date):
+    def get_data(self, start_date, end_date, data=None):
         logger.info("Tradedoubler - Start importing from Affiliate Network")
         url = self.url % (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
         try:

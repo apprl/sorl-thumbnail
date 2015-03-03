@@ -17,6 +17,10 @@ class Command(BaseCommand):
             dest='days',
             help='Start date set to current date - selected number of days',
             default=90,
+        ),optparse.make_option('--data',
+            action='store',
+            dest='data',
+            default=None,
         ),
     )
 
@@ -36,6 +40,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         end_date = datetime.date.today()
         start_date = end_date - datetime.timedelta(days=int(options.get('days')))
+        data = options.get('data')
 
         if not args:
             args = self.affiliates
@@ -46,7 +51,7 @@ class Command(BaseCommand):
                 instance = module.Importer()
                 logger.info('Importing %s' % (instance.name,))
                 try:
-                    for row in instance.get_data(start_date, end_date):
+                    for row in instance.get_data(start_date, end_date, data):
                         logger.debug('Updating row: %s' % (row,))
                         sale_instance = self.update(row)
                 except Exception as e:
