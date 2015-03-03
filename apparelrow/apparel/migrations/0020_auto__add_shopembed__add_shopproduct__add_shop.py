@@ -45,6 +45,11 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'apparel', ['Shop'])
 
+        # Adding field 'LookComponent.flipped'
+        db.add_column(u'apparel_lookcomponent', 'flipped',
+                      self.gf('django.db.models.fields.BooleanField')(default=False),
+                      keep_default=False)
+
 
     def backwards(self, orm):
         # Deleting model 'ShopEmbed'
@@ -55,6 +60,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Shop'
         db.delete_table(u'apparel_shop')
+
+        # Deleting field 'LookComponent.flipped'
+        db.delete_column(u'apparel_lookcomponent', 'flipped')
 
 
     models = {
