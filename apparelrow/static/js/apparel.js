@@ -371,11 +371,10 @@ $(document).ready(function() {
         $('.navbar .navbar-responsive-collapse').collapse('hide');
     });
 
-    if ('createTouch' in document) {
+    if (('createTouch' in document)) {
         try {
             var ignore = /:hover/;
             for (var i = 0; i < document.styleSheets.length; i++) {
-                console.log(1);
                 var sheet = document.styleSheets[i];
                 if (!sheet.cssRules) {
                     continue;
