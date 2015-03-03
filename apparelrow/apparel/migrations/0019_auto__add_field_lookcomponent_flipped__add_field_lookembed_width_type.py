@@ -8,10 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'LookComponent.flipped'
-        db.add_column(u'apparel_lookcomponent', 'flipped',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
 
         # Adding field 'LookEmbed.width_type'
         db.add_column(u'apparel_lookembed', 'width_type',
@@ -20,8 +16,6 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Deleting field 'LookComponent.flipped'
-        db.delete_column(u'apparel_lookcomponent', 'flipped')
 
         # Deleting field 'LookEmbed.width_type'
         db.delete_column(u'apparel_lookembed', 'width_type')
@@ -119,7 +113,6 @@ class Migration(SchemaMigration):
         u'apparel.lookcomponent': {
             'Meta': {'object_name': 'LookComponent'},
             'component_of': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
-            'flipped': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'height': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'left': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
