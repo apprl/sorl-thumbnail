@@ -143,8 +143,17 @@ class Cut(models.Model):
                                            'is the User id. Cut replaces the cut value for the user and the current cut'
                                            ' and Tribute replaces the tribute value the user has to pay to the network '
                                            'owner')
+
+    class Meta:
+        ordering = ('group', 'vendor')
+
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
+
+class ClickCost(models.Model):
+    cut = models.ForeignKey('dashboard.Cut', null=False, blank=False)
+    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Click cost'))
+    currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
 
 
 class Signup(models.Model):
