@@ -13,8 +13,6 @@
   <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;overflow:hidden;">
   <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look" target="_blank" title="Follow {{ object.user.display_name }} on APPRL" style="text-decoration:none;color:#000000;float:left;font-size:12px;">+ follow {{ object.user.display_name }}</a>
     <span style="font-size:12px;color:#000000;float:left;"> &nbsp;</span>
-    <a href="http://{{ request.get_host }}{{ object.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look" target="_blank" title="View this look & create your own on APPRL" style="text-decoration:none;color:#000000;float:left;font-size:12px;">\ go to look</a>
-    <span style="font-size:12px;color:#000000;float:left;"> &nbsp;</span>
     <a href="http://{{ request.get_host }}?aid={{ object.user.pk }}&alink=Ext-Look" target="_blank" title="Follow friends, bloggers & brands on APPRL" style="text-decoration:none;color:#000000;float:right;font-size:12px;">\ powered by APPRL</a>
   </p>
 </div>

@@ -109,6 +109,8 @@
             });
 
             return false;
+        }).on('change', 'input, select', function() {
+            $('#id_look_embed_code').parent().hide();
         });
     });
 </script>
