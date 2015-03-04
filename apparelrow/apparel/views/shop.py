@@ -1,6 +1,3 @@
-import re
-import math
-import os.path
 import decimal
 import json
 
@@ -26,14 +23,12 @@ from django.views.generic import View
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
 from apparelrow.apparel.search import ApparelSearch
-from apparelrow.apparel.models import Product
 from apparelrow.apparel.models import Brand
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
 from apparelrow.apparel.models import ShopEmbed
-from apparelrow.apparel.models import ShopProduct
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 
@@ -142,10 +137,13 @@ def shop_instance_to_dict(shop):
 
 def delete_shop(request, shop_id):
     shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
-    print HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+
     if request.user.is_authenticated() and request.user == shop.user:
         shop.delete()
-        return HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+        if get_model('apparel', 'Shop').objects.filter(user=request.user).exists():
+            return HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+        else:
+            return HttpResponseRedirect(reverse('profile-likes', args=(request.user.slug,)))
     else:
         return HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
 
