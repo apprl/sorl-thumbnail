@@ -322,7 +322,8 @@ def build_static_look_image(look_id):
 
     for component in look.display_components.order_by('z_index').all():
         if look.display_with_component == 'P':
-            component_image = Image.open(finders.find('images/look-hotspot.png'))
+            component_image = Image.open(finders.find('images/look-hotspot.png')).resize((40, 40), Image.ANTIALIAS)
+
         else:
             if not component.product.product_image:
                 continue
