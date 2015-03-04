@@ -46,7 +46,7 @@ $(document).ready(function() {
             <div class="col-sm-10 profile-content">
                 <h1>{{ profile.display_name }}</h1>
                 {% if request.user.is_authenticated and request.user == profile %}
-                <a class="btn btn-primary btn-create-shop" data-slug="{{ request.user.slug }}" data-toggle="modal" data-target="#modal_embed_shop">{% trans "Create a shop on your site" %}</a>
+                <a class="btn btn-primary btn-create-shop" data-slug="{{ request.user.slug }}" href="{% url 'create-shop' %}">{% trans "Create a shop on your site" %}</a>
                 {% else %}
                 {% include 'apparel/fragments/follow.html' %}
                 {% endif %}
@@ -72,7 +72,7 @@ $(document).ready(function() {
 
         <div class="profile-navigation row">
             <div class="col-lg-12">
-                {% with likes_url=profile.url_likes looks_url=profile.url_looks followers_url=profile.url_followers following_url=profile.url_following %}
+                {% with likes_url=profile.url_likes looks_url=profile.url_looks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
                 <ul class="list-inline">
                     <li>
                     {% if profile and profile.is_brand %}
@@ -90,6 +90,11 @@ $(document).ready(function() {
                     <li>
                         <a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">
                             {% blocktrans count profile.looks as look_count %}{{look_count}} Look{% plural %}{{look_count}} Looks{% endblocktrans %}
+                        </a>
+                    </li>
+                    <li>
+                        <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">
+                            {% blocktrans count profile.shops as shop_count %}{{shop_count}} Shop{% plural %}{{shop_count}} Shops{% endblocktrans %}
                         </a>
                     </li>
                     <li>

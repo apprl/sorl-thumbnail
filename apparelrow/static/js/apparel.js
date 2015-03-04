@@ -302,10 +302,12 @@ $(document).ready(function() {
         if(!element.data('load_data')) {
             like_element = element.find('.btn-product-like');
             $.getJSON(product_popup_url + '?id=' + product_id, function(json) {
-                if(json[0].liked == true) {
-                    likeElement(like_element);
-                } else {
-                    unlikeElement(like_element);
+                if(json.length) {
+                    if (json[0].liked == true) {
+                        likeElement(like_element);
+                    } else {
+                        unlikeElement(like_element);
+                    }
                 }
             });
         }
@@ -368,6 +370,42 @@ $(document).ready(function() {
         FB.ui({method: 'apprequests', message: 'I think you should try Apprl! All the best stores in one place and you can follow friends, bloggers & brands.', filters: ['app_non_users']});
         $('.navbar .navbar-responsive-collapse').collapse('hide');
     });
+
+    if ('createTouch' in document) {
+        try {
+            var ignore = /:hover/;
+            for (var i = 0; i < document.styleSheets.length; i++) {
+                console.log(1);
+                var sheet = document.styleSheets[i];
+                if (!sheet.cssRules) {
+                    continue;
+                }
+                for (var j = sheet.cssRules.length - 1; j >= 0; j--) {
+                    var rule = sheet.cssRules[j];
+                    if (rule.type === CSSRule.STYLE_RULE && ignore.test(rule.selectorText)) {
+                        if (rule.selectorText.indexOf(',') == -1) {
+                            sheet.deleteRule(j);
+                        } else {
+                            var selectors = rule.selectorText.split(',');
+                            for (var k = 0; k < selectors.length; k++) {
+                                if (ignore.test(selectors[k])) {
+                                    selectors.splice(k, 1);
+                                    k--;
+                                }
+                            }
+
+                            sheet.deleteRule(j);
+                            if (selectors.length) {
+                                sheet.insertRule(selectors.join(',') + /{.+}/.exec(rule.cssText), j);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (e) {
+        }
+    }
 });
 
 function getElementId(element, numeric) {

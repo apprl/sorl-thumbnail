@@ -278,13 +278,23 @@ body {
         text-align: center;
         > ul {
             > li {
+                width: 100%;
                 padding-right: 0;
                 padding-left: 10px;
                 > .btn {
+                    width: 100%;
                     margin-top: 10px;
                     padding-top: 10px;
                     padding-bottom: 10px;
                 }
+            }
+            @media (min-width: @grid-float-breakpoint) {
+              > li {
+                width: auto;
+                > .btn {
+                  width: auto;
+                }
+              }
             }
             .dropdown-menu {
                 left: auto;
@@ -1084,6 +1094,14 @@ footer {
                 .make-sm-column(6);
             }
         }
+         &.no-filters {
+          .col-product-list {
+            .make-sm-column(12);
+            .col-product-item {
+              .make-sm-column(4);
+            }
+          }
+        }
     }
     @media (min-width: @screen-desktop) {
         .col-product-filter { .make-sm-column(4); }
@@ -1093,16 +1111,33 @@ footer {
                 .make-sm-column(4);
             }
         }
+         &.no-filters {
+          .col-product-list {
+            .make-sm-column(12);
+            .col-product-item {
+              .make-sm-column(3);
+            }
+          }
+        }
     }
     @media (min-width: @screen-lg-desktop) {
-        .col-product-filter { .make-sm-column(3); }
+        .col-product-filter { .make-sm-column(4); }
         .col-product-list {
-            .make-sm-column(9);
+            .make-sm-column(8);
             .col-product-item {
                 .make-sm-column(4);
             }
         }
+        &.no-filters {
+          .col-product-list {
+            .make-sm-column(12);
+            .col-product-item {
+              .make-sm-column(3);
+            }
+          }
+        }
     }
+
     #reset {
         position: absolute;
         top: -2px;
@@ -1498,6 +1533,18 @@ body.shop, body.profile-likes {
 // Load look css
 // -------------------------
 @import "./look.less";
+
+// Load store css
+// -------------------------
+@import "./store.less";
+
+// Load product widget css
+// -------------------------
+@import "./product_widget.less";
+
+// Load widget css
+// -------------------------
+@import "./widget.less";
 
 // Load profile css
 // -------------------------

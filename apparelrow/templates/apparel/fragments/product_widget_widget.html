@@ -1,0 +1,12 @@
+{% spaceless %}
+<div style="width: {{ object.width }}{{ object.width_type }};"><iframe src="//{{ request.get_host }}/embed/productwidget/{{ object.pk }}" width="{{ object.width }}{{ object.width_type }}" scrolling="no" height="{{ object.height }}" frameborder="0"></iframe></div>
+<div style="width: {{ width }}{{ width_type }}; margin: 0px auto;">
+  <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;overflow:hidden;">
+  <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look" title="Follow me on APPRL" style="text-decoration:none;color:#000000;float:left;font-size:12px;">+ follow {{ object.user.display_name }}</a>
+    <span style="font-size:12px;color:#000000;float:left;"> &nbsp;</span>
+    <a href="http://{{ request.get_host }}{{ object.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look" title="View this look & create your own on APPRL" style="text-decoration:none;color:#000000;float:left;font-size:12px;">\ go to look</a>
+    <span style="font-size:12px;color:#000000;float:left;"> &nbsp;</span>
+    <a href="http://{{ request.get_host }}?aid={{ object.user.pk }}&alink=Ext-Look" title="Follow friends, bloggers & brands on APPRL" style="text-decoration:none;color:#000000;float:right;font-size:12px;">\ APPRL</a>
+  </p>
+</div>
+{% endspaceless %}

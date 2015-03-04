@@ -5,6 +5,8 @@ from django.views.generic import TemplateView, RedirectView
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
+from apparelrow.apparel.views.shop import ShopCreateView
+from apparelrow.apparel.views.product_widget import ProductWidgetView
 from apparelrow.apparel.views import BrandRedirectView
 
 urlpatterns = patterns('',
@@ -37,10 +39,27 @@ urlpatterns = patterns('',
     url(r'^shop/$', 'apparelrow.apparel.browse.browse_products', name='shop'),
     url(r'^shop/men/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^shop/women/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
+    url(r'^shop/create/$', 'apparelrow.apparel.views.shop.create_shop', name='create-shop'),
+    url(r'^shop/edit/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.create_shop', name='create-shop'),
+    url(r'^shop/delete/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.delete_shop', name='shop-delete'),
+    url(r'^embed/shop/(?P<embed_shop_id>\d+)/$', 'apparelrow.apparel.views.shop.embed_shop', name='embed-shop'),
+    url(r'^shop/create/api/$', ShopCreateView.as_view(), name='create_shop'),
+    url(r'^shop/create/api/(?P<pk>\d+)/?$', ShopCreateView.as_view(), name='create_shop'),
+    url(r'^shop/widget/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.shop_widget', name='shop-widget'),
+    url(r'^dialog/embed/shop/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.dialog_embed', name='dialog-shop-embed'),
 
     # Shop embed - wardrobe
     url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
     url(r'^widget/shop/$', 'apparelrow.apparel.browse.shop_widget', name='shop-widget'),
+
+    # Product widget
+    url(r'^productwidget/create/single/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'single'}, name='create-product-widget-single'),
+    url(r'^productwidget/create/multiple/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'multiple'}, name='create-product-widget-multiple'),
+    url(r'^productwidget/edit/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.editor', name='edit-product-widget'),
+    url(r'^productwidget/widget/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.product_widget_widget', name='product-widget'),
+    url(r'^productwidget/api/$', ProductWidgetView.as_view(), name='product_widget-api'),
+    url(r'^productwidget/api/(?P<pk>\d+)/?$', ProductWidgetView.as_view(), name='product_widget-api'),
+    url(r'^embed/productwidget/(?P<embed_product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.embed_product_widget', name='embed-product-widget'),
 
     # About pages
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),
