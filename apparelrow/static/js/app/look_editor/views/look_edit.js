@@ -131,7 +131,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     _get_hotspot: function(e) {
         // TODO: maybe use dynamic scale for hotspot size instead of 80x80
-        var size = 80,
+        var size = 40,
             $container = this.$el.find('.look-container'),
             container_offset = $container.offset(),
             container_width = $container.width() - size,
@@ -142,10 +142,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     _create_photo_component: function(position) {
         var $container = $('.look-container');
-        return new App.Models.LookComponent().set(_.extend({width: 80,
-            height: 80,
-            rel_left: (position.left+40)/$container.width(),
-            rel_top: (position.top+40)/$container.height()}, position));
+        var size = 40;
+        return new App.Models.LookComponent().set(_.extend({width: size,
+            height: size,
+            rel_left: (position.left+size/2)/$container.width(),
+            rel_top: (position.top+size/2)/$container.height()}, position));
     },
 
     _create_collage_component: function(product) {
@@ -258,7 +259,10 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     render_temporary_image: function() {
         if(external_look_type == 'photo' && !this.model.has('image')) {
-            this.$el.find('.look-container').append(this.temporary_image_view.render().el);
+            if (!this.$el.find('.look-container #temporaryimage').length) {
+                this.initialize_temporary_image();
+                this.$el.find('.look-container').append(this.temporary_image_view.render().el);
+            }
         }
     },
 
