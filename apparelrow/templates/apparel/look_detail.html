@@ -120,7 +120,7 @@
                             {% thumbnail object.image "720" upscale=True as im %}
                             <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
                             {% endthumbnail %}
-                            <div class="component-wrapper" style="width: {{ wrapper_element.width }}%; height: {{ wrapper_element.height }}%;position:absolute; top:50%; left:50%; transform:translateX(-50%) translateY(-50%);">
+                            <div class="component-wrapper" style="width: {{ wrapper_element.width }}%; height: {{ wrapper_element.height }}%;">
                                 {% for component in object.collage_components.all %}
                                     {% thumbnail component.product.product_image "224x291" crop=False format="PNG" transparent=True as im %}
                                     <a href="{{ component.product.get_absolute_url }}" data-container="body" data-toggle="popover" data-placement="auto" data-trigger="click" class="product collage-image {% if component.flipped %}flipped{% endif %}" style="{{ component.style_percentage }}">

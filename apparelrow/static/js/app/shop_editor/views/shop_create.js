@@ -50,7 +50,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         $('.body-header-col-right .btn-delete').parent().show();
         $('.body-header-col-right .btn-reset').parent().hide();
         if(this.model.attributes.hasOwnProperty('products')) {
-            for (var i = 0; i < this.model.attributes.products.length; i++) {
+            for (var i = this.model.attributes.products.length - 1; i >= 0; i--) {
                 var product = this.model.attributes.products[i];
                 var self = this;
                 var component = new App.Models.ShopComponent();
@@ -58,7 +58,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                     product.discount_price = 0;
                 }
                 component.set('product', product);
-                self.model.components.add(component);
+                self.model.components.unshift(component);
             }
         }
         $(window).trigger('resize');
@@ -89,7 +89,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         var $container = $('#shop-product-list');
 
         self.add_product_to_component(component, product);
-        self.model.components.add(component);
+        self.model.components.unshift(component);
     },
     add_product_to_component: function(component, product) {
         component.set('product', product.toJSON());
@@ -98,7 +98,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     add_component: function(model, collection) {
         this.update_title(1);
         var view = new App.Views.ShopComponentProduct({ model: model, collection: collection });
-        this.$('#shop-product-list .product-list').append(view.render().el);
+        this.$('#shop-product-list .product-list').prepend(view.render().el);
     },
     update_title: function(delta, val) {
         var $title = this.$el.find('#preview-header');
@@ -113,7 +113,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     },
     product_display: function(show_liked) {
         this.model.set('show_liked', show_liked);
-
+        this.init_footer();
         if(show_liked) {
             if (!this.model.attributes.id) {
                 this.save_shop({ title: "My latest likes", 'callback': function() {
@@ -122,6 +122,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                 }});
             }
             this.$el.find('#preview-header').html(liked_title);
+            $('.widget-footer .btn-add-item').prop('disabled', true);
             $('#modal_embed_shop .modal-footer').find('.btn.hidden').removeClass('hidden');
             $('#modal_embed_shop .modal-footer').find('.btn:first').addClass('hidden');
             $('#product-chooser .disabled .info').show();
@@ -133,7 +134,6 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             $('#shop-product-list').removeClass('liked-products');
             $('.body-header-col-right ul').show();
             $('.body-header-col-right .btn-delete').parent().hide();
-            this.init_footer();
         }
         $('#shop-preview').removeClass('splash');
         this.resize();

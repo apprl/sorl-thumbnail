@@ -35,7 +35,7 @@
                 <div id="edit-look"></div>
 
             </div>
-            <div id="startsplash">{% trans "Start by adding the items here" %}</div>
+            <div id="startsplash">{% if object and not object.id %}{% trans "Start by adding the items here" %}{% endif %}</div>
             <div class="col-md-6 visible-md visible-lg">
                 {% include "apparel/tools/product_picker.html" %}
             </div>
