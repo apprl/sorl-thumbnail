@@ -121,6 +121,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                     window.shop_create.init_products();
                 }});
             }
+            $('body').addClass('show-liked');
             this.$el.find('#preview-header').html(liked_title);
             $('.widget-footer .btn-add-item').prop('disabled', true);
             $('#modal_embed_shop .modal-footer').find('.btn.hidden').removeClass('hidden');

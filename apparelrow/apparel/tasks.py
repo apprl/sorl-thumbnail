@@ -298,7 +298,7 @@ def build_static_look_image(look_id):
     image = Image.new('RGBA', settings.APPAREL_LOOK_SIZE, (255, 255, 255, 255))
     offset_left = 0
     offset_top = 0
-
+    component_size = 40
     if look.display_with_component == 'P' and look.image:
         # Reuse photo image
         thumbnail = ''
@@ -322,7 +322,7 @@ def build_static_look_image(look_id):
 
     for component in look.display_components.order_by('z_index').all():
         if look.display_with_component == 'P':
-            component_image = Image.open(finders.find('images/look-hotspot.png')).resize((40, 40), Image.ANTIALIAS)
+            component_image = Image.open(finders.find('images/look-hotspot.png')).resize((component_size, component_size), Image.ANTIALIAS)
 
         else:
             if not component.product.product_image:

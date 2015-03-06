@@ -6354,76 +6354,76 @@ fieldset[disabled] .btn-default.active {
   background-color: #ffffff;
 }
 #embed_shop_form .btn-default,
-#embed_look_form {
+#embed_look_form .btn_default {
   color: #333333;
   background-color: #ffffff;
   border-color: #cccccc;
 }
 #embed_shop_form .btn-default:hover,
-#embed_look_form:hover,
+#embed_look_form .btn_default:hover,
 #embed_shop_form .btn-default:focus,
-#embed_look_form:focus,
+#embed_look_form .btn_default:focus,
 #embed_shop_form .btn-default.focus,
-#embed_look_form.focus,
+#embed_look_form .btn_default.focus,
 #embed_shop_form .btn-default:active,
-#embed_look_form:active,
+#embed_look_form .btn_default:active,
 #embed_shop_form .btn-default.active,
-#embed_look_form.active,
+#embed_look_form .btn_default.active,
 .open > .dropdown-toggle#embed_shop_form .btn-default,
-.open > .dropdown-toggle#embed_look_form {
+.open > .dropdown-toggle#embed_look_form .btn_default {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #adadad;
 }
 #embed_shop_form .btn-default:active,
-#embed_look_form:active,
+#embed_look_form .btn_default:active,
 #embed_shop_form .btn-default.active,
-#embed_look_form.active,
+#embed_look_form .btn_default.active,
 .open > .dropdown-toggle#embed_shop_form .btn-default,
-.open > .dropdown-toggle#embed_look_form {
+.open > .dropdown-toggle#embed_look_form .btn_default {
   background-image: none;
 }
 #embed_shop_form .btn-default.disabled,
-#embed_look_form.disabled,
+#embed_look_form .btn_default.disabled,
 #embed_shop_form .btn-default[disabled],
-#embed_look_form[disabled],
+#embed_look_form .btn_default[disabled],
 fieldset[disabled] #embed_shop_form .btn-default,
-fieldset[disabled] #embed_look_form,
+fieldset[disabled] #embed_look_form .btn_default,
 #embed_shop_form .btn-default.disabled:hover,
-#embed_look_form.disabled:hover,
+#embed_look_form .btn_default.disabled:hover,
 #embed_shop_form .btn-default[disabled]:hover,
-#embed_look_form[disabled]:hover,
+#embed_look_form .btn_default[disabled]:hover,
 fieldset[disabled] #embed_shop_form .btn-default:hover,
-fieldset[disabled] #embed_look_form:hover,
+fieldset[disabled] #embed_look_form .btn_default:hover,
 #embed_shop_form .btn-default.disabled:focus,
-#embed_look_form.disabled:focus,
+#embed_look_form .btn_default.disabled:focus,
 #embed_shop_form .btn-default[disabled]:focus,
-#embed_look_form[disabled]:focus,
+#embed_look_form .btn_default[disabled]:focus,
 fieldset[disabled] #embed_shop_form .btn-default:focus,
-fieldset[disabled] #embed_look_form:focus,
+fieldset[disabled] #embed_look_form .btn_default:focus,
 #embed_shop_form .btn-default.disabled.focus,
-#embed_look_form.disabled.focus,
+#embed_look_form .btn_default.disabled.focus,
 #embed_shop_form .btn-default[disabled].focus,
-#embed_look_form[disabled].focus,
+#embed_look_form .btn_default[disabled].focus,
 fieldset[disabled] #embed_shop_form .btn-default.focus,
-fieldset[disabled] #embed_look_form.focus,
+fieldset[disabled] #embed_look_form .btn_default.focus,
 #embed_shop_form .btn-default.disabled:active,
-#embed_look_form.disabled:active,
+#embed_look_form .btn_default.disabled:active,
 #embed_shop_form .btn-default[disabled]:active,
-#embed_look_form[disabled]:active,
+#embed_look_form .btn_default[disabled]:active,
 fieldset[disabled] #embed_shop_form .btn-default:active,
-fieldset[disabled] #embed_look_form:active,
+fieldset[disabled] #embed_look_form .btn_default:active,
 #embed_shop_form .btn-default.disabled.active,
-#embed_look_form.disabled.active,
+#embed_look_form .btn_default.disabled.active,
 #embed_shop_form .btn-default[disabled].active,
-#embed_look_form[disabled].active,
+#embed_look_form .btn_default[disabled].active,
 fieldset[disabled] #embed_shop_form .btn-default.active,
-fieldset[disabled] #embed_look_form.active {
+fieldset[disabled] #embed_look_form .btn_default.active {
   background-color: #ffffff;
   border-color: #cccccc;
 }
 #embed_shop_form .btn-default .badge,
-#embed_look_form .badge {
+#embed_look_form .btn_default .badge {
   color: #ffffff;
   background-color: #333333;
 }
@@ -9863,8 +9863,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .look-hotspot .hotspot,
 .look-hotspot .ar-hotspot {
   position: absolute;
-  width: 80px;
-  height: 80px;
+  width: 40px;
+  height: 40px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -9924,7 +9924,7 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   color: #FFF;
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
   right: -14px;
-  top: -14px;
+  top: -23px;
 }
 #collage .delete:hover,
 #photo-background .delete:hover,
@@ -9960,8 +9960,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 #photo-background .ar-hotspot,
 #photo .ar-hotspot {
   position: absolute;
-  width: 80px;
-  height: 80px;
+  width: 40px;
+  height: 40px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -9985,6 +9985,15 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 #collage-background {
   position: relative;
   border: 1px solid #eeeeee;
+}
+#collage-background .component-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 #collage-background .product {
   position: absolute;
@@ -10322,6 +10331,9 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   width: 100%;
   margin-top: 10px;
 }
+.widget-page #popup-slim .add-container {
+  text-align: center;
+}
 .widget-page footer {
   display: none;
 }
@@ -10557,15 +10569,15 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   height: 100%;
 }
 #photo-markers .hotspot {
-  background-image: url('../images/look-hotspot.png');
   position: absolute;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -o-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
   background-size: contain;
-  width: 80px;
-  height: 80px;
+  cursor: pointer;
 }
 @media (max-width: 480px) {
   #photo-markers .hotspot {
@@ -10623,9 +10635,14 @@ html.look-type-C .collage {
   z-index: 10;
 }
 #product-chooser .disabled .info {
+  position: absolute;
   display: none;
-  background: #FFF;
-  padding: 15px;
+  padding: 0 15px;
+  top: 50%;
+  -webkit-transform: translate(0%, -50%);
+  -ms-transform: translate(0%, -50%);
+  -o-transform: translate(0%, -50%);
+  transform: translate(0%, -50%);
 }
 #product-chooser #product-tabs > li {
   background-color: #e6e6e6;
@@ -10850,6 +10867,11 @@ html.look-type-C .collage {
 #product-chooser .product-filter-container {
   padding: 0 10px 0px;
 }
+@media (min-width: 768px) {
+  #product-chooser .product-filter-container {
+    padding-bottom: 10px;
+  }
+}
 @media (min-width: 992px) {
   #product-chooser .product-filter-container {
     border-left: 2px solid #d9d9d9;
@@ -10914,7 +10936,7 @@ html.look-type-C .collage {
 }
 #product-list .product-list.hide-captions .caption {
   visibility: hidden;
-  height: 40px;
+  height: 10px;
 }
 .widget-footer {
   bottom: 0px;
@@ -11104,15 +11126,20 @@ html.look-type-C .collage {
   top: 50%;
   left: 50%;
   width: 80%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
 }
 @media (min-width: 768px) {
   .create-product-widget-page #product-widget-display-settings {
     width: 50%;
   }
+}
+.show-liked #product-chooser .product-filter-container > div {
+  visibility: hidden;
+}
+.show-liked #product-chooser .product-list-container > div,
+.show-liked #product-chooser .product-list-container > ul {
+  visibility: hidden;
 }
 .profile-welcome {
   background-color: #ffffff;
