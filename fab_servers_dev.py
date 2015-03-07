@@ -93,6 +93,7 @@ def dev_admin():
     env.restart = ['gunicorn_admin','nginx']
     env.hostname="dev-admin"
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
+    env.collectstatic = True
 
 @task
 def dev_solr():
@@ -137,7 +138,8 @@ def prestaging_common(settings=None):
     env.user = 'deploy'
     env.group = env.user
     env.run_user = 'www-data'
-    env.installed_apps = ['supervisor-gunicorn-norelic','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',]
+    #env.installed_apps = ['supervisor-gunicorn-norelic','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',]
+    env.installed_apps = ['supervisor-gunicorn-norelic','gunicorn',]
     env.venv_home = "/home/%(user)s" % env
     env.venv_path = "%(venv_home)s/%(project_name)s-%(settings)s" % env
     env.path = env.venv_path
