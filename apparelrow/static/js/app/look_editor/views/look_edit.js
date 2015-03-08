@@ -191,7 +191,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             this.pending_product = false;
             this.pending_event = false;
         } else {
-            if ($(window).width() < 992) {
+            if ($(window).width() < 992 && isMobileDevice() && external_look_type == 'photo') {
                 this.pending_event = e;
                 this.show_product_filter();
             }
