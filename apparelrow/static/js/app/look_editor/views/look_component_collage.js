@@ -184,9 +184,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                 this.applyTransform();
             }, this));
             this.hammertime.on("rotateend", _.bind(function(event) {
-                this.transform.angle = event.rotation + rotatestart;
-                this.model.set('rotation', event.rotation);
-                this.applyTransform();
+                this.model.set('rotation', this.transform.angle);
                 rotatestart = false;
                 this.recoup = this.getRecoup(this.$el.position());
                 this.$el.css({'left': this.recoup.left + this.model.get('left'), 'top': this.recoup.top + this.model.get('top')});

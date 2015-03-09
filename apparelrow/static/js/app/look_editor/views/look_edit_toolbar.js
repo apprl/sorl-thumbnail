@@ -34,7 +34,6 @@ App.Views.LookEditToolbar = Backbone.View.extend({
         if (this.active_component) {
             var new_component = this.active_component.model.clone();
             new_component.unset('id');
-            new_component.set('cid', 'c' + _.random(1000, 2000));
             $container = $('.look-container');
             new_component.set({z_index: this.active_component._max_zindex()+1, left: $container.width()/2 - new_component.get('width')/2, top: $container.height()/2 - new_component.get('height')/2});
             window.look_edit.model.components.add(new_component);
