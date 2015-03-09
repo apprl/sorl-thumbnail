@@ -10327,6 +10327,10 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .widget-page #popup-slim .content-container .loading {
   margin: 20px;
 }
+.widget-page #popup-slim.popup-slim-dialog_save .content-container .loading {
+  margin: 20px auto;
+  display: block;
+}
 .widget-page #popup-slim .product-container .btn-success {
   width: 100%;
   margin-top: 10px;
