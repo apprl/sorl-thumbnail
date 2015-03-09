@@ -22,7 +22,7 @@ class AsosSpider(CSVFeedSpider, AffiliateMixin):
         item = Product()
         key = key_regex1.search(row.get('ZanoxProductLink'))
         if key:
-            item['key'] = 'http://www.asos.com%s' % (urllib.unquote(force_bytes(key.group(1))),)
+            item['key'] = 'http://www.asos.com/%s' % (urllib.unquote(force_bytes(key.group(1))),)
         item['sku'] = row.get('MerchantProductNumber')
         item['name'] = row.get('ProductName')
         item['vendor'] = self.name

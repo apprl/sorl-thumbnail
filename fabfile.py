@@ -106,7 +106,6 @@ def deploy_app():
                 run("git checkout %(branch)s;git pull origin %(branch)s" % env)
             else:
                 run("git checkout master;git pull origin master -f")
-        # Todo reactivate this
         if not "dev" in env.settings and env.collectstatic:
             manage("collectstatic --noinput")
 
@@ -116,7 +115,6 @@ def deploy_app():
         manage("migrate")
         #manage("makemessages --all")
         sudo("chown -R %(run_user)s:%(user)s %(project_path)s" % env)
-    # Todo reactivate this
     for restart_str in env.restart:
         restart(restart_str)
     return True

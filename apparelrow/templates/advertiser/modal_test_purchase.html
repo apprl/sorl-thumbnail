@@ -33,7 +33,7 @@ function startsWith(word, str){
 };
 
 function addHttp(url) {
-    if (!startsWith(url, "http://")){
+    if ((!(startsWith(url, "http://") || startsWith(url, "https://")))){
         url = "http://" + url;
     }
     return url;

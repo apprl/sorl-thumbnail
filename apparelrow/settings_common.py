@@ -114,6 +114,13 @@ VENDOR_LOCATION_MAPPING = {
     "default":["ALL","SE","NO","US"],
 }
 
+LOCATION_MAPPING = (
+    ('SE', gettext('Sweden (SEK)')),
+    ('NO', gettext('Norway (NOK)')),
+    ('US', gettext('USA (USD)')),
+    ('ALL', gettext('International (USD)')),
+)
+
 LOCATION_LANGUAGE_MAPPING = (
                              ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
                              ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[2]),
@@ -172,6 +179,8 @@ STATICFILES_FINDERS = (
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 #AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
 #AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
 AWS_HEADERS = {
         'Expires': 'Sat, Nov 01 2015 20:00:00 GMT',

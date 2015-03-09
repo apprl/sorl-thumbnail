@@ -211,27 +211,6 @@ def following(request, profile, form, page=0):
 #
 # Settings
 #
-
-@login_required
-def settings_password(request):
-    FormClass = PasswordChangeForm if request.user.password else SetPasswordForm
-
-    if request.method == 'POST':
-        form = FormClass(request.user, request.POST)
-        if form.is_valid():
-            form.save()
-
-            if request.user.password:
-                messages.success(request, _('Password was updated'))
-            else:
-                messages.success(request, _('Password was added'))
-
-            return HttpResponseRedirect(reverse('settings-password'))
-    else:
-        form = FormClass(request.user)
-
-    return render(request, 'profile/settings_password.html', {'form': form})
-
 @login_required
 def settings_notification(request):
     """
@@ -273,9 +252,21 @@ def confirm_email(request):
 @login_required
 def settings_email(request):
     """
-    Handles the email settings form
+    Handles the email settings and facebook form on settings
     """
+    form_has_error = False
+    try:
+        email_change = EmailChange.objects.get(user=request.user)
+    except EmailChange.DoesNotExist:
+        email_change = None
+    FormClass = PasswordChangeForm if request.user.password else SetPasswordForm
+
     if request.method == 'POST':
+        password_form = FormClass(request.user)
+        facebook_form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user)
+        if facebook_form.is_valid():
+            facebook_form.save()
+
         form = EmailForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             # Remove old email change confirmations
@@ -283,8 +274,6 @@ def settings_email(request):
 
             token = uuid.uuid4().hex
             email = form.cleaned_data['email']
-            email_change = EmailChange.objects.create(user=request.user, email=email, token=token)
-
             subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
             body = render_to_string('profile/confirm_email.html', {
                     'username': request.user.display_name,
@@ -292,36 +281,60 @@ def settings_email(request):
                     'token': token,
                 })
             send_email_confirm_task.delay(subject, body, request.user.email)
-
+        else:
+            return render_to_response('profile/settings_email.html',
+                                  {'email_form': form, 'email_change': email_change,
+                                   'form': password_form, 'facebook_settings_form': facebook_form },
+                                  context_instance=RequestContext(request))
         return HttpResponseRedirect(reverse('settings-email'))
 
     form = EmailForm()
+    password_form = FormClass(request.user)
+    facebook_form = FacebookSettingsForm(instance=request.user)
+
+
+    return render(request, 'profile/settings_email.html', {
+            'email_form': form,
+            'email_change': email_change,
+            'form': password_form,
+            'facebook_settings_form': facebook_form
+        })
+
+
+@login_required
+def settings_password(request):
+    """
+    Handles the password form on settings
+    """
     try:
         email_change = EmailChange.objects.get(user=request.user)
     except EmailChange.DoesNotExist:
         email_change = None
+    FormClass = PasswordChangeForm if request.user.password else SetPasswordForm
+    facebook_form = FacebookSettingsForm(instance=request.user)
+    form = EmailForm()
+    if request.method == 'POST':
+        password_form = FormClass(request.user, request.POST)
+        if password_form.is_valid():
+            password_form.save()
+
+            if request.user.password:
+                messages.success(request, _('Password was updated'))
+            else:
+                messages.success(request, _('Password was added'))
+        else:
+            return render_to_response('profile/settings_email.html',
+                                  {'email_form': form, 'email_change': email_change,
+                                   'form': password_form, 'facebook_settings_form': facebook_form},
+                                  context_instance=RequestContext(request))
+    password_form = FormClass(request.user)
 
     return render(request, 'profile/settings_email.html', {
-            'email_form': form,
-            'email_change': email_change
-        })
-
-@login_required
-def settings_facebook(request):
-    """
-    Handles the facebook settings form.
-    """
-    if request.method == 'POST':
-        form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-
-        return HttpResponseRedirect(reverse('settings-facebook'))
-
-    form = FacebookSettingsForm(instance=request.user)
-
-    return render(request, 'profile/settings_facebook.html', {'facebook_settings_form': form})
-
+        'email_form': form,
+        'email_change': email_change,
+        'form': password_form,
+        'facebook_settings_form': facebook_form
+    })
 
 @login_required
 def settings_publisher(request):

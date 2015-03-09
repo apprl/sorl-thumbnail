@@ -3,6 +3,9 @@ import json
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def get_referral_user_from_cookie(request):
@@ -53,7 +56,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                             if data['sid'] == user.id:
                                 publisher_cut = 1 - decimal.Decimal(data['tribute'])
             except:
-                pass
+                log.warn("No cut exists for %s and vendor %s, please do correct this." % (user.partner_group,vendor))
     except get_user_model().DoesNotExist:
         pass
 

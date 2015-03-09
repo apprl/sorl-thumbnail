@@ -340,7 +340,8 @@ class Product(models.Model):
         earning_cut = None
         store_commission = 0
         if hasattr(user,"is_partner") and user.is_partner:
-            if user.partner_group and get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor):
+            has_cut = get_model('dashboard', 'Cut').objects.filter(group=user.partner_group, vendor=vendor).exists()
+            if user.partner_group and has_cut:
                 stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
                 if len(stores) > 0:
                     store_commission = stores[0].commission_percentage

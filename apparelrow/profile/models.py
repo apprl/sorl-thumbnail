@@ -51,6 +51,7 @@ class User(AbstractUser):
     language = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     gender = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     blog_url = models.CharField(max_length=255, null=True, blank=True)
+    location = models.CharField(_('Location'), null=True, blank=True, max_length=10, choices=settings.LOCATION_MAPPING)
 
     is_hidden = models.BooleanField(default=False, blank=False, null=False)
 

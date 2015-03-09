@@ -298,7 +298,7 @@ def build_static_look_image(look_id):
     image = Image.new('RGBA', settings.APPAREL_LOOK_SIZE, (255, 255, 255, 255))
     offset_left = 0
     offset_top = 0
-    component_size = 40;
+    component_size = 40
     if look.display_with_component == 'P' and look.image:
         # Reuse photo image
         thumbnail = ''
@@ -314,7 +314,8 @@ def build_static_look_image(look_id):
         offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
         offset_top = (settings.APPAREL_LOOK_SIZE[1] - thumbnail.height) / 2
         image.paste(background, (offset_left, offset_top))
-
+        #look.width = thumbnail.width
+        #look.height = thumbnail.height
     else:
         offset_left = (settings.APPAREL_LOOK_SIZE[0] - look.width)/2
         offset_top = (settings.APPAREL_LOOK_SIZE[1] - look.height)/2
