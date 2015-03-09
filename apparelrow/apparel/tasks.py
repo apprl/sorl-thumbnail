@@ -323,6 +323,9 @@ def build_static_look_image(look_id):
     for component in look.display_components.order_by('z_index').all():
         if look.display_with_component == 'P':
             component_image = Image.open(finders.find('images/look-hotspot.png')).resize((component_size, component_size), Image.ANTIALIAS)
+            if thumbnail.width < look.width or thumbnail.height < look.height:
+                component.left = int(component.left*thumbnail.width/look.width)
+                component.top = (component.top*thumbnail.height/look.height)
         else:
             if not component.product.product_image:
                 continue
