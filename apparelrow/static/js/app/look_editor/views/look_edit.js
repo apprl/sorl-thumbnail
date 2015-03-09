@@ -131,7 +131,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     _get_hotspot: function(e) {
         // TODO: maybe use dynamic scale for hotspot size instead of 80x80
-        var size = 40,
+        var size = 60,
             $container = this.$el.find('.look-container'),
             container_offset = $container.offset(),
             container_width = $container.width() - size,
@@ -142,7 +142,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     _create_photo_component: function(position) {
         var $container = $('.look-container');
-        var size = 40;
+        var size = 60;
         return new App.Models.LookComponent().set(_.extend({width: size,
             height: size,
             rel_left: (position.left+size/2)/$container.width(),

@@ -9887,8 +9887,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .look-hotspot .hotspot,
 .look-hotspot .ar-hotspot {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -9984,8 +9984,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 #photo-background .ar-hotspot,
 #photo .ar-hotspot {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -10351,6 +10351,10 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .widget-page #popup-slim .content-container .loading {
   margin: 20px;
 }
+.widget-page #popup-slim.popup-slim-dialog_save .content-container .loading {
+  margin: 20px auto;
+  display: block;
+}
 .widget-page #popup-slim .product-container .btn-success {
   width: 100%;
   margin-top: 10px;
@@ -10594,8 +10598,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 }
 #photo-markers .hotspot {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.5);
