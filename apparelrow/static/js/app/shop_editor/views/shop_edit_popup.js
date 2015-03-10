@@ -83,10 +83,8 @@ App.Views.ShopEditPopup = App.Views.WidgetBase.extend({
         content.addClass('center');
         content.load(url, _.bind(function() {
             content.removeClass('center');
-            //this._center();
         }, this));
 
-        //this._center();
         this.$el.show();
     },
     _center: function(){
