@@ -42,22 +42,25 @@ class ConfidentLivingSpider(CSVFeedSpider, AffiliateMixin):
             yield Request(url, meta=meta, dont_filter=True)
 
     def parse_row(self, response, row):
-        item = Product()
-        item['key'] = row.get('Product URL')
-        item['sku'] = row.get('SKU')
-        item['name'] = row.get('Product name')
-        item['vendor'] = self.name
-        item['url'] = row.get('Product URL')
-        item['affiliate'] = self.AFFILIATE_AAN
-        item['category'] = row.get('Category')
-        item['description'] = row.get('Description')
-        item['brand'] = row.get('Manufacturer')
-        item['gender'] = 'U'
-        item['colors'] = row.get('Product name') + row.get('Description')
-        item['regular_price'] = row.get('Price')
-        item['discount_price'] = ''
-        item['currency'] = 'SEK'
-        item['in_stock'] = row.get('In Stock') == 'Ja'
-        item['stock'] = row.get('Stock Level')
-        item['image_urls'] = [row.get('Graphic URL', '')]
-        return item
+        try:
+            item = Product()
+            item['key'] = row.get('Product URL')
+            item['sku'] = row.get('SKU')
+            item['name'] = row.get('Product name')
+            item['vendor'] = self.name
+            item['url'] = row.get('Product URL')
+            item['affiliate'] = self.AFFILIATE_AAN
+            item['category'] = row.get('Category')
+            item['description'] = row.get('Description')
+            item['brand'] = row.get('Manufacturer')
+            item['gender'] = 'U'
+            item['colors'] = row.get('Product name') + row.get('Description')
+            item['regular_price'] = row.get('Price')
+            item['discount_price'] = ''
+            item['currency'] = 'SEK'
+            item['in_stock'] = row.get('In Stock') == 'Ja'
+            item['stock'] = row.get('Stock Level')
+            item['image_urls'] = [row.get('Graphic URL', '')]
+            return item
+        except:
+            pass
