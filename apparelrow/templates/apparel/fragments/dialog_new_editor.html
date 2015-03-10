@@ -1,0 +1,26 @@
+{% extends 'dialog_base.html' %}
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block modal_id %}modal_new_editor{% endblock %}
+{% block modal_title %}{% trans "Welcome to the new look & shop editor!" %}{% endblock %}
+{% block modal_content %}
+<img width="100%" src="{% static 'images/tools/apprl_new_editor_small.jpg' %}" />
+<p>
+    {% blocktrans %}
+        We’ve just released a new version of the editor to make it easier for you to create looks and shops on the go
+        with your mobile/tablet as well as some new features. <a href="#"><b>Read more about the new editor here.</b></a>
+    {% endblocktrans %}
+</p>
+<p>
+    {% blocktrans %}
+        Drop us an email on <a href="mailto:hello@apprl.com"><b>hello@apprl.com</b></a> if you want to tell us about a feature that you really really want us to
+        add, or just have feedback about something!
+    {% endblocktrans %}
+</p>
+<p>
+    {% trans "Have fun" %}
+    <br>
+    {% trans "/The team" %}
+</p>
+{% endblock %}

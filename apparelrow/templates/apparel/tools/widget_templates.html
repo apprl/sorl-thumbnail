@@ -168,3 +168,7 @@
         </div>
     </div>
 </script>
+{% include 'apparel/fragments/dialog_new_editor.html' with request=request csrf_token=csrf_token next=next only %}
+<script>
+    $('#modal_new_editor').modal('show')
+</script>
