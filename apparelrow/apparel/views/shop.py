@@ -23,7 +23,7 @@ from django.views.generic import View
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
 from apparelrow.apparel.search import ApparelSearch
-from apparelrow.apparel.models import Brand
+from apparelrow.apparel.models import Brand, Shop
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
@@ -290,12 +290,12 @@ class ShopCreateView(View):
 
 def shop_widget(request, shop_id=None):
     if request.method != 'POST':
-        return HttpResponseNotAllowed()
+        return HttpResponseNotAllowed("Call method not allowed")
 
     shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
 
-    if request.user.pk is not shop.user.pk:
-        return HttpResponseNotAllowed()
+    if not request.user.pk == shop.user.pk:
+        return HttpResponseNotAllowed("Action is not allowed.")
 
 
     content = {}
@@ -367,7 +367,7 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
 
     return response
 
-def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None, **kwargs):
+def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):
     user_id = shop.user.id
 
     if not language:

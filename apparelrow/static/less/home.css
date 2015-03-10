@@ -10351,7 +10351,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .widget-page #popup-slim .content-container .loading {
   margin: 20px;
 }
-.widget-page #popup-slim.popup-slim-dialog_save .content-container .loading {
+.widget-page #popup-slim.popup-slim-dialog_save .content-container .loading,
+.widget-page #popup-slim.popup-slim-dialog_publish .content-container .loading {
   margin: 20px auto;
   display: block;
 }
@@ -10913,7 +10914,8 @@ html.look-type-C .collage {
 }
 #product-chooser .product-filter-container .btn span {
   display: block;
-  margin: 0px 17px;
+  margin: 0px 5px;
+  padding-right: 15px;
 }
 #product-chooser .product-filter-container .btn .glyphicon {
   position: absolute;
@@ -10923,7 +10925,8 @@ html.look-type-C .collage {
 #product-chooser .product-filter-container .hidden-filters {
   margin-bottom: 0px;
 }
-#product-chooser .product-filter-container .hidden-filters li:first-child {
+#product-chooser .product-filter-container .hidden-filters li:first-child,
+#product-chooser .product-filter-container .hidden-filters li#product-filter-category {
   padding-left: 0;
 }
 #product-chooser .product-filter-container .hidden-filters .dropdown-menu {
