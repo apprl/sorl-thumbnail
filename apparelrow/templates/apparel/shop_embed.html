@@ -80,9 +80,9 @@
         }
         </script>
     </head>
-    <body class="shop shop-embed">
+    <body class="shop shop-embed {% if not show_filters %}no-filters{% endif %}">
         <div class="container-fluid">
-            {% include 'apparel/product_list.html' with is_embed_shop=True %}
+            {% include 'apparel/product_list.html' with is_embed_shop=True show_filters=show_filters %}
         </div>
     </body>
 </html>

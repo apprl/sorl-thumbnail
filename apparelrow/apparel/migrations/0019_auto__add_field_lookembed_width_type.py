@@ -8,6 +8,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+
         # Adding field 'LookEmbed.width_type'
         db.add_column(u'apparel_lookembed', 'width_type',
                       self.gf('django.db.models.fields.CharField')(default='px', max_length=2),
@@ -15,6 +16,7 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+
         # Deleting field 'LookEmbed.width_type'
         db.delete_column(u'apparel_lookembed', 'width_type')
 
@@ -58,6 +60,13 @@ class Migration(SchemaMigration):
             'singular_name_no': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'singular_name_sv': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+        },
+        u'apparel.domaindeeplinking': {
+            'Meta': {'object_name': 'DomainDeepLinking'},
+            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'template': ('django.db.models.fields.CharField', [], {'max_length': '512'}),
+            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
         },
         u'apparel.facebookaction': {
             'Meta': {'object_name': 'FacebookAction'},
@@ -189,6 +198,14 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"})
         },
+        u'apparel.shortdomainlink': {
+            'Meta': {'unique_together': "(('url', 'user'),)", 'object_name': 'ShortDomainLink'},
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'url': ('django.db.models.fields.CharField', [], {'max_length': '512'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'short_domain_links'", 'to': u"orm['profile.User']"}),
+            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
+        },
         u'apparel.shortproductlink': {
             'Meta': {'unique_together': "(('product', 'user'),)", 'object_name': 'ShortProductLink'},
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
@@ -291,6 +308,7 @@ class Migration(SchemaMigration):
         u'dashboard.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_subscriber': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'owner': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'owner_group'", 'null': 'True', 'to': u"orm['profile.User']"}),
             'owner_cut': ('django.db.models.fields.DecimalField', [], {'default': "'1.00'", 'null': 'True', 'max_digits': '10', 'decimal_places': '3', 'blank': 'True'})
@@ -328,12 +346,14 @@ class Migration(SchemaMigration):
             'is_hidden': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_partner': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_subscriber': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_top_partner': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'language': ('django.db.models.fields.CharField', [], {'default': "'en'", 'max_length': '10'}),
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'like_look_created': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
+            'location': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
             'login_flow': ('django.db.models.fields.CharField', [], {'default': "'complete'", 'max_length': '20'}),
             'manual_about': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'manual_about_da': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
@@ -342,6 +362,8 @@ class Migration(SchemaMigration):
             'manual_about_sv': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'newsletter': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'owner_network': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'publisher_network'", 'null': 'True', 'to': u"orm['profile.User']"}),
+            'owner_network_cut': ('django.db.models.fields.DecimalField', [], {'default': "'1.00'", 'null': 'True', 'max_digits': '10', 'decimal_places': '3', 'blank': 'True'}),
             'partner_group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Group']", 'null': 'True', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),

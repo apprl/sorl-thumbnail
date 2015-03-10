@@ -53,6 +53,23 @@ def map_placement(placement):
 
     return link
 
+def get_available_stores(current_location):
+    """
+    Returns a list of the available stores based on the current location
+    :param current_location: Current location for the site
+    :return:
+        List of vendors
+    """
+    vendors = []
+    for store in get_model('dashboard', 'StoreCommission').objects.all():
+        store_name = store.vendor.name
+        try:
+            if current_location in settings.VENDOR_LOCATION_MAPPING[store_name]:
+                vendors.append(store_name)
+        except KeyError:
+            vendors.append(store_name)
+    return vendors
+
 def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
     user_criteria = ''
     values = [start_date, end_date, limit]
@@ -1021,14 +1038,8 @@ def commissions(request):
                   % request.user)
         raise Http404
 
-    cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) \
-        if request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) else request.session.get('location','ALL')
-    vendors = []
-    for data in settings.VENDOR_LOCATION_MAPPING:
-        location_array = settings.VENDOR_LOCATION_MAPPING[data]
-        if cookie_value in location_array or 'ALL' in location_array:
-            vendors.append(data)
-
+    cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) or request.session.get('location','ALL')
+    vendors = get_available_stores(cookie_value)
     stores = list(get_model('dashboard', 'StoreCommission').objects.filter(vendor__name__in=vendors).select_related('vendor').order_by('vendor__name'))
     user_id = request.user.id
     stores = [store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))

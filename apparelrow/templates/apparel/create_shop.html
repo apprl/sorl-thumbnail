@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% load i18n compressed %}
+
+{% block extra-title %}{% if external_shop_id %}{% trans "Edit" %} {{ object.title }}{% else %}{% trans "Create shop" %}{% endif %} | {% endblock %}
+
+{% block body-classes %}create-shop product-list create-store-page shop widget-page{% endblock %}
+{% block full-body %}
+    {% if external_shop_id %}
+        {% with "Edit "|add:object.title as title %}
+        {% include "apparel/tools/widget_header.html" with title=title type='create_shop' external_shop_id=external_shop_id %}
+        {% endwith %}
+    {% else %}
+        {% include "apparel/tools/widget_header.html" with title='Create a shop' type='create_shop' external_shop_id=external_shop_id %}
+    {% endif %}
+
+    <div id="content">
+        <div class="row content-row">
+            <div class="col-md-6 col-widget">
+                {% include "apparel/tools/widget_shop_edit.html" with external_shop_id=external_shop_id show_liked=show_liked title=object.title %}
+            </div>
+
+            <div class="col-md-6 visible-md visible-lg">
+                {% include "apparel/tools/product_picker.html" with enabled=product_picker %}
+            </div>
+        </div>
+    </div>
+
+    {% include "apparel/tools/widget_templates.html" %}
+
+    {% include "apparel/tools/widget_footer.html" %}
+    <script type="text/javascript">
+        var external_shop_id = {% if external_shop_id %}{{ external_shop_id }}{% else %}0{% endif %};
+        var selected_gender = '{{ gender }}';
+        var show_liked = {{ show_liked }};
+        var external_shops_url = '{{ shops_url }}';
+    </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    {% compressed_js 'create_store' %}
+{% endblock %}

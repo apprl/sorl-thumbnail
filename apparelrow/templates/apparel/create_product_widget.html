@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% load i18n compressed %}
+
+{% block body-classes %}create-product product-list create-product-widget-page shop widget-page{% endblock %}
+{% block full-body %}
+
+    {% if external_product_widget_id %}
+        {% include "apparel/tools/widget_header.html" with title='Edit widget' type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+    {% else %}
+        {% include "apparel/tools/widget_header.html" with title='Create widget' type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+    {% endif %}
+
+    <div id="content">
+        <div class="row content-row">
+            <div class="col-md-6 col-widget">
+                {% include "apparel/tools/widget_product_edit.html" with external_product_widget_id=external_product_widget_id type=type %}
+            </div>
+
+            <div class="col-md-6 visible-md visible-lg">
+                {% include "apparel/tools/product_picker.html" with enabled=product_picker %}
+            </div>
+        </div>
+    </div>
+
+    {% include "apparel/tools/widget_templates.html" %}
+
+    {% include "apparel/tools/widget_footer.html" %}
+    <script type="text/javascript">
+        var external_product_widget_id = {% if external_product_widget_id %}{{ external_product_widget_id }}{% else %}0{% endif %};
+        var selected_gender = 'A';
+        var external_product_widget_type = '{{  type }}';
+    </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    {% compressed_js 'create_product_widget' %}
+{% endblock %}

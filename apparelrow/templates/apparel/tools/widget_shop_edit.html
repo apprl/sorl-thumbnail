@@ -1,0 +1,40 @@
+{% load i18n compressed %}
+{% load static from staticfiles %}
+
+<div id="shop-preview" class="splash no-filter">
+    <div id="shop-display-settings">
+        <div class="buttons">
+            <p>{% trans 'What products do you want to include in your shop?' %}</p>
+            <a id="show_liked" data-value="likes" href="#" class="btn btn-primary btn-block">{% trans 'My latest likes' %}</a>
+            <a id="pick_products" data-value="pick" href="#" class="btn btn-primary btn-block">{% trans 'Choose products manually' %}</a>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#show_liked, #pick_products').click(function(e) {
+                e.preventDefault();
+                var show_liked = ($(this).attr('data-value') == 'likes');
+                App.Events.trigger('widget:product_display', show_liked);
+            });
+        });
+        var liked_title = "{% trans 'Your liked products' %}";
+    </script>
+    <div id="preview-header" class="preview-header">
+        0 {%  trans 'products selected' %}
+    </div>
+    <div class="product-list-container">
+        <div>
+            <div class="col-product-filter">
+                <h3>{% trans "Filter products" %}</h3>
+                <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
+                    {% include 'apparel/fragments/product_filter.html' with is_embed_shop=is_embed_shop %}
+            </div>
+
+            <div id="shop-product-list" class="col-product-list{% if show_liked == 'true' %} liked-products{% endif %}">
+                <ul class="product-list list-unstyled"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES title=title external_shop_id=external_shop_id only %}

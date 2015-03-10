@@ -6,7 +6,7 @@
     <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     {% for language in LANGUAGES_DISPLAY %}
@@ -36,6 +36,9 @@
         var browse_url = '{% multi_gender_url request "shop" "shop" %}';
         var looks_search_url = '{% url "search-look-list" %}';
         var look_api_base_url = '{% url "look_list" %}';
+        var create_store_api_base_url = '{% url "create_shop" %}';
+        var create_product_widget_api_base_url = '{% url "product_widget-api" %}';
+
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         {% if request.user.is_authenticated %}
         var userID = {{ request.user.pk }};
@@ -166,7 +169,10 @@
                             <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
                             {% endif %}
                             <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
-                            <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
+                            <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a></li>
+                            <li><a href="{% url 'create-shop' %}">{% trans "+ Create shop" %}</a></li>
+                            <!--<li><a href="{% url 'create-product-widget-single' %}">{% trans "+ Create product widget" %}</a></li>
+                            <li><a href="{% url 'create-product-widget-multiple' %}">{% trans "+ Create product widget 2" %}</a></li>-->
                             <li><a href="{% url 'settings-notification' %}">{% trans "Settings" %}</a></li>
                             <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                         </ul>
@@ -308,7 +314,9 @@
     {% include 'apparel/fragments/dialog_contest_rules.html' with request=request LANGUAGES=LANGUAGES only %}
     <div class="modal fade" id="modal_embed_look" tabindex="-1"></div>
     {% if request.user.is_authenticated %}
-    {% include 'profile/dialog_embed_shop.html' with request=request LANGUAGES=LANGUAGES only %}
+    <div class="modal fade" id="modal_embed_look" tabindex="-1"></div>
+    <div class="modal fade" id="modal_embed_shop" tabindex="-1"></div>
+
     <script type="text/html" id="user_like_template">
         <li data-user-id="{{ request.user.pk }}"><a href="{{ request.user.get_absolute_url }}" title="{{ request.user.display_name }}"><img class="img-circle" alt="{{ request.user.display_name }}" title="{{ request.user.display_name }}" src="{{ request.user.avatar }}"></a></li>
     </script>

@@ -1,0 +1,170 @@
+{% load static from staticfiles %}
+{% load i18n compressed %}
+
+<script type="text/template" id="dialog_login_template" data-title="{% trans "Login" %}">
+    <p>{% trans "Do you want to save before logging in with Facebook?" %}</p>
+    <a href="#" class="btn btn-primary btn-block btn-cancel">{% trans "Cancel" %}</a>
+    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
+</script>
+
+<script type="text/template" id="dialog_reset_template" data-title="{% trans "Reset look?" %}">
+    <p>{% trans "Are you sure you want to discard changes and start over?" %}</p>
+    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+</script>
+
+<script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
+    <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
+    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+</script>
+
+<script type="text/template" id="dialog_unpublish_template" data-title="{% trans "Unpublish?" %}">
+    <p>{% trans "Are you sure you want to unpublish this so that no one can see it?" %}</p>
+    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+</script>
+
+<script type="text/template" id="dialog_save_template" data-title="{% trans "Save" %}">
+    <div class="form-group">
+        <label for="look_title">{% trans "Your title" %} *</label>
+        <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="look_description">{% trans "Description" %}</label>
+        <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
+    </div>
+
+    <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
+    <a href="#" class="btn btn-block btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
+</script>
+
+<script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish" %}">
+    <div class="form-group">
+        <label for="look_title">{% trans "Your title" %} *</label>
+        <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="look_description">{% trans "Description" %}</label>
+        <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
+    </div>
+
+    <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
+    <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
+</script>
+
+<script type="text/template" id="popup_slim_template" data-title="{% trans "Product info" %}">
+    <div class="header group">
+        <h5 class="title"></h5>
+        <a href="#" class="close"></a>
+    </div>
+    <div class="content-container">
+        <div class="content"></div>
+    </div>
+</script>
+
+<script type="text/template" id="look_edit_popup_loading">
+    <img class="loading" src="{% static "images/loading_white.gif" %}">
+</script>
+
+<script type="text/template" id="look_edit_add_popup_template" data-title="{% trans "Add product" %}">
+    <div class="add-container group">
+        <img src="{% static "images/big-larrow.png" %}">
+        <p>{% trans "Click in photo to place item" %}</p>
+        <img src="<%= image_small %>">
+    </div>
+</script>
+
+<script type="text/template" id="edit_look_template">
+    <div class="look-container" id="<%= look_type %>"<% if(look_type == 'photo' && look.image) { %> style="background-image: url('<%= look.image %>');"<% } %>></div>
+</script>
+
+<script type="text/template" id="look_component_photo">
+    <a href="#" class="delete">×</a>
+</script>
+
+<script type="text/template" id="shop_component_product">
+    <div class="thumbnail product-medium">
+        <div class="product-image-container">
+            <a href="#"><img class="product-image fake-product-image" src="{% static "images/fake_product.png" %}"/></a>
+
+            <div class="hover" style="display: none;">
+                <!--<div class="btn-group btn-group-justified">-->
+                    <a href="#" class="btn btn-primary btn-block btn-danger delete">
+                        <span class="glyphicon glyphicon-remove"></span>&nbsp;<span>{% trans 'Remove' %}</span>
+                    </a>
+
+                    <a href="#" class="btn btn-primary btn-block btn-product-info" rel="nofollow">
+                        {% trans 'Info' %}
+                    </a>
+                <!--</div>-->
+            </div>
+            <img class="product-image product-image-actual" src="<%= product.image_look %>"/>
+        </div>
+
+
+        <div class="caption">
+            <h4><a href="#"><%= product.brand_name %></a></h4>
+
+            <ul class="list-inline">
+                <li class="price">
+                    <% if(product.price != product.discount_price && product.discount_price != 0) { %>
+                        <span class="discount-price"><%= formatNumber(product.discount_price) %> <%= product.currency %></span>
+                        <span class="price discounted"><%= formatNumber(product.price) %> <%= product.currency %></span>
+                    <% } else { %>
+                        <%= formatNumber(product.price) %> <%= product.currency %>
+                    <% } %>
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="look_component_collage">
+    <img src="<%= product.image_look %>" style="width: 100%; height: 100%;">
+    <a href="#" class="delete"></a>
+</script>
+
+<script type="text/template" id="temporary_image_form_template">
+    <div class="loading" style="display:none;">
+        <span>{% trans "Uploading image" %}</span> <img src="{% static "images/loading_white.gif" %}">
+    </div>
+    <form enctype="multipart/form-data" action="{% url 'temporary-image' %}" method="POST" id="temporaryimage">
+        {% csrf_token %}
+        <div class="form-group">
+            <p>{% trans 'Start by adding your photo here' %}</p>
+            <div class="form-group upload-field">
+                <span><input class="form-control" type="file" accept="image/*;capture=camera" capture="camera" name="image_file"></span>
+            </div>
+            <button class="btn btn-primary">{% trans "Add your photo" %}</button>
+        </div>
+    </form>
+</script>
+
+<script type="text/template" id="product_small_template">
+    <div class="product-small product-container">
+        <a class="image-small" href="#"><img src="<%= image_small %>"></a>
+        <div class="hover">
+            <a class="btn btn-block btn-primary btn-product-info" href="#">{% trans "Info" %}</a>
+            <a class="btn btn-block btn-success btn-add" href="#">{% trans "Add" %}</a>
+        </div>
+        <div class="caption">
+            <h4><%= brand_name %></h4>
+            <% if(!availability) { %>
+            <span class="sold-out">SOLD OUT</span>
+            <% } else { %>
+            <p>
+                <% if(discount) { %>
+                    <span class="discount-price"><%= formatNumber(discount_price) %> <%= currency %></span>
+                    <span class="price discounted"><%= formatNumber(price) %> <%= currency %></span>
+                <% } else { %>
+                    <span class="price"><%= formatNumber(price) %> <%= currency %></span>
+                <% } %>
+            </p>
+            <% } %>
+        </div>
+    </div>
+</script>

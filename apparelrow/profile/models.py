@@ -51,6 +51,7 @@ class User(AbstractUser):
     language = models.CharField(_('Language'), max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     gender = models.CharField(_('Gender'), max_length=1, choices=GENDERS, null=True, blank=True, default=None)
     blog_url = models.CharField(max_length=255, null=True, blank=True)
+    location = models.CharField(_('Location'), null=True, blank=True, max_length=10, choices=settings.LOCATION_MAPPING)
 
     is_hidden = models.BooleanField(default=False, blank=False, null=False)
 
@@ -150,6 +151,11 @@ class User(AbstractUser):
     def looks(self):
         """Number of looks"""
         return self.look.filter(published=True).count()
+
+    @cached_property
+    def shops(self):
+        """Number of shops"""
+        return self.shop.all().count()
 
     @cached_property
     def likes(self):
@@ -280,6 +286,11 @@ class User(AbstractUser):
             return reverse('brand-looks', args=[self.slug])
 
         return reverse('profile-looks', args=[self.slug])
+
+    @cached_property
+    def url_shops(self):
+        return reverse('profile-shops', args=[self.slug])
+
     @cached_property
     def url_followers(self):
         if self.is_brand:

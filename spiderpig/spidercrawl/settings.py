@@ -13,10 +13,10 @@ BOT_NAME = 'spidercrawl'
 LOG_LEVEL = 'INFO'
 
 RAVEN_CONFIG = {
-    'dsn': 'https://d9f9d656ce4f43b8b0e180337c81ac20:9bec16b72e9f45eca4b0a4361c72e8a8@sentry.wordex.se/9',
+    '',
 }
 
-SENTRY_DSN='https://d9f9d656ce4f43b8b0e180337c81ac20:9bec16b72e9f45eca4b0a4361c72e8a8@sentry.wordex.se/9'
+SENTRY_DSN=''
 
 
 CONCURRENT_REQUESTS_PER_DOMAIN = 2
