@@ -72,7 +72,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
     add_product: function() {
         App.Events.trigger('widget:product:add', this.model);
-
+        this.$el.hide();
         return false;
     },
 
