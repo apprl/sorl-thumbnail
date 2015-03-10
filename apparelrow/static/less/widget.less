@@ -307,15 +307,15 @@ html.look-type-C {
           }
         }
         .hidden-filters {
-          margin-bottom: 0px;
-            li:first-child {
-                padding-left: 0;
-            }
+           margin-bottom: 0px;
+           li:first-child, li#product-filter-category {
+               padding-left: 0;
+           }
 
-            .dropdown-menu {
-                max-height: 240px;
-                overflow-y: scroll;
-            }
+           .dropdown-menu {
+               max-height: 240px;
+               overflow-y: scroll;
+           }
           @media (max-width: @screen-xs-max) {
             display: none;
             > li {
