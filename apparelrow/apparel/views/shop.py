@@ -32,9 +32,6 @@ from apparelrow.apparel.models import ShopEmbed
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 
-import logging
-log = logging.getLogger(__name__)
-
 from apparelrow.profile.models import Follow
 
 BROWSE_PAGE_SIZE = 30
@@ -297,8 +294,7 @@ def shop_widget(request, shop_id=None):
 
     shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
 
-    if request.user.pk is not shop.user.pk:
-        log.warn("User %s is trying to create a shop which is owned by %s. Shopid [%s]" % (request.user.pk,shop.user.pk,shop.id))
+    if not request.user.pk == shop.user.pk:
         return HttpResponseNotAllowed("Action is not allowed.")
 
 
