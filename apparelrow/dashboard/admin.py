@@ -73,4 +73,7 @@ class UserEarningAdmin(admin.ModelAdmin):
 
 admin.site.register(UserEarning, UserEarningAdmin)
 
-admin.site.register(ClickCost)
+class ClickCostAdmin(admin.ModelAdmin):
+    list_display = ('cut',   'amount', 'currency')
+
+admin.site.register(ClickCost, ClickCostAdmin)
