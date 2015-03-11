@@ -93,6 +93,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     },
 
     add_components: function(collection) {
+        console.log(1);
         collection.each(_.bind(function(model) { this.add_component(model, collection); }, this));
     },
 
@@ -245,6 +246,10 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         var adjust = Math.max(0, ($container.height() - this.model.get('height'))/2);
         if (adjust) {
             this.model.components.each(function(model) {model.set('top', model.get('top') + adjust)});
+        }
+        if (external_look_type == 'photo') {
+            // adjust width of old components
+            this.model.components.each(function(model) {model.set({'width': 60, 'height': 60})});
         }
 
         // TODO: this must be done here because it must happen after main

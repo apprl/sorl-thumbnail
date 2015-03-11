@@ -10666,7 +10666,8 @@ html.look-type-C .collage {
 #product-chooser .disabled .info {
   position: absolute;
   display: none;
-  padding: 0 15px;
+  text-align: center;
+  padding: 0 80px;
   top: 50%;
   -webkit-transform: translate(0%, -50%);
   -ms-transform: translate(0%, -50%);
@@ -10730,6 +10731,7 @@ html.look-type-C .collage {
 #product-chooser #product-filter #product-filter-gender-2 ul {
   float: none;
   margin: 0 auto;
+  padding: 10px 0px 0px;
 }
 #product-chooser #product-filter #product-filter-gender {
   padding-top: 5px;

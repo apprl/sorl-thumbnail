@@ -126,8 +126,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.init_footer();
         if(show_liked) {
             if (!this.model.attributes.id) {
-                this.save_shop({ title: "My latest likes", 'callback': function() {
-                    $("#embed_shop_form #id_name").val("My latest likes");
+                this.save_shop({ title: "My liked products", 'callback': function() {
+                    $("#embed_shop_form #id_name").val("My liked products");
                     window.shop_create.init_products();
                 }});
             }

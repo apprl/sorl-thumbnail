@@ -12,6 +12,8 @@ App.Views.FilterProductReset = Backbone.View.extend({
         this.model.on('change:color', this.show, this);
         this.model.on('change:price', this.show, this);
         this.model.on('change:q', this.show, this);
+
+        App.Events.on('product:reset', function() { this.$el.hide(); }, this);
     },
 
     product_reset: function(e) {
