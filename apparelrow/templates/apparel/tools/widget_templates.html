@@ -170,5 +170,8 @@
 </script>
 {% include 'apparel/fragments/dialog_new_editor.html' with request=request csrf_token=csrf_token next=next only %}
 <script>
-    $('#modal_new_editor').modal('show')
+    if (!getCookie('new_editor')) {
+        $('#modal_new_editor').modal('show');
+        setCookie('new_editor', '1', 999999)
+    }
 </script>
