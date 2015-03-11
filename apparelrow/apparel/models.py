@@ -158,6 +158,9 @@ class Vendor(models.Model):
     user     = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', blank=True, null=True)
     provider = models.CharField(max_length=50)
 
+    is_cpc = models.BooleanField(default=False, help_text=_('Cost per click'), db_index=True)
+    is_cpo = models.BooleanField(default=True, help_text=_('Cost per order'), db_index=True)
+
     class Meta:
         ordering = ['name']
         verbose_name = 'Vendor'
@@ -169,7 +172,7 @@ class Vendor(models.Model):
 
 #
 # Category
-#
+#   
 
 class Category(MPTTModel):
     name          = models.CharField(max_length=100, db_index=True)
