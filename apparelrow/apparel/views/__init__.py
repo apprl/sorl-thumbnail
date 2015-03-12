@@ -635,6 +635,7 @@ def look_list(request, search=None, contains=None, gender=None):
 
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page'))
+    logger.info("paged result says %s about hasnext" % paged_result.has_next)
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/look_list.html', {

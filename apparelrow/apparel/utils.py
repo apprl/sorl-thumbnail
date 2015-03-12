@@ -6,6 +6,7 @@ import itertools
 import urllib
 import httplib
 import uuid
+import logging
 
 from django.conf import settings
 from django.core.cache import cache
@@ -18,6 +19,8 @@ from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+
+logger = logging.getLogger("apparel.debug")
 
 
 def get_ga_cookie_cid(request=None):
@@ -342,6 +345,11 @@ def get_paged_result(queryset, per_page, page_num):
     except EmptyPage:
         paged_result = paginator.page(paginator.num_pages)
 
+    #JAS: this field has been used to determine whether or not to display pagination but it was never set
+    if(len(queryset) > per_page):
+        paged_result.has_next = True
+    else:
+        paged_result.has_next = False
     return paged_result
 
 

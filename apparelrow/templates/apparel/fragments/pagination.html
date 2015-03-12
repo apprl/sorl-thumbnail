@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load static from staticfiles %}
-{% if current_page.has_next and is_shop or current_page.object_list %}
+{% if current_page.has_next %}<!-- and is_shop or current_page.object_list%} -->
 <a class="btn btn-block btn-lg btn-pagination" data-loading-text="{% trans "More on the way" %}" href="{{ request.path }}?page={{ current_page.next_page_number }}{% if extra_parameter %}&{{ extra_parameter }}{% endif %}">
     <span>{% trans "Show me more!" %}</span>
     <img src="{% static "images/loading.gif" %}">
