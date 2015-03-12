@@ -118,7 +118,7 @@ def shop_instance_to_dict(shop):
                 })
     else:
         for product in shop.products.all():
-            if product.default_vendor is not None:
+            if product.default_vendor:
                 manufacturer_name = product.manufacturer.name if product.manufacturer else None
                 shop_dict['products'].append({
                     'id': product.id,
