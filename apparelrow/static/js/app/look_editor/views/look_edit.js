@@ -54,6 +54,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         // Create toolbar
         this.toolbar = new App.Views.LookEditToolbar();
 
+        this.hotspot_size = 50;
+
         // Listen on product add
         App.Events.on('widget:product:add', this.pending_add_component, this);
         this.pending_product = false;
@@ -132,7 +134,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     _get_hotspot: function(e) {
         // TODO: maybe use dynamic scale for hotspot size instead of 80x80
-        var size = 60,
+        var size = this.hotspot_size,
             $container = this.$el.find('.look-container'),
             container_offset = $container.offset(),
             container_width = $container.width() - size,
@@ -143,7 +145,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     _create_photo_component: function(position) {
         var $container = $('.look-container');
-        var size = 60;
+        var size = this.hotspot_size;
         return new App.Models.LookComponent().set(_.extend({width: size,
             height: size,
             rel_left: (position.left+size/2)/$container.width(),
@@ -249,7 +251,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         }
         if (external_look_type == 'photo') {
             // adjust width of old components
-            this.model.components.each(function(model) {model.set({'width': 60, 'height': 60})});
+            this.model.components.each(function(model) {model.set({'width': this.hotspot_size, 'height': this.hotspot_size})});
         }
 
         // TODO: this must be done here because it must happen after main
