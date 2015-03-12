@@ -1128,6 +1128,8 @@ def publisher_contact(request):
 
     return render(request, 'dashboard/publisher_contact.html', {'form': form, 'referral_user': referral_user})
 
+def publisher_tools(request):
+    return render(request, 'dashboard/publisher_tools.html')
 def products(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_partner:
         if year is None and month is None:
