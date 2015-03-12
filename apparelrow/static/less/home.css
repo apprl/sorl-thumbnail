@@ -9887,8 +9887,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .look-hotspot .hotspot,
 .look-hotspot .ar-hotspot {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -9984,8 +9984,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 #photo-background .ar-hotspot,
 #photo .ar-hotspot {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -10599,8 +10599,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 }
 #photo-markers .hotspot {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.5);

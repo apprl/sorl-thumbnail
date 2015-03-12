@@ -13,9 +13,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this.parent_view = options.parent_view;
 
         App.Events.on('widget:product:info', this.product_info, this);
-        if (!isMobileDevice()) {
-            App.Events.on('widget:product:add', this.product_add, this);
-        }
+        App.Events.on('widget:product:add', this.product_add, this);
 
         $(document).on('keydown', _.bind(function(e) { if(e.keyCode == 27) { this.hide() } }, this));
 
@@ -33,7 +31,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
     product_add: function(model) {
         // Do not show add product popup if we have a pending component waiting
         // for this click or if the look type is collage
-        if(!this.parent_view.pending_component && external_look_type == 'photo' && (!isMobileDevice() || $(window).width() >= 1024)) {
+        if(!this.parent_view.pending_component && external_look_type == 'photo' && (!isMobileDevice() || $(window).width() >= 992)) {
             this.active_type = 'add';
             this.show(model);
             this.render_add();

@@ -51,7 +51,7 @@ def _to_int(s):
 
 def create_shop(request, template='apparel/create_shop.html', shop_id=None, gender=None, user_gender=None, user_id=None, language=None, **kwargs):
     if not request.user.is_authenticated():
-        return HttpResponse('Unauthorized', status=401)
+        return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
 
     likes = []
     show_liked = False
