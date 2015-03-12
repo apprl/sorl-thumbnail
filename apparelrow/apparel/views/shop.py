@@ -27,6 +27,7 @@ from apparelrow.apparel.models import Brand, Shop
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
+from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
 from apparelrow.apparel.models import ShopEmbed
 from sorl.thumbnail import get_thumbnail
@@ -101,9 +102,38 @@ def shop_instance_to_dict(shop):
 
     shop_dict['products'] = []
     if shop.show_liked:
-        for like in shop.user.product_likes.select_related('product').all():
-            product = like.product
-            if product.default_vendor is not None:
+        user_id = shop.user.id
+
+        language = get_language()
+        translation.activate(language)
+
+        currency = settings.APPAREL_BASE_CURRENCY
+        if language in settings.LANGUAGE_TO_CURRENCY:
+            currency = settings.LANGUAGE_TO_CURRENCY.get(language)
+
+        query_arguments = {'rows': 50, 'start': 0}
+        class Request:
+            pass
+        request = Request()
+        request.GET = {}
+        query_arguments = set_query_arguments(query_arguments, request, facet_fields=None, currency=currency)
+
+        query_arguments['fl'] = ['id:django_id']
+
+        query_arguments['fq'].append('availability:true')
+
+        query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
+        query_arguments['fq'].append('user_likes:%s' % (user_id,))
+
+        query_string = '*:*'
+
+        search = ApparelSearch(query_string, **query_arguments)
+        paged_result, pagination = get_pagination_page(search, 50, 1)
+
+        product_ids = [product.id for product in paged_result.object_list if product]
+
+        for product in Product.objects.filter(pk__in=product_ids):
+            if product.default_vendor:
                 manufacturer_name = product.manufacturer.name if product.manufacturer else None
                 shop_dict['products'].append({
                     'id': product.id,
@@ -118,7 +148,7 @@ def shop_instance_to_dict(shop):
                 })
     else:
         for product in shop.products.all():
-            if product.default_vendor is not None:
+            if product.default_vendor:
                 manufacturer_name = product.manufacturer.name if product.manufacturer else None
                 shop_dict['products'].append({
                     'id': product.id,
