@@ -18,6 +18,11 @@ function keepParam(uri)
 
         <div class="body-header-col-left">
             <h1>{% trans "Looks" %}</h1>
+             <ul class="list-inline text-center">
+                <li><h2><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></h2></li>
+                <li><h2><a href="?view=latest&sort=lat" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></h2></li>
+                <li><h2><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></h2></li>
+            </ul>
         </div>
         <div class="body-header-col-right">
             <ul class="list-inline">
@@ -33,15 +38,6 @@ function keepParam(uri)
             </ul>
         </div>
 
-        <div class="body-header-col-full text-center">
-            <ul class="list-inline text-center">
-                <li><h2><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></h2></li>
-                <li><h2><a href="?view=latest&sort=lat" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></h2></li>
-                <li><h2><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></h2></li>
-            </ul>
-        </div>
-
-        
     </div>
 
     <div class="row">
