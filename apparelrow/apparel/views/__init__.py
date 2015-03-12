@@ -634,7 +634,7 @@ def look_list(request, search=None, contains=None, gender=None):
         queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
 
 
-    paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page', 1))
     logger.info("paged result says %s about hasnext" % paged_result.has_next)
 
     if request.is_ajax():
@@ -926,7 +926,7 @@ def user_list(request, gender=None, brand=False):
 
     queryset = queryset.order_by('-popularity', '-followers_count', 'first_name', 'last_name', 'username')
 
-    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {
@@ -1064,7 +1064,7 @@ def topmodel_user_list(request):
 
     extra_parameter = None
     queryset = queryset.order_by('-followers_count', 'first_name', 'last_name')
-    paged_result = get_paged_result(queryset, 20, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 20, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {

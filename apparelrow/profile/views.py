@@ -118,7 +118,7 @@ def looks(request, profile, form, page=0):
     else:
         queryset = profile.look.filter(published=True).order_by('-created')
 
-    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/look_list.html', {
@@ -144,7 +144,7 @@ def shops(request, profile, form, page=0):
     else:
         return HttpResponse('Unauthorized', status=401)
 
-    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/shop_list.html', {
@@ -171,7 +171,7 @@ def followers(request, profile, form, page=0):
     queryset = get_user_model().objects.filter(is_hidden=False, following__user_follow=profile, following__active=True) \
                                        .order_by('name', 'first_name', 'username')
 
-    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {
@@ -195,7 +195,7 @@ def following(request, profile, form, page=0):
     queryset = get_user_model().objects.filter(is_hidden=False, followers__user=profile, followers__active=True) \
                                        .order_by('name', 'first_name', 'username')
 
-    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {
@@ -396,7 +396,7 @@ def login_flow_brands(request):
         follow_featured_auto(request)
 
     queryset = get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:24]
-    paged_result = get_paged_result(queryset, 24, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 24, request.GET.get('page', '1'))
 
     context = {
         'current_page': paged_result,
