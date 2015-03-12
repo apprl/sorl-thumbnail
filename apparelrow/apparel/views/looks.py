@@ -131,7 +131,7 @@ def dialog_embed(request, slug):
 
 def widget(request, slug):
     if request.method != 'POST':
-        return HttpResponseNotAllowed()
+        return HttpResponseNotAllowed("Call method is not allowed")
 
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
 

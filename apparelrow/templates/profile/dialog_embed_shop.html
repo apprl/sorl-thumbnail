@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static from staticfiles %}
 <div class="modal fade" id="modal_embed_shop" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -14,6 +15,7 @@
                     <div class="form-group">
                         <label class="control-label" for="id_name">{% trans "Shop name" %}</label>
                         <input id="id_name" type="text" required class="form-control" placeholder="Shop name" value="{{ title }}"/>
+                        <span class="help-block">* {% trans "This field is required" %}</span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="id_width">{% trans "Width" %}</label>
@@ -53,7 +55,7 @@
                         </div>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="show_filters" id="id_show_filters" value="1">
+                                <input type="checkbox" name="show_filters" id="id_show_filters" value="1" checked>
                                 {% trans "Show filters" %}
                             </label>
                         </div>
@@ -103,7 +105,6 @@
 
         var width_type = '%';
 
-        $('.filter-collapsed').hide();
         $('#id_show_filters').on('click', function() {
             if($(this).prop('checked')) {
                 $('.filter-collapsed').show();
@@ -115,7 +116,11 @@
 
         $('.btn-save-exit').on('click', function(e) {
             e.preventDefault();
-            if (!$('#embed_shop_form #id_name').val().length) return false;
+            if (!$('#embed_shop_form #id_name').val().length) {
+                $('#embed_shop_form #id_name').parent().addClass('has-error');
+                $('#embed_shop_form #id_name').focus()[0].scrollIntoView();
+                return false;
+            }
             App.Events.trigger('widget:save', {title: $('#embed_shop_form #id_name').val()});
         });
 
@@ -135,6 +140,8 @@
 
         $('#embed_shop_form').on('submit', function() {
             if (!$('#embed_shop_form #id_name').val().length) {
+                $('#embed_shop_form #id_name').parent().addClass('has-error');
+                $('#embed_shop_form #id_name').focus()[0].scrollIntoView();
                 return false;
             }
             if (!shop_id) {
@@ -144,6 +151,8 @@
             }
 
             return false;
+        }).on('change', 'input, select', function() {
+            $('#id_embed_code').parent().hide();
         });
 
         function get_embed(external_shop_id) {
@@ -174,9 +183,11 @@
                 }
             }
 
+            $('#id_embed_code').hide().parent().show().append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
+
             $.post("{% url 'shop-widget' external_shop_id %}".replace('/0/', '/'+external_shop_id+'/'), data, function(response) {
-                $('#id_embed_code').val(response);
-                $('#id_embed_code').parents('.form-group').show();
+                $('#id_embed_code').val(response).show();
+                $('#loading_image').remove();
                 $('#modal_embed_shop').animate({scrollTop: 800});
             });
         }

@@ -14,6 +14,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:publish', this.publish_shop, this);
         App.Events.on('widget:unpublish', this.unpublish_shop, this);
         App.Events.on('widget:product_display', this.product_display, this);
+        App.Events.on('widget:touchmenu', this.alter_buttons, this);
 
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
@@ -50,7 +51,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         $('.body-header-col-right .btn-delete').parent().show();
         $('.body-header-col-right .btn-reset').parent().hide();
         if(this.model.attributes.hasOwnProperty('products')) {
-            for (var i = 0; i < this.model.attributes.products.length; i++) {
+            for (var i = this.model.attributes.products.length - 1; i >= 0; i--) {
                 var product = this.model.attributes.products[i];
                 var self = this;
                 var component = new App.Models.ShopComponent();
@@ -58,10 +59,19 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                     product.discount_price = 0;
                 }
                 component.set('product', product);
-                self.model.components.add(component);
+                self.model.components.unshift(component);
             }
         }
         $(window).trigger('resize');
+    },
+    alter_buttons: function() {
+        if (this.model.get('show_liked') || this.model.attributes.id) {
+            $('.popup-slim-dialog_mobile_menu .btn-reset').parent().hide();
+        }
+        if (!this.model.attributes.id) {
+             $('.popup-slim-dialog_mobile_menu .btn-delete').parent().hide();
+        }
+
     },
     reset: function() {
         this.model.components.each(_.bind(function(model) {
@@ -89,7 +99,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         var $container = $('#shop-product-list');
 
         self.add_product_to_component(component, product);
-        self.model.components.add(component);
+        self.model.components.unshift(component);
     },
     add_product_to_component: function(component, product) {
         component.set('product', product.toJSON());
@@ -98,7 +108,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     add_component: function(model, collection) {
         this.update_title(1);
         var view = new App.Views.ShopComponentProduct({ model: model, collection: collection });
-        this.$('#shop-product-list .product-list').append(view.render().el);
+        this.$('#shop-product-list .product-list').prepend(view.render().el);
     },
     update_title: function(delta, val) {
         var $title = this.$el.find('#preview-header');
@@ -113,15 +123,17 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     },
     product_display: function(show_liked) {
         this.model.set('show_liked', show_liked);
-
+        this.init_footer();
         if(show_liked) {
             if (!this.model.attributes.id) {
-                this.save_shop({ title: "My latest likes", 'callback': function() {
-                    $("#embed_shop_form #id_name").val("My latest likes");
+                this.save_shop({ title: "My liked products", 'callback': function() {
+                    $("#embed_shop_form #id_name").val("My liked products");
                     window.shop_create.init_products();
                 }});
             }
+            $('body').addClass('show-liked');
             this.$el.find('#preview-header').html(liked_title);
+            $('.widget-footer .btn-add-item').prop('disabled', true);
             $('#modal_embed_shop .modal-footer').find('.btn.hidden').removeClass('hidden');
             $('#modal_embed_shop .modal-footer').find('.btn:first').addClass('hidden');
             $('#product-chooser .disabled .info').show();
@@ -133,7 +145,6 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             $('#shop-product-list').removeClass('liked-products');
             $('.body-header-col-right ul').show();
             $('.body-header-col-right .btn-delete').parent().hide();
-            this.init_footer();
         }
         $('#shop-preview').removeClass('splash');
         this.resize();

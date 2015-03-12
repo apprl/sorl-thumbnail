@@ -6,13 +6,22 @@ App.Views.Product = Backbone.View.extend({
     events: {
         'mouseenter .image-small, .hover': 'mouseenter',
         'mouseleave .image-small, .hover': 'mouseleave',
+        'touchstart .image-small, .hover': 'touchstart',
+        'touchstart .btn-product-info': 'info',
+        'touchstart .btn-add': 'add',
         'click .btn-product-info': 'info',
-        'click .btn-add': 'add',
-        'click .product-small': 'mouseenter'
+        'click .btn-add': 'add'
+        //'click .product-small': 'mouseenter'
+    },
+
+    touchstart: function(e) {
+        this.$el.parent().find('.hover:visible').hide();
+        this.$el.find('.hover').show();
+        return false;
     },
 
     mouseenter: function(e) {
-        this.$el.find('.hover').show();
+        if (!('createTouch' in document)) this.$el.find('.hover').show();
         return false;
     },
 

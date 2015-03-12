@@ -137,7 +137,7 @@
         <div class="form-group">
             <p>{% trans 'Start by adding your photo here' %}</p>
             <div class="form-group upload-field">
-                <span><input class="form-control" type="file" accept="image/*" capture="camera" name="image_file"></span>
+                <span><input class="form-control" type="file" accept="image/*;capture=camera" capture="camera" name="image_file"></span>
             </div>
             <button class="btn btn-primary">{% trans "Add your photo" %}</button>
         </div>
@@ -167,4 +167,11 @@
             <% } %>
         </div>
     </div>
+</script>
+{% include 'apparel/fragments/dialog_new_editor.html' with request=request csrf_token=csrf_token next=next only %}
+<script>
+    if (!getCookie('new_editor')) {
+        $('#modal_new_editor').modal('show');
+        setCookie('new_editor', '1', 999999)
+    }
 </script>

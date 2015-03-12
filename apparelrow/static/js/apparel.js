@@ -18,6 +18,13 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -371,11 +378,10 @@ $(document).ready(function() {
         $('.navbar .navbar-responsive-collapse').collapse('hide');
     });
 
-    if ('createTouch' in document) {
+    if (('createTouch' in document)) {
         try {
             var ignore = /:hover/;
             for (var i = 0; i < document.styleSheets.length; i++) {
-                console.log(1);
                 var sheet = document.styleSheets[i];
                 if (!sheet.cssRules) {
                     continue;

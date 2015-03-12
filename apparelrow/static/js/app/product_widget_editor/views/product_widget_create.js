@@ -79,8 +79,8 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
 
         if(show_liked) {
             if (!this.model.attributes.id) {
-                this.save_product_widget({ title: "My latest likes", 'callback': function() {
-                    $("#embed_product_widget_form #id_name").val("My latest likes");
+                this.save_product_widget({ title: "My liked products", 'callback': function() {
+                    $("#embed_product_widget_form #id_name").val("My liked products");
                     window.product_widget_create.init_products();
                 }});
             }

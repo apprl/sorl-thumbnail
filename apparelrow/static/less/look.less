@@ -134,8 +134,8 @@
     margin: 0 auto;
     .hotspot, .ar-hotspot {
         position: absolute;
-        width: 80px;
-        height: 80px;
+        width: 50px;
+        height: 50px;
         background: rgba(255,255,255,0.1);
         border-radius: 50%;
         border: 2px solid rgba(255,255,255,0.5);
@@ -197,7 +197,7 @@
         color: #FFF;
         text-shadow: 0 0 1px rgba(0,0,0,0.5);
         right: -14px;
-        top: -14px;
+        top: -23px;
         &:hover {
           opacity: 0.5;
         }
@@ -223,6 +223,12 @@
 #collage-background {
     position: relative;
     border: 1px solid @gray-lighter;
+    .component-wrapper {
+      position:absolute;
+      top:50%;
+      left:50%;
+      .translate(-50%, -50%);
+    }
     .product {
         position: absolute;
     }
@@ -551,14 +557,21 @@
                 }
             }
             .loading {
-                margin: 20px
+                margin: 20px;
             }
+        }
+        &.popup-slim-dialog_save .content-container .loading, &.popup-slim-dialog_publish .content-container .loading {
+          margin: 20px auto;
+          display:block;
         }
         .product-container {
           .btn-success {
             width: 100%;
             margin-top: 10px;
           }
+        }
+        .add-container {
+          text-align:center;
         }
     }
 

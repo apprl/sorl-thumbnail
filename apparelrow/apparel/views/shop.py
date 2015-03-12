@@ -1,6 +1,3 @@
-import re
-import math
-import os.path
 import decimal
 import json
 
@@ -26,14 +23,12 @@ from django.views.generic import View
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
 from apparelrow.apparel.search import ApparelSearch
-from apparelrow.apparel.models import Product
-from apparelrow.apparel.models import Brand
+from apparelrow.apparel.models import Brand, Shop
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
 from apparelrow.apparel.models import ShopEmbed
-from apparelrow.apparel.models import ShopProduct
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 
@@ -56,7 +51,7 @@ def _to_int(s):
 
 def create_shop(request, template='apparel/create_shop.html', shop_id=None, gender=None, user_gender=None, user_id=None, language=None, **kwargs):
     if not request.user.is_authenticated():
-        return HttpResponse('Unauthorized', status=401)
+        return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
 
     likes = []
     show_liked = False
@@ -66,9 +61,9 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
         if shop.show_liked:
             likes = shop.user.product_likes.all()
             show_liked = True
-
-        if request.user.pk is not shop.user.pk:
-            return HttpResponse('Unauthorized', status=401)
+        #if request.user.pk is not shop.user.pk: Does not work for me, nor on staging. Different python versions?
+        if not request.user.pk == shop.user.pk:
+            return HttpResponseNotAllowed("Action is not allowed.")
 
     else:
         shop = False
@@ -108,32 +103,34 @@ def shop_instance_to_dict(shop):
     if shop.show_liked:
         for like in shop.user.product_likes.select_related('product').all():
             product = like.product
-            manufacturer_name = product.manufacturer.name if product.manufacturer else None
-            shop_dict['products'].append({
-                'id': product.id,
-                'slug': product.slug,
-                'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
-                'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
-                'product_name': product.product_name,
-                'brand_name': manufacturer_name,
-                'currency': product.default_vendor.locale_currency,
-                'price': product.default_vendor.locale_price,
-                'discount_price': product.default_vendor.locale_discount_price,
-            })
+            if product.default_vendor is not None:
+                manufacturer_name = product.manufacturer.name if product.manufacturer else None
+                shop_dict['products'].append({
+                    'id': product.id,
+                    'slug': product.slug,
+                    'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
+                    'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                    'product_name': product.product_name,
+                    'brand_name': manufacturer_name,
+                    'currency': product.default_vendor.locale_currency,
+                    'price': product.default_vendor.locale_price,
+                    'discount_price': product.default_vendor.locale_discount_price,
+                })
     else:
         for product in shop.products.all():
-            manufacturer_name = product.manufacturer.name if product.manufacturer else None
-            shop_dict['products'].append({
-                'id': product.id,
-                'slug': product.slug,
-                'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
-                'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
-                'product_name': product.product_name,
-                'brand_name': manufacturer_name,
-                'currency': product.default_vendor.locale_currency,
-                'price': product.default_vendor.locale_price,
-                'discount_price': product.default_vendor.locale_discount_price,
-            })
+            if product.default_vendor:
+                manufacturer_name = product.manufacturer.name if product.manufacturer else None
+                shop_dict['products'].append({
+                    'id': product.id,
+                    'slug': product.slug,
+                    'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
+                    'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                    'product_name': product.product_name,
+                    'brand_name': manufacturer_name,
+                    'currency': product.default_vendor.locale_currency,
+                    'price': product.default_vendor.locale_price,
+                    'discount_price': product.default_vendor.locale_discount_price,
+                })
 
     return shop_dict
 
@@ -142,10 +139,13 @@ def shop_instance_to_dict(shop):
 
 def delete_shop(request, shop_id):
     shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
-    print HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+
     if request.user.is_authenticated() and request.user == shop.user:
         shop.delete()
-        return HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+        if get_model('apparel', 'Shop').objects.filter(user=request.user).exists():
+            return HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
+        else:
+            return HttpResponseRedirect(reverse('profile-likes', args=(request.user.slug,)))
     else:
         return HttpResponseRedirect(reverse('profile-shops', args=(request.user.slug,)))
 
@@ -292,12 +292,12 @@ class ShopCreateView(View):
 
 def shop_widget(request, shop_id=None):
     if request.method != 'POST':
-        return HttpResponseNotAllowed()
+        return HttpResponseNotAllowed("Call method not allowed")
 
     shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
 
-    if request.user.pk is not shop.user.pk:
-        return HttpResponseNotAllowed()
+    if not request.user.pk == shop.user.pk:
+        return HttpResponseNotAllowed("Action is not allowed.")
 
 
     content = {}
@@ -369,7 +369,7 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
 
     return response
 
-def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None, **kwargs):
+def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):
     user_id = shop.user.id
 
     if not language:
