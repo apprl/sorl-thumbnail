@@ -48,7 +48,7 @@ from apparelrow.activity_feed.views import user_feed
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("apparel.debug")
 
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 12
@@ -592,12 +592,19 @@ def look_list(request, search=None, contains=None, gender=None):
         4) If contains-argument is set displays all looks that contains the product.
 
     """
+    logger.info("looks list called")
     gender = select_from_multi_gender(request, 'look', gender)
     gender_list = {'A': ['W', 'M', 'U'],
                    'M': ['M', 'U'],
                    'W': ['W', 'U']}
 
     queryset = Look.published_objects.filter(user__is_hidden=False)
+
+
+    #add different tabs views
+    view = request.GET.get('view', 'all')
+    profile = request.user
+    is_authenticated = request.user.is_authenticated()
 
     if search:
         if not gender or gender == 'A':
@@ -611,18 +618,30 @@ def look_list(request, search=None, contains=None, gender=None):
                            'rows': 500} # XXX: maximum search results, sync this with the count that is displayed in the search result box
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
         queryset = queryset.filter(id__in=[doc.django_id for doc in results.get_docs()])
+    elif view:
+       # logger.info("there is a view parameter for look list")
+        if view == 'latest' or 'f' in request.GET:
+            queryset = queryset.filter(published=True).filter(gender__in=gender_list.get(gender)).order_by('-created')
+        elif view == 'friends':
+            user_ids = []
+            if is_authenticated:
+                user_ids = get_model('profile', 'Follow').objects.filter(user=request.user).values_list('user_follow_id', flat=True)
+                queryset = queryset.filter(gender__in=gender_list.get(gender)).filter(user__in=user_ids)
     elif contains:
         queryset = queryset.filter(components__product__slug=contains).distinct()
     else:
         queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
+
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/look_list.html', {
             'current_page': paged_result,
+            'objects_list': paged_result,
         })
 
+    #return HttpResponseRedirect()
     return render(request, 'apparel/look_list.html', {
         'query': request.GET.get('q'),
         'paginator': paged_result.paginator,
@@ -929,7 +948,12 @@ def user_list(request, gender=None, brand=False):
 #
 
 def index(request, gender=None):
+    logger.info("hallo")
+    print "blabla"
     if request.user.is_authenticated():
+        #dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
+        if gender == 'none':
+            gender = None
         return user_feed(request, gender=gender)
 
     return render(request, 'apparel/index.html', {'featured': get_featured_activity_today()})

@@ -1,5 +1,6 @@
 import uuid
 import urlparse
+import logging
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -31,6 +32,8 @@ from apparelrow.profile.decorators import avatar_change
 from apparelrow.apparel.browse import browse_products
 
 PROFILE_PAGE_SIZE = 24
+
+logger = logging.getLogger('apparel.debug')
 
 def get_facebook_friends(request):
     facebook_user = get_facebook_user(request)
@@ -107,6 +110,9 @@ def likes(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def looks(request, profile, form, page=0):
+    print "looks called"
+    logger.info("looks called")
+
     if profile == request.user:
         queryset = profile.look.order_by('-created')
     else:

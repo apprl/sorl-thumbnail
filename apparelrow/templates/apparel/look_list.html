@@ -7,9 +7,16 @@
 {% block body %}
 
     <div class="body-header">
+
         <div class="body-header-col-left">
             <h1>{% trans "Looks" %}</h1>
+            <ul class="list-inline">
+                <li><h2><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></h2></li>
+                <li><h2><a href="?view=latest&sort=lat" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></h2></li>
+                <li><h2><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My Friends" %}</a></h2></li>
+            </ul>
         </div>
+
         <div class="body-header-col-right">
             <ul class="list-inline">
                 <li>{% include 'apparel/fragments/create_look_button.html' with request=request only %}</li>

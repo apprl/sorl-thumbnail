@@ -11,7 +11,9 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-8">
+         <div class="row">
+          <div class="col-sm-4 text-center">
             {% if request.GET.error == 'user_denied' %}
             <div class="alert alert-danger">{% trans "User denied Facebook login flow." %}</div>
             {% elif request.GET.error %}
@@ -24,8 +26,17 @@
             {% else %}
             {% facebook_button next=next_url extra_class="btn-facebook-login" %}
             {% endif %}
-            <p>{% trans "or:" %}</p>
+            <p>
+                {% blocktrans %}Don't have an account yet? Use Facebook to create one or:{% endblocktrans %}<br/>
+                <a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
+            
+            </p>
 
+          </div>
+          <div class="col-sm-2 text-center">
+            <p><strong>{% trans "or" %}<br/>your account</strong></p>
+          </div>
+          <div class="col-sm-6">
             <form action="{% url 'auth_login' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
@@ -37,19 +48,19 @@
                     <label for="inputPassword" class="control-label">{{ form.password.label }}</label>
                     <input name="password" type="password" class="form-control" id="inputPassword" placeholder="{{ form.password.label }}">
                 </div>
+                <div class="form-group text-center small">
+                    <a href="{% url 'auth_password_reset' %}" style="font-size: 100%;">{% trans "Forgot password?" %}</a>
+                </div>
                 <div class="form-group">
                     {% if form.errors %}
                     <p>{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
                     {% endif %}
                     <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
                 </div>
-                <div class="form-group">
-                    <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
-                    <a href="{% url 'auth_register' %}">{% trans "Sign up" %}</a>
-                </div>
             </form>
-
+          </div>
+         </div>
+        
         </div>
     </div>
-
 {% endblock %}
