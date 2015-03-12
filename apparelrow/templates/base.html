@@ -162,17 +162,17 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
                             {% if request.user.is_partner %}
-                            <li><a href="{% url 'dashboard' %}">{% trans "Publisher Dashboard" %}</a></li>
+                            <li><a href="{% url 'dashboard' %}">{% trans "For Publishers" %}</a></li>
                             {% endif %}
-                            <li><a href="{% url 'publisher-tools' %}">{% trans "Publisher Tools" %}</a></li>
                             {% if request.user.advertiser_store %}
                             <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
                             {% endif %}
-                            <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
+                            <li><a href="{% url 'publisher-tools' %}">{% trans "+ Publisher Tools" %}</a></li>
                             <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a></li>
-                            <li><a href="{% url 'create-shop' %}">{% trans "+ Create shop" %}</a></li>
-                            <!--<li><a href="{% url 'create-product-widget-single' %}">{% trans "+ Create product widget" %}</a></li>
-                            <li><a href="{% url 'create-product-widget-multiple' %}">{% trans "+ Create product widget 2" %}</a></li>-->
+                            <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
+                            {% comment %}<li><a href="{% url 'create-shop' %}">{% trans "+ Create shop" %}</a></li>
+                            {% comment %}<li><a href="{% url 'create-product-widget-single' %}">{% trans "+ Create product widget" %}</a></li>
+                            <li><a href="{% url 'create-product-widget-multiple' %}">{% trans "+ Create product widget 2" %}</a></li>{% endcomment %}
                             <li><a href="{% url 'settings-notification' %}">{% trans "Settings" %}</a></li>
                             <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                         </ul>
