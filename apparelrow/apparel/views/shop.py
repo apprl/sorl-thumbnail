@@ -61,9 +61,9 @@ def create_shop(request, template='apparel/create_shop.html', shop_id=None, gend
         if shop.show_liked:
             likes = shop.user.product_likes.all()
             show_liked = True
-
-        if request.user.pk is not shop.user.pk:
-            return HttpResponse('Unauthorized', status=401)
+        #if request.user.pk is not shop.user.pk: Does not work for me, nor on staging. Different python versions?
+        if not request.user.pk == shop.user.pk:
+            return HttpResponseNotAllowed("Action is not allowed.")
 
     else:
         shop = False
