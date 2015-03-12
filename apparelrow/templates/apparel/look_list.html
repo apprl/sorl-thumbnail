@@ -5,31 +5,42 @@
 
 {% block body-classes %}look-list-page{% endblock %}
 {% block body %}
+<script type="text/javascript">
+function keepParam(uri)
+{
+    var uri = uri + document.location.search;
+    return uri;
+}
+</script>
 
     <div class="body-header">
 
         <div class="body-header-col-left">
             <h1>{% trans "Looks" %}</h1>
-            <ul class="list-inline">
-                <li><h2><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></h2></li>
-                <li><h2><a href="?view=latest&sort=lat" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></h2></li>
-                <li><h2><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My Friends" %}</a></h2></li>
-            </ul>
         </div>
-
         <div class="body-header-col-right">
             <ul class="list-inline">
                 <li>{% include 'apparel/fragments/create_look_button.html' with request=request only %}</li>
                 <li>
                     <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men’s" %}{% elif gender == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'look-list' %}">{% trans "Show all" %}</a></li>
-                        <li><a href="{% url 'look-list-men' %}">{% trans "Only men’s" %}</a></li>
-                        <li><a href="{% url 'look-list-women' %}">{% trans "Only women’s" %}</a></li>
+                        <li><a id="allButton" href="{% url 'look-list' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Show all" %}</a></li>
+                        <li><a id="menButton" href="{% url 'look-list-men' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Only men’s" %}</a></li>
+                        <li><a id="womenButton" href="{% url 'look-list-women' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Only women’s" %}</a></li>
                     </ul>
                 </li>
             </ul>
         </div>
+
+        <div class="body-header-col-full text-center">
+            <ul class="list-inline text-center">
+                <li><h2><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></h2></li>
+                <li><h2><a href="?view=latest&sort=lat" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></h2></li>
+                <li><h2><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></h2></li>
+            </ul>
+        </div>
+
+        
     </div>
 
     <div class="row">

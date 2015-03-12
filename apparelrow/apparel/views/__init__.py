@@ -618,7 +618,7 @@ def look_list(request, search=None, contains=None, gender=None):
                            'rows': 500} # XXX: maximum search results, sync this with the count that is displayed in the search result box
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
         queryset = queryset.filter(id__in=[doc.django_id for doc in results.get_docs()])
-    elif view:
+    elif view and view != 'all':
        # logger.info("there is a view parameter for look list")
         if view == 'latest' or 'f' in request.GET:
             queryset = queryset.filter(published=True).filter(gender__in=gender_list.get(gender)).order_by('-created')
@@ -630,6 +630,7 @@ def look_list(request, search=None, contains=None, gender=None):
     elif contains:
         queryset = queryset.filter(components__product__slug=contains).distinct()
     else:
+       # logger.info("using deault for gender %s" % gender)
         queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
 
 
