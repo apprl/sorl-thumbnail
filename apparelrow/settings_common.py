@@ -58,7 +58,7 @@ LOCALE_PATHS = (
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en'
 LANGUAGES = (
-    ('en', gettext(u'English ($)')),
+    ('en',  (u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
     ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),

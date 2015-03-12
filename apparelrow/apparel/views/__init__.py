@@ -949,8 +949,6 @@ def user_list(request, gender=None, brand=False):
 #
 
 def index(request, gender=None):
-    logger.info("hallo")
-    print "blabla"
     if request.user.is_authenticated():
         #dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
         if gender == 'none':
