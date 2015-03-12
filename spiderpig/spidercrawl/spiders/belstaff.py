@@ -7,7 +7,7 @@ from spiderpig.spidercrawl.spiders import AffiliateMixin
 class BelstaffSpider(CSVFeedSpider, AffiliateMixin):
     name = 'belstaff'
     allowed_domains = ['belstaff.com']
-    start_urls = ['http://customfeeds.easyfeed.goldenfeeds.com/1763/custom-feed-linkshare-belstaf311-belstaff-uk.csv.zip']
+    start_urls = ['http://customfeeds.easyfeed.goldenfeeds.com/962/custom-feed-belstaff-privet-network-belstaf94-test.csv.zip']
     delimiter = ','
 
     def parse_row(self, response, row):
