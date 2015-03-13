@@ -161,15 +161,15 @@
                        <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="img-circle" src="{{ request.user.avatar_small }}"><span> {{ request.user.display_name }}</span> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
-                            {% if request.user.is_partner %}
-                            <li><a href="{% url 'dashboard' %}">{% trans "For Publishers" %}</a></li>
-                            {% endif %}
                             {% if request.user.advertiser_store %}
                             <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
                             {% endif %}
-                            <li><a href="{% url 'publisher-tools' %}">{% trans "+ Publisher Tools" %}</a></li>
+                            {% if request.user.is_partner %}
+                            <li><a href="{% url 'dashboard' %}">{% trans "For publishers" %}</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'publisher-tools' %}">{% trans "+ Publisher tools" %}</a></li>
                             <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a></li>
-                            <li><a class="facebook-invite" href="#invite">{% trans "+ Invite friends" %}</a></li>
+                            <li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li>
                             {% comment %}<li><a href="{% url 'create-shop' %}">{% trans "+ Create shop" %}</a></li>
                             {% comment %}<li><a href="{% url 'create-product-widget-single' %}">{% trans "+ Create product widget" %}</a></li>
                             <li><a href="{% url 'create-product-widget-multiple' %}">{% trans "+ Create product widget 2" %}</a></li>{% endcomment %}
