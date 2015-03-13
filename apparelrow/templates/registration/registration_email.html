@@ -33,7 +33,7 @@ function updateUsername(){
                 {% csrf_token %}
 
                 <div class="form-group{% if form.first_name.errors %} has-error{% endif %}">
-                    <label for="id_{{ form.first_name.html_name }}" class="control-label">{{ form.first_name.label }}</label>
+                    <label for="id_{{ form.first_name.html_name }}" class="control-label">Your name</label>
                     <div class="form-inline text-center" >
                         <div class="row">
                             <div class="col-sm-6">
@@ -74,26 +74,26 @@ function updateUsername(){
 
                 <div class="form-group {% if form.gender.errors %} has-error{% endif %}">
                     <label class="control-label">{{ form.gender.label }}</label>
-                    <div class="form-inline text-center text-uppercase" style="font-size: 125%;">
+                
                         <div class="radio">
                             
                                 <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M">
                                 {% trans "Man" %}
                         
                         </div>
-                        &nbsp &nbsp &nbsp
+
                         <div class="radio">
                    
                                 <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W" checked>
                                 {% trans "Woman" %}
              
                         </div>
-                     </div>
+                  
                     {% if form.gender.errors %}<span class="help-block">{{ form.gender.errors.as_text }}</span>{% endif %}
                 </div>
 
-                <div class="form-group text-center">
-                    <button type="submit" class="btn btn-primary btn-email-signup btn-lg">{% trans "Sign up" %}</button>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-email-signup">{% trans "Sign up" %}</button>
                 </div>
 
                 <div class="form-group">
