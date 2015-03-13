@@ -195,6 +195,10 @@ class User(AbstractUser):
 
         return items
 
+    def get_liked_looks(self):
+        queryset = Look.published_objects.filter(user__is_hidden=False)
+
+
     @cached_property
     def display_name(self):
         return self.display_name_live
@@ -286,6 +290,11 @@ class User(AbstractUser):
             return reverse('brand-looks', args=[self.slug])
 
         return reverse('profile-looks', args=[self.slug])
+
+
+    @cached_property
+    def url_likedlooks(self):
+        return reverse('profile-likedlooks', args=[self.slug])
 
     @cached_property
     def url_shops(self):
