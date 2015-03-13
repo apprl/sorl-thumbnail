@@ -265,8 +265,7 @@ USER_EARNING_TYPES = (
     ('publisher_network_tribute', 'Network Earnings'),
 
     ('publisher_network_click_tribute', 'Network Earnings per Clicks'),
-    ('publisher_sale_click_commission', 'Network Earnings per Clicks'),
-    ('apprl_click_commission', 'Network Earnings per Clicks'),
+    ('publisher_sale_click_commission', 'Earnings per Clicks'),
 )
 
 class UserEarning(models.Model):
@@ -339,6 +338,8 @@ def create_user_earnings(sale):
     if not len(sale_product) == 0:
         product = sale_product[0]
 
+    earning_type = 'publisher_sale_commission' if sale.type == Sale.COST_PER_ORDER else 'publisher_sale_click_commission'
+
     user = None
     if sale.user_id:
         try:
@@ -381,10 +382,10 @@ def create_user_earnings(sale):
                                                                          status=sale.status)
 
                     get_model('dashboard', 'UserEarning').objects.create( user=user,
-                                                                          user_earning_type='publisher_sale_commission',
-                                                                          sale=sale, from_product=product,
-                                                                          amount=publisher_commission, date=sale.sale_date,
-                                                                          status=sale.status)
+                                                                          user_earning_type=earning_type, sale=sale,
+                                                                          from_product=product,
+                                                                          amount=publisher_commission,
+                                                                          date=sale.sale_date, status=sale.status)
                 except:
                     logging.error("Error creating earnings within the publisher network")
             else:
@@ -428,7 +429,9 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product)
     if owner.owner_network:
         owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product)
 
-    get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type='publisher_network_tribute',
-                                                          sale=sale, from_product=product, from_user=user,
-                                                          amount=owner_earning, date=sale.sale_date, status=sale.status)
+    earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER else 'publisher_network_click_tribute'
+
+    get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type=earning_type, sale=sale,
+                                                          from_product=product, from_user=user, amount=owner_earning,
+                                                          date=sale.sale_date, status=sale.status)
     return publisher_commission
