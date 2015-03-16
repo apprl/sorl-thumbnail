@@ -13,7 +13,7 @@
             <div class="message warning">
             {% if request.path == profile.url_looks %}
                 <p>{% trans "All looks that you create end up here." %}</p>
-                <a class="btn btn-success" href="{% url 'look-create' %}">{% trans "Create look!" %}</a>
+                <a class="btn btn-success" href="{% url 'look-create' %}">{% trans "Create your first look!" %}</a>
             {% elif request.path == profile.url_likedlooks %}
                 <p>{% trans "All looks that you like end up here." %}</p>
                 <a class="btn btn-success" href="{% url 'look-list' %}">{% trans "Find looks!" %}</a>

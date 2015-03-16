@@ -625,7 +625,7 @@ def look_list(request, search=None, contains=None, gender=None):
         elif view == 'friends':
             user_ids = []
             if is_authenticated:
-                user_ids = get_model('profile', 'Follow').objects.filter(user=request.user).values_list('user_follow_id', flat=True)
+                user_ids = get_model('profile', 'Follow').objects.filter(user=request.user, active=True).values_list('user_follow_id', flat=True)
                 queryset = queryset.filter(gender__in=gender_list.get(gender)).filter(user__in=user_ids)
     elif contains:
         queryset = queryset.filter(components__product__slug=contains).distinct()
