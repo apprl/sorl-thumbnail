@@ -441,6 +441,7 @@ PIPELINE_JS = {
             'js/app/base/views/dialog_unpublish.js',
             'js/app/base/views/dialog_save.js',
             'js/app/base/views/dialog_login.js',
+            'js/app/base/views/dialog_no_products.js',
             'js/app/shop_editor/views/shop_create.js',
             'js/app/shop_editor/views/shop_edit_popup.js',
             'js/app/look_editor/views/look_edit_filter_tabs.js',

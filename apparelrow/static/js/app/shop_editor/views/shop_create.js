@@ -19,6 +19,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
+        this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+
 
         // Shop editor popup
         this.shop_edit_popup = new App.Views.ShopEditPopup({parent_view: this});
@@ -190,6 +192,11 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                 model.destroy();
             }
         }, this));
+
+        if (!this.model.components.length) {
+            this.popup_dispatcher.show('dialog_no_products');
+            return;
+        }
 
         if(this.model.backend == 'client') {
             this.model.backend = 'server';
