@@ -161,7 +161,7 @@ class Cut(models.Model):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
 
 class ClickCost(models.Model):
-    cut = models.ForeignKey('dashboard.Cut', null=False, blank=False)
+    vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, on_delete=models.CASCADE)
     amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Click cost'))
     currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
 
@@ -208,14 +208,14 @@ class StoreCommission(models.Model):
                     if commission_array[2] == '0':
                         self.commission =  _('%(standard_from)s%%' % {'standard_from':standard_from})
                     else:
-                        self.commission =  _('%(standard_from)s%% (Sale %(sale)s%%)' % {'standard_from':standard_from,
+                        self.commission =  _('%(standard_from)s%% (sale items %(sale)s%%)' % {'standard_from':standard_from,
                                                                                     'sale':sale})
                 elif commission_array[2] == '0':
                         self.commission = _('%(standard_from)s-%(standard_to)s%%' %
                                             {'standard_from':standard_from,
                                              'standard_to':standard_to})
                 else:
-                    self.commission = _('%(standard_from)s-%(standard_to)s%% (Sale %(sale)s%%)' %
+                    self.commission = _('%(standard_from)s-%(standard_to)s%% (sale items %(sale)s%%)' %
                                            {'standard_from':standard_from,
                                             'standard_to':standard_to,
                                             'sale':sale})
@@ -397,7 +397,6 @@ def create_user_earnings(sale):
         get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
-
 
 def create_earnings_publisher_network(user, publisher_commission, sale, product):
     owner = user.owner_network

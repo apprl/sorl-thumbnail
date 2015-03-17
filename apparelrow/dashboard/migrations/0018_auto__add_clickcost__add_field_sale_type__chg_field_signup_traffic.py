@@ -11,11 +11,16 @@ class Migration(SchemaMigration):
         # Adding model 'ClickCost'
         db.create_table(u'dashboard_clickcost', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('cut', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['dashboard.Cut'])),
+            ('vendor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Vendor'])),
             ('amount', self.gf('django.db.models.fields.DecimalField')(default='0.0', max_digits=10, decimal_places=2)),
             ('currency', self.gf('django.db.models.fields.CharField')(default='EUR', max_length=3)),
         ))
         db.send_create_signal(u'dashboard', ['ClickCost'])
+
+        # Adding field 'Sale.type'
+        db.add_column(u'dashboard_sale', 'type',
+                      self.gf('django.db.models.fields.CharField')(default='0', max_length=1),
+                      keep_default=False)
 
 
         # Changing field 'Signup.traffic'
@@ -24,6 +29,9 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
         # Deleting model 'ClickCost'
         db.delete_table(u'dashboard_clickcost')
+
+        # Deleting field 'Sale.type'
+        db.delete_column(u'dashboard_sale', 'type')
 
 
         # Changing field 'Signup.traffic'
@@ -107,6 +115,8 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['name']", 'object_name': 'Vendor'},
             'homepage': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_cpc': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
+            'is_cpo': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
             'logotype': ('django.db.models.fields.files.ImageField', [], {'max_length': '127', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_index': 'True'}),
             'provider': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
@@ -174,11 +184,11 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'ClickCost'},
             'amount': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '10', 'decimal_places': '2'}),
             'currency': ('django.db.models.fields.CharField', [], {'default': "'EUR'", 'max_length': '3'}),
-            'cut': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['dashboard.Cut']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
         },
         u'dashboard.cut': {
-            'Meta': {'object_name': 'Cut'},
+            'Meta': {'ordering': "('group', 'vendor')", 'object_name': 'Cut'},
             'cut': ('django.db.models.fields.DecimalField', [], {'default': "'0.67'", 'max_digits': '10', 'decimal_places': '3'}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'cuts'", 'on_delete': 'models.PROTECT', 'to': u"orm['dashboard.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -234,6 +244,7 @@ class Migration(SchemaMigration):
             'referral_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'null': 'True', 'blank': 'True'}),
             'sale_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '1', 'db_index': 'True'}),
+            'type': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '1'}),
             'user_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'})
         },
