@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 import json
 import datetime
 import os.path
 import string
 import urllib
 import urlparse
+from apparelrow.apparel.utils import currency_exchange
 import decimal
 
 from django.conf import settings
-from django.shortcuts import render, render_to_response, get_object_or_404, redirect
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Count, get_model
@@ -36,11 +36,11 @@ from apparelrow.profile.notifications import process_like_look_created
 
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
-from apparelrow.apparel.models import Brand, Product, ProductLike, Category, Option, VendorProduct, BackgroundImage
-from apparelrow.apparel.models import Look, LookLike, LookComponent, ShortProductLink, ShortStoreLink, ShortDomainLink
-from apparelrow.apparel.forms import LookForm, LookComponentForm
+from apparelrow.apparel.models import Brand, Product, ProductLike
+from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortStoreLink, ShortDomainLink
+from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
-from apparelrow.apparel.utils import get_paged_result, CountPopularity, vendor_buy_url, get_product_alternative, get_featured_activity_today, select_from_multi_gender, JSONResponse, JSONPResponse
+from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, select_from_multi_gender, JSONResponse, JSONPResponse
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 
 from apparelrow.activity_feed.views import user_feed
@@ -302,6 +302,19 @@ def product_detail(request, slug):
 
     earning_cut = product.get_product_earning(request.user)
 
+    # Cost per click
+    default_vendor = product.default_vendor
+    cost_per_click = 0
+    if default_vendor and default_vendor.vendor.is_cpc:
+        try:
+            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
+            click_cut = cut * publisher_cut
+            cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
+            rate = currency_exchange('EUR', cost_per_click.currency)
+            cost_per_click = "%.2f" % (decimal.Decimal(cost_per_click.amount * rate) * click_cut)
+        except get_model('dashboard', 'ClickCost').DoesNotExist:
+            logger.warning("ClickCost not defined for default vendor %s of the product %s" % (product.default_vendor, product.product_name))
+
     return render_to_response(
         'apparel/product_detail.html',
         {
@@ -320,6 +333,7 @@ def product_detail(request, slug):
             'alternative': alternative,
             'alternative_url': alternative_url,
             'earning_cut': earning_cut,
+            'cost_per_click': cost_per_click,
         }, context_instance=RequestContext(request),
     )
 
@@ -525,7 +539,6 @@ def _product_like(request, product, action):
 
     if request.user.owner_network:
         owner_user = request.user.owner_network
-        print owner_user.is_subscriber
         if owner_user.is_subscriber:
             product_like, created = ProductLike.objects.get_or_create(user=owner_user, product=product,
                                                               defaults={'active': default_active})
