@@ -2,62 +2,23 @@
 {% load i18n dashboard_extras %}
 
 {% block modal_id %}modal_detail_clicks{% endblock %}
-{% block modal_extra_class %}full_modal{% endblock %}
+{% block extra_modal_classes %}full_modal{% endblock %}
 {% block modal_title %}&nbsp;{% endblock %}
 {% block modal_content %}
     <div class="row">
         <div class="col-lg-12">
-            <h2>{% trans "Click details" %} {{ month }} {{ year }}</h2>
+            <h2>{% trans "Clicks to" %} <span id="modal-vendor"></span>{% trans " on " %}<span id="modal-date"></span></h2>
             <table id="top-products-more" class="sortable table">
                 <thead>
                     <tr>
-                        <th class="col1 product-image center">{% trans "Product" %}</th>
-                        <th class="col2 hidden-xs center"></th>
-                        <th class="col3 center hidden-xs center">{% trans "Clicks" %}</th>
-                        <th class="center">{% trans "Sales" %}</th>
-                        <th class="hidden-xs center">{% trans "Conversion rate" %}</th>
-                        <th class="hidden-xs center">{% trans "Sales generated" %}</th>
-                        <th class="center">{% trans "Total earnings" %}</th>
+                        <th>{% trans "Product" %}</th>
+                        <th class="col2 center">{% trans "Clicks" %}</th>
+                        <th class="col3 center">{% trans "Earnings" %}</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                      <td colspan="7"><i>Showing a maximum of 50 products</i></td>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    {% for product in most_sold_products %}
-                    <tr>
-                        <td data-sort="{{ product.product }}" class="col1 product-image center">
-                            <a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a>
-                        </td>
-                        <td class="col2 hidden-xs">
-                            <a href="{{ product.product_link }}">{{ product.product }}</a>
-                        </td>
-                        <td class="col3 center hidden-xs"  data-sort="{{ product.clicks }}">
-                            {{ product.clicks }}
-                        </td>
-                        <td class="center" data-sort="{{ product.sales }}">
-                            {{ product.sales }}
-                        </td>
-                        <td class="hidden-xs center">
-                            {{ product.sales|commission_rate:product.clicks }}
-                        </td>
-                        <td class="hidden-xs center" data-sort="{{ product.converted_amount }}">
-                            {{ product.converted_amount }} {{ currency }}
-                        </td>
-                        <td class="center" data-sort="{{ product.total_earnings }}">
-                            {{ product.total_earnings }} {{ currency }}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3">{% trans "No sales yet." %}</td>
-                    </tr>
-                    {% endfor %}
+                <tbody id="content-clicks">
                 </tbody>
             </table>
         </div>
     </div>
-    <div id="content-clicks"></div>
 {% endblock %}
