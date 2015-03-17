@@ -14,7 +14,7 @@ class BelstaffSpider(CSVFeedSpider, AffiliateMixin):
         item = Product()
         item['name'] = row.get('product_name')
         item['vendor'] = self.name
-        item['url'] = row.get('original_url')
+        item['url'] = row.get('url')
         item['key'] = row.get('original_url').split('?')[0]
         item['sku'] = row.get('product_number')
         item['affiliate'] = self.AFFILIATE_AAN
