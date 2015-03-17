@@ -23,15 +23,17 @@ class Command(BaseCommand):
     affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox', 'aan']
 
     def update(self, row):
-        instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
+        # Creates a sale only if the vendor supports Cost per order
+        if row['vendor'].is_cpo:
+            instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
 
-        if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
-            for field in row.keys():
-                setattr(instance, field, row.get(field))
+            if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
+                for field in row.keys():
+                    setattr(instance, field, row.get(field))
 
             instance.save()
 
-        return instance
+            return instance
 
     def handle(self, *args, **options):
         end_date = datetime.date.today()
