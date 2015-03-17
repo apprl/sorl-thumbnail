@@ -3,11 +3,10 @@ import decimal
 import calendar
 import uuid
 import logging
+import operator
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core import urlresolvers
 from django.db.models import get_model, Sum
 from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
@@ -18,6 +17,7 @@ import dateutil.parser
 
 from apparelrow.statistics.utils import get_client_ip
 from apparelrow.apparel.utils import exchange_amount
+from apparelrow.dashboard.utils import get_clicks_amount, get_total_clicks_per_vendor, get_number_clicks
 
 from advertiser.tasks import send_text_email_task
 from advertiser.utils import make_advertiser_url
@@ -270,9 +270,19 @@ def store_admin(request, year=None, month=None):
 
     year = start_date.year
     month = start_date.month
+    month_display = start_date.strftime('%B')
 
     start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
     end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+
+    total_clicks_per_month = 0
+    clicks_delivered_per_month = 0
+    clicks_cost_per_month = 0
+
+    if store.vendor.is_cpc:
+        total_clicks_per_month = get_total_clicks_per_vendor(store.vendor)
+        clicks_delivered_per_month = get_number_clicks(store.vendor, start_date_query, end_date_query)
+        clicks_cost_per_month = get_clicks_amount(store.vendor, start_date_query, end_date_query)
 
     Transaction = get_model('advertiser', 'Transaction')
     transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
@@ -315,16 +325,47 @@ def store_admin(request, year=None, month=None):
     for click in clicks:
         data_per_month[click.created.date()][1] += 1
 
+    clicks_per_day = {}
+    click_cost = None
+    if store.vendor.is_cpc:
+        try:
+            click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=store.vendor)
+            for row in clicks:
+                date_key = datetime.datetime.strftime(row.created, "%Y%m%d")
+                if not date_key in clicks_per_day:
+                    start_date_query = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
+                    end_date_query = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
+                    clicks_per_day[date_key] = {}
+                    clicks_per_day[date_key]['date'] = row.created
+                    clicks_per_day[date_key]['amount'] = get_clicks_amount(store.vendor, start_date_query, end_date_query)
+                    clicks_per_day[date_key]['clicks'] = 0
+                    product = get_model('apparel', 'Product').objects.get(slug=row.product)
+                    clicks_per_day[date_key]['name'] = product.product_name
+                clicks_per_day[date_key]['clicks'] += 1
+
+            # Sort clicks per day
+            clicks_per_day = sorted(clicks_per_day.items(), key=operator.itemgetter(0), reverse=True)
+        except get_model('dashboard', 'ClickCost').DoesNotExist:
+            logger.warning("No cost per click defined for vendor %s"%store.vendor)
+
     return render(request, 'advertiser/store_admin.html', {'transactions': transactions,
                                                           'store': request.user.advertiser_store,
                                                           'dates': dates,
                                                           'selected_date': 'abc',
                                                           'year': year,
                                                           'month': month,
+                                                          'month_display': month_display,
+                                                          'vendor': store.vendor,
+                                                          'currency': 'EUR',
+                                                          'click_cost': click_cost,
                                                           'accepted_commission': accepted_commission,
                                                           'total_accepted_commission': total_accepted_commission,
-                                                          'data_per_month': data_per_month})
-
+                                                          'data_per_month': data_per_month,
+                                                          'clicks_per_day': clicks_per_day,
+                                                          'total_clicks_per_month': total_clicks_per_month,
+                                                          'clicks_delivered_per_month': clicks_delivered_per_month,
+                                                          'clicks_cost_per_month': clicks_cost_per_month,
+                                                          })
 
 @login_required
 def store_admin_accept(request, transaction_id):
