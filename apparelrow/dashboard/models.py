@@ -29,6 +29,8 @@ class Sale(models.Model):
     CONFIRMED = '3'
     READY = '4' # not used
     PAID = '5' # not used
+    PRODUCT_ADDED = '0'
+    PRODUCT_DECLINED = '1'
     STATUS_CHOICES = (
         (INCOMPLETE, 'Incomplete'),
         (DECLINED, 'Declined'),
@@ -80,6 +82,8 @@ class Sale(models.Model):
     sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
+    log_info = JSONField(_('Log info'), null=True, blank=True,
+                 help_text='Includes information about the products contained in the sale and their status.')
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
@@ -266,9 +270,13 @@ def sale_post_save(sender, instance, created, **kwargs):
         if len(earnings) == 0:
             create_earnings(instance)
         else:
-            for earning in earnings:
-                earning.status = instance.status
-                earning.save()
+            if instance.status >= Sale.CONFIRMED:
+                for earning in earnings:
+                    earning.status = instance.status
+                    earning.save()
+            else:
+                get_model('dashboard', 'UserEarning').objects.filter(sale=instance).delete()
+                create_earnings(instance)
 
 def create_earnings(instance):
     with transaction.atomic():
@@ -373,7 +381,6 @@ def create_user_earnings(sale):
         get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
-
 
 def create_earnings_publisher_network(user, publisher_commission, sale, product):
     owner = user.owner_network

@@ -12,7 +12,7 @@ class Importer(BaseImporter):
 
     name = 'APPRL Advertiser Network'
 
-    def get_data(self, start_date, end_date):
+    def get_data(self, start_date, end_date, data=None):
         logger.info("AAN - Start importing from Transaction")
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
