@@ -133,14 +133,23 @@
                         {% endif %}
 
                         {% if object.default_vendor and earning_cut and request.user.is_partner %}
-                        <p class="earning-box">You will earn approx.
-                            {% if object.default_vendor.locale_discount_price %}
-                                {% multiply object.default_vendor.locale_discount_price earning_cut %}
-                            {% else %}
-                                {% multiply object.default_vendor.locale_price earning_cut %}
+                             {% if object.default_vendor.vendor.is_cpo %}
+                                <p class="earning-box">You will earn approx. <span class="currency">{{ object.default_vendor.locale_currency }}</span>
+                                    {% if object.default_vendor.locale_discount_price %}
+                                        {% multiply object.default_vendor.locale_discount_price earning_cut %}
+                                    {% else %}
+                                        {% multiply object.default_vendor.locale_price earning_cut %}
+                                    {% endif %}
+
+                                    per generated sale of this item
+                                </p>
+                            {% elif object.default_vendor.vendor.is_cpc %}
+                                 <p class="earning-box">You will earn approx.
+                                     <span class="currency">EUR</span>
+                                     {{ cost_per_click }}
+                                    per click to this item
+                                </p>
                             {% endif %}
-                            <span class="currency">{{ object.default_vendor.locale_currency }}</span>
-                            per generated sale of this item</p>
                             <br>
                         {% endif %}
 

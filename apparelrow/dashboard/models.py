@@ -48,6 +48,14 @@ class Sale(models.Model):
         (PAID_READY, 'Ready for payment'),
         (PAID_COMPLETE, 'Payment complete'),
     )
+
+    COST_PER_ORDER = '0'
+    COST_PER_CLICK = '1'
+    SALE_TYPES_CHOICES = (
+        (COST_PER_ORDER, 'Cost per order'),
+        (COST_PER_CLICK, 'Cost per click'),
+    )
+
     original_sale_id = models.CharField(max_length=100)
     affiliate = models.CharField(max_length=100, null=False, blank=False)
     vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True, on_delete=models.PROTECT)
@@ -59,6 +67,8 @@ class Sale(models.Model):
 
     status = models.CharField(max_length=1, default=INCOMPLETE, choices=STATUS_CHOICES, null=False, blank=False, db_index=True)
     paid = models.CharField(max_length=1, default=PAID_PENDING, choices=PAID_STATUS_CHOICES, null=False, blank=False)
+    type = models.CharField(max_length=1, default=COST_PER_ORDER, choices=SALE_TYPES_CHOICES, null=False, blank=False)
+
     adjusted = models.BooleanField(null=False, blank=False, default=False)
     adjusted_date = models.DateTimeField(default=None, null=True, blank=True)
 
@@ -143,12 +153,21 @@ class Cut(models.Model):
                                        help_text='Between 1 and 0, default %s. Determines the percentage that goes to the referral partner parent.' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
     rules_exceptions = JSONField(null=True, blank=True,
                                  help_text='Creates exceptions for Cuts using the following format: [{"sid": 1, "cut": '
-                                           '0.90, "tribute":0.50}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
+                                           '0.90, "tribute":0.50, "click_cost":"10 SEK"}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
                                            'is the User id. Cut replaces the cut value for the user and the current cut'
                                            ' and Tribute replaces the tribute value the user has to pay to the network '
                                            'owner')
+
+    class Meta:
+        ordering = ('group', 'vendor')
+
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
+
+class ClickCost(models.Model):
+    vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, on_delete=models.CASCADE)
+    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Click cost'))
+    currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
 
 
 class Signup(models.Model):
@@ -193,14 +212,14 @@ class StoreCommission(models.Model):
                     if commission_array[2] == '0':
                         self.commission =  _('%(standard_from)s%%' % {'standard_from':standard_from})
                     else:
-                        self.commission =  _('%(standard_from)s%% (Sale %(sale)s%%)' % {'standard_from':standard_from,
+                        self.commission =  _('%(standard_from)s%% (sale items %(sale)s%%)' % {'standard_from':standard_from,
                                                                                     'sale':sale})
                 elif commission_array[2] == '0':
                         self.commission = _('%(standard_from)s-%(standard_to)s%%' %
                                             {'standard_from':standard_from,
                                              'standard_to':standard_to})
                 else:
-                    self.commission = _('%(standard_from)s-%(standard_to)s%% (Sale %(sale)s%%)' %
+                    self.commission = _('%(standard_from)s-%(standard_to)s%% (sale items %(sale)s%%)' %
                                            {'standard_from':standard_from,
                                             'standard_to':standard_to,
                                             'sale':sale})
@@ -248,6 +267,9 @@ USER_EARNING_TYPES = (
     ('referral_signup_commission', 'Referral Signup Earnings'),
     ('publisher_sale_commission', 'Publisher Sale Earnings'),
     ('publisher_network_tribute', 'Network Earnings'),
+
+    ('publisher_network_click_tribute', 'Network Earnings per Clicks'),
+    ('publisher_sale_click_commission', 'Earnings per Clicks'),
 )
 
 class UserEarning(models.Model):
@@ -324,6 +346,8 @@ def create_user_earnings(sale):
     if not len(sale_product) == 0:
         product = sale_product[0]
 
+    earning_type = 'publisher_sale_commission' if sale.type == Sale.COST_PER_ORDER else 'publisher_sale_click_commission'
+
     user = None
     if sale.user_id:
         try:
@@ -366,10 +390,10 @@ def create_user_earnings(sale):
                                                                          status=sale.status)
 
                     get_model('dashboard', 'UserEarning').objects.create( user=user,
-                                                                          user_earning_type='publisher_sale_commission',
-                                                                          sale=sale, from_product=product,
-                                                                          amount=publisher_commission, date=sale.sale_date,
-                                                                          status=sale.status)
+                                                                          user_earning_type=earning_type, sale=sale,
+                                                                          from_product=product,
+                                                                          amount=publisher_commission,
+                                                                          date=sale.sale_date, status=sale.status)
                 except:
                     logging.error("Error creating earnings within the publisher network")
             else:
@@ -412,7 +436,9 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product)
     if owner.owner_network:
         owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product)
 
-    get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type='publisher_network_tribute',
-                                                          sale=sale, from_product=product, from_user=user,
-                                                          amount=owner_earning, date=sale.sale_date, status=sale.status)
+    earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER else 'publisher_network_click_tribute'
+
+    get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type=earning_type, sale=sale,
+                                                          from_product=product, from_user=user, amount=owner_earning,
+                                                          date=sale.sale_date, status=sale.status)
     return publisher_commission

@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.core import urlresolvers
 
-from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning
+from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning, ClickCost
 from apparelrow.dashboard.forms import CutAdminForm
 
 class SaleAdmin(admin.ModelAdmin):
@@ -72,3 +72,8 @@ class UserEarningAdmin(admin.ModelAdmin):
     search_fields = ('user__name', 'user_earning_type', 'status', 'paid')
 
 admin.site.register(UserEarning, UserEarningAdmin)
+
+class ClickCostAdmin(admin.ModelAdmin):
+    list_display = ('vendor',   'amount', 'currency')
+
+admin.site.register(ClickCost, ClickCostAdmin)

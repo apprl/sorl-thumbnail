@@ -18,6 +18,9 @@ class CutAdminForm(ModelForm):
                     elif key == "cut":
                         if value < 0 or value > 1:
                             raise ValidationError("Value for cut is not valid. Insert a number between 0 and 1.")
+                    elif key == "click_cost":
+                        if not len(value.split(" ")) == 2:
+                            raise ValidationError("Value for click is not valid. Insert amount and currency. Ex: '10 EUR'.")
                     else:
                         raise ValidationError("JSON key is not valid: %s."%(key))
         return rules_exceptions

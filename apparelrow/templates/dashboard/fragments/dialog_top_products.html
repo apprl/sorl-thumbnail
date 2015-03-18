@@ -2,7 +2,7 @@
 {% load i18n dashboard_extras %}
 
 {% block modal_id %}modal_top_products{% endblock %}
-{% block modal_extra_class %}full_modal{% endblock %}
+{% block extra_modal_classes %}full_modal{% endblock %}
 {% block modal_title %}&nbsp;{% endblock %}
 {% block modal_content %}
     <div class="row">
@@ -38,16 +38,16 @@
                             {{ product.clicks }}
                         </td>
                         <td class="center" data-sort="{{ product.sales }}">
-                            {{ product.sales }}
+                            {% if product.sales == 0 %}-{% else %}{{ product.sales }}{% endif %}
                         </td>
                         <td class="hidden-xs center">
-                            {{ product.sales|commission_rate:product.clicks }}
+                            {% if product.sales == 0 %}-{% else %}{{ product.sales|commission_rate:product.clicks }}{% endif %}
                         </td>
                         <td class="hidden-xs center" data-sort="{{ product.converted_amount }}">
-                            {{ product.converted_amount }} {{ currency }}
+                             {% if product.sales == 0 %}-{% else %}{{ currency }} {{ product.converted_amount }}{% endif %}
                         </td>
                         <td class="center" data-sort="{{ product.total_earnings }}">
-                            {{ product.total_earnings }} {{ currency }}
+                            {{ currency }} {{ product.total_earnings }}
                         </td>
                     </tr>
                     {% empty %}

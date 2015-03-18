@@ -2,7 +2,7 @@
 {% load i18n dashboard_extras %}
 
 {% block modal_id %}modal_top_publishers{% endblock %}
-{% block modal_extra_class %}full_modal{% endblock %}
+{% block extra_modal_classes %}full_modal{% endblock %}
 {% block modal_title %}&nbsp;{% endblock %}
 {% block modal_content %}
     <div class="row">
@@ -11,17 +11,12 @@
             <table id="top-publishers-more" class="sortable table">
                 <thead>
                     <tr>
-                        <th class="col1 product-image center">{% trans "User" %}</th>
+                        <th class="col1 product-image center">{% trans "Publisher" %}</th>
                         <th class="col2 hidden-xs center"></th>
-                        <th class="col3 center hidden-xs">{% trans "Clicks" %}</th>
-                        <th class="center">{% trans "Sales" %}</th>
-                        <th class="hidden-xs center">{% trans "Conversion rate" %}</th>
-                        <th class="hidden-xs center">{% trans "Sales generated" %}</th>
-                        {% if is_admin %}
-                            <th class="center">{% trans "Publisher earnings" %}</th>
-                        {% else %}
-                            <th class="center">{% trans "Network earnings" %}</th>
-                        {% endif %}
+                        <th class="hidden-xs center">{% trans "Commission earnings" %}</th>
+                        <th class="hidden-xs center">{% trans "Click earnings" %}</th>
+                        <th class="center">{% trans "Total earnings" %}</th>
+                        <th class="center">{% trans "Network earnings" %}</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -38,27 +33,18 @@
                         <td class="col2 hidden-xs">
                             <a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a>
                         </td>
-                        <td class="col3 center hidden-xs">
-                            {{ publisher.clicks }}
+                        <td class="hidden-xs center" data-sort="{{ publisher.publisher_earnings }}">
+                            {{ currency }} {{ publisher.publisher_earnings }}
                         </td>
-                        <td class="center">
-                            {{ publisher.sales }}
+                        <td class="hidden-xs center" data-sort="{{ publisher.publisher_click_earnings }}">
+                            {{ currency }} {{ publisher.publisher_click_earnings }}
                         </td>
-                        <td class="hidden-xs center">
-                            {{ publisher.sales|commission_rate:publisher.clicks }}
+                        <td class="center" data-sort="{{ publisher.total_network_earnings }}">
+                            {{ currency }} {{ publisher.total_network_earnings }}
                         </td>
-                        <td class="hidden-xs center" data-sort="{{ publisher.converted_amount }}">
-                            {{ publisher.converted_amount }} {{ currency }}
+                        <td class="center" data-sort="{{ publisher.network_earnings }}">
+                            {{ currency }} {{ publisher.network_earnings }}
                         </td>
-                        {% if is_admin %}
-                            <td class="center" data-sort="{{ publisher.publisher_earnings }}">
-                                {{ publisher.publisher_earnings }} {{ currency }}
-                            </td>
-                        {% else %}
-                            <td class="center" data-sort="{{ publisher.network_earnings }}">
-                                {{ publisher.network_earnings }} {{ currency }}
-                            </td>
-                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
