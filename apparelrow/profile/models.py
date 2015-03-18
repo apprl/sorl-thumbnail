@@ -170,6 +170,7 @@ class User(AbstractUser):
     def look_likes_count(self):
         return self.look_likes.filter(active=True).count()
 
+
     @cached_property
     def profile_content(self):
         # TODO: better algorithm for finding out content to fill user_medium.html templates with
@@ -291,10 +292,13 @@ class User(AbstractUser):
 
         return reverse('profile-looks', args=[self.slug])
 
-
     @cached_property
     def url_likedlooks(self):
         return reverse('profile-likedlooks', args=[self.slug])
+
+    @cached_property
+    def url_brandlooks(self):
+        return reverse('profile-brandlooks', args=[self.slug])
 
     @cached_property
     def url_shops(self):

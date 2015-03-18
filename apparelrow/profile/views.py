@@ -139,8 +139,7 @@ def looks(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def likedlooks(request, profile, form, page=0):
-    print "looks called"
-    logger.info("looks called")
+    #logger.info("looks called")
 
     #retrieve looks for which a like for the current user exists and is active
     looks = get_model('apparel', 'Look').published_objects.filter(likes__user=profile, likes__active=True)
@@ -162,6 +161,34 @@ def likedlooks(request, profile, form, page=0):
     content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/looks.html', content)
+
+
+@get_current_user
+@avatar_change
+def brandlooks(request, profile, form, page=0):
+    logger.info("brand looks called")
+
+    #retrieve looks for which a like for the current user exists and is active
+    looks = get_model('apparel', 'Look').published_objects.filter(components__product__static_brand = profile.name)
+
+    paged_result = get_paged_result(looks, 12, request.GET.get('page', '1'))
+
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/look_list.html', {
+                'current_page': paged_result
+            })
+
+    content = {
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
+        }
+    content.update(form)
+    content.update(get_profile_sidebar_info(request, profile))
+
+    return render(request, 'profile/looks.html', content)
+
 
 @get_current_user
 @avatar_change
