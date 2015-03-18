@@ -5,6 +5,7 @@
         <ul class="list-inline">
             <li><h2><a{% if 'dashboard' in request.path %} class="selected"{% endif %} href="{% url 'dashboard' %}">{% if request.user.is_authenticated and request.user.is_partner %}{% trans "Your statistics" %}{% else %}{% trans "Become a publisher" %}{% endif %}</a></h2></li>
             {% if request.user.is_authenticated and request.user.is_partner %}
+            <li><h2><a href="{% url 'publisher-tools' %}">{% trans "Publisher tools" %}</a></h2></li>
             <li><h2><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-commissions' %}">{% trans "Stores" %}</a></h2></li>
             {% endif %}
             <li><h2><a{% if 'info' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-info' %}">{% trans "How it works" %}</a></h2></li>

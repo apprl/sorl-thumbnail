@@ -59,7 +59,7 @@
             return uri + separator + key + "=" + value;
         }
     }
-$(document).ready(function() {
+        $(document).ready(function() {
         var width_type = '%';
 
         $('#width_dropdown a').on('click', function(e) {
@@ -109,6 +109,8 @@ $(document).ready(function() {
             });
 
             return false;
+        }).on('change', 'input, select', function() {
+            $('#id_look_embed_code').parent().hide();
         });
     });
 </script>

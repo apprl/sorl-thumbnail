@@ -119,9 +119,10 @@
     }
 
     $.fn.enableApprlTooltip = function(selector) {
+        jQuery(document).on({'touchstart': function(event) {event.preventDefault(); open(event); }}, selector)
         jQuery(document).on({'mouseenter': open, 'mouseleave': timer}, selector);
         jQuery(document).on({'mouseenter': open, 'mouseleave': timer}, '.tooltip');
-        jQuery(document).click(close);
+        jQuery(document).on('click', close);
         jQuery('.tooltip .product-image').hover(
             function(e) {
                 jQuery(e.currentTarget).parent().find('.product-meta > a').addClass('hover');

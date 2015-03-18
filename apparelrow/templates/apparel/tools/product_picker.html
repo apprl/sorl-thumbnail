@@ -1,0 +1,62 @@
+{% load static from staticfiles %}
+{% load i18n compressed %}
+
+<div id="product-chooser" data-reset-text="{% trans "Reset" %}">
+    {% if not enabled %}<div class="disabled"><div class="info">{% trans 'This shop automatically includes all your liked products. If you wish to create a shop where you can manually choose what to include, create a new shop.' %}</div></div>{% endif %}
+    <ul id="product-tabs" class="nav nav-tabs nav-justified">
+        <li><a{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} class="tab-likes" href="#"><i class="glyphicon glyphicon-heart"></i> <span>{% trans "My likes" %}</span></a></li>
+        <li class="active"><a class="tab-all" href="#"><i class="glyphicon glyphicon-list"></i> <span>{% trans "All products" %}</span></a></li>
+    </ul>
+    <a href="#" class="close-product-chooser"><img src="{% static "images/close.svg" %}"/></a>
+    <div class="product-filter-container">
+        <div id="product-filter" class="group">
+            <div class="middle-filters group">
+                <ul id="product-filter-gender" class="list-inline hidden-xs">
+                    <li><a href="#" data-value="W"{% if gender == 'W' %} class="selected"{% endif %}>{% trans "Women" %}</a></li>
+                    <li><a href="#" data-value="M"{% if gender == 'M' %} class="selected"{% endif %}>{% trans "Men" %}</a></li>
+                </ul>
+                <div class="form-control-wrapper"><input class="form-control" id="product-search" type="search" name="q" placeholder="{% trans "Search products & brands here…" %}"></div>
+                <a class="btn btn-primary btn-sm btn-product-reset hidden-xs" style="display:none;" href="#">{% trans "Reset" %}</a>
+            </div>
+            <div class="hidden-filters-container">
+                <a class="btn btn-primary btn-show-filters btn-sm"><span>{% trans "Filter products" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
+                <ul class="hidden-filters list-inline">
+                    <li class="btn-product-reset hidden-sm hidden-md hidden-lg dropdown" style="display:none">
+                        <a class="btn btn-primary btn-sm btn-product-reset" style="display:none;" href="#"><span>{% trans "Reset filtering" %}</span> <b class="glyphicon glyphicon-remove"></b></a>
+                    </li>
+                    <li id="product-filter-gender-2" class="dropdown left hidden-sm hidden-md hidden-lg">
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose gender" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
+                        <ul id="product-filter-gender" class="list-inline" style="display:none">
+                            <li><a href="#" data-value="W"{% if gender == 'W' %} class="selected"{% endif %}>{% trans "Women" %}</a></li>
+                            <li><a href="#" data-value="M"{% if gender == 'M' %} class="selected"{% endif %}>{% trans "Men" %}</a></li>
+                        </ul>
+                    </li>
+                    <li id="product-filter-category" class="dropdown left">
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Choose category" %}"><span>{% trans "Choose category" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
+                    </li>
+                    <li id="product-filter-subcategory" class="dropdown left">
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Subcategory" %}"><span>{% trans "Subcategory" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
+                    </li>
+                    <li id="product-filter-color" class="dropdown">
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Color" %}"><span>{% trans "Color" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
+                    </li>
+                    <li id="product-filter-price" class="dropdown">
+                        <a class="btn btn-primary btn-sm" href="#" data-default-name="{% trans "Price" %}"><span>{% trans "Price" %}</span> <b class="glyphicon glyphicon-chevron-down"></b></a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="product-list-container">
+        <div id="product-list-empty">
+            <p>{% trans "No matching items" %}</p>
+            <a class="btn btn-primary btn-reset" href="#">{% trans "Reset search" %}</a>
+        </div>
+        <div id="product-list-unauthenticated">
+            <p>{% trans "Connect with your Facebook account to save your favourite items" %}</p>
+            <a class="facebook-btn" href="#login"><img src="{% static "images/facebook-en.png" %}"></a>
+        </div>
+        <ul id="product-list" class="list-inline"></ul>
+    </div>
+</div>

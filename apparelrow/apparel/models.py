@@ -24,7 +24,7 @@ from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
 from apparelrow.apparel.utils import currency_exchange, get_brand_and_category
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
-from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache
+from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache
 
 from apparelrow.profile.notifications import process_sale_alert
 
@@ -446,6 +446,8 @@ def product_like_post_save(sender, instance, **kwargs):
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
+    empty_embed_shop_cache.apply_async(args=[instance.user.pk], countdown=1)
+
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
@@ -777,7 +779,6 @@ class VendorProductVariation(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=VendorProductVariation)
 models.signals.post_delete.connect(invalidate_model_handler, sender=VendorProductVariation)
 
-
 #
 # Look
 #
@@ -791,6 +792,7 @@ def static_image_path(instance, filename):
 def validate_not_spaces(value):
     if value.strip() == '':
         raise ValidationError(u'You must provide more than just whitespace.')
+
 
 class Look(models.Model):
     title = models.CharField(_('Title'), max_length=200, validators=[validate_not_spaces])
@@ -978,6 +980,108 @@ class Look(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=Look)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Look)
 
+#
+# Shop
+#
+
+class Shop(models.Model):
+    created     = models.DateTimeField(_("Time created"), auto_now_add=True)
+    modified    = models.DateTimeField(_("Time modified"), auto_now=True)
+    title       = models.CharField(_('Title'), max_length=200, validators=[validate_not_spaces])
+    slug        = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
+                    help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
+    description = models.TextField(_('Look description'), null=True, blank=True)
+    user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='shop')
+    show_liked  = models.BooleanField(default=False) # If true the products field will be ignored
+    products    = models.ManyToManyField(Product, through='ShopProduct')
+    published   = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return u'%s\'s shop' % (self.user,)
+
+    def save(self, *args, **kwargs):
+        logger.debug('User shop save: %s %s %s' % (self.pk, self.user, self.published))
+        super(Shop, self).save(*args, **kwargs)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('create_shop', [str(self.pk)])
+
+class ShopEmbed(models.Model):
+    shop                    = models.ForeignKey(Shop, related_name='parent_shop')
+    user                    = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='shop_embed')
+    width                   = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0])
+    height                  = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1])
+    width_type              = models.CharField(max_length=2, null=False, blank=False, default='px')
+    language                = models.CharField(max_length=3, null=False, blank=False)
+    show_product_brand      = models.BooleanField(default=True)
+    show_filters            = models.BooleanField(default=True)
+    show_filters_collapsed  = models.BooleanField(default=True)
+
+
+#
+# ShopProduct
+#
+
+class ShopProduct(models.Model):
+    shop_embed = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    product    = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+@receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save_cache')
+def shop_product_save(instance, **kwargs):
+    empty_embed_shop_cache.apply_async(args=[instance.shop_embed.user.pk], countdown=1)
+
+#
+# Shop
+#
+
+class ProductWidget(models.Model):
+    created     = models.DateTimeField(_("Time created"), auto_now_add=True)
+    modified    = models.DateTimeField(_("Time modified"), auto_now=True)
+    title       = models.CharField(_('Title'), max_length=200, validators=[validate_not_spaces])
+    slug        = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
+                    help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
+    description = models.TextField(_('Description'), null=True, blank=True)
+    user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='product_widget')
+    show_liked  = models.BooleanField(default=False) # If true the products field will be ignored
+    products    = models.ManyToManyField(Product, through='ProductWidgetProduct')
+    published   = models.BooleanField(default=False)
+    type        = models.CharField(_('Type'), max_length=10, default='single')
+
+    def __unicode__(self):
+        return u'%s' % (self.title,)
+
+    def save(self, *args, **kwargs):
+        logger.debug('Product widget save: %s %s %s' % (self.pk, self.user, self.published))
+        super(ProductWidget, self).save(*args, **kwargs)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('edit-product-widget', [str(self.pk)])
+
+class ProductWidgetEmbed(models.Model):
+    product_widget          = models.ForeignKey(ProductWidget, related_name='parent_widget')
+    user                    = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='product_widget_embed')
+    width                   = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0])
+    height                  = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1])
+    width_type              = models.CharField(max_length=2, null=False, blank=False, default='px')
+    language                = models.CharField(max_length=3, null=False, blank=False)
+    show_product_brand      = models.BooleanField(default=True)
+    show_filters            = models.BooleanField(default=True)
+    show_filters_collapsed  = models.BooleanField(default=True)
+#
+# ShopProduct
+#
+
+class ProductWidgetProduct(models.Model):
+    product_widget_embed = models.ForeignKey(ProductWidget, on_delete=models.CASCADE)
+    product    = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+#@receiver(post_save, sender=ProductWidgetProduct, dispatch_uid='product_widget_product_save_cache')
+#def shop_product_save(instance, **kwargs):
+#    empty_embed_shop_cache.apply_async(args=[instance.shop_embed.user.pk], countdown=1)
+
+
 @receiver(look_saved, sender=Look, dispatch_uid='look_saved')
 def look_saved_handler(sender, look, **kwargs):
     if not hasattr(look, 'user'):
@@ -1086,6 +1190,7 @@ class LookComponent(models.Model):
     z_index = models.IntegerField(_('CSS z-index'), blank=True, null=True)
     rotation = models.IntegerField(_('CSS rotation'), blank=True, null=True)
     positioned = models.CharField(max_length=1, choices=LOOK_COMPONENT_POSITIONED, null=True, blank=True)
+    flipped = models.BooleanField(default=False, blank=True)
 
     # FIXME: Scale product image on initial save and store height and width
     # properties

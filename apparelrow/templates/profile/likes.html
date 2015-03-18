@@ -20,7 +20,7 @@
 
 {% block content %}
     {% if current_page.paginator.count != 0 %}
-        {% include 'apparel/product_list.html' %}
+        {% include 'apparel/product_list.html' with show_filters=True%}
     {% else %}
     <div class="row">
         <div class="col-lg-12">

@@ -1,0 +1,26 @@
+{% extends 'dialog_base.html' %}
+{% load i18n %}
+
+{% block modal_id %}modal_shop_delete{% endblock %}
+{% block modal_title %}{% trans "Are you sure?" %}{% endblock %}
+{% block modal_content %}
+<p class="shop_title">{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
+{% endblock %}
+{% block modal_footer %}
+<p>
+    <a class="btn btn-success btn-delete-shop" href="#">{% trans "Yes" %}</a>
+    <a class="btn btn-danger" data-dismiss="modal" href="#">{% trans "No" %}</a>
+</p>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#modal_shop_delete').on('show.bs.modal', function (event) {
+            var $button = $(event.relatedTarget); // Button that triggered the modal
+            var shop_id = $button.data('shopid'); // Extract info from data-* attributes
+            var $modal = $(this);
+            $modal.find('.btn-success').off('click').on('click', function() {
+                location.href = '{% url "shop-delete" 0 %}'.replace('0', shop_id);
+            });
+        });
+    });
+</script>
+{% endblock %}
