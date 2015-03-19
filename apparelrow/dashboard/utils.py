@@ -78,7 +78,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
 
     return user, normal_cut, referral_cut, publisher_cut
 
-def get_clicks_list(vendor_name, date, user_id=None):
+def get_clicks_list(vendor_name, date, currency, user_id=None):
     """
         Returns a sorted list with detailed information from click earnings per product
         for a given user, vendor and day
@@ -97,7 +97,9 @@ def get_clicks_list(vendor_name, date, user_id=None):
                                                       type=get_model('dashboard', 'Sale').COST_PER_CLICK,
                                                       sale_date__range=[start_date_query, end_date_query])
 
-    exchange_rate = sale[0].exchange_rate
+    exchange_rate = 1
+    if currency == "EUR":
+        exchange_rate = sale[0].exchange_rate
     if user_id:
         try:
             user = get_user_model().objects.get(id=user_id)
@@ -150,11 +152,14 @@ def get_clicks_amount(vendor, start_date_query, end_date_query):
         Returns total amount in EUR for a Vendor in given date range
     """
     total_amount = 0
+    currency = None
     for item in get_model('dashboard', 'Sale').objects.filter(vendor=vendor,
                                                               sale_date__range=[start_date_query, end_date_query],
                                                               type=get_model('dashboard', 'Sale').COST_PER_CLICK):
-        total_amount += item.converted_amount
-    return total_amount
+        total_amount += item.original_amount
+        if not currency and item.original_currency:
+            currency = item.original_currency
+    return total_amount, currency
 
 def get_number_clicks(vendor, start_date_query, end_date_query):
     """
