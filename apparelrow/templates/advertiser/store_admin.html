@@ -118,10 +118,10 @@
 
             {% if vendor.is_cpc %}
             <ul class="list-inline monthly-list">
-                <li class="last">{% trans "Number of clicks delivered:" %} {{ clicks_delivered_per_month|floatformat:2|intcomma }} EUR</li>
+                <li class="last">{% trans "Number of clicks delivered:" %} {{ clicks_delivered_per_month }} </li>
             </ul>
             <ul class="list-inline monthly-list">
-                <li class="last">{% trans "Value:" %} {{ clicks_cost_per_month|floatformat:2|intcomma }} EUR</li>
+                <li class="last">{% trans "Value:" %} {{ clicks_cost_per_month|floatformat:2|intcomma }} {{ currency }}</li>
             </ul>
             {% endif %}
 
@@ -199,17 +199,19 @@
                 </thead>
                 <tbody>
                     {% for key, row in clicks_per_day %}
+                    {% if row.amount > 0 %}
                     <tr class="{% cycle 'odd' 'even' %}">
                         <td class="hidden-xs" data-sort="{{ row.date|date:"U" }}">{{ row.date.date }}</td>
                         <td>{{ row.clicks }}</td>
                         <td>{{ row.amount }} {{ currency }}</td>
                         <td>
-                            <a class="btn btn-primary {% if row.amount <= 0 %} disabled {% endif %} click-detail" data-vendor="{{ vendor }}"
+                            <a class="btn btn-primary click-detail" data-vendor="{{ vendor }}"
                                data-date="{{ row.date.date }}">
                                {% trans "See details" %}
                             </a>
                         </td>
                     </tr>
+                    {% endif %}
                     {% empty %}
                     <tr>
                         <td colspan="6">{% trans "No clicks" %}</td>
@@ -235,10 +237,11 @@
         var user_id = $(this).data("user");
         var vendor = $(this).data("vendor");
         var date = $(this).data("date");
+        var currency = 'original';
         $.ajax({
             type: "post",
             url: "{% url 'clicks-detail' %}",
-            data: { user_id: user_id, vendor : vendor, date : date},
+            data: { user_id: user_id, vendor : vendor, date : date, currency: currency},
             success: function (response) {
                 var json = jQuery.parseJSON(response);
                 load_detailed_data_clicks(json, date, vendor, "{{ currency }}");
