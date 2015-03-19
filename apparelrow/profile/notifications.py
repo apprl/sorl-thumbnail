@@ -3,7 +3,9 @@ import decimal
 import HTMLParser
 
 from django.conf import settings
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage
 from django.core.cache import cache
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
@@ -15,6 +17,10 @@ from django.utils.translation import get_language, activate
 from django.core.urlresolvers import reverse
 from django.utils.formats import number_format
 from django.db.models.loading import get_model
+from django.core.files.storage import DefaultStorage
+
+from sorl.thumbnail import get_thumbnail
+from django.templatetags.static import static
 
 import facebook
 
@@ -104,6 +110,66 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     activate(current_language)
 
+def notifiy_with_mandrill_teplate(users, notification_name, notification_subject, sender, merge_vars, extra_context=None):
+    """
+    New version of mail notifications using Mandrill templates (manually added to account beforehand) instead of local html templates
+
+    Sends an email to all users for the specified notification
+    Variable users is a list of django auth user instances.
+    """
+    if extra_context is None:
+        extra_context = {}
+    if sender.is_hidden:
+        return
+    emails = []
+    usernames = {}
+    notification_count = 0
+
+    """ extract email addresses and usernames"""
+    for user in users:
+        if user and user.email and user.is_active:
+            emails.append(user.email)
+            usernames[user.email] = {'USERNAME': user.display_name}
+            notification_count = notification_count + 1
+
+    """ create message object """
+    msg = EmailMessage(subject=notification_subject, from_email="no-reply@example.com", to=emails)
+    msg.template_name = notification_name           # A Mandrill template name
+    #this is nor currently used, but for some reason the API fails if this is not set.
+    #  it could say anything, none of this lands in the final email
+    msg.template_content = {                        # Content blocks to fill in
+        'EMPTY_BLOCK': "<a href='appr.com/*|URL|*'>Hello there!</a>"
+    }
+    apprl_logo_url = "logo.jpg" #TODO where is this?
+    #  append host name to url
+
+    apprl_logo_url = retrieve_full_url(apprl_logo_url)
+
+    msg.global_merge_vars = {                       # to merge into template
+        'LOGOURL': apprl_logo_url, 'FBICONURL': "", 'TWITTERICONURL': "", 'PINTERESTICONURL': "", 'INSTAICONURL': ""
+    }
+    msg.global_merge_vars.update(merge_vars) #add specific parameters
+
+    msg.merge_vars = usernames                        # Per-recipient merge tags, here adding personalized names
+    msg.send()
+
+    current_language = get_language()
+    stats, created = get_model('statistics', 'NotificationEmailStats').objects.get_or_create(notification_name=notification_name,
+                                                                                             defaults={'notification_count': notification_count})
+    if not created:
+        stats.notification_count = stats.notification_count + notification_count
+        stats.save()
+
+    activate(current_language)
+
+def retrieve_full_url(path):
+        devStage = True
+        if devStage:
+            return 'http://localhost:8000' + path
+        else:
+            return settings.STATIC_URL + path
+
+
 #
 # COMMENT LOOK CREATED
 #
@@ -125,7 +191,7 @@ def process_comment_look_created(recipient, sender, comment, **kwargs):
     if recipient.comment_look_created == 'A':
         notify_user = recipient
     elif recipient.comment_look_created == 'F':
-        if is_following(user, sender):
+        if is_following(recipient, sender):
             notify_user = recipient
 
     if notify_user and sender:
@@ -299,10 +365,28 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
             notify_user = recipient
 
     if notify_user and sender:
-        notify_by_mail([notify_user], 'like_look_created', sender, {
-            'object_title': look_like.look.title,
-            'object_link': look_like.look.get_absolute_url()
-        })
+        merge_vars = dict()
+        domain = Site.objects.get_current().domain
+        sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+        merge_vars['PROFILEURL'] = sender_link
+        look_url = look_like.look.get_absolute_url()
+        merge_vars['LOOKURL'] = retrieve_full_url(look_url)
+        look_photo_url = look_like.look.static_image
+        merge_vars['LOOKPHOTOURL'] = retrieve_full_url(look_photo_url)
+
+        if sender.image:
+            profile_photo_url =  get_thumbnail(sender.image, '500').url
+        elif sender.facebook_user_id:
+            profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+        else:
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+        merge_vars['LIKERNAME'] = sender.display_name
+        merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+        notifiy_with_mandrill_teplate([notify_user], "likedLook", "One of your looks got a like on Apprl!", sender, merge_vars)
+       # notify_by_mail([notify_user], 'like_look_created', sender, {
+       #     'object_title': look_like.look.title,
+       #     'object_link': look_like.look.get_absolute_url()
+       # })
 
         return get_key('like_look_created', recipient, sender, look_like)
 
@@ -323,8 +407,9 @@ def process_follow_user(recipient, sender, follow, **kwargs):
     Process notification for sender following recipient.
     """
     logger = process_follow_user.get_logger(**kwargs)
-    if is_duplicate('follow_user', recipient, sender, None):
-        return 'duplicate'
+    ##FIXME!!! this should of course run!
+    #if is_duplicate('follow_user', recipient, sender, None):
+    #    return 'duplicate'
 
     notify_user = None
     template_name = 'follow_user'
@@ -334,7 +419,20 @@ def process_follow_user(recipient, sender, follow, **kwargs):
             template_name = 'follow_user_following'
 
     if notify_user and sender:
-        notify_by_mail([notify_user], template_name, sender)
+        merge_vars = dict()
+        domain = Site.objects.get_current().domain
+        sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+        merge_vars['PROFILEURL'] = sender_link
+        if sender.image:
+            profile_photo_url =  get_thumbnail(sender.image, '500').url
+        elif sender.facebook_user_id:
+            profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+        else:
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+        merge_vars['FOLLOWERNAME'] = sender.display_name
+        merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+        notifiy_with_mandrill_teplate([notify_user], "newFollower", "You have a new follower on Apprl!", sender, merge_vars)
+        #notify_by_mail([notify_user], template_name, sender)
 
         return get_key('follow_user', recipient, sender, None)
 

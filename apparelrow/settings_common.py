@@ -158,8 +158,8 @@ MEDIA_URL = '/media/'
 
 # Absolute path to the directory that holds static files like app media.
 # Example: "/home/media/media.lawrence.com/apps/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_root')
-
+#STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_root')
+STATIC_ROOT = 'http://localhost:8000/static/'
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
 STATIC_URL = 'http://s.apprl.com/'
@@ -570,7 +570,7 @@ PIPELINE_JS = {
 CSRF_FAILURE_VIEW = 'apparelrow.apparel.views.csrf_failure'
 
 EMAIL_CONFIRMATION_DAYS = 2
-EMAIL_DEBUG = DEBUG
+EMAIL_DEBUG = False
 CONTACT_EMAIL = "klas@apprl.com"
 
 # ACCOUNT/LOGIN AND OTHER STUFF
@@ -598,8 +598,8 @@ FACEBOOK_APP_ACCESS_TOKEN = '177090790853|sX7Yr41ov0I_267HjmJYHs6GgO8'
 # EMAIL CONFIGURATION
 MANDRILL_API_KEY = '7dDF82r91MHKJ68Q0t6egQ'
 EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-DEFAULT_FROM_EMAIL = 'Apprl <no-reply@apprl.com>'
-SERVER_EMAIL = 'Apprl <no-reply@apprl.com>'
+#DEFAULT_FROM_EMAIL = 'thesis@apprl.com'
+SERVER_EMAIL = 'thesis@apprl.com'
 #EMAIL_HOST          = 'smtp.gmail.com'
 #EMAIL_PORT          = 587
 #EMAIL_HOST_USER     = 'postman@apparelrow.com'

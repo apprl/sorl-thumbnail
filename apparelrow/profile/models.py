@@ -261,6 +261,9 @@ class User(AbstractUser):
 
         return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
+    def get_username(self):
+        return super(User, self).get_username()
+
     def avatar_large_absolute_uri(self, request):
         if self.image:
             return request.build_absolute_uri(get_thumbnail(self.image, '208').url)
