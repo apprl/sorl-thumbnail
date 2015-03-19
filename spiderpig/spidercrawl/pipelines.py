@@ -138,10 +138,9 @@ class DatabaseHandler:
 
 
 class RequiredFieldsPipeline:
-    required_fields = ['key', 'sku', 'name', 'description', 'brand',
+    required_fields = ['key', 'sku', 'name', 'brand',
                        'category', 'gender', 'vendor', 'url', 'affiliate',
-                       'regular_price', 'discount_price', 'currency',
-                       'in_stock', 'image_urls',
+                       'regular_price', 'currency','image_urls',
                        'images']
 
     def __init__(self):
