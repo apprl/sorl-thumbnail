@@ -588,8 +588,7 @@ def look_like(request, slug, action):
         look_like.save()
 
     if action == 'like':
-        process_like_look_created(look.user, request.user, look_like)
-        #process_like_look_created.delay(look.user, request.user, look_like)
+        process_like_look_created.delay(look.user, request.user, look_like)
 
     look_popularity.delay(look)
 

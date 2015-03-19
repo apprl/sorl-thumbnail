@@ -144,7 +144,6 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
     }
     apprl_logo_url = "logo.jpg" #TODO where is this?
     #  append host name to url
-
     apprl_logo_url = retrieve_full_url(apprl_logo_url)
 
     msg.global_merge_vars = {                       # to merge into template
@@ -353,8 +352,8 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
     Process notification for a like by sender on a look created by recipient.
     """
     logger = process_like_look_created.get_logger(**kwargs)
-  #  if is_duplicate('like_look_created', recipient, sender, look_like):
-   #     return 'duplicate'
+    if is_duplicate('like_look_created', recipient, sender, look_like):
+        return 'duplicate'
 
     if sender == recipient:
         return 'sender is recipient, no notification'
@@ -387,10 +386,6 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
         notifiy_with_mandrill_teplate([notify_user], "likedLook", "One of your looks got a like on Apprl!", sender, merge_vars)
-       # notify_by_mail([notify_user], 'like_look_created', sender, {
-       #     'object_title': look_like.look.title,
-       #     'object_link': look_like.look.get_absolute_url()
-       # })
 
         return get_key('like_look_created', recipient, sender, look_like)
 
@@ -411,16 +406,14 @@ def process_follow_user(recipient, sender, follow, **kwargs):
     Process notification for sender following recipient.
     """
     logger = process_follow_user.get_logger(**kwargs)
-    ##FIXME!!! this should of course run!
-    #if is_duplicate('follow_user', recipient, sender, None):
-    #    return 'duplicate'
+    if is_duplicate('follow_user', recipient, sender, None):
+        return 'duplicate'
 
     notify_user = None
-    template_name = 'follow_user'
     if recipient.follow_user == 'A':
         notify_user = recipient
-        if is_following(recipient, sender):
-            template_name = 'follow_user_following'
+        #if is_following(recipient, sender):
+            #TODO handle in new templates
 
     if notify_user and sender:
         merge_vars = dict()
@@ -436,8 +429,6 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         merge_vars['FOLLOWERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
         notifiy_with_mandrill_teplate([notify_user], "newFollower", "You have a new follower on Apprl!", sender, merge_vars)
-        #notify_by_mail([notify_user], template_name, sender)
-
         return get_key('follow_user', recipient, sender, None)
 
     if not notify_user and sender:
@@ -479,9 +470,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
                 profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
-            notifiy_with_mandrill_teplate([notify_user], "fbFriend", "new FB friend on Apprl", sender, merge_vars)
-          #  notify_by_mail([recipient], 'facebook_friends', sender)
-
+            notifiy_with_mandrill_teplate([recipient], "fbFriend", "new FB friend on Apprl", sender, merge_vars)
 
 #
 # SALE ALERT
@@ -499,8 +488,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
         if likes.user and likes.user.discount_notification:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
-            if is_duplicate('sale_alert', likes.user, sender, product):
-                template_name = 'second_sale_alert'
+           # if is_duplicate('sale_alert', likes.user, sender, product):
+                #TODO adapt this for new templates
 
             # Use the exchange rate from the user language
             language = settings.LANGUAGE_CODE
@@ -527,11 +516,3 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['CURRENCY'] = currency
 
             notifiy_with_mandrill_teplate([likes.user], "itemSale", "A product you like has dropped in price!", sender, merge_vars)
-
-           # notify_by_mail([likes.user], template_name, sender, {
-           #     'brand_name': sender.display_name,
-           #     'product_name': product.product_name,
-           #     'object_link': product.get_absolute_url(),
-           #     'original_price': '%s %s' % (number_format(locale_original_price, use_l10n=False, force_grouping=True), currency),
-           #     'discount_price': '%s %s' % (number_format(locale_discount_price, use_l10n=False, force_grouping=True), currency),
-           # })

@@ -52,9 +52,7 @@ def post_save_follow_handler(sender, instance, **kwargs):
     apparel_profile = instance.user_follow
     if instance.active and not instance.user.is_hidden:
         apparel_profile.followers_count = apparel_profile.followers_count + 1
-        #TODO change back to using a delay
-        process_follow_user(instance.user_follow, instance.user, instance)
-        #process_follow_user.delay(instance.user_follow, instance.user, instance)
+        process_follow_user.delay(instance.user_follow, instance.user, instance)
         Activity.objects.push_activity(instance.user, 'follow', instance.user_follow, instance.user.gender)
         apparel_profile.save()
     elif not instance.user.is_hidden:
