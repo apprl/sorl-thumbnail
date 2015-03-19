@@ -133,7 +133,9 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
             notification_count = notification_count + 1
 
     """ create message object """
-    msg = EmailMessage(subject=notification_subject, from_email="no-reply@example.com", to=emails)
+    msg = EmailMessage(from_email="no-reply@example.com", to=emails)
+    #NOTICE: currently using the subject as defined in Mandrill template, thus also using merge tags there
+   # msg = EmailMessage(subject=notification_subject, from_email="no-reply@example.com", to=emails)
     msg.template_name = notification_name           # A Mandrill template name
     #this is nor currently used, but for some reason the API fails if this is not set.
     #  it could say anything, none of this lands in the final email
@@ -351,8 +353,8 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
     Process notification for a like by sender on a look created by recipient.
     """
     logger = process_like_look_created.get_logger(**kwargs)
-    if is_duplicate('like_look_created', recipient, sender, look_like):
-        return 'duplicate'
+  #  if is_duplicate('like_look_created', recipient, sender, look_like):
+   #     return 'duplicate'
 
     if sender == recipient:
         return 'sender is recipient, no notification'
@@ -371,7 +373,9 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         merge_vars['PROFILEURL'] = sender_link
         look_url = look_like.look.get_absolute_url()
         merge_vars['LOOKURL'] = retrieve_full_url(look_url)
-        look_photo_url = look_like.look.static_image
+        look_name = look_like.look.title
+        merge_vars['LOOKNAME'] = look_name
+        look_photo_url = look_like.look.static_image.url
         merge_vars['LOOKPHOTOURL'] = retrieve_full_url(look_photo_url)
 
         if sender.image:
@@ -463,7 +467,20 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             continue
 
         if recipient.facebook_friends == 'A' and sender:
-            notify_by_mail([recipient], 'facebook_friends', sender)
+            merge_vars = dict()
+            domain = Site.objects.get_current().domain
+            sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+            merge_vars['PROFILEURL'] = sender_link
+            if sender.image:
+                profile_photo_url =  get_thumbnail(sender.image, '500').url
+            elif sender.facebook_user_id:
+                profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+            else:
+                profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            merge_vars['FRIENDNAME'] = sender.display_name
+            merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+            notifiy_with_mandrill_teplate([notify_user], "fbFriend", "new FB friend on Apprl", sender, merge_vars)
+          #  notify_by_mail([recipient], 'facebook_friends', sender)
 
 
 #
@@ -497,10 +514,24 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             locale_original_price = (original_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
             locale_discount_price = (discount_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
 
-            notify_by_mail([likes.user], template_name, sender, {
-                'brand_name': sender.display_name,
-                'product_name': product.product_name,
-                'object_link': product.get_absolute_url(),
-                'original_price': '%s %s' % (number_format(locale_original_price, use_l10n=False, force_grouping=True), currency),
-                'discount_price': '%s %s' % (number_format(locale_discount_price, use_l10n=False, force_grouping=True), currency),
-            })
+            merge_vars = dict()
+            if product.image:
+                product_photo_url = get_thumbnail(product.image, '500').url
+            else:
+                product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            merge_vars['PRODUCTPHOTOURL'] = retrieve_full_url(product_photo_url)
+            merge_vars['PRODUCTNAME'] = product.product_name
+            merge_vars['PRODUCTLINK'] = retrieve_full_url(product.get_absolute_url())
+            merge_vars['OLDPRICE'] = locale_original_price
+            merge_vars['NEWPRICE'] = locale_discount_price
+            merge_vars['CURRENCY'] = currency
+
+            notifiy_with_mandrill_teplate([likes.user], "itemSale", "A product you like has dropped in price!", sender, merge_vars)
+
+           # notify_by_mail([likes.user], template_name, sender, {
+           #     'brand_name': sender.display_name,
+           #     'product_name': product.product_name,
+           #     'object_link': product.get_absolute_url(),
+           #     'original_price': '%s %s' % (number_format(locale_original_price, use_l10n=False, force_grouping=True), currency),
+           #     'discount_price': '%s %s' % (number_format(locale_discount_price, use_l10n=False, force_grouping=True), currency),
+           # })
