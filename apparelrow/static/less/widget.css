@@ -23,6 +23,9 @@
   }
 }
 @media (min-width: 768px) {
+  .widget-page #popup-slim .info-container {
+    text-align: left;
+  }
   .widget-page #popup-slim .body-header-col-right {
     width: 100%;
   }
@@ -42,6 +45,9 @@
 }
 #popup-slim .product-image img {
   margin: 0 auto !important;
+}
+#popup-slim .info-container {
+  text-align: center;
 }
 .container {
   position: static;

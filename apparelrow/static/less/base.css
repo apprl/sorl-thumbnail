@@ -7306,8 +7306,10 @@ a:focus {
   font-size: 18px;
 }
 .modal .modal-footer {
-  padding: 10px;
-  margin-top: 10px;
+  padding-right: 30px;
+}
+.modal-backdrop.in {
+  opacity: 0.7;
 }
 .default-form input .form-control .custom-form {
   width: 95%;
@@ -9720,7 +9722,176 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   margin: 0 !important;
 }
 .full_modal {
-  width: 90%;
+  width: 60%;
+}
+.body-grey {
+  background: #EEEEEE !important;
+}
+.apprl-modal-tools-content {
+  padding-left: 0;
+  padding-right: 0;
+  background: #FFFFFF !important;
+}
+.apprl-modal-tools-content .slider-container {
+  visibility: hidden;
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding: 0 0 39% 0;
+}
+.apprl-modal-tools-content .slider-container .iosSlider .tools_prevButton {
+  left: 30px;
+}
+.apprl-modal-tools-content .slider-container .iosSlider .tools_nextButton {
+  right: 30px;
+}
+.publisher-panel {
+  background: #FFFFFF !important;
+  /* redefined because it was overwritten */
+}
+.publisher-panel .image img {
+  width: 100%;
+}
+.publisher-panel .image:hover {
+  cursor: pointer;
+}
+.publisher-panel .text {
+  padding-top: 10px;
+  text-align: center;
+  font-size: 18px;
+}
+.publisher-panel .text .desc {
+  min-height: 60px;
+  padding: 10px;
+}
+.publisher-panel .title span {
+  color: #000000;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.publisher-panel .btn-default {
+  background-color: #000 !important;
+  background-image: #000 !important;
+  background: #000 !important;
+  border-color: #000 !important;
+  color: #FFFFFF;
+  margin: 15px;
+}
+.publisher-panel .btn-default:hover {
+  background-color: #222222 !important;
+  background-image: #222222 !important;
+  background: #222222 !important;
+  border-color: #222222 !important;
+}
+.publisher-panel h3 {
+  display: inline;
+}
+.apprl-tools h4.apprl-slash::before {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.modal-tools-description {
+  padding: 30px 30px 0px 30px;
+  line-height: 30px;
+}
+.modal-tools-description h4 {
+  line-height: 40px;
+}
+.modal-tools-description p,
+.modal-tools-description h4 {
+  font-size: 20px;
+}
+.modal-header-outside {
+  background-color: transparent !important;
+  border-bottom: 0px;
+  padding-right: 0px;
+}
+#modal_tool_shop .btn-default,
+#modal_tool_collage .btn-default,
+#modal_tool_tagged_photo .btn-default,
+#modal_tool_text_link .btn-default {
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+#modal_tool_shop .modal-content .modal-body,
+#modal_tool_collage .modal-content .modal-body,
+#modal_tool_tagged_photo .modal-content .modal-body,
+#modal_tool_text_link .modal-content .modal-body {
+  padding: 0px;
+}
+.modal-tools-font {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  color: #000 !important;
+}
+.header-screens {
+  position: absolute;
+  top: 200px;
+  text-align: right;
+  z-index: 999;
+}
+.iosSlider {
+  width: 100%;
+  height: 1500px;
+  border-top: 3px solid #000;
+  border-bottom: 3px solid #000;
+}
+.iosSlider .slider {
+  width: 100%;
+  height: 100%;
+}
+.iosSlider .slider .item {
+  float: left;
+  width: 100%;
+  background: #fff;
+}
+.iosSlider .slider .item img {
+  width: 100%;
+  height: auto;
+}
+@media (min-width: 1120px) {
+  #modal_tool_shop .modal-dialog,
+  #modal_tool_collage .modal-dialog,
+  #modal_tool_tagged_photo .modal-dialog,
+  #modal_tool_text_link .modal-dialog {
+    width: 1117px;
+  }
+}
+@media (max-width: 1190px) {
+  #modal_tool_shop .modal-dialog,
+  #modal_tool_collage .modal-dialog,
+  #modal_tool_tagged_photo .modal-dialog,
+  #modal_tool_text_link .modal-dialog {
+    width: 95%;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+  }
+  .modal-tools-description {
+    padding: 30px;
+  }
+  .modal-tools-description p,
+  .modal-tools-description h4 {
+    font-size: 18px;
+  }
+  .apprl-modal-tools-content .slider-container .iosSlider .tools_prevButton {
+    left: 30px;
+  }
+  .apprl-modal-tools-content .slider-container .iosSlider .tools_nextButton {
+    right: 30px;
+  }
+}
+@media (max-width: 767px) {
+  .header-screens {
+    text-align: center;
+  }
+  .header-screens .image-header {
+    width: 300px;
+    margin-top: 80px;
+  }
+  .publisher-top h1.apprl-maintitle {
+    font-size: 32px;
+  }
 }
 .look-detail-page .body-header .draft-text.published {
   display: none;
@@ -10591,6 +10762,9 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   }
 }
 @media (min-width: 768px) {
+  .widget-page #popup-slim .info-container {
+    text-align: left;
+  }
   .widget-page #popup-slim .body-header-col-right {
     width: 100%;
   }
@@ -10610,6 +10784,9 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 }
 #popup-slim .product-image img {
   margin: 0 auto !important;
+}
+#popup-slim .info-container {
+  text-align: center;
 }
 .container {
   position: static;
