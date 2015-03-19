@@ -14,17 +14,7 @@ class TedTeresaSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
     namespaces = [('g', 'http://base.google.com/ns/1.0')]
     itertag = 'item'
 
-    """def __init__(self, name=None, **kwargs):
-        loglevel = WARNING
-        file_to_write = os.path.join(os.path.abspath(os.path.dirname(__file__)),'../logs/%s.log' % self.name)
-        logencoding = "utf-8"
-        crawler = name
-        sflo = ApprlFileLogObserver(DailyLogFile.fromFullPath(file_to_write), loglevel, logencoding, crawler)
-        log.log.addObserver(sflo.emit)
-        super(JcSpider, self).__init__(name, **kwargs)
-    """
     def parse_node(self, response, node):
-        try:
             in_stock = node.xpath('g:availability/text()').extract()[0]
             if in_stock:
                 in_stock = in_stock.strip()
@@ -43,17 +33,11 @@ class TedTeresaSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
                 discount_price, _ = self.parse_price(discount_price[0])
             else:
                 discount_price = regular_price
-            product_type = u'%s' % node.xpath('g:product_type/text()').extract()[0]
 
-            gender = "U"
-            categories = product_type.split(u" > ")
-            category = categories[0]
-            gender = categories[1]
-            if gender == "Man":
-                gender = "M"
-            elif gender == "Kvinna":
-                gender = "W"
-            log.msg(message='CATEGORIES: %s \nExtracted gender %s' % (categories,gender) )
+            category_array = node.xpath('g:product_type/text()').extract()
+            category_str = category_array[1] if len(category_array) > 1 else category_array[0]
+            category = ' > '.join(category_str.split(" > ")[-2:])
+            gender = category_str
 
             # Select image ending with _90 if it exists
             images = node.xpath('g:image_link/text()').extract()
@@ -99,5 +83,3 @@ class TedTeresaSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
             l.add_value('image_urls', images)
 
             return l.load_item()
-        except:
-            pass
