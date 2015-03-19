@@ -1066,20 +1066,20 @@ def commissions(request):
         try:
             temp = {}
             vendor_obj = get_model('apparel', 'Vendor').objects.get(name=vendor)
+            store = get_model('dashboard', 'StoreCommission').objects.get(vendor=vendor_obj)
+            store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
             temp['vendor_pk'] = vendor_obj.pk
             temp['vendor_name'] = vendor_obj.name
+            temp['link'] = store.link
             if vendor_obj.is_cpc:
-                _, _, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
+                _, normal_cut , _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
                 click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
                 rate = currency_exchange('EUR', click_cost.currency)
-                temp['amount'] = "%.2f"%(click_cost.amount * rate * publisher_cut)
+                temp['amount'] = "%.2f"%(click_cost.amount * rate * publisher_cut * normal_cut)
                 temp['currency'] = 'EUR'
                 temp['type'] = "is_cpc"
             elif vendor_obj.is_cpo:
-                store = get_model('dashboard', 'StoreCommission').objects.get(vendor=vendor_obj)
-                store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
                 temp['amount'] = store.commission
-                temp['link'] = store.link
                 temp['store_pk'] = store.pk
                 temp['type'] = "is_cpo"
             stores[vendor] = temp
