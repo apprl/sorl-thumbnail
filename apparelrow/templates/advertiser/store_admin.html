@@ -21,7 +21,9 @@
             ]);
             data.sort(0);
 
+            {% if vendor.is_cpo %}
             var left = data.getColumnRange(1);
+            {% endif %}
             var right = data.getColumnRange(2);
             var view = new google.visualization.DataView(data);
             //var chart = new google.visualization.LineChart(document.getElementById('transaction_chart'));
@@ -34,7 +36,7 @@
             };
             {% else %}
             var series = {
-                0: {targetAxisIndex: 0, color: '#dc3912'},
+                0: {targetAxisIndex: 0, color: '#dc3912'}
             };
             view.setColumns([0,2]);
             {% endif %}
@@ -44,14 +46,16 @@
                 dataTable: view,
                 options: {
                     vAxes: {
+                        {% if vendor.is_cpo %}
                         0: {
                             minValue: 0,
                             maxValue: (left.min == 0 && left.max == 0) ? 1 : null,
-                            title: '{% if vendor.is_cpo %}{% trans "Earnings" %} ({{ currency }}){% endif %}',
+                            title: '{% trans "Earnings" %} ({{ currency }})',
                             textStyle: {color: '#3366cc'},
                             titleTextStyle: {color: '#3366cc'}
                         },
-                        1: {
+                        {% endif %}
+                        {% if vendor.is_cpo %}1{% else %}0{% endif %}: {
                             minValue: 0,
                             maxValue: (right.min == 0 && right.max == 0) ? 1 : null,
                             title: '{% trans "Clicks" %}',
@@ -59,6 +63,7 @@
                             titleTextStyle: {color: '#dc3912'}
                         }
                     },
+                    legend: { position: 'top' },
                     series: series
                 }
             });

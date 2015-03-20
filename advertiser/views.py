@@ -284,6 +284,7 @@ def store_admin(request, year=None, month=None):
     total_clicks_per_month = 0
     clicks_delivered_per_month = 0
     clicks_cost_per_month = 0
+    currency = None
 
     if store.vendor.is_cpc:
         total_clicks_per_month = get_total_clicks_per_vendor(store.vendor)
