@@ -144,7 +144,7 @@
                 $('#embed_shop_form #id_name').focus()[0].scrollIntoView();
                 return false;
             }
-            if (!shop_id) {
+            if (!external_shop_id) {
                 App.Events.trigger('widget:save', {title: $('#embed_shop_form #id_name').val(), callback: get_embed});
             } else {
                 get_embed(external_shop_id);
@@ -156,7 +156,6 @@
         });
 
         function get_embed(external_shop_id) {
-            shop_id = external_shop_id;
             var data = {
                 name: $('#id_name').val(),
                 width: $('#id_width').val(),

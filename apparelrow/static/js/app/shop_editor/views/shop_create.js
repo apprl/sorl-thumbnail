@@ -127,9 +127,11 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.model.set('show_liked', show_liked);
         this.init_footer();
         if(show_liked) {
-            if (!this.model.attributes.id) {
-                this.save_shop({ title: "My liked products", 'callback': function() {
+            if (!this.model.get('id')) {
+                this.save_shop({ title: "My liked products", 'callback': function(id) {
                     $("#embed_shop_form #id_name").val("My liked products");
+
+                    extenal_shop_id = id;
                     window.shop_create.init_products();
                 }});
             }
@@ -210,6 +212,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.model._dirty = false;
         // Update title
         $('.body-header h1 span').html('Edit ' + this.model.get('title'));
+        external_shop_id = this.model.get('id');
         if (callback) {
             callback(this.model.get('id'));
         } else {
