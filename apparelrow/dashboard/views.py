@@ -1440,8 +1440,7 @@ def clicks_detail(request):
         user_id = request.POST.get('user_id', None)
         vendor = request.POST.get('vendor', None)
         currency = request.POST.get('currency', 'EUR')
-        query_date = datetime.datetime.strptime(request.POST['date'], "%b. %d, %Y")
-
+        query_date = datetime.datetime.fromtimestamp(int(request.POST['date']))
         data = get_clicks_list(vendor, query_date, currency, user_id)
         json_data = json.dumps(data)
         return HttpResponse(json_data)

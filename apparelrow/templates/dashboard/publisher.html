@@ -341,7 +341,7 @@
                             <td data-sort="{{ earning.sale.converted_amount }}">
                                 {% if earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute" %}
                                     <a class="btn btn-primary click-detail" data-user="{{ earning.sale.user_id }}"
-                                       data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date.date }}">
+                                       data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}">
                                         {% trans "See details" %}
                                     </a>
                                 {% else %}

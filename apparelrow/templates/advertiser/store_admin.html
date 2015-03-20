@@ -206,7 +206,7 @@
                         <td>{{ row.amount }} {{ currency }}</td>
                         <td>
                             <a class="btn btn-primary click-detail" data-vendor="{{ vendor }}"
-                               data-date="{{ row.date.date }}">
+                               data-date="{{ row.date|date:"U" }}">
                                {% trans "See details" %}
                             </a>
                         </td>
