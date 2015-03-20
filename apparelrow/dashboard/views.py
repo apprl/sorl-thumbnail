@@ -420,7 +420,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             WHERE
                 {0}
                 ds.status BETWEEN %s AND %s AND
-                ds.created BETWEEN %s AND %s
+                ds.sale_date BETWEEN %s AND %s
             GROUP BY ds.id, ap.product_name, ap.product_image, ap.slug, ab.name, pu.name
             ORDER BY ds.created DESC
         """.format(user_criteria), values)

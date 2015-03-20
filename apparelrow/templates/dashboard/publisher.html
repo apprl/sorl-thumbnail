@@ -332,7 +332,7 @@
                                         {% if earning.user_earning_type == 'publisher_network_tribute' %}
                                             {% trans "Sale by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}
                                         {% elif earning.user_earning_type == 'publisher_sale_commission' %}
-                                            {% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}</td>
+                                            {% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}
                                         {% else %}
                                             {{ earning.get_user_earning_type_display }}
                                         {% endif %}
