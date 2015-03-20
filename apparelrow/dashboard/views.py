@@ -865,6 +865,17 @@ def dashboard(request, year=None, month=None):
 
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
+
+        # Sales count
+        sales_count = 0
+        referral_sales_count = 0
+        tribute_sales_count = 0
+
+        # Sales and commission per day
+        data_per_day = {}
+        for day in range(0, (end_date - start_date).days + 2):
+            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
+
         # User Earnings
         user_earnings = get_model('dashboard', 'UserEarning').objects\
             .filter(user=request.user, date__range=(start_date_query, end_date_query), status__gte=Sale.PENDING)\
@@ -907,17 +918,7 @@ def dashboard(request, year=None, month=None):
                 if earning.from_user.name:
                     earning.from_user_name = earning.from_user.name
 
-        # Sales count
-        sales_count = 0
-        referral_sales_count = 0
-        tribute_sales_count = 0
-
-        # Sales and commission per day
-        data_per_day = {}
-        for day in range(0, (end_date - start_date).days + 2):
-            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
-
-        for earning in user_earnings:
+            # Summarize per day
             if earning.user_earning_type == "publisher_sale_commission":
                 data_per_day[earning.date.date()][0] += earning.amount
                 sales_count += 1
@@ -931,6 +932,8 @@ def dashboard(request, year=None, month=None):
             elif earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute":
                 data_per_day[earning.date.date()][4] += earning.amount
                 data_per_day[earning.date.date()][5] += get_clicks_fom_sale(earning.sale)
+
+
 
 
         # Clicks per day
@@ -957,9 +960,7 @@ def dashboard(request, year=None, month=None):
         referral_earnings = sum([x[2] for x in data_per_day.values()])
         ppc_earnings = sum([x[4] for x in data_per_day.values()])
 
-        if is_owner:
-            network_clicks -= ppc_clicks
-        else:
+        if not is_owner:
             month_clicks -= ppc_clicks
 
         total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings
