@@ -341,7 +341,8 @@
                             <td data-sort="{{ earning.sale.converted_amount }}">
                                 {% if earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute" %}
                                     <a class="btn btn-primary click-detail" data-user="{{ earning.sale.user_id }}"
-                                       data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}">
+                                       data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
+                                       data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
                                         {% trans "See details" %}
                                     </a>
                                 {% else %}
@@ -366,10 +367,12 @@
         var user_id = $(this).data("user");
         var vendor = $(this).data("vendor");
         var date = $(this).data("date");
+        var amount = $(this).data("amount");
+        var clicks = $(this).data("clicks");
         $.ajax({
             type: "post",
             url: "{% url 'clicks-detail' %}",
-            data: { user_id: user_id, vendor : vendor, date : date},
+            data: { user_id: user_id, vendor : vendor, date : date, amount: amount, clicks: clicks},
             success: function (response) {
                 var json = jQuery.parseJSON(response);
                 load_detailed_data_clicks(json, date, vendor, "{{ currency }}");

@@ -870,6 +870,11 @@ def dashboard(request, year=None, month=None):
             .filter(user=request.user, date__range=(start_date_query, end_date_query), status__gte=Sale.PENDING)\
             .order_by('-date')
         for earning in user_earnings:
+            day_start = datetime.datetime.combine(earning.date, datetime.time(0, 0, 0, 0))
+            day_end = datetime.datetime.combine(earning.date, datetime.time(23, 59, 59, 999999))
+            earning.clicks = get_model('statistics', 'ProductStat')\
+                .objects.filter(vendor=earning.sale.vendor, user_id=earning.user.id,
+                                created__range=(day_start, day_end)).count()
             earning.extra_sale = None
             for sale in sales:
                 if earning.sale.id == sale['id']:
@@ -906,8 +911,6 @@ def dashboard(request, year=None, month=None):
         sales_count = 0
         referral_sales_count = 0
         tribute_sales_count = 0
-        ppc_clicks = 0
-        ppc_earnings = 0
 
         # Sales and commission per day
         data_per_day = {}
@@ -1440,7 +1443,11 @@ def clicks_detail(request):
         user_id = request.POST.get('user_id', None)
         vendor = request.POST.get('vendor', None)
         currency = request.POST.get('currency', 'EUR')
-        query_date = datetime.datetime.fromtimestamp(int(request.POST['date']))
-        data = get_clicks_list(vendor, query_date, currency, user_id)
-        json_data = json.dumps(data)
-        return HttpResponse(json_data)
+        num_clicks = request.POST.get('clicks', 0)
+        amount_for_clicks = request.POST.get('amount', 0)
+        if num_clicks > 0:
+            click_cost = float(amount_for_clicks)/int(num_clicks)
+            query_date = datetime.datetime.fromtimestamp(int(request.POST['date']))
+            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
+            json_data = json.dumps(data)
+            return HttpResponse(json_data)

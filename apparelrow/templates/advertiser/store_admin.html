@@ -199,14 +199,15 @@
                 </thead>
                 <tbody>
                     {% for key, row in clicks_per_day %}
-                    {% if row.amount > 0 %}
+                    {% if row.amount > 0 and row.clicks > 0 %}
                     <tr class="{% cycle 'odd' 'even' %}">
                         <td class="hidden-xs" data-sort="{{ row.date|date:"U" }}">{{ row.date.date }}</td>
                         <td>{{ row.clicks }}</td>
                         <td>{{ row.amount }} {{ currency }}</td>
                         <td>
                             <a class="btn btn-primary click-detail" data-vendor="{{ vendor }}"
-                               data-date="{{ row.date|date:"U" }}">
+                               data-date="{{ row.date|date:"U" }}" data-amount="{{ row.amount }}"
+                                data-clicks="{{ row.clicks }}">
                                {% trans "See details" %}
                             </a>
                         </td>
@@ -237,11 +238,13 @@
         var user_id = $(this).data("user");
         var vendor = $(this).data("vendor");
         var date = $(this).data("date");
+        var amount = $(this).data("amount");
+        var clicks = $(this).data("clicks");
         var currency = 'original';
         $.ajax({
             type: "post",
             url: "{% url 'clicks-detail' %}",
-            data: { user_id: user_id, vendor : vendor, date : date, currency: currency},
+            data: { user_id: user_id, vendor : vendor, date : date, currency: currency, amount: amount, clicks: clicks},
             success: function (response) {
                 var json = jQuery.parseJSON(response);
                 load_detailed_data_clicks(json, date, vendor, "{{ currency }}");
