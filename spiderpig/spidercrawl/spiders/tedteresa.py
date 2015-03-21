@@ -35,8 +35,13 @@ class TedTeresaSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
                 discount_price = regular_price
 
             category_array = node.xpath('g:product_type/text()').extract()
-            category_str = category_array[1] if len(category_array) > 1 else category_array[0]
-            category = ' > '.join(category_str.split(" > ")[-2:])
+            #print category_array
+            category_str = None
+            try:
+                category_str = category_array[1] if len(category_array) > 1 else category_array[0]
+                category = ' > '.join(category_str.split(" > ")[-2:])
+            except:
+                category_str = ' > '.join(category_array[0].split(" > "))
             gender = category_str
 
             # Select image ending with _90 if it exists
@@ -61,7 +66,7 @@ class TedTeresaSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
             # Affiliate id if the contact is established through another partner
             l.add_value('affiliate', self.AFFILIATE_AAN)
             # Category to describe the product in a context, used to match the product category to existing categories (Normalization)
-            l.add_value('category', category)
+            l.add_value('category', category_str)
             # Descriptive text about the product
             l.add_xpath('description', 'description/text()')
             # Brand name of the product
