@@ -42,11 +42,19 @@ def initiate_product_importer():
         run_vendor_importer.delay(vendor)
 
 #daily
+@periodic_task(name='apparelrow.scheduledjobs.tasks.update_clicks_summary', run_every=crontab(minute='0',hour='2'), max_retries=1, ignore_result=True)
+def update_clicks_summary():
+    from django.core import management
+    log.info('Running update click earnings job.')
+    management.call_command('update_clicks_earnings_status')
+
+#daily
 @periodic_task(name='apparelrow.scheduledjobs.tasks.clicks_summary', run_every=crontab(minute='0',hour='1'), max_retries=1, ignore_result=True)
 def clicks_summary():
     from django.core import management
     log.info('Running click summary job.')
     management.call_command('clicks_summary')
+
 
 #weekly
 @periodic_task(name='apparelrow.scheduledjobs.tasks.popularity', run_every=crontab(minute='0',hour='0',day_of_week='sunday'), max_retries=1, ignore_result=True)

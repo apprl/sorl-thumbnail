@@ -773,6 +773,7 @@ CELERY_ROUTES = ({
     'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.clicks_summary': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}},)
 
 # LOGGING CONFIGURATION
