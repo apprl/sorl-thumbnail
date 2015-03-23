@@ -1083,7 +1083,7 @@ def commissions(request):
             temp['vendor_name'] = vendor_obj.name
             temp['link'] = store.link
             if vendor_obj.is_cpc:
-                _, normal_cut , _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
+                _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
                 click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
                 rate = currency_exchange('EUR', click_cost.currency)
                 temp['amount'] = "%.2f"%(click_cost.amount * rate * publisher_cut * normal_cut)
@@ -1452,10 +1452,10 @@ def clicks_detail(request):
         vendor = request.POST.get('vendor', None)
         currency = request.POST.get('currency', 'EUR')
         num_clicks = request.POST.get('clicks', 0)
-        amount_for_clicks = request.POST.get('amount', 0)
+        amount_for_clicks = request.POST.get('amount', 0).replace(',', '.')
 
         if num_clicks > 0:
-            click_cost = float(amount_for_clicks)/int(num_clicks)
+            click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.POST['date']))
             data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
             json_data = json.dumps(data)
