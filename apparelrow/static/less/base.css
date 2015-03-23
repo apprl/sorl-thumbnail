@@ -9896,13 +9896,6 @@ body.profile-likes #product-stores ul > li > a.selected:before {
     font-size: 32px;
   }
 }
-.apprl-circle-link {
-  border-radius: 50%;
-  /* Prevent background color leak outs */
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-}
 .look-detail-page .body-header .draft-text.published {
   display: none;
 }
