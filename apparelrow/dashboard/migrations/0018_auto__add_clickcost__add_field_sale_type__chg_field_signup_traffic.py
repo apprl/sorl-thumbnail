@@ -22,20 +22,12 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.CharField')(default='0', max_length=1),
                       keep_default=False)
 
-
-        # Changing field 'Signup.traffic'
-        db.alter_column(u'dashboard_signup', 'traffic', self.gf('django.db.models.fields.CharField')(max_length=100, null=True))
-
     def backwards(self, orm):
         # Deleting model 'ClickCost'
         db.delete_table(u'dashboard_clickcost')
 
         # Deleting field 'Sale.type'
         db.delete_column(u'dashboard_sale', 'type')
-
-
-        # Changing field 'Signup.traffic'
-        db.alter_column(u'dashboard_signup', 'traffic', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
 
     models = {
         u'apparel.brand': {
