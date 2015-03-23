@@ -47,7 +47,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
             try:
                 cuts = user.partner_group.cuts.get(vendor=vendor)
                 normal_cut = cuts.cut
-                publisher_cut = cuts.cut
+                #publisher_cut = cuts.cut
                 referral_cut = cuts.referral_cut
                 data_exceptions = None
 
