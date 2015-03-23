@@ -123,9 +123,9 @@
     {% include 'dashboard/body_header.html' %}
 
     <div class="row subnav-page">
-        <div class="col-sm-3">{% trans "Pending earnings: " %}<strong>{{ currency }} {{ sales_pending|floatformat:2 }}</strong></div>
-        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Confirmed earnings: " %}<strong>{{ currency }} {{ total_confirmed|floatformat:2 }}</strong></div>
-        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Pending payment: " %}<strong>{{ currency }} {{ pending_payment|floatformat:2 }}</strong></div>
+        <div class="col-sm-3">{% trans "Pending earnings: " %}<strong>{{ currency }} {{ sales_pending|floatdot }}</strong></div>
+        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Confirmed earnings: " %}<strong>{{ currency }} {{ total_confirmed|floatdot }}</strong></div>
+        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Pending payment: " %}<strong>{{ currency }} {{ pending_payment|floatdot }}</strong></div>
         <div class="col-sm-3"><a data-toggle="modal" href="#modal_publisher_info">{% trans "How payments work" %}</a></div>
         <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 45px;">{% trans "In total, " %}<strong>{{ currency }} {{ total_earned }}</strong> {% trans "has been paid out to you" %}</div>
     </div>
@@ -152,9 +152,9 @@
         </ul>
         <ul class="list-inline monthly-list">
             <li>{% blocktrans %}Commission earnings: {{ currency }} {{ month_commission }}{% endblocktrans %}</li>
-            <li>{% blocktrans %}Clicks: {{ month_clicks }}{% endblocktrans %}</li>
+            {%  comment %}<li>{% blocktrans %}Clicks: {{ month_clicks }}{% endblocktrans %}</li>{%  endcomment %}
             <li>{% blocktrans %}Sales: {{ month_sales }}{% endblocktrans %}</li>
-            <li>{% blocktrans with conversion_rate=month_conversion_rate|floatformat:2 %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</li>
+            {%  comment %}<li>{% blocktrans with conversion_rate=month_conversion_rate|floatdot %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</li>{%  endcomment %}
         </ul>
         {% if request.user.referral_partner %}
         <ul class="list-inline monthly-list">
@@ -270,8 +270,8 @@
                         <td class="col3 center hidden-xs">{{ product.clicks }}</td>
                         <td class="center">{% if product.sales == 0 %}-{% else %}{{ product.sales }}{% endif %}</td>
                         <td class="hidden-xs center">{{ product.sales|commission_rate:product.clicks }}</td>
-                        <td class="hidden-xs center">{{ currency }} {{ product.converted_amount|floatformat:2 }}</td>
-                        <td class="center">{{ currency }} {{ product.total_earnings|floatformat:2 }}</td>
+                        <td class="hidden-xs center">{{ currency }} {{ product.converted_amount|floatdot }}</td>
+                        <td class="center">{{ currency }} {{ product.total_earnings|floatdot }}</td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -348,10 +348,10 @@
                                         {% trans "See details" %}
                                     </a>
                                 {% else %}
-                                    {{ currency }} {{ earning.sale.converted_amount|floatformat:2 }}
+                                    {{ currency }} {{ earning.sale.converted_amount|floatdot }}
                                 {% endif %}
                             </td>
-                            <td data-sort="{{ earning.amount }}">{{ currency }} {{ earning.amount|floatformat:2 }}</td>
+                            <td data-sort="{{ earning.amount }}">{{ currency }} {{ earning.amount|floatdot }}</td>
                         </tr>
                         {% empty %}
                         <tr>
