@@ -40,9 +40,12 @@ class TedTeresaSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
             try:
                 category_str = category_array[1] if len(category_array) > 1 else category_array[0]
                 category = ' > '.join(category_str.split(" > ")[-2:])
-            except:
-                category_str = ' > '.join(category_array[0].split(" > "))
-            gender = category_str
+            except Exception,msg:
+                try:
+		   category_str = ' > '.join(category_array[0].split(" > "))
+            	except:
+		   category_str = "Category unknown"
+	    gender = category_str
 
             # Select image ending with _90 if it exists
             images = node.xpath('g:image_link/text()').extract()
