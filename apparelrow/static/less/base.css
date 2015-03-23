@@ -9850,6 +9850,9 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   width: 100%;
   height: auto;
 }
+.click-detail {
+  cursor: pointer;
+}
 @media (min-width: 1120px) {
   #modal_tool_shop .modal-dialog,
   #modal_tool_collage .modal-dialog,
@@ -9892,6 +9895,13 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   .publisher-top h1.apprl-maintitle {
     font-size: 32px;
   }
+}
+.apprl-circle-link {
+  border-radius: 50%;
+  /* Prevent background color leak outs */
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
 }
 .look-detail-page .body-header .draft-text.published {
   display: none;
