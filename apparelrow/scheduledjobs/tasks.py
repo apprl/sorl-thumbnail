@@ -32,7 +32,7 @@ def run_importer():
     management.call_command('brand_updates')
 
 # Run importer at midnight
-@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute='0',hour='6'), max_retries=1, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute='0',hour='14'), max_retries=1, ignore_result=True)
 def initiate_product_importer():
     from django.core import management
     from theimp.models import Vendor
@@ -40,6 +40,13 @@ def initiate_product_importer():
     vendors = Vendor.objects.filter(vendor__isnull=False)
     for vendor in vendors:
         run_vendor_importer.delay(vendor)
+
+#daily
+@periodic_task(name='apparelrow.scheduledjobs.tasks.clicks_summary', run_every=crontab(minute='0',hour='1'), max_retries=1, ignore_result=True)
+def clicks_summary():
+    from django.core import management
+    log.info('Running click summary job.')
+    management.call_command('clicks_summary')
 
 #weekly
 @periodic_task(name='apparelrow.scheduledjobs.tasks.popularity', run_every=crontab(minute='0',hour='0',day_of_week='sunday'), max_retries=1, ignore_result=True)
