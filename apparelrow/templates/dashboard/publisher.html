@@ -174,7 +174,6 @@
             <li>{% blocktrans %}Click earnings: {{ currency }} {{ ppc_earnings }}{% endblocktrans %}</li>
             <li>{% blocktrans %}Clicks: {{ ppc_clicks }}{% endblocktrans %}</li>
         </ul>
-
     </div>
 
     <div class="row">
@@ -202,9 +201,9 @@
                     <thead>
                         <tr>
                             <th class="col1 product-image center">{% trans "Publisher" %}</th>
-                            <th class="col2 center"></th>
-                            <th class="center hidden-xs ">{% trans "Commission earnings" %}</th>
-                            <th class="center hidden-xs ">{% trans "Click earnings" %}</th>
+                            <th class="col2 hidden-xs center"></th>
+                            <th class="hidden-xs center">{% trans "Commission earnings" %}</th>
+                            <th class="hidden-xs center">{% trans "Click earnings" %}</th>
                             <th class="center">{% trans "Total earnings" %}</th>
                             <th class="center">{% trans "Network earnings" %}</th>
                         </tr>
@@ -212,25 +211,23 @@
                     <tbody>
                         {% for publisher in top_publishers|top_five %}
                         <tr>
-                            <td data-sort="{{ publisher.user }}" class="col1 product-image center"><img src="{{ publisher.publisher_image }}"></td>
-                            <td data-sort="{{ publisher.user }}" class="col2"><a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a></td>
+                            <td data-sort="{{ publisher.user }}" class="col1 product-image center">
+                                <img src="{{ publisher.publisher_image }}">
+                            </td>
+                            <td class="col2 hidden-xs">
+                                <a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a>
+                            </td>
                             <td class="hidden-xs center" data-sort="{{ publisher.publisher_earnings }}">
-                                {{ currency }} {{ publisher.publisher_earnings|floatformat:2 }}
+                                {{ currency }} {{ publisher.publisher_earnings }}
                             </td>
-                            {% comment %}{% if is_admin %}{% endcomment %}
                             <td class="hidden-xs center" data-sort="{{ publisher.publisher_click_earnings }}">
-                                {{ currency }} {{ publisher.publisher_click_earnings|floatformat:2 }}
+                                {{ currency }} {{ publisher.publisher_click_earnings }}
                             </td>
-                            {% comment %}{% else %}
-                                <td class="center" data-sort="{{ publisher.network_click_earnings }}">
-                                    {{ publisher.network_click_earnings }} {{ currency }}
-                                </td>
-                            {% endif %}{% endcomment %}
                             <td class="center" data-sort="{{ publisher.total_network_earnings }}">
-                                {{ currency }} {{ publisher.total_network_earnings|floatformat:2 }}
+                                {{ currency }} {{ publisher.total_network_earnings }}
                             </td>
                             <td class="center" data-sort="{{ publisher.network_earnings }}">
-                                {{ currency }} {{ publisher.network_earnings|floatformat:2 }}
+                                {{ currency }} {{ publisher.network_earnings }}
                             </td>
                         </tr>
                         {% empty %}
@@ -238,7 +235,6 @@
                             <td colspan="3">{% trans "No sales yet." %}</td>
                         </tr>
                         {% endfor %}
-                </tbody>
                     </tbody>
                 </table>
             </div>
@@ -261,6 +257,11 @@
                         <th class="center">{% trans "Total earnings" %}</th>
                     </tr>
                 </thead>
+                <tfoot>
+                    <tr>
+                      <td colspan="7"><i>Products from stores paying per click are not currently included</i></td>
+                    </tr>
+                </tfoot>
                 <tbody>
                     {% for product in most_sold_products|top_five %}
                     <tr>
@@ -304,8 +305,8 @@
 
                             {% if earning.user_earning_type == "referral_sale_commission" %}
                                 <!-- If referral, show user -->
-                                <td class="center hidden-xs"></td>
-                                <td data-sort="{{ earning.from_user }}">{% trans "Referral sale by" %} <a href="{{ earning.from_user }}">{{ earning.from_user }}</a></td>
+                                <td class="hidden-xs" class="center hidden-xs"></td>
+                                <td class="hidden-xs" data-sort="{{ earning.from_user }}">{% trans "Referral sale by" %} <a href="{{ earning.from_user }}">{{ earning.from_user }}</a></td>
                                 <td class="hidden-xs">{% trans "Referral" %}</td>
                             {% elif earning.extra_sale.is_promo %}
                                 <!-- Referral Signup -->
@@ -314,24 +315,24 @@
                                 <td>{% trans "Welcome to APPRL" %}</td>
                             {% elif earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute" %}
                                 <!-- Clicks -->
-                                <td class="hidden-xs" colspan="2">{% trans "Clicks to " %}{{ earning.sale.vendor }}</td>
-                                <td>
+                                <td class="hidden-xs" colspan="2">
                                     {% if earning.from_user %}{% trans "Clicks by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}{% endif %}
                                 </td>
+                                <td >{% trans "Clicks to " %}{{ earning.sale.vendor }}</td>
                             {% else %}
                                 <!-- Product Information -->
-                                <td data-sort="{{ earning.product_name }}"><a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a></td>
-                                <td class="hidden-xs">{% if earning.product_link %}<a href="{{ earning.product_link }}">{{ earning.product_name }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.product_name }}{% endif %}{% endif %}</td>
+                                <td class="hidden-xs" data-sort="{{ earning.product_name }}"><a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a></td>
+                                <td class="hidden-xs" >{% if earning.product_link %}<a href="{{ earning.product_link }}">{{ earning.product_name }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.product_name }}{% endif %}{% endif %}</td>
 
                                 <!-- FROM -->
-                                <td class="hidden-xs">
+                                <td>
                                     {% if earning.extra_sale.link %}
                                         {{ earning.extra_sale.link }}
                                     {% else %}
                                         {% if earning.user_earning_type == 'publisher_network_tribute' %}
                                             {% trans "Sale by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}
                                         {% elif earning.user_earning_type == 'publisher_sale_commission' %}
-                                            <td class="hidden-xs">{% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}</td>
+                                            {% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}
                                         {% else %}
                                             {{ earning.get_user_earning_type_display }}
                                         {% endif %}
@@ -341,7 +342,9 @@
                             <td data-sort="{{ earning.sale.converted_amount }}">
                                 {% if earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute" %}
                                     <a class="btn btn-primary click-detail" data-user="{{ earning.sale.user_id }}"
-                                       data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date.date }}">
+                                       data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
+                                       data-date_display="{{ earning.date.date }}"
+                                       data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
                                         {% trans "See details" %}
                                     </a>
                                 {% else %}
@@ -366,13 +369,16 @@
         var user_id = $(this).data("user");
         var vendor = $(this).data("vendor");
         var date = $(this).data("date");
+        var date_display = $(this).data("date_display");
+        var amount = $(this).data("amount");
+        var clicks = $(this).data("clicks");
         $.ajax({
             type: "post",
             url: "{% url 'clicks-detail' %}",
-            data: { user_id: user_id, vendor : vendor, date : date},
+            data: { user_id: user_id, vendor : vendor, date : date, amount: amount, clicks: clicks},
             success: function (response) {
                 var json = jQuery.parseJSON(response);
-                load_detailed_data_clicks(json, date, vendor, "{{ currency }}");
+                load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}");
             }
         });
     });

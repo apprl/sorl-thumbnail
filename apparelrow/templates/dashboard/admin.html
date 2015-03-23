@@ -14,9 +14,10 @@
         data.addColumn('date', 'Date');
         data.addColumn('number', 'Total commission ({{ currency }})');
         data.addColumn('number', 'Publisher commission ({{ currency }})');
+        data.addColumn('number', 'Clicks earnings');
         data.addRows([
           {% for sale_date, commission in sales.items %}
-          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission.0|unlocalize }}, {{ commission.1|unlocalize }}],
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ commission.0|unlocalize }}, {{ commission.1|unlocalize }}, {{ commission.4|unlocalize }}],
           {% endfor %}
         ]);
         data.sort(0);
@@ -29,9 +30,10 @@
         clicksData.addColumn('date', 'Date');
         clicksData.addColumn('number', 'Total clicks');
         clicksData.addColumn('number', 'Publisher clicks');
+        clicksData.addColumn('number', 'PPC clicks');
         clicksData.addRows([
           {% for sale_date, data in sales.items %}
-          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.2 }}, {{ data.3 }}],
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.2 }}, {{ data.3 }}, {{ data.5 }}],
           {% endfor %}
         ]);
         clicksData.sort(0);
@@ -84,6 +86,10 @@
                 <li>{% blocktrans %}Total commission {{ month_commission }} {{ currency }}{% endblocktrans %}</li>
                 <li>{% blocktrans %}Publisher commission {{ partner }} {{ currency }}{% endblocktrans %}</li>
                 <li>{% blocktrans %}Apprl commission {{ apprl }} {{ currency }}{% endblocktrans %}</li>
+            </ul>
+            <ul class="list-inline monthly-list">
+                <li>{% blocktrans %}Click earnings: {{ currency }} {{ ppc_earnings }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Clicks: {{ ppc_clicks }}{% endblocktrans %}</li>
             </ul>
             <ul class="list-inline">
                 <li>{% blocktrans %}Sales {{ sales_count }}{% endblocktrans %}</li>
@@ -239,8 +245,30 @@
                     <tr>
                         <td data-sort="{{ earning.date|date:"U" }}">{{ earning.date.date }}</td>
                         <td data-sort="{{ earning.sale }}">{{ earning.sale.id }}</td>
+                        {% if earning.user_earning_type == "publisher_sale_click_commission"  %}
+                            <td colspan="2" >
+                                {% trans "Clicks to " %}{{ earning.sale.vendor }}
+                                <a class="click-detail" data-user="{{ earning.sale.user_id }}"
+                                   data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
+                                   data-date_display="{{ earning.date.date }}"
+                                   data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
+                                    ({% trans "Click for details" %})
+                                </a>
+                            </td>
+                        {% elif earning.user_earning_type == "publisher_network_click_tribute"  %}
+                            <td colspan="2">
+                                {% if earning.from_user %}{% trans "Clicks by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %} to {{ earning.sale.vendor }}{% endif %}
+                                <a class="click-detail" data-user="{{ earning.sale.user_id }}"
+                                   data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
+                                   data-date_display="{{ earning.date.date }}"
+                                   data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
+                                    ({% trans "Click for details" %})
+                                </a>
+                            </td>
+                        {% else %}
                         <td data-sort="{{ earning.product_name }}">{% if earning.product_image %}<a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a>{% endif %}</td>
                         <td><a href="{{ earning.product_link }}">{{ earning.product_name }}</a></td>
+                        {% endif %}
                         <td data-sort="{{ earning.from_user_name }}">{% if earning.from_user_avatar %}<a href="{{ earning.from_user_link }}"><img src="{{ earning.from_user_avatar }}"></a>{% endif %}</td>
                         <td><a href="{{ earning.from_user_link }}">{{ earning.from_user_name }}</a></td>
                         <td data-sort="{{ earning.get_user_earning_type_display }}">{{ earning.get_user_earning_type_display }}</td>
@@ -255,6 +283,26 @@
             </table>
         </div>
     </div>
+<script>
+    $(".click-detail").click(function() {
+        var user_id = $(this).data("user");
+        var vendor = $(this).data("vendor");
+        var date = $(this).data("date");
+        var date_display = $(this).data("date_display");
+        var amount = $(this).data("amount");
+        var clicks = $(this).data("clicks");
+        $.ajax({
+            type: "post",
+            url: "{% url 'clicks-detail' %}",
+            data: { user_id: user_id, vendor : vendor, date : date, amount: amount, clicks: clicks},
+            success: function (response) {
+                var json = jQuery.parseJSON(response);
+                load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}");
+            }
+        });
+    });
+</script>
+{% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
 {% include 'dashboard/fragments/dialog_top_products.html' with request=request csrf_token=csrf_token next=next most_sold_products=most_sold_products month=month_display year=year is_admin=True currency=currency only %}
 {% include 'dashboard/fragments/dialog_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers month=month_display year=year is_admin=True currency=currency only %}
 {% endblock body %}

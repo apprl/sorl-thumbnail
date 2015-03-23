@@ -420,7 +420,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             WHERE
                 {0}
                 ds.status BETWEEN %s AND %s AND
-                ds.created BETWEEN %s AND %s
+                ds.sale_date BETWEEN %s AND %s
             GROUP BY ds.id, ap.product_name, ap.product_image, ap.slug, ab.name, pu.name
             ORDER BY ds.created DESC
         """.format(user_criteria), values)
@@ -662,7 +662,7 @@ def dashboard_admin(request, year=None, month=None):
         # Per month
         data_per_month = {}
         for day in range(0, (end_date - start_date).days + 2):
-            data_per_month[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
+            data_per_month[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
@@ -756,6 +756,16 @@ def dashboard_admin(request, year=None, month=None):
             else:
                 earning.from_user_name = "APPRL"
 
+            earning.clicks = get_clicks_from_sale(earning.sale)
+
+            # Acummulate clicks and click earnings per day
+            if earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute":
+                data_per_month[earning.date.date()][4] += earning.amount
+                data_per_month[earning.date.date()][5] += get_clicks_from_sale(earning.sale)
+
+            ppc_earnings = sum([x[4] for x in data_per_month.values()])
+            ppc_clicks = sum([x[5] for x in data_per_month.values()])
+
         return render(request, 'dashboard/admin.html', {'sales': data_per_month,
                                                         'sales_count': sales_count,
                                                         'month_commission': month_commission,
@@ -777,7 +787,9 @@ def dashboard_admin(request, year=None, month=None):
                                                         'top_publishers': top_publishers,
                                                         'most_clicked_products': most_clicked_products,
                                                         'currency': 'EUR',
-                                                        'earnings': earnings})
+                                                        'earnings': earnings,
+                                                        'ppc_earnings': ('%.2f' % ppc_earnings),
+                                                        'ppc_clicks': ppc_clicks,})
 
     return HttpResponseNotFound()
 
@@ -865,11 +877,25 @@ def dashboard(request, year=None, month=None):
 
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
+
+        # Sales count
+        sales_count = 0
+        referral_sales_count = 0
+        tribute_sales_count = 0
+
+        # Sales and commission per day
+        data_per_day = {}
+        for day in range(0, (end_date - start_date).days + 2):
+            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
+
         # User Earnings
         user_earnings = get_model('dashboard', 'UserEarning').objects\
             .filter(user=request.user, date__range=(start_date_query, end_date_query), status__gte=Sale.PENDING)\
             .order_by('-date')
         for earning in user_earnings:
+            day_start = datetime.datetime.combine(earning.date, datetime.time(0, 0, 0, 0))
+            day_end = datetime.datetime.combine(earning.date, datetime.time(23, 59, 59, 999999))
+            earning.clicks = get_clicks_from_sale(earning.sale)
             earning.extra_sale = None
             for sale in sales:
                 if earning.sale.id == sale['id']:
@@ -902,19 +928,7 @@ def dashboard(request, year=None, month=None):
                 if earning.from_user.name:
                     earning.from_user_name = earning.from_user.name
 
-        # Sales count
-        sales_count = 0
-        referral_sales_count = 0
-        tribute_sales_count = 0
-        ppc_clicks = 0
-        ppc_earnings = 0
-
-        # Sales and commission per day
-        data_per_day = {}
-        for day in range(0, (end_date - start_date).days + 2):
-            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
-
-        for earning in user_earnings:
+            # Summarize per day
             if earning.user_earning_type == "publisher_sale_commission":
                 data_per_day[earning.date.date()][0] += earning.amount
                 sales_count += 1
@@ -927,8 +941,7 @@ def dashboard(request, year=None, month=None):
                 tribute_sales_count += 1
             elif earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute":
                 data_per_day[earning.date.date()][4] += earning.amount
-                data_per_day[earning.date.date()][5] += get_clicks_fom_sale(earning.sale)
-
+                data_per_day[earning.date.date()][5] += get_clicks_from_sale(earning.sale)
 
         # Clicks per day
         clicks = get_model('statistics', 'ProductStat').objects\
@@ -954,9 +967,7 @@ def dashboard(request, year=None, month=None):
         referral_earnings = sum([x[2] for x in data_per_day.values()])
         ppc_earnings = sum([x[4] for x in data_per_day.values()])
 
-        if is_owner:
-            network_clicks -= ppc_clicks
-        else:
+        if not is_owner:
             month_clicks -= ppc_clicks
 
         total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings
@@ -1420,7 +1431,7 @@ def publishers(request, year=None, month=None):
                                                             'currency': 'EUR'})
     return HttpResponseRedirect(reverse('index-publisher'))
 
-def get_clicks_fom_sale(sale):
+def get_clicks_from_sale(sale):
     """
         Returns number of clicks generated from the given sale
     """
@@ -1440,8 +1451,12 @@ def clicks_detail(request):
         user_id = request.POST.get('user_id', None)
         vendor = request.POST.get('vendor', None)
         currency = request.POST.get('currency', 'EUR')
-        query_date = datetime.datetime.strptime(request.POST['date'], "%b. %d, %Y")
+        num_clicks = request.POST.get('clicks', 0)
+        amount_for_clicks = request.POST.get('amount', 0)
 
-        data = get_clicks_list(vendor, query_date, currency, user_id)
-        json_data = json.dumps(data)
-        return HttpResponse(json_data)
+        if num_clicks > 0:
+            click_cost = float(amount_for_clicks)/int(num_clicks)
+            query_date = datetime.datetime.fromtimestamp(int(request.POST['date']))
+            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
+            json_data = json.dumps(data)
+            return HttpResponse(json_data)
