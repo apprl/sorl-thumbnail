@@ -1,3 +1,4 @@
+from StringIO import StringIO
 import re
 import urllib
 
@@ -40,6 +41,10 @@ class ConfidentLivingSpider(CSVFeedSpider, AffiliateMixin):
     def parse_rows(self, response):
         response = response.replace(encoding='iso-8859-1')
         return super(ConfidentLivingSpider, self).parse_rows(response)
+
+    def adapt_response(self, response):
+        body = response.body.replace('\x00','')
+        return response.replace(body=body)
 
 
     def start_requests(self):
