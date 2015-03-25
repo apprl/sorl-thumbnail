@@ -365,6 +365,8 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     if user_id:
         result.update(user_gender=user_gender)
         result.update(user_id=user_id)
+        result.update(show_filters=True)
+        result.update(show_product_brand=True)
 
     # Serve non ajax request
     result.update(

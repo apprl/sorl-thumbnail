@@ -275,14 +275,21 @@ def store_admin(request, year=None, month=None):
     start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
     end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
+
+    end_date_clicks_query = end_date_query
+    if end_date != datetime.date.today():
+        end_date_clicks_query = datetime.datetime.combine(
+            datetime.date.today() - datetime.timedelta(1), datetime.time(23, 59, 59, 999999))
+
     total_clicks_per_month = 0
     clicks_delivered_per_month = 0
     clicks_cost_per_month = 0
+    currency = None
 
     if store.vendor.is_cpc:
         total_clicks_per_month = get_total_clicks_per_vendor(store.vendor)
-        clicks_delivered_per_month = get_number_clicks(store.vendor, start_date_query, end_date_query)
-        clicks_cost_per_month = get_clicks_amount(store.vendor, start_date_query, end_date_query)
+        clicks_delivered_per_month = get_number_clicks(store.vendor, start_date_query, end_date_clicks_query)
+        clicks_cost_per_month, currency = get_clicks_amount(store.vendor, start_date_query, end_date_clicks_query)
 
     Transaction = get_model('advertiser', 'Transaction')
     transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
@@ -331,17 +338,18 @@ def store_admin(request, year=None, month=None):
         try:
             click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=store.vendor)
             for row in clicks:
-                date_key = datetime.datetime.strftime(row.created, "%Y%m%d")
-                if not date_key in clicks_per_day:
-                    start_date_query = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
-                    end_date_query = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
-                    clicks_per_day[date_key] = {}
-                    clicks_per_day[date_key]['date'] = row.created
-                    clicks_per_day[date_key]['amount'] = get_clicks_amount(store.vendor, start_date_query, end_date_query)
-                    clicks_per_day[date_key]['clicks'] = 0
-                    product = get_model('apparel', 'Product').objects.get(slug=row.product)
-                    clicks_per_day[date_key]['name'] = product.product_name
-                clicks_per_day[date_key]['clicks'] += 1
+                if row.created.date() != datetime.date.today() and row.user_id != 0:
+                    date_key = datetime.datetime.strftime(row.created, "%Y%m%d")
+                    if not date_key in clicks_per_day:
+                        start_date_query = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
+                        end_date_query = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
+                        clicks_per_day[date_key] = {}
+                        clicks_per_day[date_key]['date'] = row.created
+                        clicks_per_day[date_key]['amount'], _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
+                        clicks_per_day[date_key]['clicks'] = 0
+                        product = get_model('apparel', 'Product').objects.get(slug=row.product)
+                        clicks_per_day[date_key]['name'] = product.product_name
+                    clicks_per_day[date_key]['clicks'] += 1
 
             # Sort clicks per day
             clicks_per_day = sorted(clicks_per_day.items(), key=operator.itemgetter(0), reverse=True)
@@ -356,7 +364,7 @@ def store_admin(request, year=None, month=None):
                                                           'month': month,
                                                           'month_display': month_display,
                                                           'vendor': store.vendor,
-                                                          'currency': 'EUR',
+                                                          'currency': currency,
                                                           'click_cost': click_cost,
                                                           'accepted_commission': accepted_commission,
                                                           'total_accepted_commission': total_accepted_commission,

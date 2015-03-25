@@ -166,8 +166,8 @@
                             {% endif %}
                             {% if request.user.is_partner %}
                             <li><a href="{% url 'dashboard' %}">{% trans "For publishers" %}</a></li>
-                            {% endif %}
                             <li><a href="{% url 'publisher-tools' %}">{% trans "+ Publisher tools" %}</a></li>
+                            {% endif %}
                             <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a></li>
                             <li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li>
                             {% comment %}<li><a href="{% url 'create-shop' %}">{% trans "+ Create shop" %}</a></li>

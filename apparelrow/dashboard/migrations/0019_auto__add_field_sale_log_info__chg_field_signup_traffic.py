@@ -13,17 +13,10 @@ class Migration(SchemaMigration):
                       self.gf('jsonfield.fields.JSONField')(null=True, blank=True),
                       keep_default=False)
 
-
-        # Changing field 'Signup.traffic'
-        db.alter_column(u'dashboard_signup', 'traffic', self.gf('django.db.models.fields.CharField')(max_length=100, null=True))
-
     def backwards(self, orm):
         # Deleting field 'Sale.log_info'
         db.delete_column(u'dashboard_sale', 'log_info')
 
-
-        # Changing field 'Signup.traffic'
-        db.alter_column(u'dashboard_signup', 'traffic', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
 
     models = {
         u'apparel.brand': {

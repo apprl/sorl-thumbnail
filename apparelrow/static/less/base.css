@@ -9850,6 +9850,9 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   width: 100%;
   height: auto;
 }
+.click-detail {
+  cursor: pointer;
+}
 @media (min-width: 1120px) {
   #modal_tool_shop .modal-dialog,
   #modal_tool_collage .modal-dialog,

@@ -193,7 +193,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             }
         }, this));
 
-        if (!this.model.components.length) {
+        if (!this.model.components.length && !this.model.get('show_liked')) {
             this.popup_dispatcher.show('dialog_no_products');
             return;
         }

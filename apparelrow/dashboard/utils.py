@@ -47,7 +47,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
             try:
                 cuts = user.partner_group.cuts.get(vendor=vendor)
                 normal_cut = cuts.cut
-                publisher_cut = cuts.cut
+                #publisher_cut = cuts.cut
                 referral_cut = cuts.referral_cut
                 data_exceptions = None
 
@@ -78,7 +78,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
 
     return user, normal_cut, referral_cut, publisher_cut
 
-def get_clicks_list(vendor_name, date, user_id=None):
+def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
     """
         Returns a sorted list with detailed information from click earnings per product
         for a given user, vendor and day
@@ -86,23 +86,11 @@ def get_clicks_list(vendor_name, date, user_id=None):
     start_date_query = datetime.datetime.combine(date, datetime.time(0, 0, 0, 0))
     end_date_query = datetime.datetime.combine(date, datetime.time(23, 59, 59, 999999))
     values = [vendor_name, start_date_query, end_date_query]
-    vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_name)
-    earning_cut = 1
     cursor = connection.cursor()
-    click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
 
-    start_date_query = datetime.datetime.combine(date, datetime.time(0, 0, 0, 0))
-    end_date_query = datetime.datetime.combine(date, datetime.time(23, 59, 59, 999999))
-    sale = get_model('dashboard', 'Sale').objects.filter(vendor=vendor,
-                                                      type=get_model('dashboard', 'Sale').COST_PER_CLICK,
-                                                      sale_date__range=[start_date_query, end_date_query])
-
-    exchange_rate = sale[0].exchange_rate
     if user_id:
         try:
             user = get_user_model().objects.get(id=user_id)
-            _, cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor)
-            earning_cut = cut * publisher_cut
             values.append(user_id)
             cursor.execute(
                 """SELECT PS.vendor, PS.user_id, PS.product, count(PS.id)
@@ -125,7 +113,7 @@ def get_clicks_list(vendor_name, date, user_id=None):
             product = get_model('apparel', 'Product').objects.get(slug=row['product'])
             row['product_url'] = reverse('product-detail', args=[row['product']])
             row['product_name'] = product.product_name
-            row['product_earning'] = float(int(row['count']) * click_cost.amount * earning_cut * exchange_rate)
+            row['product_earning'] = float(int(row['count']) * click_cost)
         except get_model('apparel', 'Product').DoesNotExist:
             log.warn("Product %s does not exist" % row['product'])
     return data
@@ -150,11 +138,14 @@ def get_clicks_amount(vendor, start_date_query, end_date_query):
         Returns total amount in EUR for a Vendor in given date range
     """
     total_amount = 0
+    currency = None
     for item in get_model('dashboard', 'Sale').objects.filter(vendor=vendor,
                                                               sale_date__range=[start_date_query, end_date_query],
                                                               type=get_model('dashboard', 'Sale').COST_PER_CLICK):
-        total_amount += item.converted_amount
-    return total_amount
+        total_amount += item.original_amount
+        if not currency and item.original_currency:
+            currency = item.original_currency
+    return total_amount, currency
 
 def get_number_clicks(vendor, start_date_query, end_date_query):
     """
