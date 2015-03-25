@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from apparelrow.profile.models import Follow
 from apparelrow.profile.models import NotificationCache
+from apparelrow.profile.models import NotificationEvent
 from apparelrow.profile.models import PaymentDetail
 
 
@@ -134,6 +135,7 @@ admin.site.unregister(Group)
 #
 
 admin.site.register(NotificationCache)
+admin.site.register(NotificationEvent)
 
 
 class FollowAdmin(admin.ModelAdmin):

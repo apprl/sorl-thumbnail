@@ -111,6 +111,7 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
     activate(current_language)
 
 def notifiy_with_mandrill_teplate(users, notification_name, notification_subject, sender, merge_vars, extra_context=None):
+
     """
     New version of mail notifications using Mandrill templates (manually added to account beforehand) instead of local html templates
 
@@ -135,16 +136,15 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
     """ create message object """
     msg = EmailMessage(from_email="no-reply@example.com", to=emails)
     #NOTICE: currently using the subject as defined in Mandrill template, thus also using merge tags there
-   # msg = EmailMessage(subject=notification_subject, from_email="no-reply@example.com", to=emails)
     msg.template_name = notification_name           # A Mandrill template name
-    #this is nor currently used, but for some reason the API fails if this is not set.
+    #this is not currently used, but for some reason the API fails if this is not set.
     #  it could say anything, none of this lands in the final email
     msg.template_content = {                        # Content blocks to fill in
-        'EMPTY_BLOCK': "<a href='appr.com/*|URL|*'>Hello there!</a>"
+        'EMPTY_BLOCK': "<a href='apprl.com/*|URL|*'>Hello there!</a>"
     }
     apprl_logo_url = "http://s-staging.apprl.com/static/email/logo.png" #TODO switch to deploy
 
-    msg.global_merge_vars = {                       # to merge into template
+    msg.global_merge_vars = {                       # values to merge into template
         'LOGOURL': apprl_logo_url,
         'FBICONURL': "http://s-staging.apprl.com/static/email/icon-facebook.png",
         'TWITTERICONURL': "http://s-staging.apprl.com/static/email/icon-twitter.png",
@@ -153,7 +153,7 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
     }
     msg.global_merge_vars.update(merge_vars) #add specific parameters
 
-    msg.merge_vars = usernames                        # Per-recipient merge tags, here adding personalized names
+    msg.merge_vars = usernames    # Per-recipient merge tags, here adding personalized names
     msg.send()
 
     current_language = get_language()
@@ -164,7 +164,6 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
         stats.save()
 
     activate(current_language)
-
 def retrieve_full_url(path):
     """ append current hostname to front of URL
     """

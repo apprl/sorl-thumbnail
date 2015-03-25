@@ -1,5 +1,6 @@
 # coding=utf-8
 import uuid
+from apparelrow.apparelrow.apparel.models import Look, Product
 import os.path
 
 from django.db import models
@@ -456,6 +457,24 @@ class NotificationCache(models.Model):
 
     def __unicode__(self):
         return '%s' % (self.key,)
+
+class NotificationEvent(models.Model):
+    owner = models.ForeignKey(User, related_name='notificationEvent')
+    actor = models.ForeignKey(User, related_name='performedEvent', blank=True)
+    look = models.ForeignKey(Look, related_name='notification', on_delete=models.CASCADE, blank=True)
+    product = models.ForeignKey(Product, related_name='notification', on_delete=models.CASCADE, blank=True)
+
+    TYPES =   (
+        ("FB", "fbFriend"),
+        ("SALE", "itemSale"),
+        ("FOLLOW", "newFollower"),
+        ("LIKELOOK", "likedLook"),
+        ("COMMLOOK", "commentedLook"),
+        ("NEWLOOK", "createdLook"),
+        ("PURCH", "generatedPurchase"),
+    )
+    type = models.CharField(max_length=15, choices=TYPES)
+
 
 
 
