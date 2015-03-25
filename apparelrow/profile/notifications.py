@@ -142,12 +142,14 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
     msg.template_content = {                        # Content blocks to fill in
         'EMPTY_BLOCK': "<a href='appr.com/*|URL|*'>Hello there!</a>"
     }
-    apprl_logo_url = "logo.jpg" #TODO where is this?
-    #  append host name to url
-    apprl_logo_url = retrieve_full_url(apprl_logo_url)
+    apprl_logo_url = "http://s-staging.apprl.com/static/email/logo.png" #TODO switch to deploy
 
     msg.global_merge_vars = {                       # to merge into template
-        'LOGOURL': apprl_logo_url, 'FBICONURL': "", 'TWITTERICONURL': "", 'PINTERESTICONURL': "", 'INSTAICONURL': ""
+        'LOGOURL': apprl_logo_url,
+        'FBICONURL': "http://s-staging.apprl.com/static/email/icon-facebook.png",
+        'TWITTERICONURL': "http://s-staging.apprl.com/static/email/icon-twitter.png",
+        'PINTERESTICONURL': "http://s-staging.apprl.com/static/email/icon-pinterest.png",
+        'INSTAICONURL': "http://s-staging.apprl.com/static/email/icon-instagram.png"
     }
     msg.global_merge_vars.update(merge_vars) #add specific parameters
 
@@ -164,11 +166,9 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
     activate(current_language)
 
 def retrieve_full_url(path):
-        devStage = True
-        if devStage:
-            return 'http://localhost:8000' + path
-        else:
-            return settings.STATIC_URL + path
+    """ append current hostname to front of URL
+    """
+    return settings.STATIC_URL + path
 
 
 #
