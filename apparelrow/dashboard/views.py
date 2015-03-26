@@ -1082,6 +1082,7 @@ def commissions(request):
             temp['vendor_pk'] = vendor_obj.pk
             temp['vendor_name'] = vendor_obj.name
             temp['link'] = store.link
+            temp['store_pk'] = store.pk
             if vendor_obj.is_cpc:
                 _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
                 click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
@@ -1091,7 +1092,6 @@ def commissions(request):
                 temp['type'] = "is_cpc"
             elif vendor_obj.is_cpo:
                 temp['amount'] = store.commission
-                temp['store_pk'] = store.pk
                 temp['type'] = "is_cpo"
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
