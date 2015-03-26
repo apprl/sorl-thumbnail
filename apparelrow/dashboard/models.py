@@ -186,8 +186,11 @@ class Signup(models.Model):
 
 class StoreCommission(models.Model):
     vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False)
-    commission = models.CharField(max_length=255,help_text=_('Written like X/Y/Z which translates into X-Y%% (Sale Z%%). If the number is 0 then it will not be used. '
-                                                             'If the said format X/Y/Z is not used at all just the plain text will be displayed.'))
+    commission = models.CharField(max_length=255,
+                                  help_text=_('Written like X/Y/Z which translates into X-Y%% (Sale Z%%). '
+                                              'If the number is 0 then it will not be used. '
+                                              'If the said format X/Y/Z is not used at all just the plain text will be displayed. '
+                                              'It could be written as 0 if it is a PPC (Pay per click) store.'))
     link = models.CharField(max_length=255, null=True, blank=True, help_text=_('Only our own store links works, should be copied excactly as they appear in short store link admin list without a user id.'))
 
 
