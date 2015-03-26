@@ -1,7 +1,6 @@
 import logging
 import decimal
 import HTMLParser
-
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
@@ -22,11 +21,13 @@ from django.core.files.storage import DefaultStorage
 from sorl.thumbnail import get_thumbnail
 from django.templatetags.static import static
 
+
 import facebook
 
 from celery.task import task
 
 from apparelrow.apparel.utils import currency_exchange
+
 
 def is_following(user_one, user_two):
     return get_model('profile', 'Follow').objects.filter(user=user_one, user_follow=user_two, active=True).exists()
@@ -384,7 +385,14 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
             profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
-        notifiy_with_mandrill_teplate([notify_user], "likedLook", "One of your looks got a like on Apprl!", sender, merge_vars)
+        # create NotificationEvent
+        event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+                                                                                actor=sender,
+                                                                                type="LIKELOOK",
+                                                                                look=look_like.look,
+                                                                                email_sent=True)
+        event.save()
+        notifiy_with_mandrill_teplate([notify_user], "likedLook", "", sender, merge_vars)
 
         return get_key('like_look_created', recipient, sender, look_like)
 
@@ -427,6 +435,12 @@ def process_follow_user(recipient, sender, follow, **kwargs):
             profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
         merge_vars['FOLLOWERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+        event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+                                                                                actor=sender,
+                                                                                type="FOLLOW",
+                                                                                email_sent=True)
+        event.email_sent = True #we are sending the email right away
+        event.save()
         notifiy_with_mandrill_teplate([notify_user], "newFollower", "You have a new follower on Apprl!", sender, merge_vars)
         return get_key('follow_user', recipient, sender, None)
 
@@ -469,6 +483,13 @@ def process_facebook_friends(sender, graph_token, **kwargs):
                 profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+            # create NotificationEvent
+            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+                                                                                    actor=sender,
+                                                                                    type="FB",
+                                                                                email_sent=True)
+            event.email_sent = True #we are sending the email right away
+            event.save()
             notifiy_with_mandrill_teplate([recipient], "fbFriend", "new FB friend on Apprl", sender, merge_vars)
 
 #
@@ -514,4 +535,11 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
 
+            # create NotificationEvent
+            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+                                                                                type="SALE",
+                                                                                product=product,
+                                                                                email_sent=True)
+            event.email_sent = True #we are sending the email right away
+            event.save()
             notifiy_with_mandrill_teplate([likes.user], "itemSale", "A product you like has dropped in price!", sender, merge_vars)

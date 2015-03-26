@@ -1,6 +1,5 @@
 # coding=utf-8
 import uuid
-from apparelrow.apparelrow.apparel.models import Look, Product
 import os.path
 
 from django.db import models
@@ -172,6 +171,14 @@ class User(AbstractUser):
         return self.look_likes.filter(active=True).count()
 
     @cached_property
+    def notifications(self):
+        self.notification_events
+
+    @cached_property
+    def unread_count(self):
+        self.notification_events.count()
+
+    @cached_property
     def profile_content(self):
         # TODO: better algorithm for finding out content to fill user_medium.html templates with
         if self.is_brand and self.brand:
@@ -262,9 +269,6 @@ class User(AbstractUser):
 
         return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
-    def get_username(self):
-        return super(User, self).get_username()
-
     def avatar_large_absolute_uri(self, request):
         if self.image:
             return request.build_absolute_uri(get_thumbnail(self.image, '208').url)
@@ -310,6 +314,7 @@ class User(AbstractUser):
 
     def has_partner_group_ownership(self):
         return get_model('dashboard', 'Group').objects.filter(owner=self).exists()
+
 
     def is_referral_parent_valid(self):
         if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():
@@ -459,10 +464,12 @@ class NotificationCache(models.Model):
         return '%s' % (self.key,)
 
 class NotificationEvent(models.Model):
-    owner = models.ForeignKey(User, related_name='notificationEvent')
-    actor = models.ForeignKey(User, related_name='performedEvent', blank=True)
-    look = models.ForeignKey(Look, related_name='notification', on_delete=models.CASCADE, blank=True)
-    product = models.ForeignKey(Product, related_name='notification', on_delete=models.CASCADE, blank=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='notification_events')
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='performed_events', blank=True, null=True)
+    look = models.ForeignKey('apparel.Look', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey('apparel.Product', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
+    seen = models.BooleanField(default=False)
+    email_sent = models.BooleanField(default=False)
 
     TYPES =   (
         ("FB", "fbFriend"),
@@ -474,7 +481,6 @@ class NotificationEvent(models.Model):
         ("PURCH", "generatedPurchase"),
     )
     type = models.CharField(max_length=15, choices=TYPES)
-
 
 
 

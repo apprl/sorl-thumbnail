@@ -135,7 +135,12 @@ admin.site.unregister(Group)
 #
 
 admin.site.register(NotificationCache)
-admin.site.register(NotificationEvent)
+
+class NotificationEventAdmin(admin.ModelAdmin):
+    raw_id_fields = ['owner', 'actor', 'look', 'product']
+    list_display = ('owner', 'actor', 'look', 'product', 'type', 'seen', 'email_sent')
+    list_filter = ('owner', 'actor')
+admin.site.register(NotificationEvent, NotificationEventAdmin)
 
 
 class FollowAdmin(admin.ModelAdmin):
