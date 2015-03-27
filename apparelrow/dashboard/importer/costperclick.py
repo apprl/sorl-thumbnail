@@ -64,7 +64,5 @@ class Importer(BaseImporter):
             #TODO probar que estas excepciones se estan lanzando bien
             except get_user_model().DoesNotExist:
                 logger.warn('User %id does not exist'%user_id)
-                #print('User %id does not exist'%user_id)
             except get_model('apparel', 'Vendor').DoesNotExist:
                 logger.warn('Vendor %vendor does not exist'%vendor_id)
-                #print('Vendor %vendor does not exist'%vendor_id)
