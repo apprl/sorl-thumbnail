@@ -21,6 +21,7 @@ from sorl.thumbnail import get_thumbnail
 
 from apparelrow.activity_feed.tasks import update_activity_feed
 from apparelrow.apparel.utils import roundrobin
+from apparelrow.apparel.utils import get_paged_result
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 from apparelrow.profile.tasks import mail_managers_task
 
@@ -172,11 +173,13 @@ class User(AbstractUser):
 
     @cached_property
     def notifications(self):
-        self.notification_events
+        notifications = self.notification_events.order_by('id')
+        paged_result = get_paged_result(notifications, 5, 1)
+        return paged_result
 
     @cached_property
     def unread_count(self):
-        self.notification_events.count()
+        return self.notification_events.count()
 
     @cached_property
     def profile_content(self):
@@ -470,6 +473,10 @@ class NotificationEvent(models.Model):
     product = models.ForeignKey('apparel.Product', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
     seen = models.BooleanField(default=False)
     email_sent = models.BooleanField(default=False)
+
+    sale_new_price = models.IntegerField(blank=True, null=True)
+    sale_old_price = models.IntegerField(blank=True, null=True)
+    sale_currency = models.CharField(max_length=10, unique=False, blank=True, null=True)
 
     TYPES =   (
         ("FB", "fbFriend"),

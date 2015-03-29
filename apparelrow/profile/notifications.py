@@ -392,7 +392,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
                                                                                 look=look_like.look,
                                                                                 email_sent=True)
         event.save()
-        notifiy_with_mandrill_teplate([notify_user], "likedLook", "", sender, merge_vars)
+     #   notifiy_with_mandrill_teplate([notify_user], "likedLook", "", sender, merge_vars)
 
         return get_key('like_look_created', recipient, sender, look_like)
 
@@ -536,10 +536,14 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['CURRENCY'] = currency
 
             # create NotificationEvent
-            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=likes.use,
                                                                                 type="SALE",
                                                                                 product=product,
-                                                                                email_sent=True)
+                                                                                email_sent=True,
+                                                                                sale_new_price = locale_discount_price,
+                                                                                sale_old_price = locale_original_price,
+                                                                                sale_currency = currency)
+
             event.email_sent = True #we are sending the email right away
             event.save()
             notifiy_with_mandrill_teplate([likes.user], "itemSale", "A product you like has dropped in price!", sender, merge_vars)
