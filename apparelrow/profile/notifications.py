@@ -20,7 +20,9 @@ from django.core.files.storage import DefaultStorage
 
 from sorl.thumbnail import get_thumbnail
 from django.templatetags.static import static
-
+# for summaries
+from datetime import timedelta
+from django.utils import timezone
 
 import facebook
 
@@ -484,7 +486,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
             # create NotificationEvent
-            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=recipient,
                                                                                     actor=sender,
                                                                                     type="FB",
                                                                                 email_sent=True)
@@ -547,3 +549,25 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             event.email_sent = True #we are sending the email right away
             event.save()
             notifiy_with_mandrill_teplate([likes.user], "itemSale", "A product you like has dropped in price!", sender, merge_vars)
+
+def create_summary(user, period):
+    if period == 'dayly':
+        ref_time = timezone.now().date() - timedelta(days=1)
+    else:
+        some_day_last_week = timezone.now().date() - timedelta(days=7)
+        monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
+        ref_time = monday_of_last_week
+    events = get_model('profile', 'NotificationEvent').objects.filter(owner=user, created__gte=ref_time)
+
+    look_likes = []
+    new_followers = []
+    sales = []
+
+    for event in events:
+        if event.type == "LIKELOOK":
+            look_likes.append(event)
+        elif event.type == "SALE":
+            sales.append(event)
+        elif event.type == "FOLLOW":
+            new_followers.append(event)
+
