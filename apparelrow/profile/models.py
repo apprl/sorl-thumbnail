@@ -492,6 +492,10 @@ class NotificationEvent(models.Model):
     )
     type = models.CharField(max_length=15, choices=TYPES)
 
+    @cached_property
+    def dislay_time(self):
+        return self.created
+
 
 
 import apparelrow.profile.activity

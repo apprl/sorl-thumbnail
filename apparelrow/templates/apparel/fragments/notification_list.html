@@ -16,7 +16,7 @@
                 <div>
                 {% if event.type == "LIKELOOK" %}
                     <span>
-                    <abbr title="Mar 26 2015 12:06:04 UTC">13:06</abbr></span>
+                    <abbr title="{{ event.created }}">{{ event.dislay_time }}</abbr></span>
                     <span><a class="img-circle" href="{{ event.actor.url_likes }}"><img src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="16" height="16"/></a></span>
                     <span class="content">
                         <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> liked your look <span class="quote">"</span><a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a><span class="quote">"</span>
