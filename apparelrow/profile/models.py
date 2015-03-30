@@ -31,6 +31,12 @@ EVENT_CHOICES = (
     ('N', _('No one')),
 )
 
+SUMMARY_CHOICES = (
+    ('D', _('Daily')),
+    ('W', _('Weekly')),
+    ('N', _('None')),
+)
+
 def profile_image_path(instance, filename):
     return os.path.join(settings.APPAREL_PROFILE_IMAGE_ROOT, uuid.uuid4().hex)
 
@@ -116,6 +122,8 @@ class User(AbstractUser):
             help_text=_('When someone starts to follow me'))
     facebook_friends = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When a Facebook friend has joined Apprl'))
+    summary_mails = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Receive summaries of recent activities'))
 
     followers_count = models.IntegerField(default=0, blank=False, null=False)
     popularity = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
