@@ -1,0 +1,56 @@
+{% load thumbnail %}
+<style>
+.notifications a:hover{
+    text-decoration: none !important;
+}
+.notifications a{
+    text-decoration: none !important;
+}
+</style>
+<li class="dropdown notifications">
+   <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.user.url_likes }}"><span class="glyphicon glyphicon-heart-empty"></span> {{ request.user.unread_count }}<span> &nbsp</span> <b class="caret"></b></a>
+    <ul class="dropdown-menu" style="width: 350px !important;">
+        {% for event in request.user.notifications %}
+        
+            <li style="padding: 3px">
+                <div>
+                {% if event.type == "LIKELOOK" %}
+                    <span>
+                    <abbr title="Mar 26 2015 12:06:04 UTC">13:06</abbr></span>
+                    <span><a class="img-circle" href="{{ event.actor.url_likes }}"><img src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="16" height="16"/></a></span>
+                    <span class="content">
+                        <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> liked your look <span class="quote">"</span><a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a><span class="quote">"</span>
+                    </span>
+                {% elif event.type == "FB" %}
+                    <span>
+                    <abbr title="Mar 26 2015 12:06:04 UTC">13:06</abbr></span>
+                    <span><a class="img-circle" href="{{ event.actor.url_likes }}"><img src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="16" height="16"/></a></span>
+                    <span class="content">
+                        Your Facebook friend <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> is now on APPRL! 
+                    </span>
+                {% elif event.type == "SALE" %}
+                    {% thumbnail event.product.product_image "16" crop="noop" as im %}
+                    <span>
+                    <abbr title="Mar 26 2015 12:06:04 UTC">13:06</abbr></span>
+                    <span><a class="img-circle" href="{{ event.product.get_absolute_url }}">
+                    <img src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="16" height="16"/></a></span>
+                    <span class="content">
+                    <a href="{{ event.product.get_absolute_url }}"><i><span class="name">{{ event.product }}</span></i></a> is on sale! <span style="color: #e27b67;">{{ event.sale_new_price }}</span> <span style="text-decoration: line-through;">{{ event.sale_old_price }}</span> {{ event.currency }}
+                    </span>
+                    {% endthumbnail %}
+                {% elif event.type == "FOLLOW" %}
+                    <span>
+                    <abbr title="Mar 26 2015 12:06:04 UTC">13:06</abbr></span>
+                    <span><a class="img-circle" href="{{ event.actor.url_likes }}"><img src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="16" height="16"/></a></span>
+                    <span class="content">
+                        <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> started following you!
+                    </span>
+                {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+
+
+        <li><a href="{{ request.user.url_likes }}">Show all</a></li>
+    </ul>
+</li>
