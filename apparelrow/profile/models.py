@@ -474,6 +474,9 @@ class NotificationEvent(models.Model):
     seen = models.BooleanField(default=False)
     email_sent = models.BooleanField(default=False)
 
+    created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
+
+
     sale_new_price = models.IntegerField(blank=True, null=True)
     sale_old_price = models.IntegerField(blank=True, null=True)
     sale_currency = models.CharField(max_length=10, unique=False, blank=True, null=True)
