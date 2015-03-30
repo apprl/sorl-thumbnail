@@ -484,7 +484,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
             # create NotificationEvent
-            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=recipient,
                                                                                     actor=sender,
                                                                                     type="FB",
                                                                                 email_sent=True)
