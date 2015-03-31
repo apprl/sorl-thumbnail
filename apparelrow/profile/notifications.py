@@ -123,7 +123,7 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
     """
     if extra_context is None:
         extra_context = {}
-    if sender.is_hidden:
+    if sender and sender.is_hidden:
         return
     emails = []
     usernames = {}
@@ -170,7 +170,8 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
 def retrieve_full_url(path):
     """ append current hostname to front of URL
     """
-    return settings.STATIC_URL + path
+    domain = Site.objects.get_current().domain
+    return 'http://%s%s' % (domain, path)
 
 
 #
@@ -409,6 +410,18 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
 # FOLLOW USER
 #
 
+def get_avatar_url(user):
+    """
+    retrieve full url to a profile picture
+    """
+    if user.image:
+        profile_photo_url =  retrieve_full_url(get_thumbnail(user.image, '500').url)
+    elif user.facebook_user_id:
+        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % user.facebook_user_id
+    else:
+        profile_photo_url = retrieve_full_url(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
+    return profile_photo_url
+
 @task(name='profile.notifications.process_follow_user', max_retries=5, ignore_result=True)
 def process_follow_user(recipient, sender, follow, **kwargs):
     """
@@ -426,17 +439,11 @@ def process_follow_user(recipient, sender, follow, **kwargs):
 
     if notify_user and sender:
         merge_vars = dict()
-        domain = Site.objects.get_current().domain
-        sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+        sender_link = retrieve_full_url(sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
-        if sender.image:
-            profile_photo_url =  get_thumbnail(sender.image, '500').url
-        elif sender.facebook_user_id:
-            profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
-        else:
-            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+        profile_photo_url = get_avatar_url(sender)
         merge_vars['FOLLOWERNAME'] = sender.display_name
-        merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+        merge_vars['PROFILEPHOTOURL'] = profile_photo_url
         event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
                                                                                 actor=sender,
                                                                                 type="FOLLOW",
@@ -474,17 +481,10 @@ def process_facebook_friends(sender, graph_token, **kwargs):
 
         if recipient.facebook_friends == 'A' and sender:
             merge_vars = dict()
-            domain = Site.objects.get_current().domain
-            sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+            sender_link = retrieve_full_url(sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
-            if sender.image:
-                profile_photo_url =  get_thumbnail(sender.image, '500').url
-            elif sender.facebook_user_id:
-                profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
-            else:
-                profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
-            merge_vars['FRIENDNAME'] = sender.display_name
-            merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+
+            merge_vars['PROFILEPHOTOURL'] = get_avatar_url(sender)
             # create NotificationEvent
             event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=recipient,
                                                                                     actor=sender,
@@ -551,9 +551,13 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             notifiy_with_mandrill_teplate([likes.user], "itemSale", "A product you like has dropped in price!", sender, merge_vars)
 
 def create_summary(user, period):
-    if period == 'dayly':
+    if period == 'D':
+        # it is a daily summary
+        period_name = "daily"
         ref_time = timezone.now().date() - timedelta(days=1)
     else:
+        # it is a weekly summary
+        period_name = "weekly"
         some_day_last_week = timezone.now().date() - timedelta(days=7)
         monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
         ref_time = monday_of_last_week
@@ -563,11 +567,36 @@ def create_summary(user, period):
     new_followers = []
     sales = []
 
+    merge_vars = dict()
+    merge_vars['looklikes'] = list()
+    merge_vars['sales'] = list()
+    merge_vars['follows'] = list()
     for event in events:
         if event.type == "LIKELOOK":
+            details = {
+                'name': event.look.title,
+                'imgurl': retrieve_full_url(event.look.static_image.url),
+                'url': retrieve_full_url(event.look.get_absolute_url()),
+            }
+            merge_vars['looklikes'].append(details)
             look_likes.append(event)
         elif event.type == "SALE":
+            details = {
+                'name': event.product.product_name,
+                'imgurl': retrieve_full_url(get_thumbnail(event.product.image, '500').url),
+                'url': retrieve_full_url(event.product.get_absolute_url()),
+            }
+            merge_vars['sales'].append(details)
             sales.append(event)
         elif event.type == "FOLLOW":
+            details = {
+                'name': event.actor.display_name,
+                'imgurl': get_avatar_url(event.actor),
+                'url': retrieve_full_url(event.actor.get_absolute_url()),
+            }
+            merge_vars['follows'].append(details)
             new_followers.append(event)
 
+    merge_vars['PERIOD'] = period_name
+
+    notifiy_with_mandrill_teplate([user], "SummaryMail", "new FB friend on Apprl", None, merge_vars)
