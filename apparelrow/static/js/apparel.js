@@ -10,7 +10,7 @@ function load_detailed_data_clicks(data, date, vendor, currency){
     jQuery.each(data, function() {
         html += "<tr>" +
                 "<td><a href=\""+this.product_url+"\">" + this.product_name + "</a></td>" +
-                "<td class='center'>"  + this.count + "</td>" +
+                "<td class='center'>"  + this.clicks + "</td>" +
                 "<td class='center'>" + currency + " " + this.product_earning.toFixed(2) + "</td>" +
                 "<tr>";
     });

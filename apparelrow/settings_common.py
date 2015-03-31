@@ -114,6 +114,8 @@ VENDOR_LOCATION_MAPPING = {
     "Boozt no":["NO"],
     "ASOS no":["NO"],
     "QVC":["US"],
+    "Room 21 no":["NO"],
+    "Rum 21 se":["SE"],
     "default":["ALL","SE","NO","US"],
 }
 

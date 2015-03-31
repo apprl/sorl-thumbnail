@@ -82,24 +82,14 @@
                     </select>
                 </label>
             </p>
+            {% for heading, total, publisher, apprl in monthly_array %}
             <ul class="list-inline">
-                <li>{% blocktrans %}Total commission {{ month_commission }} {{ currency }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Publisher commission {{ partner }} {{ currency }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Apprl commission {{ apprl }} {{ currency }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}{{ heading }} - {% endblocktrans %}</li>
+                <li>{% blocktrans %}Total {{ total }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Publisher {{ publisher }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Apprl {{ apprl }}{% endblocktrans %}</li>
             </ul>
-            <ul class="list-inline monthly-list">
-                <li>{% blocktrans %}Click earnings: {{ currency }} {{ ppc_earnings }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Clicks: {{ ppc_clicks }}{% endblocktrans %}</li>
-            </ul>
-            <ul class="list-inline">
-                <li>{% blocktrans %}Sales {{ sales_count }}{% endblocktrans %}</li>
-                <li>{% blocktrans with conversion_rate=conversion_rate|floatformat:2 %}Conversion rate {{ conversion_rate }}%{% endblocktrans %}</li>
-            </ul>
-            <ul class="list-inline">
-                <li>{% blocktrans %}Total click {{ click_total }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Publisher click {{ click_partner }}{% endblocktrans %}</li>
-                <li>{% blocktrans %}Apprl click {{ click_apprl }}{% endblocktrans %}</li>
-            </ul>
+            {% endfor %}
         </div>
     </div>
 
@@ -117,16 +107,15 @@
             <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a></small></h2></div>
             <table id="top-publishers" class="sortable table">
                 <thead>
-                    <tr>
-                        <th class="col1 product-image center">{% trans "User" %}</th>
-                        <th class="col2 hidden-xs center"></th>
-                        <th class="col3 center hidden-xs">{% trans "Clicks" %}</th>
-                        <th class="center">{% trans "Sales" %}</th>
-                        <th class="center">{% trans "Conversion rate" %}</th>
-                        <th class="hidden-xs center">{% trans "Sales generated" %}</th>
-                        <th class="hidden-xs center">{% trans "Earnings" %}</th>
-                    </tr>
-                </thead>
+                        <tr>
+                            <th class="col1 product-image center">{% trans "Publisher" %}</th>
+                            <th class="col2 hidden-xs center"></th>
+                            <th class="hidden-xs center">{% trans "Commission earnings" %}</th>
+                            <th class="hidden-xs center">{% trans "Click earnings" %}</th>
+                            <th class="center">{% trans "Total earnings" %}</th>
+                            <th class="center">{% trans "Total network earnings" %}</th>
+                        </tr>
+                    </thead>
                 <tbody>
                     {% for publisher in top_publishers|top_five %}
                     <tr>
@@ -136,20 +125,17 @@
                         <td class="col2 hidden-xs">
                             <a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a>
                         </td>
-                        <td class="col3 center hidden-xs">
-                            {{ publisher.clicks }}
+                        <td class="hidden-xs center" data-sort="{{ publisher.publisher_earnings }}">
+                            {{ currency }} {{ publisher.publisher_earnings|floatdot }}
                         </td>
-                        <td class="center">
-                            {{ publisher.sales }}
+                        <td class="hidden-xs center" data-sort="{{ publisher.publisher_click_earnings }}">
+                            {{ currency }} {{ publisher.publisher_click_earnings|floatdot }}
                         </td>
-                        <td class="center">
-                            {{ publisher.sales|commission_rate:publisher.clicks }}
+                        <td class="center" data-sort="{{ publisher.total_network_earnings }}">
+                            {{ currency }} {{ publisher.total_network_earnings|floatdot }}
                         </td>
-                        <td class="hidden-xs center" data-sort="{{ publisher.converted_amount }}">
-                            {{ publisher.converted_amount }} {{ currency }}
-                        </td>
-                        <td class="hidden-xs center" data-sort="{{ publisher.publisher_earnings }}">
-                            {{ publisher.publisher_earnings }} {{ currency }}
+                        <td class="center" data-sort="{{ publisher.network_earnings }}">
+                            {{ currency }} {{ publisher.network_earnings|floatdot }}
                         </td>
                     </tr>
                     {% empty %}
@@ -157,7 +143,6 @@
                         <td colspan="3">{% trans "No sales yet." %}</td>
                     </tr>
                     {% endfor %}
-            </tbody>
                 </tbody>
             </table>
         </div>

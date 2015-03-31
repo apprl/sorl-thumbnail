@@ -102,19 +102,28 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
         except get_user_model().DoesNotExist:
             log.warn("User %s does not exist" % user)
     else:
+        values.extend([vendor_name, start_date_query, end_date_query])
         cursor.execute(
-            """SELECT PS.vendor, PS.product, count(PS.id)
+            """(SELECT PS.vendor, PS.product, count(PS.id) as clicks
                FROM statistics_productstat PS, profile_user U, apparel_vendor V
                WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
                AND V.is_cpc = True AND PS.created BETWEEN %s AND %s
-               GROUP BY PS.vendor, PS.product ORDER BY count(PS.id) DESC""", values)
+               GROUP BY PS.vendor, PS.product)
+               UNION
+               (SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V
+               WHERE V.name = %s AND PS.vendor = V.name
+               AND V.is_cpc = True AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               ORDER BY clicks DESC
+               """, values)
     data = dictfetchall(cursor)
     for row in data:
         try:
             product = get_model('apparel', 'Product').objects.get(slug=row['product'])
             row['product_url'] = reverse('product-detail', args=[row['product']])
             row['product_name'] = product.product_name
-            row['product_earning'] = float(int(row['count']) * click_cost)
+            row['product_earning'] = float(int(row['clicks']) * click_cost)
         except get_model('apparel', 'Product').DoesNotExist:
             log.warn("Product %s does not exist" % row['product'])
     return data

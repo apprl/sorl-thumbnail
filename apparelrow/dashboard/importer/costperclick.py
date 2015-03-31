@@ -14,14 +14,20 @@ class Importer(BaseImporter):
     name = 'Cost per Click'
 
     def get_cpc_clicks_per_vendor_per_user(self, start_date, end_date):
-        values = [start_date, end_date]
+        values = [start_date, end_date, start_date, end_date]
         cursor = connection.cursor()
         cursor.execute(
-            """SELECT PS.vendor, PS.user_id, count(PS.id)
+            """(SELECT PS.vendor, PS.user_id, count(PS.id)
                FROM statistics_productstat PS, profile_user U, apparel_vendor V
-               WHERE PS.user_id = U.id AND  PS.vendor = V.name AND U.is_partner = True AND V.is_cpc = True
+               WHERE PS.user_id = U.id AND U.is_partner = True AND  PS.vendor = V.name AND V.is_cpc = True
                AND PS.created BETWEEN %s AND %s
-               GROUP BY PS.user_id, PS.vendor""", values)
+               GROUP BY PS.user_id, PS.vendor)
+               UNION
+               (SELECT PS.vendor, PS.user_id, count(PS.id)
+               FROM statistics_productstat PS, apparel_vendor V
+               WHERE PS.user_id=0 AND  PS.vendor = V.name AND V.is_cpc = True
+               AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.user_id, PS.vendor)""", values)
         data = cursor.fetchall()
         return data
 
@@ -39,9 +45,11 @@ class Importer(BaseImporter):
         data = self.get_cpc_clicks_per_vendor_per_user(start_date_query, end_date_query)
         for (vendor_id, user_id, count) in data:
             try:
-                user = get_user_model().objects.get(id=user_id)
+                user = None
+                if user_id != 0:
+                    user = get_user_model().objects.get(id=user_id)
                 vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_id)
-                if user.is_partner:
+                if (user and user.is_partner) or user_id == 0:
                     click_cost, currency = self.get_click_cost(vendor)
                     if click_cost and currency:
                         sale = {}
@@ -61,7 +69,6 @@ class Importer(BaseImporter):
                         if not sale:
                             continue
                         yield sale
-            #TODO probar que estas excepciones se estan lanzando bien
             except get_user_model().DoesNotExist:
                 logger.warn('User %id does not exist'%user_id)
             except get_model('apparel', 'Vendor').DoesNotExist:
