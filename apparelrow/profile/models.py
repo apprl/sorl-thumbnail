@@ -25,6 +25,9 @@ from apparelrow.apparel.utils import get_paged_result
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 from apparelrow.profile.tasks import mail_managers_task
 
+from datetime import timedelta
+from django.utils import timezone
+
 EVENT_CHOICES = (
     ('A', _('All')),
     ('F', _('Those I follow')),
@@ -181,7 +184,7 @@ class User(AbstractUser):
 
     @cached_property
     def notifications(self):
-        notifications = self.notification_events.order_by('id')
+        notifications = self.notification_events.order_by('created').reverse()
         paged_result = get_paged_result(notifications, 5, 1)
         return paged_result
 
@@ -498,12 +501,11 @@ class NotificationEvent(models.Model):
         ("NEWLOOK", "createdLook"),
         ("PURCH", "generatedPurchase"),
     )
+
     type = models.CharField(max_length=15, choices=TYPES)
 
+
     @cached_property
-    def dislay_time(self):
-        return self.created
-
-
-
-import apparelrow.profile.activity
+    def from_today(self):
+        ref_time = timezone.now()
+        return ref_time.date() == self.created.date()
