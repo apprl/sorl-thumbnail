@@ -9,7 +9,6 @@ from django.utils import timezone
 
 from apparelrow.profile.models import Follow
 from apparelrow.profile.models import NotificationCache
-from apparelrow.profile.models import NotificationEvent
 from apparelrow.profile.models import PaymentDetail
 
 
@@ -135,13 +134,6 @@ admin.site.unregister(Group)
 #
 
 admin.site.register(NotificationCache)
-
-class NotificationEventAdmin(admin.ModelAdmin):
-    raw_id_fields = ['owner', 'actor', 'look', 'product']
-    list_display = ('owner', 'actor', 'look', 'product', 'type', 'seen', 'email_sent')
-    list_filter = ('owner', 'actor')
-admin.site.register(NotificationEvent, NotificationEventAdmin)
-
 
 class FollowAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'modified')
