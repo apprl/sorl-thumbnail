@@ -184,7 +184,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    {% if request.user.is_authenticated %}
+                    {% if request.user.is_authenticated and False %}
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}    
                     {% endif %}
                 </ul>
