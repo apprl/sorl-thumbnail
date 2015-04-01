@@ -462,26 +462,3 @@ class NotificationCache(models.Model):
 
     def __unicode__(self):
         return '%s' % (self.key,)
-
-class NotificationEvent(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='notification_events')
-    actor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='performed_events', blank=True, null=True)
-    look = models.ForeignKey('apparel.Look', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
-    product = models.ForeignKey('apparel.Product', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
-    seen = models.BooleanField(default=False)
-    email_sent = models.BooleanField(default=False)
-
-    TYPES =   (
-        ("FB", "fbFriend"),
-        ("SALE", "itemSale"),
-        ("FOLLOW", "newFollower"),
-        ("LIKELOOK", "likedLook"),
-        ("COMMLOOK", "commentedLook"),
-        ("NEWLOOK", "createdLook"),
-        ("PURCH", "generatedPurchase"),
-    )
-    type = models.CharField(max_length=15, choices=TYPES)
-
-
-
-import apparelrow.profile.activity
