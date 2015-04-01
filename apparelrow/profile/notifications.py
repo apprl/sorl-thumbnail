@@ -370,8 +370,8 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
 
     if notify_user and sender:
         merge_vars = dict()
-        domain = Site.objects.get_current().domain
-        sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+
+        sender_link = retrieve_full_url(sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
         look_url = look_like.look.get_absolute_url()
         merge_vars['LOOKURL'] = retrieve_full_url(look_url)
@@ -527,7 +527,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
             merge_vars = dict()
             if product.image:
-                product_photo_url = get_thumbnail(product.image, '500').url
+                product_photo_url = get_thumbnail(product.product_image, '500').url
             else:
                 product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
             merge_vars['PRODUCTPHOTOURL'] = retrieve_full_url(product_photo_url)
@@ -554,14 +554,15 @@ def create_summary(user, period):
     if period == 'D':
         # it is a daily summary
         period_name = "daily"
-        ref_time = timezone.now().date() - timedelta(days=1)
+        ref_time = timezone.now() - timedelta(days=1)
     else:
         # it is a weekly summary
         period_name = "weekly"
-        some_day_last_week = timezone.now().date() - timedelta(days=7)
+        some_day_last_week = timezone.now() - timedelta(days=7)
         monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
         ref_time = monday_of_last_week
     events = get_model('profile', 'NotificationEvent').objects.filter(owner=user, created__gte=ref_time)
+    latest_likes = get_model('apparel', 'ProductLike').objects.filter(user=user, created__gte=ref_time)
 
     look_likes = []
     new_followers = []
@@ -583,7 +584,7 @@ def create_summary(user, period):
         elif event.type == "SALE":
             details = {
                 'name': event.product.product_name,
-                'imgurl': retrieve_full_url(get_thumbnail(event.product.image, '500').url),
+                'imgurl': retrieve_full_url(get_thumbnail(event.product.product_image, '500').url),
                 'url': retrieve_full_url(event.product.get_absolute_url()),
             }
             merge_vars['sales'].append(details)
@@ -597,6 +598,17 @@ def create_summary(user, period):
             merge_vars['follows'].append(details)
             new_followers.append(event)
 
+    merge_vars['products'] = list()
+    for productlike in latest_likes:
+        product = productlike.product
+        details = {
+            'name': product.product_name,
+            'imgurl': retrieve_full_url(get_thumbnail(product.product_image, '500').url),
+            'url': retrieve_full_url(product.get_absolute_url()),
+        }
+        merge_vars['products'].append(details)
+
     merge_vars['PERIOD'] = period_name
+    merge_vars['PROFILEURL'] = retrieve_full_url(user.get_absolute_url())
 
     notifiy_with_mandrill_teplate([user], "SummaryMail", "new FB friend on Apprl", None, merge_vars)
