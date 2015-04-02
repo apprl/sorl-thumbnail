@@ -134,7 +134,7 @@ def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
             notification_count = notification_count + 1
 
     """ create message object """
-    msg = EmailMessage(from_email="no-reply@example.com", to=emails)
+    msg = EmailMessage(from_email=settings.DEFAULT_FROM_EMAIL, to=emails)
     #NOTICE: currently using the subject as defined in Mandrill template, thus also using merge tags there
     msg.template_name = notification_name           # A Mandrill template name
     #this is not currently used, but for some reason the API fails if this is not set.
