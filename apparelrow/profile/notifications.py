@@ -111,17 +111,14 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     activate(current_language)
 
-def notifiy_with_mandrill_teplate(users, notification_name, notification_subject, sender, merge_vars, extra_context=None):
-
+def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
     """
     New version of mail notifications using Mandrill templates (manually added to account beforehand) instead of local html templates
 
     Sends an email to all users for the specified notification
     Variable users is a list of django auth user instances.
     """
-    if extra_context is None:
-        extra_context = {}
-    if sender.is_hidden:
+    if sender and sender.is_hidden:
         return
     emails = []
     usernames = {}
@@ -135,7 +132,7 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
             notification_count = notification_count + 1
 
     """ create message object """
-    msg = EmailMessage(from_email="no-reply@example.com", to=emails)
+    msg = EmailMessage(from_email=settings.DEFAULT_FROM_EMAIL, to=emails)
     #NOTICE: currently using the subject as defined in Mandrill template, thus also using merge tags there
     msg.template_name = notification_name           # A Mandrill template name
     #this is not currently used, but for some reason the API fails if this is not set.
@@ -386,7 +383,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
 
-        notifiy_with_mandrill_teplate([notify_user], "likedLook", "", sender, merge_vars)
+        notify_with_mandrill_template([notify_user], "likedLook", sender, merge_vars)
 
         return get_key('like_look_created', recipient, sender, look_like)
 
@@ -430,7 +427,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         merge_vars['FOLLOWERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
 
-        notifiy_with_mandrill_teplate([notify_user], "newFollower", "You have a new follower on Apprl!", sender, merge_vars)
+        notify_with_mandrill_template([notify_user], "newFollower", sender, merge_vars)
         return get_key('follow_user', recipient, sender, None)
 
     if not notify_user and sender:
@@ -473,7 +470,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
 
-            notifiy_with_mandrill_teplate([recipient], "fbFriend", "new FB friend on Apprl", sender, merge_vars)
+            notify_with_mandrill_template([recipient], "fbFriend", sender, merge_vars)
 
 #
 # SALE ALERT
@@ -519,4 +516,4 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['CURRENCY'] = currency
 
 
-            notifiy_with_mandrill_teplate([likes.user], "itemSale", "A product you like has dropped in price!", sender, merge_vars)
+            notify_with_mandrill_template([likes.user], "itemSale", sender, merge_vars)
