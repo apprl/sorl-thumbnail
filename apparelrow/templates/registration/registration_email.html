@@ -3,7 +3,23 @@
 
 {% block body-classes %}account registration-email{% endblock body-classes %}
 {% block body %}
+<script type="text/javascript">
+function emailUsername(emailAddress)
+{
+    return emailAddress.substring(0, emailAddress.indexOf("@"));
+}
 
+function updateUsername(){        
+    email = document.getElementById("id_email").value;
+    if (email.indexOf("@") > -1) {
+        username = emailUsername(email);
+    }     
+    else {
+        username = email;
+    }
+    document.getElementById("id_username").value = username;    
+}
+</script>
     <div class="body-header">
         <div class="body-header-col-full">
             <h1>{% trans "Become a member" %}</h1>
@@ -11,33 +27,37 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-8">
 
             <form action="{% url 'auth_register_email' %}" method="post">
                 {% csrf_token %}
 
                 <div class="form-group{% if form.first_name.errors %} has-error{% endif %}">
-                    <label for="id_{{ form.first_name.html_name }}" class="control-label">{{ form.first_name.label }}</label>
-                    <input name="{{ form.first_name.html_name }}" type="text" class="form-control" id="id_{{ form.first_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" placeholder="{{ form.first_name.label }}">
-                    {% if form.first_name.errors %}<span class="help-block">{{ form.first_name.errors.as_text }}</span>{% endif %}
+                    <label for="id_{{ form.first_name.html_name }}" class="control-label">Your name</label>
+                    <div class="form-inline text-center" >
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input name="{{ form.first_name.html_name }}" type="text" class="form-control" id="id_{{ form.first_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" placeholder="{{ form.first_name.label }}" style="width: 100%;">
+                                {% if form.first_name.errors %}<span class="help-block">{{ form.first_name.errors.as_text }}</span>{% endif %}
+                            </div>
+                            <div class="col-sm-6">
+                                <input name="{{ form.last_name.html_name }}" type="text" class="form-control" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" placeholder="{{ form.last_name.label }}" style="width: 100%;">
+                                {% if form.last_name.errors %}<span class="help-block">{{ form.last_name.errors.as_text }}</span>{% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group{% if form.last_name.errors %} has-error{% endif %}">
-                    <label for="id_{{ form.last_name.html_name }}" class="control-label">{{ form.last_name.label }}</label>
-                    <input name="{{ form.last_name.html_name }}" type="text" class="form-control" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" placeholder="{{ form.last_name.label }}">
-                    {% if form.last_name.errors %}<span class="help-block">{{ form.last_name.errors.as_text }}</span>{% endif %}
+                <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.email.html_name }}" class="control-label">{{ form.email.label }}</label>
+                    <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}" onkeyup="updateUsername();">
+                    {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group{% if form.username.errors %} has-error{% endif %}">
                     <label for="id_{{ form.username.html_name }}" class="control-label">{{ form.username.label }}</label>
                     <input name="{{ form.username.html_name }}" type="text" class="form-control" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}" placeholder="{{ form.username.label }}">
                     {% if form.username.errors %}<span class="help-block">{{ form.username.errors.as_text }}</span>{% endif %}
-                </div>
-
-                <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-                    <label for="id_{{ form.email.html_name }}" class="control-label">{{ form.email.label }}</label>
-                    <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}">
-                    {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                 </div>
 
                 <div class="form-group{% if form.password1.errors %} has-error{% endif %}">
@@ -52,20 +72,23 @@
                     {% if form.password2.errors %}<span class="help-block">{{ form.password2.errors.as_text }}</span>{% endif %}
                 </div>
 
-                <div class="form-group{% if form.gender.errors %} has-error{% endif %}">
+                <div class="form-group {% if form.gender.errors %} has-error{% endif %}">
                     <label class="control-label">{{ form.gender.label }}</label>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M">
-                            {% trans "Man" %}
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W" checked>
-                            {% trans "Woman" %}
-                        </label>
-                    </div>
+                
+                        <div class="radio">
+                            
+                                <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M">
+                                {% trans "Man" %}
+                        
+                        </div>
+
+                        <div class="radio">
+                   
+                                <input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W" checked>
+                                {% trans "Woman" %}
+             
+                        </div>
+                  
                     {% if form.gender.errors %}<span class="help-block">{{ form.gender.errors.as_text }}</span>{% endif %}
                 </div>
 

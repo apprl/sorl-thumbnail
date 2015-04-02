@@ -875,7 +875,7 @@ LOGGING = {
             'propagate': True,
             'handlers': ['app_core','sentry'],
         },
-        'requests': {
+        'reqeusts': {
             'level': 'DEBUG',
             'propagate': False,
             'handlers': ['app_core'],
@@ -929,5 +929,3 @@ LOGGING = {
 }
 
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
-
-

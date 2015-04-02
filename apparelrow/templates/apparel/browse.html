@@ -27,7 +27,6 @@
             <ul class="shop-view list-inline">
                 <li><h2><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></h2></li>
                 <li><h2><a href="?view=latest&sort=lat" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest in" %}</a></h2></li>
-                <!--<li><h2><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></h2></li>-->
                 <li><h2><a href="?view=brands" data-view="brands"{% if request.GET.view == 'brands' %} class="selected"{% endif %}>{% trans "My brands" %}</a></h2></li>
             </ul>
         </div>

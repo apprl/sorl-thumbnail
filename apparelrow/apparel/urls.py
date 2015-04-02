@@ -11,7 +11,8 @@ from apparelrow.apparel.views import BrandRedirectView
 
 urlpatterns = patterns('',
     # Index
-    url(r'^$', 'apparelrow.apparel.views.index', {'gender': 'A'}, name='index'),
+    url(r'^$', 'apparelrow.apparel.views.index', {'gender': 'none'}, name='index'),
+    url(r'^all/$', 'apparelrow.apparel.views.index', {'gender': 'A'}, name='index-all'),
     url(r'^men/$', 'apparelrow.apparel.views.index', {'gender': 'M'}, name='index-men'),
     url(r'^women/$', 'apparelrow.apparel.views.index', {'gender': 'W'}, name='index-women'),
     url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),

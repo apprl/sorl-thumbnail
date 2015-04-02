@@ -72,7 +72,7 @@ $(document).ready(function() {
 
         <div class="profile-navigation row">
             <div class="col-lg-12">
-                {% with likes_url=profile.url_likes looks_url=profile.url_looks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
+                {% with likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
                 <ul class="list-inline">
                     <li>
                     {% if profile and profile.is_brand %}
@@ -92,7 +92,24 @@ $(document).ready(function() {
                             {% blocktrans count profile.looks as look_count %}{{look_count}} Look{% plural %}{{look_count}} Looks{% endblocktrans %}
                         </a>
                     </li>
+
+                    {% if profile == request.user %}
+                    <li>
+                        <a{% if request.path == likedlooks_url %} class="selected"{% endif %} href="{{ likedlooks_url }}">
+                            {% blocktrans count profile.look_likes_count as look_count %}{{look_count}} Liked Look{% plural %}{{look_count}} Liked Looks{% endblocktrans %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if profile.is_brand %}
+                    <li>
+                        <a{% if request.path == brandlooks_url %} class="selected"{% endif %} href="{{ brandlooks_url }}">
+                            {% blocktrans count profile.look_likes_count as look_count %}{{look_count}} Look using this Brand{% plural %}{{look_count}} Looks using this Brand{% endblocktrans %}
+                        </a>
+                    </li>
+                    {% endif %}
+
                     {% if profile.shops and request.user.is_authenticated and request.user == profile%}
+
                     <li>
                         <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">
                             {% blocktrans count profile.shops as shop_count %}{{shop_count}} Shop{% plural %}{{shop_count}} Shops{% endblocktrans %}

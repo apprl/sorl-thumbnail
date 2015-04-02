@@ -4,15 +4,21 @@
 {% block extra-title %}{{ profile.display_name }} - {% trans "Looks" %} | {% endblock %}
 
 {% block body-classes %}profile-page profile-looks{% endblock body-classes %}
-{% block content %}
+{% block content %}     
     {% if current_page.object_list %}
         {% include 'apparel/fragments/look_list.html' with is_profile=True %}
     {% else %}
         <div class="empty">
         {% if profile == request.user %}
             <div class="message warning">
+            {% if request.path == profile.url_looks %}
                 <p>{% trans "All looks that you create end up here." %}</p>
-                <a class="btn btn-block btn-positive btn-upper" href="{% url 'look-create' %}">{% trans "+ Create look!" %}</a>
+                <a class="btn btn-success" href="{% url 'look-create' %}">{% trans "Create your first look!" %}</a>
+            {% elif request.path == profile.url_likedlooks %}
+                <p>{% trans "All looks that you like end up here." %}</p>
+                <a class="btn btn-success" href="{% url 'look-list' %}">{% trans "Find looks!" %}</a>
+            {% endif %} 
+               
             </div>
         {% else %}
             <div class="message warning">{% blocktrans with profile.display_name as display_name %}{{ display_name }} has not created any looks yet.{% endblocktrans %}</div>

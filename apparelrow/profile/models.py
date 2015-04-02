@@ -30,6 +30,11 @@ EVENT_CHOICES = (
     ('N', _('No one')),
 )
 
+FB_FRIEND_CHOICES = (
+    ('A', _('Yes')),
+    ('N', _('No')),
+)
+
 def profile_image_path(instance, filename):
     return os.path.join(settings.APPAREL_PROFILE_IMAGE_ROOT, uuid.uuid4().hex)
 
@@ -113,7 +118,7 @@ class User(AbstractUser):
             help_text=_('When someone likes a look that I have created'))
     follow_user = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
             help_text=_('When someone starts to follow me'))
-    facebook_friends = models.CharField(max_length=1, choices=EVENT_CHOICES, default='A',
+    facebook_friends = models.CharField(max_length=1, choices=FB_FRIEND_CHOICES, default='A',
             help_text=_('When a Facebook friend has joined Apprl'))
 
     followers_count = models.IntegerField(default=0, blank=False, null=False)
@@ -170,6 +175,7 @@ class User(AbstractUser):
     def look_likes_count(self):
         return self.look_likes.filter(active=True).count()
 
+
     @cached_property
     def profile_content(self):
         # TODO: better algorithm for finding out content to fill user_medium.html templates with
@@ -194,6 +200,10 @@ class User(AbstractUser):
                 items.append((False, False))
 
         return items
+
+    def get_liked_looks(self):
+        queryset = Look.published_objects.filter(user__is_hidden=False)
+
 
     @cached_property
     def display_name(self):
@@ -286,6 +296,14 @@ class User(AbstractUser):
             return reverse('brand-looks', args=[self.slug])
 
         return reverse('profile-looks', args=[self.slug])
+
+    @cached_property
+    def url_likedlooks(self):
+        return reverse('profile-likedlooks', args=[self.slug])
+
+    @cached_property
+    def url_brandlooks(self):
+        return reverse('profile-brandlooks', args=[self.slug])
 
     @cached_property
     def url_shops(self):

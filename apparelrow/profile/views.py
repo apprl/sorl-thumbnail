@@ -1,5 +1,6 @@
 import uuid
 import urlparse
+import logging
 
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -31,6 +32,8 @@ from apparelrow.profile.decorators import avatar_change
 from apparelrow.apparel.browse import browse_products
 
 PROFILE_PAGE_SIZE = 24
+
+logger = logging.getLogger('apparel.debug')
 
 def get_facebook_friends(request):
     facebook_user = get_facebook_user(request)
@@ -107,12 +110,14 @@ def likes(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def looks(request, profile, form, page=0):
+    logger.info("looks called")
+
     if profile == request.user:
         queryset = profile.look.order_by('-created')
     else:
         queryset = profile.look.filter(published=True).order_by('-created')
 
-    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/look_list.html', {
@@ -132,13 +137,67 @@ def looks(request, profile, form, page=0):
 
 @get_current_user
 @avatar_change
+def likedlooks(request, profile, form, page=0):
+    #logger.info("looks called")
+
+    #retrieve looks for which a like for the current user exists and is active
+    looks = get_model('apparel', 'Look').published_objects.filter(likes__user=profile, likes__active=True)
+
+    paged_result = get_paged_result(looks, 12, request.GET.get('page', '1'))
+
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/look_list.html', {
+                'current_page': paged_result
+            })
+
+    content = {
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
+        }
+    content.update(form)
+    content.update(get_profile_sidebar_info(request, profile))
+
+    return render(request, 'profile/looks.html', content)
+
+
+@get_current_user
+@avatar_change
+def brandlooks(request, profile, form, page=0):
+    logger.info("brand looks called")
+
+    #retrieve looks for which a like for the current user exists and is active
+    looks = get_model('apparel', 'Look').published_objects.filter(components__product__static_brand = profile.name)
+
+    paged_result = get_paged_result(looks, 12, request.GET.get('page', '1'))
+
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/look_list.html', {
+                'current_page': paged_result
+            })
+
+    content = {
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request)
+        }
+    content.update(form)
+    content.update(get_profile_sidebar_info(request, profile))
+
+    return render(request, 'profile/looks.html', content)
+
+
+@get_current_user
+@avatar_change
 def shops(request, profile, form, page=0):
     if profile == request.user:
         queryset = profile.shop.order_by('-modified')
     else:
         return HttpResponse('Unauthorized', status=401)
 
-    paged_result = get_paged_result(queryset, 12, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/shop_list.html', {
@@ -165,7 +224,7 @@ def followers(request, profile, form, page=0):
     queryset = get_user_model().objects.filter(is_hidden=False, following__user_follow=profile, following__active=True) \
                                        .order_by('name', 'first_name', 'username')
 
-    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {
@@ -189,7 +248,7 @@ def following(request, profile, form, page=0):
     queryset = get_user_model().objects.filter(is_hidden=False, followers__user=profile, followers__active=True) \
                                        .order_by('name', 'first_name', 'username')
 
-    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, PROFILE_PAGE_SIZE, request.GET.get('page', '1'))
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/user_list.html', {
@@ -390,7 +449,7 @@ def login_flow_brands(request):
         follow_featured_auto(request)
 
     queryset = get_user_model().objects.filter(is_brand=True).order_by('-followers_count')[:24]
-    paged_result = get_paged_result(queryset, 24, request.GET.get('page'))
+    paged_result = get_paged_result(queryset, 24, request.GET.get('page', '1'))
 
     context = {
         'current_page': paged_result,
