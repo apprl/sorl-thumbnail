@@ -165,11 +165,11 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
         stats.save()
 
     activate(current_language)
+
 def retrieve_full_url(path):
     """ append current hostname to front of URL
     """
-    return settings.STATIC_URL + path
-
+    return settings.APPAREL_EMAIL_IMAGE_ROOT + path
 
 #
 # COMMENT LOOK CREATED
