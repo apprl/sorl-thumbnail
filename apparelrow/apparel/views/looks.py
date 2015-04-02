@@ -65,7 +65,7 @@ def embed(request, slug, identifier=None):
     if look.display_with_component == 'C':
         components = look.collage_components.select_related('product')
     elif look.display_with_component == 'P':
-        components = look.photo_components.select_related('product')
+        components = look.photo_components.select_related('product').select_related('link')
         if look.image:
             thumbnail = get_thumbnail(look.image, str(width), upscale=False)
             max_width = min(thumbnail.width, width)
@@ -78,27 +78,27 @@ def embed(request, slug, identifier=None):
                        'sort': 'price asc, popularity desc, created desc'}
     for component in components:
         component.style_embed = component.style_percentage()
-
-        colors_pk = list(map(str, component.product.options.filter(option_type__name='color').values_list('pk', flat=True)))
-        query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
-        query_arguments['fq'].append('gender:(%s OR U)' % (component.product.gender,))
-        query_arguments['fq'].append('category:%s' % (component.product.category_id))
-        if colors_pk:
-            query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
-        search = ApparelSearch('*:*', **query_arguments)
-        docs = search.get_docs()
-        if docs:
-            shop_reverse = 'shop-men' if component.product.gender == 'M' else 'shop-women'
-            shop_url = '%s?aid=%s&alink=Ext-Look&category=%s' % (reverse(shop_reverse), look.user.pk, component.product.category_id)
+        if component.product:
+            colors_pk = list(map(str, component.product.options.filter(option_type__name='color').values_list('pk', flat=True)))
+            query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
+            query_arguments['fq'].append('gender:(%s OR U)' % (component.product.gender,))
+            query_arguments['fq'].append('category:%s' % (component.product.category_id))
             if colors_pk:
-                shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+                query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+            search = ApparelSearch('*:*', **query_arguments)
+            docs = search.get_docs()
+            if docs:
+                shop_reverse = 'shop-men' if component.product.gender == 'M' else 'shop-women'
+                shop_url = '%s?aid=%s&alink=Ext-Look&category=%s' % (reverse(shop_reverse), look.user.pk, component.product.category_id)
+                if colors_pk:
+                    shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
 
-            price, currency = docs[0].price.split(',')
-            rate = currency_exchange(language_currency, currency)
-            price = rate * decimal.Decimal(price)
-            price = price.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
+                price, currency = docs[0].price.split(',')
+                rate = currency_exchange(language_currency, currency)
+                price = rate * decimal.Decimal(price)
+                price = price.quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
 
-            component.alternative = (shop_url, price, language_currency)
+                component.alternative = (shop_url, price, language_currency)
 
     translation.activate(language)
     response = render(request, 'apparel/look_embed.html', {'object': look,
@@ -291,8 +291,7 @@ def look_instance_to_dict(look):
     if look.components:
         look_dict['components'] = []
         for component in look.components.all():
-            manufacturer_name = component.product.manufacturer.name if component.product.manufacturer else None
-            look_dict['components'].append({
+            component_dict = {
                 'id': component.id,
                 'component_of': component.component_of,
                 'left': component.left,
@@ -303,8 +302,11 @@ def look_instance_to_dict(look):
                 'rotation': component.rotation,
                 'flipped': component.flipped,
                 'rel_left': float(component.left + (component.width/2 if look.component == 'P' else 0))/look.width,
-                'rel_top': float(component.top + (component.height/2 if look.component == 'P' else 0))/look.height,
-                'product': {
+                'rel_top': float(component.top + (component.height/2 if look.component == 'P' else 0))/look.height
+            }
+            if component.product:
+                manufacturer_name = component.product.manufacturer.name if component.product.manufacturer else None
+                component_dict['product'] = {
                     'id': component.product.id,
                     'slug': component.product.slug,
                     'image_small': get_thumbnail(component.product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
@@ -312,7 +314,16 @@ def look_instance_to_dict(look):
                     'product_name': component.product.product_name,
                     'brand_name': manufacturer_name
                 }
-            })
+                component_dict['link'] = None
+            else:
+                component_dict['product'] = None
+                component_dict['link'] = {
+                    'id': component.link.id,
+                    'title': component.link.title,
+                    'url': component.link.url
+                }
+
+            look_dict['components'].append(component_dict)
 
     if look.image:
         look_dict['image'] = look.image.url
@@ -400,17 +411,35 @@ class LookView(View):
 
             # Add new components and update old
             LookComponent = get_model('apparel', 'LookComponent')
+            ComponentLink = get_model('apparel', 'ComponentLink')
             for component in json_data['components']:
                 component_id = None
                 if 'id' in component:
                     component_id = component['id']
                     del component['id']
-                product_id = component['product']['id']
-                del component['product']
+                if 'product' in component and component['product']:
+                    product_id = component['product']['id']
+                    del component['product']
+                else:
+                    product_id = None
+                if 'link' in component:
+                    if component['link']:
+                        if 'id' in component['link']:
+                            link_id = component['link']['id']
+                        else:
+                            component_link = ComponentLink(title=component['link']['title'], url=component['link']['url'])
+                            component_link.save()
+                            link_id = component_link.pk
+                    else:
+                        link_id = None
+                    del component['link']
+                else:
+                    link_id = None
 
                 look_component, created = LookComponent.objects.get_or_create(id=component_id,
                                                                               look_id=pk,
-                                                                              product_id=product_id)
+                                                                              product_id=product_id,
+                                                                              link_id=link_id)
 
                 if 'component_of' not in component or not component['component_of']:
                     component['component_of'] = json_data['component']
@@ -503,11 +532,26 @@ class LookView(View):
 
         look = get_model('apparel', 'Look')(**json_data)
         look.save()
-
+        ComponentLink = get_model('apparel', 'ComponentLink')
         for component in components:
-            component['product_id'] = component['product']['id']
-            del component['product']
-
+            if 'product' in component:
+                component['product_id'] = component['product']['id']
+                del component['product']
+            else:
+                component['product_id'] = None
+            if 'link' in component:
+                if component['link']:
+                    if 'id' in component['link']:
+                        component['link_id'] = component['link']['id']
+                    else:
+                        component_link = ComponentLink(title=component['link']['title'], url=component['link']['url'])
+                        component_link.save()
+                        component['link_id'] = component_link.pk
+                else:
+                    component['link'] = None
+                del component['link']
+            else:
+                component['link_id'] = None
             if 'component_of' not in component:
                 component['component_of'] = look.component
 

@@ -8,7 +8,8 @@ window.App.Models.LookComponent = Backbone.Model.extend({
         width: null,
         height: null,
         z_index: null,
-        rotation: null
+        rotation: null,
+        flipped: false
     }
 
 });

@@ -15,6 +15,10 @@ App.Views.LookComponentPhoto = App.Views.LookComponent.extend({
             App.Events.trigger('widget:product:info', new App.Models.Product(this.model.get('product')));
 
             return false;
+        } else if(this.model.has('link') && !$(e.target).is('.delete') && !this.$el.is('.ui-draggable-dragging')) {
+            App.Events.trigger('look_edit:link_info', this.model.get('link'));
+
+            return false;
         }
     },
 

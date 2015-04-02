@@ -3,6 +3,8 @@ App.Views.LookEditPopup = Backbone.View.extend({
     id: 'popup-slim',
     template: _.template($('#look_edit_add_popup_template').html()),
     popup_template: _.template($('#popup_slim_template').html()),
+    link_template: _.template($('#look_edit_add_link_popup_template').html()),
+    link_info_template: _.template($('#look_edit_link_info_popup_template').html()),
 
     events: {
         'click .close': 'hide',
@@ -14,6 +16,9 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
         App.Events.on('widget:product:info', this.product_info, this);
         App.Events.on('widget:product:add', this.product_add, this);
+
+        App.Events.on('look_edit:add_link', this.link_add, this);
+        App.Events.on('look_edit:link_info', this.link_info, this);
 
         $(document).on('keydown', _.bind(function(e) { if(e.keyCode == 27) { this.hide() } }, this));
 
@@ -28,6 +33,12 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this.render_info();
     },
 
+    link_info: function(model) {
+        this.active_type = 'info';
+        this.show(model);
+        this.render_link_info();
+    },
+
     product_add: function(model) {
         // Do not show add product popup if we have a pending component waiting
         // for this click or if the look type is collage
@@ -38,6 +49,15 @@ App.Views.LookEditPopup = Backbone.View.extend({
             $('.look-container').css('cursor', 'pointer');
         } else if(external_look_type == 'collage') {
             this.hide();
+        }
+    },
+
+    link_add: function(model) {
+        if(!this.parent_view.pending_link && external_look_type == 'photo' && (!isMobileDevice() || $(window).width() >= 992)) {
+            this.active_type = 'add';
+            this.show(model);
+            this.render_add_link();
+            $('.look-container').css('cursor', 'pointer');
         }
     },
 
@@ -74,6 +94,14 @@ App.Views.LookEditPopup = Backbone.View.extend({
         return false;
     },
 
+    render_link_info: function() {
+        this.$el.find('.title').text($('#look_edit_link_info_popup_template').data('title'));
+        this.$el.find('.content').html(this.link_info_template(this.model));
+        this.$el.css('width', 'auto');
+        this.$el.removeClass('adjust-right');
+        this.$el.show();
+    },
+
     render_info: function() {
         App.Events.trigger('product:disable');
 
@@ -102,6 +130,18 @@ App.Views.LookEditPopup = Backbone.View.extend({
 
         this.$el.find('.title').text($('#look_edit_add_popup_template').data('title'));
         this.$el.find('.content').html(this.template(this.model.toJSON()));
+        this.$el.css('width', 'auto');
+        this.$el.addClass('adjust-right');
+        this.$el.show();
+    },
+
+    render_add_link: function() {
+        App.Events.trigger('product:disable');
+
+        this.delegateEvents();
+
+        this.$el.find('.title').text($('#look_edit_add_link_popup_template').data('title'));
+        this.$el.find('.content').html(this.link_template(this.model.toJSON()));
         this.$el.css('width', 'auto');
         this.$el.addClass('adjust-right');
         this.$el.show();

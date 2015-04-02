@@ -13,23 +13,38 @@ App.Views.LookEditFilterTabs = Backbone.View.extend({
         }
     },
 
+    add_tab: function(parent, id, title, icon, view) {
+        this.$el.append('<li><a class="tab-'+id+'" href="#"><i class="glyphicon glyphicon-'+icon+'"></i> <span>'+title+'</span></a></li>');
+        view.render().$el.appendTo(parent.$el).hide();
+    },
+
     filter: function(e) {
         var $target = $(e.currentTarget);
         if (!$target.hasClass('active')) {
-            var user = $target.data('user');
-            if ($target.hasClass('tab-likes') && user) {
-                this.model.set('user_id', user);
-            } else if ($target.hasClass('tab-likes') && !isAuthenticated) {
-                App.Events.trigger('product_list:unauthenticated', true);
-            } else {
-                App.Events.trigger('product_list:unauthenticated', false);
-                this.model.unset('user_id');
+            $target.parent().siblings().removeClass('active');
+            $target.parent().addClass('active');
+            $('.product-chooser-wrapper').hide();
+        }
+        if ($target.hasClass('tab-likes') || $target.hasClass('tab-all')) {
+            if (!$target.hasClass('active')) {
+                var user = $target.data('user');
+                if ($target.hasClass('tab-likes') && user) {
+                    this.model.set('user_id', user);
+                } else if ($target.hasClass('tab-likes') && !isAuthenticated) {
+                    App.Events.trigger('product_list:unauthenticated', true);
+                } else {
+                    App.Events.trigger('product_list:unauthenticated', false);
+                    this.model.unset('user_id');
+                }
             }
 
-            $target.parent().siblings().removeClass('active');
-            //$target.parent().siblings().find('a').removeClass('selected');
-            $target.parent().addClass('active');
+            $('#product-wrapper').show();
+        } else {
+
+            $('#'+$target[0].className.substr(4)+'-wrapper').show();
         }
+
+
         e.preventDefault();
     }
 
