@@ -478,6 +478,9 @@ class NotificationCache(models.Model):
         return '%s' % (self.key,)
 
 class NotificationEvent(models.Model):
+    """
+    Create an event whenever something relevant happens, to later display for user or build summaries
+    """
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='notification_events')
     actor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='performed_events', blank=True, null=True)
     look = models.ForeignKey('apparel.Look', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)

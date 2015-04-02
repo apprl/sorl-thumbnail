@@ -113,16 +113,13 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     activate(current_language)
 
-def notifiy_with_mandrill_teplate(users, notification_name, notification_subject, sender, merge_vars, extra_context=None):
-
+def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
     """
     New version of mail notifications using Mandrill templates (manually added to account beforehand) instead of local html templates
 
     Sends an email to all users for the specified notification
     Variable users is a list of django auth user instances.
     """
-    if extra_context is None:
-        extra_context = {}
     if sender and sender.is_hidden:
         return
     emails = []
@@ -167,12 +164,11 @@ def notifiy_with_mandrill_teplate(users, notification_name, notification_subject
         stats.save()
 
     activate(current_language)
+
 def retrieve_full_url(path):
     """ append current hostname to front of URL
     """
-    domain = Site.objects.get_current().domain
-    return 'http://%s%s' % (domain, path)
-
+    return settings.APPAREL_EMAIL_IMAGE_ROOT + path
 
 #
 # COMMENT LOOK CREATED
@@ -450,7 +446,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
                                                                                 email_sent=True)
         event.email_sent = True #we are sending the email right away
         event.save()
-        notifiy_with_mandrill_teplate([notify_user], "newFollower", "You have a new follower on Apprl!", sender, merge_vars)
+        notify_with_mandrill_template([notify_user], "newFollower", sender, merge_vars)
         return get_key('follow_user', recipient, sender, None)
 
     if not notify_user and sender:
@@ -492,7 +488,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
                                                                                 email_sent=True)
             event.email_sent = True #we are sending the email right away
             event.save()
-            notifiy_with_mandrill_teplate([recipient], "fbFriend", "new FB friend on Apprl", sender, merge_vars)
+            notify_with_mandrill_template([recipient], "fbFriend", sender, merge_vars)
 
 #
 # SALE ALERT
@@ -548,7 +544,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
             event.email_sent = True #we are sending the email right away
             event.save()
-            notifiy_with_mandrill_teplate([likes.user], "itemSale", "A product you like has dropped in price!", sender, merge_vars)
+            notify_with_mandrill_template([likes.user], "itemSale", sender, merge_vars)
 
 def create_summary(user, period):
     if period == 'D':
@@ -611,4 +607,4 @@ def create_summary(user, period):
     merge_vars['PERIOD'] = period_name
     merge_vars['PROFILEURL'] = retrieve_full_url(user.get_absolute_url())
 
-    notifiy_with_mandrill_teplate([user], "SummaryMail", "new FB friend on Apprl", None, merge_vars)
+    notify_with_mandrill_template([user], "SummaryMail", None, merge_vars)
