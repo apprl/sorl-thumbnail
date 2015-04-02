@@ -37,7 +37,9 @@ def look_like_products(request, look_id):
     look = get_model('apparel', 'Look').objects.get(pk=look_id)
 
     for component in look.display_components.select_related('product'):
-        _product_like(request, component.product, 'like')
+        # Not autolike text links
+        if not component.link:
+            _product_like(request, component.product, 'like')
 
 
 def embed(request, slug, identifier=None):
