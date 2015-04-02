@@ -170,13 +170,6 @@ class User(AbstractUser):
     def look_likes_count(self):
         return self.look_likes.filter(active=True).count()
 
-    @cached_property
-    def notifications(self):
-        self.notification_events
-
-    @cached_property
-    def unread_count(self):
-        self.notification_events.count()
 
     @cached_property
     def profile_content(self):
