@@ -14,7 +14,8 @@ from sorl.thumbnail.fields import ImageField
 log = logging.getLogger(__name__)
 
 def dictfetchall(cursor):
-    """Return all rows from a cursor as a dict
+    """
+        Returns all rows from a cursor as a dict
     """
     desc = cursor.description
     return [
@@ -23,7 +24,8 @@ def dictfetchall(cursor):
     ]
 
 def get_referral_user_from_cookie(request):
-    """Return user instance retrieved from the request information
+    """
+    Return user instance retrieved from the request information
     """
     user = None
     user_id = request.get_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, None)
@@ -35,8 +37,10 @@ def get_referral_user_from_cookie(request):
 
     return user
 
+
 def get_cuts_for_user_and_vendor(user_id, vendor):
-    """Return a tuple that contains user instance, commission group cut, referral cut, publisher cut considering if the
+    """
+    Return a tuple that contains user instance, commission group cut, referral cut, publisher cut considering if the
     publisher belongs to a publisher network and pays tribute, given an user id and a vendor
     """
     user = None
@@ -81,8 +85,9 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
     return user, normal_cut, referral_cut, publisher_cut
 
 def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
-    """Return a sorted list with detailed information from click earnings per product
-    for a given user, vendor and day
+    """
+        Returns a sorted list with detailed information from click earnings per product
+        for a given user, vendor and day
     """
     start_date_query = datetime.datetime.combine(date, datetime.time(0, 0, 0, 0))
     end_date_query = datetime.datetime.combine(date, datetime.time(23, 59, 59, 999999))
@@ -129,7 +134,8 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
     return data
 
 def get_product_thumbnail_and_link(product):
-    """Return thumbnail and link for a product
+    """
+        Returns thumbnail and link for a product
     """
     product_image = ''
     if product.product_image:
@@ -143,7 +149,8 @@ def get_product_thumbnail_and_link(product):
     return product_image, product_link
 
 def get_clicks_amount(vendor, start_date_query, end_date_query):
-    """Return total amount in EUR for a Vendor in given date range
+    """
+        Returns total amount in EUR for a Vendor in given date range
     """
     total_amount = 0
     currency = None
@@ -156,13 +163,15 @@ def get_clicks_amount(vendor, start_date_query, end_date_query):
     return total_amount, currency
 
 def get_number_clicks(vendor, start_date_query, end_date_query):
-    """Return total number of clicks for a Vendor in a given date range
+    """
+        Return total number of clicks for a Vendor in a given date range
     """
     return get_model('statistics', 'ProductStat').objects.\
         filter(vendor=vendor, created__range=[start_date_query, end_date_query]).count()
 
 def get_total_clicks_per_vendor(vendor):
-    """Return total number of clicks for a Vendor
+    """
+    Return total number of clicks for a Vendor
     """
     today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
