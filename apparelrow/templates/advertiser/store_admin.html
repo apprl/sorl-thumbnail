@@ -204,20 +204,20 @@
                 </thead>
                 <tbody>
                     {% for key, row in clicks_per_day %}
-                    {% if row.amount > 0 and row.clicks > 0 %}
-                    <tr class="{% cycle 'odd' 'even' %}">
-                        <td class="hidden-xs" data-sort="{{ row.date|date:"U" }}">{{ row.date.date }}</td>
-                        <td>{{ row.clicks }}</td>
-                        <td>{{ row.amount|floatdot }} {{ currency }}</td>
-                        <td>
-                            <a class="btn btn-primary click-detail" data-vendor="{{ vendor }}"
-                               data-date="{{ row.date|date:"U" }}" data-amount="{{ row.amount|floatdot }}"
-                               data-date_display="{{ row.date.date }}" data-clicks="{{ row.clicks }}">
-                               {% trans "See details" %}
-                            </a>
-                        </td>
-                    </tr>
-                    {% endif %}
+                        {% if row.amount > 0 and row.clicks > 0 %}
+                        <tr class="{% cycle 'odd' 'even' %}">
+                            <td class="hidden-xs" data-sort="{{ row.date|date:"U" }}">{{ row.date.date }}</td>
+                            <td>{{ row.clicks }}</td>
+                            <td>{{ row.amount|floatdot }} {{ currency }}</td>
+                            <td>
+                                <a class="btn btn-primary click-detail" data-vendor="{{ vendor }}"
+                                   data-date="{{ row.date|date:"U" }}" data-amount="{{ row.amount|floatdot }}"
+                                   data-date_display="{{ row.date.date }}" data-clicks="{{ row.clicks }}">
+                                   {% trans "See details" %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
                     {% empty %}
                     <tr>
                         <td colspan="6">{% trans "No clicks" %}</td>

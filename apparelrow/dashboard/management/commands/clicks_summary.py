@@ -20,8 +20,6 @@ class Command(BaseCommand):
         ),
     )
 
-    #TODO maybe move this method to utils instead?
-
     def update(self, row):
         instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
 

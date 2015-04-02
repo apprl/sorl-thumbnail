@@ -277,7 +277,7 @@ def store_admin(request, year=None, month=None):
 
 
     end_date_clicks_query = end_date_query
-    if end_date != datetime.date.today():
+    if end_date >= datetime.date.today():
         end_date_clicks_query = datetime.datetime.combine(
             datetime.date.today() - datetime.timedelta(1), datetime.time(23, 59, 59, 999999))
 
@@ -326,7 +326,7 @@ def store_admin(request, year=None, month=None):
     for transaction in transactions:
         data_per_month[transaction.created.date()][0] += 1
 
-    clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_query) \
+    clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_clicks_query) \
                                                            .filter(vendor=store.vendor) \
                                                            .order_by('created')
     for click in clicks:
@@ -338,18 +338,17 @@ def store_admin(request, year=None, month=None):
         try:
             click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=store.vendor)
             for row in clicks:
-                if row.created.date() != datetime.date.today() and row.user_id != 0:
-                    date_key = datetime.datetime.strftime(row.created, "%Y%m%d")
-                    if not date_key in clicks_per_day:
-                        start_date_query = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
-                        end_date_query = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
-                        clicks_per_day[date_key] = {}
-                        clicks_per_day[date_key]['date'] = row.created
-                        clicks_per_day[date_key]['amount'], _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
-                        clicks_per_day[date_key]['clicks'] = 0
-                        product = get_model('apparel', 'Product').objects.get(slug=row.product)
-                        clicks_per_day[date_key]['name'] = product.product_name
-                    clicks_per_day[date_key]['clicks'] += 1
+                date_key = datetime.datetime.strftime(row.created, "%Y%m%d")
+                if not date_key in clicks_per_day:
+                    start_date_query = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
+                    end_date_query = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
+                    clicks_per_day[date_key] = {}
+                    clicks_per_day[date_key]['date'] = row.created
+                    clicks_per_day[date_key]['amount'], _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
+                    clicks_per_day[date_key]['clicks'] = 0
+                    product = get_model('apparel', 'Product').objects.get(slug=row.product)
+                    clicks_per_day[date_key]['name'] = product.product_name
+                clicks_per_day[date_key]['clicks'] += 1
 
             # Sort clicks per day
             clicks_per_day = sorted(clicks_per_day.items(), key=operator.itemgetter(0), reverse=True)
