@@ -3,10 +3,12 @@ import calendar
 import decimal
 import operator
 import re
+import json
 
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, Http404
+from django.db import connection
 from django.db.models import get_model, Sum, Count
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
@@ -17,13 +19,17 @@ from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.template.loader import render_to_string
 
+
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
 from apparelrow.dashboard.tasks import send_email_task
-from apparelrow.dashboard.utils import get_referral_user_from_cookie, get_cuts_for_user_and_vendor
+from apparelrow.dashboard.utils import get_referral_user_from_cookie, get_cuts_for_user_and_vendor, get_clicks_list, get_product_thumbnail_and_link
+from apparelrow.apparel.utils import currency_exchange
 from apparelrow.profile.tasks import mail_managers_task
+from django.views.decorators.cache import cache_page
+
 
 import logging
 log = logging.getLogger(__name__)
@@ -53,12 +59,17 @@ def map_placement(placement):
 
     return link
 
-def get_available_stores(current_location):
+def get_conversion_rate(sales, clicks):
+    """ Return conversion rate on string format given the amount of sale and amount of clicks
     """
-    Returns a list of the available stores based on the current location
-    :param current_location: Current location for the site
-    :return:
-        List of vendors
+    conversion_rate = 0
+    if clicks > 0:
+            conversion_rate = decimal.Decimal(sales) / decimal.Decimal(clicks)
+            conversion_rate = conversion_rate.quantize(decimal.Decimal('0.0001')) * 100
+    return ("%.2f %%" % conversion_rate)
+
+def get_available_stores(current_location):
+    """ Return a list of vendors depending on the current location value
     """
     vendors = []
     for store in get_model('dashboard', 'StoreCommission').objects.all():
@@ -88,16 +99,7 @@ def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
         """.format(user_criteria), values)
     most_clicked_products = []
     for product in product_table:
-        product_image = ''
-        if product.product_image:
-            try:
-                product_image = get_thumbnail(ImageField().to_python(product.product_image), '50', crop='noop').url
-            except:
-                pass
-
-        product_link = None
-        if product.slug:
-            product_link = reverse('product-detail', args=[product.slug])
+        product_image, product_link = get_product_thumbnail_and_link(product)
 
         most_clicked_products.append({
             'product_image': product_image,
@@ -122,7 +124,6 @@ def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
     top_publishers = []
     temp_product_prod = []
     most_sold = {}
-
     for publisher in publishers:
         user_criteria = ''
         values = [start_date, end_date, Sale.PENDING, Sale.CONFIRMED, start_date, end_date]
@@ -147,7 +148,7 @@ def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
                 WHERE
                     {0}
                     ds.status BETWEEN %s AND %s AND
-                    ds.created BETWEEN %s AND %s
+                    ds.sale_date BETWEEN %s AND %s
                 GROUP BY ds.id, ap.product_name, ap.product_image, ap.slug, ab.name, pu.name, pu.image
                 ORDER BY ds.created DESC
             """.format(user_criteria), values)
@@ -162,32 +163,33 @@ def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
             pass
 
         for sale in sale_table:
-            product_link = None
             if not sale.is_promo:
-                if sale.slug:
-                    product_link = reverse('product-detail', args=[sale.slug])
-                product_image = ''
-                if sale.product_image:
-                    try:
-                        product_image = get_thumbnail(ImageField().to_python(sale.product_image), '50', crop='noop').url
-                    except:
-                        pass
-
+                product_image, product_link = get_product_thumbnail_and_link(sale)
                 network_earnings = 0
+                network_click_earnings = 0
                 publisher_earnings = 0
+                publisher_click_earnings = 0
                 total_earnings = 0
                 earnings = None
                 converted_amount = 0
                 try:
-                    earnings = get_model('dashboard', 'UserEarning').objects.get(user=owner_user, sale=sale,
-                                                                                 user_earning_type="publisher_network_tribute")
-                    network_earnings = earnings.amount
-                    earnings = get_model('dashboard', 'UserEarning').objects.get(user=publisher, sale=sale,
-                                                                                 user_earning_type="publisher_sale_commission")
-                    publisher_earnings = earnings.amount
+                    # Owner earnings
                     earnings = get_model('dashboard', 'UserEarning').objects.get(user=owner_user, sale=sale)
                     total_earnings = earnings.amount
                     converted_amount = sale.converted_amount
+
+                    if earnings.user_earning_type == 'publisher_network_tribute':
+                        network_earnings = earnings.amount
+                    elif earnings.user_earning_type == 'publisher_network_click_tribute':
+                        network_click_earnings = earnings.amount
+
+                    # Publisher earnings
+                    earnings = get_model('dashboard', 'UserEarning').objects.get(user=publisher, sale=sale)
+                    if earnings.user_earning_type == 'publisher_sale_commission':
+                        publisher_earnings = earnings.amount
+                    if earnings.user_earning_type == 'publisher_sale_click_commission':
+                        publisher_click_earnings = earnings.amount
+
                 except get_model('dashboard', 'UserEarning').DoesNotExist:
                     pass
                 temp = {
@@ -196,14 +198,16 @@ def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
                     'clicks': sale.clicks,
                     'sales': 0,
                     'publisher_earnings': publisher_earnings,
-                    'network_earnings': network_earnings,
+                    'network_earnings': network_earnings + network_click_earnings,
+                    'publisher_click_earnings': publisher_click_earnings,
                     'product': '%s %s' % (sale.brand_name, sale.product_name) if sale.product_name else _('Unknown'),
                     'user': sale.name if sale.name else '%s' % (publisher.username),
                     'product_image': product_image,
                     'product_link': product_link,
                     'publisher_image': publisher_image,
                     'publisher_link': reverse('profile-likes', args=[publisher.username]),
-                    'total_earnings': total_earnings
+                    'total_earnings': total_earnings,
+                    'total_network_earnings': publisher_earnings + publisher_click_earnings
                 }
                 if user_dict:
                     if earnings:
@@ -211,6 +215,8 @@ def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
                     user_dict['converted_amount'] += temp['converted_amount']
                     user_dict['network_earnings'] += temp['network_earnings']
                     user_dict['publisher_earnings'] += temp['publisher_earnings']
+                    user_dict['publisher_click_earnings'] += temp['publisher_click_earnings']
+                    user_dict['total_network_earnings'] += temp['total_network_earnings']
                     if temp['product']:
                         if not temp['product'] in temp_products:
                             user_dict['clicks'] += temp['clicks']
@@ -230,9 +236,11 @@ def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
                             most_sold[temp['product']]['sales'] += 1
                         most_sold[temp['product']]['converted_amount'] += temp['converted_amount']
                         most_sold[temp['product']]['publisher_earnings'] += temp['publisher_earnings']
+                        most_sold[temp['product']]['publisher_click_earnings'] += temp['publisher_click_earnings']
                         most_sold[temp['product']]['network_earnings'] += temp['network_earnings']
 
                         most_sold[temp['product']]['total_earnings'] += temp['total_earnings']
+                        most_sold[temp['product']]['total_network_earnings'] += temp['total_network_earnings']
                         if temp['product']:
                             if not temp['product'] in temp_product_prod:
                                 most_sold[temp['product']]['clicks'] += temp['clicks']
@@ -249,18 +257,20 @@ def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
             top_publishers.append(user_dict)
         elif not user_dict and see_all:
             temp = {
-                'converted_amount': 0.00,
+                'converted_amount': decimal.Decimal(0.00),
                 'currency': 'EUR',
                 'clicks': 0,
                 'sales': 0,
-                'publisher_earnings': 0.00,
-                'network_earnings': 0.00,
+                'publisher_earnings': decimal.Decimal(0.00),
+                'total_network_earnings': decimal.Decimal(0.00),
+                'publisher_click_earnings': decimal.Decimal(0.00),
+                'network_earnings': decimal.Decimal(0.00),
                 'user': publisher.name if publisher.name else '%s' % (publisher.username),
                 'publisher_image': publisher_image,
                 'publisher_link': reverse('profile-likes', args=[publisher.username]),
             }
             top_publishers.append(temp)
-    sorted_top_publishers = sorted(top_publishers, key=operator.itemgetter('network_earnings'), reverse=True)[:limit]
+    sorted_top_publishers = sorted(top_publishers, key=operator.itemgetter('total_network_earnings'), reverse=True)[:limit]
     most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: (x['sales'], x['total_earnings']), reverse=True)[:limit] if x['sales'] > 0]
     return sorted_top_publishers, most_sold_products
 
@@ -269,94 +279,120 @@ def get_publishers_admin(start_date, end_date, limit=5, see_all=True):
     most_sold = {}
     temp_product_prod = []
     temp_users = []
-    sales = get_model('dashboard','Sale').objects.filter(created__range=(start_date, end_date))
+    sales = get_model('dashboard','Sale').objects.filter(sale_date__range=(start_date, end_date))
     for sale in sales:
         try:
-            product = get_model('apparel','Product').objects.get(id=sale.product_id)
+            product = get_model('apparel', 'Product').objects.get(id=sale.product_id)
             product_link = None
-            if not sale.is_promo:
-                if product.slug:
-                    product_link = reverse('product-detail', args=[product.slug])
-                product_image = ''
-                if product.product_image:
+        except get_model('apparel', 'Product').DoesNotExist:
+            product = None
+
+        if not sale.is_promo:
+            product_name = ''
+            product_image = ''
+            product_link = ''
+
+            if product:
+                product_name = '%s %s' % (product.static_brand, product.product_name) if product.product_name else _('Unknown')
+                product_image, product_link = get_product_thumbnail_and_link(product)
+
+            temp = {
+                'converted_amount': sale.converted_amount,
+                'currency': sale.currency,
+                'sales': 0,
+                'total_earnings': sale.converted_commission,
+                'publisher_earnings': decimal.Decimal(0.00),
+                'publisher_click_earnings': decimal.Decimal(0.00),
+                'network_earnings': decimal.Decimal(0.00),
+                'total_network_earnings': decimal.Decimal(0.00),
+                'product': product_name,
+                'user': '',
+                'product_image': product_image,
+                'product_link': product_link,
+                'publisher_image': '',
+                'publisher_link': '',
+                'clicks': 0
+            }
+
+            earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=sale)
+            for earning in earnings:
+
+                if earning.user_earning_type != "apprl_commission" and earning.user:
+                    earning_user = earning.user
+                    publisher_earnings = 0
+                    publisher_click_earnings = 0
+                    network_earnings = 0
+                    network_click_earnings = 0
+                    if earning.user_earning_type == 'publisher_network_tribute':
+                        network_earnings = earning.amount
+                    elif earning.user_earning_type == 'publisher_network_click_tribute':
+                        network_click_earnings = earning.amount
+                    elif earning.user_earning_type == 'publisher_sale_commission':
+                        publisher_earnings = earning.amount
+                    elif earning.user_earning_type == 'publisher_sale_click_commission':
+                        publisher_click_earnings = earning.amount
+
+                    publisher_image = ''
                     try:
-                        product_image = get_thumbnail(ImageField().to_python(product.product_image), '50', crop='noop').url
+                        publisher_image = get_thumbnail(ImageField().to_python(earning_user.image), '50', crop='noop').url
                     except:
                         pass
-                temp = {
-                    'converted_amount': sale.converted_amount,
-                    'currency': sale.currency,
-                    'sales': 0,
-                    'total_earnings': sale.converted_commission,
-                    'publisher_earnings': 0,
-                    'product': '%s %s' % (product.static_brand, product.product_name) if product.product_name else _('Unknown'),
-                    'user': '',
-                    'product_image': product_image,
-                    'product_link': product_link,
-                    'publisher_image': '',
-                    'publisher_link': '',
-                    'clicks': 0
-                }
+                    temp['publisher_earnings'] = publisher_earnings
+                    temp['publisher_click_earnings'] = publisher_click_earnings
+                    temp['network_earnings'] = network_earnings + network_click_earnings
+                    temp['publisher_image'] = publisher_image
+                    temp['publisher_link'] = reverse('profile-likes', args=[earning_user.username])
+                    temp['clicks'] = 0
+                    temp['total_network_earnings'] = temp['publisher_earnings'] + temp['publisher_click_earnings']
+                    temp['user'] = earning_user.name if earning_user.name else '%s' % (earning_user.username)
 
-                earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=sale)
-                for earning in earnings:
-                    if earning.user_earning_type != "apprl_commission" and earning.user:
-                        publisher_earnings = earning.amount
-                        earning_user = earning.user
-
-                        publisher_image = ''
-                        try:
-                            publisher_image = get_thumbnail(ImageField().to_python(earning_user.image), '50', crop='noop').url
-                        except:
-                            pass
-                        temp['publisher_earnings'] = publisher_earnings
-                        temp['publisher_image'] = publisher_image
-                        temp['publisher_link'] = reverse('profile-likes', args=[earning_user.username])
-                        temp['clicks'] = 0
-                        temp['user'] = earning_user.name if earning_user.name else '%s' % (earning_user.username)
-
-                        # save publisher data
-                        if temp['user'] in top_publishers:
-                            if earning.user_earning_type == "publisher_sale_commission":
-                                top_publishers[temp['user']]['sales'] += 1
-                            top_publishers[temp['user']]['converted_amount'] += temp['converted_amount']
-                            top_publishers[temp['user']]['publisher_earnings'] += temp['publisher_earnings']
-                            if not temp['user'] in temp_users and earning.user_earning_type == "publisher_sale_commission":
-                                temp_users.append(temp['user'])
-                        else:
+                    # save publisher data
+                    if temp['user'] in top_publishers:
+                        if earning.user_earning_type == "publisher_sale_commission":
+                            top_publishers[temp['user']]['sales'] += 1
+                        top_publishers[temp['user']]['converted_amount'] += temp['converted_amount']
+                        top_publishers[temp['user']]['publisher_earnings'] += temp['publisher_earnings']
+                        top_publishers[temp['user']]['publisher_click_earnings'] += temp['publisher_click_earnings']
+                        top_publishers[temp['user']]['network_earnings'] += temp['network_earnings']
+                        top_publishers[temp['user']]['total_network_earnings'] += temp['total_network_earnings']
+                        if not temp['user'] in temp_users and earning.user_earning_type == "publisher_sale_commission":
                             temp_users.append(temp['user'])
-                            top_publishers[temp['user']] = dict(temp)
-                            publisher_clicks = get_model('statistics', 'ProductStat').objects.\
-                            filter(user_id=earning_user.id, created__range=(start_date, end_date)).aggregate(total=Count('user_id'))['total']
-                            top_publishers[temp['user']]['clicks'] = publisher_clicks
-                            if earning.user_earning_type == "publisher_sale_commission":
-                                top_publishers[temp['user']]['sales'] = 1
-                            else:
-                                top_publishers[temp['user']]['sales'] = 0
-
-                # if product, save product information
-                if product.product_name:
-                    if temp['product'] in most_sold:
-                        if earnings:
-                            most_sold[temp['product']]['sales'] += 1
-                            most_sold[temp['product']]['converted_amount'] += temp['converted_amount']
-                            most_sold[temp['product']]['publisher_earnings'] += temp['publisher_earnings']
-                            most_sold[temp['product']]['total_earnings'] += temp['total_earnings']
-                            if not temp['product'] in temp_product_prod:
-                                temp_product_prod.append(temp['product'])
                     else:
-                        most_sold[temp['product']] = dict(temp)
-                        product_clicks = get_model('statistics', 'ProductStat').objects.\
-                            filter(product=product.slug, created__range=(start_date, end_date)).aggregate(total=Count('product'))['total']
-                        most_sold[temp['product']]['clicks'] = product_clicks
-                        if earnings:
-                            most_sold[temp['product']]['sales'] = 1
+                        temp_users.append(temp['user'])
+                        top_publishers[temp['user']] = dict(temp)
+                        publisher_clicks = get_model('statistics', 'ProductStat').objects.\
+                        filter(user_id=earning_user.id, created__range=(start_date, end_date)).aggregate(total=Count('user_id'))['total']
+                        top_publishers[temp['user']]['clicks'] = publisher_clicks
+                        if earning.user_earning_type == "publisher_sale_commission":
+                            top_publishers[temp['user']]['sales'] = 1
                         else:
-                            most_sold[temp['product']]['sales'] = 0
-                        if most_sold[temp['product']]['clicks'] > 0:
+                            top_publishers[temp['user']]['sales'] = 0
+
+            # if product, save product information
+            if product and product.product_name:
+                if temp['product'] in most_sold:
+                    if earnings:
+                        most_sold[temp['product']]['sales'] += 1
+                        most_sold[temp['product']]['converted_amount'] += temp['converted_amount']
+                        most_sold[temp['product']]['publisher_earnings'] += temp['publisher_earnings']
+                        most_sold[temp['product']]['publisher_click_earnings'] += temp['publisher_click_earnings']
+                        most_sold[temp['product']]['network_earnings'] += temp['network_earnings']
+                        most_sold[temp['product']]['total_earnings'] += temp['total_earnings']
+                        most_sold[temp['product']]['total_network_earnings'] += temp['total_network_earnings']
+                        if not temp['product'] in temp_product_prod:
                             temp_product_prod.append(temp['product'])
-        except get_model('apparel', 'Product').DoesNotExist:
-            pass
+                else:
+                    most_sold[temp['product']] = dict(temp)
+                    product_clicks = get_model('statistics', 'ProductStat').objects.\
+                        filter(product=product.slug, created__range=(start_date, end_date)).aggregate(total=Count('product'))['total']
+                    most_sold[temp['product']]['clicks'] = product_clicks
+                    if earnings:
+                        most_sold[temp['product']]['sales'] = 1
+                    else:
+                        most_sold[temp['product']]['sales'] = 0
+                    if most_sold[temp['product']]['clicks'] > 0:
+                        temp_product_prod.append(temp['product'])
+
 
     all_users = get_user_model().objects.filter(is_partner=True)
     for user in all_users:
@@ -368,19 +404,21 @@ def get_publishers_admin(start_date, end_date, limit=5, see_all=True):
             except:
                 pass
             temp = {
-                'converted_amount': 0.00,
+                'converted_amount': decimal.Decimal(0.00),
                 'currency': 'EUR',
                 'clicks': 0,
                 'sales': 0,
-                'publisher_earnings': 0.00,
-                'network_earnings': 0.00,
+                'publisher_earnings': decimal.Decimal(0.00),
+                'publisher_click_earnings': decimal.Decimal(0.00),
+                'network_earnings': decimal.Decimal(0.00),
                 'user': user_name,
                 'publisher_image': publisher_image,
                 'publisher_link': reverse('profile-likes', args=[user.username]),
-                'total_earnings': 0.00
+                'total_earnings': decimal.Decimal(0.00),
+                'total_network_earnings': decimal.Decimal(0.00),
             }
             top_publishers[temp['user']] = dict(temp)
-    sorted_top_publishers = [x for x in sorted(top_publishers.values(), key=lambda x: (x['publisher_earnings'], x['sales']), reverse=True)[:limit]]
+    sorted_top_publishers = [x for x in sorted(top_publishers.values(), key=lambda x: (x['total_network_earnings'], x['network_earnings']), reverse=True)[:limit]]
     most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: (x['sales'], x['publisher_earnings']), reverse=True)[:limit] if x['sales'] > 0]
     return sorted_top_publishers, most_sold_products
 
@@ -404,7 +442,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             WHERE
                 {0}
                 ds.status BETWEEN %s AND %s AND
-                ds.created BETWEEN %s AND %s
+                ds.sale_date BETWEEN %s AND %s
             GROUP BY ds.id, ap.product_name, ap.product_image, ap.slug, ab.name, pu.name
             ORDER BY ds.created DESC
         """.format(user_criteria), values)
@@ -412,17 +450,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
     temp_products = []
     most_sold = {}
     for sale in sale_table:
-        product_image = ''
-        if sale.product_image:
-            try:
-                product_image = get_thumbnail(ImageField().to_python(sale.product_image), '50', crop='noop').url
-            except:
-                pass
-
-        product_link = None
-        if sale.slug:
-            product_link = reverse('product-detail', args=[sale.slug])
-
+        product_image, product_link = get_product_thumbnail_and_link(sale)
         apprl_commission = sale.converted_commission if sale.user_id == 0 else sale.converted_commission - sale.commission
         referral_user = None
         if sale.is_referral_sale:
@@ -456,6 +484,8 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             'referral_user': referral_user,
             'converted_amount': sale.converted_amount,
             'link': map_placement(sale.placement),
+            'placement': sale.placement,
+            'vendor': sale.vendor,
             'link_raw': sale.placement,
             'commission': 0 if sale.user_id == 0 else sale.commission,
             'apprl_commission': apprl_commission,
@@ -471,7 +501,6 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
             'network_earnings': 0,
             'total_earnings': total_earnings,
         }
-
         if sale.product_name:
             if temp['product'] in most_sold:
                 most_sold[temp['product']]['sales'] += 1
@@ -525,8 +554,8 @@ def merge_top_products(most_sold_products, network_publishers, limit=5):
                 temp_products.append(temp['product'])
 
     network_total_products = [x for x in sorted(network_total_publishers.values(),
-                                                key=lambda x: (x['sales'], x['total_earnings']),
-                                                reverse=True)[:limit] if x['sales'] > 0]
+                                                key=lambda x: (x['total_earnings'], x['sales']),
+                                                reverse=True)[:limit]]
     return network_total_products
 
 def get_network_clicks(publisher_list=None):
@@ -620,6 +649,7 @@ def dashboard_group_admin(request, pk):
 
     raise Http404
 
+@cache_page(60 * 15)
 def dashboard_admin(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_superuser:
         if year is None and month is None:
@@ -656,7 +686,7 @@ def dashboard_admin(request, year=None, month=None):
         # Per month
         data_per_month = {}
         for day in range(0, (end_date - start_date).days + 2):
-            data_per_month[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
+            data_per_month[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0, 0, 0]
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
@@ -665,16 +695,21 @@ def dashboard_admin(request, year=None, month=None):
         month_commission = decimal.Decimal('0.0')
         partner_commission = decimal.Decimal('0.0')
         result = Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                             .filter(sale_date__range=(start_date_query, end_date_query)) \
+                             .filter(sale_date__range=(start_date_query, end_date_query), type=Sale.COST_PER_ORDER) \
                              .order_by('sale_date') \
                              .values('sale_date', 'converted_commission', 'commission', 'user_id')
+
+        sales_count = [0, 0, 0] #total, publisher, apprl
         for sale in result:
             data_per_month[sale['sale_date'].date()][0] += sale['converted_commission']
+            sales_count[0] += 1
             if sale['user_id']:
+                sales_count[1] += 1
                 data_per_month[sale['sale_date'].date()][1] += sale['commission']
                 partner_commission += sale['commission']
+            else:
+                sales_count[2] += 1
             month_commission += sale['converted_commission']
-
         apprl_commission = month_commission - partner_commission
 
         # Clicks per month
@@ -698,12 +733,6 @@ def dashboard_admin(request, year=None, month=None):
             ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
         )]
 
-        sales_count = result.count()
-        conversion_rate = 0
-        if click_total > 0:
-            conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(click_total)
-            conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
-
         # Sales top products and top publishers
         sales, most_sold_products = get_sales(start_date_query, end_date_query, limit=50)
         top_publishers, network_publishers = get_publishers_admin(start_date_query, end_date_query, limit=50)
@@ -725,16 +754,7 @@ def dashboard_admin(request, year=None, month=None):
             earning.product_name= ''
             try:
                 product = get_model('apparel', 'Product').objects.get(id=sale.product_id)
-                product_image = ''
-                product_link = ''
-                if product.product_image:
-                    try:
-                        product_image = get_thumbnail(ImageField().to_python(product.product_image),
-                                                      '50', crop='noop').url
-                    except:
-                        pass
-                if product.slug:
-                    product_link = reverse('product-detail', args=[product.slug])
+                product_image, product_link = get_product_thumbnail_and_link(product)
                 earning.product_image = product_image
                 earning.product_link = product_link
                 earning.product_name = product.product_name
@@ -750,11 +770,67 @@ def dashboard_admin(request, year=None, month=None):
             else:
                 earning.from_user_name = "APPRL"
 
+            earning.clicks = get_clicks_from_sale(earning.sale)
+
+        for sale in get_model('dashboard', 'Sale').objects.filter(sale_date__range=(start_date_query, end_date_query),
+                                                                  status__gte=Sale.PENDING):
+            if sale.type==get_model('dashboard', 'Sale').COST_PER_CLICK:
+                if sale.user_id != 0:
+                    data_per_month[sale.sale_date.date()][5] += get_clicks_from_sale(sale)
+                else:
+                    data_per_month[sale.sale_date.date()][7] += get_clicks_from_sale(sale)
+
+
+        ppc_clicks_publisher = sum([x[5] for x in data_per_month.values()])
+        ppc_clicks_apprl = sum([x[7] for x in data_per_month.values()])
+
+        ppc_result = Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
+                             .filter(sale_date__range=(start_date_query, end_date_query), type=Sale.COST_PER_CLICK) \
+                             .order_by('sale_date') \
+                             .values('sale_date', 'converted_commission', 'commission', 'user_id')
+
+        for sale in ppc_result:
+            data_per_month[sale['sale_date'].date()][6] += sale['converted_commission']
+
+        # Calculate CPC earnings
+        publisher_ppc_earnings = sum([x[4] for x in data_per_month.values()])
+        total_ppc_earnings = sum([x[6] for x in data_per_month.values()])
+        apprl_ppc_earnings = total_ppc_earnings - publisher_ppc_earnings
+
+        # Calculate CPO clicks
+        commission_clicks_publisher = click_partner - ppc_clicks_publisher
+        commission_clicks_apprl = click_apprl - ppc_clicks_apprl
+        commission_clicks_total = commission_clicks_publisher + commission_clicks_apprl
+
+        # Build table in the dashboard admin top
+        headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
+                    'Commission CR']
+        total_top = ['%.2f EUR' % (total_ppc_earnings + month_commission),
+                     '%.2f EUR' % month_commission,
+                     ('%.2f EUR' % total_ppc_earnings),
+                     (ppc_clicks_publisher + ppc_clicks_apprl),
+                     commission_clicks_total,
+                     sales_count[0],
+                     get_conversion_rate(sales_count[0], commission_clicks_total)]
+        publisher_top = ['%.2f EUR' % (partner_commission + total_ppc_earnings),
+                         '%.2f EUR' % partner_commission,
+                         '%.2f EUR' % publisher_ppc_earnings,
+                         ppc_clicks_publisher,
+                         commission_clicks_publisher,
+                         sales_count[1],
+                         get_conversion_rate(sales_count[1], commission_clicks_publisher)]
+        apprl_top = ['%.2f' % (apprl_commission + apprl_ppc_earnings),
+                     '%.2f' % apprl_commission,
+                     '%.2f' % apprl_ppc_earnings,
+                     ppc_clicks_apprl,
+                     commission_clicks_apprl,
+                     sales_count[2],
+                     get_conversion_rate(sales_count[2], commission_clicks_apprl)]
+
+        monthly_array = zip(headings, total_top, publisher_top, apprl_top)
+
         return render(request, 'dashboard/admin.html', {'sales': data_per_month,
                                                         'sales_count': sales_count,
-                                                        'month_commission': month_commission,
-                                                        'partner': partner_commission,
-                                                        'apprl': apprl_commission,
                                                         'click_total': click_total,
                                                         'click_partner': click_partner,
                                                         'click_apprl': click_apprl,
@@ -765,13 +841,13 @@ def dashboard_admin(request, year=None, month=None):
                                                         'year': year,
                                                         'month': month,
                                                         'currency': 'EUR',
-                                                        'conversion_rate': conversion_rate,
                                                         'sales_table': sales,
                                                         'most_sold_products': network_publishers,
                                                         'top_publishers': top_publishers,
                                                         'most_clicked_products': most_clicked_products,
                                                         'currency': 'EUR',
-                                                        'earnings': earnings})
+                                                        'earnings': earnings,
+                                                        'monthly_array': monthly_array})
 
     return HttpResponseNotFound()
 
@@ -854,17 +930,30 @@ def dashboard(request, year=None, month=None):
             top_publishers, network_publishers = get_publishers(start_date_query, end_date_query,
                                                                 user_id=request.user.pk, limit=50)
 
-        network_clicks = get_network_clicks(top_publishers);
-
+        network_clicks = get_network_clicks(top_publishers)
         network_total_products = merge_top_products(most_sold_products, network_publishers, limit=50)
 
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, user_id=request.user.pk)
+
+        # Sales count
+        sales_count = 0
+        referral_sales_count = 0
+        tribute_sales_count = 0
+
+        # Sales and commission per day
+        data_per_day = {}
+        for day in range(0, (end_date - start_date).days + 2):
+            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
+
         # User Earnings
         user_earnings = get_model('dashboard', 'UserEarning').objects\
             .filter(user=request.user, date__range=(start_date_query, end_date_query), status__gte=Sale.PENDING)\
             .order_by('-date')
         for earning in user_earnings:
+            day_start = datetime.datetime.combine(earning.date, datetime.time(0, 0, 0, 0))
+            day_end = datetime.datetime.combine(earning.date, datetime.time(23, 59, 59, 999999))
+            earning.clicks = get_clicks_from_sale(earning.sale)
             earning.extra_sale = None
             for sale in sales:
                 if earning.sale.id == sale['id']:
@@ -875,16 +964,7 @@ def dashboard(request, year=None, month=None):
             earning.product_name = ''
             try:
                 product = get_model('apparel', 'Product').objects.get(id=sale.product_id)
-                product_image = ''
-                product_link = ''
-                if product.product_image:
-                    try:
-                        product_image = get_thumbnail(ImageField().to_python(product.product_image),
-                                                      '50', crop='noop').url
-                    except:
-                        pass
-                if product.slug:
-                    product_link = reverse('product-detail', args=[product.slug])
+                product_image, product_link = get_product_thumbnail_and_link(product)
                 earning.product_image = product_image
                 earning.product_link = product_link
                 earning.product_name = product.product_name
@@ -897,17 +977,7 @@ def dashboard(request, year=None, month=None):
                 if earning.from_user.name:
                     earning.from_user_name = earning.from_user.name
 
-        # Sales count
-        sales_count = 0
-        referral_sales_count = 0
-        tribute_sales_count = 0
-
-        # Sales and commission per day
-        data_per_day = {}
-        for day in range(0, (end_date - start_date).days + 2):
-            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
-
-        for earning in user_earnings:
+            # Summarize per day
             if earning.user_earning_type == "publisher_sale_commission":
                 data_per_day[earning.date.date()][0] += earning.amount
                 sales_count += 1
@@ -918,6 +988,9 @@ def dashboard(request, year=None, month=None):
             elif earning.user_earning_type == "publisher_network_tribute":
                 data_per_day[earning.date.date()][3] += earning.amount
                 tribute_sales_count += 1
+            elif earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute":
+                data_per_day[earning.date.date()][4] += earning.amount
+                data_per_day[earning.date.date()][5] += get_clicks_from_sale(earning.sale)
 
         # Clicks per day
         clicks = get_model('statistics', 'ProductStat').objects\
@@ -937,11 +1010,16 @@ def dashboard(request, year=None, month=None):
         is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
 
         # Summary earning
+        ppc_clicks = sum([x[5] for x in data_per_day.values()])
         month_earnings = sum([x[0] for x in data_per_day.values()])
         network_earnings = sum([x[3] for x in data_per_day.values()])
         referral_earnings = sum([x[2] for x in data_per_day.values()])
+        ppc_earnings = sum([x[4] for x in data_per_day.values()])
 
-        total_earnings = month_earnings + network_earnings + referral_earnings
+        if not is_owner:
+            month_clicks -= ppc_clicks
+
+        total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings
 
         return render(request, 'dashboard/publisher.html', {'data_per_day': data_per_day,
                                                             'total_sales': sales_total,
@@ -969,8 +1047,10 @@ def dashboard(request, year=None, month=None):
                                                             'network_clicks': network_clicks,
                                                             'network_commission': ('%.2f' % network_earnings),
                                                             'referral_commission': ('%.2f' % referral_earnings),
-                                                            'total_commission': total_earnings,
+                                                            'total_commission': ('%.2f' % total_earnings),
                                                             'currency': 'EUR',
+                                                            'ppc_earnings': ('%.2f' % ppc_earnings),
+                                                            'ppc_clicks': ppc_clicks,
                                                             'is_owner': is_owner})
     return HttpResponseRedirect(reverse('index-publisher'))
 
@@ -1040,10 +1120,34 @@ def commissions(request):
 
     cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) or request.session.get('location','ALL')
     vendors = get_available_stores(cookie_value)
-    stores = list(get_model('dashboard', 'StoreCommission').objects.filter(vendor__name__in=vendors).select_related('vendor').order_by('vendor__name'))
     user_id = request.user.id
-    stores = [store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
-              for store in stores]
+    stores = {}
+    for vendor in vendors:
+        try:
+            temp = {}
+            vendor_obj = get_model('apparel', 'Vendor').objects.get(name=vendor)
+            store = get_model('dashboard', 'StoreCommission').objects.get(vendor=vendor_obj)
+            store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
+            temp['vendor_pk'] = vendor_obj.pk
+            temp['vendor_name'] = vendor_obj.name
+            temp['link'] = store.link
+            temp['store_pk'] = store.pk
+            if vendor_obj.is_cpc:
+                _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
+                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
+                rate = currency_exchange('EUR', click_cost.currency)
+                temp['amount'] = "%.2f"%(click_cost.amount * rate * publisher_cut * normal_cut)
+                temp['currency'] = 'EUR'
+                temp['type'] = "is_cpc"
+            elif vendor_obj.is_cpo:
+                temp['amount'] = store.commission
+                temp['type'] = "is_cpo"
+            stores[vendor] = temp
+        except get_model('dashboard', 'ClickCost').DoesNotExist:
+            log.warning("ClickCost for vendor %s does not exist" % vendor)
+        except get_model('dashboard', 'StoreCommission').DoesNotExist:
+            log.warning("StoreCommission for vendor %s does not exist" % vendor)
+    stores = [x for x in sorted(stores.values(), key=lambda x: x['vendor_name'])]
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):
@@ -1127,6 +1231,9 @@ def publisher_contact(request):
     referral_user = get_referral_user_from_cookie(request)
 
     return render(request, 'dashboard/publisher_contact.html', {'form': form, 'referral_user': referral_user})
+
+def publisher_tools(request):
+    return render(request, 'dashboard/publisher_tools.html')
 
 def products(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_partner:
@@ -1372,3 +1479,32 @@ def publishers(request, year=None, month=None):
                                                             'referral_commission': ('%.2f' % sum([x[2] for x in data_per_day.values()])),
                                                             'currency': 'EUR'})
     return HttpResponseRedirect(reverse('index-publisher'))
+
+def get_clicks_from_sale(sale):
+    """
+        Returns number of clicks generated from the given sale
+    """
+    user_id = sale.user_id
+    start_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(0, 0, 0, 0))
+    end_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(23, 59, 59, 999999))
+    vendor_name = sale.vendor
+    clicks = get_model('statistics', 'ProductStat').objects.filter(vendor=vendor_name, user_id=user_id,
+                                                          created__range=[start_date_query, end_date_query]).count()
+    return clicks
+
+def clicks_detail(request):
+    """
+        Returns a list of click details given an user, vendor and date
+    """
+    if request.method == 'POST' and request.is_ajax():
+        user_id = request.POST.get('user_id', None)
+        vendor = request.POST.get('vendor', None)
+        currency = request.POST.get('currency', 'EUR')
+        num_clicks = request.POST.get('clicks', 0)
+        amount_for_clicks = request.POST.get('amount', 0).replace(',', '.')
+        if num_clicks > 0:
+            click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
+            query_date = datetime.datetime.fromtimestamp(int(request.POST['date']))
+            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
+            json_data = json.dumps(data)
+            return HttpResponse(json_data)

@@ -2,6 +2,28 @@ String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
+/*
+    Load detail data for clicks in a modal
+ */
+function load_detailed_data_clicks(data, date, vendor, currency){
+    var html = "<table>";
+    jQuery.each(data, function() {
+        html += "<tr>" +
+                "<td><a href=\""+this.product_url+"\">" + this.product_name + "</a></td>" +
+                "<td class='center'>"  + this.clicks + "</td>" +
+                "<td class='center'>" + currency + " " + this.product_earning.toFixed(2) + "</td>" +
+                "<tr>";
+    });
+    html += "</table>";
+    $("#content-clicks").html(html);
+    $("#modal-date").html(date);
+    $("#modal-vendor").html(vendor);
+    $("#modal_detail_clicks").modal("show");
+}
+
+/*
+    Returns cookie value given the cookie name
+ */
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -16,6 +38,16 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+/*
+    Sets a value and expiration date for a cookie given the cookie name
+ */
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
 }
 
 function csrfSafeMethod(method) {

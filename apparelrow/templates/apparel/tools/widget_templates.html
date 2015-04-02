@@ -20,6 +20,12 @@
     <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
 </script>
 
+<script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
+    <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
+    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+</script>
+
 <script type="text/template" id="dialog_unpublish_template" data-title="{% trans "Unpublish?" %}">
     <p>{% trans "Are you sure you want to unpublish this so that no one can see it?" %}</p>
     <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
@@ -41,6 +47,11 @@
     <a href="#" class="btn btn-block btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
 </script>
 
+<script type="text/template" id="dialog_no_products" data-title="{% trans "No products" %}">
+    <p>{% trans "You need to add at least one product to be able to save." %}</p>
+    <a href="#" class="btn btn-primary btn-block btn-ok">{% trans "Ok" %}</a>
+</script>
+
 <script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish" %}">
     <div class="form-group">
         <label for="look_title">{% trans "Your title" %} *</label>
@@ -52,8 +63,8 @@
         <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
     </div>
 
-    <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
     <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
+    <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
 </script>
 
 <script type="text/template" id="popup_slim_template" data-title="{% trans "Product info" %}">
@@ -61,7 +72,7 @@
         <h5 class="title"></h5>
         <a href="#" class="close"></a>
     </div>
-    <div class="content-container">
+    <div class="content-container info-container">
         <div class="content"></div>
     </div>
 </script>
@@ -137,7 +148,7 @@
         <div class="form-group">
             <p>{% trans 'Start by adding your photo here' %}</p>
             <div class="form-group upload-field">
-                <span><input class="form-control" type="file" accept="image/*" capture="camera" name="image_file"></span>
+                <span><input class="form-control" type="file" accept="image/*;capture=camera" capture="camera" name="image_file"></span>
             </div>
             <button class="btn btn-primary">{% trans "Add your photo" %}</button>
         </div>
@@ -167,4 +178,11 @@
             <% } %>
         </div>
     </div>
+</script>
+{% include 'apparel/fragments/dialog_new_editor.html' with request=request csrf_token=csrf_token next=next only %}
+<script>
+    if (!getCookie('new_editor')) {
+        $('#modal_new_editor').modal('show');
+        setCookie('new_editor', '1', 999999)
+    }
 </script>

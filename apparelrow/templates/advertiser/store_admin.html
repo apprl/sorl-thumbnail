@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-{% load i18n l10n cache humanize %}
+{% load i18n static l10n cache humanize apparel_extras dashboard_extras %}
 
 {% block extra-title %}{% trans "Your store" %} | {% endblock %}
 
 {% block 'extra-scripts' %}
+    <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
     <script type='text/javascript'>
         google.load('visualization', '1', {'packages':['corechart']});
@@ -20,21 +21,32 @@
             ]);
             data.sort(0);
 
+            {% if vendor.is_cpo %}
             var left = data.getColumnRange(1);
+            {% endif %}
             var right = data.getColumnRange(2);
             var view = new google.visualization.DataView(data);
             //var chart = new google.visualization.LineChart(document.getElementById('transaction_chart'));
             //var options = {legend: {position: 'none'}};
+
+            {% if vendor.is_cpo %}
             var series = {
                 0: {targetAxisIndex: 0},
                 1: {targetAxisIndex: 1, color: '#dc3912'}
             };
+            {% else %}
+            var series = {
+                0: {targetAxisIndex: 0, color: '#dc3912'}
+            };
+            view.setColumns([0,2]);
+            {% endif %}
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
                 containerId: 'transaction_chart',
                 dataTable: view,
                 options: {
                     vAxes: {
+                        {% if vendor.is_cpo %}
                         0: {
                             minValue: 0,
                             maxValue: (left.min == 0 && left.max == 0) ? 1 : null,
@@ -42,7 +54,8 @@
                             textStyle: {color: '#3366cc'},
                             titleTextStyle: {color: '#3366cc'}
                         },
-                        1: {
+                        {% endif %}
+                        {% if vendor.is_cpo %}1{% else %}0{% endif %}: {
                             minValue: 0,
                             maxValue: (right.min == 0 && right.max == 0) ? 1 : null,
                             title: '{% trans "Clicks" %}',
@@ -50,6 +63,7 @@
                             titleTextStyle: {color: '#dc3912'}
                         }
                     },
+                    legend: { position: 'top' },
                     series: series
                 }
             });
@@ -63,6 +77,7 @@
 
                 window.location.href = '/a/admin/' + year + '/' + month + '/';
             });
+            new Tablesort($('table#clicks_tb').get(0));
         });
     </script>
 {% endblock %}
@@ -73,16 +88,23 @@
     <div class="body-header">
         <div class="body-header-col-full">
             <h1>{% trans "Your store" %}</h1>
+            {% if vendor.is_cpo %}<br>
             <br>
-            <br>
-            <a class="btn btn-primary" data-toggle="modal" data-target="#modal_test_purchase">{% trans "Make a test purchase" %}</a>
+            <a class="btn btn-primary" data-toggle="modal" data-target="#modal_test_purchase">{% trans "Make a test purchase" %}</a>{% endif %}
         </div>
     </div>
 
     <div class="row subnav-page" style="margin-bottom: 10px;">
         <div class="col-md-12">{% trans "Balance:" %} <strong>{{ store.balance }} EUR</strong></div>
-        <div class="col-md-12">{% trans "Total accepted commission:" %} <strong>{{ total_accepted_commission|floatformat:2|intcomma }} EUR</strong></div>
+    {% if vendor.is_cpc %}
+        <div class="col-md-12">{% trans "Total clicks generated:" %} <strong>{{ total_clicks_per_month }}</strong></div>
+    {% endif %}
+
+    {% if vendor.is_cpo %}
+        <div class="col-md-12">{% trans "Total accepted commission:" %} <strong>{{ total_accepted_commission|floatdot|intcomma }} EUR</strong></div>
+    {% endif %}
         <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 10px;"></div>
+
     </div>
 
     <div class="row">
@@ -98,8 +120,22 @@
                     </label>
                 </li>
             </ul>
+
+            {% if vendor.is_cpc %}
             <ul class="list-inline monthly-list">
-                <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatformat:2|intcomma }} EUR</li>
+                <li class="last">{% trans "Number of clicks delivered:" %} {{ clicks_delivered_per_month }} </li>
+            </ul>
+            <ul class="list-inline monthly-list">
+                <li class="last">{% trans "Value:" %} {{ clicks_cost_per_month|floatdot|intcomma }} {{ currency }}</li>
+            </ul>
+            {% endif %}
+
+            {% if vendor.is_cpo %}
+            <ul class="list-inline monthly-list">
+                <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatdot|intcomma }} EUR</li>
+            </ul>
+            {% endif %}
+
             </ul>
         </div>
     </div>
@@ -110,6 +146,7 @@
         </div>
     </div>
 
+    {% if vendor.is_cpo %}
     <div class="row">
         <div class="col-lg-12">
             <table class="table table-condensed">
@@ -150,12 +187,78 @@
             </table>
         </div>
     </div>
+    {% endif %}
+
+    {% if vendor.is_cpc %}
+    <div class="row">
+        <div class="col-lg-12 table-responsive  ">
+            <h2 class="sales-header">{% trans "Clicks in" %} {{ month_display }} {{ year }}</h2>
+            <table id="clicks_tb" class="sortable table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-sm-3 hidden-xs">{% trans "Date" %}</th>
+                        <th class="col-sm-3">{% trans "Clicks" %}</th>
+                        <th class="col-sm-4">{% trans "Value" %}</th>
+                        <th class="col-sm-2">{% trans "Info" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, row in clicks_per_day %}
+                        {% if row.amount > 0 and row.clicks > 0 %}
+                        <tr class="{% cycle 'odd' 'even' %}">
+                            <td class="hidden-xs" data-sort="{{ row.date|date:"U" }}">{{ row.date.date }}</td>
+                            <td>{{ row.clicks }}</td>
+                            <td>{{ row.amount|floatdot }} {{ currency }}</td>
+                            <td>
+                                <a class="btn btn-primary click-detail" data-vendor="{{ vendor }}"
+                                   data-date="{{ row.date|date:"U" }}" data-amount="{{ row.amount|floatdot }}"
+                                   data-date_display="{{ row.date.date }}" data-clicks="{{ row.clicks }}">
+                                   {% trans "See details" %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">{% trans "No clicks" %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
 {% for transaction in transactions %}
     {% if transaction.status == 'P' %}
     {% include 'advertiser/modal_accept.html' with transaction=transaction only %}
     {% include 'advertiser/modal_reject.html' with transaction=transaction only %}
     {% endif %}
 {% endfor %}
-
 {% include 'advertiser/modal_test_purchase.html' with store=store%}
+
+{% if vendor.is_cpc %}
+<script>
+    $(".click-detail").click(function() {
+        var user_id = $(this).data("user");
+        var vendor = $(this).data("vendor");
+        var date = $(this).data("date");
+        var date_display = $(this).data("date_display");
+        var amount = $(this).data("amount");
+        var clicks = $(this).data("clicks");
+        var currency = 'original';
+        $.ajax({
+            type: "post",
+            url: "{% url 'clicks-detail' %}",
+            data: { user_id: user_id, vendor : vendor, date : date, currency: currency, amount: amount, clicks: clicks},
+            success: function (response) {
+                var json = jQuery.parseJSON(response);
+                load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}");
+            }
+        });
+    });
+</script>
+{% endif %}
+
+{% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token  only  %}
 {% endblock body %}

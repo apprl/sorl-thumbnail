@@ -38,13 +38,10 @@ admin.site.register(ProductClick, ProductClickAdmin)
 
 
 class ProductStatAdmin(admin.ModelAdmin):
-    list_display = ('action', 'user_id', 'page', 'product', 'vendor', 'price', 'created')
-    list_filter = ('action', 'page', 'created')
+    list_display = ('action', 'user_id', 'page', 'product', 'vendor', 'price', 'created', 'ip')
+    list_filter = ('action', 'page', 'created', 'vendor')
 
     def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
         return False
 
 admin.site.register(ProductStat, ProductStatAdmin)

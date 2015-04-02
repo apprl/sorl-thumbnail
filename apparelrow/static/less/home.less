@@ -139,7 +139,7 @@ body { max-width: 1824px; } /* */
 @apprl-h6-xs-size: 			13px; 		//Calculated from 10pt in PSD (72dpi)
 
 // Other fonts
-@apprl-slash-font: 			"Helvetica Neue",Helvetica,Arial,sans-serif;
+@apprl-slash-font: 			'Lato', sans-serif; //"Helvetica Neue",Helvetica,Arial,sans-serif;
 @apprl-slash-weight:		500;
 
 // Font settings
@@ -282,7 +282,7 @@ h1.apprl-slash {
 		display: inline-block;
 		width: @apprl-h1-size;
 		font-weight: @apprl-slash-weight;
-		font-size: @apprl-h1-size * 2.133; // Value lifted form proportions in PSD
+		font-size: 64px; //@apprl-h1-size * 2.133; // Value lifted form proportions in PSD
 		content: "\005C";
 	}
 }
@@ -443,8 +443,6 @@ body {
 .apprl-retailers-header {
   background: url('@{app-img-url}backgrounds/Apprl-home-retailer-bg.png') no-repeat left top scroll;
 }
-/*.apprl-publishers-header,
-.apprl-retailers-header,*/
 .apprl-home-header {
 	background: url('@{app-img-url}backgrounds/Apprl-home-bg.png') no-repeat left top scroll;
 }
@@ -589,8 +587,15 @@ body {
 	border-radius: 295px;
 	text-align: center;
     cursor: pointer;
+    /* Staffans fix */
+    border-radius: 50%;
+    /* Prevent background color leak outs */
+    -webkit-background-clip: padding-box;
+    -moz-background-clip:    padding;
+    background-clip:         padding-box;
+    /* End Staffans fix */
 
-	-webkit-transition: background-color @apprl-hover-style @apprl-hover-time;
+    -webkit-transition: background-color @apprl-hover-style @apprl-hover-time;
 	-moz-transition: background-color @apprl-hover-style @apprl-hover-time;
 	transition: background-color @apprl-hover-style @apprl-hover-time;
 
@@ -611,9 +616,6 @@ body {
 }
 .apprl-facebook {
     padding-top: 170px;
-	.facepile-container {
-
-	}
 	.fb-facepile {
 		margin-left: 0px;
 	}

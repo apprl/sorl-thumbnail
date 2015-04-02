@@ -14,3 +14,9 @@ def commission_rate(value, arg):
 @register.filter(name='top_five')
 def top_five(value):
     return value[:5]
+
+@register.filter(name='floatdot')
+def floatdot(value):
+    return ("%.2f" % value)
+
+floatdot.is_safe = True

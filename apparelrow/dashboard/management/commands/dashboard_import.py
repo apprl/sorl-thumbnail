@@ -3,9 +3,9 @@ import datetime
 import optparse
 
 from django.db.models.loading import get_model
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-logger = logging.getLogger('dashboard.import')
+logger = logging.getLogger('affiliate_networks')
 
 
 class Command(BaseCommand):
@@ -17,25 +17,32 @@ class Command(BaseCommand):
             dest='days',
             help='Start date set to current date - selected number of days',
             default=90,
+        ),optparse.make_option('--data',
+            action='store',
+            dest='data',
+            default=None,
         ),
     )
 
     affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox', 'aan']
 
     def update(self, row):
-        instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
+        # Creates a sale only if the vendor supports Cost per order
+        if row['vendor'].is_cpo:
+            instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
 
-        if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
-            for field in row.keys():
-                setattr(instance, field, row.get(field))
+            if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
+                for field in row.keys():
+                    setattr(instance, field, row.get(field))
 
             instance.save()
 
-        return instance
+            return instance
 
     def handle(self, *args, **options):
         end_date = datetime.date.today()
         start_date = end_date - datetime.timedelta(days=int(options.get('days')))
+        data = options.get('data')
 
         if not args:
             args = self.affiliates
@@ -46,7 +53,7 @@ class Command(BaseCommand):
                 instance = module.Importer()
                 logger.info('Importing %s' % (instance.name,))
                 try:
-                    for row in instance.get_data(start_date, end_date):
+                    for row in instance.get_data(start_date, end_date, data):
                         logger.debug('Updating row: %s' % (row,))
                         sale_instance = self.update(row)
                 except Exception as e:

@@ -10,7 +10,7 @@
     name: Vendor 2
     homepage: http://www.example.net
 
-- model: apparel.manufacturer
+- model: apparel.brand
   pk: 1
   fields:
     name: The Factory
@@ -37,7 +37,7 @@
     product: 1
     price: ~
     currency: ~
-    original_price: 1000
+    _original_price: 1000
     original_currency: BRL
 
 - model: apparel.vendorproduct
@@ -47,7 +47,7 @@
     product: 1
     price: ~
     currency: ~
-    original_price: 500
+    _original_price: 500
     original_currency: GBP
 
 - model: apparel.vendorproduct
@@ -57,7 +57,7 @@
     product: 2
     price: ~
     currency: ~
-    original_price: 1100
+    _original_price: 1100
     original_currency: BRL
 
 - model: apparel.vendorproduct
@@ -67,7 +67,7 @@
     product: 2
     price: ~
     currency: ~
-    original_price: 300
+    _original_price: 300
     original_currency: GBP
 
 - model: importer.fxrate
@@ -91,3 +91,16 @@
     currency: EUR
     rate: "0.113160"
 
+- model: importer.fxrate
+  pk: 4
+  fields:
+    base_currency: EUR
+    currency: SEK
+    rate: "9.41412"
+
+- model: importer.fxrate
+  pk: 5
+  fields:
+    base_currency: SEK
+    currency: SEK
+    rate: "1.000"

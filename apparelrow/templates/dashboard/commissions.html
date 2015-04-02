@@ -13,16 +13,23 @@
                 <thead>
                     <tr>
                         <th>{% trans "Store" %}</th>
-                        <th>{% trans "Commission" %}</th>
+                        <th>{% trans "Your earning" %}</th>
                         <th>{% trans "Link to store" %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for store in stores %}
                     <tr>
-                        <td><a href="{% url 'shop' %}?store={{ store.vendor.pk }}">{{ store.vendor.name }}</a></td>
-                        <td>{{ store.commission }}</td>
-                        <td>{% if store.link %}<a class="btn btn-primary" data-store="{{ store.pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor.name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
+                        <td><a href="{% url 'shop' %}?store={{ store.vendor_pk }}">{{ store.vendor_name }}</a></td>
+                        <td>
+                            {{ store.currency }} {{ store.amount }}
+                            {% if store.type == "is_cpc" %}
+                                {% trans " per click" %}
+                            {% elif store.type == "is_cpo" %}
+                                {% trans " per sale" %}
+                            {% endif %}
+                        </td>
+                        <td>{% if store.link %}<a class="btn btn-primary" data-store="{{ store.store_pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -34,7 +41,7 @@
                 </tbody>
             </table>
 
-            <p><small>{% trans "Note: The commission rates above are approximate and might depend on how many sales you have generated and other factors." %}</small></p>
+            <p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
 
         </div>
     </div>

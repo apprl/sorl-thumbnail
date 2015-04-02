@@ -14,10 +14,13 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:publish', this.publish_shop, this);
         App.Events.on('widget:unpublish', this.unpublish_shop, this);
         App.Events.on('widget:product_display', this.product_display, this);
+        App.Events.on('widget:touchmenu', this.alter_buttons, this);
 
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
+        this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+
 
         // Shop editor popup
         this.shop_edit_popup = new App.Views.ShopEditPopup({parent_view: this});
@@ -62,6 +65,15 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
             }
         }
         $(window).trigger('resize');
+    },
+    alter_buttons: function() {
+        if (this.model.get('show_liked') || this.model.attributes.id) {
+            $('.popup-slim-dialog_mobile_menu .btn-reset').parent().hide();
+        }
+        if (!this.model.attributes.id) {
+             $('.popup-slim-dialog_mobile_menu .btn-delete').parent().hide();
+        }
+
     },
     reset: function() {
         this.model.components.each(_.bind(function(model) {
@@ -116,8 +128,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.init_footer();
         if(show_liked) {
             if (!this.model.attributes.id) {
-                this.save_shop({ title: "My latest likes", 'callback': function() {
-                    $("#embed_shop_form #id_name").val("My latest likes");
+                this.save_shop({ title: "My liked products", 'callback': function() {
+                    $("#embed_shop_form #id_name").val("My liked products");
                     window.shop_create.init_products();
                 }});
             }
@@ -180,6 +192,11 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
                 model.destroy();
             }
         }, this));
+
+        if (!this.model.components.length && !this.model.get('show_liked')) {
+            this.popup_dispatcher.show('dialog_no_products');
+            return;
+        }
 
         if(this.model.backend == 'client') {
             this.model.backend = 'server';

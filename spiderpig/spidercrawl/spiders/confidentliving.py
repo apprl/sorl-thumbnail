@@ -1,3 +1,4 @@
+from StringIO import StringIO
 import re
 import urllib
 
@@ -36,6 +37,16 @@ class ConfidentLivingSpider(CSVFeedSpider, AffiliateMixin):
         'Shipping Cost'
     )
 
+
+    def parse_rows(self, response):
+        response = response.replace(encoding='iso-8859-1')
+        return super(ConfidentLivingSpider, self).parse_rows(response)
+
+    def adapt_response(self, response):
+        body = response.body.replace('\x00','')
+        return response.replace(body=body)
+
+
     def start_requests(self):
         meta = {'ftp_user': 'CL_Pricerunner', 'ftp_password': 'ESM9onUf'}
         for url in self.start_urls:
@@ -55,9 +66,9 @@ class ConfidentLivingSpider(CSVFeedSpider, AffiliateMixin):
         item['gender'] = 'U'
         item['colors'] = row.get('Product name') + row.get('Description')
         item['regular_price'] = row.get('Price')
-        item['discount_price'] = ''
+        item['discount_price'] = item['regular_price']
         item['currency'] = 'SEK'
         item['in_stock'] = row.get('In Stock') == 'Ja'
-        item['stock'] = row.get('Stock Level')
+        item['stock'] = row.get('Stock Level') or 10
         item['image_urls'] = [row.get('Graphic URL', '')]
         return item

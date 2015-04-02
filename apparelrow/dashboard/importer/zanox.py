@@ -73,7 +73,7 @@ class Importer(BaseImporter):
 
         return Sale.PENDING
 
-    def get_data(self, start_date, end_date):
+    def get_data(self, start_date, end_date, data=None):
         logger.info("Zanox - Start importing from Affiliate Network")
         for start_date, end_date in self.generate_subdates(start_date, end_date, 1):
             signature, timestamp, nonce = self.get_signature('GET', '/reports/sales/date/%s' % (end_date.strftime('%Y-%m-%d')))

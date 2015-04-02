@@ -4,8 +4,7 @@ import decimal
 import dateutil.parser
 import logging
 
-from django.conf import settings
-from django.contrib.auth import get_user_model
+import abc
 from django.db.models.loading import get_model
 from fuzzywuzzy import process
 
@@ -18,6 +17,7 @@ logger = logging.getLogger('dashboard.import')
 
 
 class BaseImporter:
+    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         self.vendors = get_model('apparel', 'Vendor').objects.all()
@@ -126,3 +126,11 @@ class BaseImporter:
 
     def map_placement_and_user(self, sid):
         return parse_sid(sid)
+
+    @abc.abstractmethod
+    def get_data(self, start_date, end_date, data=None):
+        return
+
+    '''@abc.abstractmethod
+    def parse_data(self):
+        return'''

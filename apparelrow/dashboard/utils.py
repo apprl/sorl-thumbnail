@@ -1,14 +1,32 @@
 import decimal
-import json
+import datetime
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from django.db.models import get_model
+from django.db import connection
 import logging
+
+from sorl.thumbnail import get_thumbnail
+from sorl.thumbnail.fields import ImageField
 
 log = logging.getLogger(__name__)
 
+def dictfetchall(cursor):
+    """
+        Returns all rows from a cursor as a dict
+    """
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
 
 def get_referral_user_from_cookie(request):
+    """
+    Return user instance retrieved from the request information
+    """
     user = None
     user_id = request.get_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, None)
     if user_id:
@@ -21,6 +39,10 @@ def get_referral_user_from_cookie(request):
 
 
 def get_cuts_for_user_and_vendor(user_id, vendor):
+    """
+    Return a tuple that contains user instance, commission group cut, referral cut, publisher cut considering if the
+    publisher belongs to a publisher network and pays tribute, given an user id and a vendor
+    """
     user = None
     normal_cut = decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)
     referral_cut = decimal.Decimal(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
@@ -61,3 +83,96 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
         pass
 
     return user, normal_cut, referral_cut, publisher_cut
+
+def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
+    """
+        Returns a sorted list with detailed information from click earnings per product
+        for a given user, vendor and day
+    """
+    start_date_query = datetime.datetime.combine(date, datetime.time(0, 0, 0, 0))
+    end_date_query = datetime.datetime.combine(date, datetime.time(23, 59, 59, 999999))
+    values = [vendor_name, start_date_query, end_date_query]
+    cursor = connection.cursor()
+
+    if user_id:
+        try:
+            user = get_user_model().objects.get(id=user_id)
+            values.append(user_id)
+            cursor.execute(
+                """SELECT PS.vendor, PS.user_id, PS.product, count(PS.id)
+                   FROM statistics_productstat PS, profile_user U, apparel_vendor V
+                   WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
+                   AND V.is_cpc = True AND PS.created BETWEEN %s AND %s AND U.id = %s
+                   GROUP BY PS.user_id, PS.vendor, PS.product ORDER BY count(PS.id) DESC""", values)
+        except get_user_model().DoesNotExist:
+            log.warn("User %s does not exist" % user)
+    else:
+        values.extend([vendor_name, start_date_query, end_date_query])
+        cursor.execute(
+            """(SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, profile_user U, apparel_vendor V
+               WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
+               AND V.is_cpc = True AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               UNION
+               (SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V
+               WHERE V.name = %s AND PS.vendor = V.name
+               AND V.is_cpc = True AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               ORDER BY clicks DESC
+               """, values)
+    data = dictfetchall(cursor)
+    for row in data:
+        try:
+            product = get_model('apparel', 'Product').objects.get(slug=row['product'])
+            row['product_url'] = reverse('product-detail', args=[row['product']])
+            row['product_name'] = product.product_name
+            row['product_earning'] = float(int(row['clicks']) * click_cost)
+        except get_model('apparel', 'Product').DoesNotExist:
+            log.warn("Product %s does not exist" % row['product'])
+    return data
+
+def get_product_thumbnail_and_link(product):
+    """
+        Returns thumbnail and link for a product
+    """
+    product_image = ''
+    if product.product_image:
+        try:
+            product_image = get_thumbnail(ImageField().to_python(product.product_image), '50', crop='noop').url
+        except:
+            pass
+    product_link = None
+    if product.slug:
+        product_link = reverse('product-detail', args=[product.slug])
+    return product_image, product_link
+
+def get_clicks_amount(vendor, start_date_query, end_date_query):
+    """
+        Returns total amount in EUR for a Vendor in given date range
+    """
+    total_amount = 0
+    currency = None
+    for item in get_model('dashboard', 'Sale').objects.filter(vendor=vendor,
+                                                              sale_date__range=[start_date_query, end_date_query],
+                                                              type=get_model('dashboard', 'Sale').COST_PER_CLICK):
+        total_amount += item.original_amount
+        if not currency and item.original_currency:
+            currency = item.original_currency
+    return total_amount, currency
+
+def get_number_clicks(vendor, start_date_query, end_date_query):
+    """
+        Return total number of clicks for a Vendor in a given date range
+    """
+    return get_model('statistics', 'ProductStat').objects.\
+        filter(vendor=vendor, created__range=[start_date_query, end_date_query]).count()
+
+def get_total_clicks_per_vendor(vendor):
+    """
+    Return total number of clicks for a Vendor
+    """
+    today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+    today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+    return get_model('statistics', 'ProductStat').objects.filter(vendor=vendor).exclude(created__range=(today_min, today_max)).count()

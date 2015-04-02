@@ -48,6 +48,7 @@ USE_L10N = True
 
 THOUSAND_SEPARATOR = ' '
 NUMBER_GROUPING = 3
+DECIMAL_SEPARATOR = '.'
 
 # Locale paths
 LOCALE_PATHS = (
@@ -58,7 +59,7 @@ LOCALE_PATHS = (
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en'
 LANGUAGES = (
-    ('en',  (u'English ($)')),
+    ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
     ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
@@ -97,6 +98,8 @@ MAX_MIN_CURRENCY = {
 
 VENDOR_LOCATION_MAPPING = {
     "Shirtonomy":["ALL","SE"],
+    "Ted & Teresa":["SE"],
+    "ConfidentLiving":["SE"],
     "MQ":["SE"],
     "ALDO": ["US"],
     "ASOS": ["SE","NO","ALL"],
@@ -111,6 +114,8 @@ VENDOR_LOCATION_MAPPING = {
     "Boozt no":["NO"],
     "ASOS no":["NO"],
     "QVC":["US"],
+    "Room 21 no":["NO"],
+    "Rum 21 se":["SE"],
     "default":["ALL","SE","NO","US"],
 }
 
@@ -177,10 +182,10 @@ STATICFILES_FINDERS = (
 
 # Django-storages
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
-AWS_SECRET_ACCESS_KEY = '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'
-#AWS_ACCESS_KEY_ID = ''
-#AWS_SECRET_ACCESS_KEY = ''
+#AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
+#AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
 AWS_HEADERS = {
         'Expires': 'Sat, Nov 01 2015 20:00:00 GMT',
@@ -441,6 +446,7 @@ PIPELINE_JS = {
             'js/app/base/views/dialog_unpublish.js',
             'js/app/base/views/dialog_save.js',
             'js/app/base/views/dialog_login.js',
+            'js/app/base/views/dialog_no_products.js',
             'js/app/shop_editor/views/shop_create.js',
             'js/app/shop_editor/views/shop_edit_popup.js',
             'js/app/look_editor/views/look_edit_filter_tabs.js',
@@ -539,6 +545,7 @@ PIPELINE_JS = {
                              'js/app/base/views/dialog_unpublish.js',
                              'js/app/base/views/dialog_save.js',
                              'js/app/base/views/dialog_login.js',
+                             'js/app/base/views/dialog_no_products.js',
                              'js/app/look_editor/views/look_edit_filter_tabs.js',
                              'js/app/base/views/header.js',
                              'js/app/base/views/dialog_header_mobile.js',
@@ -768,6 +775,8 @@ CELERY_ROUTES = ({
     'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.clicks_summary': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}},)
 
 # LOGGING CONFIGURATION
@@ -864,7 +873,7 @@ LOGGING = {
             'propagate': True,
             'handlers': ['app_core','sentry'],
         },
-        'requests': {
+        'reqeusts': {
             'level': 'DEBUG',
             'propagate': False,
             'handlers': ['app_core'],
@@ -918,5 +927,3 @@ LOGGING = {
 }
 
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
-
-

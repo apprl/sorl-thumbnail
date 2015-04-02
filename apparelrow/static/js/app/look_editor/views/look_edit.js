@@ -19,7 +19,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
-
+        this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+        
         // Look editor popup
         this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
 
@@ -53,6 +54,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
         // Create toolbar
         this.toolbar = new App.Views.LookEditToolbar();
+
+        this.hotspot_size = 50;
 
         // Listen on product add
         App.Events.on('widget:product:add', this.pending_add_component, this);
@@ -131,7 +134,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     _get_hotspot: function(e) {
         // TODO: maybe use dynamic scale for hotspot size instead of 80x80
-        var size = 60,
+        var size = this.hotspot_size,
             $container = this.$el.find('.look-container'),
             container_offset = $container.offset(),
             container_width = $container.width() - size,
@@ -142,7 +145,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
     _create_photo_component: function(position) {
         var $container = $('.look-container');
-        var size = 60;
+        var size = this.hotspot_size;
         return new App.Models.LookComponent().set(_.extend({width: size,
             height: size,
             rel_left: (position.left+size/2)/$container.width(),
@@ -398,6 +401,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
                 model.destroy();
             }
         }, this));
+
+        if (!this.model.components.length) {
+            App.Events.trigger('popup_dispatcher:hide');
+            this.popup_dispatcher.show('dialog_no_products');
+        }
 
         if(this.model.backend == 'client') {
             this.model.backend = 'server';

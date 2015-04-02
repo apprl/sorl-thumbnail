@@ -1,0 +1,24 @@
+{% extends 'dialog_base.html' %}
+{% load i18n dashboard_extras %}
+
+{% block modal_id %}modal_detail_clicks{% endblock %}
+{% block extra_modal_classes %}full_modal{% endblock %}
+{% block modal_title %}&nbsp;{% endblock %}
+{% block modal_content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{% trans "Clicks to" %} <span id="modal-vendor"></span>{% trans " on " %}<span id="modal-date"></span></h2>
+            <table id="top-products-more" class="sortable table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Product" %}</th>
+                        <th class="col2 center">{% trans "Clicks" %}</th>
+                        <th class="col3 center">{% trans "Earnings" %}</th>
+                    </tr>
+                </thead>
+                <tbody id="content-clicks">
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
