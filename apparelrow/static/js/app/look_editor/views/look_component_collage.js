@@ -131,14 +131,16 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
     },
 
     render: function() {
+        if (this.model.get('z_index') == null) {
+            this.model.set('z_index', this._max_zindex() + 1);
+        }
+
         this.$el.css({'left': this.model.get('left'),
                       'top': this.model.get('top'),
                       'width': Math.round(this.model.get('width')),
                       'height': Math.round(this.model.get('height')),
                       'z-index': this.model.get('z_index'),
                       position: 'absolute'});
-
-
 
         this.$el.toggleClass('flipped', this.model.get('flipped'));
 
@@ -147,8 +149,6 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         this.set_size(this.model.get('width'), this.model.get('height'));
 
         this.$el.html(this.template(this.model.toJSON()));
-
-        this.$el.css('z-index', this._max_zindex() + 1);
 
         this.transform = {
             'translate': {'x':0, 'y':0},
@@ -213,13 +213,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  minWidth: 50,
                  handles: "se, ne, sw, nw",
                  create: _.bind(function (event, ui) {
-                     var z_index = $(event.target).css('z-index');
-                     if (!isNaN(parseInt(z_index))) {
-                         this.model.set({z_index: z_index}, {silent: true});
-                     }
-
                      $(event.target).find('.ui-resizable-handle').css('display', '');
-
                  }, this),
                  start: _.bind(function(event, ui) {
                  }, this),
@@ -246,7 +240,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  stop: _.bind(function (event, ui) {
                      var z_index = $(event.target).css('z-index');
                      if (!isNaN(parseInt(z_index))) {
-                         this.model.set({z_index: z_index}, {silent: true});
+                         this.model.set({z_index: parseInt(z_index)}, {silent: true});
                      }
 
                      this.set_position(ui.position.left, ui.position.top);

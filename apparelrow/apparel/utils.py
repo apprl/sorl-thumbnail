@@ -140,6 +140,8 @@ def get_product_alternative(product, default=None):
 def get_brand_and_category(look):
     #XXX: this query might be slow on live
     for c in look.display_components.select_related('product', 'product__category', 'product__category__parent', 'product__manufacturer'):
+        if not c.product:
+            continue
         singular = None
 
         if c.product.category:
