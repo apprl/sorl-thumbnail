@@ -140,15 +140,16 @@ def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
     msg.template_content = {                        # Content blocks to fill in
         'EMPTY_BLOCK': "<a href='apprl.com/*|URL|*'>Hello there!</a>"
     }
-    apprl_logo_url = "http://s-staging.apprl.com/static/email/logo.png" #TODO switch to deploy
+    apprl_logo_url = retrieve_static_url("logo.png")
 
     msg.global_merge_vars = {                       # values to merge into template
         'LOGOURL': apprl_logo_url,
-        'FBICONURL': "http://s-staging.apprl.com/static/email/icon-facebook.png",
-        'TWITTERICONURL': "http://s-staging.apprl.com/static/email/icon-twitter.png",
-        'PINTERESTICONURL': "http://s-staging.apprl.com/static/email/icon-pinterest.png",
-        'INSTAICONURL': "http://s-staging.apprl.com/static/email/icon-instagram.png"
+        'FBICONURL': retrieve_static_url("icon-facebook.png"),
+        'TWITTERICONURL': retrieve_static_url("icon-twitter.png"),
+        'PINTERESTICONURL': retrieve_static_url("icon-pinterest.png"),
+        'INSTAICONURL': retrieve_static_url("icon-instagram.png")
     }
+
     msg.global_merge_vars.update(merge_vars) #add specific parameters
 
     msg.merge_vars = usernames    # Per-recipient merge tags, here adding personalized names
@@ -166,7 +167,15 @@ def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
 def retrieve_full_url(path):
     """ append current hostname to front of URL
     """
-    return settings.APPAREL_EMAIL_IMAGE_ROOT + path
+    domain = settings.STATIC_URL
+    return 'http://%s%s' % (domain, path)
+
+def retrieve_static_url(path):
+    """ append current hostname to front of URL for static email content
+    """
+    domain = settings.STATIC_URL
+    static_location = settings.APPAREL_EMAIL_IMAGE_ROOT
+    return 'http://%s%s%s' % (domain, static_location, path)
 
 #
 # COMMENT LOOK CREATED
