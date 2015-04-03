@@ -3,7 +3,7 @@
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Looks" %} | {% endblock %}
 
-{% block body-classes %}profile-page profile-looks discover-list-page{% endblock body-classes %}
+{% block body-classes %}profile-page profile-looks{% endblock body-classes %}
 {% block content %} 
 {% with looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks %}
      <div class="row">
