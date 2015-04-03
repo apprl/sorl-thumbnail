@@ -110,7 +110,6 @@ def likes(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def looks(request, profile, form, page=0):
-    logger.info("looks called")
 
     if profile == request.user:
         queryset = profile.look.order_by('-created')
