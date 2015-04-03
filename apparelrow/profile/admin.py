@@ -135,7 +135,6 @@ admin.site.unregister(Group)
 
 admin.site.register(NotificationCache)
 
-
 class FollowAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'modified')
     raw_id_fields = ['user', 'user_follow']
