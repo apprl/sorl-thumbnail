@@ -605,7 +605,6 @@ def look_list(request, search=None, contains=None, gender=None):
         4) If contains-argument is set displays all looks that contains the product.
 
     """
-    logger.info("looks list called")
     gender = select_from_multi_gender(request, 'look', gender)
     gender_list = {'A': ['W', 'M', 'U'],
                    'M': ['M', 'U'],
