@@ -875,7 +875,7 @@ LOGGING = {
             'propagate': True,
             'handlers': ['app_core','sentry'],
         },
-        'reqeusts': {
+        'requests': {
             'level': 'DEBUG',
             'propagate': False,
             'handlers': ['app_core'],
