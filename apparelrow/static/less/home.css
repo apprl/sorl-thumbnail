@@ -11460,7 +11460,8 @@ html.look-type-C .collage {
   /*border-bottom-right-radius: 4px;*/
   /*}*/
 }
-.discover-list-page .alphabet {
+.discover-list-page .alphabet,
+.profile-looks .alphabet {
   font-size: 14px;
   border-bottom: 3px solid #000000;
   padding-bottom: 5px;
@@ -11468,24 +11469,30 @@ html.look-type-C .collage {
   margin-bottom: 15px;
   color: #333333;
 }
-.discover-list-page .alphabet li {
+.discover-list-page .alphabet li,
+.profile-looks .alphabet li {
   padding-left: 2px;
   padding-right: 2px;
 }
-.discover-list-page .alphabet li:first-child {
+.discover-list-page .alphabet li:first-child,
+.profile-looks .alphabet li:first-child {
   padding-left: 0;
 }
-.discover-list-page .alphabet li a {
+.discover-list-page .alphabet li a,
+.profile-looks .alphabet li a {
   padding: 5px;
   color: #d9d9d9;
 }
-.discover-list-page .alphabet li a.selected {
+.discover-list-page .alphabet li a.selected,
+.profile-looks .alphabet li a.selected {
   color: #000000;
 }
-.discover-list-page .alphabet li a:first-child {
+.discover-list-page .alphabet li a:first-child,
+.profile-looks .alphabet li a:first-child {
   padding-left: 0;
 }
-.discover-list-page .alphabet.topmodel {
+.discover-list-page .alphabet.topmodel,
+.profile-looks .alphabet.topmodel {
   font-size: 23px;
   font-weight: 700;
   text-transform: none;
@@ -11496,7 +11503,8 @@ html.look-type-C .collage {
   color: #333333;
 }
 @media (max-width: 767px) {
-  .discover-list-page .alphabet.topmodel {
+  .discover-list-page .alphabet.topmodel,
+  .profile-looks .alphabet.topmodel {
     font-size: 18px;
     /*margin-top: 0;*/
   }
