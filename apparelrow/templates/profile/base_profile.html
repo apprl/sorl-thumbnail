@@ -82,7 +82,7 @@ $(document).ready(function() {
                             {% blocktrans count products as product_count %}{{product_count}} Item{% plural %}{{product_count}} Items{% endblocktrans %}
                         </a>
                     {% else %}
-                        <a{% if request.path == likes_url %} class="selected"{% endif %} href="{{ likes_url }}">
+                        <a{% if request.path == likes_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ likes_url }}">
                             {% blocktrans count products as product_count %}{{product_count}} Item{% plural %}{{product_count}} Items{% endblocktrans %}
                         </a>
                     {% endif %}
@@ -92,22 +92,6 @@ $(document).ready(function() {
                             {% blocktrans count profile.looks as look_count %}{{look_count}} Look{% plural %}{{look_count}} Looks{% endblocktrans %}
                         </a>
                     </li>
-
-                    {% if profile == request.user %}
-                    <li>
-                        <a{% if request.path == likedlooks_url %} class="selected"{% endif %} href="{{ likedlooks_url }}">
-                            {% blocktrans count profile.look_likes_count as look_count %}{{look_count}} Liked Look{% plural %}{{look_count}} Liked Looks{% endblocktrans %}
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if profile.is_brand %}
-                    <li>
-                        <a{% if request.path == brandlooks_url %} class="selected"{% endif %} href="{{ brandlooks_url }}">
-                            {% blocktrans count profile.look_likes_count as look_count %}{{look_count}} Look using this Brand{% plural %}{{look_count}} Looks using this Brand{% endblocktrans %}
-                        </a>
-                    </li>
-                    {% endif %}
-
                     {% if profile.shops and request.user.is_authenticated and request.user == profile%}
 
                     <li>
