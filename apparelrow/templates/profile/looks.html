@@ -1,10 +1,24 @@
 {% extends "profile/base_profile.html" %}
-{% load i18n %}
+{% load i18n apparel_extras %}
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Looks" %} | {% endblock %}
 
 {% block body-classes %}profile-page profile-looks{% endblock body-classes %}
-{% block content %}     
+{% block content %} 
+{% with looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks %}
+     <div class="row">
+        <div class="col-lg-12">
+            <ul class="alphabet list-inline">
+                <li><a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">{% trans "Created" %}</a></li>
+                <li><a{% if request.path == likedlooks_url %} class="selected"{% endif %} href="{{ likedlooks_url }}">{% trans "Liked" %}</a></li>
+                {% if profile.is_brand %}
+                  <li><a{% if request.path == brandlooks_url %} class="selected"{% endif %} href="{{ brandlooks_url }}">{% trans "Using Brand" %}</a></li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>   
+    {% endwith %}
     {% if current_page.object_list %}
         {% include 'apparel/fragments/look_list.html' with is_profile=True %}
     {% else %}
