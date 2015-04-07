@@ -133,10 +133,12 @@ def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
 
     """ create message object """
     msg = EmailMessage(from_email=settings.DEFAULT_FROM_EMAIL, to=emails)
+
     #NOTICE: currently using the subject as defined in Mandrill template, thus also using merge tags there
     msg.template_name = notification_name           # A Mandrill template name
-    #this is not currently used, but for some reason the API fails if this is not set.
-    #  it could say anything, none of this lands in the final email
+
+    # this is not currently used, but for some reason the API fails if this is not set.
+    # it could say anything, none of this lands in the final email
     msg.template_content = {                        # Content blocks to fill in
         'EMPTY_BLOCK': "<a href='apprl.com/*|URL|*'>Hello there!</a>"
     }
@@ -165,17 +167,28 @@ def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
     activate(current_language)
 
 def retrieve_full_url(path):
-    """ append current hostname to front of URL
+    """
+        append current hostname to front of URL
     """
     domain = settings.STATIC_URL
-    return 'http://%s%s' % (domain, path)
+    if domain[-1] == "/":
+        if path[0] == "/":
+            path = path.replace("/","",1)
+    return '%s%s' % (domain, path)
 
-def retrieve_static_url(path):
-    """ append current hostname to front of URL for static email content
+def retrieve_static_url(path,domain=None):
     """
-    domain = settings.STATIC_URL
+        append current hostname to front of URL for static email content
+    """
+    if not domain:
+        domain = settings.STATIC_URL
     static_location = settings.APPAREL_EMAIL_IMAGE_ROOT
-    return 'http://%s%s%s' % (domain, static_location, path)
+    if not domain.startswith("http"):
+        domain = ""
+        static_location = "/%s/" % static_location
+    else:
+        static_location = "%s/" % static_location
+    return '%s%s%s' % (domain, static_location, path)
 
 #
 # COMMENT LOOK CREATED
