@@ -53,10 +53,18 @@
         </div>
         <div id="photo-markers" class="photo-hotspots">
             {% for component in components %}
-              <a rel="nofollow" target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" class="hotspot product btn-buy-external" id="hotspot-{{ component.product.id }}" data-sid="{% get_sid component.product.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }}"></a>
-              {% cache CACHE_TIMEOUT look_embed_tooltip component.product.id LANGUAGE_CODE %}
+              {% if component.product %}
+                <a rel="nofollow" target="_blank" href="{% if component.product.default_vendor and component.product.default_vendor.availability != 0 %}{% buy_url component.product.id component.product.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.product.get_absolute_url }}{% endif %}" class="hotspot product btn-buy-external" id="hotspot-{{ component.product.id }}" data-sid="{% get_sid component.product.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.product.slug }}" data-vendor="{{ component.product.default_vendor.vendor }}" data-price="{{ component.product.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }}"></a>
+                {% cache CACHE_TIMEOUT look_embed_tooltip component.product.id LANGUAGE_CODE %}
                 {% include "apparel/fragments/look_embed_tooltip.html" with owner=object.user product=component.product alternative=component.alternative only %}
-              {% endcache %}
+                {% endcache %}
+              {% endif %}
+              {% if component.link %}
+                  <a rel="nofollow" target="_blank" href="{{ link.url }}" class="hotspot product btn-buy-external" id="hotspot-link{{ component.link.id }}" style="{{ component.style_embed }}"></a>
+                 {% cache CACHE_TIMEOUT look_embed_link_tooltip component.link.id LANGUAGE_CODE %}
+                {% include "apparel/fragments/look_embed_link_tooltip.html" with owner=object.user link=component.link only %}
+                {% endcache %}
+              {% endif %}
             {% endfor %}
         </div>
       {% endif %}

@@ -1,9 +1,10 @@
 import logging
 import decimal
 import HTMLParser
-
 from django.conf import settings
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage
 from django.core.cache import cache
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
@@ -15,12 +16,18 @@ from django.utils.translation import get_language, activate
 from django.core.urlresolvers import reverse
 from django.utils.formats import number_format
 from django.db.models.loading import get_model
+from django.core.files.storage import DefaultStorage
+
+from sorl.thumbnail import get_thumbnail
+from django.templatetags.static import static
+
 
 import facebook
 
 from celery.task import task
 
 from apparelrow.apparel.utils import currency_exchange
+
 
 def is_following(user_one, user_two):
     return get_model('profile', 'Follow').objects.filter(user=user_one, user_follow=user_two, active=True).exists()
@@ -104,6 +111,85 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     activate(current_language)
 
+def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
+    """
+    New version of mail notifications using Mandrill templates (manually added to account beforehand) instead of local html templates
+
+    Sends an email to all users for the specified notification
+    Variable users is a list of django auth user instances.
+    """
+    if sender and sender.is_hidden:
+        return
+    emails = []
+    usernames = {}
+    notification_count = 0
+
+    """ extract email addresses and usernames"""
+    for user in users:
+        if user and user.email and user.is_active:
+            emails.append(user.email)
+            usernames[user.email] = {'USERNAME': user.display_name}
+            notification_count = notification_count + 1
+
+    """ create message object """
+    msg = EmailMessage(from_email=settings.DEFAULT_FROM_EMAIL, to=emails)
+
+    #NOTICE: currently using the subject as defined in Mandrill template, thus also using merge tags there
+    msg.template_name = notification_name           # A Mandrill template name
+
+    # this is not currently used, but for some reason the API fails if this is not set.
+    # it could say anything, none of this lands in the final email
+    msg.template_content = {                        # Content blocks to fill in
+        'EMPTY_BLOCK': "<a href='apprl.com/*|URL|*'>Hello there!</a>"
+    }
+    apprl_logo_url = retrieve_static_url("logo.png")
+
+    msg.global_merge_vars = {                       # values to merge into template
+        'LOGOURL': apprl_logo_url,
+        'FBICONURL': retrieve_static_url("icon-facebook.png"),
+        'TWITTERICONURL': retrieve_static_url("icon-twitter.png"),
+        'PINTERESTICONURL': retrieve_static_url("icon-pinterest.png"),
+        'INSTAICONURL': retrieve_static_url("icon-instagram.png")
+    }
+
+    msg.global_merge_vars.update(merge_vars) #add specific parameters
+
+    msg.merge_vars = usernames    # Per-recipient merge tags, here adding personalized names
+    msg.send()
+
+    current_language = get_language()
+    stats, created = get_model('statistics', 'NotificationEmailStats').objects.get_or_create(notification_name=notification_name,
+                                                                                             defaults={'notification_count': notification_count})
+    if not created:
+        stats.notification_count = stats.notification_count + notification_count
+        stats.save()
+
+    activate(current_language)
+
+def retrieve_full_url(path):
+    """
+        append current hostname to front of URL
+    """
+    domain = settings.STATIC_URL
+    if domain[-1] == "/":
+        if path[0] == "/":
+            path = path.replace("/","",1)
+    return '%s%s' % (domain, path)
+
+def retrieve_static_url(path,domain=None):
+    """
+        append current hostname to front of URL for static email content
+    """
+    if not domain:
+        domain = settings.STATIC_URL
+    static_location = settings.APPAREL_EMAIL_IMAGE_ROOT
+    if not domain.startswith("http"):
+        domain = ""
+        static_location = "/%s/" % static_location
+    else:
+        static_location = "%s/" % static_location
+    return '%s%s%s' % (domain, static_location, path)
+
 #
 # COMMENT LOOK CREATED
 #
@@ -125,7 +211,7 @@ def process_comment_look_created(recipient, sender, comment, **kwargs):
     if recipient.comment_look_created == 'A':
         notify_user = recipient
     elif recipient.comment_look_created == 'F':
-        if is_following(user, sender):
+        if is_following(recipient, sender):
             notify_user = recipient
 
     if notify_user and sender:
@@ -299,10 +385,27 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
             notify_user = recipient
 
     if notify_user and sender:
-        notify_by_mail([notify_user], 'like_look_created', sender, {
-            'object_title': look_like.look.title,
-            'object_link': look_like.look.get_absolute_url()
-        })
+        merge_vars = dict()
+        domain = Site.objects.get_current().domain
+        sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+        merge_vars['PROFILEURL'] = sender_link
+        look_url = retrieve_full_url(look_like.look.get_absolute_url())
+        merge_vars['LOOKURL'] = look_url
+        look_name = look_like.look.title
+        merge_vars['LOOKNAME'] = look_name
+        look_photo_url = look_like.look.static_image.url
+        merge_vars['LOOKPHOTOURL'] = look_photo_url
+
+        if sender.image:
+            profile_photo_url =  get_thumbnail(sender.image, '500').url
+        elif sender.facebook_user_id:
+            profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+        else:
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+        merge_vars['LIKERNAME'] = sender.display_name
+        merge_vars['PROFILEPHOTOURL'] = profile_photo_url
+
+        notify_with_mandrill_template([notify_user], "likedLook", sender, merge_vars)
 
         return get_key('like_look_created', recipient, sender, look_like)
 
@@ -327,15 +430,26 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         return 'duplicate'
 
     notify_user = None
-    template_name = 'follow_user'
     if recipient.follow_user == 'A':
         notify_user = recipient
-        if is_following(recipient, sender):
-            template_name = 'follow_user_following'
+        #if is_following(recipient, sender):
+            #TODO handle in new templates
 
     if notify_user and sender:
-        notify_by_mail([notify_user], template_name, sender)
+        merge_vars = dict()
+        domain = Site.objects.get_current().domain
+        sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+        merge_vars['PROFILEURL'] = sender_link
+        if sender.image:
+            profile_photo_url =  get_thumbnail(sender.image, '500').url
+        elif sender.facebook_user_id:
+            profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+        else:
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+        merge_vars['FOLLOWERNAME'] = sender.display_name
+        merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
 
+        notify_with_mandrill_template([notify_user], "newFollower", sender, merge_vars)
         return get_key('follow_user', recipient, sender, None)
 
     if not notify_user and sender:
@@ -365,8 +479,20 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             continue
 
         if recipient.facebook_friends == 'A' and sender:
-            notify_by_mail([recipient], 'facebook_friends', sender)
+            merge_vars = dict()
+            domain = Site.objects.get_current().domain
+            sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+            merge_vars['PROFILEURL'] = sender_link
+            if sender.image:
+                profile_photo_url =  get_thumbnail(sender.image, '500').url
+            elif sender.facebook_user_id:
+                profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+            else:
+                profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            merge_vars['FRIENDNAME'] = sender.display_name
+            merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
 
+            notify_with_mandrill_template([recipient], "fbFriend", sender, merge_vars)
 
 #
 # SALE ALERT
@@ -384,8 +510,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
         if likes.user and likes.user.discount_notification:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
-            if is_duplicate('sale_alert', likes.user, sender, product):
-                template_name = 'second_sale_alert'
+           # if is_duplicate('sale_alert', likes.user, sender, product):
+                #TODO adapt this for new templates
 
             # Use the exchange rate from the user language
             language = settings.LANGUAGE_CODE
@@ -399,10 +525,17 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             locale_original_price = (original_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
             locale_discount_price = (discount_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
 
-            notify_by_mail([likes.user], template_name, sender, {
-                'brand_name': sender.display_name,
-                'product_name': product.product_name,
-                'object_link': product.get_absolute_url(),
-                'original_price': '%s %s' % (number_format(locale_original_price, use_l10n=False, force_grouping=True), currency),
-                'discount_price': '%s %s' % (number_format(locale_discount_price, use_l10n=False, force_grouping=True), currency),
-            })
+            merge_vars = dict()
+            if product.image:
+                product_photo_url = get_thumbnail(product.image, '500').url
+            else:
+                product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            merge_vars['PRODUCTPHOTOURL'] = retrieve_full_url(product_photo_url)
+            merge_vars['PRODUCTNAME'] = product.product_name
+            merge_vars['PRODUCTLINK'] = retrieve_full_url(product.get_absolute_url())
+            merge_vars['OLDPRICE'] = locale_original_price
+            merge_vars['NEWPRICE'] = locale_discount_price
+            merge_vars['CURRENCY'] = currency
+
+
+            notify_with_mandrill_template([likes.user], "itemSale", sender, merge_vars)

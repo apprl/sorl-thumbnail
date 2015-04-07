@@ -11,8 +11,6 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:delete', this.delete_shop, this);
         App.Events.on('widget:reset', this.reset, this);
         App.Events.on('widget:save', this.save_shop, this);
-        App.Events.on('widget:publish', this.publish_shop, this);
-        App.Events.on('widget:unpublish', this.unpublish_shop, this);
         App.Events.on('widget:product_display', this.product_display, this);
         App.Events.on('widget:touchmenu', this.alter_buttons, this);
 
@@ -119,17 +117,15 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
 
         $title.html($title.html().replace(nr, val));
     },
-    publish_shop: function(values) {
-        this.model.set('published', true);
-        this.save_shop(values);
-    },
     product_display: function(show_liked) {
         this.model.set('show_liked', show_liked);
         this.init_footer();
         if(show_liked) {
-            if (!this.model.attributes.id) {
-                this.save_shop({ title: "My liked products", 'callback': function() {
+            if (!this.model.get('id')) {
+                this.save_shop({ title: "My liked products", 'callback': function(id) {
                     $("#embed_shop_form #id_name").val("My liked products");
+
+                    extenal_shop_id = id;
                     window.shop_create.init_products();
                 }});
             }
@@ -150,10 +146,6 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         }
         $('#shop-preview').removeClass('splash');
         this.resize();
-    },
-    unpublish_shop: function() {
-        this.model.set('published', false);
-        this.model.save();
     },
     delete_shop: function() {
         this.model._dirty = false;
@@ -210,6 +202,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.model._dirty = false;
         // Update title
         $('.body-header h1 span').html('Edit ' + this.model.get('title'));
+        external_shop_id = this.model.get('id');
         if (callback) {
             callback(this.model.get('id'));
         } else {

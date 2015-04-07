@@ -587,8 +587,15 @@ body {
 	border-radius: 295px;
 	text-align: center;
     cursor: pointer;
+    /* Staffans fix */
+    border-radius: 50%;
+    /* Prevent background color leak outs */
+    -webkit-background-clip: padding-box;
+    -moz-background-clip:    padding;
+    background-clip:         padding-box;
+    /* End Staffans fix */
 
-	-webkit-transition: background-color @apprl-hover-style @apprl-hover-time;
+    -webkit-transition: background-color @apprl-hover-style @apprl-hover-time;
 	-moz-transition: background-color @apprl-hover-style @apprl-hover-time;
 	transition: background-color @apprl-hover-style @apprl-hover-time;
 

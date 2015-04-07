@@ -12,7 +12,7 @@
         {% if profile == request.user %}
             <div class="message warning">
                 <p>{% trans "You currently don't follow anyone." %}</p>
-                <a class="btn btn-success btn-block" href="{% url 'user-list-popular' %}">{% trans "Find members to follow!" %}</a>
+                <a class="btn btn-success" href="{% url 'user-list-popular' %}">{% trans "Find members to follow!" %}</a>
             </div>
         {% else %}
             <div class="message warning">{% blocktrans with profile.display_name as display_name %}{{ display_name }} is not following anyone yet.{% endblocktrans %}</div>

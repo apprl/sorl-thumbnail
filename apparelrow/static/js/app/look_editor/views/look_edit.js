@@ -19,7 +19,8 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
-
+        this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+        
         // Look editor popup
         this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
 
@@ -58,6 +59,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
 
         // Listen on product add
         App.Events.on('widget:product:add', this.pending_add_component, this);
+        App.Events.on('look_edit:add_link', this.pending_add_link, this);
         this.pending_product = false;
         this.pending_component = false;
 
@@ -76,6 +78,12 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             this.disable_footer();
         } else {
             this.init_footer();
+        }
+
+        if (external_look_type == 'photo') {
+            var custom_link_view = new App.Views.CustomLinkView();
+
+            window.filter_product_view.add_tab('custom-link', 'Custom link', 'globe', custom_link_view);
         }
         $(window).trigger('resize');
     },
@@ -109,6 +117,11 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         component.set('product', product.toJSON());
 
         this.model._dirty = true;
+    },
+
+    pending_add_link: function(link) {
+        this.hide_product_filter();
+        this.pending_link = link;
     },
 
     pending_add_component: function(product) {
@@ -192,6 +205,16 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             this.model.components.add(new_component);
             this.pending_product = false;
             this.pending_event = false;
+
+        } else if(this.pending_link) {
+            var new_component = this._create_photo_component(this._get_hotspot(e));
+            new_component.set('link', this.pending_link.toJSON());
+            console.log(new_component);
+            this.model.components.add(new_component);
+            console.log(this.model.components);
+            this.pending_product = false;
+            this.pending_event = false;
+            App.Events.trigger('look_edit:linked_placed');
         } else {
             if ($(window).width() < 992 && isMobileDevice() && external_look_type == 'photo') {
                 this.pending_event = e;
@@ -395,11 +418,17 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         this.model.components.each(_.bind(function(model) {
             model.unset('rel_left');
             model.unset('rel_top');
-            if(!model.has('product') || !model.get('product')) {
+            if(!((model.has('product') && model.get('product')) || (model.has('link') && model.get('link')))) {
                 this.model.components.remove(model);
                 model.destroy();
             }
         }, this));
+
+        if (!this.model.components.length) {
+            App.Events.trigger('popup_dispatcher:hide');
+            this.popup_dispatcher.show('dialog_no_products');
+            return;
+        }
 
         if(this.model.backend == 'client') {
             this.model.backend = 'server';

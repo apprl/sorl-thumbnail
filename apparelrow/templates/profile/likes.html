@@ -29,7 +29,7 @@
             <div class="message warning">
                 <p>{% trans "Welcome to your Apprl profile!" %}</p>
                 <p>{% trans "All the items that you ♥ will end up here<br>(and you will get alerts once they go on sale)." %}</p>
-                <a class="btn btn-primary" href="{% multi_gender_url request 'shop' 'shop' %}">{% trans "Go find items!" %}</a>
+                <a class="btn btn-success" href="{% multi_gender_url request 'shop' 'shop' %}">{% trans "Go find items!" %}</a>
             </div>
             {% else %}
             {% if profile.is_brand %}

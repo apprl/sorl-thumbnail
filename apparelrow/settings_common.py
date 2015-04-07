@@ -497,6 +497,7 @@ PIPELINE_JS = {
             'js/app/base/views/dialog_unpublish.js',
             'js/app/base/views/dialog_save.js',
             'js/app/base/views/dialog_login.js',
+            'js/app/base/views/dialog_no_products.js',
             'js/app/product_widget_editor/views/product_widget_create.js',
             'js/app/product_widget_editor/views/product_widget_edit_popup.js',
             'js/app/look_editor/views/look_edit_filter_tabs.js',
@@ -545,6 +546,7 @@ PIPELINE_JS = {
                              'js/app/base/views/dialog_unpublish.js',
                              'js/app/base/views/dialog_save.js',
                              'js/app/base/views/dialog_login.js',
+                             'js/app/base/views/dialog_no_products.js',
                              'js/app/look_editor/views/look_edit_filter_tabs.js',
                              'js/app/base/views/header.js',
                              'js/app/base/views/dialog_header_mobile.js',
@@ -564,6 +566,7 @@ PIPELINE_JS = {
                              'js/app/look_editor/views/look_component_photo.js',
                              'js/app/look_editor/views/look_component_collage.js',
                              'js/app/look_editor/views/look_edit_toolbar.js',
+                             'js/app/look_editor/views/custom_link.js',
                              'js/app/look_editor/look_editor.js',
                              ),
         'output_filename': 'js/compiled/look_editor.js',
@@ -774,6 +777,8 @@ CELERY_ROUTES = ({
     'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.clicks_summary': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}},)
 
 # LOGGING CONFIGURATION
@@ -924,5 +929,3 @@ LOGGING = {
 }
 
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
-
-
