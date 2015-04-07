@@ -94,7 +94,7 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
             user = get_user_model().objects.get(id=user_id)
             values.append(user_id)
             cursor.execute(
-                """SELECT PS.vendor, PS.user_id, PS.product, count(PS.id)
+                """SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
                    FROM statistics_productstat PS, profile_user U, apparel_vendor V
                    WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
                    AND V.is_cpc = True AND PS.created BETWEEN %s AND %s AND U.id = %s
