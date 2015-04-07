@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client
 
 from localeurl.utils import locale_url
+from apparelrow.apparel.models import Look
 from apparelrow.profile.notifications import retrieve_full_url, retrieve_static_url
 
 
@@ -81,4 +82,17 @@ class TestUtilities(TestCase):
         self.assertEqual("/static/email/someimage.png",url)
         print "Test retrieve static url"
 
+    @override_settings(STATIC_URL="http://s-staging.apprl.com/")
+    def test_retrieve_look_full_url(self):
+        from django.conf import settings
+        look = Look()
+        look.name = "yekshamesh"
+        look.slug = "yekshamesh"
+        #self.assertEqual("/en/look/yekshamesh/",reverse("look-detail",{"slug":look.get_absolute_url()})
+        self.assertEqual("/looks/yekshamesh/",look.get_absolute_url())
+        print "Test full url"
+        url = retrieve_full_url(look.get_absolute_url())
+        self.assertEqual(settings.STATIC_URL, self.temp_static_url)
+        self.assertEqual("http://s-staging.apprl.com/looks/yekshamesh/",url)
+        print "Test retrieve static url look suceeded"
 
