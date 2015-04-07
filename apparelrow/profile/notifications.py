@@ -390,11 +390,11 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
         look_url = look_like.look.get_absolute_url()
-        merge_vars['LOOKURL'] = retrieve_full_url(look_url)
+        merge_vars['LOOKURL'] = look_url
         look_name = look_like.look.title
         merge_vars['LOOKNAME'] = look_name
         look_photo_url = look_like.look.static_image.url
-        merge_vars['LOOKPHOTOURL'] = retrieve_full_url(look_photo_url)
+        merge_vars['LOOKPHOTOURL'] = look_photo_url
 
         if sender.image:
             profile_photo_url =  get_thumbnail(sender.image, '500').url
@@ -403,7 +403,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         else:
             profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
         merge_vars['LIKERNAME'] = sender.display_name
-        merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+        merge_vars['PROFILEPHOTOURL'] = profile_photo_url
 
         notify_with_mandrill_template([notify_user], "likedLook", sender, merge_vars)
 
