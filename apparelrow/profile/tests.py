@@ -1,3 +1,4 @@
+from django.contrib.sites.models import Site
 import re
 
 from django.core import mail
@@ -91,8 +92,10 @@ class TestUtilities(TestCase):
         #self.assertEqual("/en/look/yekshamesh/",reverse("look-detail",{"slug":look.get_absolute_url()})
         self.assertEqual("/looks/yekshamesh/",look.get_absolute_url())
         print "Test full url"
+        domain = Site.objects.get_current().domain
         url = retrieve_full_url(look.get_absolute_url())
         self.assertEqual(settings.STATIC_URL, self.temp_static_url)
-        self.assertEqual("http://s-staging.apprl.com/looks/yekshamesh/",url)
+        url = 'http://%s%s' % (domain, look.get_absolute_url())
+        self.assertEqual("http://example.com/looks/yekshamesh/",url)
         print "Test retrieve static url look suceeded"
 

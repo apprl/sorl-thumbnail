@@ -389,8 +389,8 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         domain = Site.objects.get_current().domain
         sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
-        look_url = retrieve_full_url(look_like.look.get_absolute_url())
-        merge_vars['LOOKURL'] = look_url
+        look_url_link = 'http://%s%s' % (domain, look_like.look.get_absolute_url())
+        merge_vars['LOOKURL'] = look_url_link
         look_name = look_like.look.title
         merge_vars['LOOKNAME'] = look_name
         look_photo_url = look_like.look.static_image.url
