@@ -512,8 +512,9 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
         if likes.user and likes.user.discount_notification:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
-           # if is_duplicate('sale_alert', likes.user, sender, product):
-                #TODO adapt this for new templates
+            further = False
+            if is_duplicate('sale_alert', likes.user, sender, product):
+                further = True
 
             # Use the exchange rate from the user language
             language = settings.LANGUAGE_CODE
@@ -540,6 +541,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['OLDPRICE'] = locale_original_price
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
+            if further:
+                merge_vars['FURTHER'] = further
 
 
             notify_with_mandrill_template([likes.user], "itemSale", sender, merge_vars)
