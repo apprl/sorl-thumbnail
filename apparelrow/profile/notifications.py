@@ -396,11 +396,11 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         look_photo_url = look_like.look.static_image.url
         merge_vars['LOOKPHOTOURL'] = look_photo_url
         if sender.image:
-            profile_photo_url = retrieve_full_url( get_thumbnail(sender.image, '500').url )
+            profile_photo_url = get_thumbnail(sender.image, '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
-            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            profile_photo_url = retrieve_full_url(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
 
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
@@ -441,11 +441,11 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
         if sender.image:
-            profile_photo_url =  retrieve_full_url( get_thumbnail(sender.image, '500').url )
+            profile_photo_url = get_thumbnail(sender.image, '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
-            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            profile_photo_url = retrieve_full_url( staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE) )
 
         merge_vars['FOLLOWERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
@@ -485,11 +485,11 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
             if sender.image:
-                profile_photo_url =  retrieve_full_url( get_thumbnail(sender.image, '500').url )
+                profile_photo_url = get_thumbnail(sender.image, '500').url
             elif sender.facebook_user_id:
                 profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
             else:
-                profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                profile_photo_url = retrieve_full_url( staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE) )
 
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = profile_photo_url
@@ -532,8 +532,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             if product.image:
                 product_photo_url = get_thumbnail(product.image, '500').url
             else:
-                product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
-            merge_vars['PRODUCTPHOTOURL'] = retrieve_full_url(product_photo_url)
+                product_photo_url = retrieve_full_url( staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE) )
+            merge_vars['PRODUCTPHOTOURL'] = product_photo_url
             merge_vars['PRODUCTNAME'] = product.product_name
             merge_vars['PRODUCTLINK'] = "http://%s%s" % (domain,product.get_absolute_url())
             merge_vars['OLDPRICE'] = locale_original_price
