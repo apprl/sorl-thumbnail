@@ -400,7 +400,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
-            profile_photo_url = retrieve_full_url(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
@@ -445,7 +445,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
-            profile_photo_url = retrieve_full_url( staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE) )
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
         merge_vars['FOLLOWERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
@@ -489,7 +489,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             elif sender.facebook_user_id:
                 profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
             else:
-                profile_photo_url = retrieve_full_url( staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE) )
+                profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = profile_photo_url
