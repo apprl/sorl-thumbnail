@@ -8736,6 +8736,17 @@ fieldset[disabled] .pagination .btn-pagination.active {
 .shop-embed .container {
   max-width: none;
 }
+.shop-embed h3 {
+  display: none;
+}
+.shop-embed.filter-collapse-shown h3 {
+  display: block;
+}
+@media (min-width: 768px) {
+  .shop-embed h3 {
+    display: block;
+  }
+}
 .price.discounted,
 .sold-out.discounted {
   text-decoration: line-through;

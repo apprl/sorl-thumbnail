@@ -1014,6 +1014,19 @@ footer {
     .container {
         max-width: none;
     }
+    h3 {
+        display: none;
+      }
+      &.filter-collapse-shown {
+        h3 {
+          display: block;
+        }
+      }
+    @media (min-width: @screen-tablet) {
+      h3 {
+        display: block;
+      }
+    }
 }
 
 .price, .sold-out {
