@@ -529,7 +529,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
             domain = Site.objects.get_current().domain
             merge_vars = dict()
-            if product.image:
+            if product.product_image:
                 product_photo_url = get_thumbnail(product.product_image, '500').url
             else:
                 product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
