@@ -525,6 +525,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             locale_original_price = (original_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
             locale_discount_price = (discount_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
 
+            domain = Site.objects.get_current().domain
             merge_vars = dict()
             if product.image:
                 product_photo_url = get_thumbnail(product.image, '500').url
@@ -532,7 +533,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
                 product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
             merge_vars['PRODUCTPHOTOURL'] = retrieve_full_url(product_photo_url)
             merge_vars['PRODUCTNAME'] = product.product_name
-            merge_vars['PRODUCTLINK'] = retrieve_full_url(product.get_absolute_url())
+            merge_vars['PRODUCTLINK'] = "http://%s%s" % (domain,product.get_absolute_url())
             merge_vars['OLDPRICE'] = locale_original_price
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
