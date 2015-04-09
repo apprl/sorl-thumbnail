@@ -7,7 +7,7 @@ from apparelrow.dashboard.importer.base import BaseImporter
 from django.db.models.loading import get_model
 from django.contrib.auth import get_user_model
 
-logger = logging.getLogger('affiliate_networks')
+logger = logging.getLogger('dashboard')
 
 
 class Importer(BaseImporter):
@@ -42,6 +42,7 @@ class Importer(BaseImporter):
     def get_data(self, start_date, end_date):
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(start_date, datetime.time(23, 59, 59, 999999))
+        logger.info("Importing Cost per Click data from %s until %s"%(start_date_query, end_date_query))
         data = self.get_cpc_clicks_per_vendor_per_user(start_date_query, end_date_query)
         for (vendor_id, user_id, count) in data:
             try:
