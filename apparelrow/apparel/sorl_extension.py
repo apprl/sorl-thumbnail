@@ -11,9 +11,34 @@ from os.path import basename
 from django.conf import settings
 from sorl.thumbnail.helpers import tokey, serialize
 
+ADOBE_TO_XYZ = (
+    0.57667, 0.18556, 0.18823, 0,
+    0.29734, 0.62736, 0.07529, 0,
+    0.02703, 0.07069, 0.99134, 0,
+)
+
+XYZ_TO_SRGB = (
+    3.2406, -1.5372, -0.4986, 0,
+    -0.9689, 1.8758, 0.0415, 0,
+    0.0557, -0.2040, 1.0570, 0,
+)
+
+def adobe_to_srgb(image):
+    return image.convert('RGB', ADOBE_TO_XYZ).convert('RGB', XYZ_TO_SRGB)
+
+def is_adobe_rgb(image):
+    return 'Adobe RGB' in image.info.get('icc_profile', '')
+
+def preserve_adobe_rgb(image, **kwargs):
+    if is_adobe_rgb(image):
+        return adobe_to_srgb(image)
+    return image
+
+
 class Engine(PILEngine):
     def create(self, image, geometry, options):
         image = super(PILEngine, self).create(image, geometry, options)
+        image = preserve_adobe_rgb(image)
         image = self.transparent(image, geometry, options)
         return image
 
