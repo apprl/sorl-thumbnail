@@ -505,6 +505,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
     """
     Process a new sale alert.
     """
+    # Todo: function documentation
+
     logger = process_sale_alert.get_logger(**kwargs)
 
     template_name = 'first_sale_alert' if first else 'second_sale_alert'
@@ -536,6 +538,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
                 product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
             merge_vars['PRODUCTPHOTOURL'] = product_photo_url
+            merge_vars['BRANDNAME'] = product.manufacturer.name
             merge_vars['PRODUCTNAME'] = product.product_name
             merge_vars['PRODUCTLINK'] = "http://%s%s" % (domain,product.get_absolute_url())
             merge_vars['OLDPRICE'] = locale_original_price
