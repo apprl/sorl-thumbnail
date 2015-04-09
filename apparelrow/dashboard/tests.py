@@ -1,7 +1,10 @@
 import re
+import datetime
 import urllib
 import decimal
 import os
+import calendar
+import json
 
 from django.conf import settings
 from django.core import mail
@@ -17,7 +20,8 @@ from localeurl.utils import locale_url
 from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
-from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
+from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor, get_total_clicks_per_vendor
+from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.admin import PaymentAdmin
 from jsonfield import JSONField
 
@@ -391,6 +395,7 @@ class TestDashboardCuts(TransactionTestCase):
     def test_default_cut(self):
         user = self._create_partner_user()
         vendor, transaction = self._create_transaction(user, order_value='500')
+        self.assertTrue(vendor.is_cpo)
 
         # Import the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
@@ -398,12 +403,14 @@ class TestDashboardCuts(TransactionTestCase):
         # Verify sale transaction
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
         sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertEqual(sale.type, Sale.COST_PER_ORDER)
         self.assertIsNotNone(sale)
         self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
     def test_non_default_cut(self):
         user = self._create_partner_user()
         vendor, transaction = self._create_transaction(user, order_value='500')
+        self.assertTrue(vendor.is_cpo)
 
         # Create group + cut for store vendor
         group = get_model('dashboard', 'Group').objects.create(name='group_name')
@@ -417,12 +424,14 @@ class TestDashboardCuts(TransactionTestCase):
         # Verify sale transaction
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
         sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertEqual(sale.type, Sale.COST_PER_ORDER)
         self.assertIsNotNone(sale)
         self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal('0.9'))
 
     def test_update_cut(self):
         user = self._create_partner_user()
         vendor, transaction = self._create_transaction(user, order_value='500')
+        self.assertTrue(vendor.is_cpo)
 
         # Create group + cut for store vendor
         group = get_model('dashboard', 'Group').objects.create(name='group_name')
@@ -436,6 +445,7 @@ class TestDashboardCuts(TransactionTestCase):
         # Verify sale transaction
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
         sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertEqual(sale.type, Sale.COST_PER_ORDER)
         self.assertIsNotNone(sale)
         self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal('0.8'))
         self.assertEqual(sale.cut, decimal.Decimal('0.8'))
@@ -459,6 +469,8 @@ class TestDashboardCuts(TransactionTestCase):
         user = self._create_partner_user()
         payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=user)
         vendor, transaction = self._create_transaction(user, order_value='1000')
+        self.assertTrue(vendor.is_cpo)
+
         group = get_model('dashboard', 'Group').objects.create(name='mygroup')
         cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, referral_cut=0.2)
 
@@ -469,6 +481,7 @@ class TestDashboardCuts(TransactionTestCase):
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
         sale = get_model('dashboard', 'Sale').objects.get()
+        self.assertEqual(sale.type, Sale.COST_PER_ORDER)
         self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
         self.assertEqual(sale.paid, get_model('dashboard', 'Sale').PAID_PENDING)
@@ -534,6 +547,8 @@ class TestDashboardCuts(TransactionTestCase):
         user.partner_group = group
         user.save()
         vendor = Vendor.objects.create(name="TestVendor",homepage="http://www.example.com",provider="aaa")
+        self.assertTrue(vendor.is_cpo)
+
         cut = Cut.objects.create(vendor=vendor, group=group, cut=0.9)
         store_commission = StoreCommission.objects.create(vendor=vendor,commission="6/10/0")
 
@@ -1355,3 +1370,187 @@ class TestAffiliateNetworks(TransactionTestCase):
         self.assertAlmostEqual(sale.original_amount, decimal.Decimal('150.55'))
         self.assertAlmostEqual(sale.original_commission, decimal.Decimal('9.03'))
         self.assertGreater(sale.status, sale_model.PENDING)
+
+        
+class TestSalesPerClicks(TransactionTestCase):
+    fixtures = ['test-fxrates.yaml']
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.is_partner = True
+        self.user.save()
+        self.group = get_model('dashboard', 'Group').objects.create(name='group_name')
+        self.user.partner_group = self.group
+        self.user.save()
+
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor', is_cpc=True)
+        self.other_vendor = get_model('apparel', 'Vendor').objects.create(name='Other vendor', is_cpc=True)
+
+        get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
+                                                     vendor=self.vendor)
+        get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
+                                                     vendor=self.other_vendor)
+
+        category = get_model('apparel', 'Category').objects.create(name='Category')
+        manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
+        self.product = get_model('apparel', 'Product').objects.create(
+            product_name='Product',
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            product_image='no real image',
+            published=True
+        )
+        self.product2 = get_model('apparel', 'Product').objects.create(
+            product_name='Other Product',
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            product_image='no real image',
+            published=True,
+            sku=123
+        )
+        self.product3 = get_model('apparel', 'Product').objects.create(
+            product_name='Other Product Number 3',
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            product_image='no real image',
+            published=True,
+            sku=456
+        )
+        get_model('apparel', 'VendorProduct').objects.create(product=self.product, vendor=self.vendor)
+        get_model('apparel', 'VendorProduct').objects.create(product=self.product2, vendor=self.other_vendor)
+        get_model('apparel', 'VendorProduct').objects.create(product=self.product3, vendor=self.vendor)
+        get_model('dashboard', 'ClickCost').objects.create(vendor=self.vendor, amount=1.00, currency="EUR")
+        get_model('dashboard', 'ClickCost').objects.create(vendor=self.other_vendor, amount=50.00, currency="SEK")
+
+
+    def test_sale_cost_per_click(self):
+        ''' Test that earnings per clicks are being generated
+        '''
+        ip = "192.128.2.3"
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+
+        for i in range(0, 100):
+            get_model('statistics', 'ProductStat').objects.create(product=self.product.product_name, page="BuyReferral",
+                                                                  user_id=self.user.id, vendor=self.vendor.name,
+                                                                  ip=ip, created=yesterday)
+        #query_date = yesterday.strftime('%d-%m-%Y')
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.get().amount, 100)
+
+        click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.vendor)
+        sale_amount = 100 * click_cost.amount
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 2)
+        _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, self.vendor)
+        earning_cut = normal_cut * publisher_cut
+
+        user_earning = get_model('dashboard', 'UserEarning').objects.get(user=self.user)
+        self.assertAlmostEqual(user_earning.amount, decimal.Decimal("%.2f" % (sale_amount * earning_cut)))
+
+    def test_sale_cost_per_click_currency_exchange(self):
+        """Test that earnings per clicks are being generated in EUR, even when the ClickCost is defined in another
+        currency
+        """
+        ip = "192.128.2.3"
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+
+        # Generate random ProductStat data
+        for i in range(0, 100):
+            get_model('statistics', 'ProductStat').objects.create(product=self.product2.product_name, page="BuyReferral",
+                                                                  user_id=self.user.id, vendor=self.other_vendor.name,
+                                                                  ip=ip, created=yesterday)
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.other_vendor)
+        rate = currency_exchange('EUR', click_cost.currency)
+        _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, self.other_vendor)
+        earning_cut = normal_cut * publisher_cut
+        sale_amount = 100 * click_cost.amount * rate
+        self.assertEqual(get_model('dashboard', 'Sale').objects.get().converted_amount, sale_amount)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 2)
+
+        user_earning = get_model('dashboard', 'UserEarning').objects.get(user=self.user)
+        self.assertAlmostEqual(user_earning.amount, decimal.Decimal("%.2f" % (sale_amount * earning_cut)))
+
+    def test_cost_per_clicks_historical_clicks(self):
+        """Test that not clicks from today are being shown in the dashboard. This clicks can't be included until their
+        respective earnings are generated
+        """
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+        ip = "192.128.2.3"
+
+        # Generated 100 clicks yesterday
+        for i in range(0, 100):
+            get_model('statistics', 'ProductStat').objects.create(product=self.product2.product_name, page="BuyReferral",
+                                                                  user_id=self.user.id, vendor=self.vendor.name,
+                                                                  ip=ip, created=yesterday)
+        # Generated 2000 clicks today
+        for i in range(0, 2000):
+            get_model('statistics', 'ProductStat').objects.create(product=self.product2.product_name, page="BuyReferral",
+                                                                  user_id=self.user.id, vendor=self.vendor.name,
+                                                                  ip=ip)
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+        self.assertEqual(get_total_clicks_per_vendor(self.vendor), 100)
+
+    def test_detail_clicks_amount(self):
+        ''' Test that detailed data for clicks per day is being generated correctly
+        '''
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+        ip = "192.128.2.3"
+        for i in range(0, 52):
+            get_model('statistics', 'ProductStat').objects.create(product=self.product.product_name, page="BuyReferral",
+                                                                  user_id=self.user.id, vendor=self.vendor.name,
+                                                                  ip=ip, created=yesterday)
+        for i in range(0, 48):
+            get_model('statistics', 'ProductStat').objects.create(product=self.product3.product_name, page="BuyReferral",
+                                                                  user_id=self.user.id, vendor=self.vendor.name,
+                                                                  ip=ip, created=yesterday)
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 2)
+        user_earning = get_model('dashboard', 'UserEarning').objects.get(user=self.user)
+
+        # Simulate a POST call for clicks detail
+        dict_data = {'user_id': self.user.id, 'vendor': self.vendor.name, 'clicks': 100, 'amount': user_earning.amount,
+                     'date': calendar.timegm(yesterday.timetuple())}
+        response = self.client.post(reverse('clicks-detail'), dict_data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        response_dict = json.loads(response.content)
+        sum_clicks = 0
+        for item in response_dict:
+            self.assertEqual(item['user_id'], self.user.id)
+            self.assertEqual(item['vendor'], self.vendor.name)
+            sum_clicks += item['count']
+        self.assertEqual(sum_clicks, 100)
+
+    def test_sale_cost_per_click_apprl_clicks(self):
+        ''' Test that earnings per clicks are being generated for clicks on apprl.com
+        '''
+        ip = "192.128.2.3"
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+
+        for i in range(0, 100):
+            get_model('statistics', 'ProductStat').objects.create(product=self.product.product_name, page="BuyReferral",
+                                                                  user_id=0, vendor=self.vendor.name,
+                                                                  ip=ip, created=yesterday)
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+
+        click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.vendor)
+        sale_amount = 100 * click_cost.amount
+        self.assertEqual(get_model('dashboard', 'Sale').objects.get().amount, sale_amount)
+
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 1)
+        user_earning = get_model('dashboard', 'UserEarning').objects.get()
+        self.assertEqual(user_earning.user_earning_type, 'apprl_commission')
+        self.assertAlmostEqual(user_earning.amount, sale_amount)

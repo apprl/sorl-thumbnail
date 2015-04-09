@@ -51,8 +51,8 @@ def dev_local():
     env.solr_url = 'localhost'
     env.s3_url = "none"
 
-    env.path = '/Users/%(user)s/PycharmProjects/apparelenv/apparelrow/' % env
-    env.solr_path = '/Users/%(user)s/PycharmProjects/apparelenv/apparelrow/solr-apprl/' % env
+    env.path = '/Users/%(user)s/jasper/apparelenv/apparelrow/' % env
+    env.solr_path = '/Users/%(user)s/jasper/apparelenv/apparelrow/solr-apprl/' % env
 
 
 @task

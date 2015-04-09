@@ -1,0 +1,9 @@
+{% load i18n thumbnail thumbnail_extras apparel_extras buy_extras %}
+<div id="tooltip-link{{ link.id }}" class="tooltip">
+    <div class="media popover-link">
+        <div>
+            <h4><a target="_blank" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></h4>
+            <div class="text-center"><a href="{{ link.url }}" target="_blank" class="btn btn-primary">{% trans "GO TO" %}</a></div>
+        </div>
+    </div>
+</div>

@@ -205,7 +205,7 @@
                             <th class="hidden-xs center">{% trans "Commission earnings" %}</th>
                             <th class="hidden-xs center">{% trans "Click earnings" %}</th>
                             <th class="center">{% trans "Total earnings" %}</th>
-                            <th class="center">{% trans "Network earnings" %}</th>
+                            <th class="center">{% trans "Total network earnings" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -218,16 +218,16 @@
                                 <a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a>
                             </td>
                             <td class="hidden-xs center" data-sort="{{ publisher.publisher_earnings }}">
-                                {{ currency }} {{ publisher.publisher_earnings }}
+                                {{ currency }} {{ publisher.publisher_earnings|floatdot }}
                             </td>
                             <td class="hidden-xs center" data-sort="{{ publisher.publisher_click_earnings }}">
-                                {{ currency }} {{ publisher.publisher_click_earnings }}
+                                {{ currency }} {{ publisher.publisher_click_earnings|floatdot }}
                             </td>
                             <td class="center" data-sort="{{ publisher.total_network_earnings }}">
-                                {{ currency }} {{ publisher.total_network_earnings }}
+                                {{ currency }} {{ publisher.total_network_earnings|floatdot }}
                             </td>
                             <td class="center" data-sort="{{ publisher.network_earnings }}">
-                                {{ currency }} {{ publisher.network_earnings }}
+                                {{ currency }} {{ publisher.network_earnings|floatdot }}
                             </td>
                         </tr>
                         {% empty %}
@@ -321,9 +321,13 @@
                                 <td >{% trans "Clicks to " %}{{ earning.sale.vendor }}</td>
                             {% else %}
                                 <!-- Product Information -->
-                                <td class="hidden-xs" data-sort="{{ earning.product_name }}"><a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a></td>
-                                <td class="hidden-xs" >{% if earning.product_link %}<a href="{{ earning.product_link }}">{{ earning.product_name }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.product_name }}{% endif %}{% endif %}</td>
-
+                                {% if earning.extra_sale.placement and earning.extra_sale.placement == 'Ext-Store' %}
+                                    <td class="hidden-xs"></td>
+                                    <td class="hidden-xs">Sale on {{ earning.extra_sale.vendor }}</td>
+                                {% else %}
+                                    <td class="hidden-xs" data-sort="{{ earning.product_name }}"><a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a></td>
+                                    <td class="hidden-xs" >{% if earning.product_link %}<a href="{{ earning.product_link }}">{{ earning.product_name }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.product_name }}{% endif %}{% endif %}</td>
+                                {% endif %}
                                 <!-- FROM -->
                                 <td>
                                     {% if earning.extra_sale.link %}

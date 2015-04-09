@@ -184,7 +184,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    {% if request.user.is_authenticated and False %}
+                    {% if request.user.is_authenticated %}
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}    
                     {% endif %}
                 </ul>
@@ -275,9 +275,12 @@
                     <div class="row">
                         <ul class="list-unstyled col-xs-6">
                             <li><h4>{% trans "Follow us" %}</h4></li>
-                            <li><a target="_blank" href="http://www.facebook.com/apprl">{% trans "Facebook" %}</a></li>
-                            <li><a target="_blank" href="https://twitter.com/GetApprl">{% trans "Twitter" %}</a></li>
+                            <li><a target="_blank" href="http://instagram.com/get_apprl">{% trans "Instagram" %}</a></li>
                             <li><a target="_blank" href="http://pinterest.com/apprl/">{% trans "Pinterest" %}</a></li>
+                            <li><a target="_blank" href="http://www.facebook.com/apprl">{% trans "Facebook" %}</a></li>
+                            <li><a target="_blank" href="https://twitter.com/get_apprl">{% trans "Twitter" %}</a></li>
+                            <li><a target="_blank" href="https://www.linkedin.com/company/apprl">{% trans "LinkedIn" %}</a></li>
+                            <li><a target="_blank" href="http://blog.apprl.com">{% trans "Blog" %}</a></li>
                             <li><a target="_blank" href="{% url 'newsletter-redirect' %}">{% trans "E-mail newsletter" %}</a></li>
                         </ul>
                         <ul class="list-unstyled col-xs-6">

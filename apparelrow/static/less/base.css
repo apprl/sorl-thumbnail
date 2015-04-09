@@ -8736,6 +8736,17 @@ fieldset[disabled] .pagination .btn-pagination.active {
 .shop-embed .container {
   max-width: none;
 }
+.shop-embed h3 {
+  display: none;
+}
+.shop-embed.filter-collapse-shown h3 {
+  display: block;
+}
+@media (min-width: 768px) {
+  .shop-embed h3 {
+    display: block;
+  }
+}
 .price.discounted,
 .sold-out.discounted {
   text-decoration: line-through;
@@ -8817,14 +8828,20 @@ fieldset[disabled] .pagination .btn-pagination.active {
 }
 .product-list-container .col-product-list .col-product-item {
   position: relative;
+  float: left;
+  width: 50%;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
 }
-@media (min-width: 768px) {
+@media (min-width: 512px) {
   .product-list-container .col-product-list .col-product-item {
+    position: relative;
     float: left;
-    width: 100%;
+    width: 33.33333333%;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }
 @media (min-width: 768px) {
@@ -10030,6 +10047,13 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .popover .popover-product ul li:last-child {
   padding: 0;
 }
+.popover .popover-link {
+  min-width: 200px;
+  max-width: 200px;
+}
+.popover .popover-link h4 {
+  margin-top: 0px;
+}
 .look-hotspot {
   position: relative;
   margin: 0 auto;
@@ -10435,6 +10459,11 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .widget-page #product-chooser #product-tabs > li > a {
   border-radius: 0;
 }
+.widget-page #product-chooser #custom-link-wrapper {
+  padding: 10px 10px 0px;
+  border: 2px solid #d9d9d9;
+  border-top: 0px;
+}
 .widget-page #popup-slim {
   display: none;
   position: absolute;
@@ -10767,6 +10796,16 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 @media (min-width: 768px) {
   .widget-page #popup-slim .info-container {
     text-align: left;
+  }
+  .widget-page #popup-slim .link-info-container {
+    text-align: center;
+    padding: 0px !important;
+  }
+  .widget-page #popup-slim .link-info-container .url {
+    font-size: 11px;
+  }
+  .widget-page #popup-slim .link-info-container h4 {
+    margin-top: 0px;
   }
   .widget-page #popup-slim .body-header-col-right {
     width: 100%;
@@ -11251,6 +11290,23 @@ html.look-type-C .collage {
     right: 5px;
   }
 }
+.container .tooltip.tooltip-link .tooltip-container {
+  height: auto;
+}
+.container .tooltip.tooltip-link .tooltip-arrow.tooltip-arrow-bottom {
+  bottom: -6px;
+  top: auto;
+}
+.container .tooltip.tooltip-link .row {
+  text-align: center;
+}
+.container .tooltip.tooltip-link .row a.link_title {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
 #temporaryimage {
   text-align: center;
 }
@@ -11425,7 +11481,8 @@ html.look-type-C .collage {
   /*border-bottom-right-radius: 4px;*/
   /*}*/
 }
-.discover-list-page .alphabet {
+.discover-list-page .alphabet,
+.profile-looks .alphabet {
   font-size: 14px;
   border-bottom: 3px solid #000000;
   padding-bottom: 5px;
@@ -11433,24 +11490,30 @@ html.look-type-C .collage {
   margin-bottom: 15px;
   color: #333333;
 }
-.discover-list-page .alphabet li {
+.discover-list-page .alphabet li,
+.profile-looks .alphabet li {
   padding-left: 2px;
   padding-right: 2px;
 }
-.discover-list-page .alphabet li:first-child {
+.discover-list-page .alphabet li:first-child,
+.profile-looks .alphabet li:first-child {
   padding-left: 0;
 }
-.discover-list-page .alphabet li a {
+.discover-list-page .alphabet li a,
+.profile-looks .alphabet li a {
   padding: 5px;
   color: #d9d9d9;
 }
-.discover-list-page .alphabet li a.selected {
+.discover-list-page .alphabet li a.selected,
+.profile-looks .alphabet li a.selected {
   color: #000000;
 }
-.discover-list-page .alphabet li a:first-child {
+.discover-list-page .alphabet li a:first-child,
+.profile-looks .alphabet li a:first-child {
   padding-left: 0;
 }
-.discover-list-page .alphabet.topmodel {
+.discover-list-page .alphabet.topmodel,
+.profile-looks .alphabet.topmodel {
   font-size: 23px;
   font-weight: 700;
   text-transform: none;
@@ -11461,7 +11524,8 @@ html.look-type-C .collage {
   color: #333333;
 }
 @media (max-width: 767px) {
-  .discover-list-page .alphabet.topmodel {
+  .discover-list-page .alphabet.topmodel,
+  .profile-looks .alphabet.topmodel {
     font-size: 18px;
     /*margin-top: 0;*/
   }

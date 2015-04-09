@@ -15,12 +15,10 @@ class Command(BaseCommand):
         optparse.make_option('--date',
             action='store',
             dest='date',
-            help='Select a custom date in the format DD-MM-YYYY',
-            default= (datetime.date.today() - datetime.timedelta(1)).strftime('%d-%m-%Y'),
+            help='Select a custom date in the format YYYY-MM-DD',
+            default= (datetime.date.today() - datetime.timedelta(1)).strftime('%Y-%m-%d'),
         ),
     )
-
-    #TODO maybe move this method to utils instead?
 
     def update(self, row):
         instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
@@ -28,15 +26,13 @@ class Command(BaseCommand):
         if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
             for field in row.keys():
                 setattr(instance, field, row.get(field))
-
             instance.save()
-
+        logger.info("Earning per click with sale id %s for user %s updated " % (instance.id, instance.user_id))
         return instance
 
 
     def handle(self, *args, **options):
-        query_date = datetime.datetime.strptime(options.get('date'), '%d-%m-%Y')
-
+        query_date = datetime.datetime.strptime(options.get('date'), '%Y-%m-%d')
         module = __import__('apparelrow.dashboard.importer.costperclick', fromlist = ['Importer'])
         instance = module.Importer()
         logger.info('Importing %s' % (instance.name,))

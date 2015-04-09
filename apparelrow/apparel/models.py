@@ -1174,6 +1174,11 @@ def look_like_pre_delete(sender, instance, **kwargs):
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_look', instance.look)
 
 
+
+class ComponentLink(models.Model):
+    title = models.CharField(max_length=64, blank=True, null=True)
+    url = models.CharField(max_length=255, blank=True, null=True)
+
 #
 # LookComponent
 #
@@ -1184,7 +1189,8 @@ class LookComponent(models.Model):
     contains necessary information to display the product's image there in.
     """
     look    = models.ForeignKey(Look, related_name='components')
-    product = models.ForeignKey(Product)
+    product = models.ForeignKey(Product, null=True, default=None)
+    link = models.ForeignKey(ComponentLink, null=True, default=None)
     component_of = models.CharField(max_length=1, choices=LOOK_COMPONENT_TYPES)
     top = models.IntegerField(_('CSS top'), blank=True, null=True)
     left = models.IntegerField(_('CSS left'), blank=True, null=True)
@@ -1304,6 +1310,7 @@ class LookComponent(models.Model):
 
 models.signals.post_save.connect(invalidate_model_handler, sender=LookComponent)
 models.signals.post_delete.connect(invalidate_model_handler, sender=LookComponent)
+
 
 
 #

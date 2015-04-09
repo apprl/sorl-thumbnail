@@ -1014,6 +1014,19 @@ footer {
     .container {
         max-width: none;
     }
+    h3 {
+        display: none;
+      }
+      &.filter-collapse-shown {
+        h3 {
+          display: block;
+        }
+      }
+    @media (min-width: @screen-tablet) {
+      h3 {
+        display: block;
+      }
+    }
 }
 
 .price, .sold-out {
@@ -1082,7 +1095,14 @@ footer {
     .col-product-list {
         .make-sm-column(12);
         .col-product-item {
-            .make-sm-column(12);
+            .make-xs-column(6);
+        }
+    }
+    @media (min-width: 512px) {
+        .col-product-list {
+            .col-product-item {
+                .make-xs-column(4);
+            }
         }
     }
     @media (min-width: @screen-tablet) {

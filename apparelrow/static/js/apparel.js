@@ -3,17 +3,17 @@ String.prototype.capitalize = function() {
 }
 
 /*
-    Load detail data for clicks in a modal
+    Load detail click earning details for clicks in a modal
  */
-function load_detailed_data_clicks(data, date, vendor, currency){
+function load_detailed_data_clicks(json_detail, date, vendor, currency){
     var html = "<table>";
-    jQuery.each(data, function() {
+    for (i = 0; i < json_detail.length; i++){
         html += "<tr>" +
-                "<td><a href=\""+this.product_url+"\">" + this.product_name + "</a></td>" +
-                "<td class='center'>"  + this.count + "</td>" +
-                "<td class='center'>" + currency + " " + this.product_earning.toFixed(2) + "</td>" +
+                "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
+                "<td class='center'>"  + json_detail[i].clicks + "</td>" +
+                "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
                 "<tr>";
-    });
+    }
     html += "</table>";
     $("#content-clicks").html(html);
     $("#modal-date").html(date);

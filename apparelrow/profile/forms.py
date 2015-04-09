@@ -123,7 +123,7 @@ class PartnerSettingsForm(forms.ModelForm):
 
 
 class RegisterForm(UserCreationForm):
-    first_name = forms.CharField(label=_('First name'), required=True)
+    first_name = forms.CharField(label=_('First name'), required=True, error_messages={'required': _('At least a first name is required.')})
     last_name = forms.CharField(label=_('Last name'), required=False)
     email = forms.EmailField(label=_('E-mail address'), required=True, error_messages={'invalid': _('Please enter a valid email address.')})
     gender = forms.ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=forms.RadioSelect, label=_('Gender'))

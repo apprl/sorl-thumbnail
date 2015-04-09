@@ -93,6 +93,11 @@ App.Views.FilterProduct =  Backbone.View.extend({
         }
     },
 
+    add_tab: function(id, title, icon, view) {
+        this.filter_tabs.add_tab(this, id, title, icon, view);
+    },
+
+
     update_gender: function(model, value, options) {
         var checked_element = this.$el.find('input:radio[name=gender]:checked');
         if(checked_element.val() != value) {

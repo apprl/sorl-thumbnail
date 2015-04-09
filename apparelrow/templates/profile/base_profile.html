@@ -72,7 +72,7 @@ $(document).ready(function() {
 
         <div class="profile-navigation row">
             <div class="col-lg-12">
-                {% with likes_url=profile.url_likes looks_url=profile.url_looks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
+                {% with likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
                 <ul class="list-inline">
                     <li>
                     {% if profile and profile.is_brand %}
@@ -82,7 +82,7 @@ $(document).ready(function() {
                             {% blocktrans count products as product_count %}{{product_count}} Item{% plural %}{{product_count}} Items{% endblocktrans %}
                         </a>
                     {% else %}
-                        <a{% if request.path == likes_url %} class="selected"{% endif %} href="{{ likes_url }}">
+                        <a{% if request.path == likes_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ likes_url }}">
                             {% blocktrans count products as product_count %}{{product_count}} Item{% plural %}{{product_count}} Items{% endblocktrans %}
                         </a>
                     {% endif %}
@@ -92,7 +92,8 @@ $(document).ready(function() {
                             {% blocktrans count profile.looks as look_count %}{{look_count}} Look{% plural %}{{look_count}} Looks{% endblocktrans %}
                         </a>
                     </li>
-                    {% if profile.shops %}
+                    {% if profile.shops and request.user.is_authenticated and request.user == profile%}
+
                     <li>
                         <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">
                             {% blocktrans count profile.shops as shop_count %}{{shop_count}} Shop{% plural %}{{shop_count}} Shops{% endblocktrans %}

@@ -10,6 +10,12 @@ jQuery(document).ready(function() {
 
     var display_min = jQuery('#price-min span');
     var display_max = jQuery('#price-max span');
+    jQuery('#product-filter-accordion').on('show.bs.collapse', function(e) {
+        jQuery('body').addClass('filter-collapse-shown');
+    });
+    jQuery('#product-filter-accordion').on('hide.bs.collapse', function(e) {
+        jQuery('body').removeClass('filter-collapse-shown');
+    });
 
     jQuery('#price-slider').siblings('input[type=text]').blur(function(e) {
         var slider = jQuery('#price-slider').data('slider');

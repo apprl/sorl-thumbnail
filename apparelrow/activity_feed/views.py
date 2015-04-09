@@ -17,7 +17,7 @@ from django.core.urlresolvers import reverse
 import redis
 
 from apparelrow.apparel.models import Product, Look
-from apparelrow.apparel.utils import get_featured_activity_today, select_from_multi_gender
+from apparelrow.apparel.utils import get_featured_activity_today, select_from_multi_gender, get_paged_result
 
 from apparelrow.activity_feed.models import Activity, ActivityFeed
 from apparelrow.activity_feed.tasks import get_feed_key
@@ -122,16 +122,10 @@ def user_feed(request, gender=None):
     gender = select_from_multi_gender(request, 'feed', gender)
 
     htmlset = ActivityFeedRender(request, gender, request.user).run()
-    paginator = Paginator(htmlset, 12)
-    paginator._count = 10000 # disable count sql query
 
-    page = request.GET.get('page')
-    try:
-        paged_result = paginator.page(page)
-    except PageNotAnInteger:
-        paged_result = paginator.page(1)
-    except EmptyPage:
-        paged_result = paginator.page(paginator.num_pages)
+    page = request.GET.get('page', '1')
+    
+    paged_result = get_paged_result(htmlset, 12, page)
 
     if request.is_ajax():
         return render(request, 'activity_feed/fragments/feed_list.html', {

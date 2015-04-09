@@ -140,8 +140,14 @@
                         <div id="photo-background" class="look-photo" style="max-width: {{ im.width }}px;">
                             <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
                             {% for component in components %}
-                                <a href="{{ component.product.get_absolute_url }}" data-container="body" data-toggle="popover" data-placement="auto" data-trigger="click" class="hotspot product" style="{% look_component_style component im.width im.height %}"></a>
-                                {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
+                                {% if component.product %}
+                                    <a href="{{ component.product.get_absolute_url }}" data-container="body" data-toggle="popover" data-placement="auto" data-trigger="click" class="hotspot product" style="{% look_component_style component im.width im.height %}"></a>
+                                    {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
+                                {% endif %}
+                                {% if component.link %}
+                                    <a href="{{ component.link.url }}" data-container="body" data-toggle="popover" data-placement="auto" data-trigger="click" class="hotspot link" style="{% look_component_style component im.width im.height %}"></a>
+                                    {% include "apparel/fragments/look_link_tooltip.html" with owner=object.user link=component.link only %}
+                                {% endif %}
                             {% endfor %}
                         </div>
                         {% endthumbnail %}
