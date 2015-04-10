@@ -844,8 +844,10 @@ def product_lookup_asos_nelly(url):
             pos = path.find("/")
             path = path[pos+1:]
             noToRemove -= 1
-    
-    key = path
+    elif("asos" in parsedurl.netloc):
+        key = path
+    else:
+        return None
     print key
     products = get_model('theimp', 'Product').objects.filter(key__contains=key)
     if len(products) < 1:
