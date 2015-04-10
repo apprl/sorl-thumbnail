@@ -9763,7 +9763,7 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   margin: 0 !important;
 }
 .full_modal {
-  width: 60%;
+  width: 90%;
 }
 .body-grey {
   background: #EEEEEE !important;
@@ -9890,9 +9890,6 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .iosSlider .slider .item img {
   width: 100%;
   height: auto;
-}
-.click-detail {
-  cursor: pointer;
 }
 @media (min-width: 1120px) {
   #modal_tool_shop .modal-dialog,
@@ -10070,6 +10067,13 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 }
 .popover .popover-product ul li:last-child {
   padding: 0;
+}
+.popover .popover-link {
+  min-width: 200px;
+  max-width: 200px;
+}
+.popover .popover-link h4 {
+  margin-top: 0px;
 }
 .look-hotspot {
   position: relative;
@@ -10814,6 +10818,16 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   .widget-page #popup-slim .info-container {
     text-align: left;
   }
+  .widget-page #popup-slim .link-info-container {
+    text-align: center;
+    padding: 0px !important;
+  }
+  .widget-page #popup-slim .link-info-container .url {
+    font-size: 11px;
+  }
+  .widget-page #popup-slim .link-info-container h4 {
+    margin-top: 0px;
+  }
   .widget-page #popup-slim .body-header-col-right {
     width: 100%;
   }
@@ -11297,6 +11311,23 @@ html.look-type-C .collage {
     right: 5px;
   }
 }
+.container .tooltip.tooltip-link .tooltip-container {
+  height: auto;
+}
+.container .tooltip.tooltip-link .tooltip-arrow.tooltip-arrow-bottom {
+  bottom: -6px;
+  top: auto;
+}
+.container .tooltip.tooltip-link .row {
+  text-align: center;
+}
+.container .tooltip.tooltip-link .row a.link_title {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
 #temporaryimage {
   text-align: center;
 }
@@ -11471,8 +11502,7 @@ html.look-type-C .collage {
   /*border-bottom-right-radius: 4px;*/
   /*}*/
 }
-.discover-list-page .alphabet,
-.profile-looks .alphabet {
+.discover-list-page .alphabet {
   font-size: 14px;
   border-bottom: 3px solid #000000;
   padding-bottom: 5px;
@@ -11480,30 +11510,24 @@ html.look-type-C .collage {
   margin-bottom: 15px;
   color: #333333;
 }
-.discover-list-page .alphabet li,
-.profile-looks .alphabet li {
+.discover-list-page .alphabet li {
   padding-left: 2px;
   padding-right: 2px;
 }
-.discover-list-page .alphabet li:first-child,
-.profile-looks .alphabet li:first-child {
+.discover-list-page .alphabet li:first-child {
   padding-left: 0;
 }
-.discover-list-page .alphabet li a,
-.profile-looks .alphabet li a {
+.discover-list-page .alphabet li a {
   padding: 5px;
   color: #d9d9d9;
 }
-.discover-list-page .alphabet li a.selected,
-.profile-looks .alphabet li a.selected {
+.discover-list-page .alphabet li a.selected {
   color: #000000;
 }
-.discover-list-page .alphabet li a:first-child,
-.profile-looks .alphabet li a:first-child {
+.discover-list-page .alphabet li a:first-child {
   padding-left: 0;
 }
-.discover-list-page .alphabet.topmodel,
-.profile-looks .alphabet.topmodel {
+.discover-list-page .alphabet.topmodel {
   font-size: 23px;
   font-weight: 700;
   text-transform: none;
@@ -11514,8 +11538,7 @@ html.look-type-C .collage {
   color: #333333;
 }
 @media (max-width: 767px) {
-  .discover-list-page .alphabet.topmodel,
-  .profile-looks .alphabet.topmodel {
+  .discover-list-page .alphabet.topmodel {
     font-size: 18px;
     /*margin-top: 0;*/
   }
@@ -12562,13 +12585,6 @@ body .apprl-top {
   border-radius: 295px;
   text-align: center;
   cursor: pointer;
-  /* Staffans fix */
-  border-radius: 50%;
-  /* Prevent background color leak outs */
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-  /* End Staffans fix */
   -webkit-transition: background-color ease 0s;
   -moz-transition: background-color ease 0s;
   transition: background-color ease 0s;
