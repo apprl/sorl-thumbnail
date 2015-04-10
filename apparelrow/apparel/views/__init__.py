@@ -833,6 +833,35 @@ def product_lookup_by_theimp(request, key):
     json_data = json.loads(products[0].json)
     return json_data.get('site_product', None)
 
+def chop_url(url):
+    parsedurl = urlparse.urlsplit(url)
+    path = parsedurl.path
+    if("nelly" in parsedurl.netloc):
+        #get rid of categories for nelly links, only keep product name (last two "/"")
+        noToRemove = path.count("/") - 1
+        while noToRemove > 0:
+            pos = path.find("/")
+            path = path[pos+1:]
+            noToRemove -= 1
+    return path
+
+def product_lookup_asos_nelly(url):
+    parsedurl = urlparse.urlsplit(url)
+    path = parsedurl.path
+    if("nelly" in parsedurl.netloc):
+        #get rid of categories for nelly links, only keep product name (last two "/"")
+        noToRemove = path.count("/") - 1
+        while noToRemove > 0:
+            pos = path.find("/")
+            path = path[pos+1:]
+            noToRemove -= 1
+
+    products = get_model('theimp', 'Product').objects.extra(where=["%s LIKE key||'%%'"], params=[key])
+    if len(products) < 1:
+        return None
+    json_data = json.loads(products[0].json)
+    return json_data.get('site_product', None)
+
 def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
