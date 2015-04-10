@@ -8,6 +8,7 @@ import urllib
 import urlparse
 from apparelrow.apparel.utils import currency_exchange
 import decimal
+import re
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
@@ -833,6 +834,11 @@ def product_lookup_by_theimp(request, key):
     json_data = json.loads(products[0].json)
     return json_data.get('site_product', None)
 
+def parse_luisaviaroma_fragment(fragment):
+    seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)
+    collectionId = re.search(r'CollectionId=(\w+)?', fragment).group(1)
+    itemId = re.search(r'ItemId=(\w+)?', fragment).group(1).zfill(3)
+    return "%s-%s%s" % (seasonId, collectionId, itemId)
 
 def product_lookup_asos_nelly(url):
     parsedurl = urlparse.urlsplit(url)
@@ -846,9 +852,10 @@ def product_lookup_asos_nelly(url):
             noToRemove -= 1
     elif("asos" in parsedurl.netloc):
         key = path
+    elif("luisaviaroma" in parsedurl.netloc):
+        key = parse_luisaviaroma_fragment(parsedurl.fragment)
     else:
         return None
-    print key
     products = get_model('theimp', 'Product').objects.filter(key__contains=key)
     if len(products) < 1:
         return None
