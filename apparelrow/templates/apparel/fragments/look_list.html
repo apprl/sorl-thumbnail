@@ -6,7 +6,7 @@
     {% if current_page.number == 1 %}
     	{% if request.GET.view == 'friends' %}
             <div class="message warning">
-                <p>{% trans "You currently don't follow anyone." %}</p>
+                <p>{% trans "You currently don't follow anyone who has created looks" %}{% if gender == 'M' %}{% trans " for men." %}{% elif gender == 'W' %}{% trans "for women." %}{% else %}{% trans "." %}{% endif %}</p>
                 <a class="btn btn-success" href="{% url 'user-list-popular' %}">{% trans "Find members to follow!" %}</a>
             </div>
         {% else %}
