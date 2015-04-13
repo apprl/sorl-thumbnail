@@ -176,6 +176,10 @@ class User(AbstractUser):
     def look_likes_count(self):
         return self.look_likes.filter(active=True).count()
 
+    @cached_property
+    def total_look_count(self):
+        return self.look_likes_count + self.looks
+
 
     @cached_property
     def profile_content(self):
