@@ -91,6 +91,31 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_short_link'], 'http://testserver/en/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
+class TestChromeExtensionSpecials(TestCase):
+    fixtures = ['extensiontest_vendor.json', 'extensiontest_product.json']
+
+    def _login(self):
+        normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+
+    def test_product_lookup_by_url(self):
+        self._login()
+
+        vendor = get_model('theimp', 'Vendor').objects.get(name='asos')
+        product = get_model('theimp', 'Product').objects.get(pk=883414)
+        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
+
+        response = self.client.get('/backend/product/lookup/?key=%s' % key)
+        self.assertEqual(response.status_code, 200)
+        #json_content = json.loads(response.content)
+
+        #self.assertEqual(json_content['product_pk'], 883414)
+        #self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
+        #self.assertEqual(json_content['product_short_link'], 'http://testserver/en/p/4C92/')
+        self.assertIsNotNone(vendor)
+        self.assertIsNotNone(product)
+
 
 class TestProductDetails(TestCase):
     def setUp(self):

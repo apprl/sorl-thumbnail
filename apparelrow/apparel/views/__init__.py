@@ -859,8 +859,10 @@ def product_lookup_asos_nelly(url):
     products = get_model('theimp', 'Product').objects.filter(key__contains=key)
     if len(products) < 1:
         return None
-    json_data = json.loads(products[0].json)
-    return json_data.get('site_product', None)
+
+    return products[0].pk
+    #json_data = json.loads(products[0].json)
+    #return json_data.get('site_product', None)
 
 def product_lookup(request):
     if not request.user.is_authenticated():
