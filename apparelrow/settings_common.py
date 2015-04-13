@@ -101,6 +101,7 @@ VENDOR_LOCATION_MAPPING = {
     "Ted & Teresa":["SE"],
     "ConfidentLiving":["SE"],
     "MQ":["SE"],
+    "Care of Carl":["SE"],
     "ALDO": ["US"],
     "ASOS": ["SE","NO","ALL"],
     "Eleven": ["SE","ALL"],
