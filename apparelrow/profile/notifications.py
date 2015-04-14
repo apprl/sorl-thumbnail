@@ -1,6 +1,7 @@
 import logging
 import decimal
 import HTMLParser
+from apparelrow.apparelrow.activity_feed.views import ActivityFeedRender
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
@@ -590,17 +591,28 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             event.save()
             notify_with_mandrill_template([likes.user], "itemSale", sender, merge_vars)
 
-def create_summary(user, period):
+def get_ref_time(days, monday=False):
+    if days == 1:
+        return timezone.now() - timedelta(days=1)
+    else:
+        ref_time = timezone.now() - timedelta(days=days)
+        if monday:
+            monday_of_last_week = ref_time - timedelta(days=(ref_time.isocalendar()[2] - 1))
+        return ref_time
+
+def calculate_period(period):
     if period == 'D':
         # it is a daily summary
         period_name = "daily"
-        ref_time = timezone.now() - timedelta(days=1)
-    else:
+        ref_time = get_ref_time(1)
+    elif period == 'W':
         # it is a weekly summary
         period_name = "weekly"
-        some_day_last_week = timezone.now() - timedelta(days=7)
-        monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
-        ref_time = monday_of_last_week
+        ref_time = get_ref_time(7, True)
+    return period_name, ref_time
+
+def create_summary(user, period):
+    period_name, ref_time = calculate_period(period)
     events = get_model('profile', 'NotificationEvent').objects.filter(owner=user, created__gte=ref_time)
     latest_likes = get_model('apparel', 'ProductLike').objects.filter(user=user, created__gte=ref_time)
 
@@ -653,3 +665,24 @@ def create_summary(user, period):
 
     notify_with_mandrill_template([user], "SummaryMail", None, merge_vars)
 
+def create_like_summary(period):
+    period_name, ref_time = calculate_period(period)
+    look_likes = get_model('apparel', 'LookLike').objects.filter(created__gte=ref_time)
+
+    like_dict = {}
+    #iterate through look likes
+    for like in look_likes:
+        look = like.look
+        if like_dict[look]:
+            like_dict[look].append(like.user)
+        else:
+            like_dict[look] = [like.user]
+
+    return like_dict
+
+
+
+
+
+def create_activity_summary(user, period):
+    activity = ActivityFeedRender(None, 'A', user).run()
