@@ -193,6 +193,15 @@ class TestChromeExtensionSpecials(TestCase):
         key = "http://nelly.com/se/somecategory/somesubcategory/otherparam/closet-1153/quilt-effect-dress-601764-2350/"
         self.assertEqual(product_lookup_asos_nelly(key), 883603)
 
+        #3rd Nelly product from pivotaltracker story
+        #original
+        key = "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883604)
+        #other
+        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54"
+        self.assertEqual(product_lookup_asos_nelly(key), 883604)
+
+
 class TestProductDetails(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
