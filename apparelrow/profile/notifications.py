@@ -1,7 +1,7 @@
 import logging
 import decimal
 import HTMLParser
-from apparelrow.apparelrow.activity_feed.views import ActivityFeedRender
+from apparelrow.activity_feed.views import ActivityFeedRender
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
