@@ -15,6 +15,8 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         App.Events.on('lookedit:reposition', this.reposition, this);
         App.Events.on('lookedit:rescale', this.rescale, this);
         App.Events.on('lookedit:clicked', this.set_inactive, this);
+        App.Events.on('lookedit:increase_zindex', this.increase_zindex, this);
+
         this.$container = $('.look-container');
     },
 
@@ -109,6 +111,14 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             }
         });
         return current_min;
+    },
+
+    increase_zindex: function(component) {
+        if (this != component) {
+            var z_index = this.model.get('z_index') + 1;
+            this.model.set({z_index: parseInt(z_index)}, {silent: true});
+            this.$el.css('z-index', z_index);
+        }
     },
 
     applyTransform: function() {
