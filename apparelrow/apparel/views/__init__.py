@@ -850,13 +850,18 @@ def product_lookup_asos_nelly(url):
             pos = path.find("/")
             path = path[pos+1:]
             noToRemove -= 1
-    elif("asos" in parsedurl.netloc):
         key = path
+    elif("asos" in parsedurl.netloc):
+        prodId = re.search(r'iid=(\w+)?', parsedurl.query).group(1)
+        key = "%s?iid=%s" % (path, prodId)
     elif("luisaviaroma" in parsedurl.netloc):
-        key = parse_luisaviaroma_fragment(parsedurl.fragment)
+        if parsedurl.fragment: # the "original" links don't have this, they should never land here though
+            key = parse_luisaviaroma_fragment(parsedurl.fragment)
+        else:
+            key = url
     else:
         return None
-    products = get_model('theimp', 'Product').objects.filter(key__contains=key)
+    products = get_model('theimp', 'Product').objects.filter(key__icontains=key)
     if len(products) < 1:
         return None
 
