@@ -563,4 +563,3 @@ class NotificationEvent(models.Model):
     def from_today(self):
         ref_time = timezone.now()
         return ref_time.date() == self.created.date()
-
