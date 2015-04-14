@@ -50,6 +50,7 @@ urlpatterns = patterns('',
     url(r'^dialog/embed/shop/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.dialog_embed', name='dialog-shop-embed'),
 
     # Shop embed - wardrobe
+    # embed-shop is deprecated??
     url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
     url(r'^widget/shop/$', 'apparelrow.apparel.browse.shop_widget', name='shop-widget'),
 

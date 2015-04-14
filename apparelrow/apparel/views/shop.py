@@ -364,8 +364,13 @@ def shop_widget(request, shop_id=None):
 
     shop_embed.save()
     content['object'] = shop_embed
+    response = render(request, 'apparel/fragments/shop_widget.html', content)
 
-    return render(request, 'apparel/fragments/shop_widget.html', content)
+    # Todo now we are caching the widget itself, not the result. The response we have is not the one we should be cachgin
+    #nginx_key = reverse('embed-shop', args=[shop_id])
+    #get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
+
+    return response
 
 
 def dialog_embed(request, shop_id=None):
@@ -384,6 +389,9 @@ def dialog_embed(request, shop_id=None):
 # Embed
 #
 def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
+    """
+        If no shop is found in cache then this method will be called.
+    """
     if embed_shop_id is None:
         return HttpResponse('Not found', status=404)
 
