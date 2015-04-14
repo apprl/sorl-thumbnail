@@ -1,7 +1,6 @@
 import logging
 import decimal
 import HTMLParser
-from apparelrow.activity_feed.views import ActivityFeedRender
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
@@ -670,19 +669,66 @@ def create_like_summary(period):
     look_likes = get_model('apparel', 'LookLike').objects.filter(created__gte=ref_time)
 
     like_dict = {}
+    users_to_notify = {}
     #iterate through look likes
     for like in look_likes:
         look = like.look
-        if like_dict[look]:
+        if look in like_dict:
             like_dict[look].append(like.user)
         else:
             like_dict[look] = [like.user]
+        if like.user in users_to_notify:
+            users_to_notify[like.user].append(look)
+        else:
+            users_to_notify[like.user] = [look]
 
-    return like_dict
+    return like_dict, users_to_notify
+
+def send_like_summaries(period):
+    look_likes, users_to_notify = create_like_summary(period)
+    domain = Site.objects.get_current().domain
+    all = []
+    #iterate over all users that created any likes within the given period
+    for user in users_to_notify:
+        looks = []
+        merge_vars = dict()
+        merge_vars['looks'] = list()
+        for look in users_to_notify[user]:
+            look_url_link = 'http://%s%s' % (domain, look.get_absolute_url())
+            look_detail = { "LOOKURL" : look_url_link,
+                            "LOOKNAME" : look.title,
+                            "LOOKPHOTOURL" : look.static_image.url,
+            }
+            likers = []
+
+            for liker in look_likes[look]:
+                if not(liker == user):
+                    if liker.image:
+                        profile_photo_url = get_thumbnail(liker.image, '100').url
+                    elif liker.facebook_user_id:
+                        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
+                    else:
+                        profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                    sender_link = retrieve_full_url(liker.get_absolute_url())
+                    likers.append({"USERNAME" : liker.display_name,
+                                   "PROFILEURL" : sender_link,
+                                   "PROFILEPHOTOURL" : profile_photo_url,
+                    })
+            look_detail["LIKERS"] = likers
+            if likers:
+                looks.append(look_detail)
+        all.append(looks)
+
+    return all
 
 
 
 
 
-def create_activity_summary(user, period):
-    activity = ActivityFeedRender(None, 'A', user).run()
+
+
+
+
+
+# def create_activity_summary(user, period):
+#     activity = ActivityFeedRender(None, 'A', user).run()
