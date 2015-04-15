@@ -673,7 +673,7 @@ def create_summary(user, period):
 
     notify_with_mandrill_template([user], "SummaryMail", merge_vars)
 
-def create_like_summary(period):
+def create_look_like_summary(period):
     period_name, interesting_time = calculate_period(period)
     #include looks that users liked within the month for notifying them too
     ref_time = calculate_period('M')[1]
@@ -696,8 +696,31 @@ def create_like_summary(period):
 
     return like_dict, users_to_notify
 
-def send_like_summaries(period):
-    look_likes, users_to_notify = create_like_summary(period)
+def create_product_like_summary(period):
+    period_name, interesting_time = calculate_period(period)
+    #include products that users liked within the month for notifying them too
+    ref_time = calculate_period('M')[1]
+    product_likes = get_model('apparel', 'ProductLike').objects.filter(created__gte=ref_time)
+
+    like_dict = {}
+    users_to_notify = {}
+    #iterate through look likes
+    for like in product_likes:
+        product = like.product
+        if(like.created > interesting_time):
+            if product in like_dict:
+                like_dict[product].append(like.user)
+            else:
+                like_dict[product] = [like.user]
+        if like.user in users_to_notify:
+            users_to_notify[like.user].append(product)
+        else:
+            users_to_notify[like.user] = [product]
+
+    return like_dict, users_to_notify
+
+def send_look_like_summaries(period):
+    look_likes, users_to_notify = create_look_like_summary(period)
     domain = Site.objects.get_current().domain
     #iterate over all users that created any likes within the given period
     for user in users_to_notify:
@@ -716,7 +739,7 @@ def send_like_summaries(period):
             }
             likers = []
             for liker in look_likes[look]:
-                if not(liker == user):
+                if not(liker == user and len(likers) <= 20):
                     if liker.image:
                         profile_photo_url = get_thumbnail(liker.image, '100').url
                     elif liker.facebook_user_id:
@@ -748,6 +771,60 @@ def send_like_summaries(period):
 
     return
 
+def send_product_like_summaries(period):
+    product_likes, users_to_notify = create_product_like_summary(period)
+    domain = Site.objects.get_current().domain
+    #iterate over all users that created any likes within the given period
+    for user in users_to_notify:
+        products = []
+        merge_vars = dict()
+        if(period == 'D'):
+            merge_vars['PERIOD'] = "today"
+        elif(period == 'W'):
+            merge_vars['PERIOD'] = "this week"
+
+        for product in users_to_notify[user]:
+            product_url_link = 'http://%s%s' % (domain, product.get_absolute_url())
+            product_detail = {  "PRODUCTURL" : product_url_link,
+                                "BRANDNAME" : product.manufacturer.name,
+                                "PRODUCTNAME" : product.product_name,
+                                "PRODUCTPHOTOURL" : get_thumbnail(product.product_image, '500').url,
+            }
+            likers = []
+            if(not product in product_likes):
+                continue
+            for liker in product_likes[product]:
+                if not(liker == user and len(likers) <= 20):
+                    if liker.image:
+                        profile_photo_url = get_thumbnail(liker.image, '100').url
+                    elif liker.facebook_user_id:
+                        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
+                    else:
+                        profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                    sender_link = retrieve_full_url(liker.get_absolute_url())
+                    likers.append({"USERNAME" : liker.display_name,
+                                   "PROFILEURL" : sender_link,
+                                   "PROFILEPICTUREURL" : profile_photo_url,
+                    })
+            if(len(likers) == 1):
+                product_detail["SINGULAR"] = True
+            elif(len(likers) == 2):
+                product_detail["TWOLIKERS"] = True
+                product_detail["SINGULAR"] = False
+                product_detail["OTHERLIKERNAME"] = likers[1]["USERNAME"]
+            else:
+                product_detail["TWOLIKERS"] = False
+                product_detail["SINGULAR"] = False
+                product_detail["NOOFLIKES"] = len(likers)-1
+            product_detail["LIKERS"] = likers
+            if likers:
+                product_detail["ONELIKERNAME"] = likers[0]["USERNAME"]
+                products.append(product_detail)
+
+        merge_vars['PRODUCTS'] = products
+        notify_with_mandrill_template([user], "productLikeSummary", merge_vars)
+
+    return
 
 # def create_activity_summary(user, period):
 #     activity = ActivityFeedRender(None, 'A', user).run()
