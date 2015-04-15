@@ -738,6 +738,8 @@ def send_look_like_summaries(period):
                             "LOOKPHOTOURL" : look.static_image.url,
             }
             likers = []
+            if(not look in look_likes):
+                continue
             for liker in look_likes[look]:
                 if not(liker == user and len(likers) <= 20):
                     if liker.image:
@@ -756,7 +758,8 @@ def send_look_like_summaries(period):
             elif(len(likers) == 2):
                 look_detail["TWOLIKERS"] = True
                 look_detail["SINGULAR"] = False
-                look_detail["OTHER  LIKERNAME"] = likers[1]["USERNAME"]
+                look_detail["OTHERLIKERNAME"] = likers[1]["USERNAME"]
+                look_detail["OTHERLIKERURL"] = likers[1]["PROFILEURL"]
             else:
                 look_detail["TWOLIKERS"] = False
                 look_detail["SINGULAR"] = False
@@ -764,6 +767,7 @@ def send_look_like_summaries(period):
             look_detail["LIKERS"] = likers
             if likers:
                 look_detail["ONELIKERNAME"] = likers[0]["USERNAME"]
+                look_detail["ONELIKERURL"] = likers[0]["PROFILEURL"]
                 looks.append(look_detail)
 
         merge_vars['LOOKS'] = looks
@@ -812,6 +816,7 @@ def send_product_like_summaries(period):
                 product_detail["TWOLIKERS"] = True
                 product_detail["SINGULAR"] = False
                 product_detail["OTHERLIKERNAME"] = likers[1]["USERNAME"]
+                product_detail["OTHERLIKERURL"] = likers[1]["PROFILEURL"]
             else:
                 product_detail["TWOLIKERS"] = False
                 product_detail["SINGULAR"] = False
@@ -819,6 +824,7 @@ def send_product_like_summaries(period):
             product_detail["LIKERS"] = likers
             if likers:
                 product_detail["ONELIKERNAME"] = likers[0]["USERNAME"]
+                product_detail["ONELIKERURL"] = likers[0]["PROFILEURL"]
                 products.append(product_detail)
 
         merge_vars['PRODUCTS'] = products
