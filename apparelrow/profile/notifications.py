@@ -113,15 +113,13 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     activate(current_language)
 
-def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
+def notify_with_mandrill_template(users, notification_name, merge_vars):
     """
     New version of mail notifications using Mandrill templates (manually added to account beforehand) instead of local html templates
 
     Sends an email to all users for the specified notification
     Variable users is a list of django auth user instances.
     """
-    if sender and sender.is_hidden:
-        return
     emails = []
     usernames = {}
     notification_count = 0
@@ -155,6 +153,8 @@ def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
     }
 
     msg.global_merge_vars.update(merge_vars) #add specific parameters
+    #FIXME development only
+    msg.subaccount ="apprl_testing"
 
     msg.merge_vars = usernames    # Per-recipient merge tags, here adding personalized names
     msg.send()
@@ -371,6 +371,8 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
     """
     Process notification for a like by sender on a look created by recipient.
     """
+    if sender and sender.is_hidden:
+        return
     logger = process_like_look_created.get_logger(**kwargs)
     if is_duplicate('like_look_created', recipient, sender, look_like):
         return 'duplicate'
@@ -412,7 +414,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
                                                                                 look=look_like.look,
                                                                                 email_sent=True)
         event.save()
-        notify_with_mandrill_template([notify_user], "likedLook", sender, merge_vars)
+        notify_with_mandrill_template([notify_user], "likedLook", merge_vars)
 
         return get_key('like_look_created', recipient, sender, look_like)
 
@@ -444,6 +446,9 @@ def process_follow_user(recipient, sender, follow, **kwargs):
     """
     Process notification for sender following recipient.
     """
+
+    if sender and sender.is_hidden:
+        return
     logger = process_follow_user.get_logger(**kwargs)
     if is_duplicate('follow_user', recipient, sender, None):
         return 'duplicate'
@@ -475,7 +480,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
                                                                                 email_sent=True)
         event.email_sent = True #we are sending the email right away
         event.save()
-        notify_with_mandrill_template([notify_user], "newFollower", sender, merge_vars)
+        notify_with_mandrill_template([notify_user], "newFollower", merge_vars)
         return get_key('follow_user', recipient, sender, None)
 
     if not notify_user and sender:
@@ -524,7 +529,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             event.email_sent = True #we are sending the email right away
             event.save()
 
-            notify_with_mandrill_template([recipient], "fbFriend", sender, merge_vars)
+            notify_with_mandrill_template([recipient], "fbFriend", merge_vars)
 
 #
 # SALE ALERT
@@ -588,7 +593,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
             event.email_sent = True #we are sending the email right away
             event.save()
-            notify_with_mandrill_template([likes.user], "itemSale", sender, merge_vars)
+            notify_with_mandrill_template([likes.user], "itemSale", merge_vars)
 
 def get_ref_time(days, monday=False):
     if days == 1:
@@ -662,7 +667,7 @@ def create_summary(user, period):
     merge_vars['PERIOD'] = period_name
     merge_vars['PROFILEURL'] = retrieve_full_url(user.get_absolute_url())
 
-    notify_with_mandrill_template([user], "SummaryMail", None, merge_vars)
+    notify_with_mandrill_template([user], "SummaryMail", merge_vars)
 
 def create_like_summary(period):
     period_name, ref_time = calculate_period(period)
@@ -687,12 +692,15 @@ def create_like_summary(period):
 def send_like_summaries(period):
     look_likes, users_to_notify = create_like_summary(period)
     domain = Site.objects.get_current().domain
-    all = []
     #iterate over all users that created any likes within the given period
     for user in users_to_notify:
         looks = []
         merge_vars = dict()
-        merge_vars['looks'] = list()
+        if(period == 'D'):
+            merge_vars['PERIOD'] = "today"
+        elif(period == 'W'):
+            merge_vars['PERIOD'] = "this week"
+
         for look in users_to_notify[user]:
             look_url_link = 'http://%s%s' % (domain, look.get_absolute_url())
             look_detail = { "LOOKURL" : look_url_link,
@@ -712,22 +720,21 @@ def send_like_summaries(period):
                     sender_link = retrieve_full_url(liker.get_absolute_url())
                     likers.append({"USERNAME" : liker.display_name,
                                    "PROFILEURL" : sender_link,
-                                   "PROFILEPHOTOURL" : profile_photo_url,
+                                   "PROFILEPICTUREURL" : profile_photo_url,
                     })
+            if(len(likers) == 1):
+                look_detail["SINGULAR"] = True
+            else:
+                look_detail["SINGULAR"] = False
             look_detail["LIKERS"] = likers
             if likers:
+
                 looks.append(look_detail)
-        all.append(looks)
 
-    return all
+        merge_vars['LOOKS'] = looks
+        notify_with_mandrill_template([user], "lookLikeSummary", merge_vars)
 
-
-
-
-
-
-
-
+    return
 
 
 # def create_activity_summary(user, period):
