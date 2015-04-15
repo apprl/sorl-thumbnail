@@ -613,6 +613,10 @@ def calculate_period(period):
         # it is a weekly summary
         period_name = "weekly"
         ref_time = get_ref_time(7, True)
+    elif period == 'M':
+        # it is a weekly summary
+        period_name = "monthly"
+        ref_time = get_ref_time(30, True)
     return period_name, ref_time
 
 def create_summary(user, period):
@@ -670,7 +674,9 @@ def create_summary(user, period):
     notify_with_mandrill_template([user], "SummaryMail", merge_vars)
 
 def create_like_summary(period):
-    period_name, ref_time = calculate_period(period)
+    period_name, interesting_time = calculate_period(period)
+    #include looks that users liked within the month for notifying them too
+    ref_time = calculate_period('M')[1]
     look_likes = get_model('apparel', 'LookLike').objects.filter(created__gte=ref_time)
 
     like_dict = {}
@@ -678,10 +684,11 @@ def create_like_summary(period):
     #iterate through look likes
     for like in look_likes:
         look = like.look
-        if look in like_dict:
-            like_dict[look].append(like.user)
-        else:
-            like_dict[look] = [like.user]
+        if(like.created > interesting_time):
+            if look in like_dict:
+                like_dict[look].append(like.user)
+            else:
+                like_dict[look] = [like.user]
         if like.user in users_to_notify:
             users_to_notify[like.user].append(look)
         else:
@@ -723,7 +730,12 @@ def send_like_summaries(period):
                     })
             if(len(likers) == 1):
                 look_detail["SINGULAR"] = True
+            elif(len(likers) == 2):
+                look_detail["TWOLIKERS"] = True
+                look_detail["SINGULAR"] = False
+                look_detail["OTHER  LIKERNAME"] = likers[1]["USERNAME"]
             else:
+                look_detail["TWOLIKERS"] = False
                 look_detail["SINGULAR"] = False
                 look_detail["NOOFLIKES"] = len(likers)-1
             look_detail["LIKERS"] = likers
