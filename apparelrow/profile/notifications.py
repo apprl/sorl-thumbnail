@@ -708,7 +708,6 @@ def send_like_summaries(period):
                             "LOOKPHOTOURL" : look.static_image.url,
             }
             likers = []
-
             for liker in look_likes[look]:
                 if not(liker == user):
                     if liker.image:
@@ -726,9 +725,10 @@ def send_like_summaries(period):
                 look_detail["SINGULAR"] = True
             else:
                 look_detail["SINGULAR"] = False
+                look_detail["NOOFLIKES"] = len(likers)-1
             look_detail["LIKERS"] = likers
             if likers:
-
+                look_detail["ONELIKERNAME"] = likers[0]["USERNAME"]
                 looks.append(look_detail)
 
         merge_vars['LOOKS'] = looks
