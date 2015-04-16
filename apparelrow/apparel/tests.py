@@ -6,6 +6,8 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from decimal import Decimal
 from django.conf import settings
+from apparelrow.apparel.models import Shop, ShopEmbed
+from apparelrow.dashboard.tests import reverse
 
 
 """ CHROME EXTENSION """
@@ -168,4 +170,19 @@ class TestProductDetails(TestCase):
 
         earning_product = self.product.get_product_earning(self.user)
         self.assertIsNone(earning_product)
+
+
+class TestEmbeddingShops(TestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+
+    def test_create_shop(self):
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+        self.assertEquals(Shop.objects.count(),0)
+        self.assertEquals(ShopEmbed.objects.count(),0)
+        response = self.client.put(reverse('create_shop')[3:])
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(Shop.objects.count(),1)
 

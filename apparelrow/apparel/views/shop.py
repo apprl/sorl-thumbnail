@@ -366,7 +366,7 @@ def shop_widget(request, shop_id=None):
     content['object'] = shop_embed
     response = render(request, 'apparel/fragments/shop_widget.html', content)
 
-    # Todo now we are caching the widget itself, not the result. The response we have is not the one we should be cachgin
+    # Todo now we are caching the widget itself, not the result. The response we have is not the one we should be cachin
     #nginx_key = reverse('embed-shop', args=[shop_id])
     #get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
 
