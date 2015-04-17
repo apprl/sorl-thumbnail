@@ -197,6 +197,10 @@ class ShopCreateView(View):
 
 
     def put(self, request, pk=None, *args, **kwargs):
+        """
+            Updating an existing shop widget
+        """
+
         if pk is not None and pk is not 0:
             shop = get_object_or_404(get_model('apparel', 'Shop'), pk=pk)
         else:
@@ -316,7 +320,6 @@ class ShopCreateView(View):
 
         response = JSONResponse(shop_instance_to_dict(shop), status=201)
         response['Location'] = reverse('create_shop', args=[shop.pk])
-
         return response
 
 
