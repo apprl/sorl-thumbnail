@@ -32,6 +32,9 @@ from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gend
 from apparelrow.apparel.models import ShopEmbed
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
+import logging
+
+log = logging.getLogger(__name__)
 
 from apparelrow.profile.models import Follow
 
@@ -198,7 +201,7 @@ class ShopCreateView(View):
 
     def put(self, request, pk=None, *args, **kwargs):
         """
-            Updating an existing shop widget
+            Updating an existing shop widget inside the "create shop" web admin
         """
 
         if pk is not None and pk is not 0:
@@ -369,10 +372,16 @@ def shop_widget(request, shop_id=None):
     content['object'] = shop_embed
     response = render(request, 'apparel/fragments/shop_widget.html', content)
 
-    # Todo now we are caching the widget itself, not the result. The response we have is not the one we should be cachin
-    #nginx_key = reverse('embed-shop', args=[shop_id])
-    #get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
+    nginx_key = reverse('embed-shop', args=[shop_embed.id])
 
+    # If request is considered an AJAX request we will receive and cache json which we do not want. Depending on
+    if hasattr(request.META,"HTTP_X_REQUESTED_WITH"):
+        request.META["HTTP_X_REQUESTED_WITH"] = None
+    cached_shop_response = embed_shop(request,embed_shop_id=shop_embed.id)
+    if not cached_shop_response.status_code == 200:
+        log.error("Unable to embed shop (%s/%s) (embed,shop) url (%s) in nginx upstream cache because received %s." %
+                  (shop_embed.id,shop.id,nginx_key,cached_shop_response.status_code,))
+    get_cache('nginx').set(nginx_key, cached_shop_response.content, 60*60*24*20)
     return response
 
 

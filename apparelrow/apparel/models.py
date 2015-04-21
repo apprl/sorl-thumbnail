@@ -449,7 +449,7 @@ def product_like_post_save(sender, instance, **kwargs):
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
-    empty_embed_shop_cache.apply_async(args=[instance.user.pk], countdown=1)
+    #empty_embed_shop_cache.apply_async(args=[instance.user.pk], countdown=1)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
