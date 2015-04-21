@@ -192,7 +192,7 @@ class User(AbstractUser):
     @cached_property
     def notifications(self):
         notifications = self.notification_events.order_by('created').reverse()
-        paged_result = get_paged_result(notifications, 5, 1)
+        paged_result = get_paged_result(notifications, 10, 1)
         return paged_result
 
     @cached_property
