@@ -160,6 +160,16 @@ def notification_follow_brand(request):
     url = request.build_absolute_uri(profile.get_absolute_url())
     return render(request, 'apparel/notifications/follow_brand.html', {'object': profile, 'url': url})
 
+def notifications_seen_all(request):
+    if request.method == 'POST' and request.is_ajax():
+        user_id = request.POST.get('user_id', None)
+        queryset = get_model('profile', 'NotificationEvent').objects.filter(owner__id = user_id)
+        for notificationevent in queryset:
+            notificationevent.seen = True
+            notificationevent.save()
+        data = []
+        json_data = json.dumps(data)
+        return HttpResponse(json_data)
 #
 # Facebook calls
 #

@@ -197,7 +197,7 @@ class User(AbstractUser):
 
     @cached_property
     def unread_count(self):
-        return self.notification_events.count()
+        return self.notification_events.filter(seen=False).count()
 
     @cached_property
     def profile_content(self):
