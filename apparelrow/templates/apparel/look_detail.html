@@ -115,10 +115,9 @@
                     {% cache CACHE_TIMEOUT look_detail_content object.id LANGUAGE_CODE %}
                     {% if object.display_with_component == 'C' %}
                     <div class="look-large collage">
-
                         <div id="collage-background" class="look-collage">
-                            {% thumbnail object.image "720" upscale=True as im %}
-                            <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                            {% thumbnail object.image resolution crop="center" as im %}
+                            <img class="img-responsive" src="{{ im.url }}"">
                             {% endthumbnail %}
                             <div class="component-wrapper" style="width: {{ wrapper_element.width }}%; height: {{ wrapper_element.height }}%;">
                                 {% for component in object.collage_components.all %}

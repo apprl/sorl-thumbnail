@@ -9937,6 +9937,9 @@ body.profile-likes #product-stores ul > li > a.selected:before {
     font-size: 32px;
   }
 }
+.look-detail-page #collage-background .img-responsive {
+  width: 100%;
+}
 .look-detail-page .body-header .draft-text.published {
   display: none;
 }
@@ -12600,7 +12603,10 @@ body .apprl-top {
   border-radius: 50%;
   /* Prevent background color leak outs */
   -webkit-background-clip: padding-box;
+<<<<<<< HEAD
   -webkit-border-radius: 50%;
+=======
+>>>>>>> Fix look size on look detail
   -moz-background-clip: padding;
   background-clip: padding-box;
   /* End Staffans fix */
