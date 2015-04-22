@@ -8,39 +8,35 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'NotificationEvent.created'
-        db.add_column(u'profile_notificationevent', 'created',
-                      self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True),
-                      keep_default=False)
+        # Adding model 'NotificationEvent'
+        db.create_table(u'profile_notificationevent', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(related_name='notification_events', to=orm['profile.User'])),
+            ('actor', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='performed_events', null=True, to=orm['profile.User'])),
+            ('look', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='notifications', null=True, to=orm['apparel.Look'])),
+            ('product', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='notifications', null=True, to=orm['apparel.Product'])),
+            ('seen', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('email_sent', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
+            ('sale_new_price', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('sale_old_price', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('sale_currency', self.gf('django.db.models.fields.CharField')(max_length=10, null=True, blank=True)),
+            ('type', self.gf('django.db.models.fields.CharField')(max_length=15)),
+        ))
+        db.send_create_signal(u'profile', ['NotificationEvent'])
 
-        # Adding field 'NotificationEvent.sale_new_price'
-        db.add_column(u'profile_notificationevent', 'sale_new_price',
-                      self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
-                      keep_default=False)
-
-        # Adding field 'NotificationEvent.sale_old_price'
-        db.add_column(u'profile_notificationevent', 'sale_old_price',
-                      self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
-                      keep_default=False)
-
-        # Adding field 'NotificationEvent.sale_currency'
-        db.add_column(u'profile_notificationevent', 'sale_currency',
-                      self.gf('django.db.models.fields.CharField')(max_length=10, null=True, blank=True),
+        # Adding field 'User.summary_mails'
+        db.add_column('profile_user', 'summary_mails',
+                      self.gf('django.db.models.fields.CharField')(default='W', max_length=1),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'NotificationEvent.created'
-        db.delete_column(u'profile_notificationevent', 'created')
+        # Deleting model 'NotificationEvent'
+        db.delete_table(u'profile_notificationevent')
 
-        # Deleting field 'NotificationEvent.sale_new_price'
-        db.delete_column(u'profile_notificationevent', 'sale_new_price')
-
-        # Deleting field 'NotificationEvent.sale_old_price'
-        db.delete_column(u'profile_notificationevent', 'sale_old_price')
-
-        # Deleting field 'NotificationEvent.sale_currency'
-        db.delete_column(u'profile_notificationevent', 'sale_currency')
+        # Deleting field 'User.summary_mails'
+        db.delete_column('profile_user', 'summary_mails')
 
 
     models = {
@@ -86,14 +82,14 @@ class Migration(SchemaMigration):
             'gender': ('django.db.models.fields.CharField', [], {'default': "'U'", 'max_length': '1'}),
             'height': ('django.db.models.fields.IntegerField', [], {'default': '524'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('sorl.thumbnail.fields.ImageField', [], {'max_length': '255', 'blank': 'True'}),
+            'image': (u'sorl.thumbnail.fields.ImageField', [], {'max_length': '255', 'blank': 'True'}),
             'image_height': ('django.db.models.fields.IntegerField', [], {'default': '524'}),
             'image_width': ('django.db.models.fields.IntegerField', [], {'default': '694'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
             'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('title',)", 'overwrite': 'False'}),
-            'static_image': ('sorl.thumbnail.fields.ImageField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'static_image': (u'sorl.thumbnail.fields.ImageField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'tags': ('tagging.fields.TagField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'look'", 'to': u"orm['profile.User']"}),
@@ -130,7 +126,7 @@ class Migration(SchemaMigration):
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'options': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Option']", 'symmetrical': 'False', 'blank': 'True'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
-            'product_image': ('sorl.thumbnail.fields.ImageField', [], {'max_length': '255'}),
+            'product_image': (u'sorl.thumbnail.fields.ImageField', [], {'max_length': '255'}),
             'product_name': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'published': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'sku': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
@@ -325,6 +321,7 @@ class Migration(SchemaMigration):
             'referral_partner_parent': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'null': 'True', 'blank': 'True'}),
             'referral_partner_parent_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'slug': ('django.db.models.fields.CharField', [], {'max_length': '100', 'unique': 'True', 'null': 'True'}),
+            'summary_mails': ('django.db.models.fields.CharField', [], {'default': "'W'", 'max_length': '1'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         }

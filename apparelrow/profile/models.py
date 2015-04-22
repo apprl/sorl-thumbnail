@@ -474,6 +474,57 @@ class Follow(models.Model):
     class Meta:
         unique_together = ('user', 'user_follow')
 
+class NotificationManager(models.Manager):
+     def push_notification(self, owner, type, actor=None, product=None, look=None):
+        if actor.is_hidden:
+            # Don't push notifications for hidden users
+            return None
+        event = self.get_or_create(owner=owner,
+                                    actor=actor,
+                                    type=type,
+                                    product=product,
+                                    look=look)[0]
+        event.save()
+
+class NotificationEvent(models.Model):
+    """
+    Create an event whenever something relevant happens, to later display for user or build summaries
+    """
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, db_index=True, related_name='notification_events')
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='performed_events', blank=True, null=True)
+    look = models.ForeignKey('apparel.Look', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey('apparel.Product', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
+    seen = models.BooleanField(default=False)
+    email_sent = models.BooleanField(default=False)
+
+    created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
+
+    #add custom manager
+    objects = NotificationManager()
+
+    sale_new_price = models.IntegerField(blank=True, null=True)
+    sale_old_price = models.IntegerField(blank=True, null=True)
+    sale_currency = models.CharField(max_length=10, unique=False, blank=True, null=True)
+
+    TYPES =   (
+        ("FB", "fbFriend"),
+        ("SALE", "itemSale"),
+        ("FOLLOW", "newFollower"),
+        ("LIKELOOK", "likedLook"),
+        ("COMMLOOK", "commentedLook"),
+        ("NEWLOOK", "createdLook"),
+        ("PURCH", "generatedPurchase"),
+    )
+
+    type = models.CharField(max_length=15, choices=TYPES)
+
+
+
+    @cached_property
+    def from_today(self):
+        ref_time = timezone.now()
+        return ref_time.date() == self.created.date()
+
 #
 # Follow handlers
 #
@@ -497,6 +548,7 @@ def post_save_follow_handler(sender, instance, **kwargs):
         apparel_profile.followers_count = apparel_profile.followers_count + 1
         process_follow_user.delay(instance.user_follow, instance.user, instance)
         Activity.objects.push_activity(instance.user, 'follow', instance.user_follow, instance.user.gender)
+        NotificationEvent.objects.push_notification(instance.user_follow, "FOLLOW", instance.user)
         apparel_profile.save()
     elif not instance.user.is_hidden:
         apparel_profile.followers_count = apparel_profile.followers_count - 1
@@ -527,40 +579,4 @@ class NotificationCache(models.Model):
     def __unicode__(self):
         return '%s' % (self.key,)
 
-
-class NotificationEvent(models.Model):
-    """
-    Create an event whenever something relevant happens, to later display for user or build summaries
-    """
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='notification_events')
-    actor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='performed_events', blank=True, null=True)
-    look = models.ForeignKey('apparel.Look', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
-    product = models.ForeignKey('apparel.Product', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
-    seen = models.BooleanField(default=False)
-    email_sent = models.BooleanField(default=False)
-
-    created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
-
-
-    sale_new_price = models.IntegerField(blank=True, null=True)
-    sale_old_price = models.IntegerField(blank=True, null=True)
-    sale_currency = models.CharField(max_length=10, unique=False, blank=True, null=True)
-
-    TYPES =   (
-        ("FB", "fbFriend"),
-        ("SALE", "itemSale"),
-        ("FOLLOW", "newFollower"),
-        ("LIKELOOK", "likedLook"),
-        ("COMMLOOK", "commentedLook"),
-        ("NEWLOOK", "createdLook"),
-        ("PURCH", "generatedPurchase"),
-    )
-
-    type = models.CharField(max_length=15, choices=TYPES)
-
-
-    @cached_property
-    def from_today(self):
-        ref_time = timezone.now()
-        return ref_time.date() == self.created.date()
 
