@@ -82,6 +82,8 @@ urlpatterns = patterns('',
     url(r'^notification/create_look/$', 'apparelrow.apparel.views.notification_create_look', name='notification-create-look'),
     url(r'^notification/follow_member/$', 'apparelrow.apparel.views.notification_follow_member', name='notification-follow-member'),
     url(r'^notification/follow_brand/$', 'apparelrow.apparel.views.notification_follow_brand', name='notification-follow-brand'),
+    #for AJAX handling of read notifications
+    url(r'^notifications/seenall/$', 'apparelrow.apparel.views.notifications_seen_all', name='notifications-seen'),
 
     # Facebook
     url(r'^facebook/share/(?P<activity>push|pull)/?$', 'apparelrow.apparel.views.facebook_share', name='facebook-share'),
