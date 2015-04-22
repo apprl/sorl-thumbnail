@@ -605,7 +605,7 @@ def get_ref_time(days, monday=False):
     else:
         ref_time = timezone.now() - timedelta(days=days)
         if monday:
-            monday_of_last_week = ref_time - timedelta(days=(ref_time.isocalendar()[2] - 1))
+            ref_time = ref_time - timedelta(days=(ref_time.isocalendar()[2] - 1))
         return ref_time
 
 def calculate_period(period):
@@ -623,7 +623,12 @@ def calculate_period(period):
         ref_time = get_ref_time(30, True)
     return period_name, ref_time
 
-def create_summary(user, period):
+def create_activity_summaries(period):
+    users_to_notify = get_model('profile', 'User').objects.filter(summary_mails=period)
+    for user in users_to_notify:
+        create_individual_summary(user, period)
+
+def create_individual_summary(user, period):
     period_name, ref_time = calculate_period(period)
     events = get_model('profile', 'NotificationEvent').objects.filter(owner=user, created__gte=ref_time)
     latest_likes = get_model('apparel', 'ProductLike').objects.filter(user=user, created__gte=ref_time)
@@ -844,13 +849,10 @@ def send_product_like_summaries(period):
     return
 
 def send_earning_summaries(period):
-    users_to_notify = get_model('profile', 'User').objects.filter(is_partner=True)
+    users_to_notify = get_model('profile', 'User').objects.filter(is_partner=True, earning_summaries=period)
     domain = Site.objects.get_current().domain
     #iterate over all publishers and generate their summaries
     for user in users_to_notify:
-        #make sure the user wants this summary
-        if user.earning_summaries != period:
-            continue
         earningdetails = []
         merge_vars = dict()
         if(period == 'D'):
