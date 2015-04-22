@@ -35,6 +35,12 @@ EVENT_CHOICES = (
     ('N', _('No one')),
 )
 
+NOTIFICATION_CHOICES = (
+    ('I'), _('Immediately'),
+    ('D', _('Daily')),
+    ('W', _('Weekly')),
+    ('N', _('None')),
+)
 
 SUMMARY_CHOICES = (
     ('D', _('Daily')),
@@ -134,6 +140,18 @@ class User(AbstractUser):
             help_text=_('When a Facebook friend has joined Apprl'))
     summary_mails = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
             help_text=_('Receive summaries of recent activities'))
+    product_like_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Receive summaries of about who else likes the same products'))
+    look_like_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Receive summaries of about who else likes the same looks'))
+    earning_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='D',
+            help_text=_('Summary about your most recent earnings to find out what is driving your sales'))
+    friend_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Summary with the latest from the people I follow'))
+    brand_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Summary with the latest from the brands I follow'))
+    follow_recommendations = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Recommendations for who to follow'))
 
     followers_count = models.IntegerField(default=0, blank=False, null=False)
     popularity = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)

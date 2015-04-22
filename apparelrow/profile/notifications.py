@@ -724,6 +724,9 @@ def send_look_like_summaries(period):
     domain = Site.objects.get_current().domain
     #iterate over all users that created any likes within the given period
     for user in users_to_notify:
+        #make sure the user wants this summary
+        if user.look_like_summaries != period:
+            continue
         looks = []
         merge_vars = dict()
         if(period == 'D'):
@@ -780,10 +783,14 @@ def send_product_like_summaries(period):
     domain = Site.objects.get_current().domain
     #iterate over all users that created any likes within the given period
     for user in users_to_notify:
+        #make sure the user wants this summary
+        if user.product_like_summaries != period:
+            continue
         products = []
         merge_vars = dict()
         if(period == 'D'):
             merge_vars['PERIOD'] = "today"
+
         elif(period == 'W'):
             merge_vars['PERIOD'] = "this week"
 
@@ -832,5 +839,44 @@ def send_product_like_summaries(period):
 
     return
 
+def send_earning_summaries(period):
+    users_to_notify = get_model('profile', 'User').objects.filter(is_partner=True)
+    domain = Site.objects.get_current().domain
+    #iterate over all publishers and generate their summaries
+    for user in users_to_notify:
+        #make sure the user wants this summary
+        if user.earning_summaries != period:
+            continue
+        earningdetails = []
+        merge_vars = dict()
+        if(period == 'D'):
+            merge_vars['PERIOD'] = "today"
+        elif(period == 'W'):
+            merge_vars['PERIOD'] = "this week"
+
+        earninglist = []
+
+        # fetch User Earnings
+        period_name, ref_time = calculate_period(period)
+        PENDING = 'Pending'
+        user_earnings = get_model('dashboard', 'UserEarning').objects\
+            .filter(user=user, date__range=(ref_time, timezone.now()), status__gte=PENDING)\
+            .order_by('-date')
+
+        return user_earnings
+        for earning in user_earnings:
+            product = earning.product
+            product_url_link = 'http://%s%s' % (domain, product.get_absolute_url())
+            earning_detail = {  "PRODUCTURL" : product_url_link,
+                                "BRANDNAME" : product.manufacturer.name,
+                                "PRODUCTNAME" : product.product_name,
+                                "PRODUCTPHOTOURL" : get_thumbnail(product.product_image, '500').url,
+            }
+
+
+        merge_vars['EARNINGDETAILS'] = earninglist
+        notify_with_mandrill_template([user], "earningSummary", merge_vars)
+
+    return
 # def create_activity_summary(user, period):
 #     activity = ActivityFeedRender(None, 'A', user).run()

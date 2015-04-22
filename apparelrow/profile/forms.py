@@ -73,6 +73,11 @@ class NotificationForm(forms.ModelForm):
             'follow_user': forms.RadioSelect,
             'facebook_friends': forms.RadioSelect,
             'summary_mails': forms.RadioSelect,
+            'product_like_summaries': forms.RadioSelect,
+            'look_like_summaries': forms.RadioSelect,
+            'friend_summaries': forms.RadioSelect,
+            'brand_summaries': forms.RadioSelect,
+            'follow_recommendations': forms.RadioSelect,
         }
 
 
