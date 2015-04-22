@@ -2,6 +2,7 @@
 import logging
 import json
 import datetime
+from apparelrow.profile.models import NotificationEvent
 import os.path
 import string
 import urllib
@@ -596,9 +597,10 @@ def look_like(request, slug, action):
     if not created:
         look_like.active = default_active
         look_like.save()
+    NotificationEvent.objects.push_notification(look.user, "LIKELOOK", request.user, look=look)
 
     if action == 'like':
-        process_like_look_created(look.user, request.user, look_like)
+        process_like_look_created.delay(look.user, request.user, look_like)
 
     look_popularity.delay(look)
 

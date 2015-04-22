@@ -408,11 +408,11 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
 
-        event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+        event, created = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
                                                                                 actor=sender,
                                                                                 type="LIKELOOK",
-                                                                                look=look_like.look,
-                                                                                email_sent=True)
+                                                                                look=look_like.look)
+        event.email_Sent = True
         event.save()
         notify_with_mandrill_template([notify_user], "likedLook", merge_vars)
 
@@ -474,10 +474,9 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         merge_vars['FOLLOWERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
 
-        event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+        event, created = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
                                                                                 actor=sender,
-                                                                                type="FOLLOW",
-                                                                                email_sent=True)
+                                                                                type="FOLLOW")
         event.email_sent = True #we are sending the email right away
         event.save()
         notify_with_mandrill_template([notify_user], "newFollower", merge_vars)
@@ -522,10 +521,9 @@ def process_facebook_friends(sender, graph_token, **kwargs):
 
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = profile_photo_url
-            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=recipient,
+            event, created = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=recipient,
                                                                                     actor=sender,
-                                                                                    type="FB",
-                                                                                email_sent=True)
+                                                                                    type="FB")
             event.email_sent = True #we are sending the email right away
             event.save()
 
@@ -546,7 +544,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
     template_name = 'first_sale_alert' if first else 'second_sale_alert'
     for likes in product.likes.filter(user__discount_notification=True, active=True).select_related('user'):
-        if likes.user and likes.user.discount_notification:
+
+        if likes.user:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
             further = False
@@ -568,6 +567,18 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             domain = Site.objects.get_current().domain
             merge_vars = dict()
 
+            # create NotificationEvent
+            event, created = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=likes.user,
+                                                                                type="SALE",
+                                                                                product=product,
+                                                                                sale_new_price = locale_discount_price,
+                                                                                sale_old_price = locale_original_price,
+                                                                                sale_currency = currency)
+            #if the user does not want an email just save the event and move on, otherwise build the email
+            if not likes.user.discount_notification:
+                event.save()
+                continue
+
             if product.product_image:
                 product_photo_url = get_thumbnail(product.product_image, '500').url
             else:
@@ -582,14 +593,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['CURRENCY'] = currency
             if further:
                 merge_vars['FURTHER'] = further
-            # create NotificationEvent
-            event = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=likes.use,
-                                                                                type="SALE",
-                                                                                product=product,
-                                                                                email_sent=True,
-                                                                                sale_new_price = locale_discount_price,
-                                                                                sale_old_price = locale_original_price,
-                                                                                sale_currency = currency)
+
 
             event.email_sent = True #we are sending the email right away
             event.save()
