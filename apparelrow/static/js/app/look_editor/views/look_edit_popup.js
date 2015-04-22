@@ -27,10 +27,10 @@ App.Views.LookEditPopup = Backbone.View.extend({
         $('body').append(this.$el);
     },
 
-    product_info: function(model) {
+    product_info: function(model, hide_add) {
         this.active_type = 'info';
         this.show(model);
-        this.render_info();
+        this.render_info(hide_add == true);
     },
 
     link_info: function(model) {
@@ -102,7 +102,7 @@ App.Views.LookEditPopup = Backbone.View.extend({
         this.$el.show();
     },
 
-    render_info: function() {
+    render_info: function(hide_add) {
         App.Events.trigger('product:disable');
 
         this.delegateEvents();
@@ -118,6 +118,11 @@ App.Views.LookEditPopup = Backbone.View.extend({
         content.addClass('center');
         content.load(url, _.bind(function() {
             content.removeClass('center');
+            if (hide_add) {
+                content.find('.btn-success').parent().hide();
+            } else {
+                content.find('.btn-success').parent().show();
+            }
         }, this));
         this.$el.removeClass('adjust-right');
         this.$el.show();
