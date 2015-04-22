@@ -49,7 +49,9 @@ def empty_embed_shop_cache(embed_shop_id):
     """
         Invalidate embedded shops 2.0 from cache
     """
-    get_cache('nginx').delete(reverse('embed-shop', args=[embed_shop_id]))
+    nginx_key = reverse('embed-shop', args=[embed_shop_id])
+    logging.info("Removing embedded shop %s from memcached" % nginx_key)
+    get_cache('nginx').delete(nginx_key)
 
 # @task(name='apparelrow.apparel.tasks.empty_embed_shop_cache', max_retries=5, ignore_result=True)
 # def empty_embed_shop_cache(embed_shop_id):

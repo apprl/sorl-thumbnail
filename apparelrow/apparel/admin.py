@@ -232,6 +232,7 @@ class LookComponentAdmin(admin.ModelAdmin):
 admin.site.register(LookComponent, LookComponentAdmin)
 
 class ShopProductInline(admin.TabularInline):
+    raw_id_fields = ('product',)
     model = ShopProduct
 
 #
@@ -240,6 +241,7 @@ class ShopProductInline(admin.TabularInline):
 
 class ShopAdmin(admin.ModelAdmin):
     list_display = ('title', 'user', 'created')
+    raw_id_fields = ('user',)
     inlines = [
         ShopProductInline,
     ]
@@ -251,7 +253,8 @@ admin.site.register(Shop, ShopAdmin)
 #
 
 class ShopEmbedAdmin(admin.ModelAdmin):
-    list_display = ('user', )
+    list_display = ('id','user','shop',)
+    raw_id_fields = ('user','shop')
 
 admin.site.register(ShopEmbed, ShopEmbedAdmin)
 
