@@ -16,6 +16,7 @@ from django.utils.translation import get_language, activate
 from django.core.urlresolvers import reverse
 from django.utils.formats import number_format
 from django.db.models.loading import get_model
+from django.db.models import Q
 from django.core.files.storage import DefaultStorage
 
 from sorl.thumbnail import get_thumbnail
@@ -153,8 +154,8 @@ def notify_with_mandrill_template(users, notification_name, merge_vars):
     }
 
     msg.global_merge_vars.update(merge_vars) #add specific parameters
-    #FIXME development only
-    msg.subaccount ="apprl_testing"
+    #development only
+    #msg.subaccount ="apprl_testing"
 
     msg.merge_vars = usernames    # Per-recipient merge tags, here adding personalized names
     msg.send()
@@ -848,39 +849,128 @@ def send_product_like_summaries(period):
 
     return
 
+def get_vendor_logo(vendor):
+    if(vendor.logotype):
+        return get_thumbnail(vendor.logotype, '500').url
+    else:
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
+def create_earning_summary(period):
+    period_name, interesting_time = calculate_period(period)
+    #include products that users liked within the month for notifying them too
+    period_name, ref_time = calculate_period(period)
+    PENDING = 2 #This can't be imported here but is originally 'Pending' fro STATUS_CHOICES in dashboard.models.Sale
+    #fetch all earnings in the given period that are either sales or clicks
+    earnings = get_model('dashboard', 'UserEarning').objects\
+            .filter(Q(user_earning_type='publisher_sale_commission') | Q(user_earning_type='publisher_sale_click_commission')\
+            , date__range=(ref_time, timezone.now()), status__gte=PENDING)\
+            .order_by('-date')
+
+    earning_dict = {}
+    users_to_notify = {}
+    #iterate through look likes
+    for earning in earnings:
+        user = earning.user
+        earning_detail = dict()
+        if user in users_to_notify:
+            #there are already earning for this user
+            new_amount = earning.amount
+            earning_detail['SUM'] = new_amount
+            users_to_notify[user]["totalearning"] += new_amount
+            earning_detail['VENDORNAME'] = earning.sale.vendor.name
+            if(earning.user_earning_type == 'publisher_sale_commission'):
+                product = earning.from_product
+                earning_detail['PRODUCTSALE'] = True
+                if not product:
+                    #there is no associated product
+                    vendor = earning.sale.vendor
+                    if(vendor in users_to_notify[user]["othersales"]):
+                        old_details = users_to_notify[user]["othersales"][vendor]
+                        old_details['AMOUNT'] += 1
+                        old_details['SUM'] += new_amount
+                    else:
+                        earning_detail['AMOUNT'] = 1
+                        earning_detail['PHOTOURL'] = get_vendor_logo(vendor)
+                        earning_detail['NOPRODUCT'] = True
+                        users_to_notify[user]["othersales"][vendor] = earning_detail
+                elif(product in users_to_notify[user]["productsales"]):
+                    #aggregate earnings for same product
+                    old_details = users_to_notify[user]["productsales"][product]
+                    old_details['AMOUNT'] += 1
+                    old_details['SUM'] += new_amount
+                else:
+                    #or create new one if it does not exist
+                    earning_detail['AMOUNT'] = 1
+                    earning_detail['BRANDNAME'] = product.manufacturer.name
+                    earning_detail['PRODUCTNAME'] = product.product_name
+                    earning_detail['PHOTOURL'] = get_thumbnail(product.product_image, '500').url
+                    earning_detail['NOPRODUCT'] = False
+                    users_to_notify[user]["productsales"][product] = earning_detail
+            elif(earning.user_earning_type == 'publisher_sale_click_commission'):
+                vendor = earning.sale.vendor
+                earning_detail['PRODUCTSALE'] = False
+                if(vendor in users_to_notify[user]["clickearnings"]):
+                    #aggregate earnings for same vendor
+                    old_details = users_to_notify[user]["clickearnings"][vendor]
+                    old_details['SUM'] += new_amount
+                else:
+                    #or create new one if it does not exist
+                    earning_detail['PHOTOURL'] = get_vendor_logo(vendor)
+                    users_to_notify[user]["clickearnings"][vendor] = earning_detail
+        else:
+            #this is the first sale encoutered for the user
+            #so create dicts for earnings
+            product_sales = dict()
+            click_earnings = dict()
+            other_sales = dict()
+            earning_detail['SUM'] = earning.amount
+            total_earnings = earning.amount
+            earning_detail['VENDORNAME'] = earning.sale.vendor.name
+            if(earning.user_earning_type == 'publisher_sale_commission'):
+                earning_detail['PRODUCTSALE'] = True
+                earning_detail['AMOUNT'] = 1
+                product = earning.from_product
+                if product:
+                    earning_detail['BRANDNAME'] = product.manufacturer.name
+                    earning_detail['PRODUCTNAME'] = product.product_name
+                    earning_detail['PHOTOURL'] = get_thumbnail(product.product_image, '500').url
+                    earning_detail['NOPRODUCT'] = False
+                    product_sales[product] = earning_detail
+                else:
+                    earning_detail['NOPRODUCT'] = True
+                    vendor = earning.sale.vendor
+                    earning_detail['PHOTOURL'] = get_vendor_logo(vendor)
+                    other_sales[vendor] = earning_detail
+            elif(earning.user_earning_type == 'publisher_sale_click_commission'):
+                earning_detail['PRODUCTSALE'] = False
+                earning_detail['PHOTOURL'] = get_vendor_logo(earning.sale.vendor)
+                click_earnings[earning.sale.vendor] = earning_detail
+            users_to_notify[user] = {"productsales" : product_sales,
+                                     "clickearnings" : click_earnings,
+                                     "othersales" : other_sales,
+                                     "totalearning" : total_earnings,
+            }
+
+    return earning_dict, users_to_notify, period_name
+
 def send_earning_summaries(period):
-    users_to_notify = get_model('profile', 'User').objects.filter(is_partner=True, earning_summaries=period)
+    earnings, users_to_notify, period_name = create_earning_summary(period)
     domain = Site.objects.get_current().domain
     #iterate over all publishers and generate their summaries
     for user in users_to_notify:
-        earningdetails = []
+        all_earnings = users_to_notify[user]["productsales"].values()
+        all_earnings.extend(users_to_notify[user]["othersales"].values())
+        all_earnings.extend(users_to_notify[user]["clickearnings"].values())
+        sorted_earnings = sorted(all_earnings, key=lambda k: k['SUM'])
+        for earning in sorted_earnings:
+            earning["SUM"] = str(earning["SUM"])
+
+        total_earning = users_to_notify[user]["totalearning"]
         merge_vars = dict()
-        if(period == 'D'):
-            merge_vars['PERIOD'] = "today"
-        elif(period == 'W'):
-            merge_vars['PERIOD'] = "this week"
+        merge_vars['PERIOD'] = period_name
+        merge_vars['TOTAL'] = str(total_earning)
+        merge_vars['EARNINGDETAILS'] = sorted_earnings
 
-        earninglist = []
-
-        # fetch User Earnings
-        period_name, ref_time = calculate_period(period)
-        PENDING = 'Pending'
-        user_earnings = get_model('dashboard', 'UserEarning').objects\
-            .filter(user=user, date__range=(ref_time, timezone.now()), status__gte=PENDING)\
-            .order_by('-date')
-
-        return user_earnings
-        for earning in user_earnings:
-            product = earning.product
-            product_url_link = 'http://%s%s' % (domain, product.get_absolute_url())
-            earning_detail = {  "PRODUCTURL" : product_url_link,
-                                "BRANDNAME" : product.manufacturer.name,
-                                "PRODUCTNAME" : product.product_name,
-                                "PRODUCTPHOTOURL" : get_thumbnail(product.product_image, '500').url,
-            }
-
-
-        merge_vars['EARNINGDETAILS'] = earninglist
         notify_with_mandrill_template([user], "earningSummary", merge_vars)
 
     return
