@@ -12629,16 +12629,17 @@ body .apprl-top {
 .apprl-circle-link {
   display: table-cell;
   vertical-align: middle;
+  text-align: center;
   margin-bottom: 20px;
   width: 295px;
   height: 295px;
-  border-radius: 295px;
-  text-align: center;
+  /*border-radius: 295px;*/
   cursor: pointer;
   /* Staffans fix */
   border-radius: 50%;
   /* Prevent background color leak outs */
   -webkit-background-clip: padding-box;
+  -webkit-border-radius: 50%;
   -moz-background-clip: padding;
   background-clip: padding-box;
   /* End Staffans fix */

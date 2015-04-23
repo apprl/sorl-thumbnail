@@ -4,7 +4,7 @@ from spiderpig.spidercrawl.items import Product
 from spiderpig.spidercrawl.spiders import AffiliateMixin
 
 
-class SsenseSpider(CSVFeedSpider, AffiliateMixin):
+class MenlookSpider(CSVFeedSpider, AffiliateMixin):
     name = 'menlook'
     allowed_domains = ['menlook.com']
     start_urls = ['http://flux.lengow.com/shopbot/apprl/60001/txt/']
