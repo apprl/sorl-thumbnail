@@ -9763,7 +9763,7 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   margin: 0 !important;
 }
 .full_modal {
-  width: 90%;
+  width: 60%;
 }
 .body-grey {
   background: #EEEEEE !important;
@@ -9890,6 +9890,9 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 .iosSlider .slider .item img {
   width: 100%;
   height: auto;
+}
+.click-detail {
+  cursor: pointer;
 }
 @media (min-width: 1120px) {
   #modal_tool_shop .modal-dialog,
@@ -11502,7 +11505,8 @@ html.look-type-C .collage {
   /*border-bottom-right-radius: 4px;*/
   /*}*/
 }
-.discover-list-page .alphabet {
+.discover-list-page .alphabet,
+.profile-looks .alphabet {
   font-size: 14px;
   border-bottom: 3px solid #000000;
   padding-bottom: 5px;
@@ -11510,24 +11514,30 @@ html.look-type-C .collage {
   margin-bottom: 15px;
   color: #333333;
 }
-.discover-list-page .alphabet li {
+.discover-list-page .alphabet li,
+.profile-looks .alphabet li {
   padding-left: 2px;
   padding-right: 2px;
 }
-.discover-list-page .alphabet li:first-child {
+.discover-list-page .alphabet li:first-child,
+.profile-looks .alphabet li:first-child {
   padding-left: 0;
 }
-.discover-list-page .alphabet li a {
+.discover-list-page .alphabet li a,
+.profile-looks .alphabet li a {
   padding: 5px;
   color: #d9d9d9;
 }
-.discover-list-page .alphabet li a.selected {
+.discover-list-page .alphabet li a.selected,
+.profile-looks .alphabet li a.selected {
   color: #000000;
 }
-.discover-list-page .alphabet li a:first-child {
+.discover-list-page .alphabet li a:first-child,
+.profile-looks .alphabet li a:first-child {
   padding-left: 0;
 }
-.discover-list-page .alphabet.topmodel {
+.discover-list-page .alphabet.topmodel,
+.profile-looks .alphabet.topmodel {
   font-size: 23px;
   font-weight: 700;
   text-transform: none;
@@ -11538,7 +11548,8 @@ html.look-type-C .collage {
   color: #333333;
 }
 @media (max-width: 767px) {
-  .discover-list-page .alphabet.topmodel {
+  .discover-list-page .alphabet.topmodel,
+  .profile-looks .alphabet.topmodel {
     font-size: 18px;
     /*margin-top: 0;*/
   }
@@ -12579,12 +12590,20 @@ body .apprl-top {
 .apprl-circle-link {
   display: table-cell;
   vertical-align: middle;
+  text-align: center;
   margin-bottom: 20px;
   width: 295px;
   height: 295px;
-  border-radius: 295px;
-  text-align: center;
+  /*border-radius: 295px;*/
   cursor: pointer;
+  /* Staffans fix */
+  border-radius: 50%;
+  /* Prevent background color leak outs */
+  -webkit-background-clip: padding-box;
+  -webkit-border-radius: 50%;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  /* End Staffans fix */
   -webkit-transition: background-color ease 0s;
   -moz-transition: background-color ease 0s;
   transition: background-color ease 0s;
