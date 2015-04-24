@@ -9996,6 +9996,9 @@ body.profile-likes #product-stores ul > li > a.selected:before {
     font-size: 32px;
   }
 }
+.look-detail-page #collage-background .img-responsive {
+  width: 100%;
+}
 .look-detail-page .body-header .draft-text.published {
   display: none;
 }
