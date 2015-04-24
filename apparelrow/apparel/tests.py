@@ -1,4 +1,5 @@
 import json
+from apparelrow.apparel.views import product_lookup_asos_nelly
 
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
@@ -90,6 +91,115 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/en/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
+
+class TestChromeExtensionSpecials(TestCase):
+    fixtures = ['extensiontest_vendor.json', 'extensiontest_product.json']
+
+    def _login(self):
+        normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+
+    def test_fixtures(self):
+        self._login()
+
+        vendor = get_model('theimp', 'Vendor').objects.get(name='asos')
+        product = get_model('theimp', 'Product').objects.get(pk=883414)
+
+        self.assertIsNotNone(vendor)
+        self.assertIsNotNone(product)
+
+    def test_product_asos_nelly_luisaviaroma(self):
+        #1st ASOS product
+        #original
+        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
+        self.assertEqual(product_lookup_asos_nelly(key), 883414)
+        #after click
+        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate&r=2"
+        self.assertEqual(product_lookup_asos_nelly(key), 883414)
+        #manual search
+        key = "http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2108486&clr=Grey&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=101&gridsize=3&gridrow=2&gridcolumn=3"
+        self.assertEqual(product_lookup_asos_nelly(key), 883414)
+        #from "last viewed"
+        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&CTARef=Recently%20Viewed"
+        self.assertEqual(product_lookup_asos_nelly(key), 883414)
+
+        #2nd ASOS product
+        #original
+        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
+        self.assertEqual(product_lookup_asos_nelly(key), 883415)
+        #after click
+        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
+        self.assertEqual(product_lookup_asos_nelly(key), 883415)
+        #manual search
+        key = "http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2109266&clr=White&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=100&gridsize=3&gridrow=2&gridcolumn=2"
+        self.assertEqual(product_lookup_asos_nelly(key), 883415)
+
+        #3rd ASOS product
+        #original
+        key = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+        self.assertEqual(product_lookup_asos_nelly(key), 883416)
+        #after click
+        key = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+        self.assertEqual(product_lookup_asos_nelly(key), 883416)
+        #manual search
+        key = "http://www.asos.com/asos/asos-mix-and-match-halter-leopard-print-bikini-top/prod/pgeproduct.aspx?iid=2125546&clr=Leopardprint&SearchQuery=Mix+and+Match+Halter+Leopard+Print+Bikini+Top&SearchRedirect=true"
+        self.assertEqual(product_lookup_asos_nelly(key), 883416)
+
+        #1st Luisaviaroma product
+        #original
+        key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN"
+        self.assertEqual(product_lookup_asos_nelly(key), 883598)
+        #after click
+        key = "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing"
+        self.assertEqual(product_lookup_asos_nelly(key), 883598)
+        #manual search
+        key = "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&VendorColorId=TTYzMDU30&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode="
+        self.assertEqual(product_lookup_asos_nelly(key), 883598)
+
+        #2nd Luisaviaroma product
+        #original
+        key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"
+        self.assertEqual(product_lookup_asos_nelly(key), 883602)
+        #after click
+        key = "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing"
+        self.assertEqual(product_lookup_asos_nelly(key), 883602)
+        #manual search
+        key = "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&VendorColorId=TTYzMTAy0&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode="
+        self.assertEqual(product_lookup_asos_nelly(key), 883602)
+
+        #1st Nelly product
+        #original
+        key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883607)
+        #after click
+        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883607)
+        #manual search
+        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883607)
+
+        #2nd Nelly product
+        #original
+        key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883603)
+        #after click
+        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883603)
+        #manual search
+        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883603)
+        #made up category
+        key = "http://nelly.com/se/somecategory/somesubcategory/otherparam/closet-1153/quilt-effect-dress-601764-2350/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883603)
+
+        #3rd Nelly product from pivotaltracker story
+        #original
+        key = "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
+        self.assertEqual(product_lookup_asos_nelly(key), 883604)
+        #other
+        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54"
+        self.assertEqual(product_lookup_asos_nelly(key), 883604)
 
 
 class TestProductDetails(TestCase):

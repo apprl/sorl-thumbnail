@@ -1,0 +1,279 @@
+[
+    {
+        "pk": 883414,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 3,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:21:47.405",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:21:47.432",
+            "parsed_date": "2015-04-13T13:21:47.432",
+            "json": "{\"scraped\": {\"sku\": \"1005699\", \"category\": \"Menswear / T-Shirts / Basic Singles \\u00a36\", \"vendor\": \"asos\", \"name\": \"ASOS Vest With Extreme Racer Back - Grey\", \"regular_price\": \"73.17\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate]]\", \"gender\": \"Menswear / T-Shirts / Basic Singles \\u00a36\", \"brand\": \"ASOS\", \"discount_price\": \"None\", \"image_urls\": [\"http://images.asos-media.com/inv/media/6/8/4/8/2108486/grey/image1xxl.jpg\"], \"currency\": \"SEK\", \"colors\": \"\", \"affiliate\": \"zanox\", \"key\": \"http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate\", \"stock\": \"\", \"in_stock\": true, \"description\": \"Vest by ASOS . Constructed in a lightweight, pure cotton, jersey. Featuring a U-neck, dropped armholes and an extreme racer back to the reverse. In a relaxed and regular fit. Vest by ASOS has been styled with boat shoes . ABOUT ASOS BRAND Designed in-house in our London studio by our dedicated menswear team, ASOS offer a range of men's clothing designed and created exclusively for ASOS .. ABOUT ME 100% Cotton SIZE & FIT Model's height: 6'1\\\"/185.5 cmModel is wearing: Size MediumThis style comes in a regular fit. Please note an ASOS regular fit is cut slightly slimmer than other brands.. LOOK AFTER ME Machine wash according to instructions on care label\"}, \"parsed\": {\"sku\": \"1005699\", \"is_discount\": false, \"vendor\": \"asos\", \"name\": \"ASOS Vest With Extreme Racer Back - Grey\", \"currency\": \"SEK\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate]]\", \"gender\": \"M\", \"brand\": \"ASOS\", \"regular_price\": \"73.17\", \"brand_id\": 13153, \"in_stock\": true, \"affiliate\": \"zanox\", \"description\": \"Vest by ASOS . Constructed in a lightweight, pure cotton, jersey. Featuring a U-neck, dropped armholes and an extreme racer back to the reverse. In a relaxed and regular fit. Vest by ASOS has been styled with boat shoes . ABOUT ASOS BRAND Designed in-house in our London studio by our dedicated menswear team, ASOS offer a range of men's clothing designed and created exclusively for ASOS .. ABOUT ME 100% Cotton SIZE & FIT Model's height: 6'1\\\"/185.5 cmModel is wearing: Size MediumThis style comes in a regular fit. Please note an ASOS regular fit is cut slightly slimmer than other brands.. LOOK AFTER ME Machine wash according to instructions on care label\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate",
+            "category_mapping": null
+        }
+    },
+        {
+        "pk": 883414,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:21:47.432"
+        }
+    },
+    {
+        "pk": 883415,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 3,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:21:47.460",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:21:47.476",
+            "parsed_date": "2015-04-13T13:21:47.476",
+            "json": "{\"scraped\": {\"sku\": \"1006308\", \"category\": \"Menswear / T-Shirts / Basic Singles \\u00a36\", \"vendor\": \"asos\", \"name\": \"ASOS Vest With Extreme Racer Back - White\", \"regular_price\": \"73.17\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate]]\", \"gender\": \"Menswear / T-Shirts / Basic Singles \\u00a36\", \"brand\": \"ASOS\", \"discount_price\": \"None\", \"image_urls\": [\"http://images.asos-media.com/inv/media/6/6/2/9/2109266/white/image1xxl.jpg\"], \"currency\": \"SEK\", \"colors\": \"\", \"affiliate\": \"zanox\", \"key\": \"http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate\", \"stock\": \"\", \"in_stock\": true, \"description\": \"Vest by ASOS . Constructed in a lightweight, pure cotton, jersey. Featuring a U-neck, dropped armholes and an extreme racer back to the reverse. In a relaxed and regular fit. Vest by ASOS has been styled with boat shoes . ABOUT ASOS BRAND Designed in-house in our London studio by our dedicated menswear team, ASOS offer a range of men's clothing designed and created exclusively for ASOS .. ABOUT ME 100% Cotton   SIZE & FIT Model's height: 6'1\\\"/185.5 cm Model is wearing: Size Medium  This style comes in a regular fit. Please note an ASOS regular fit is cut slightly slimmer than other brands.. LOOK AFTER ME Machine wash according to instructions on care label\"}, \"parsed\": {\"sku\": \"1006308\", \"is_discount\": false, \"vendor\": \"asos\", \"name\": \"ASOS Vest With Extreme Racer Back - White\", \"currency\": \"SEK\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate]]\", \"gender\": \"M\", \"brand\": \"ASOS\", \"regular_price\": \"73.17\", \"brand_id\": 13153, \"in_stock\": true, \"affiliate\": \"zanox\", \"description\": \"Vest by ASOS . Constructed in a lightweight, pure cotton, jersey. Featuring a U-neck, dropped armholes and an extreme racer back to the reverse. In a relaxed and regular fit. Vest by ASOS has been styled with boat shoes . ABOUT ASOS BRAND Designed in-house in our London studio by our dedicated menswear team, ASOS offer a range of men's clothing designed and created exclusively for ASOS .. ABOUT ME 100% Cotton   SIZE & FIT Model's height: 6'1\\\"/185.5 cm Model is wearing: Size Medium  This style comes in a regular fit. Please note an ASOS regular fit is cut slightly slimmer than other brands.. LOOK AFTER ME Machine wash according to instructions on care label\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883416,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 3,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:21:47.497",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:21:47.512",
+            "parsed_date": "2015-04-13T13:21:47.512",
+            "json": "{\"scraped\": {\"sku\": \"1019342\", \"category\": \"Womenswear / Swimwear & Beachwear / Mix & Match\", \"vendor\": \"asos\", \"name\": \"ASOS Mix and Match Halter Leopard Print Bikini Top - Multi\", \"regular_price\": \"219.52\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate]]\", \"gender\": \"Womenswear / Swimwear & Beachwear / Mix & Match\", \"brand\": \"ASOS\", \"discount_price\": \"60.98\", \"image_urls\": [\"http://images.asos-media.com/inv/media/6/4/5/5/2125546/leopardprint/image1xxl.jpg\"], \"currency\": \"SEK\", \"colors\": \"\", \"affiliate\": \"zanox\", \"key\": \"http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate\", \"stock\": \"\", \"in_stock\": true, \"description\": \"Bikini top by ASOS Collection . Featuring a halterneck design with a self-tie fastening to the neck, moulded cups with ruching to the centre, a bold leopard print design and a twist clasp fastening to the reverse. ABOUT ASOS COLLECTION Directional, exciting and diverse the ASOS Collection makes and breaks the fashion rules. Scouring the globe for inspiration, our London based Design Team is inspired by fashion's most covetable trends; providing you with a cutting edge wardrobe season upon season.. ABOUT ME Main: 81% Polyamide, 19% Elastane Cup Liner: 100% Polyester. LOOK AFTER ME Hand wash only\"}, \"parsed\": {\"sku\": \"1019342\", \"is_discount\": true, \"vendor\": \"asos\", \"name\": \"ASOS Mix and Match Halter Leopard Print Bikini Top - Multi\", \"currency\": \"SEK\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate]]\", \"gender\": \"W\", \"brand\": \"ASOS\", \"regular_price\": \"219.52\", \"discount_price\": \"60.98\", \"brand_id\": 13153, \"in_stock\": true, \"affiliate\": \"zanox\", \"description\": \"Bikini top by ASOS Collection . Featuring a halterneck design with a self-tie fastening to the neck, moulded cups with ruching to the centre, a bold leopard print design and a twist clasp fastening to the reverse. ABOUT ASOS COLLECTION Directional, exciting and diverse the ASOS Collection makes and breaks the fashion rules. Scouring the globe for inspiration, our London based Design Team is inspired by fashion's most covetable trends; providing you with a cutting edge wardrobe season upon season.. ABOUT ME Main: 81% Polyamide, 19% Elastane Cup Liner: 100% Polyester. LOOK AFTER ME Hand wash only\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate",
+            "category_mapping": null
+        }
+    },
+     {
+        "pk": 883417,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 3,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:21:47.535",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:21:47.550",
+            "parsed_date": "2015-04-13T13:21:47.550",
+            "json": "{\"scraped\": {\"sku\": \"1019391\", \"category\": \"Womenswear / Swimwear & Beachwear / Mix & Match\", \"vendor\": \"asos\", \"name\": \"ASOS Mix and Match Leopard Print Hipster Bikini Pant - Multi\", \"regular_price\": \"170.73\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-Mix-and-Match-Leopard-Print-Hipster-Bikini-Pant/Prod/pgeproduct.aspx?iid=2125628&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimiprp&istBid=t&channelref=affiliate]]\", \"gender\": \"Womenswear / Swimwear & Beachwear / Mix & Match\", \"brand\": \"ASOS\", \"discount_price\": \"48.78\", \"image_urls\": [\"http://images.asos-media.com/inv/media/8/2/6/5/2125628/leopardprint/image1xxl.jpg\"], \"currency\": \"SEK\", \"colors\": \"\", \"affiliate\": \"zanox\", \"key\": \"http://www.asos.com/ASOS/ASOS-Mix-and-Match-Leopard-Print-Hipster-Bikini-Pant/Prod/pgeproduct.aspx?iid=2125628&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimiprp&istBid=t&channelref=affiliate\", \"stock\": \"\", \"in_stock\": true, \"description\": \"Bikini briefs by ASOS Collection Low-rise hipster cut Leopard print design Full flattering back ABOUT ASOS COLLECTION Directional, exciting and diverse, the ASOS Collection makes and breaks the fashion rules. Scouring the globe for inspiration, our London based Design Team is inspired by fashion's most covetable trends; providing you with a cutting edge wardrobe season upon season.. ABOUT ME Fabric: 80% Polyamide, 20% Elastane, Lining: 75% Polyamide, 25% Elastane.. LOOK AFTER ME Hand wash only\"}, \"parsed\": {\"sku\": \"1019391\", \"is_discount\": true, \"vendor\": \"asos\", \"name\": \"ASOS Mix and Match Leopard Print Hipster Bikini Pant - Multi\", \"currency\": \"SEK\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-Mix-and-Match-Leopard-Print-Hipster-Bikini-Pant/Prod/pgeproduct.aspx?iid=2125628&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimiprp&istBid=t&channelref=affiliate]]\", \"gender\": \"W\", \"brand\": \"ASOS\", \"regular_price\": \"170.73\", \"discount_price\": \"48.78\", \"brand_id\": 13153, \"in_stock\": true, \"affiliate\": \"zanox\", \"description\": \"Bikini briefs by ASOS Collection Low-rise hipster cut Leopard print design Full flattering back ABOUT ASOS COLLECTION Directional, exciting and diverse, the ASOS Collection makes and breaks the fashion rules. Scouring the globe for inspiration, our London based Design Team is inspired by fashion's most covetable trends; providing you with a cutting edge wardrobe season upon season.. ABOUT ME Fabric: 80% Polyamide, 20% Elastane, Lining: 75% Polyamide, 25% Elastane.. LOOK AFTER ME Hand wash only\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Leopard-Print-Hipster-Bikini-Pant/Prod/pgeproduct.aspx?iid=2125628&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimiprp&istBid=t&channelref=affiliate",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883418,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 3,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:21:47.571",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:21:47.586",
+            "parsed_date": "2015-04-13T13:21:47.586",
+            "json": "{\"scraped\": {\"sku\": \"1027009\", \"category\": \"Menswear / T-Shirts / Basic Singles \\u00a36\", \"vendor\": \"asos\", \"name\": \"ASOS T-Shirt With Crew Neck - Grey\", \"regular_price\": \"73.17\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-T-Shirt-With-Crew-Neck/Prod/pgeproduct.aspx?iid=2135073&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwxqwt&istBid=t&channelref=affiliate]]\", \"gender\": \"Menswear / T-Shirts / Basic Singles \\u00a36\", \"brand\": \"ASOS\", \"discount_price\": \"None\", \"image_urls\": [\"http://images.asos-media.com/inv/media/3/7/0/5/2135073/charcoalmarl/image1xxl.jpg\"], \"currency\": \"SEK\", \"colors\": \"\", \"affiliate\": \"zanox\", \"key\": \"http://www.asos.com/ASOS/ASOS-T-Shirt-With-Crew-Neck/Prod/pgeproduct.aspx?iid=2135073&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwxqwt&istBid=t&channelref=affiliate\", \"stock\": \"\", \"in_stock\": true, \"description\": \"T-shirt by ASOS Made from 100% pure cotton Soft touch jersey fabric Bound crew neck Regular fit Shop other colours of ASOS basic crew neck t-shirts. ABOUT ASOS BRAND Designed in-house in our London studio by our dedicated menswear team, ASOS offer a range of men's clothing designed and created exclusively for ASOS .. ABOUT ME Fabric: 50% Cotton, 50% Polyester SIZE & FIT Model's height: 6'1\\\"/185.5 cm Model is wearing: Size Medium This style comes in a regular fit which fits true to size.. LOOK AFTER ME Machine wash according to instructions on care label\"}, \"parsed\": {\"sku\": \"1027009\", \"is_discount\": false, \"vendor\": \"asos\", \"name\": \"ASOS T-Shirt With Crew Neck - Grey\", \"currency\": \"SEK\", \"url\": \"http://ad.zanox.com/ppc/?19595318C106179573&ULP=[[ASOS/ASOS-T-Shirt-With-Crew-Neck/Prod/pgeproduct.aspx?iid=2135073&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwxqwt&istBid=t&channelref=affiliate]]\", \"gender\": \"M\", \"brand\": \"ASOS\", \"regular_price\": \"73.17\", \"brand_id\": 13153, \"in_stock\": true, \"affiliate\": \"zanox\", \"description\": \"T-shirt by ASOS Made from 100% pure cotton Soft touch jersey fabric Bound crew neck Regular fit Shop other colours of ASOS basic crew neck t-shirts. ABOUT ASOS BRAND Designed in-house in our London studio by our dedicated menswear team, ASOS offer a range of men's clothing designed and created exclusively for ASOS .. ABOUT ME Fabric: 50% Cotton, 50% Polyester SIZE & FIT Model's height: 6'1\\\"/185.5 cm Model is wearing: Size Medium This style comes in a regular fit which fits true to size.. LOOK AFTER ME Machine wash according to instructions on care label\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.asos.com/ASOS/ASOS-T-Shirt-With-Crew-Neck/Prod/pgeproduct.aspx?iid=2135073&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwxqwt&istBid=t&channelref=affiliate",
+            "category_mapping": null
+        }
+    },
+     {
+        "pk": 883603,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 13,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:31.836",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:31.888",
+            "parsed_date": "2015-04-13T13:23:31.888",
+            "json": "{\"scraped\": {\"sku\": \"1659980211\", \"category\": \"Mode > Kvinna > KL\\u00c4DER > Festkl\\u00e4nningar > Skater Dresses\", \"vendor\": \"nelly\", \"name\": \"Quilt Effect Dress\", \"regular_price\": \"499.00\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1659980211)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fcloset-1153%2Fquilt-effect-dress-601764-2350%2F)\", \"gender\": \"Kvinna\", \"brand\": \"Closet\", \"discount_price\": \"249.00\", \"image_urls\": [\"http://nlyscandinavia.scene7.com/is/image/nlyscandinavia/productPress/601764-2350.jpg\"], \"currency\": \"SEK\", \"colors\": \"Cream\", \"affiliate\": \"tradedoubler\", \"key\": \"http://nelly.com/se/kl\\u00e4der-f\\u00f6r-kvinnor/kl\\u00e4der/festkl\\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/\", \"stock\": 1, \"in_stock\": true, \"description\": \"Kl\\u00e4nning fr\\u00e5n CLOSET. \\u00c4rml\\u00f6s modell med rundad halsringning. Markerad midja samt utst\\u00e4lld kjoldel. Grov dragkedja baktill.  Tillverkad av 100% Polyester.\"}, \"parsed\": {\"sku\": \"1659980211\", \"is_discount\": true, \"colors\": [\"beige\"], \"vendor\": \"nelly\", \"name\": \"Quilt Effect Dress\", \"currency\": \"SEK\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1659980211)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fcloset-1153%2Fquilt-effect-dress-601764-2350%2F)\", \"gender\": \"W\", \"brand\": \"Closet\", \"regular_price\": \"499.00\", \"discount_price\": \"249.00\", \"brand_id\": 13441, \"in_stock\": true, \"affiliate\": \"tradedoubler\", \"stock\": 1, \"description\": \"Kl\\u00e4nning fr\\u00e5n CLOSET. \\u00c4rml\\u00f6s modell med rundad halsringning. Markerad midja samt utst\\u00e4lld kjoldel. Grov dragkedja baktill.  Tillverkad av 100% Polyester.\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883604,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 13,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:31.914",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:31.925",
+            "parsed_date": "2015-04-13T13:23:31.925",
+            "json": "{\"scraped\": {\"sku\": \"1667515503\", \"category\": \"Mode > Kvinna > KL\\u00c4DER > Festkl\\u00e4nningar > Skater Dresses\", \"vendor\": \"nelly\", \"name\": \"Embellished Cutout Skater Dress\", \"regular_price\": \"399.00\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1667515503)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fax-paris-1107%2Fembellished-cutout-skater-dress-710254-1%2F)\", \"gender\": \"Kvinna\", \"brand\": \"Ax Paris\", \"discount_price\": \"199.00\", \"image_urls\": [\"http://nlyscandinavia.scene7.com/is/image/nlyscandinavia/productPress/710254-0001.jpg\"], \"currency\": \"SEK\", \"colors\": \"Vit\", \"affiliate\": \"tradedoubler\", \"key\": \"http://nelly.com/se/kl\\u00e4der-f\\u00f6r-kvinnor/kl\\u00e4der/festkl\\u00e4nningar/ax-paris-1107/embellished-cutout-skater-dress-710254-1/\", \"stock\": 1, \"in_stock\": true, \"description\": \"Kl\\u00e4nning i skatermodell fr\\u00e5n AX PARIS. Rundad halsringning med \\u00f6ppna partier i midjan. Transparenta \\u00e4rmar med dekorativa stenar i \\u00e4rmslut samt i midjan. F\\u00f6rsluts med dold dragkedja samt hyska och hake baktill. Handtv\\u00e4tt rekommenderas. Tillverkad av 100% Polyester. Foder av 100% Polyester.\"}, \"parsed\": {\"sku\": \"1667515503\", \"is_discount\": true, \"colors\": [\"white\"], \"vendor\": \"nelly\", \"name\": \"Embellished Cutout Skater Dress\", \"currency\": \"SEK\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1667515503)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fax-paris-1107%2Fembellished-cutout-skater-dress-710254-1%2F)\", \"gender\": \"W\", \"brand\": \"Ax Paris\", \"regular_price\": \"399.00\", \"discount_price\": \"199.00\", \"brand_id\": 10226, \"in_stock\": true, \"affiliate\": \"tradedoubler\", \"stock\": 1, \"description\": \"Kl\\u00e4nning i skatermodell fr\\u00e5n AX PARIS. Rundad halsringning med \\u00f6ppna partier i midjan. Transparenta \\u00e4rmar med dekorativa stenar i \\u00e4rmslut samt i midjan. F\\u00f6rsluts med dold dragkedja samt hyska och hake baktill. Handtv\\u00e4tt rekommenderas. Tillverkad av 100% Polyester. Foder av 100% Polyester.\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883605,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 13,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:31.947",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:31.959",
+            "parsed_date": "2015-04-13T13:23:31.959",
+            "json": "{\"scraped\": {\"sku\": \"1702034795\", \"category\": \"Mode > Kvinna > KL\\u00c4DER > Festkl\\u00e4nningar > Skater Dresses\", \"vendor\": \"nelly\", \"name\": \"Maine Dress\", \"regular_price\": \"549.00\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1702034795)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fmotel-604%2Fmaine-dress-604330-115%2F)\", \"gender\": \"Kvinna\", \"brand\": \"Motel\", \"discount_price\": \"220.00\", \"image_urls\": [\"http://nlyscandinavia.scene7.com/is/image/nlyscandinavia/productPress/604330-0115.jpg\"], \"currency\": \"SEK\", \"colors\": \"Ivory\", \"affiliate\": \"tradedoubler\", \"key\": \"http://nelly.com/se/kl\\u00e4der-f\\u00f6r-kvinnor/kl\\u00e4der/festkl\\u00e4nningar/motel-604/maine-dress-604330-115/\", \"stock\": 0, \"in_stock\": false, \"description\": \"Kl\\u00e4nning med strukturerad yta fr\\u00e5n MOTEL. V-ringning framtill med \\u00f6ppna partier i vardera axel. F\\u00f6rsluts med dold dragkedja i rygg. Stum midja och utst\\u00e4lld kjoldel.  Tillverkad av 100% Polyester.\"}, \"parsed\": {\"sku\": \"1702034795\", \"is_discount\": true, \"vendor\": \"nelly\", \"name\": \"Maine Dress\", \"currency\": \"SEK\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1702034795)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fmotel-604%2Fmaine-dress-604330-115%2F)\", \"gender\": \"W\", \"brand\": \"Motel\", \"regular_price\": \"549.00\", \"discount_price\": \"220.00\", \"brand_id\": 223, \"colors\": [\"white\"], \"affiliate\": \"tradedoubler\", \"description\": \"Kl\\u00e4nning med strukturerad yta fr\\u00e5n MOTEL. V-ringning framtill med \\u00f6ppna partier i vardera axel. F\\u00f6rsluts med dold dragkedja i rygg. Stum midja och utst\\u00e4lld kjoldel.  Tillverkad av 100% Polyester.\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/motel-604/maine-dress-604330-115/",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883606,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 13,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:31.980",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:31.994",
+            "parsed_date": "2015-04-13T13:23:31.994",
+            "json": "{\"scraped\": {\"sku\": \"1705772345\", \"category\": \"Mode > Kvinna > KL\\u00c4DER > Festkl\\u00e4nningar > Skater Dresses\", \"vendor\": \"nelly\", \"name\": \"Gratuation Contrast Dress Nelly Exclusive\", \"regular_price\": \"299.00\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1705772345)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fglamorous-100212%2Fgratuation-contrast-dress-nelly-exclusive-737376-10%2F)\", \"gender\": \"Kvinna\", \"brand\": \"Glamorous\", \"discount_price\": \"299.00\", \"image_urls\": [\"http://nlyscandinavia.scene7.com/is/image/nlyscandinavia/productPress/737376-0010.jpg\"], \"currency\": \"SEK\", \"colors\": \"Vit/Svart\", \"affiliate\": \"tradedoubler\", \"key\": \"http://nelly.com/se/kl\\u00e4der-f\\u00f6r-kvinnor/kl\\u00e4der/festkl\\u00e4nningar/glamorous-100212/gratuation-contrast-dress-nelly-exclusive-737376-10/\", \"stock\": 1, \"in_stock\": true, \"description\": \"Kl\\u00e4nning i trik\\u00e5 fr\\u00e5n GLAMOROUS. Kort\\u00e4rmad modell med rundad halsringning. \\u00d6ppet parti med kn\\u00e4ppning i rygg. F\\u00f6rsluts med dold dragkedja i v\\u00e4nster sida. Partier med dekorativ spets fram- och baktill. Endast handtv\\u00e4tt.  Tillverkad av 60% Polyester, 35% Viskos och 5% Elastan.\"}, \"parsed\": {\"sku\": \"1705772345\", \"is_discount\": false, \"vendor\": \"nelly\", \"name\": \"Gratuation Contrast Dress Nelly Exclusive\", \"currency\": \"SEK\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1705772345)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fglamorous-100212%2Fgratuation-contrast-dress-nelly-exclusive-737376-10%2F)\", \"gender\": \"W\", \"brand\": \"Glamorous\", \"regular_price\": \"299.00\", \"colors\": [\"black\", \"white\"], \"brand_id\": 13284, \"in_stock\": true, \"affiliate\": \"tradedoubler\", \"stock\": 1, \"description\": \"Kl\\u00e4nning i trik\\u00e5 fr\\u00e5n GLAMOROUS. Kort\\u00e4rmad modell med rundad halsringning. \\u00d6ppet parti med kn\\u00e4ppning i rygg. F\\u00f6rsluts med dold dragkedja i v\\u00e4nster sida. Partier med dekorativ spets fram- och baktill. Endast handtv\\u00e4tt.  Tillverkad av 60% Polyester, 35% Viskos och 5% Elastan.\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/glamorous-100212/gratuation-contrast-dress-nelly-exclusive-737376-10/",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883607,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 13,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:32.016",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:32.028",
+            "parsed_date": "2015-04-13T13:23:32.028",
+            "json": "{\"scraped\": {\"sku\": \"1752832627\", \"category\": \"Mode > Kvinna > KL\\u00c4DER > Festkl\\u00e4nningar > Skater Dresses\", \"vendor\": \"nelly\", \"name\": \"Scuba Wrap Dress\", \"regular_price\": \"299.00\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1752832627)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fnly-trend-917%2Fscuba-wrap-dress-917910-29%2F)\", \"gender\": \"Kvinna\", \"brand\": \"NLY Trend\", \"discount_price\": \"150.00\", \"image_urls\": [\"http://nlyscandinavia.scene7.com/is/image/nlyscandinavia/productPress/917910-0029.jpg\"], \"currency\": \"SEK\", \"colors\": \"Bl\\u00e5\", \"affiliate\": \"tradedoubler\", \"key\": \"http://nelly.com/se/kl\\u00e4der-f\\u00f6r-kvinnor/kl\\u00e4der/festkl\\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/\", \"stock\": 1, \"in_stock\": true, \"description\": \"Kl\\u00e4nning fr\\u00e5n NLY TREND. \\u00c4rml\\u00f6s modell med markerad midja och utsv\\u00e4ngd kjoldel. V-ringad framtill samt omlott vid byst. Tillverkad av 90% Polyester och 10% Elastan.\"}, \"parsed\": {\"sku\": \"1752832627\", \"is_discount\": true, \"colors\": [\"blue\"], \"vendor\": \"nelly\", \"name\": \"Scuba Wrap Dress\", \"currency\": \"SEK\", \"url\": \"http://pdt.tradedoubler.com/click?a(1853028)p(17833)prod(1752832627)ttid(5)url(http%3A%2F%2Fnelly.com%2Fse%2Fkl%C3%A4der-f%C3%B6r-kvinnor%2Fkl%C3%A4der%2Ffestkl%C3%A4nningar%2Fnly-trend-917%2Fscuba-wrap-dress-917910-29%2F)\", \"gender\": \"W\", \"brand\": \"NLY Trend\", \"regular_price\": \"299.00\", \"discount_price\": \"150.00\", \"brand_id\": 22582, \"in_stock\": true, \"affiliate\": \"tradedoubler\", \"stock\": 1, \"description\": \"Kl\\u00e4nning fr\\u00e5n NLY TREND. \\u00c4rml\\u00f6s modell med markerad midja och utsv\\u00e4ngd kjoldel. V-ringad framtill samt omlott vid byst. Tillverkad av 90% Polyester och 10% Elastan.\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/",
+            "category_mapping": null
+        }
+    },
+        {
+        "pk": 883598,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 7,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:03.443",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:03.454",
+            "parsed_date": "2015-04-13T13:23:03.454",
+            "json": "{\"scraped\": {\"sku\": \"60I-CD1014\", \"category\": \"WOMEN>>CLOTHING>>T-SHIRTS\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED TECHNO FLEECE T-SHIRT\", \"regular_price\": \"120.00\", \"url\": \"http://www.anrdoezrs.net/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Ft-shirts%2F60I-CD1014%2Flang_EN\", \"gender\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED TECHNO FLEECE T-SHIRT FALL WINTER 2014 WOMEN CLOTHING T-SHIRTS\", \"brand\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU\", \"discount_price\": \"120.00\", \"image_urls\": [\"http://images.luisaviaroma.com/Big60I/CD1/014_8142f243-8497-4c69-8565-d6e33b7936ac.JPG\"], \"currency\": \"EUR\", \"colors\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED TECHNO FLEECE T-SHIRT FALL WINTER 2014 WOMEN CLOTHING T-SHIRTS\", \"affiliate\": \"cj\", \"key\": \"http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN\", \"stock\": \"-\", \"in_stock\": true, \"description\": \"Short sleeves. Concealed back zip closure. All over print . Sample size: 42\"}, \"parsed\": {\"sku\": \"60I-CD1014\", \"category\": \"T-shirts\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED TECHNO FLEECE T-SHIRT\", \"regular_price\": \"120.00\", \"url\": \"http://www.anrdoezrs.net/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Ft-shirts%2F60I-CD1014%2Flang_EN\", \"gender\": \"W\", \"currency\": \"EUR\", \"in_stock\": true, \"affiliate\": \"cj\", \"is_discount\": false, \"category_id\": 7, \"description\": \"Short sleeves. Concealed back zip closure. All over print . Sample size: 42\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883599,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 7,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:03.474",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:03.485",
+            "parsed_date": "2015-04-13T13:23:03.485",
+            "json": "{\"scraped\": {\"sku\": \"60I-CD1015\", \"category\": \"WOMEN>>CLOTHING>>SKIRTS\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED NEOPRENE SKIRT\", \"regular_price\": \"180.00\", \"url\": \"http://www.tkqlhce.com/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Fskirts%2F60I-CD1015%2Flang_EN\", \"gender\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED NEOPRENE SKIRT FALL WINTER 2014 WOMEN CLOTHING SKIRTS\", \"brand\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU\", \"discount_price\": \"180.00\", \"image_urls\": [\"http://images.luisaviaroma.com/Big60I/CD1/015_39425b38-fca7-479c-8d65-0bb15bd342c1.JPG\"], \"currency\": \"EUR\", \"colors\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED NEOPRENE SKIRT FALL WINTER 2014 WOMEN CLOTHING SKIRTS\", \"affiliate\": \"cj\", \"key\": \"http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1015/lang_EN\", \"stock\": \"-\", \"in_stock\": true, \"description\": \"Two way side zip closure . Heat-sealed zipper seams. All over print. Sample size: 42\"}, \"parsed\": {\"sku\": \"60I-CD1015\", \"category\": \"Evening\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED NEOPRENE SKIRT\", \"regular_price\": \"180.00\", \"url\": \"http://www.tkqlhce.com/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Fskirts%2F60I-CD1015%2Flang_EN\", \"gender\": \"W\", \"currency\": \"EUR\", \"in_stock\": true, \"affiliate\": \"cj\", \"is_discount\": false, \"category_id\": 241, \"description\": \"Two way side zip closure . Heat-sealed zipper seams. All over print. Sample size: 42\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1015/lang_EN",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883600,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 7,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:03.506",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:03.517",
+            "parsed_date": "2015-04-13T13:23:03.517",
+            "json": "{\"scraped\": {\"sku\": \"60I-CD1007\", \"category\": \"WOMEN>>CLOTHING>>DRESSES\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED MESH NEOPRENE DRESS\", \"regular_price\": \"200.00\", \"url\": \"http://www.anrdoezrs.net/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Fdresses%2F60I-CD1007%2Flang_EN\", \"gender\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED MESH NEOPRENE DRESS FALL WINTER 2014 WOMEN CLOTHING DRESSES\", \"brand\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU\", \"discount_price\": \"200.00\", \"image_urls\": [\"http://images.luisaviaroma.com/Big60I/CD1/007_915dce6c-8f83-4906-8ed6-53a8459a8a14.JPG\"], \"currency\": \"EUR\", \"colors\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED MESH NEOPRENE DRESS FALL WINTER 2014 WOMEN CLOTHING DRESSES\", \"affiliate\": \"cj\", \"key\": \"http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/dresses/60I-CD1007/lang_EN\", \"stock\": \"-\", \"in_stock\": true, \"description\": \"Sleeveless. Racerback. All over print. Black cotton jersey lining. Sample size: 42\"}, \"parsed\": {\"sku\": \"60I-CD1007\", \"category\": \"Evening\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED MESH NEOPRENE DRESS\", \"regular_price\": \"200.00\", \"url\": \"http://www.anrdoezrs.net/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Fdresses%2F60I-CD1007%2Flang_EN\", \"gender\": \"W\", \"currency\": \"EUR\", \"in_stock\": true, \"affiliate\": \"cj\", \"is_discount\": false, \"category_id\": 198, \"description\": \"Sleeveless. Racerback. All over print. Black cotton jersey lining. Sample size: 42\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/dresses/60I-CD1007/lang_EN",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883601,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 7,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:03.537",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:03.553",
+            "parsed_date": "2015-04-13T13:23:03.553",
+            "json": "{\"scraped\": {\"sku\": \"60I-CD1010\", \"category\": \"WOMEN>>CLOTHING>>CASUAL JACKETS\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED TECHNO JERSEY BOMBER JACKET\", \"regular_price\": \"220.00\", \"url\": \"http://www.jdoqocy.com/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Fcasual+jackets%2F60I-CD1010%2Flang_EN\", \"gender\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED TECHNO JERSEY BOMBER JACKET FALL WINTER 2014 WOMEN CLOTHING CASUAL JACKETS\", \"brand\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU\", \"discount_price\": \"220.00\", \"image_urls\": [\"http://images.luisaviaroma.com/Big60I/CD1/010_264ace5f-b916-4be3-8656-869d4fbc78d0.JPG\"], \"currency\": \"EUR\", \"colors\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED TECHNO JERSEY BOMBER JACKET FALL WINTER 2014 WOMEN CLOTHING CASUAL JACKETS\", \"affiliate\": \"cj\", \"key\": \"http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/casual+jackets/60I-CD1010/lang_EN\", \"stock\": \"-\", \"in_stock\": true, \"description\": \"Ribbed collar, cuffs and hem. Front zip closure. Stripes on sleeves. All over print . Two front zip pockets. Sample size: 42\"}, \"parsed\": {\"sku\": \"60I-CD1010\", \"category\": \"Jackets\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED TECHNO JERSEY BOMBER JACKET\", \"regular_price\": \"220.00\", \"url\": \"http://www.jdoqocy.com/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Fcasual+jackets%2F60I-CD1010%2Flang_EN\", \"gender\": \"W\", \"currency\": \"EUR\", \"in_stock\": true, \"affiliate\": \"cj\", \"is_discount\": false, \"category_id\": 218, \"description\": \"Ribbed collar, cuffs and hem. Front zip closure. Stripes on sleeves. All over print . Two front zip pockets. Sample size: 42\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/casual+jackets/60I-CD1010/lang_EN",
+            "category_mapping": null
+        }
+    },
+    {
+        "pk": 883602,
+        "model": "theimp.product",
+        "fields": {
+            "imported_date": null,
+            "vendor": 7,
+            "brand_mapping": null,
+            "created": "2015-04-13T13:23:03.575",
+            "is_dropped": false,
+            "modified": "2015-04-13T13:23:03.589",
+            "parsed_date": "2015-04-13T13:23:03.589",
+            "json": "{\"scraped\": {\"sku\": \"60I-CD1013\", \"category\": \"WOMEN>>CLOTHING>>SKIRTS\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED NEOPRENE SKIRT\", \"regular_price\": \"180.00\", \"url\": \"http://www.jdoqocy.com/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Fskirts%2F60I-CD1013%2Flang_EN\", \"gender\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED NEOPRENE SKIRT FALL WINTER 2014 WOMEN CLOTHING SKIRTS\", \"brand\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU\", \"discount_price\": \"180.00\", \"image_urls\": [\"http://images.luisaviaroma.com/Big60I/CD1/013_4c25fe5b-8a9d-412b-b8c0-27f083dce976.JPG\"], \"currency\": \"EUR\", \"colors\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU PRINTED NEOPRENE SKIRT FALL WINTER 2014 WOMEN CLOTHING SKIRTS\", \"affiliate\": \"cj\", \"key\": \"http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN\", \"stock\": \"-\", \"in_stock\": true, \"description\": \"Concealed back zip closure. All over print. Techno jersey lining. Sample size: 42\"}, \"parsed\": {\"sku\": \"60I-CD1013\", \"category\": \"Evening\", \"vendor\": \"luisaviaroma\", \"name\": \"ADIDAS ORIGINALS BY MARY KATRANTZOU - PRINTED NEOPRENE SKIRT\", \"regular_price\": \"180.00\", \"url\": \"http://www.jdoqocy.com/click-4125005-10676831?url=http%3A%2F%2Fwww.luisaviaroma.com%2Fadidas+originals+by+mary+katrantzou%2Fwomen%2Fskirts%2F60I-CD1013%2Flang_EN\", \"gender\": \"W\", \"currency\": \"EUR\", \"in_stock\": true, \"affiliate\": \"cj\", \"is_discount\": false, \"category_id\": 241, \"description\": \"Concealed back zip closure. All over print. Techno jersey lining. Sample size: 42\"}, \"final\": {}}",
+            "is_validated": false,
+            "is_released": false,
+            "key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN",
+            "category_mapping": null
+        }
+    }
+]

@@ -2,14 +2,15 @@ from sorl.thumbnail.base import ThumbnailBackend
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 
 try:
-    from PIL import Image, ImageDraw
+    from PIL import Image, ImageDraw, ImageOps
 except ImportError:
-    import Image, ImageDraw
+    import Image, ImageDraw, ImageOps
 
 import os.path
 from os.path import basename
 from django.conf import settings
 from sorl.thumbnail.helpers import tokey, serialize
+
 
 class Engine(PILEngine):
     def create(self, image, geometry, options):
@@ -53,6 +54,25 @@ class Engine(PILEngine):
                             pixels[x, y] = (255, 255, 255, 0)
 
         return image
+
+
+class CustomCircularEngine(PILEngine):
+    def create(self, image, geometry, options):
+        image = super(PILEngine, self).create(image, geometry, options)
+        image = self.circular(image, geometry, options)
+        return image
+
+    def circular(self, image, geometry, options):
+        # Create circular mask
+        mask = Image.new('L', geometry, 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0) + geometry, fill=255)
+
+        # Resize image
+        output = ImageOps.fit(image, mask.size, centering=(0.5, 0.5))
+        output.putalpha(mask)
+        return output
+
 
 class NamedThumbnailBackend(ThumbnailBackend):
     def _get_thumbnail_filename(self, source, geometry_string, options):
