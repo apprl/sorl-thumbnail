@@ -7842,39 +7842,6 @@ h3 {
     margin-bottom: 15px;
   }
 }
-.scroll-top-wrapper {
-  position: fixed;
-  opacity: 0;
-  visibility: hidden;
-  overflow: hidden;
-  text-align: center;
-  z-index: 99999999;
-  background-color: #000000;
-  color: #EEEEEE;
-  width: 50px;
-  height: 50px;
-  line-height: 18px;
-  right: 30px;
-  bottom: 30px;
-  padding-top: 6px;
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-}
-.scroll-top-wrapper:hover {
-  background-color: #515151;
-}
-.scroll-top-wrapper.show {
-  visibility: visible;
-  cursor: pointer;
-  opacity: 1.0;
-}
-.scroll-top-wrapper i.fa,
-.scroll-top-wrapper a.fa {
-  line-height: inherit;
-}
 #content-container {
   background-color: #ffffff;
   padding-bottom: 20px;
@@ -12623,16 +12590,17 @@ body .apprl-top {
 .apprl-circle-link {
   display: table-cell;
   vertical-align: middle;
+  text-align: center;
   margin-bottom: 20px;
   width: 295px;
   height: 295px;
-  border-radius: 295px;
-  text-align: center;
+  /*border-radius: 295px;*/
   cursor: pointer;
   /* Staffans fix */
   border-radius: 50%;
   /* Prevent background color leak outs */
   -webkit-background-clip: padding-box;
+  -webkit-border-radius: 50%;
   -moz-background-clip: padding;
   background-clip: padding-box;
   /* End Staffans fix */

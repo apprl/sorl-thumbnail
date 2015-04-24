@@ -1,0 +1,45 @@
+[
+    {
+        "pk": 3,
+        "model": "theimp.vendor",
+        "fields": {
+            "comment": "",
+            "vendor": null,
+            "name": "asos",
+            "created": "2013-12-28T16:17:39.296",
+            "is_active": true,
+            "affiliate_identifier": "asos",
+            "modified": "2014-09-30T19:03:34.530",
+            "last_imported_date": "2014-09-30T19:02:33.950"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "theimp.vendor",
+        "fields": {
+            "comment": "",
+            "vendor": null,
+            "name": "nelly",
+            "created": "2013-12-28T16:17:39.926",
+            "is_active": true,
+            "affiliate_identifier": "",
+            "modified": "2014-10-03T19:17:13.976",
+            "last_imported_date": "2014-10-03T19:15:50.116"
+        }
+    },
+
+    {
+        "pk": 7,
+        "model": "theimp.vendor",
+        "fields": {
+            "comment": "",
+            "vendor": null,
+            "name": "luisaviaroma",
+            "created": "2013-12-28T16:17:39.548",
+            "is_active": true,
+            "affiliate_identifier": "",
+            "modified": "2014-10-01T19:08:32.796",
+            "last_imported_date": "2014-10-01T19:04:15.697"
+        }
+    }
+]

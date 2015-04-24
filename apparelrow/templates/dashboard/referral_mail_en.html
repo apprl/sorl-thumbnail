@@ -1,121 +1,229 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta property="og:title" content="Invitation from {{referral_name}}" />
-    <title>Invitation from {{referral_name}}</title>
-  </head>
-  <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="width: 100% !important; -webkit-text-size-adjust: none; font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; background-color: #E6E6E6; margin: 0; padding: 0;" bgcolor="#E6E6E6"><style type="text/css">
-.preheaderContent div a:visited { color: #336699 !important; font-weight: normal !important; text-decoration: underline !important; }
-.headerContent a:visited { color: #ffffff !important; font-size: 15px !important; font-weight: bold !important; text-decoration: none !important; }
-.headerContent a:hover { color: #ffffff !important; text-decoration: underline !important; }
-.bodyContent div a:visited { color: #666666 !important; font-weight: normal !important; text-decoration: underline !important; }
-.bodyContent div a:hover { color: #666666 !important; font-weight: normal !important; text-decoration: underline !important; }
-.socialContent a:visited { color: #000000 !important; font-size: 20px !important; font-weight: bold !important; text-decoration: none !important; }
-.socialContent a:hover { color: #000000 !important; text-decoration: underline !important; }
-.footerContent a:visited { color: #666666 !important; font-weight: normal !important; text-decoration: none !important; }
-.footerContent a:hover { text-decoration: underline !important; }
-.postfooterContent div a:visited { color: #336699 !important; font-weight: normal !important; text-decoration: underline !important; }
-&gt;</style>
-      <center>
-          <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="backgroundTable" style="height: 100% !important; width: 100% !important; margin: 0; padding: 0;"><tr><td align="center" valign="top">
-                        <!-- // Begin Template Preheader \\ -->
-                        <table border="0" cellpadding="10" cellspacing="0" width="614" id="templatePreheader"><tr><td valign="top" class="preheaderContent">
-                                  <!-- // Begin Module: Standard Preheader \\ -->
-                                    <table border="0" cellpadding="10" cellspacing="0" width="100%"><tr><td valign="top">
-                                              <div style="color: #505050; font-size: 10px; line-height: 100%; text-align: left;" align="left">
-                                                  A personal invitation from your friend to join Apprl.
-                                                </div>
-                                            </td>
-                                        </tr></table><!-- // End Module: Standard Preheader \\ --></td>
-                            </tr></table><!-- // End Template Preheader \\ --><table border="0" cellpadding="0" cellspacing="0" width="614" id="templateContainer"><tr><td align="center" valign="top">
-                                    <!-- // Begin Template Header \\ -->
-                                  <table border="0" cellpadding="0" cellspacing="0" width="614" height="76" id="templateHeader"><tr><td class="headerContent" style="color: #666666; font-size: 12px; font-weight: bold; line-height: 100%; text-align: center; vertical-align: middle; background-image: url('http://s.apprl.com/images/small-email-header.png'); padding: 0;" align="center" valign="middle">
-                                                <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="center" align="center" height="66" class="logo" style="padding-top: 10px;">
-                                                            <a href="http://apprl.com/" target="_blank" style="color: #ffffff; font-size: 15px; font-weight: bold; text-decoration: none; padding: 10px;">
-                                                                <img border="0" width="170" height="25" src="http://s.apprl.com/images/logo.png" alt="apprl.com" style="font-size: 14px; font-weight: bold; height: auto; line-height: 100%; outline: none; text-decoration: none; text-transform: capitalize; border: none;" /></a>
-                                                        </td>
-                                                    </tr></table></td>
-                                        </tr></table><!-- // End Template Header \\ --></td>
-                            </tr><tr><td align="center" valign="top">
-                                    <!-- // Begin Template Body \\ -->
-                                    <table border="0" cellpadding="0" cellspacing="0" width="614" id="templateBody" style="background-color: transparent; background-image: url(http://s.apprl.com/images/email-bg-shadow.png); background-repeat: repeat-y; padding-left: 7px; padding-right: 7px;" bgcolor="transparent"><tr><td valign="top" class="bodyImage">
-                                                <!-- // Begin Module: Standard Header Image \\ -->
-                                                <!--<img src="140114_APPRL_top_newsletter.jpg" style="max-width: 600px; font-size: 14px; font-weight: bold; height: auto; line-height: 100%; outline: none; text-decoration: none; text-transform: capitalize; border: none;" id="headerImage campaign-icon" />[> // End Module: Standard Header Image \\ <]</td>-->
-                                        </tr><tr><td valign="top" class="bodyContent">
-                                                <!-- // Begin Module: Standard Content \\ -->
-                                                <table border="0" cellpadding="10" cellspacing="0" width="100%"><tr><td valign="top">
-                                                            <div style="color: #666666; font-size: 14px; line-height: 150%; text-align: left;" align="left">
-                                                              <div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;margin-bottom: 15px;" align="center"><br /><span style="color: #000000;"><strong><span style="font-size: 24px;">Invitation from {{referral_name}}</span></strong></span><br/></div>
+<head>
+	<title>Invitation from {{referral_name}}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta property="og:title" content="Invitation from {{referral_name}}" />
+	<meta name="viewport" content="width=device-width" />
+	<link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		/* Client specific styles */
+		#outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+		.ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+		.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+		body, table, td, a{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+		table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+		img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
 
+		/* Reset styles */
+		body{margin:0; padding:0; background-color:#eaeaea;}
+		img{border:0; height:auto; line-height:100%; outline:none; text-decoration:none;}
+		table{border-collapse:collapse !important;}
+		body{height:100% !important; margin:0; padding:0; width:100% !important;}
 
-<div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center"> </div>
+		/* iOS links */
+		.appleBody a {color:#68440a; text-decoration: none;}
+		.appleFooter a {color:#999999; text-decoration: none;}
 
-<div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center">Apprl is an invitation-only service for fashion influencers, bloggers &amp; magazines that helps you earn money and grow your blog through a range of easy-to-use digital tools. <br /><br />
-Join Apprl through this invitation and you will <a href="{{ referral_code }}" target="_blank" style="color: #666666; font-weight: normal; text-decoration: underline;"><u><strong>get €20 on your Apprl account</strong></u></a> to start with.</div>
+		/* Document styles */
+		body {
+			font-family: 'Helvetica', Arial, sans-serif;
+			line-height: 100%;
+		}
+		a {
+			text-decoration: none;
+		}
 
-<div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center"><br />
- </div>
+		/* Media queries */
+		@media screen and (max-width: 699px) {
+		  table[class="container"] {
+		    width: 100% !important;
+		    max-width: 100% !important;
+		  }
+		  img[class="fluid"] {
+				max-width: 100% !important;
+				width: auto !important;
+				height: auto !important;
+			}
+			h1 {
+				font-size: 24px !important;
+			}
+		}
+	</style>
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" bgcolor="#eaeaea">
 
- <div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center"><a href="{{ referral_code }}" target="_blank" style="color: #666666; font-weight: normal; text-decoration: underline;"><img align="none" height="70" src="https://gallery.mailchimp.com/288a115f8369a96ef3fcf6e9d/images/APPRL_newsletter_JOINBUTTON.jpeg" width="280" style="font-size: 14px; font-weight: bold; height: auto; line-height: 100%; outline: none; text-decoration: none; text-transform: capitalize; display: inline; max-width: 600px; border: 0 none;" /></a> </div>
+	<!-- Document wrapper -->
+	<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" bgcolor="#eaeaea">
+		<tr>
+    	<td align="center" style="padding: 10px;">
 
-<div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center">
-<div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center"><br /><span style="font-size: 18px;"><span style="color: rgb(0, 0, 0);"><strong>About APPRL</strong></span></span></div>
-</div>
+    		<!-- Content wrapper -->
+    		<table border="0" cellpadding="0" cellspacing="0" width="700" style="width: 700px; max-width: 700px;" class="container">
+  				<tr>
+  					<td style="padding-top: 10px;">
 
-<div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center"><br />
-  Apprl is used by leading stylemakers &amp; bloggers such as Elin Kling, Alicia Vikander &amp; Petra Tungården on sites such as Kanal5, Stureplan and Vecko-Revyn.<br /><br /><span style="text-align: center;">We have partnered with the world's leading online stores such as Net-a-porter, The Outnet, ASOS, Filippa K, Nelly and many more. You can find products from all our partner stores on Apprl.com to feature on your blog.  </span><br /><br /><br /><span style="color: #000000;"><strong style="text-align: center;"><span style="font-size: 18px;">Earn money with APPRL's digital tools for your blog</span></strong></span><br /><br /><a href="{{ referral_code }}" target="_blank" style="color: #666666; font-weight: normal; text-decoration: underline;"><img align="none" height="240" src="https://gallery.mailchimp.com/288a115f8369a96ef3fcf6e9d/images/140203_APPRL_bottom_newsletter.jpg" style="width: 570px; height: 240px; font-size: 14px; font-weight: bold; line-height: 100%; outline: none; text-decoration: none; text-transform: capitalize; display: inline; max-width: 600px; border: 0 none;" width="570" /></a></div>
+  						<!-- Preheader -->
+  						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td valign="top">
+										<div style="padding-bottom: 20px; font-size: 11px; font-weight: normal; color: #999999;">
+											A personal invitation from your friend to join Apprl.
+										</div>
+									</td>
+									<td valign="top">
+										<div style="padding-bottom: 20px; font-size: 11px; font-weight: normal; color: #999999; line-height: 150%;">
+										<!-- *|IFNOT:ARCHIVE_PAGE|* -->Is this email not displaying correctly?<br><a href="*|ARCHIVE|*" target="_blank" style="color: #666666;">View it in your browser</a>.<!-- *|END:IF|* -->
+										</div>
+									</td>
+								</tr>
+							</table>
 
-<ul><li style="text-align: left;">TAG YOUR IMAGES WITH PRODUCT LINKS</li>
-  <li style="text-align: left;"><span style="text-align: center;">CREATE AN APPRL SHOP FOR YOUR BLOG IN 5 MINS</span></li>
-  <li style="text-align: left;">GET PRODUCT LINKS TO SHARE ON ANY SOCIAL PLATFORM </li>
-  <li style="text-align: left;">CREATE COLLAGES THAT INSPIRE YOUR READERS</li>
-  <li style="text-align: left;">GET FOLLOWERS ON APPRL.COM TO SHARE YOUR STYLE WITH </li>
-</ul><div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center"><span style="text-align: center;">All our tools link your readers directly to the product on the online store. You earn a commission when someone clicks a product link and buys something from that store within 30 days - whether it be on your blog, in social media or on Apprl.com. We offer high commissions on every sale you generate and will help you to grow your blog through our Apprl Get-started Program for publishers.</span><br />
- </div>
-</div>
-<div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center"><br /><font size="4"><strong><span style="font-size: 18px;"><span style="color: #000000;">See live statistics on your clicks &amp; earnings from any device</span></span><br /><img align="none" height="313" src="https://gallery.mailchimp.com/288a115f8369a96ef3fcf6e9d/images/apprl_responsive_cropped2_600px.png" width="570" style="font-size: 14px; font-weight: bold; height: auto; line-height: 100%; outline: none; text-decoration: none; text-transform: capitalize; display: inline; max-width: 600px; border: 0 none;" /></strong></font><br /><br /><a href="{{ referral_code }}" style="text-align: center; color: #666666; font-weight: normal; text-decoration: underline;" target="_blank"><img align="none" height="70" src="https://gallery.mailchimp.com/288a115f8369a96ef3fcf6e9d/images/APPRL_newsletter_JOINBUTTON.jpeg" style="line-height: 14px; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; display: inline; max-width: 600px; border: 0 none;" width="280" /></a></div>
+							<!-- Header -->
+							<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#000000">
+								<tr>
+									<td align="center" style="padding: 20px;">
+										<a target="_blank" href="http://apprl.com"><img src="http://s.apprl.com/static/email/logo.png" style="display: block; padding: 0;" border="0" width="170" height="25" alt="APPRL"></a>
+									</td>
+								</tr>
+							</table>
 
-<div style="text-align: center; color: #666666; font-size: 14px; line-height: 150%;" align="center"><br /><em><a href="http://apprl.com/about" target="_blank" style="color: #666666; font-weight: normal; text-decoration: underline;">Read more about Apprl here</a></em><br />
- </div>
-                            </td>
-                                                    </tr></table><!-- // End Module: Standard Content \\ --></td>
-                                        </tr><tr><td class="divider" height="5px" style="height: 5px; font-size: 1px; line-height: 1px; background-color: #202020;" bgcolor="#202020"> </td>
-                                        </tr><tr><td valign="top" class="bodyContent">
+							<!-- Main -->
+							<table border="0" cellpadding="0" cellspacing="0" width="100%">
 
-                                                <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td colspan="3" valign="top" align="center" class="bodyHeader socialHeader" style="padding-bottom: 15px;">
-                                                            <h3 style="color: #000000; display: block; font-size: 20px; font-weight: bold; line-height: 100%; margin-bottom: 10px; text-align: center;" align="center">Follow us on</h3>
-                                                        </td>
-                                                    </tr><tr class="socialContent" style="color: #000000; font-size: 20px; font-weight: bold; text-decoration: none;"><td align="right">
-                                                            <a href="https://www.facebook.com/apprl" style="color: #000000; font-size: 20px; font-weight: bold; text-decoration: none;">Facebook</a>
-                                                        </td>
-                                                        <td align="center" width="32">|</td>
-                                                        <td align="left">
-                                                            <a href="http://pinterest.com/apprl/" style="color: #000000; font-size: 20px; font-weight: bold; text-decoration: none;">Pinterest</a>
-                                                        </td>
-                                                        </tr>
-                                                        <tr>
-                                                        <td>&nbsp;</td>
-                                                        </tr>
-                                                        </table></td>
-                                        </tr><tr><td> </td>
-                                        </tr></table><!-- // End Template Body \\ --></td>
-                            </tr><tr><td align="center" valign="top">
-                                    <!-- // Begin Template Footer \\ -->
-                                  <table border="0" cellpadding="17" cellspacing="0" width="614" height="131" id="templateFooter" style="background-image: url(http://s.apprl.com/images/email-footer.png);"><tr><td valign="top" class="footerContent" style="color: #666666; font-size: 12px; line-height: 125%; text-align: left;" align="left">
+								<!-- Article -->
+								<tr>
+									<td>
+										<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+											<tr>
+												<td style="padding: 20px;">
 
-                                                <!-- // Begin Module: Standard Footer \\ -->
-                                                <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" class="header" align="center" style="color: #333333;">© Apprl Fashion AB</td>
-                                                    </tr><tr><td valign="top" align="center">
-                                                            <div>
-                                                                <br />c/o SUP46<br />
-                                                                Regeringsgatan 29<br />
-                                                                111 53 Stockholm, Sweden<br /><a target="_blank" href="mailto:info@apprl.com" style="color: #666666; font-weight: normal; text-decoration: none;">info@apprl.com</a>
-                                                                <br /></div>
-                                                        </td>
-                                                    </tr></table><!-- // End Module: Standard Footer \\ --></td>
-                                        </tr></table><!-- // End Template Footer \\ --></td>
-                            </tr></table><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /></td>
-                </tr></table></center>
-    </body>
+													<table border="0" cellpadding="0" cellspacing="0" width="100%">
+														<tr>
+															<td align="center">
+																<h1 style="margin-top: 20px; font-family: 'Lato', Arial, sans-serif; font-weight: 400; font-size: 36px; margin-bottom: 10px; text-transform: uppercase; line-height: 1; letter-spacing: 1px; padding-bottom: 10px;">Invitation from {{referral_name}}</h1>
+																<div style="color: #666666; font-size: 14px; line-height: 150%; font-weight: normal;">
+																	Apprl is an invitation-only service for fashion influencers, bloggers &amp; magazines that helps you earn money and grow your blog through a range of easy-to-use digital tools.
+																	<br><br>
+																	Join Apprl through this invitation and you will <a href="{{ referral_code }}" target="_blank" style="color: #666666; text-decoration: underline; font-weight: bold;">get €20 on your Apprl account</a> to start with.
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<td align="center" style="padding-top: 30px; padding-bottom: 5px;">
+																<a href="{{ referral_code }}" target="_blank" style="line-height: 22px; font-size: 16px; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #67e2b8; border-top: 10px solid #67e2b8; border-bottom: 10px solid #67e2b8; border-left: 25px solid #67e2b8; border-right: 25px solid #67e2b8; display: inline-block;">JOIN APPRL</a>
+															</td>
+														</tr>
+														<tr>
+															<td align="center"><h2 style="margin-top: 30px; font-size: 18px; margin-bottom: 10px;">About APPRL</h2></td>
+														</tr>
+														<tr>
+															<td align="center">
+																<div style="color: #666666; font-size: 14px; line-height: 150%; font-weight: normal;">
+																	Apprl is used by leading stylemakers &amp; bloggers such as Elin Kling, Alicia Vikander &amp; Petra Tungården on sites such as Elle, Metro Mode and Project Runway.
+																	<br><br>
+																	We have partnered with the world's leading online stores such as Net-a-porter, The Outnet, ASOS, Filippa K, Nelly and many more. You can find products from all our partner stores on Apprl.com to feature on your blog.
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<td align="center"><h2 style="margin-top: 30px; font-size: 18px; margin-bottom: 10px;">Earn money with APPRL's digital tools for your blog</h2></td>
+														</tr>
+														<tr>
+															<td align="center"><a href="{{ referral_code }}" target="_blank"><img src="https://gallery.mailchimp.com/288a115f8369a96ef3fcf6e9d/images/140203_APPRL_bottom_newsletter.jpg" style="padding: 0; display: block;" border="0" width="570" height="240" class="fluid" alt="APPRL"></a></td>
+														</tr>
+														<tr>
+															<td align="center">
+																<ul style="line-height: 150%; font-size: 14px; font-weight: normal;">
+																	<li style="text-align: left;">TAG YOUR IMAGES WITH PRODUCT LINKS</li>
+																	<li style="text-align: left;"><span style="text-align: center;">CREATE AN APPRL SHOP FOR YOUR BLOG IN 5 MINS</span></li>
+																	<li style="text-align: left;">GET PRODUCT LINKS TO SHARE ON ANY SOCIAL PLATFORM</li>
+																	<li style="text-align: left;">CREATE COLLAGES THAT INSPIRE YOUR READERS</li>
+																	<li style="text-align: left;">GET FOLLOWERS ON APPRL.COM TO SHARE YOUR STYLE WITH</li>
+																</ul>
+															</td>
+														</tr>
+														<tr>
+															<td align="center" style="color: #666666; font-size: 14px; line-height: 150%;">All our tools link your readers directly to the product in the online store. You earn money when someone clicks your links or when they buy something from that store within 30-45 days. Some of our stores pay per click and some per order, and since we only work with selected bloggers and sites we can offer very high commission levels.</td>
+														</tr>
+														<tr>
+															<td align="center"><h2 style="margin-top: 30px; font-size: 18px; margin-bottom: 10px;">See live statistics on your clicks &amp; earnings from any device</h2></td>
+														</tr>
+														<tr>
+															<td align="center"><img src="https://gallery.mailchimp.com/288a115f8369a96ef3fcf6e9d/images/apprl_responsive_cropped2_600px.png" width="570" height="313" border="0" style="padding: 0; display: block;" class="fluid" alt="APPRL"></td>
+														</tr>
+														<tr>
+															<td align="center" style="padding-top: 30px; padding-bottom: 5px;">
+																<a href="{{ referral_code }}" target="_blank" style="line-height: 22px; font-size: 16px; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #67e2b8; border-top: 10px solid #67e2b8; border-bottom: 10px solid #67e2b8; border-left: 25px solid #67e2b8; border-right: 25px solid #67e2b8; display: inline-block;">JOIN APPRL</a>
+															</td>
+														</tr>
+														<tr>
+															<td align="center" style="padding-top: 15px; padding-bottom: 30px;"><a href="http://apprl.com/publisher/" target="_blank" style="color: #666666; font-weight: normal; text-decoration: underline;">Read more about Apprl here</a></td>
+														</tr>
+													</table>
+
+												</td>
+											</tr>
+											<tr>
+												<td style="height: 5px;" bgcolor="#000000"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<!-- / Article -->
+
+								<!-- Social -->
+								<tr>
+									<td>
+										<table border="0" cellpadding="0" cellspacing="0" width="100%" bgColor="#ffffff">
+											<tr>
+												<td align="center" style="padding-left: 20px; padding-right: 20px;"><h2 style="font-size: 18px; line-height: 150%;">Follow Us</h2></td>
+											</tr>
+											<tr>
+												<td align="center" style="padding-left: 20px; padding-right: 20px; padding-bottom: 15px;">
+													<table border="0" cellpadding="0" cellspacing="0" width="240" style="width: 240px; max-width: 240px;">
+														<tr>
+															<td align="center"><a target="_blank" href="https://facebook.com/apprl"><img src="http://s.apprl.com/static/email/icon-facebook.png" alt="Apprl on Facebook" width="32" height="32"></a></td>
+															<td align="center"><a target="_blank" href="https://twitter.com/get_apprl"><img src="http://s.apprl.com/static/email/icon-twitter.png" alt="Apprl on Twitter" width="32" height="32"></a></td>
+															<td align="center"><a target="_blank" href="https://pinterest.com/apprl"><img src="http://s.apprl.com/static/email/icon-pinterest.png" alt="Apprl on Pinterest" width="32" height="32"></a></td>
+															<td align="center"><a target="_blank" href="https://instagram.com/get_apprl"><img src="http://s.apprl.com/static/email/icon-instagram.png" alt="Apprl on Instagram" width="32" height="32"></a></td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+
+									</td>
+								</tr>
+							</table>
+							<!-- / Main -->
+
+							<!-- Sender -->
+							<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#bfbfbf">
+								<tr>
+									<td align="center">
+										<div style="padding: 20px; font-size: 12px; color: #ffffff;">
+											With <strong>&#10084;</strong> from the Apprl team<br><br>
+											Apprl Fashion AB<br>
+											c/o SUP46<br>
+											Regeringsgatan 29<br>
+											111 53 Stockholm, Sweden<br>
+											<a style="color: #ffffff; text-decoration: underline;" href="mailto:info@apprl.com">info@apprl.com</a><br><br>
+											<a style="color: #ffffff; text-decoration: underline;" target="_blank" href="http://blog.apprl.com">Visit our blog</a>
+										</div>
+									</td>
+								</tr>
+							</table>
+
+						</td>
+					</tr>
+				</table>
+				<!-- / Content wrapper -->
+
+			</td>
+		</tr>
+	</table>
+	<!-- / Document wrapper -->
+
+</body>
 </html>

@@ -8,6 +8,7 @@ import urllib
 import urlparse
 from apparelrow.apparel.utils import currency_exchange
 import decimal
+import re
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
@@ -829,6 +830,41 @@ def product_lookup_by_theimp(request, key):
     json_data = json.loads(products[0].json)
     return json_data.get('site_product', None)
 
+def parse_luisaviaroma_fragment(fragment):
+    seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)
+    collectionId = re.search(r'CollectionId=(\w+)?', fragment).group(1)
+    itemId = re.search(r'ItemId=(\w+)?', fragment).group(1).zfill(3)
+    return "%s-%s%s" % (seasonId, collectionId, itemId)
+
+def product_lookup_asos_nelly(url):
+    parsedurl = urlparse.urlsplit(url)
+    path = parsedurl.path
+    if("nelly" in parsedurl.netloc):
+        #get rid of categories for nelly links, only keep product name (last two "/"")
+        noToRemove = path.count("/") - 1
+        while noToRemove > 0:
+            pos = path.find("/")
+            path = path[pos+1:]
+            noToRemove -= 1
+        key = path
+    elif("asos" in parsedurl.netloc):
+        prodId = re.search(r'iid=(\w+)?', parsedurl.query).group(1)
+        key = "%s?iid=%s" % (path, prodId)
+    elif("luisaviaroma" in parsedurl.netloc):
+        if parsedurl.fragment: # the "original" links don't have this, they should never land here though
+            key = parse_luisaviaroma_fragment(parsedurl.fragment)
+        else:
+            key = url
+    else:
+        return None
+    products = get_model('theimp', 'Product').objects.filter(key__icontains=key)
+    if len(products) < 1:
+        return None
+
+    return products[0].pk
+    #json_data = json.loads(products[0].json)
+    #return json_data.get('site_product', None)
+
 def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
@@ -851,6 +887,9 @@ def product_lookup(request):
                 key = ''.join(temp)
 
             product_pk = product_lookup_by_theimp(request, key)
+            if not product_pk:
+                product_pk = product_lookup_asos_nelly(key)
+
 
     # TODO: must go through theimp database right now to fetch site product by real url
     #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
