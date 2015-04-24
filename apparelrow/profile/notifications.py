@@ -389,7 +389,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
             notify_user = recipient
 
     if notify_user and sender:
-        merge_vars = dict()
+        merge_vars = {}
         domain = Site.objects.get_current().domain
         sender_link = retrieve_full_url(sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
@@ -639,9 +639,9 @@ def create_individual_summary(user, period):
     sales = []
 
     merge_vars = dict()
-    merge_vars['looklikes'] = list()
-    merge_vars['sales'] = list()
-    merge_vars['follows'] = list()
+    merge_vars['looklikes'] = []
+    merge_vars['sales'] = []
+    merge_vars['follows'] = []
     for event in events:
         if event.type == "LIKELOOK":
             details = {
@@ -668,7 +668,7 @@ def create_individual_summary(user, period):
             merge_vars['follows'].append(details)
             new_followers.append(event)
 
-    merge_vars['products'] = list()
+    merge_vars['products'] = []
     for productlike in latest_likes:
         product = productlike.product
         details = {
@@ -738,7 +738,7 @@ def send_look_like_summaries(period):
         if user.look_like_summaries != period:
             continue
         looks = []
-        merge_vars = dict()
+        merge_vars = {}
         if(period == 'D'):
             merge_vars['PERIOD'] = "today"
         elif(period == 'W'):
@@ -797,7 +797,7 @@ def send_product_like_summaries(period):
         if user.product_like_summaries != period:
             continue
         products = []
-        merge_vars = dict()
+        merge_vars = {}
         if(period == 'D'):
             merge_vars['PERIOD'] = "today"
 
@@ -871,7 +871,7 @@ def create_earning_summary(period):
     #iterate through look likes
     for earning in earnings:
         user = earning.user
-        earning_detail = dict()
+        earning_detail = {}
         if user in users_to_notify:
             #there are already earning for this user
             new_amount = earning.amount
@@ -920,9 +920,9 @@ def create_earning_summary(period):
         else:
             #this is the first sale encoutered for the user
             #so create dicts for earnings
-            product_sales = dict()
-            click_earnings = dict()
-            other_sales = dict()
+            product_sales = {}
+            click_earnings = {}
+            other_sales = {}
             earning_detail['SUM'] = earning.amount
             total_earnings = earning.amount
             earning_detail['VENDORNAME'] = earning.sale.vendor.name
@@ -966,7 +966,7 @@ def send_earning_summaries(period):
             earning["SUM"] = str(earning["SUM"])
 
         total_earning = users_to_notify[user]["totalearning"]
-        merge_vars = dict()
+        merge_vars = {}
         merge_vars['PERIOD'] = period_name
         merge_vars['TOTAL'] = str(total_earning)
         merge_vars['EARNINGDETAILS'] = sorted_earnings

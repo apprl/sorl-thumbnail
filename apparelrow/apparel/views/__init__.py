@@ -169,9 +169,7 @@ def notifications_seen_all(request):
         for notificationevent in queryset:
             notificationevent.seen = True
             notificationevent.save()
-        data = []
-        json_data = json.dumps(data)
-        return HttpResponse(json_data)
+        return HttpResponse()
     else:
         return HttpResponseNotAllowed("Only POST requests allowed")
 #
