@@ -154,6 +154,9 @@
                     </div>
                 </form>
 
+
+
+
                 <ul class="nav navbar-nav navbar-nav-login navbar-right">
                     {% if not request.user.is_authenticated %}
                     <li class="visible-xs"><a href="{% url 'auth_register' %}"><span>{% trans "Get started" %}</span></a></li>
@@ -179,6 +182,12 @@
                             <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                         </ul>
                     </li>
+                    {% endif %}
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    {% if request.user.is_authenticated %}
+                        {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}    
                     {% endif %}
                 </ul>
 

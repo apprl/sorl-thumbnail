@@ -16,20 +16,34 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
-from django.utils import timezone
 from sorl.thumbnail import get_thumbnail, default
 
 from apparelrow.profile.notifications import process_follow_user
 from apparelrow.activity_feed.tasks import update_activity_feed
 from apparelrow.apparel.utils import roundrobin
 from apparelrow.apparel.sorl_extension import CustomCircularEngine
+from apparelrow.apparel.utils import get_paged_result
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 from apparelrow.profile.tasks import mail_managers_task
+from django.utils import timezone
 
 EVENT_CHOICES = (
     ('A', _('All')),
     ('F', _('Those I follow')),
     ('N', _('No one')),
+)
+
+NOTIFICATION_CHOICES = (
+    ('I'), _('Immediately'),
+    ('D', _('Daily')),
+    ('W', _('Weekly')),
+    ('N', _('Never')),
+)
+
+SUMMARY_CHOICES = (
+    ('D', _('Daily')),
+    ('W', _('Weekly')),
+    ('N', _('Never')),
 )
 
 FB_FRIEND_CHOICES = (
@@ -122,6 +136,20 @@ class User(AbstractUser):
             help_text=_('When someone starts to follow me'))
     facebook_friends = models.CharField(max_length=1, choices=FB_FRIEND_CHOICES, default='A',
             help_text=_('When a Facebook friend has joined Apprl'))
+    summary_mails = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Receive summaries of recent activities'))
+    product_like_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Receive summaries of about who else likes the same products'))
+    look_like_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Receive summaries of about who else likes the same looks'))
+    earning_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='D',
+            help_text=_('Summary about your most recent earnings to find out what is driving your sales'))
+    friend_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Summary with the latest from the people I follow'))
+    brand_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Summary with the latest from the brands I follow'))
+    follow_recommendations = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
+            help_text=_('Recommendations for who to follow'))
 
     followers_count = models.IntegerField(default=0, blank=False, null=False)
     popularity = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
@@ -181,6 +209,15 @@ class User(AbstractUser):
     def total_look_count(self):
         return self.look_likes_count + self.looks
 
+    @cached_property
+    def notifications(self):
+        notifications = self.notification_events.order_by('created').reverse()
+        paged_result = get_paged_result(notifications, 10, 1)
+        return paged_result
+
+    @cached_property
+    def unread_count(self):
+        return self.notification_events.filter(seen=False).count()
 
     @cached_property
     def profile_content(self):
@@ -487,6 +524,57 @@ class Follow(models.Model):
     class Meta:
         unique_together = ('user', 'user_follow')
 
+class NotificationManager(models.Manager):
+     def push_notification(self, owner, type, actor=None, product=None, look=None):
+        if actor.is_hidden:
+            # Don't push notifications for hidden users
+            return None
+        event = self.get_or_create(owner=owner,
+                                    actor=actor,
+                                    type=type,
+                                    product=product,
+                                    look=look)[0]
+        event.save()
+
+class NotificationEvent(models.Model):
+    """
+    Create an event whenever something relevant happens, to later display for user or build summaries
+    """
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, db_index=True, related_name='notification_events')
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='performed_events', blank=True, null=True)
+    look = models.ForeignKey('apparel.Look', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey('apparel.Product', related_name='notifications', on_delete=models.CASCADE, blank=True, null=True)
+    seen = models.BooleanField(default=False)
+    email_sent = models.BooleanField(default=False)
+
+    created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
+
+    #add custom manager
+    objects = NotificationManager()
+
+    sale_new_price = models.IntegerField(blank=True, null=True)
+    sale_old_price = models.IntegerField(blank=True, null=True)
+    sale_currency = models.CharField(max_length=10, unique=False, blank=True, null=True)
+
+    TYPES =   (
+        ("FB", "fbFriend"),
+        ("SALE", "itemSale"),
+        ("FOLLOW", "newFollower"),
+        ("LIKELOOK", "likedLook"),
+        ("COMMLOOK", "commentedLook"),
+        ("NEWLOOK", "createdLook"),
+        ("PURCH", "generatedPurchase"),
+    )
+
+    type = models.CharField(max_length=15, choices=TYPES)
+
+
+
+    @cached_property
+    def from_today(self):
+        ref_time = timezone.now()
+        return ref_time.date() == self.created.date()
+
 #
 # Follow handlers
 #
@@ -510,6 +598,7 @@ def post_save_follow_handler(sender, instance, **kwargs):
         apparel_profile.followers_count = apparel_profile.followers_count + 1
         process_follow_user.delay(instance.user_follow, instance.user, instance)
         Activity.objects.push_activity(instance.user, 'follow', instance.user_follow, instance.user.gender)
+        NotificationEvent.objects.push_notification(instance.user_follow, "FOLLOW", instance.user)
         apparel_profile.save()
     elif not instance.user.is_hidden:
         apparel_profile.followers_count = apparel_profile.followers_count - 1

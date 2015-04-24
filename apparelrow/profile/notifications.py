@@ -16,11 +16,14 @@ from django.utils.translation import get_language, activate
 from django.core.urlresolvers import reverse
 from django.utils.formats import number_format
 from django.db.models.loading import get_model
+from django.db.models import Q
 from django.core.files.storage import DefaultStorage
 
 from sorl.thumbnail import get_thumbnail
 from django.templatetags.static import static
-
+# for summaries
+from datetime import timedelta
+from django.utils import timezone
 
 import facebook
 
@@ -111,15 +114,13 @@ def notify_by_mail(users, notification_name, sender, extra_context=None):
 
     activate(current_language)
 
-def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
+def notify_with_mandrill_template(users, notification_name, merge_vars):
     """
     New version of mail notifications using Mandrill templates (manually added to account beforehand) instead of local html templates
 
     Sends an email to all users for the specified notification
     Variable users is a list of django auth user instances.
     """
-    if sender and sender.is_hidden:
-        return
     emails = []
     usernames = {}
     notification_count = 0
@@ -153,6 +154,8 @@ def notify_with_mandrill_template(users, notification_name, sender, merge_vars):
     }
 
     msg.global_merge_vars.update(merge_vars) #add specific parameters
+    #development only
+    #msg.subaccount ="apprl_testing"
 
     msg.merge_vars = usernames    # Per-recipient merge tags, here adding personalized names
     msg.send()
@@ -364,12 +367,13 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
 #
 # LIKE LOOK CREATED
 #
-
 @task(name='profile.notifications.process_like_look_created', max_retries=5, ignore_result=True)
 def process_like_look_created(recipient, sender, look_like, **kwargs):
     """
     Process notification for a like by sender on a look created by recipient.
     """
+    if sender and sender.is_hidden:
+        return
     logger = process_like_look_created.get_logger(**kwargs)
     if is_duplicate('like_look_created', recipient, sender, look_like):
         return 'duplicate'
@@ -385,9 +389,9 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
             notify_user = recipient
 
     if notify_user and sender:
-        merge_vars = dict()
+        merge_vars = {}
         domain = Site.objects.get_current().domain
-        sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+        sender_link = retrieve_full_url(sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
         look_url_link = 'http://%s%s' % (domain, look_like.look.get_absolute_url())
         merge_vars['LOOKURL'] = look_url_link
@@ -405,7 +409,13 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
 
-        notify_with_mandrill_template([notify_user], "likedLook", sender, merge_vars)
+        event, created = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+                                                                                actor=sender,
+                                                                                type="LIKELOOK",
+                                                                                look=look_like.look)
+        event.email_Sent = True
+        event.save()
+        notify_with_mandrill_template([notify_user], "likedLook", merge_vars)
 
         return get_key('like_look_created', recipient, sender, look_like)
 
@@ -420,11 +430,26 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
 # FOLLOW USER
 #
 
+def get_avatar_url(user):
+    """
+    retrieve full url to a profile picture
+    """
+    if user.image:
+        profile_photo_url =  retrieve_full_url(get_thumbnail(user.image, '500').url)
+    elif user.facebook_user_id:
+        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % user.facebook_user_id
+    else:
+        profile_photo_url = retrieve_full_url(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
+    return profile_photo_url
+
 @task(name='profile.notifications.process_follow_user', max_retries=5, ignore_result=True)
 def process_follow_user(recipient, sender, follow, **kwargs):
     """
     Process notification for sender following recipient.
     """
+
+    if sender and sender.is_hidden:
+        return
     logger = process_follow_user.get_logger(**kwargs)
     if is_duplicate('follow_user', recipient, sender, None):
         return 'duplicate'
@@ -437,9 +462,9 @@ def process_follow_user(recipient, sender, follow, **kwargs):
 
     if notify_user and sender:
         merge_vars = dict()
-        domain = Site.objects.get_current().domain
-        sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+        sender_link = retrieve_full_url(sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
+
         if sender.image:
             profile_photo_url = get_thumbnail(sender.image, '500').url
         elif sender.facebook_user_id:
@@ -450,7 +475,12 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         merge_vars['FOLLOWERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
 
-        notify_with_mandrill_template([notify_user], "newFollower", sender, merge_vars)
+        event, created = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=notify_user,
+                                                                                actor=sender,
+                                                                                type="FOLLOW")
+        event.email_sent = True #we are sending the email right away
+        event.save()
+        notify_with_mandrill_template([notify_user], "newFollower", merge_vars)
         return get_key('follow_user', recipient, sender, None)
 
     if not notify_user and sender:
@@ -481,8 +511,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
 
         if recipient.facebook_friends == 'A' and sender:
             merge_vars = dict()
-            domain = Site.objects.get_current().domain
-            sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
+            sender_link = retrieve_full_url(sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
             if sender.image:
                 profile_photo_url = get_thumbnail(sender.image, '500').url
@@ -493,8 +522,13 @@ def process_facebook_friends(sender, graph_token, **kwargs):
 
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = profile_photo_url
+            event, created = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=recipient,
+                                                                                    actor=sender,
+                                                                                    type="FB")
+            event.email_sent = True #we are sending the email right away
+            event.save()
 
-            notify_with_mandrill_template([recipient], "fbFriend", sender, merge_vars)
+            notify_with_mandrill_template([recipient], "fbFriend", merge_vars)
 
 #
 # SALE ALERT
@@ -511,7 +545,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
     template_name = 'first_sale_alert' if first else 'second_sale_alert'
     for likes in product.likes.filter(user__discount_notification=True, active=True).select_related('user'):
-        if likes.user and likes.user.discount_notification:
+
+        if likes.user:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
             further = False
@@ -532,6 +567,19 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
 
             domain = Site.objects.get_current().domain
             merge_vars = dict()
+
+            # create NotificationEvent
+            event, created = get_model('profile', 'NotificationEvent').objects.get_or_create(owner=likes.user,
+                                                                                type="SALE",
+                                                                                product=product,
+                                                                                sale_new_price = locale_discount_price,
+                                                                                sale_old_price = locale_original_price,
+                                                                                sale_currency = currency)
+            #if the user does not want an email just save the event and move on, otherwise build the email
+            if not likes.user.discount_notification:
+                event.save()
+                continue
+
             if product.product_image:
                 product_photo_url = get_thumbnail(product.product_image, '500').url
             else:
@@ -548,4 +596,385 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
                 merge_vars['FURTHER'] = further
 
 
-            notify_with_mandrill_template([likes.user], "itemSale", sender, merge_vars)
+            event.email_sent = True #we are sending the email right away
+            event.save()
+            notify_with_mandrill_template([likes.user], "itemSale", merge_vars)
+
+def get_ref_time(days, monday=False):
+    if days == 1:
+        return timezone.now() - timedelta(days=1)
+    else:
+        ref_time = timezone.now() - timedelta(days=days)
+        if monday:
+            ref_time = ref_time - timedelta(days=(ref_time.isocalendar()[2] - 1))
+        return ref_time
+
+def calculate_period(period):
+    if period == 'D':
+        # it is a daily summary
+        period_name = "daily"
+        ref_time = get_ref_time(1)
+    elif period == 'W':
+        # it is a weekly summary
+        period_name = "weekly"
+        ref_time = get_ref_time(7, True)
+    elif period == 'M':
+        # it is a weekly summary
+        period_name = "monthly"
+        ref_time = get_ref_time(30, True)
+    return period_name, ref_time
+
+def send_activity_summaries(period):
+    users_to_notify = get_model('profile', 'User').objects.filter(summary_mails=period)
+    for user in users_to_notify:
+        create_individual_summary(user, period)
+
+def create_individual_summary(user, period):
+    period_name, ref_time = calculate_period(period)
+    events = get_model('profile', 'NotificationEvent').objects.filter(owner=user, created__gte=ref_time)
+    latest_likes = get_model('apparel', 'ProductLike').objects.filter(user=user, created__gte=ref_time)
+
+    look_likes = []
+    new_followers = []
+    sales = []
+
+    merge_vars = dict()
+    merge_vars['looklikes'] = []
+    merge_vars['sales'] = []
+    merge_vars['follows'] = []
+    for event in events:
+        if event.type == "LIKELOOK":
+            details = {
+                'name': event.look.title,
+                'imgurl': retrieve_full_url(event.look.static_image.url),
+                'url': retrieve_full_url(event.look.get_absolute_url()),
+            }
+            merge_vars['looklikes'].append(details)
+            look_likes.append(event)
+        elif event.type == "SALE":
+            details = {
+                'name': event.product.product_name,
+                'imgurl': retrieve_full_url(get_thumbnail(event.product.product_image, '500').url),
+                'url': retrieve_full_url(event.product.get_absolute_url()),
+            }
+            merge_vars['sales'].append(details)
+            sales.append(event)
+        elif event.type == "FOLLOW":
+            details = {
+                'name': event.actor.display_name,
+                'imgurl': get_avatar_url(event.actor),
+                'url': retrieve_full_url(event.actor.get_absolute_url()),
+            }
+            merge_vars['follows'].append(details)
+            new_followers.append(event)
+
+    merge_vars['products'] = []
+    for productlike in latest_likes:
+        product = productlike.product
+        details = {
+            'name': product.product_name,
+            'imgurl': retrieve_full_url(get_thumbnail(product.product_image, '500').url),
+            'url': retrieve_full_url(product.get_absolute_url()),
+        }
+        merge_vars['products'].append(details)
+
+    merge_vars['PERIOD'] = period_name
+    merge_vars['PROFILEURL'] = retrieve_full_url(user.get_absolute_url())
+
+    notify_with_mandrill_template([user], "SummaryMail", merge_vars)
+
+def create_look_like_summary(period):
+    period_name, interesting_time = calculate_period(period)
+    #include looks that users liked within the month for notifying them too
+    ref_time = calculate_period('M')[1]
+    look_likes = get_model('apparel', 'LookLike').objects.filter(created__gte=ref_time)
+
+    like_dict = {}
+    users_to_notify = {}
+    #iterate through look likes
+    for like in look_likes:
+        look = like.look
+        if(like.created > interesting_time):
+            if look in like_dict:
+                like_dict[look].append(like.user)
+            else:
+                like_dict[look] = [like.user]
+        if like.user in users_to_notify:
+            users_to_notify[like.user].append(look)
+        else:
+            users_to_notify[like.user] = [look]
+
+    return like_dict, users_to_notify
+
+def create_product_like_summary(period):
+    period_name, interesting_time = calculate_period(period)
+    #include products that users liked within the month for notifying them too
+    ref_time = calculate_period('M')[1]
+    product_likes = get_model('apparel', 'ProductLike').objects.filter(created__gte=ref_time)
+
+    like_dict = {}
+    users_to_notify = {}
+    #iterate through look likes
+    for like in product_likes:
+        product = like.product
+        if(like.created > interesting_time):
+            if product in like_dict:
+                like_dict[product].append(like.user)
+            else:
+                like_dict[product] = [like.user]
+        if like.user in users_to_notify:
+            users_to_notify[like.user].append(product)
+        else:
+            users_to_notify[like.user] = [product]
+
+    return like_dict, users_to_notify
+
+def send_look_like_summaries(period):
+    look_likes, users_to_notify = create_look_like_summary(period)
+    domain = Site.objects.get_current().domain
+    #iterate over all users that created any likes within the given period
+    for user in users_to_notify:
+        #make sure the user wants this summary
+        if user.look_like_summaries != period:
+            continue
+        looks = []
+        merge_vars = {}
+        if(period == 'D'):
+            merge_vars['PERIOD'] = "today"
+        elif(period == 'W'):
+            merge_vars['PERIOD'] = "this week"
+
+        for look in users_to_notify[user]:
+            look_url_link = 'http://%s%s' % (domain, look.get_absolute_url())
+            look_detail = { "LOOKURL" : look_url_link,
+                            "LOOKNAME" : look.title,
+                            "LOOKPHOTOURL" : look.static_image.url,
+            }
+            likers = []
+            if(not look in look_likes):
+                continue
+            for liker in look_likes[look]:
+                if not(liker == user and len(likers) <= 20):
+                    if liker.image:
+                        profile_photo_url = get_thumbnail(liker.image, '100').url
+                    elif liker.facebook_user_id:
+                        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
+                    else:
+                        profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                    sender_link = retrieve_full_url(liker.get_absolute_url())
+                    likers.append({"USERNAME" : liker.display_name,
+                                   "PROFILEURL" : sender_link,
+                                   "PROFILEPICTUREURL" : profile_photo_url,
+                    })
+            if(len(likers) == 1):
+                look_detail["SINGULAR"] = True
+            elif(len(likers) == 2):
+                look_detail["TWOLIKERS"] = True
+                look_detail["SINGULAR"] = False
+                look_detail["OTHERLIKERNAME"] = likers[1]["USERNAME"]
+                look_detail["OTHERLIKERURL"] = likers[1]["PROFILEURL"]
+            else:
+                look_detail["TWOLIKERS"] = False
+                look_detail["SINGULAR"] = False
+                look_detail["NOOFLIKES"] = len(likers)-1
+            look_detail["LIKERS"] = likers
+            if likers:
+                look_detail["ONELIKERNAME"] = likers[0]["USERNAME"]
+                look_detail["ONELIKERURL"] = likers[0]["PROFILEURL"]
+                looks.append(look_detail)
+
+        merge_vars['LOOKS'] = looks
+        notify_with_mandrill_template([user], "lookLikeSummary", merge_vars)
+
+    return
+
+def send_product_like_summaries(period):
+    product_likes, users_to_notify = create_product_like_summary(period)
+    domain = Site.objects.get_current().domain
+    #iterate over all users that created any likes within the given period
+    for user in users_to_notify:
+        #make sure the user wants this summary
+        if user.product_like_summaries != period:
+            continue
+        products = []
+        merge_vars = {}
+        if(period == 'D'):
+            merge_vars['PERIOD'] = "today"
+
+        elif(period == 'W'):
+            merge_vars['PERIOD'] = "this week"
+
+        for product in users_to_notify[user]:
+            product_url_link = 'http://%s%s' % (domain, product.get_absolute_url())
+            product_detail = {  "PRODUCTURL" : product_url_link,
+                                "BRANDNAME" : product.manufacturer.name,
+                                "PRODUCTNAME" : product.product_name,
+                                "PRODUCTPHOTOURL" : get_thumbnail(product.product_image, '500').url,
+            }
+            likers = []
+            if(not product in product_likes):
+                continue
+            for liker in product_likes[product]:
+                if not(liker == user and len(likers) <= 20):
+                    if liker.image:
+                        profile_photo_url = get_thumbnail(liker.image, '100').url
+                    elif liker.facebook_user_id:
+                        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
+                    else:
+                        profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                    sender_link = retrieve_full_url(liker.get_absolute_url())
+                    likers.append({"USERNAME" : liker.display_name,
+                                   "PROFILEURL" : sender_link,
+                                   "PROFILEPICTUREURL" : profile_photo_url,
+                    })
+            if(len(likers) == 1):
+                product_detail["SINGULAR"] = True
+            elif(len(likers) == 2):
+                product_detail["TWOLIKERS"] = True
+                product_detail["SINGULAR"] = False
+                product_detail["OTHERLIKERNAME"] = likers[1]["USERNAME"]
+                product_detail["OTHERLIKERURL"] = likers[1]["PROFILEURL"]
+            else:
+                product_detail["TWOLIKERS"] = False
+                product_detail["SINGULAR"] = False
+                product_detail["NOOFLIKES"] = len(likers)-1
+            product_detail["LIKERS"] = likers
+            if likers:
+                product_detail["ONELIKERNAME"] = likers[0]["USERNAME"]
+                product_detail["ONELIKERURL"] = likers[0]["PROFILEURL"]
+                products.append(product_detail)
+
+        merge_vars['PRODUCTS'] = products
+        notify_with_mandrill_template([user], "productLikeSummary", merge_vars)
+
+    return
+
+def get_vendor_logo(vendor):
+    if(vendor.logotype):
+        return get_thumbnail(vendor.logotype, '500').url
+    else:
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
+def create_earning_summary(period):
+    period_name, interesting_time = calculate_period(period)
+    #include products that users liked within the month for notifying them too
+    period_name, ref_time = calculate_period(period)
+    PENDING = 2 #This can't be imported here but is originally 'Pending' fro STATUS_CHOICES in dashboard.models.Sale
+    #fetch all earnings in the given period that are either sales or clicks
+    earnings = get_model('dashboard', 'UserEarning').objects\
+            .filter(Q(user_earning_type='publisher_sale_commission') | Q(user_earning_type='publisher_sale_click_commission')\
+            , date__range=(ref_time, timezone.now()), status__gte=PENDING)\
+            .order_by('-date')
+
+    earning_dict = {}
+    users_to_notify = {}
+    #iterate through look likes
+    for earning in earnings:
+        user = earning.user
+        earning_detail = {}
+        if user in users_to_notify:
+            #there are already earning for this user
+            new_amount = earning.amount
+            earning_detail['SUM'] = new_amount
+            users_to_notify[user]["totalearning"] += new_amount
+            earning_detail['VENDORNAME'] = earning.sale.vendor.name
+            if(earning.user_earning_type == 'publisher_sale_commission'):
+                product = earning.from_product
+                earning_detail['PRODUCTSALE'] = True
+                if not product:
+                    #there is no associated product
+                    vendor = earning.sale.vendor
+                    if(vendor in users_to_notify[user]["othersales"]):
+                        old_details = users_to_notify[user]["othersales"][vendor]
+                        old_details['AMOUNT'] += 1
+                        old_details['SUM'] += new_amount
+                    else:
+                        earning_detail['AMOUNT'] = 1
+                        earning_detail['PHOTOURL'] = get_vendor_logo(vendor)
+                        earning_detail['NOPRODUCT'] = True
+                        users_to_notify[user]["othersales"][vendor] = earning_detail
+                elif(product in users_to_notify[user]["productsales"]):
+                    #aggregate earnings for same product
+                    old_details = users_to_notify[user]["productsales"][product]
+                    old_details['AMOUNT'] += 1
+                    old_details['SUM'] += new_amount
+                else:
+                    #or create new one if it does not exist
+                    earning_detail['AMOUNT'] = 1
+                    earning_detail['BRANDNAME'] = product.manufacturer.name
+                    earning_detail['PRODUCTNAME'] = product.product_name
+                    earning_detail['PHOTOURL'] = get_thumbnail(product.product_image, '500').url
+                    earning_detail['NOPRODUCT'] = False
+                    users_to_notify[user]["productsales"][product] = earning_detail
+            elif(earning.user_earning_type == 'publisher_sale_click_commission'):
+                vendor = earning.sale.vendor
+                earning_detail['PRODUCTSALE'] = False
+                if(vendor in users_to_notify[user]["clickearnings"]):
+                    #aggregate earnings for same vendor
+                    old_details = users_to_notify[user]["clickearnings"][vendor]
+                    old_details['SUM'] += new_amount
+                else:
+                    #or create new one if it does not exist
+                    earning_detail['PHOTOURL'] = get_vendor_logo(vendor)
+                    users_to_notify[user]["clickearnings"][vendor] = earning_detail
+        else:
+            #this is the first sale encoutered for the user
+            #so create dicts for earnings
+            product_sales = {}
+            click_earnings = {}
+            other_sales = {}
+            earning_detail['SUM'] = earning.amount
+            total_earnings = earning.amount
+            earning_detail['VENDORNAME'] = earning.sale.vendor.name
+            if(earning.user_earning_type == 'publisher_sale_commission'):
+                earning_detail['PRODUCTSALE'] = True
+                earning_detail['AMOUNT'] = 1
+                product = earning.from_product
+                if product:
+                    earning_detail['BRANDNAME'] = product.manufacturer.name
+                    earning_detail['PRODUCTNAME'] = product.product_name
+                    earning_detail['PHOTOURL'] = get_thumbnail(product.product_image, '500').url
+                    earning_detail['NOPRODUCT'] = False
+                    product_sales[product] = earning_detail
+                else:
+                    earning_detail['NOPRODUCT'] = True
+                    vendor = earning.sale.vendor
+                    earning_detail['PHOTOURL'] = get_vendor_logo(vendor)
+                    other_sales[vendor] = earning_detail
+            elif(earning.user_earning_type == 'publisher_sale_click_commission'):
+                earning_detail['PRODUCTSALE'] = False
+                earning_detail['PHOTOURL'] = get_vendor_logo(earning.sale.vendor)
+                click_earnings[earning.sale.vendor] = earning_detail
+            users_to_notify[user] = {"productsales" : product_sales,
+                                     "clickearnings" : click_earnings,
+                                     "othersales" : other_sales,
+                                     "totalearning" : total_earnings,
+            }
+
+    return earning_dict, users_to_notify, period_name
+
+def send_earning_summaries(period):
+    earnings, users_to_notify, period_name = create_earning_summary(period)
+    domain = Site.objects.get_current().domain
+    #iterate over all publishers and generate their summaries
+    for user in users_to_notify:
+        if user.earning_summaries != period:
+            continue
+        all_earnings = users_to_notify[user]["productsales"].values()
+        all_earnings.extend(users_to_notify[user]["othersales"].values())
+        all_earnings.extend(users_to_notify[user]["clickearnings"].values())
+        sorted_earnings = sorted(all_earnings, key=lambda k: k['SUM'])
+        for earning in sorted_earnings:
+            earning["SUM"] = str(earning["SUM"])
+
+        total_earning = users_to_notify[user]["totalearning"]
+        merge_vars = {}
+        merge_vars['PERIOD'] = period_name
+        merge_vars['TOTAL'] = str(total_earning)
+        merge_vars['EARNINGDETAILS'] = sorted_earnings
+
+        notify_with_mandrill_template([user], "earningSummary", merge_vars)
+
+    return
+# def create_activity_summary(user, period):
+#     activity = ActivityFeedRender(None, 'A', user).run()

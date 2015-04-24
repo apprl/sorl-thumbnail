@@ -24,5 +24,3 @@ def send_welcome_email_task(subject, body, recipient, **kwargs):
 def mail_managers_task(subject, message):
     mail_managers(subject, message)
 
-
-import apparelrow.profile.notifications

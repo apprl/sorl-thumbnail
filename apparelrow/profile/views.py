@@ -285,7 +285,7 @@ def settings_notification(request):
 
         return HttpResponseRedirect(reverse('settings-notification'))
 
-    form = NotificationForm(instance=request.user)
+    form = NotificationForm(instance=request.user, is_publisher=request.user.is_partner)
     newsletter_form = NewsletterForm(instance=request.user)
 
     return render(request, 'profile/settings_notification.html', {'notification_form': form, 'newsletter_form': newsletter_form})
