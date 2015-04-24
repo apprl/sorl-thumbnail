@@ -2,15 +2,19 @@
 <div id="tooltip-link{{ link.id }}" class="tooltip tooltip-link">
     <div class="tooltip-container">
         <a class="close" href="#"></a>
-        <div class="row">
-            <a rel="nofollow" class="link_title" target="_blank" href="{{ link.url }}" title="{{ link.title }}">
-                {{ link.title }}
-            </a>
-        </div>
-        <div class="row">
-            <a rel="nofollow" class="btn btn-upper btn-look-tooltip btn-buy-external" target="_blank" href="{{ link.url }}" title="{{ link.title }}">
-                {%  trans 'GO TO' %}
-            </a>
+        <div class="product-meta">
+            <div class="row">
+                <h2>
+                    <a rel="nofollow" class="link_title" target="_blank" href="{{ link.url }}" title="{{ link.title }}">
+                        {{ link.title }}
+                    </a>
+                </h2>
+            </div>
+            <div class="row">
+                <a rel="nofollow" class="btn btn-upper btn-block btn-look-tooltip btn-buy-external link_title" target="_blank" href="{{ link.url }}" title="{{ link.title }}">
+                    {%  trans 'GO TO' %}
+                </a>
+            </div>
         </div>
     </div>
     <div class="tooltip-arrow"></div>
