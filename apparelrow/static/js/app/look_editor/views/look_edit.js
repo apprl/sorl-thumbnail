@@ -424,7 +424,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             }
         }, this));
 
-        if (!this.model.components.length) {
+        if (!this.model.components.length && external_look_type == 'collage') {
             App.Events.trigger('popup_dispatcher:hide');
             this.popup_dispatcher.show('dialog_no_products');
             return;
