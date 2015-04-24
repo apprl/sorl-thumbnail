@@ -3,10 +3,11 @@
 
     {% load tz %}
    {% load apparel_extras %}
+   {% load staticfiles %}
     
     <li class="dropdown notifications">
 
-         <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}"><img src="static/images/lightning.png"/>{% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %} <b class="caret"></b></a>
+         <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}"><img src="{% static "images/lightning.png" %}" alt="Notifications"/>{% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %} <b class="caret"></b></a>
         <ul class="dropdown-menu notification-list" style="width: 500px !important;">
             {% localtime on %}
             {% for event in request.user.notifications %}
