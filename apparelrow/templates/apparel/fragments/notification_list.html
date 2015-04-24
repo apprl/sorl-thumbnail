@@ -41,6 +41,16 @@
                     </span>
                     </div>
                 </li>
+            {% empty %}
+
+                <li><div class="row-fluid notification-row" style="width: auto;">
+
+                        <span class="notification-content col-md-12">
+                            You don't have any notifications yet!
+                        </span>
+
+                
+                </div></li>
             {% endfor %}
             {% endlocaltime %}
             {% comment %}
