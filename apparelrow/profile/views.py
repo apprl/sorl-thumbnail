@@ -140,7 +140,7 @@ def likedlooks(request, profile, form, page=0):
     #logger.info("looks called")
 
     #retrieve looks for which a like for the current user exists and is active
-    looks = get_model('apparel', 'Look').published_objects.filter(likes__user=profile, likes__active=True)
+    looks = get_model('apparel', 'Look').published_objects.filter(likes__user=profile, likes__active=True).order_by('-created')
 
     paged_result = get_paged_result(looks, 12, request.GET.get('page', '1'))
 

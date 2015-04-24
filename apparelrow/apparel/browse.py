@@ -428,7 +428,7 @@ def shop_embed(request, user_id, language, gender):
 @login_required
 def shop_widget(request):
     if request.method != 'POST':
-        return HttpResponseNotAllowed()
+        return HttpResponseNotAllowed("Only POST requests allowed")
 
     content = {}
     content['language'] = request.POST.get('language', 'sv')

@@ -8,7 +8,7 @@ App.Views.ShopComponentProduct = App.Views.ShopComponent.extend({
     info: function(e) {
         if(this.model.has('product') && !$(e.target).is('.delete') && !this.$el.is('.ui-draggable-dragging')) {
             // TODO: this.model.get('product') is not a real model
-            App.Events.trigger('widget:product:info', new App.Models.Product(this.model.get('product')));
+            App.Events.trigger('widget:product:info', new App.Models.Product(this.model.get('product')), true);
             return false;
         }
     },

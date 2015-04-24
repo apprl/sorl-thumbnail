@@ -83,7 +83,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         if (external_look_type == 'photo') {
             var custom_link_view = new App.Views.CustomLinkView();
 
-            window.filter_product_view.add_tab('custom-link', 'Custom (Beta)', 'globe', custom_link_view);
+            window.filter_product_view.add_tab('custom-link', 'Custom (Beta)', 'images/link.svg', custom_link_view);
         }
         $(window).trigger('resize');
     },
@@ -424,7 +424,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
             }
         }, this));
 
-        if (!this.model.components.length) {
+        if (!this.model.components.length && external_look_type == 'collage') {
             App.Events.trigger('popup_dispatcher:hide');
             this.popup_dispatcher.show('dialog_no_products');
             return;
