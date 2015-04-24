@@ -39,13 +39,13 @@ NOTIFICATION_CHOICES = (
     ('I'), _('Immediately'),
     ('D', _('Daily')),
     ('W', _('Weekly')),
-    ('N', _('None')),
+    ('N', _('Never')),
 )
 
 SUMMARY_CHOICES = (
     ('D', _('Daily')),
     ('W', _('Weekly')),
-    ('N', _('None')),
+    ('N', _('Never')),
 )
 
 FB_FRIEND_CHOICES = (

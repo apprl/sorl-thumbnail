@@ -3,6 +3,7 @@ import logging
 import json
 import datetime
 from apparelrow.profile.models import NotificationEvent
+from django.http.response import HttpResponseNotAllowed
 import os.path
 import string
 import urllib
@@ -164,13 +165,15 @@ def notification_follow_brand(request):
 def notifications_seen_all(request):
     if request.method == 'POST' and request.is_ajax():
         user_id = request.POST.get('user_id', None)
-        queryset = get_model('profile', 'NotificationEvent').objects.filter(owner__id = user_id)
+        queryset = get_model('profile', 'NotificationEvent').objects.filter(owner_id = user_id)
         for notificationevent in queryset:
             notificationevent.seen = True
             notificationevent.save()
         data = []
         json_data = json.dumps(data)
         return HttpResponse(json_data)
+    else:
+        return HttpResponseNotAllowed("Only POST requests allowed")
 #
 # Facebook calls
 #
