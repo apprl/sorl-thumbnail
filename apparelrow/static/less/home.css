@@ -12603,10 +12603,7 @@ body .apprl-top {
   border-radius: 50%;
   /* Prevent background color leak outs */
   -webkit-background-clip: padding-box;
-<<<<<<< HEAD
   -webkit-border-radius: 50%;
-=======
->>>>>>> Fix look size on look detail
   -moz-background-clip: padding;
   background-clip: padding-box;
   /* End Staffans fix */
