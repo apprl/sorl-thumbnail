@@ -624,11 +624,9 @@ def calculate_period(period):
         ref_time = get_ref_time(30, True)
     return period_name, ref_time
 
-def create_activity_summaries(period):
+def send_activity_summaries(period):
     users_to_notify = get_model('profile', 'User').objects.filter(summary_mails=period)
     for user in users_to_notify:
-        if user.summary_mails != period:
-            continue
         create_individual_summary(user, period)
 
 def create_individual_summary(user, period):
