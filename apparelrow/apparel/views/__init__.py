@@ -613,7 +613,6 @@ def look_list(request, search=None, contains=None, gender=None):
 
     queryset = Look.published_objects.filter(user__is_hidden=False)
 
-
     #add different tabs views
     view = request.GET.get('view', 'all')
     profile = request.user
@@ -632,23 +631,20 @@ def look_list(request, search=None, contains=None, gender=None):
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
         queryset = queryset.filter(id__in=[doc.django_id for doc in results.get_docs()])
     elif view and view != 'all':
-       # logger.info("there is a view parameter for look list")
         if view == 'latest' or 'f' in request.GET:
             queryset = queryset.filter(published=True).filter(gender__in=gender_list.get(gender)).order_by('-created')
         elif view == 'friends':
             user_ids = []
             if is_authenticated:
                 user_ids = get_model('profile', 'Follow').objects.filter(user=request.user, active=True).values_list('user_follow_id', flat=True)
-                queryset = queryset.filter(gender__in=gender_list.get(gender)).filter(user__in=user_ids)
+                queryset = queryset.filter(gender__in=gender_list.get(gender)).filter(user__in=user_ids).order_by('-created')
     elif contains:
         queryset = queryset.filter(components__product__slug=contains).distinct()
     else:
-       # logger.info("using deault for gender %s" % gender)
         queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
 
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page', 1))
-    logger.info("paged result says %s about hasnext" % paged_result.has_next)
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/look_list.html', {
