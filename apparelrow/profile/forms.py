@@ -83,9 +83,9 @@ class NotificationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         from django.forms.widgets import HiddenInput
-        isPublisher = kwargs.pop('isPublisher',None)
+        is_publisher = kwargs.pop('is_publisher',None)
         super(NotificationForm, self).__init__(*args, **kwargs)
-        if not isPublisher:
+        if not is_publisher:
             self.fields['earning_summaries'].widget = HiddenInput()
 
 
