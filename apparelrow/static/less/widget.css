@@ -519,8 +519,15 @@ html.look-type-C .collage {
     right: 5px;
   }
 }
+.container .tooltip.tooltip-link {
+  width: 180px;
+}
 .container .tooltip.tooltip-link .tooltip-container {
+  width: 160px;
   height: auto;
+}
+.container .tooltip.tooltip-link .tooltip-container .product-meta {
+  float: none;
 }
 .container .tooltip.tooltip-link .tooltip-arrow.tooltip-arrow-bottom {
   bottom: -6px;
@@ -530,11 +537,8 @@ html.look-type-C .collage {
   text-align: center;
 }
 .container .tooltip.tooltip-link .row a.link_title {
-  display: block;
-  text-align: left;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: normal;
 }
 #temporaryimage {
   text-align: center;
