@@ -16,17 +16,15 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
-from django.utils import timezone
-from sorl.thumbnail import get_thumbnail
+from sorl.thumbnail import get_thumbnail, default
 
 from apparelrow.profile.notifications import process_follow_user
 from apparelrow.activity_feed.tasks import update_activity_feed
 from apparelrow.apparel.utils import roundrobin
+from apparelrow.apparel.sorl_extension import CustomCircularEngine
 from apparelrow.apparel.utils import get_paged_result
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 from apparelrow.profile.tasks import mail_managers_task
-
-from datetime import timedelta
 from django.utils import timezone
 
 EVENT_CHOICES = (
@@ -208,6 +206,10 @@ class User(AbstractUser):
         return self.look_likes.filter(active=True).count()
 
     @cached_property
+    def total_look_count(self):
+        return self.look_likes_count + self.looks
+
+    @cached_property
     def notifications(self):
         notifications = self.notification_events.order_by('created').reverse()
         paged_result = get_paged_result(notifications, 10, 1)
@@ -319,6 +321,36 @@ class User(AbstractUser):
             return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
 
         return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
+
+    @cached_property
+    def avatar_circular(self):
+        """ Small size circular avatar using CustomCircularEngine """
+        if self.image:
+            old_engine = default.engine
+            default.engine = CustomCircularEngine()
+            image = get_thumbnail(self.image, '50x50', format="PNG").url
+            default.engine = old_engine
+            return image
+
+    @cached_property
+    def avatar_circular_medium(self):
+        """ Medium size circular avatar using CustomCircularEngine """
+        if self.image:
+            old_engine = default.engine
+            default.engine = CustomCircularEngine()
+            image = get_thumbnail(self.image, '125', format="PNG").url
+            default.engine = old_engine
+            return image
+
+    @cached_property
+    def avatar_circular_large(self):
+        """ Large size circular avatar using CustomCircularEngine """
+        if self.image:
+            old_engine = default.engine
+            default.engine = CustomCircularEngine()
+            image = get_thumbnail(self.image, '208', format="PNG").url
+            default.engine = old_engine
+            return image
 
     @cached_property
     def url_likes(self):

@@ -8,7 +8,7 @@
                 <img class="img-circle" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>
             </a>
             <div class="media-body">
-                <h4 class="media-heading"><a href="{{ profile.get_absolute_url }}">{{ profile.display_name }}</a></h4>
+                <h4 class="media-heading"><a href="{{ profile.get_absolute_url }}">{% if profile.display_name|length >= 30 %}{{ profile.display_name|slice:":25" }} ...{% else %}{{ profile.display_name|slice:":25" }}{% endif %}</a></h4>
                 {% if cached %}
                 {% include 'apparel/fragments/follow_cache.html' %}
                 {% else %}
