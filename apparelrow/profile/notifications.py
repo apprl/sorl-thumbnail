@@ -627,6 +627,8 @@ def calculate_period(period):
 def create_activity_summaries(period):
     users_to_notify = get_model('profile', 'User').objects.filter(summary_mails=period)
     for user in users_to_notify:
+        if user.summary_mails != period:
+            continue
         create_individual_summary(user, period)
 
 def create_individual_summary(user, period):
@@ -958,6 +960,8 @@ def send_earning_summaries(period):
     domain = Site.objects.get_current().domain
     #iterate over all publishers and generate their summaries
     for user in users_to_notify:
+        if user.earning_summaries != period:
+            continue
         all_earnings = users_to_notify[user]["productsales"].values()
         all_earnings.extend(users_to_notify[user]["othersales"].values())
         all_earnings.extend(users_to_notify[user]["clickearnings"].values())
