@@ -7981,6 +7981,7 @@ body.contest .navbar {
   border-bottom-color: #ffffff;
   position: absolute;
   top: 25px;
+  right: 2px;
 }
 @media screen and (min-width: 768px) {
   .navbar .navbar-form,
