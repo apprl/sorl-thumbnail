@@ -395,13 +395,13 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         merge_vars['LOOKNAME'] = look_name
         look_photo_url = look_like.look.static_image.url
         merge_vars['LOOKPHOTOURL'] = look_photo_url
-
         if sender.image:
-            profile_photo_url =  get_thumbnail(sender.image, '500').url
+            profile_photo_url = get_thumbnail(sender.image, '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
             profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
 
@@ -441,13 +441,14 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
         if sender.image:
-            profile_photo_url =  get_thumbnail(sender.image, '500').url
+            profile_photo_url = get_thumbnail(sender.image, '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
             profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
         merge_vars['FOLLOWERNAME'] = sender.display_name
-        merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+        merge_vars['PROFILEPHOTOURL'] = profile_photo_url
 
         notify_with_mandrill_template([notify_user], "newFollower", sender, merge_vars)
         return get_key('follow_user', recipient, sender, None)
@@ -484,13 +485,14 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             sender_link = 'http://%s%s' % (domain, sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
             if sender.image:
-                profile_photo_url =  get_thumbnail(sender.image, '500').url
+                profile_photo_url = get_thumbnail(sender.image, '500').url
             elif sender.facebook_user_id:
                 profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
             else:
                 profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
             merge_vars['FRIENDNAME'] = sender.display_name
-            merge_vars['PROFILEPHOTOURL'] = retrieve_full_url(profile_photo_url)
+            merge_vars['PROFILEPHOTOURL'] = profile_photo_url
 
             notify_with_mandrill_template([recipient], "fbFriend", sender, merge_vars)
 
@@ -503,6 +505,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
     """
     Process a new sale alert.
     """
+    # Todo: function documentation
+
     logger = process_sale_alert.get_logger(**kwargs)
 
     template_name = 'first_sale_alert' if first else 'second_sale_alert'
@@ -510,8 +514,9 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
         if likes.user and likes.user.discount_notification:
             # If we already sent a notification for this product and user it
             # must mean that the price has increased and then decreased.
-           # if is_duplicate('sale_alert', likes.user, sender, product):
-                #TODO adapt this for new templates
+            further = False
+            if is_duplicate('sale_alert', likes.user, sender, product):
+                further = True
 
             # Use the exchange rate from the user language
             language = settings.LANGUAGE_CODE
@@ -525,17 +530,22 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             locale_original_price = (original_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
             locale_discount_price = (discount_price * rate).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)
 
+            domain = Site.objects.get_current().domain
             merge_vars = dict()
-            if product.image:
-                product_photo_url = get_thumbnail(product.image, '500').url
+            if product.product_image:
+                product_photo_url = get_thumbnail(product.product_image, '500').url
             else:
                 product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
-            merge_vars['PRODUCTPHOTOURL'] = retrieve_full_url(product_photo_url)
+
+            merge_vars['PRODUCTPHOTOURL'] = product_photo_url
+            merge_vars['BRANDNAME'] = product.manufacturer.name
             merge_vars['PRODUCTNAME'] = product.product_name
-            merge_vars['PRODUCTLINK'] = retrieve_full_url(product.get_absolute_url())
+            merge_vars['PRODUCTLINK'] = "http://%s%s" % (domain,product.get_absolute_url())
             merge_vars['OLDPRICE'] = locale_original_price
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
+            if further:
+                merge_vars['FURTHER'] = further
 
 
             notify_with_mandrill_template([likes.user], "itemSale", sender, merge_vars)

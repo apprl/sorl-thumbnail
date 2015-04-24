@@ -7,7 +7,7 @@ from apparelrow.dashboard.importer.base import BaseImporter
 from django.db.models.loading import get_model
 from django.contrib.auth import get_user_model
 
-logger = logging.getLogger('affiliate_networks')
+logger = logging.getLogger('dashboard')
 
 
 class Importer(BaseImporter):
@@ -39,9 +39,10 @@ class Importer(BaseImporter):
             logger.warn('ClickCost for vendor %s does not exist'%(vendor))
         return None, None
 
-    def get_data(self, start_date, end_date):
+    def get_data(self, start_date, end_date, **kwargs):
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(start_date, datetime.time(23, 59, 59, 999999))
+        logger.info("Importing Cost per Click data from %s until %s" % (start_date_query, end_date_query))
         data = self.get_cpc_clicks_per_vendor_per_user(start_date_query, end_date_query)
         for (vendor_id, user_id, count) in data:
             try:
@@ -70,6 +71,6 @@ class Importer(BaseImporter):
                             continue
                         yield sale
             except get_user_model().DoesNotExist:
-                logger.warn('User %id does not exist'%user_id)
+                logger.warn('User %s does not exist' % user_id)
             except get_model('apparel', 'Vendor').DoesNotExist:
-                logger.warn('Vendor %vendor does not exist'%vendor_id)
+                logger.warn('Vendor %s does not exist' % vendor_id)

@@ -145,7 +145,7 @@
                                     {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
                                 {% endif %}
                                 {% if component.link %}
-                                    <a href="{{ component.link }}" data-container="body" data-toggle="popover" data-placement="auto" data-trigger="click" class="hotspot link" style="{% look_component_style component im.width im.height %}"></a>
+                                    <a href="{{ component.link.url }}" data-container="body" data-toggle="popover" data-placement="auto" data-trigger="click" class="hotspot link" style="{% look_component_style component im.width im.height %}"></a>
                                     {% include "apparel/fragments/look_link_tooltip.html" with owner=object.user link=component.link only %}
                                 {% endif %}
                             {% endfor %}

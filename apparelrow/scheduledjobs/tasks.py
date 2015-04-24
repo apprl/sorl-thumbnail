@@ -49,11 +49,11 @@ def update_clicks_summary():
     management.call_command('update_clicks_earnings_status')
 
 #daily
-@periodic_task(name='apparelrow.scheduledjobs.tasks.clicks_summary', run_every=crontab(minute='0',hour='1'), max_retries=1, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.clicks_summary', run_every=crontab(minute='0',hour='5'), max_retries=1, ignore_result=True)
 def clicks_summary():
     from django.core import management
     log.info('Running click summary job.')
-    management.call_command('clicks_summary')
+    management.call_command('clicks_summary',verbosity=0, interactive=False)
 
 
 #weekly

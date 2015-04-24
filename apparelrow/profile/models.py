@@ -4,8 +4,9 @@ import os.path
 
 from django.db import models
 from django.db.models import get_model
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete, post_delete
 from django.dispatch import receiver
+from apparelrow.activity_feed.models import Activity
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.conf import settings
@@ -16,9 +17,9 @@ from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
 from django.utils import timezone
-
 from sorl.thumbnail import get_thumbnail
 
+from apparelrow.profile.notifications import process_follow_user
 from apparelrow.activity_feed.tasks import update_activity_feed
 from apparelrow.apparel.utils import roundrobin
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
@@ -200,10 +201,6 @@ class User(AbstractUser):
                 items.append((False, False))
 
         return items
-
-    def get_liked_looks(self):
-        queryset = Look.published_objects.filter(user__is_hidden=False)
-
 
     @cached_property
     def display_name(self):
@@ -455,12 +452,47 @@ class Follow(models.Model):
     class Meta:
         unique_together = ('user', 'user_follow')
 
+#
+# Follow handlers
+#
+
 @receiver(post_save, sender=Follow, dispatch_uid='profile.models.on_follow')
 def on_follow(signal, instance, **kwargs):
     """
     Update activities on follow update.
     """
     update_activity_feed.delay(instance.user, instance.user_follow, instance.active)
+
+
+@receiver(post_save, sender=Follow, dispatch_uid='profile.activity.post_save_follow_handler')
+def post_save_follow_handler(sender, instance, **kwargs):
+    """
+    Post save handler for follow objects. Updates followers count on user
+    profile and attempts to notify users about this new follow object.
+    """
+    apparel_profile = instance.user_follow
+    if instance.active and not instance.user.is_hidden:
+        apparel_profile.followers_count = apparel_profile.followers_count + 1
+        process_follow_user.delay(instance.user_follow, instance.user, instance)
+        Activity.objects.push_activity(instance.user, 'follow', instance.user_follow, instance.user.gender)
+        apparel_profile.save()
+    elif not instance.user.is_hidden:
+        apparel_profile.followers_count = apparel_profile.followers_count - 1
+        Activity.objects.pull_activity(instance.user, 'follow', instance.user_follow)
+        apparel_profile.save()
+
+@receiver(pre_delete, sender=Follow, dispatch_uid='profile.activity.pre_delete_follow_handler')
+def pre_delete_follow_handler(sender, instance, **kwargs):
+    """
+    Pre delete handler for follow objects. Updates followers count on user
+    profile.
+    """
+    if instance.user_follow:
+        instance.user_follow.followers_count = instance.user_follow.followers_count - 1
+        instance.user_follow.save()
+
+    if instance.user and instance.user_follow:
+        Activity.objects.pull_activity(instance.user, 'follow', instance.user_follow)
 
 
 #

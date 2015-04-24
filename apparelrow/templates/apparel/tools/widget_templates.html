@@ -68,8 +68,8 @@
 </script>
 
 <script type="text/template" id="look_edit_link_info_popup_template" data-title="{% trans "Link" %}">
-    <div class="content-container info-container">
-        <div class="content"><%= title %><br/><%= url %></div>
+    <div class="content-container link-info-container">
+        <div class="content"><h4><%= title %></h4><span class="url"><%= url %></span></div>
     </div>
 </script>
 
@@ -206,11 +206,4 @@
             <% } %>
         </div>
     </div>
-</script>
-{% include 'apparel/fragments/dialog_new_editor.html' with request=request csrf_token=csrf_token next=next only %}
-<script>
-    if (!getCookie('new_editor')) {
-        $('#modal_new_editor').modal('show');
-        setCookie('new_editor', '1', 999999)
-    }
 </script>

@@ -83,7 +83,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         if (external_look_type == 'photo') {
             var custom_link_view = new App.Views.CustomLinkView();
 
-            window.filter_product_view.add_tab('custom-link', 'Custom link', 'globe', custom_link_view);
+            window.filter_product_view.add_tab('custom-link', 'Custom (Beta)', 'globe', custom_link_view);
         }
         $(window).trigger('resize');
     },

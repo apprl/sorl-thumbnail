@@ -34,12 +34,15 @@ class TestProfile(TransactionTestCase):
         user = get_user_model().objects.get(email='test@xvid.se')
         self.assertFalse(user.is_active)
 
-        self.assertEqual(len(mail.outbox), 2)
-        welcome_mail_body = mail.outbox[1].body
+        mailbox = mail.outbox
+        self.assertEqual(len(mailbox), 2)
+        welcome_mail_body = mailbox[1].body
         print "Sent mail check passed"
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
+        # Sometimes an additional \r gets included in the url forcing a 404
+        activation_url = activation_url.replace("\r","")
         response = self.client.get(activation_url)
-
+        self.assertEqual(response.status_code,302)
         user = get_user_model().objects.get(email='test@xvid.se')
         self.assertTrue(user.is_active)
         print "Verified user is active"

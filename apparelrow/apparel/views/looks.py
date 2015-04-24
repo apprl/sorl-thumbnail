@@ -41,7 +41,6 @@ def look_like_products(request, look_id):
         if not component.link:
             _product_like(request, component.product, 'like')
 
-
 def embed(request, slug, identifier=None):
     """
     Display look for use in embedded iframe.
