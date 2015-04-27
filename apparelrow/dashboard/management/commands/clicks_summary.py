@@ -16,7 +16,7 @@ class Command(BaseCommand):
             action='store',
             dest='date',
             help='Select a custom date in the format YYYY-MM-DD',
-            default= (datetime.date.today() - datetime.timedelta(1)).strftime('%Y-%m-%d'),
+            default= None,
         ),
     )
 
@@ -32,7 +32,10 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        query_date = datetime.datetime.strptime(options.get('date'), '%Y-%m-%d')
+        date = options.get('date')
+        if not date:
+            date = (datetime.date.today() - datetime.timedelta(1)).strftime('%Y-%m-%d')
+        query_date = datetime.datetime.strptime(date, '%Y-%m-%d')
         module = __import__('apparelrow.dashboard.importer.costperclick', fromlist = ['Importer'])
         instance = module.Importer()
         logger.info('Importing %s' % (instance.name,))

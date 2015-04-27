@@ -24,6 +24,7 @@ def exposed_settings(request):
         'FACEBOOK_OG_TYPE': django_settings.FACEBOOK_OG_TYPE,
         'FACEBOOK_REDIRECT_URI': request.build_absolute_uri(reverse('auth_facebook_login')),
         'CURRENCY': django_settings.LANGUAGE_TO_CURRENCY.get(get_language(), django_settings.APPAREL_BASE_CURRENCY),
+        'STATIC_URL': django_settings.STATIC_URL,
     }
 
 def next_redirects(request):
