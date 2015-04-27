@@ -7825,10 +7825,10 @@ h3 {
   overflow: hidden;
   text-align: center;
   z-index: 99999999;
-  background-color: #000000;
+  background-color: #333333;
   color: #EEEEEE;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   line-height: 18px;
   right: 30px;
   bottom: 30px;
@@ -7840,16 +7840,21 @@ h3 {
   transition: all 0.3s ease-in-out;
 }
 .scroll-top-wrapper:hover {
-  background-color: #515151;
+  background-color: #000000;
 }
 .scroll-top-wrapper.show {
   visibility: visible;
   cursor: pointer;
-  opacity: 1.0;
+  opacity: 0.5;
 }
 .scroll-top-wrapper i.fa,
 .scroll-top-wrapper a.fa {
   line-height: inherit;
+}
+.scroll-top-wrapper i {
+  position: absolute;
+  top: 5px;
+  right: 7px;
 }
 #content-container {
   background-color: #ffffff;
@@ -7987,8 +7992,9 @@ body.contest .navbar {
   position: absolute;
   top: 5px;
 }
-.notifications a:hover {
-  text-decoration: none !important;
+.notification-dropdown {
+  height: 50px;
+  width: 62px;
 }
 .notifications a {
   color: #EFEFEF !important;
@@ -7996,7 +8002,6 @@ body.contest .navbar {
 }
 .notifications {
   max-height: 55px;
-  padding-bottom: -5px !important;
 }
 .notification-list {
   color: #AFAFAF;
@@ -8004,8 +8009,23 @@ body.contest .navbar {
   width: 500px;
   table-layout: fixed;
 }
-.notification-list li {
-  display: table-row;
+.notification-bg-circle {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  background: #333333;
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+.lightning-bolt {
+  margin: 0 auto;
+  display: block;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  height: 28px;
 }
 .notification-row {
   border-bottom: 2px solid #333;
