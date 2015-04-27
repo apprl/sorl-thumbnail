@@ -16,6 +16,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
         App.Events.on('lookedit:rescale', this.rescale, this);
         App.Events.on('lookedit:clicked', this.set_inactive, this);
         App.Events.on('lookedit:increase_zindex', this.increase_zindex, this);
+        App.Events.on('lookedit:update_zindex', this.update_zindex, this);
 
         this.$container = $('.look-container');
     },
@@ -119,6 +120,13 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             this.model.set({z_index: parseInt(z_index)}, {silent: true});
             this.$el.css('z-index', z_index);
         }
+    },
+
+    update_zindex: function() {
+         var z_index = this.$el.css('z-index');
+         if (!isNaN(parseInt(z_index))) {
+             this.model.set({z_index: parseInt(z_index)}, {silent: true});
+         }
     },
 
     applyTransform: function() {
@@ -250,7 +258,7 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
                  stop: _.bind(function (event, ui) {
                      var z_index = $(event.target).css('z-index');
                      if (!isNaN(parseInt(z_index))) {
-                         this.model.set({z_index: parseInt(z_index)}, {silent: true});
+                         App.Events.trigger('lookedit:update_zindex');
                      }
 
                      this.set_position(ui.position.left, ui.position.top);
