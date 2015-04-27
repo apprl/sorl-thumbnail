@@ -10197,11 +10197,6 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   -moz-user-select: none;
   -khtml-user-select: none;
 }
-.look-collage .collage-image.flipped img {
-  -webkit-transform: scale(-1, 1);
-  -ms-transform: scale(-1, 1);
-  transform: scale(-1, 1);
-}
 .look-collage .collage-image img {
   width: 100% !important;
   height: auto !important;
