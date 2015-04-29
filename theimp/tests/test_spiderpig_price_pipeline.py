@@ -4,7 +4,8 @@ from decimal import Decimal
 from django.test import TestCase
 
 try:
-    from spiderpig.spiderpig.pipelines import PricePipeline
+
+    from spiderpig.spidercrawl.pipelines import PricePipeline
 except ImportError:
     from spiderpig.pipelines import PricePipeline
 
