@@ -589,6 +589,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['BRANDNAME'] = product.manufacturer.name
             merge_vars['PRODUCTNAME'] = product.product_name
             merge_vars['PRODUCTLINK'] = "http://%s%s" % (domain,product.get_absolute_url())
+            merge_vars['BUYLINK'] = "http://%sredirect/%s/Product/0/" % (domain, product.pk)
             merge_vars['OLDPRICE'] = locale_original_price
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
