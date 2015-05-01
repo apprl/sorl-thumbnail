@@ -696,11 +696,15 @@ body.contest {
 }
 
 .active > .notification-bg-circle {
+  background-color: #FFFFFF;
+}
+
+.notification-bg-circle:hover, .notification-bg-circle.active {
   background-color: #bbbbbb;
 }
 
-.notification-bg-circle:hover {
-  background-color: #bbbbbb;
+.notification-bg-circle.active path, .notification-bg-circle:hover path {
+			fill: #000000;
 }
 
 .lightning-bolt {
@@ -708,7 +712,7 @@ body.contest {
     display: block;
     position: absolute;
     top: 2px;
-    right: 8px;
+    right: 10px;
     height: 28px;
 }
 
