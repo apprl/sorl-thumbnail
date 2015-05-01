@@ -7991,6 +7991,7 @@ body.contest .navbar {
   border-radius: 50%;
   position: absolute;
   top: 5px;
+  left: 3px;
 }
 .notification-dropdown {
   height: 50px;
@@ -8002,6 +8003,53 @@ body.contest .navbar {
 }
 .notifications {
   max-height: 55px;
+}
+.notifications li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  padding: 10px 0;
+  zoom: 1;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+.notifications li:before,
+.notifications li:after {
+  display: table;
+  content: '';
+  zoom: 1;
+}
+.notifications li:after {
+  clear: both;
+}
+.notifications li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.notifications li:last-child {
+  border-bottom: none;
+}
+.notifications small {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.notifications .message {
+  position: relative;
+  left: 40px;
+  top: 0px;
+  max-width: 200px;
+  height: 34px;
+}
+.notifications .message p {
+  line-height: 15px;
+  letter-spacing: 0.01rem;
+}
+.notifications .time {
+  line-height: 1;
+  font-size: 10px;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  letter-spacing: 0.01rem;
 }
 .notification-list {
   color: #AFAFAF;
@@ -8018,6 +8066,12 @@ body.contest .navbar {
   position: absolute;
   top: 10px;
   right: 15px;
+}
+.active > .notification-bg-circle {
+  background-color: #bbbbbb;
+}
+.notification-bg-circle:hover {
+  background-color: #bbbbbb;
 }
 .lightning-bolt {
   margin: 0 auto;
@@ -8038,9 +8092,6 @@ body.contest .navbar {
 }
 .notification-row #see-all {
   text-align: center;
-}
-.notifcation-thumb {
-  display: block;
 }
 #search-result .btn {
   margin-bottom: 20px;
