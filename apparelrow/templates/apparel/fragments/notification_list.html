@@ -16,7 +16,7 @@
                 </g>
 
     {% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %}</div><b class="caret"></b></a>
-        <ul class="dropdown-menu notification-list" style="width: 500px !important;">
+        <ul class="dropdown-menu notification-list">
             {% localtime on %}
  {% for event in request.user.notifications %}
                 <li>
