@@ -4,8 +4,8 @@
     {% load tz %}
     
     <li class="dropdown notifications hidden-xs">
-
-    <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}">
+     {% comment %}
+     <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}">
 
     <div class="notification-bg-circle"><?xml version="1.0" encoding="utf-8" standalone="no"?>
                 <svg class="lightning-bolt" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -17,34 +17,43 @@
 
     {% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %}</div><b class="caret"></b></a>
         <ul class="dropdown-menu notification-list">
+
+     {% endcomment %}
+
+        <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}"><div class="notification-bg-circle"><img class="lightning-bolt" src="{% static "images/lightning.png" %}" alt="Notifications"/>{% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %}</div><b class="caret"></b></a>
+        <ul class="dropdown-menu notification-list" style="width: 400px !important;">
             {% localtime on %}
- {% for event in request.user.notifications %}
-                <li>
+{% for event in request.user.notifications %}
+                <li class="container-fluid">
+                    <div class="row-fluid notification-row" style="width: 100%;">
                     {% if event.type == "LIKELOOK" %}
-                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
-                        <span class="message"><span class="placeholder"><p>
-                            <a href="{{ event.actor.url_likes }}">{{ event.actor }}</a> liked your look <a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a>
-                        </p></span></span>
+                        <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
+                        <div class="notification-content col-md-9 col-lg-9">
+                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> liked your look <span class="quote">"</span><a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a><span class="quote">"</span>
+                        </div>
                     {% elif event.type == "FB" %}
-                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
-                        <span class="message"><span class="placeholder"><p>
-                           Your Facebook friend <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> is now on APPRL!                       
-                        </p></span></span>
+                        <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
+                        <div class="notification-content col-md-9 col-lg-9">
+                            Your Facebook friend <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> is now on APPRL! 
+                        </div>
                     {% elif event.type == "SALE" %}
                         {% thumbnail event.product.product_image "32" crop="noop" as im %}
-                        <span class="image"><a href="{{ event.product.get_absolute_url }}"><img class="notification-thumb" src="{{ im.url }}" alt="{{ event.product }}" width="32" height="32"></a></span>
-                        <span class="message"><span class="placeholder"><p>
-                            <a href="{{ event.product.get_absolute_url }}"><i><span class="name">{{ event.product }}</span></i></a> is on sale! <span style="color: #e27b67;">{{ event.sale_new_price }}</span> <span style="text-decoration: line-through;">{{ event.sale_old_price }}</span> {{ event.currency }}
-                        </p></span></span>
+                        <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.product.get_absolute_url }}">
+                        <img class="notification-thumb" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
+                        <div class="notification-content col-md-9 col-lg-9">
+                        <a href="{{ event.product.get_absolute_url }}"><i><span class="name">{{ event.product }}</span></i></a> is on sale! <span style="color: #e27b67;">{{ event.sale_new_price }}</span> <span style="text-decoration: line-through;">{{ event.sale_old_price }}</span> {{ event.currency }}
+                        </div>
                         {% endthumbnail %}
                     {% elif event.type == "FOLLOW" %}
-                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
-                        <span class="message"><span class="placeholder"><p>
-                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> started following you!                   
-                        </p></span></span>
-
+                        <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
+                        <div class="notification-content col-md-9 col-lg-9">
+                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> started following you!
+                        </div>
                     {% endif %}
-                     <span class="time">{{ event.created|since }}</span>
+                    <div class="col-md-2 col-lg-2" style="text-align: center;">
+                        <small class="timestamp">{{ event.created|since }}</small>
+                    </div>
+                    </div>
                 </li>
             {% empty %}
 
@@ -59,6 +68,35 @@
             {% endfor %}
             {% endlocaltime %}
             {% comment %}
+             {% for event in request.user.notifications %}
+                <li>
+                    {% if event.type == "LIKELOOK" %}
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.actor.url_likes }}">{{ event.actor }}</a> liked your look <a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a>
+                        </p></span></span>
+                    {% elif event.type == "FB" %}
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                           Your Facebook friend <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> is now on APPRL!                       
+                        </p></span></span>
+                    {% elif event.type == "SALE" %}
+                        {% thumbnail event.product.product_image "32" crop="noop" as im %}
+                        <span class="image"><a href="{{ event.product.get_absolute_url }}"><img src="{{ im.url }}" alt="{{ event.product }}"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.product.get_absolute_url }}"><i><span class="name">{{ event.product }}</span></i></a> is on sale! <span style="color: #e27b67;">{{ event.sale_new_price }}</span> <span style="text-decoration: line-through;">{{ event.sale_old_price }}</span> {{ event.currency }}
+                        </p></span></span>
+                        {% endthumbnail %}
+                    {% elif event.type == "FOLLOW" %}
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> started following you!                   
+                        </p></span></span>
+
+                    {% endif %}
+                     <span class="time">{{ event.created|since }}</span>
+                </li>
+            {% empty %}
              <div class="row-fluid notification-row" style="width: auto;">
                 <a href="{{ request.user.url_likes }}">
                     <span class="col-md-5"></span>
@@ -74,6 +112,15 @@
 
     <script>
     $(".notification-dropdown").click(function() {
+        $('.timestamp').each(function(i, obj) {
+            var text = obj.textContent;
+            text = text.replace('minutes', 'min');
+            text = text.replace('minute', 'min');
+            text = text.replace(' ago', '');
+            text = text.replace('hour', 'hr');
+            text = text.replace('hours', 'hrs');
+            obj.textContent = text;
+        });
         var user_id = $(this).data("user");
         document.getElementById("unread_count").style.display = 'none';
         $.ajax({
@@ -84,5 +131,7 @@
                 var json = jQuery.parseJSON(response);
             }
         });
+        
     });
+
 </script>
