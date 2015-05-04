@@ -400,7 +400,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         look_photo_url = look_like.look.static_image.url
         merge_vars['LOOKPHOTOURL'] = look_photo_url
         if sender.image:
-            profile_photo_url = get_thumbnail(sender.image, '500').url
+            profile_photo_url = get_thumbnail(sender.avatar_circular_medium(), '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
@@ -435,7 +435,7 @@ def get_avatar_url(user):
     retrieve full url to a profile picture
     """
     if user.image:
-        profile_photo_url =  retrieve_full_url(get_thumbnail(user.image, '500').url)
+        profile_photo_url =  retrieve_full_url(get_thumbnail(user.avatar_circular_medium(), '500').url)
     elif user.facebook_user_id:
         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % user.facebook_user_id
     else:
@@ -466,7 +466,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         merge_vars['PROFILEURL'] = sender_link
 
         if sender.image:
-            profile_photo_url = get_thumbnail(sender.image, '500').url
+            profile_photo_url = get_thumbnail(sender.avatar_circular_medium(), '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
@@ -514,7 +514,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             sender_link = retrieve_full_url(sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
             if sender.image:
-                profile_photo_url = get_thumbnail(sender.image, '500').url
+                profile_photo_url = get_thumbnail(sender.avatar_circular_medium(), '500').url
             elif sender.facebook_user_id:
                 profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
             else:
@@ -589,6 +589,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['BRANDNAME'] = product.manufacturer.name
             merge_vars['PRODUCTNAME'] = product.product_name
             merge_vars['PRODUCTLINK'] = "http://%s%s" % (domain,product.get_absolute_url())
+            merge_vars['BUYLINK'] = "http://%sredirect/%s/Product/0/" % (domain, product.pk)
             merge_vars['OLDPRICE'] = locale_original_price
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
@@ -756,7 +757,7 @@ def send_look_like_summaries(period):
             for liker in look_likes[look]:
                 if not(liker == user and len(likers) <= 20):
                     if liker.image:
-                        profile_photo_url = get_thumbnail(liker.image, '100').url
+                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium(), '100').url
                     elif liker.facebook_user_id:
                         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
                     else:
@@ -817,7 +818,7 @@ def send_product_like_summaries(period):
             for liker in product_likes[product]:
                 if not(liker == user and len(likers) <= 20):
                     if liker.image:
-                        profile_photo_url = get_thumbnail(liker.image, '100').url
+                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium(), '100').url
                     elif liker.facebook_user_id:
                         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
                     else:

@@ -3,43 +3,48 @@
 
     {% load tz %}
     
-    <li class="dropdown notifications">
+    <li class="dropdown notifications hidden-xs">
 
-         <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}"><img src="{% static "images/lightning.png" %}" alt="Notifications"/>{% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %} <b class="caret"></b></a>
-        <ul class="dropdown-menu notification-list" style="width: 500px !important;">
+    <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}">
+
+    <div class="notification-bg-circle"><?xml version="1.0" encoding="utf-8" standalone="no"?>
+                <svg class="lightning-bolt" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g stroke="none" stroke-width="1" fill="none">
+                <g fill="#ffffff">
+                    <path d="M5.56425,5.4157037 L7.61271429,0.231407407 L1.854,0.231407407 L0.297321429,7.78607407 L3.17667857,7.78607407 L1.25228571,15.7685926 L8.70235714,5.4157037 L5.56425,5.4157037 L5.56425,5.4157037 Z"></path>
+                </g>
+                </g>
+
+    {% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %}</div><b class="caret"></b></a>
+        <ul class="dropdown-menu notification-list">
             {% localtime on %}
-            {% for event in request.user.notifications %}
-                
-                <li class="">
-                    <div class="row-fluid notification-row" style="width: auto;">
+ {% for event in request.user.notifications %}
+                <li>
                     {% if event.type == "LIKELOOK" %}
-                        <span class="col-md-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></span>
-                        <span class="notification-content col-md-9">
-                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> liked your look <span class="quote">"</span><a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a><span class="quote">"</span>
-                        </span>
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.actor.url_likes }}">{{ event.actor }}</a> liked your look <a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a>
+                        </p></span></span>
                     {% elif event.type == "FB" %}
-                        <span class="col-md-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></span>
-                        <span class="notification-content col-md-9">
-                            Your Facebook friend <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> is now on APPRL! 
-                        </span>
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                           Your Facebook friend <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> is now on APPRL!                       
+                        </p></span></span>
                     {% elif event.type == "SALE" %}
                         {% thumbnail event.product.product_image "32" crop="noop" as im %}
-                        <span class="col-md-1"><a class="img-circle" href="{{ event.product.get_absolute_url }}">
-                        <img class="notification-thumb" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></span>
-                        <span class="notification-content col-md-9">
-                        <a href="{{ event.product.get_absolute_url }}"><i><span class="name">{{ event.product }}</span></i></a> is on sale! <span style="color: #e27b67;">{{ event.sale_new_price }}</span> <span style="text-decoration: line-through;">{{ event.sale_old_price }}</span> {{ event.currency }}
-                        </span>
+                        <span class="image"><a href="{{ event.product.get_absolute_url }}"><img class="notification-thumb" src="{{ im.url }}" alt="{{ event.product }}" width="32" height="32"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.product.get_absolute_url }}"><i><span class="name">{{ event.product }}</span></i></a> is on sale! <span style="color: #e27b67;">{{ event.sale_new_price }}</span> <span style="text-decoration: line-through;">{{ event.sale_old_price }}</span> {{ event.currency }}
+                        </p></span></span>
                         {% endthumbnail %}
                     {% elif event.type == "FOLLOW" %}
-                        <span class="col-md-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></span>
-                        <span class="notification-content col-md-9">
-                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> started following you!
-                        </span>
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> started following you!                   
+                        </p></span></span>
+
                     {% endif %}
-                    <span class="col-md-2" style="text-align: center;">
-                        <small>{{ event.created|since }}</small>
-                    </span>
-                    </div>
+                     <span class="time">{{ event.created|since }}</span>
                 </li>
             {% empty %}
 

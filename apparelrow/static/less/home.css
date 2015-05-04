@@ -7849,10 +7849,10 @@ h3 {
   overflow: hidden;
   text-align: center;
   z-index: 99999999;
-  background-color: #000000;
+  background-color: #333333;
   color: #EEEEEE;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   line-height: 18px;
   right: 30px;
   bottom: 30px;
@@ -7864,16 +7864,21 @@ h3 {
   transition: all 0.3s ease-in-out;
 }
 .scroll-top-wrapper:hover {
-  background-color: #515151;
+  background-color: #000000;
 }
 .scroll-top-wrapper.show {
   visibility: visible;
   cursor: pointer;
-  opacity: 1.0;
+  opacity: 0.5;
 }
 .scroll-top-wrapper i.fa,
 .scroll-top-wrapper a.fa {
   line-height: inherit;
+}
+.scroll-top-wrapper i {
+  position: absolute;
+  top: 5px;
+  right: 7px;
 }
 #content-container {
   background-color: #ffffff;
@@ -7981,6 +7986,7 @@ body.contest .navbar {
   border-bottom-color: #ffffff;
   position: absolute;
   top: 25px;
+  right: 2px;
 }
 @media screen and (min-width: 768px) {
   .navbar .navbar-form,
@@ -8009,9 +8015,11 @@ body.contest .navbar {
   border-radius: 50%;
   position: absolute;
   top: 5px;
+  left: 3px;
 }
-.notifications a:hover {
-  text-decoration: none !important;
+.notification-dropdown {
+  height: 50px;
+  width: 62px;
 }
 .notifications a {
   color: #EFEFEF !important;
@@ -8019,7 +8027,53 @@ body.contest .navbar {
 }
 .notifications {
   max-height: 55px;
-  padding-bottom: -5px !important;
+}
+.notifications li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  padding: 10px 0;
+  zoom: 1;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+.notifications li:before,
+.notifications li:after {
+  display: table;
+  content: '';
+  zoom: 1;
+}
+.notifications li:after {
+  clear: both;
+}
+.notifications li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.notifications li:last-child {
+  border-bottom: none;
+}
+.notifications small {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.notifications .message {
+  position: relative;
+  left: 40px;
+  top: 0px;
+  max-width: 200px;
+  height: 34px;
+}
+.notifications .message p {
+  line-height: 15px;
+  letter-spacing: 0.01rem;
+}
+.notifications .time {
+  line-height: 1;
+  font-size: 10px;
+  position: absolute;
+  top: 10px;
+  right: 3px;
+  letter-spacing: 0.01rem;
 }
 .notification-list {
   color: #AFAFAF;
@@ -8027,8 +8081,34 @@ body.contest .navbar {
   width: 500px;
   table-layout: fixed;
 }
-.notification-list li {
-  display: table-row;
+.notification-bg-circle {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  background: #333333;
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+.active > .notification-bg-circle {
+  background-color: #FFFFFF;
+}
+.notification-bg-circle:hover,
+.notification-bg-circle.active {
+  background-color: #bbbbbb;
+}
+.notification-bg-circle.active path,
+.notification-bg-circle:hover path {
+  fill: #000000;
+}
+.lightning-bolt {
+  margin: 0 auto;
+  display: block;
+  position: absolute;
+  top: 2px;
+  right: 10px;
+  height: 28px;
 }
 .notification-row {
   border-bottom: 2px solid #333;
@@ -8041,9 +8121,6 @@ body.contest .navbar {
 }
 .notification-row #see-all {
   text-align: center;
-}
-.notifcation-thumb {
-  display: block;
 }
 #search-result .btn {
   margin-bottom: 20px;
