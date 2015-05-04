@@ -1,6 +1,7 @@
 import logging
 import decimal
 import HTMLParser
+from celery.schedules import crontab
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
@@ -27,7 +28,7 @@ from django.utils import timezone
 
 import facebook
 
-from celery.task import task
+from celery.task import task, periodic_task
 
 from apparelrow.apparel.utils import currency_exchange
 
@@ -610,18 +611,18 @@ def get_ref_time(days, monday=False):
             ref_time = ref_time - timedelta(days=(ref_time.isocalendar()[2] - 1))
         return ref_time
 
-def calculate_period(period):
+def calculate_period(period='D'):
     if period == 'D':
         # it is a daily summary
-        period_name = "daily"
+        period_name = 'daily'
         ref_time = get_ref_time(1)
     elif period == 'W':
         # it is a weekly summary
-        period_name = "weekly"
+        period_name = 'weekly'
         ref_time = get_ref_time(7, True)
     elif period == 'M':
         # it is a weekly summary
-        period_name = "monthly"
+        period_name = 'monthly'
         ref_time = get_ref_time(30, True)
     return period_name, ref_time
 
@@ -730,7 +731,16 @@ def create_product_like_summary(period):
 
     return like_dict, users_to_notify
 
-def send_look_like_summaries(period):
+
+@periodic_task(name='apparel.notifications.look_like_daily', run_every=crontab(minute='0', hour='8',))
+def send_look_like_daily_summaries():
+    send_look_like_summaries(period="D")
+
+@periodic_task(name='apparel.notifications.look_like_weekly', run_every=crontab(minute='0', hour='12',day_of_week='friday'))
+def send_look_like_weekly_summaries():
+    send_look_like_summaries(period="W")
+
+def send_look_like_summaries(period="D"):
     look_likes, users_to_notify = create_look_like_summary(period)
     domain = Site.objects.get_current().domain
     #iterate over all users that created any likes within the given period
@@ -789,7 +799,15 @@ def send_look_like_summaries(period):
 
     return
 
-def send_product_like_summaries(period):
+@periodic_task(name='apparel.notifications.product_like_daily', run_every=crontab(minute='0', hour='8',))
+def send_product_like_daily_summaries():
+    send_product_like_summaries("D")
+
+@periodic_task(name='apparel.notifications.product_like_weekly', run_every=crontab(minute='0', hour='8',day_of_week='friday'))
+def send_product_like_weekly_summaries():
+    send_product_like_summaries("W")
+
+def send_product_like_summaries(period="D"):
     product_likes, users_to_notify = create_product_like_summary(period)
     domain = Site.objects.get_current().domain
     #iterate over all users that created any likes within the given period
@@ -850,11 +868,20 @@ def send_product_like_summaries(period):
 
     return
 
+@periodic_task(name='apparel.notifications.earnings_daily', run_every=crontab(minute='0', hour='8',))
+def send_earning_daily_summary():
+    send_earning_summaries("D")
+
+@periodic_task(name='apparel.notifications.earnings_weekly', run_every=crontab(minute='0', hour='8',day_of_week='friday'))
+def send_earning_weekly_summary():
+    send_earning_summaries("W")
+
 def get_vendor_logo(vendor):
     if(vendor.logotype):
         return get_thumbnail(vendor.logotype, '500').url
     else:
         return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
 
 def create_earning_summary(period):
     period_name, interesting_time = calculate_period(period)
@@ -953,6 +980,7 @@ def create_earning_summary(period):
             }
 
     return earning_dict, users_to_notify, period_name
+
 
 def send_earning_summaries(period):
     earnings, users_to_notify, period_name = create_earning_summary(period)
