@@ -8008,8 +8008,9 @@ body.contest .navbar {
   background-color: #67E2B8;
   float: right;
   position: absolute;
-  top: -5px;
-  right: -10px;
+  top: 5px;
+  right: 10px;
+  display: inline-block;
 }
 .notification-thumb {
   border-radius: 50%;

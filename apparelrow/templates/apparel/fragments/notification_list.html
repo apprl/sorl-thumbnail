@@ -20,7 +20,7 @@
 
      {% endcomment %}
 
-        <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}"><div class="notification-bg-circle"><img class="lightning-bolt" src="{% static "images/lightning.png" %}" alt="Notifications"/>{% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %}</div><b class="caret"></b></a>
+        <a class="dropdown-toggle notification-dropdown notification-toggle" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}"><div class="notification-bg-circle"><img class="lightning-bolt" src="{% static "images/lightning.png" %}" alt="Notifications"/></div><b class="caret"></b></a>{% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %}
         <ul class="dropdown-menu notification-list" style="width: 400px !important;">
             {% localtime on %}
 {% for event in request.user.notifications %}
