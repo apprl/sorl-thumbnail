@@ -1028,13 +1028,15 @@ class ShopEmbed(models.Model):
 # ShopProduct
 #
 
+# Shop embed wrong name as it is really pointing towards the shop instance? /klas
 class ShopProduct(models.Model):
     shop_embed = models.ForeignKey(Shop, on_delete=models.CASCADE)
     product    = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 @receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save_cache')
 def shop_product_save(instance, **kwargs):
-    empty_embed_shop_cache.apply_async(args=[instance.shop_embed.id], countdown=1)
+    for shop_embed in ShopEmbed.objects.filter(shop=instance.shop_embed):
+        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=1)
 
 #
 # Shop
