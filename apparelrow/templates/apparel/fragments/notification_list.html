@@ -3,7 +3,7 @@
 
     {% load tz %}
     
-    <li class="dropdown notifications hidden-xs">
+    <li class="dropdown notifications">
      {% comment %}
      <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}">
 
@@ -29,7 +29,7 @@
                     {% if event.type == "LIKELOOK" %}
                         <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
                         <div class="notification-content col-md-9 col-lg-9">
-                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> liked your look <span class="quote">"</span><a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a><span class="quote">"</span>
+                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> liked your look <a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a>
                         </div>
                     {% elif event.type == "FB" %}
                         <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
@@ -132,6 +132,10 @@
             }
         });
         
+    });
+
+    $('.dropdown-menu').click(function(e) {
+          e.stopPropagation();
     });
 
 </script>
