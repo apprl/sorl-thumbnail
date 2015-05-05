@@ -50,8 +50,12 @@ App.Views.LookEditToolbar = Backbone.View.extend({
 
     back_component: function() {
         if (this.active_component) {
-            var z_index = this.active_component._min_zindex() -1;
-            this.active_component.$el.css('z-index', Math.max(0,z_index));
+            var z_index = Math.max(0,this.active_component._min_zindex()-1);
+            if (z_index == 0) {
+                // add 1 to all other components
+                App.Events.trigger('lookedit:increase_zindex', this.active_component);
+            }
+            this.active_component.$el.css('z-index', z_index);
             this.active_component.model.set({z_index: z_index}, {silent: true});
         }
     },

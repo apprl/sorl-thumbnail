@@ -62,7 +62,7 @@ class EmailForm(forms.ModelForm):
 class NotificationForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('like_look_created', 'follow_user', 'facebook_friends')
+        fields = ('like_look_created', 'follow_user', 'facebook_friends', 'summary_mails', 'product_like_summaries', 'look_like_summaries', 'earning_summaries')
         #fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
         widgets = {
             'comment_product_wardrobe': forms.RadioSelect,
@@ -72,7 +72,21 @@ class NotificationForm(forms.ModelForm):
             'like_look_created': forms.RadioSelect,
             'follow_user': forms.RadioSelect,
             'facebook_friends': forms.RadioSelect,
+            'summary_mails': forms.RadioSelect,
+            'product_like_summaries': forms.RadioSelect,
+            'look_like_summaries': forms.RadioSelect,
+            'earning_summaries': forms.RadioSelect,
+            'friend_summaries': forms.RadioSelect,
+            'brand_summaries': forms.RadioSelect,
+            'follow_recommendations': forms.RadioSelect,
         }
+
+    def __init__(self, *args, **kwargs):
+        from django.forms.widgets import HiddenInput
+        is_publisher = kwargs.pop('is_publisher',None)
+        super(NotificationForm, self).__init__(*args, **kwargs)
+        if not is_publisher:
+            self.fields['earning_summaries'].widget = HiddenInput()
 
 
 class NewsletterForm(forms.ModelForm):

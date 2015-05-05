@@ -140,7 +140,7 @@ def likedlooks(request, profile, form, page=0):
     #logger.info("looks called")
 
     #retrieve looks for which a like for the current user exists and is active
-    looks = get_model('apparel', 'Look').published_objects.filter(likes__user=profile, likes__active=True)
+    looks = get_model('apparel', 'Look').published_objects.filter(likes__user=profile, likes__active=True).order_by('-created')
 
     paged_result = get_paged_result(looks, 12, request.GET.get('page', '1'))
 
@@ -285,7 +285,7 @@ def settings_notification(request):
 
         return HttpResponseRedirect(reverse('settings-notification'))
 
-    form = NotificationForm(instance=request.user)
+    form = NotificationForm(instance=request.user, is_publisher=request.user.is_partner)
     newsletter_form = NewsletterForm(instance=request.user)
 
     return render(request, 'profile/settings_notification.html', {'notification_form': form, 'newsletter_form': newsletter_form})

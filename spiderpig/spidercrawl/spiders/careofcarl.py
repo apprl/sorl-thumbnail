@@ -53,7 +53,7 @@ class CareOfCarlSpider(CSVFeedSpider, AffiliateMixin):
         item['regular_price'] = row.get('Price')
         item['discount_price'] = item['regular_price']
         item['currency'] = 'SEK'
-        item['in_stock'] = row.get('In Stock') == 'Ja'
+        item['in_stock'] = bool(row.get('Availability') == 'Ja')
         item['stock'] = '-'
         item['image_urls'] = [row.get('Product image', '')]
         return item

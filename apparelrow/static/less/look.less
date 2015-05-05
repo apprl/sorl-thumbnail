@@ -1,4 +1,10 @@
 .look-detail-page {
+    #collage-background {
+
+      .img-responsive {
+        width: 100%;
+      }
+    }
     .body-header {
         .draft-text.published {
             display: none;
@@ -128,6 +134,7 @@
       max-width: 200px;
       h4 {
         margin-top: 0px;
+        font-size: 14px;
       }
     }
 }
@@ -167,11 +174,6 @@
 }
 
 .look-collage .collage-image {
-  &.flipped img {
-    -webkit-transform: scale(-1, 1);
-    -ms-transform: scale(-1, 1); // IE9+
-    transform: scale(-1, 1);
-  }
   img {
     width: 100% !important;
     height: auto !important;
