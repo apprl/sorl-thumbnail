@@ -325,32 +325,41 @@ class User(AbstractUser):
     @cached_property
     def avatar_circular(self):
         """ Small size circular avatar using CustomCircularEngine """
+        old_engine = default.engine
+        default.engine = CustomCircularEngine()
         if self.image:
-            old_engine = default.engine
-            default.engine = CustomCircularEngine()
             image = get_thumbnail(self.image, '50x50', format="PNG").url
-            default.engine = old_engine
-            return image
+        if self.facebook_user_id:
+            image_path = 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
+            image = get_thumbnail(image_path, '50x50', format="PNG").url
+        default.engine = old_engine
+        return image
 
     @cached_property
     def avatar_circular_medium(self):
         """ Medium size circular avatar using CustomCircularEngine """
+        old_engine = default.engine
+        default.engine = CustomCircularEngine()
         if self.image:
-            old_engine = default.engine
-            default.engine = CustomCircularEngine()
-            image = get_thumbnail(self.image, '125', format="PNG").url
-            default.engine = old_engine
-            return image
+            image = get_thumbnail(self.image, '125x125', format="PNG").url
+        if self.facebook_user_id:
+            image_path = 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
+            image = get_thumbnail(image_path, '125x125', format="PNG").url
+        default.engine = old_engine
+        return image
 
     @cached_property
     def avatar_circular_large(self):
         """ Large size circular avatar using CustomCircularEngine """
+        old_engine = default.engine
+        default.engine = CustomCircularEngine()
         if self.image:
-            old_engine = default.engine
-            default.engine = CustomCircularEngine()
-            image = get_thumbnail(self.image, '208', format="PNG").url
-            default.engine = old_engine
-            return image
+            image = get_thumbnail(self.image, '208x208', format="PNG").url
+        if self.facebook_user_id:
+            image_path = 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
+            image = get_thumbnail(image_path, '208x208', format="PNG").url
+        default.engine = old_engine
+        return image
 
     @cached_property
     def url_likes(self):
