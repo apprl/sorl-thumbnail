@@ -1,0 +1,88 @@
+    {% load thumbnail apparel_extras staticfiles %}
+
+
+    {% load tz %}
+    
+    <li class="dropdown notifications hidden-xs">
+
+    <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}">
+
+    <div class="notification-bg-circle"><?xml version="1.0" encoding="utf-8" standalone="no"?>
+                <svg class="lightning-bolt" width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g stroke="none" stroke-width="1" fill="none">
+                <g fill="#ffffff">
+                    <path d="M5.56425,5.4157037 L7.61271429,0.231407407 L1.854,0.231407407 L0.297321429,7.78607407 L3.17667857,7.78607407 L1.25228571,15.7685926 L8.70235714,5.4157037 L5.56425,5.4157037 L5.56425,5.4157037 Z"></path>
+                </g>
+                </g>
+
+    {% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %}</div><b class="caret"></b></a>
+        <ul class="dropdown-menu notification-list">
+            {% localtime on %}
+ {% for event in request.user.notifications %}
+                <li>
+                    {% if event.type == "LIKELOOK" %}
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.actor.url_likes }}">{{ event.actor }}</a> liked your look <a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a>
+                        </p></span></span>
+                    {% elif event.type == "FB" %}
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                           Your Facebook friend <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> is now on APPRL!                       
+                        </p></span></span>
+                    {% elif event.type == "SALE" %}
+                        {% thumbnail event.product.product_image "32" crop="noop" as im %}
+                        <span class="image"><a href="{{ event.product.get_absolute_url }}"><img class="notification-thumb" src="{{ im.url }}" alt="{{ event.product }}" width="32" height="32"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.product.get_absolute_url }}"><i><span class="name">{{ event.product }}</span></i></a> is on sale! <span style="color: #e27b67;">{{ event.sale_new_price }}</span> <span style="text-decoration: line-through;">{{ event.sale_old_price }}</span> {{ event.currency }}
+                        </p></span></span>
+                        {% endthumbnail %}
+                    {% elif event.type == "FOLLOW" %}
+                        <span class="image"><a href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" width="32" height="32"></a></span>
+                        <span class="message"><span class="placeholder"><p>
+                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> started following you!                   
+                        </p></span></span>
+
+                    {% endif %}
+                     <span class="time">{{ event.created|since }}</span>
+                </li>
+            {% empty %}
+
+                <li><div class="row-fluid notification-row" style="width: auto;">
+
+                        <span class="notification-content col-md-12">
+                            You don't have any notifications yet!
+                        </span>
+
+                
+                </div></li>
+            {% endfor %}
+            {% endlocaltime %}
+            {% comment %}
+             <div class="row-fluid notification-row" style="width: auto;">
+                <a href="{{ request.user.url_likes }}">
+                    <span class="col-md-5"></span>
+                    <span id="see-all" class="col-md-2">
+                        See all
+                    </span>
+                    <span class="col-md-5"></span>
+                </a>
+            </div>
+            {% endcomment %}
+        </ul>
+    </li>
+
+    <script>
+    $(".notification-dropdown").click(function() {
+        var user_id = $(this).data("user");
+        document.getElementById("unread_count").style.display = 'none';
+        $.ajax({
+            type: "post",
+            url: "{% url 'notifications-seen' %}",
+            data: { user_id: user_id},
+            success: function (response) {
+                var json = jQuery.parseJSON(response);
+            }
+        });
+    });
+</script>

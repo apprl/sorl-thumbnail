@@ -2,12 +2,15 @@
 import logging
 import json
 import datetime
+from apparelrow.profile.models import NotificationEvent
+from django.http.response import HttpResponseNotAllowed
 import os.path
 import string
 import urllib
 import urlparse
 from apparelrow.apparel.utils import currency_exchange
 import decimal
+import re
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
@@ -160,6 +163,16 @@ def notification_follow_brand(request):
     url = request.build_absolute_uri(profile.get_absolute_url())
     return render(request, 'apparel/notifications/follow_brand.html', {'object': profile, 'url': url})
 
+def notifications_seen_all(request):
+    if request.method == 'POST' and request.is_ajax():
+        user_id = request.POST.get('user_id', None)
+        queryset = get_model('profile', 'NotificationEvent').objects.filter(owner_id = user_id)
+        for notificationevent in queryset:
+            notificationevent.seen = True
+            notificationevent.save()
+        return HttpResponse()
+    else:
+        return HttpResponseNotAllowed("Only POST requests allowed")
 #
 # Facebook calls
 #
@@ -586,6 +599,7 @@ def look_like(request, slug, action):
     if not created:
         look_like.active = default_active
         look_like.save()
+    NotificationEvent.objects.push_notification(look.user, "LIKELOOK", request.user, look=look)
 
     if action == 'like':
         process_like_look_created.delay(look.user, request.user, look_like)
@@ -612,7 +626,6 @@ def look_list(request, search=None, contains=None, gender=None):
 
     queryset = Look.published_objects.filter(user__is_hidden=False)
 
-
     #add different tabs views
     view = request.GET.get('view', 'all')
     profile = request.user
@@ -631,23 +644,20 @@ def look_list(request, search=None, contains=None, gender=None):
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
         queryset = queryset.filter(id__in=[doc.django_id for doc in results.get_docs()])
     elif view and view != 'all':
-       # logger.info("there is a view parameter for look list")
         if view == 'latest' or 'f' in request.GET:
             queryset = queryset.filter(published=True).filter(gender__in=gender_list.get(gender)).order_by('-created')
         elif view == 'friends':
             user_ids = []
             if is_authenticated:
                 user_ids = get_model('profile', 'Follow').objects.filter(user=request.user, active=True).values_list('user_follow_id', flat=True)
-                queryset = queryset.filter(gender__in=gender_list.get(gender)).filter(user__in=user_ids)
+                queryset = queryset.filter(gender__in=gender_list.get(gender)).filter(user__in=user_ids).order_by('-created')
     elif contains:
         queryset = queryset.filter(components__product__slug=contains).distinct()
     else:
-       # logger.info("using deault for gender %s" % gender)
         queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
 
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page', 1))
-    logger.info("paged result says %s about hasnext" % paged_result.has_next)
 
     if request.is_ajax():
         return render(request, 'apparel/fragments/look_list.html', {
@@ -702,15 +712,12 @@ def look_detail(request, slug):
     base_url = request.build_absolute_uri('/')[:-1]
 
     wrapper_element = {'width': '100', 'height': '100'}
+
     # Components
     if look.display_with_component == 'C':
         components = look.collage_components.select_related('product')
         # look image is responsible for scaling the look view. Since the look width and height might not be different we need to rescale
-        if float(look.height)/look.image_height > float(look.width)/look.image_width:
-            wrapper_element['width'] = str(100*float(look.image_height)/look.height*float(look.width)/look.image_width)
-        else:
-            wrapper_element['height'] = str(100*float(look.image_width)/look.width*float(look.height)/look.image_height)
-
+        wrapper_element = {'width': '96', 'height': '96'}
     elif look.display_with_component == 'P':
         components = look.photo_components.select_related('product')
 
@@ -735,7 +742,8 @@ def look_detail(request, slug):
             'likes': likes,
             'base_url': base_url,
             'is_liked': is_liked,
-            'wrapper_element': wrapper_element
+            'wrapper_element': wrapper_element,
+            'resolution': '%sx%s' % (look.width, look.height,)
         },
         context_instance=RequestContext(request),
     )
@@ -833,6 +841,41 @@ def product_lookup_by_theimp(request, key):
     json_data = json.loads(products[0].json)
     return json_data.get('site_product', None)
 
+def parse_luisaviaroma_fragment(fragment):
+    seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)
+    collectionId = re.search(r'CollectionId=(\w+)?', fragment).group(1)
+    itemId = re.search(r'ItemId=(\w+)?', fragment).group(1).zfill(3)
+    return "%s-%s%s" % (seasonId, collectionId, itemId)
+
+def product_lookup_asos_nelly(url):
+    parsedurl = urlparse.urlsplit(url)
+    path = parsedurl.path
+    if("nelly" in parsedurl.netloc):
+        #get rid of categories for nelly links, only keep product name (last two "/"")
+        noToRemove = path.count("/") - 1
+        while noToRemove > 0:
+            pos = path.find("/")
+            path = path[pos+1:]
+            noToRemove -= 1
+        key = path
+    elif("asos" in parsedurl.netloc):
+        prodId = re.search(r'iid=(\w+)?', parsedurl.query).group(1)
+        key = "%s?iid=%s" % (path, prodId)
+    elif("luisaviaroma" in parsedurl.netloc):
+        if parsedurl.fragment: # the "original" links don't have this, they should never land here though
+            key = parse_luisaviaroma_fragment(parsedurl.fragment)
+        else:
+            key = url
+    else:
+        return None
+    products = get_model('theimp', 'Product').objects.filter(key__icontains=key)
+    if len(products) < 1:
+        return None
+
+    return products[0].pk
+    #json_data = json.loads(products[0].json)
+    #return json_data.get('site_product', None)
+
 def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
@@ -855,6 +898,9 @@ def product_lookup(request):
                 key = ''.join(temp)
 
             product_pk = product_lookup_by_theimp(request, key)
+            if not product_pk:
+                product_pk = product_lookup_asos_nelly(key)
+
 
     # TODO: must go through theimp database right now to fetch site product by real url
     #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))

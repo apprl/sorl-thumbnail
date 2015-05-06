@@ -14,7 +14,7 @@ App.Views.LookEditFilterTabs = Backbone.View.extend({
     },
 
     add_tab: function(parent, id, title, icon, view) {
-        this.$el.append('<li><a class="tab-'+id+'" href="#"><i class="glyphicon glyphicon-'+icon+'"></i> <span>'+title+'</span></a></li>');
+        this.$el.append('<li><a class="tab-'+id+'" href="#"><img src="'+static_path+icon+'" width="16" height="16"></img> <span>'+title+'</span></a></li>');
         view.render().$el.appendTo(parent.$el).hide();
     },
 

@@ -9,8 +9,8 @@
      <div class="row">
         <div class="col-lg-12">
             <ul class="alphabet list-inline">
-                <li><a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">{% trans "Created" %}</a></li>
-                <li><a{% if request.path == likedlooks_url %} class="selected"{% endif %} href="{{ likedlooks_url }}">{% trans "Liked" %}</a></li>
+                <li><a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">{{profile.looks}} {% trans "Created" %}</a></li>
+                <li><a{% if request.path == likedlooks_url %} class="selected"{% endif %} href="{{ likedlooks_url }}">{{profile.look_likes_count}} {% trans "Liked" %}</a></li>
                 {% if profile.is_brand %}
                   <li><a{% if request.path == brandlooks_url %} class="selected"{% endif %} href="{{ brandlooks_url }}">{% trans "Using Brand" %}</a></li>
                 {% endif %}

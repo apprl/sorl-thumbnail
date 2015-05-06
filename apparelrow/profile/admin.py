@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
 from apparelrow.profile.models import Follow
-from apparelrow.profile.models import NotificationCache
+from apparelrow.profile.models import NotificationCache, NotificationEvent
 from apparelrow.profile.models import PaymentDetail
 
 
@@ -134,6 +134,12 @@ admin.site.unregister(Group)
 #
 
 admin.site.register(NotificationCache)
+
+class NotificationEventAdmin(admin.ModelAdmin):
+    readonly_fields = ('created',)
+    list_display = ('owner', 'actor', 'type', 'product', 'look', 'seen')
+
+admin.site.register(NotificationEvent, NotificationEventAdmin)
 
 class FollowAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'modified')

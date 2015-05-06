@@ -1293,6 +1293,13 @@ class LookComponent(models.Model):
             s.append('-o-transform: rotate%sdeg); ' % self.rotation)
             s.append('-ms-transform: rotate(%sdeg); ' % self.rotation)
 
+        if self.flipped:
+            s.append('transform: scale(-1, 1);')
+            s.append('-moz-transform: scale(-1, 1);')
+            s.append('-webkit-transform: scale(-1, 1);')
+            s.append('-o-transform: scale(-1, 1);')
+            s.append('-ms-transform: scale(-1, 1);')
+
         return ' '.join(s)
 
     @property

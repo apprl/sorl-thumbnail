@@ -322,18 +322,24 @@ def build_static_look_image(look_id):
         offset_left = (settings.APPAREL_LOOK_SIZE[0] - thumbnail.width) / 2
         offset_top = (settings.APPAREL_LOOK_SIZE[1] - thumbnail.height) / 2
         image.paste(background, (offset_left, offset_top))
-        #look.width = thumbnail.width
-        #look.height = thumbnail.height
     else:
-        offset_left = (settings.APPAREL_LOOK_SIZE[0] - look.width)/2
-        offset_top = (settings.APPAREL_LOOK_SIZE[1] - look.height)/2
+        if float(look.width)/look.height < float(settings.APPAREL_LOOK_SIZE[0])/settings.APPAREL_LOOK_SIZE[1]:
+            wrapper_height = settings.APPAREL_LOOK_SIZE[1]
+            wrapper_width = float(look.width)/look.height*wrapper_height
+        else:
+            wrapper_width = settings.APPAREL_LOOK_SIZE[0]
+            wrapper_height = float(look.height)/look.width*wrapper_width
+
+        offset_left = int(settings.APPAREL_LOOK_SIZE[0] - wrapper_width)/2
+        offset_top = int(settings.APPAREL_LOOK_SIZE[1] - wrapper_height)/2
+
 
     for component in look.display_components.order_by('z_index').all():
         if look.display_with_component == 'P':
             component_image = Image.open(finders.find('images/look-hotspot.png')).resize((component_size, component_size), Image.ANTIALIAS)
             if thumbnail.width < look.width or thumbnail.height < look.height:
                 component.left = int(component.left*thumbnail.width/look.width)
-                component.top = (component.top*thumbnail.height/look.height)
+                component.top = int(component.top*thumbnail.height/look.height)
         else:
             if not component.product.product_image:
                 continue
@@ -349,7 +355,10 @@ def build_static_look_image(look_id):
                 component_image = Image.open(StringIO(requests.get(thumbnail.url).content))
             else:
                 component_image = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
-            component_image = component_image.resize((component.width, component.height), Image.ANTIALIAS).convert('RGBA')
+
+            component_image = component_image.resize((int(float(component.width)/look.width*wrapper_width), int(float(component.height)/look.height*wrapper_height)), Image.ANTIALIAS).convert('RGBA')
+            component.top = int(float(component.top)/look.height*wrapper_height)
+            component.left = int(float(component.left)/look.width*wrapper_width)
             if component.rotation:
                 rotation = component_image.rotate(-component.rotation, Image.BICUBIC, 1)
                 blank = Image.new('RGBA', rotation.size, (255, 255, 255, 0))
@@ -357,7 +366,7 @@ def build_static_look_image(look_id):
             if component.flipped:
                 component_image = component_image.transpose(Image.FLIP_LEFT_RIGHT)
 
-        image.paste(component_image, (offset_left + component.left, offset_top + component.top), component_image)
+        image.paste(component_image, (int(offset_left + component.left), int(offset_top + component.top)), component_image)
 
     temp_handle = StringIO()
     image.save(temp_handle, 'JPEG', quality=99)

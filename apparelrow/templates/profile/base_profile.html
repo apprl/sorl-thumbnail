@@ -89,7 +89,7 @@ $(document).ready(function() {
                     </li>
                     <li>
                         <a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">
-                            {% blocktrans count profile.looks as look_count %}{{look_count}} Look{% plural %}{{look_count}} Looks{% endblocktrans %}
+                            {% blocktrans count profile.total_look_count as look_count %}{{look_count}} Look{% plural %}{{look_count}} Looks{% endblocktrans %}
                         </a>
                     </li>
                     {% if profile.shops and request.user.is_authenticated and request.user == profile%}
