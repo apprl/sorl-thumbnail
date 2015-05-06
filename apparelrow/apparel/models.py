@@ -449,6 +449,8 @@ def product_like_post_save(sender, instance, **kwargs):
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
+    # This is somewhat redundant due to a change in id:s from previously. Not super keen to change too much too fast before
+    # understanding fully the consequences.
     like_shop_ids = get_model('apparel','ShopEmbed').objects.filter(shop__user=instance.user,shop__show_liked=True).values_list("id",flat=True)
     for shop_embed in get_model('apparel','ShopEmbed').objects.filter(id__in=like_shop_ids):
         empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=30)
