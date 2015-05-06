@@ -372,7 +372,7 @@ def shop_widget(request, shop_id=None):
     content['object'] = shop_embed
     response = render(request, 'apparel/fragments/shop_widget.html', content)
 
-    nginx_key = reverse('embed-shop', args=[shop_embed.id])
+    """nginx_key = reverse('embed-shop', args=[shop_embed.id])
     # If request is considered an AJAX request we will receive and cache json which we do not want. Depending on
     if request.META.get("HTTP_X_REQUESTED_WITH",None):
         request.META["HTTP_X_REQUESTED_WITH"] = None
@@ -383,6 +383,7 @@ def shop_widget(request, shop_id=None):
     # Should already be fine but will check it anyways
     if not get_cache('nginx').set(nginx_key,None):
         get_cache('nginx').set(nginx_key, cached_shop_response.content, 60*60*24*20)
+    """
     return response
 
 
@@ -417,10 +418,10 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
     language = embed_shop.language
 
     response = browse_products(request, template, shop, embed_shop, language)
-
-    nginx_key = reverse('embed-shop', args=[embed_shop_id])
-    log.warn("Hitting the app server for embedded shop %s " %(nginx_key))
-    get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
+    if not request.is_ajax():
+        nginx_key = reverse('embed-shop', args=[embed_shop_id])
+        log.warn("Hitting the app server for embedded shop %s " % (nginx_key))
+        get_cache('nginx').set(nginx_key, response.content, 60*60*24)
     return response
 
 def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):

@@ -450,8 +450,8 @@ def product_like_post_save(sender, instance, **kwargs):
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
     like_shop_ids = get_model('apparel','ShopEmbed').objects.filter(shop__user=instance.user,shop__show_liked=True).values_list("id",flat=True)
-    for shop_embed in get_model('apparel','ShopEmbed').objects.filter(shop_id__in=like_shop_ids):
-        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=1)
+    for shop_embed in get_model('apparel','ShopEmbed').objects.filter(id__in=like_shop_ids):
+        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=30)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -1036,7 +1036,7 @@ class ShopProduct(models.Model):
 @receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save_cache')
 def shop_product_save(instance, **kwargs):
     for shop_embed in ShopEmbed.objects.filter(shop=instance.shop_embed):
-        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=1)
+        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=60)
 
 #
 # Shop
