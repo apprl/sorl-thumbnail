@@ -333,6 +333,8 @@ class TestEmbeddingShops(TestCase):
         self.assertEqual(content.get("url"), "/shop/create/api/1")
         self.assertEqual(content.get("id"), 1)
         response = self.client.post(reverse('shop-widget',args=(content.get("id"),))[3:])
+        url = reverse('embed-shop',args=(content.get("id"),))
+        self.client.get(url)
         from django.core.cache import get_cache
         cache = get_cache('nginx')
         nginx_key = reverse('embed-shop', args=[1])
