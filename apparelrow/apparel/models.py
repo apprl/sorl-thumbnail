@@ -449,7 +449,11 @@ def product_like_post_save(sender, instance, **kwargs):
     else:
         get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
-    empty_embed_shop_cache.apply_async(args=[instance.user.pk], countdown=1)
+    # This is somewhat redundant due to a change in id:s from previously. Not super keen to change too much too fast before
+    # understanding fully the consequences.
+    like_shop_ids = get_model('apparel','ShopEmbed').objects.filter(shop__user=instance.user,shop__show_liked=True).values_list("id",flat=True)
+    for shop_embed in get_model('apparel','ShopEmbed').objects.filter(id__in=like_shop_ids):
+        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=30)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -993,7 +997,7 @@ class Shop(models.Model):
     title       = models.CharField(_('Title'), max_length=200, validators=[validate_not_spaces])
     slug        = AutoSlugField(_('Slug Name'), populate_from=("title",), blank=True,
                     help_text=_('Used for URLs, auto-generated from name if blank'), max_length=80)
-    description = models.TextField(_('Look description'), null=True, blank=True)
+    description = models.TextField(_('Shop description'), null=True, blank=True)
     user        = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='shop')
     show_liked  = models.BooleanField(default=False) # If true the products field will be ignored
     products    = models.ManyToManyField(Product, through='ShopProduct')
@@ -1026,13 +1030,15 @@ class ShopEmbed(models.Model):
 # ShopProduct
 #
 
+# Shop embed wrong name as it is really pointing towards the shop instance? /klas
 class ShopProduct(models.Model):
     shop_embed = models.ForeignKey(Shop, on_delete=models.CASCADE)
     product    = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 @receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save_cache')
 def shop_product_save(instance, **kwargs):
-    empty_embed_shop_cache.apply_async(args=[instance.shop_embed.user.pk], countdown=1)
+    for shop_embed in ShopEmbed.objects.filter(shop=instance.shop_embed):
+        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=60)
 
 #
 # Shop
