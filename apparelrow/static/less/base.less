@@ -571,12 +571,16 @@ body.contest {
             color: #ffffff;
         }
     }
+     @media (min-width: @screen-desktop) {
+       .navbar-nav > .dropdown > a .caret {
+            position:absolute;
+            top:25px;
+            right: 2px;
+        }
+     }
     .navbar-nav > .dropdown > a .caret {
         border-top-color: #ffffff;
         border-bottom-color: #ffffff;
-        position:absolute;
-        top:25px;
-        right: 2px;
     }
     @media screen and (min-width: @grid-float-breakpoint) {
         .navbar-form, .navbar-collapse {
@@ -595,20 +599,23 @@ body.contest {
 //
 // Notification center dropdown
 // ----------------------------------------------------------------------------
+
 .unread_count {
     color:#FFFFFF;
     background-color:#67E2B8;
     float:right;
     position:absolute;
     top:5px;
-    right:5px;
+    right:10px;
+  display: inline-block;
 }
 
 .notification-thumb {
     border-radius: 50%;
-    position:absolute;
-    top:5px;
-    left: 3px;
+    height: 34px;
+	position:absolute;
+    top:0px;
+    left:8px;
 }
 
 .notification-dropdown {
@@ -625,63 +632,15 @@ body.contest {
     max-height: 55px;
 }
 
-.notifications li {
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    position: relative;
-    padding: 10px 0;
-    zoom: 1;
-    -webkit-transition: background-color .2s;
-    transition: background-color .2s;
-}
-.notifications li:before, .notifications li:after {
-    display: table;
-    content: '';
-    zoom: 1;
-}
-.notifications li:after {
-    clear: both;
-}
-
-.notifications li:hover {
-    background-color: rgba(255,255,255,0.1);
-}
-
-.notifications li:last-child {
-  border-bottom: none;
-}
-
-.notifications small {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-
-.notifications .message {
-    position: relative;
-    left: 40px;
-    top: 0px;
-    max-width: 200px;
-    height: 34px;
-}
-
-.notifications .message p {
-    line-height: 15px;
-    letter-spacing: 0.01rem;
-}
-.notifications .time {
-    line-height: 1;
-    font-size: 10px;
-    position: absolute;
-    top: 10px;
-    right: 3px;
-    letter-spacing: 0.01rem;
-}
-
 .notification-list {
     color: #AFAFAF;
     background: #000000;
     width: 500px;
     table-layout: fixed;
+     background: -webkit-linear-gradient(#000000, #333333); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#000000, #333333); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#000000, #333333); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#000000, #333333); /* Standard syntax */
 }
 
 .notification-bg-circle {
@@ -695,39 +654,63 @@ body.contest {
     right: 15px;
 }
 
-.active > .notification-bg-circle {
-  background-color: #FFFFFF;
-}
-
-.notification-bg-circle:hover, .notification-bg-circle.active {
-  background-color: #bbbbbb;
-}
-
-.notification-bg-circle.active path, .notification-bg-circle:hover path {
-			fill: #000000;
+.notification-bg-circle:hover {
+    background: #BBBBBB;
 }
 
 .lightning-bolt {
     margin: 0 auto;
     display: block;
     position: absolute;
-    top: 2px;
-    right: 10px;
-    height: 28px;
-}
-
-.notification-row {
-    border-bottom: 2px solid #333;
+    top: 9px;
+    right: 12px;
+    height: 16px;
 }
 
 .notification-content {
-    vertical-align: middle;
-    line-height: 32px;
     padding-top: 5px;
     padding-bottom: 5px;
+    max-width: 300px;
+	height: 34px;
+    line-height: 12px;
+	letter-spacing: 0.01rem;
+}
+
+.timestamp {
+  font-size: 10px;
+  padding-top: 12px;
 }
 .notification-row #see-all{
     text-align: center;
+}
+
+.notifications li {
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    position: relative;
+    padding: 5px 0;
+    zoom: 1;
+    -webkit-transition: background-color .2s;
+    transition: background-color .2s;
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+.notifications li:before, .notifications li:after {
+    display: table;
+    content: '';
+    zoom: 1;
+}
+.notifications li:after {
+    clear: both;
+}
+
+.notifications li:hover {
+    background-color: rgba(255,255,255,0.1);
+  background-position: 0;
+}
+
+.notifications li:last-child {
+  border-bottom: none;
 }
 
 //
