@@ -732,11 +732,11 @@ def create_product_like_summary(period):
     return like_dict, users_to_notify
 
 
-@periodic_task(name='apparel.notifications.look_like_daily', run_every=crontab(minute='0', hour='8',))
+#@periodic_task(name='apparel.notifications.look_like_daily', run_every=crontab(minute='0', hour='8',))
 def send_look_like_daily_summaries():
     send_look_like_summaries(period="D")
 
-@periodic_task(name='apparel.notifications.look_like_weekly', run_every=crontab(minute='0', hour='12',day_of_week='friday'))
+#@periodic_task(name='apparel.notifications.look_like_weekly', run_every=crontab(minute='0', hour='12',day_of_week='friday'))
 def send_look_like_weekly_summaries():
     send_look_like_summaries(period="W")
 
@@ -799,11 +799,11 @@ def send_look_like_summaries(period="D"):
 
     return
 
-@periodic_task(name='apparel.notifications.product_like_daily', run_every=crontab(minute='0', hour='8',))
+#@periodic_task(name='apparel.notifications.product_like_daily', run_every=crontab(minute='0', hour='8',))
 def send_product_like_daily_summaries():
     send_product_like_summaries("D")
 
-@periodic_task(name='apparel.notifications.product_like_weekly', run_every=crontab(minute='0', hour='8',day_of_week='friday'))
+#@periodic_task(name='apparel.notifications.product_like_weekly', run_every=crontab(minute='0', hour='8',day_of_week='friday'))
 def send_product_like_weekly_summaries():
     send_product_like_summaries("W")
 
@@ -868,11 +868,11 @@ def send_product_like_summaries(period="D"):
 
     return
 
-@periodic_task(name='apparel.notifications.earnings_daily', run_every=crontab(minute='0', hour='8',))
+#@periodic_task(name='apparel.notifications.earnings_daily', run_every=crontab(minute='0', hour='8',))
 def send_earning_daily_summary():
     send_earning_summaries("D")
 
-@periodic_task(name='apparel.notifications.earnings_weekly', run_every=crontab(minute='0', hour='8',day_of_week='friday'))
+#@periodic_task(name='apparel.notifications.earnings_weekly', run_every=crontab(minute='0', hour='8',day_of_week='friday'))
 def send_earning_weekly_summary():
     send_earning_summaries("W")
 
