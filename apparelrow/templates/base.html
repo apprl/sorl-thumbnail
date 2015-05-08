@@ -184,12 +184,13 @@
                     </li>
                     {% endif %}
                 </ul>
-
+                {% comment %}
                 <ul class="nav navbar-nav navbar-right hidden-xs">
                     {% if request.user.is_authenticated %}
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}    
                     {% endif %}
                 </ul>
+                {% endcomment %}
 
                 <ul class="nav navbar-nav navbar-nav-main">
                     {% if request.user.is_authenticated %}
