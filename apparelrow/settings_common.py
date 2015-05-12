@@ -787,6 +787,8 @@ CELERY_ROUTES = ({
     'apparel.notifications.look_like_weekly': {'queue': 'background'},
     'apparel.notifications.product_like_daily': {'queue': 'background'},
     'apparel.notifications.product_like_weekly': {'queue': 'background'},
+    'apparel.notifications.user_activity_daily': {'queue': 'background'},
+    'apparel.notifications.user_activity_weekly': {'queue': 'background'},
     'apparel.notifications.earnings_daily': {'queue': 'background'},
     'apparel.notifications.earnings_weekly': {'queue': 'background'}},)
 
