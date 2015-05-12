@@ -10999,6 +10999,7 @@ html.look-type-C .collage {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
   border-width: 0px;
 }
 html.look-type-C .container,
