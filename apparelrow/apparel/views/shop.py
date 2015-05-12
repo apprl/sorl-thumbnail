@@ -1,7 +1,8 @@
+from copy import copy, deepcopy
 import decimal
 import json
 
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, HttpRequest
 from django.conf import settings
 from django.shortcuts import render_to_response
 
@@ -419,9 +420,19 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
 
     response = browse_products(request, template, shop, embed_shop, language)
     if not request.is_ajax():
+        temp_request = HttpRequest()
+        temp_request.GET = deepcopy(request.GET)
+        temp_request.META = request.META
+        temp_request.user = request.user
+        # Removing all query parameters
+        for value in ['category', 'manufacturer', 'color', 'store','manufactor','price','discount']:
+            try:
+                del temp_request.GET[value]
+            except:
+                pass
         nginx_key = reverse('embed-shop', args=[embed_shop_id])
-        log.warn("Hitting the app server for embedded shop %s " % (nginx_key))
-        get_cache('nginx').set(nginx_key, response.content, 60*60*24)
+        log.info("Hitting the app server for embedded shop %s " % (nginx_key))
+        get_cache('nginx').set(nginx_key, response.content, 60*60*24*2)
     return response
 
 def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):
