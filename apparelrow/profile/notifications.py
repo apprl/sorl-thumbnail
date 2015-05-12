@@ -744,7 +744,7 @@ def create_product_like_summary(period):
 def send_look_like_daily_summaries():
     send_look_like_summaries(period="D")
 
-#@periodic_task(name='apparel.notifications.look_like_weekly', run_every=crontab(minute='0', hour='15',day_of_week='wednesday'))
+#@periodic_task(name='apparel.notifications.look_like_weekly', run_every=crontab(minute='0', hour='20',day_of_week='wednesday'))
 def send_look_like_weekly_summaries():
     send_look_like_summaries(period="W")
 
@@ -807,11 +807,11 @@ def send_look_like_summaries(period="D"):
 
     return
 
-#@periodic_task(name='apparel.notifications.product_like_daily', run_every=crontab(minute='0', hour='20',))
+#@periodic_task(name='apparel.notifications.product_like_daily', run_every=crontab(minute='30', hour='9',))
 def send_product_like_daily_summaries():
     send_product_like_summaries("D")
 
-#@periodic_task(name='apparel.notifications.product_like_weekly', run_every=crontab(minute='0', hour='15',day_of_week='monday'))
+#@periodic_task(name='apparel.notifications.product_like_weekly', run_every=crontab(minute='30', hour='9',day_of_week='monday'))
 def send_product_like_weekly_summaries():
     send_product_like_summaries("W")
 
