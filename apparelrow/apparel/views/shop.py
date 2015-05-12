@@ -420,8 +420,8 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
     response = browse_products(request, template, shop, embed_shop, language)
     if not request.is_ajax():
         nginx_key = reverse('embed-shop', args=[embed_shop_id])
-        log.warn("Hitting the app server for embedded shop %s " % (nginx_key))
-        get_cache('nginx').set(nginx_key, response.content, 60*60*24)
+        log.info("Hitting the app server for embedded shop %s " % (nginx_key))
+        get_cache('nginx').set(nginx_key, response.content, 60*60*24*2)
     return response
 
 def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):
