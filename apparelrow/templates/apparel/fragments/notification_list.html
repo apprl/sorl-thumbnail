@@ -2,7 +2,6 @@
 
 
     {% load tz %}
-    
     <li class="dropdown notifications">
      {% comment %}
      <a class="dropdown-toggle notification-dropdown" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}">
@@ -20,50 +19,87 @@
 
      {% endcomment %}
 
-        <a class="dropdown-toggle notification-dropdown notification-toggle" data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}"><div class="notification-bg-circle"><img class="lightning-bolt" src="{% static "images/lightning.png" %}" alt="Notifications"/></div><b class="caret"></b></a>{% if request.user.unread_count > 0 %}<span id="unread_count" class="badge unread_count">{{ request.user.unread_count }}</span>{% endif %}
-        <ul class="dropdown-menu notification-list" style="width: 400px !important;">
+        <a class="notifications-toggler" href="{{ request.user.url_likes }}"> <!--data-toggle="dropdown" data-user="{{ request.user.id }}" href="{{ request.user.url_likes }}">-->
+				<?xml version="1.0" encoding="utf-8" standalone="no"?>
+				<svg width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g stroke="none" stroke-width="1" fill="none">
+                        <g fill="#ffffff">
+                            <path d="M5.56425,5.4157037 L7.61271429,0.231407407 L1.854,0.231407407 L0.297321429,7.78607407 L3.17667857,7.78607407 L1.25228571,15.7685926 L8.70235714,5.4157037 L5.56425,5.4157037 L5.56425,5.4157037 Z"></path>
+                        </g>
+                    </g>
+				</svg>
+				{% if request.user.unread_count > 0 %}<span id="unread_count" class="ncp-badge">{{ request.user.unread_count }}</span>{% endif %}
+        </a>
+        <ul class="ncp-notifications dropdown-menu notification-list" style="width: 400px !important;">
             {% localtime on %}
-{% for event in request.user.notifications %}
-                <li class="container-fluid">
-                    <div class="row-fluid notification-row" style="width: 100%;">
+            {% for event in request.user.notifications %}
+                <li>
                     {% if event.type == "LIKELOOK" %}
-                        <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
-                        <div class="notification-content col-md-9 col-lg-9">
-                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> liked your look <a href="{{ event.look.get_absolute_url }}">{{ event.look.title }}</a>
-                        </div>
+                        <span class="ncp-image">
+                            <a href="{{ event.actor.url_likes }}">
+                                <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32">
+                            </a>
+                        </span>
+                        <span class="ncp-message">
+                            <span class="ncp-placeholder">
+                                <p>
+                                    <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong></a> liked your look
+                                    <a href="{{ event.look.get_absolute_url }}">
+                                        <strong>{{ event.look.title }}</strong>
+                                    </a>
+                                </p>
+                            </span>
+                        </span>
                     {% elif event.type == "FB" %}
-                        <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
-                        <div class="notification-content col-md-9 col-lg-9">
-                            Your Facebook friend <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> is now on APPRL! 
-                        </div>
-                    {% elif event.type == "SALE" %}
-                        {% thumbnail event.product.product_image "32" crop="noop" as im %}
-                        <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.product.get_absolute_url }}">
-                        <img class="notification-thumb" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
-                        <div class="notification-content col-md-9 col-lg-9">
-                        <a href="{{ event.product.get_absolute_url }}"><i><span class="name">{{ event.product }}</span></i></a> is on sale! <span style="color: #e27b67;">{{ event.sale_new_price }}</span> <span style="text-decoration: line-through;">{{ event.sale_old_price }}</span> {{ event.currency }}
-                        </div>
-                        {% endthumbnail %}
+                        <span class="ncp-image">
+                            <a href="{{ event.actor.url_likes }}">
+                                <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/>
+                            </a>
+                        </span>
+                        <span class="ncp-message">
+                            <span class="ncp-placeholder">
+                                <p>Your Facebook friend <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> is now on APPRL!</span></a>
+                                </p>
+                            </span>
+                        </span>
+                    {% elif event.type == "SALE" %}                        
+                        <span class="ncp-image">
+                            <a href="{{ event.product.get_absolute_url }}">
+								{% thumbnail event.product.product_image "32" crop="noop" as im %}
+                                <img class="img-circle" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/>
+								{% endthumbnail %}
+                            </a>
+                        </span>
+                        <span class="ncp-message">
+                           <span class="ncp-placeholder">
+                               <p>
+                                   <a href="{{ event.product.get_absolute_url }}">
+                                       <strong>{{ event.product }}</strong>
+                                   </a> is on sale! 
+                               </p>
+                           </span>
+                        </span>
+                        
                     {% elif event.type == "FOLLOW" %}
-                        <div class="col-md-1 col-lg-1"><a class="img-circle" href="{{ event.actor.url_likes }}"><img class="notification-thumb" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></div>
-                        <div class="notification-content col-md-9 col-lg-9">
-                            <a href="{{ event.actor.url_likes }}"><span class="name">{{ event.actor }}</span></a> started following you!
-                        </div>
+                        <span class="ncp-image">
+                            <a href="{{ event.actor.url_likes }}">
+                                <img class="img-circle"  src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/>
+                            </a></span>
+                        <span class="ncp-message">
+                            <span class="ncp-placeholder">
+                                <p>
+                                    <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> started following you!</a>
+                                </p>
+                            </span>
+                        </span>
                     {% endif %}
-                    <div class="col-md-2 col-lg-2" style="text-align: center;">
-                        <small class="timestamp">{{ event.created|since }}</small>
-                    </div>
-                    </div>
-                </li>
+                    <span class="ncp-time">{{ event.created|since }}</span>
+				</li>
             {% empty %}
-
                 <li><div class="row-fluid notification-row" style="width: auto;">
-
                         <span class="notification-content col-md-12">
                             You don't have any notifications yet!
                         </span>
-
-                
                 </div></li>
             {% endfor %}
             {% endlocaltime %}
@@ -111,7 +147,7 @@
     </li>
 
     <script>
-    $(".notification-dropdown").click(function() {
+    /*$(".notification-dropdown").click(function() {
         $('.timestamp').each(function(i, obj) {
             var text = obj.textContent;
             text = text.replace('minutes', 'min');
@@ -136,6 +172,44 @@
 
     $('.dropdown-menu').click(function(e) {
           e.stopPropagation();
+    });*/
+
+    /*
+    Display panel
+    Basic functionality for toggling on/off the notifications center panel
+    */
+    $(document).ready(function(){
+        $( '.notifications-toggler' ).click(function(e) {
+            if ( $( '.ncp-notifications' ).is( ':visible') ) {
+                $( '.ncp-notifications' ).fadeOut(200);
+                $( '.notifications-toggler' ).removeClass( 'active' );
+            }
+            else {
+                $( '.ncp-notifications' ).fadeIn(200);
+                $( '.notifications-toggler' ).addClass( 'active' );
+        }
+		/* Mark all notifications as seen */
+		var user_id = $(this).data("user");
+        document.getElementById("unread_count").style.display = 'none';
+        $.ajax({
+            type: "post",
+            url: "{% url 'notifications-seen' %}",
+            data: { user_id: user_id},
+            success: function (response) {
+                var json = jQuery.parseJSON(response);
+            }
+        });
+        return false;
+        });
+
+        $(document).on( 'click', function(event) {
+            if (!$(event.target).closest( '.ncp-notifications' ).length) {
+                if ( $( '.ncp-notifications' ).is( ':visible') ) {
+                    $( '.ncp-notifications' ).fadeOut(200);
+                    $( '.notifications-toggler' ).toggleClass( 'active' );
+                }
+            }
+        });
     });
 
-</script>
+    </script>
