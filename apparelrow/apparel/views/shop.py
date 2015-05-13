@@ -405,7 +405,8 @@ def dialog_embed(request, shop_id=None):
 #
 def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
     """
-        If no shop is found in cache then this method will be called.
+        If no shop is found in cache then this method will be called. Also if a user interacts with the template
+        this method is called as well and theres no caching.
     """
     if embed_shop_id is None:
         return HttpResponse('Not found', status=404)
@@ -426,7 +427,7 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
         temp_request.GET = deepcopy(request.GET)
         temp_request.META = request.META
         temp_request.user = request.user
-        # Removing all query parameters
+        # Removing all query parameters to generate a standard store
         for value in ['category', 'manufacturer', 'color', 'store','manufactor','price','discount']:
             try:
                 del temp_request.GET[value]
@@ -435,7 +436,7 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
         nginx_key = reverse('embed-shop', args=[embed_shop_id])
         log.info("Hitting the app server for embedded shop %s " % (nginx_key))
         temp_response = browse_products(temp_request, template, shop, embed_shop, language)
-        get_cache('nginx').set(nginx_key, temp_response.content, 60*60*24)
+        get_cache('nginx').set(nginx_key, temp_response.content, 60*60*2)
     return response
 
 def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):
