@@ -1,6 +1,7 @@
 import logging
 import decimal
 import HTMLParser
+from celery.schedules import crontab
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.mail import EmailMultiAlternatives
@@ -27,7 +28,7 @@ from django.utils import timezone
 
 import facebook
 
-from celery.task import task
+from celery.task import task, periodic_task
 
 from apparelrow.apparel.utils import currency_exchange
 
@@ -400,7 +401,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         look_photo_url = look_like.look.static_image.url
         merge_vars['LOOKPHOTOURL'] = look_photo_url
         if sender.image:
-            profile_photo_url = get_thumbnail(sender.image, '500').url
+            profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
@@ -435,7 +436,7 @@ def get_avatar_url(user):
     retrieve full url to a profile picture
     """
     if user.image:
-        profile_photo_url =  retrieve_full_url(get_thumbnail(user.image, '500').url)
+        profile_photo_url =  retrieve_full_url(get_thumbnail(user.avatar_circular_medium, '500').url)
     elif user.facebook_user_id:
         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % user.facebook_user_id
     else:
@@ -466,7 +467,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         merge_vars['PROFILEURL'] = sender_link
 
         if sender.image:
-            profile_photo_url = get_thumbnail(sender.image, '500').url
+            profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
@@ -514,7 +515,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             sender_link = retrieve_full_url(sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
             if sender.image:
-                profile_photo_url = get_thumbnail(sender.image, '500').url
+                profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
             elif sender.facebook_user_id:
                 profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
             else:
@@ -589,6 +590,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['BRANDNAME'] = product.manufacturer.name
             merge_vars['PRODUCTNAME'] = product.product_name
             merge_vars['PRODUCTLINK'] = "http://%s%s" % (domain,product.get_absolute_url())
+            merge_vars['BUYLINK'] = "http://%sredirect/%s/Product/0/" % (domain, product.pk)
             merge_vars['OLDPRICE'] = locale_original_price
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
@@ -609,18 +611,18 @@ def get_ref_time(days, monday=False):
             ref_time = ref_time - timedelta(days=(ref_time.isocalendar()[2] - 1))
         return ref_time
 
-def calculate_period(period):
+def calculate_period(period='D'):
     if period == 'D':
         # it is a daily summary
-        period_name = "daily"
+        period_name = 'daily'
         ref_time = get_ref_time(1)
     elif period == 'W':
         # it is a weekly summary
-        period_name = "weekly"
+        period_name = 'weekly'
         ref_time = get_ref_time(7, True)
     elif period == 'M':
         # it is a weekly summary
-        period_name = "monthly"
+        period_name = 'monthly'
         ref_time = get_ref_time(30, True)
     return period_name, ref_time
 
@@ -628,6 +630,14 @@ def send_activity_summaries(period):
     users_to_notify = get_model('profile', 'User').objects.filter(summary_mails=period)
     for user in users_to_notify:
         create_individual_summary(user, period)
+
+#@periodic_task(name='apparel.notifications.user_activity_daily', run_every=crontab(minute='0', hour='15'))
+def send_activity_daily_summaries():
+    send_activity_summaries("D")
+
+#@periodic_task(name='apparel.notifications.user_activity_weekly', run_every=crontab(minute='0', hour='15',day_of_week='saturday'))
+def send_activity_weekly_summaries():
+    send_activity_summaries("W")
 
 def create_individual_summary(user, period):
     period_name, ref_time = calculate_period(period)
@@ -729,7 +739,16 @@ def create_product_like_summary(period):
 
     return like_dict, users_to_notify
 
-def send_look_like_summaries(period):
+
+#@periodic_task(name='apparel.notifications.look_like_daily', run_every=crontab(minute='0', hour='20',))
+def send_look_like_daily_summaries():
+    send_look_like_summaries(period="D")
+
+#@periodic_task(name='apparel.notifications.look_like_weekly', run_every=crontab(minute='0', hour='20',day_of_week='wednesday'))
+def send_look_like_weekly_summaries():
+    send_look_like_summaries(period="W")
+
+def send_look_like_summaries(period="D"):
     look_likes, users_to_notify = create_look_like_summary(period)
     domain = Site.objects.get_current().domain
     #iterate over all users that created any likes within the given period
@@ -756,7 +775,7 @@ def send_look_like_summaries(period):
             for liker in look_likes[look]:
                 if not(liker == user and len(likers) <= 20):
                     if liker.image:
-                        profile_photo_url = get_thumbnail(liker.image, '100').url
+                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium, '100').url
                     elif liker.facebook_user_id:
                         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
                     else:
@@ -788,7 +807,15 @@ def send_look_like_summaries(period):
 
     return
 
-def send_product_like_summaries(period):
+#@periodic_task(name='apparel.notifications.product_like_daily', run_every=crontab(minute='30', hour='9',))
+def send_product_like_daily_summaries():
+    send_product_like_summaries("D")
+
+#@periodic_task(name='apparel.notifications.product_like_weekly', run_every=crontab(minute='30', hour='9',day_of_week='monday'))
+def send_product_like_weekly_summaries():
+    send_product_like_summaries("W")
+
+def send_product_like_summaries(period="D"):
     product_likes, users_to_notify = create_product_like_summary(period)
     domain = Site.objects.get_current().domain
     #iterate over all users that created any likes within the given period
@@ -817,7 +844,7 @@ def send_product_like_summaries(period):
             for liker in product_likes[product]:
                 if not(liker == user and len(likers) <= 20):
                     if liker.image:
-                        profile_photo_url = get_thumbnail(liker.image, '100').url
+                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium, '100').url
                     elif liker.facebook_user_id:
                         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
                     else:
@@ -849,11 +876,20 @@ def send_product_like_summaries(period):
 
     return
 
+#@periodic_task(name='apparel.notifications.earnings_daily', run_every=crontab(minute='0', hour='7',))
+def send_earning_daily_summary():
+    send_earning_summaries("D")
+
+#@periodic_task(name='apparel.notifications.earnings_weekly', run_every=crontab(minute='0', hour='7',day_of_week='friday'))
+def send_earning_weekly_summary():
+    send_earning_summaries("W")
+
 def get_vendor_logo(vendor):
     if(vendor.logotype):
         return get_thumbnail(vendor.logotype, '500').url
     else:
         return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+
 
 def create_earning_summary(period):
     period_name, interesting_time = calculate_period(period)
@@ -952,6 +988,7 @@ def create_earning_summary(period):
             }
 
     return earning_dict, users_to_notify, period_name
+
 
 def send_earning_summaries(period):
     earnings, users_to_notify, period_name = create_earning_summary(period)

@@ -17,7 +17,8 @@
     <link rel="apple-touch-icon" sizes="120x120" href="{% static "images/apple-touch-icon-120x120.png" %}">
     <link rel="apple-touch-icon" sizes="152x152" href="{% static "images/apple-touch-icon-152x152.png" %}">
     <link href='http://fonts.googleapis.com/css?family=Lato:400|IM+Fell+Great+Primer:400italic' rel='stylesheet' type='text/css'>
-
+    <meta property="og:image" content="{% static "images/share-image.jpg" %}">
+    <link rel="image_src" href="{% static "images/share-image.jpg" %}">
 
     {% compressed_css 'bootstrap' %}
     {% block extra-styles %}
@@ -195,8 +196,7 @@
                     </li>
                     {% endif %}
                 </ul>
-
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right hidden-xs">
                     {% if request.user.is_authenticated %}
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}    
                     {% endif %}
@@ -334,8 +334,6 @@
     <div class="scroll-top-wrapper ">
         <span class="scroll-top-inner">
             <i class="glyphicon glyphicon-chevron-up"></i>
-            <br/>
-            <b>TOP</b>
         </span>
     </div>
     <script>

@@ -8,11 +8,12 @@ from django.db.models import get_model
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import get_language, ugettext_lazy as _
 from django.contrib.auth import get_user_model
 from jsonfield import JSONField
+from django.utils.functional import cached_property
 
-
+from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import dehydrate
 import logging
 
@@ -171,6 +172,30 @@ class ClickCost(models.Model):
     amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Click cost'))
     currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
 
+    def _calculate_exchange_price(self):
+        """
+        Return price and currency based on the selected currency. If no
+        currency is selected currency language is converted to a currency if
+        possible else APPAREL_BASE_CURRENCY is used.
+        """
+        if not hasattr(self, '_calculated_locale_cost'):
+            to_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
+            rate = currency_exchange(to_currency, self.currency)
+
+            self._calculated_locale_cost = (rate * self.amount, to_currency)
+
+        return self._calculated_locale_cost
+
+    @cached_property
+    def locale_price(self):
+        price, _ = self._calculate_exchange_price()
+        return price
+
+    @cached_property
+    def locale_currency(self):
+        _, currency = self._calculate_exchange_price()
+        return currency
+
 
 class Signup(models.Model):
     name = models.CharField(_('Your name'), max_length=255)
@@ -285,7 +310,7 @@ class UserEarning(models.Model):
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=False, on_delete=models.PROTECT)
     amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2)
-    date = models.DateTimeField(_('Payout Date'), default=timezone.now, null=True, blank=True)
+    date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, null=False, blank=False, db_index=True)
     paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES, null=False, blank=False)
 

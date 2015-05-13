@@ -137,13 +137,13 @@ class User(AbstractUser):
     facebook_friends = models.CharField(max_length=1, choices=FB_FRIEND_CHOICES, default='A',
             help_text=_('When a Facebook friend has joined Apprl'))
     summary_mails = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
-            help_text=_('Receive summaries of recent activities'))
-    product_like_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
-            help_text=_('Receive summaries of about who else likes the same products'))
-    look_like_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
-            help_text=_('Receive summaries of about who else likes the same looks'))
+            help_text=_('The latest updates on Apprl for you'))
+    product_like_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='D',
+            help_text=_('When someone likes the same product as you'))
+    look_like_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='D',
+            help_text=_('When someone likes the same look as you'))
     earning_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='D',
-            help_text=_('Summary about your most recent earnings to find out what is driving your sales'))
+            help_text=_('When you have earned money'))
     friend_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
             help_text=_('Summary with the latest from the people I follow'))
     brand_summaries = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',

@@ -39,6 +39,14 @@ class Product(BaseModel):
         return 'Product(key=%s)' % (self.key,)
 
 
+    def _get_image_path(self,file_root=None):
+        import simplejson
+        import os
+        from apparelrow import settings
+        json_obj = simplejson.loads(self.json)
+        return os.path.join(settings.APPAREL_PRODUCT_IMAGE_ROOT if not file_root else file_root,json_obj.get("scraped").get("images")[0].get("path"))
+
+
 class Vendor(BaseModel):
     name = models.CharField(max_length=128)
     affiliate_identifier = models.CharField(max_length=128, null=True, blank=True)

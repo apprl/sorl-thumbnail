@@ -1,7 +1,8 @@
+from copy import copy, deepcopy
 import decimal
 import json
 
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, HttpRequest
 from django.conf import settings
 from django.shortcuts import render_to_response
 
@@ -32,6 +33,9 @@ from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gend
 from apparelrow.apparel.models import ShopEmbed
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
+import logging
+
+log = logging.getLogger(__name__)
 
 from apparelrow.profile.models import Follow
 
@@ -197,6 +201,10 @@ class ShopCreateView(View):
 
 
     def put(self, request, pk=None, *args, **kwargs):
+        """
+            Updating an existing shop widget inside the "create shop" web admin
+        """
+
         if pk is not None and pk is not 0:
             shop = get_object_or_404(get_model('apparel', 'Shop'), pk=pk)
         else:
@@ -316,7 +324,6 @@ class ShopCreateView(View):
 
         response = JSONResponse(shop_instance_to_dict(shop), status=201)
         response['Location'] = reverse('create_shop', args=[shop.pk])
-
         return response
 
 
@@ -364,8 +371,21 @@ def shop_widget(request, shop_id=None):
 
     shop_embed.save()
     content['object'] = shop_embed
+    response = render(request, 'apparel/fragments/shop_widget.html', content)
 
-    return render(request, 'apparel/fragments/shop_widget.html', content)
+    """nginx_key = reverse('embed-shop', args=[shop_embed.id])
+    # If request is considered an AJAX request we will receive and cache json which we do not want. Depending on
+    if request.META.get("HTTP_X_REQUESTED_WITH",None):
+        request.META["HTTP_X_REQUESTED_WITH"] = None
+    cached_shop_response = embed_shop(request,embed_shop_id=shop_embed.id)
+    if not cached_shop_response.status_code == 200:
+        log.error("Unable to embed shop (%s/%s) (embed,shop) url (%s) in nginx upstream cache because received %s." %
+                  (shop_embed.id,shop.id,nginx_key,cached_shop_response.status_code,))
+    # Should already be fine but will check it anyways
+    if not get_cache('nginx').set(nginx_key,None):
+        get_cache('nginx').set(nginx_key, cached_shop_response.content, 60*60*24*20)
+    """
+    return response
 
 
 def dialog_embed(request, shop_id=None):
@@ -384,6 +404,10 @@ def dialog_embed(request, shop_id=None):
 # Embed
 #
 def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
+    """
+        If no shop is found in cache then this method will be called. Also if a user interacts with the template
+        this method is called as well and theres no caching.
+    """
     if embed_shop_id is None:
         return HttpResponse('Not found', status=404)
 
@@ -396,7 +420,23 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
     language = embed_shop.language
 
     response = browse_products(request, template, shop, embed_shop, language)
+    if not request.is_ajax():
+        # This should probably be done in an async job in the future
 
+        temp_request = HttpRequest()
+        temp_request.GET = deepcopy(request.GET)
+        temp_request.META = request.META
+        temp_request.user = request.user
+        # Removing all query parameters to generate a standard store
+        for value in ['category', 'manufacturer', 'color', 'store','manufactor','price','discount']:
+            try:
+                del temp_request.GET[value]
+            except:
+                pass
+        nginx_key = reverse('embed-shop', args=[embed_shop_id])
+        log.info("Hitting the app server for embedded shop %s " % (nginx_key))
+        temp_response = browse_products(temp_request, template, shop, embed_shop, language)
+        get_cache('nginx').set(nginx_key, temp_response.content, 60*60*3)
     return response
 
 def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):

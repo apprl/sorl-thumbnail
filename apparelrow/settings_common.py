@@ -110,6 +110,8 @@ VENDOR_LOCATION_MAPPING = {
     "JC": ["SE"],
     "Nelly":["SE"],
     "Nelly No":["NO"],
+    "Gina Tricot NO":["NO"],
+    "Gina Tricot":["SE"],
     "Panos Emporio":["SE"],
     "Boozt se":["SE"],
     "Boozt no":["NO"],
@@ -673,6 +675,7 @@ APPAREL_MULTI_GENDER_COOKIE = 'multigender'
 APPAREL_LOCATION_COOKIE = 'location'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
+NGINX_SHOP_RESET_KEY = "shopembed-reset-%s"
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/rss-feed/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR = 'images/brand-avatar.png'
@@ -781,7 +784,15 @@ CELERY_ROUTES = ({
     'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.clicks_summary': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'}},)
+    'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'},
+    'apparel.notifications.look_like_daily': {'queue': 'background'},
+    'apparel.notifications.look_like_weekly': {'queue': 'background'},
+    'apparel.notifications.product_like_daily': {'queue': 'background'},
+    'apparel.notifications.product_like_weekly': {'queue': 'background'},
+    'apparel.notifications.user_activity_daily': {'queue': 'background'},
+    'apparel.notifications.user_activity_weekly': {'queue': 'background'},
+    'apparel.notifications.earnings_daily': {'queue': 'background'},
+    'apparel.notifications.earnings_weekly': {'queue': 'background'}},)
 
 # LOGGING CONFIGURATION
 LOGGING = {

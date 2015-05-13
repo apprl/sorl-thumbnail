@@ -50,6 +50,7 @@ urlpatterns = patterns('',
     url(r'^dialog/embed/shop/(?P<shop_id>\d+)/$', 'apparelrow.apparel.views.shop.dialog_embed', name='dialog-shop-embed'),
 
     # Shop embed - wardrobe
+    # embed-shop is deprecated??
     url(r'^embed/shop/(?P<user_id>\d+)/(?P<language>\w+)/(?P<gender>\w+)/$', 'apparelrow.apparel.browse.shop_embed', name='shop-embed'),
     url(r'^widget/shop/$', 'apparelrow.apparel.browse.shop_widget', name='shop-widget'),
 
@@ -183,9 +184,9 @@ urlpatterns = patterns('',
     # Extra admin
 
     # Mailchimp - email
+    url(r'^mailchimp/webhook/$', 'apparelrow.apparel.email.mailchimp_webhook'),
     url(r'^admin/csv/users/$', 'apparelrow.apparel.email.admin_user_list_csv'),
     url(r'^admin/mail/weekly/$', 'apparelrow.apparel.email.generate_weekly_mail'),
-    url(r'^admin/mailchimp/webhook/$', 'apparelrow.apparel.email.mailchimp_webhook'),
     url(r'^admin/mail/custom/$', 'apparelrow.apparel.views.custom_email.admin', name='custom-email-admin'),
 
     url(r'^admin/dashboard/kpi/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard'),
