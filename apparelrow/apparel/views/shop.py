@@ -1,7 +1,8 @@
+from copy import copy, deepcopy
 import decimal
 import json
 
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect, HttpRequest
 from django.conf import settings
 from django.shortcuts import render_to_response
 
@@ -404,7 +405,8 @@ def dialog_embed(request, shop_id=None):
 #
 def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
     """
-        If no shop is found in cache then this method will be called.
+        If no shop is found in cache then this method will be called. Also if a user interacts with the template
+        this method is called as well and theres no caching.
     """
     if embed_shop_id is None:
         return HttpResponse('Not found', status=404)
@@ -419,9 +421,22 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
 
     response = browse_products(request, template, shop, embed_shop, language)
     if not request.is_ajax():
+        # This should probably be done in an async job in the future
+
+        temp_request = HttpRequest()
+        temp_request.GET = deepcopy(request.GET)
+        temp_request.META = request.META
+        temp_request.user = request.user
+        # Removing all query parameters to generate a standard store
+        for value in ['category', 'manufacturer', 'color', 'store','manufactor','price','discount']:
+            try:
+                del temp_request.GET[value]
+            except:
+                pass
         nginx_key = reverse('embed-shop', args=[embed_shop_id])
         log.info("Hitting the app server for embedded shop %s " % (nginx_key))
-        get_cache('nginx').set(nginx_key, response.content, 60*60*24*2)
+        temp_response = browse_products(temp_request, template, shop, embed_shop, language)
+        get_cache('nginx').set(nginx_key, temp_response.content, 60*60*3)
     return response
 
 def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):
