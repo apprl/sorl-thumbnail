@@ -658,7 +658,7 @@ def create_individual_summary(user, period):
     for event in events:
         if event.type == "LIKELOOK":
             #only include 3 items
-            if merge_vars['looklikes'].length == 3:
+            if len(merge_vars['looklikes']) == 3:
                 continue
             details = {
                 'name': event.look.title,
@@ -670,7 +670,7 @@ def create_individual_summary(user, period):
             is_not_empty = True
         elif event.type == "SALE":
             #only include 3 items
-            if merge_vars['sales'].length == 3:
+            if len(merge_vars['sales']) == 3:
                 continue
             details = {
                 'name': event.product.product_name,
@@ -682,7 +682,7 @@ def create_individual_summary(user, period):
             is_not_empty = True
         elif event.type == "FOLLOW":
             #only include 3 items
-            if merge_vars['follows'].length == 3:
+            if len(merge_vars['follows']) == 3:
                 continue
             details = {
                 'name': event.actor.display_name,
@@ -696,7 +696,7 @@ def create_individual_summary(user, period):
     merge_vars['products'] = []
     for productlike in latest_likes:
         #only include 3 items
-        if merge_vars['products'].length == 3:
+        if len(merge_vars['products']) == 3:
             continue
         product = productlike.product
         details = {
