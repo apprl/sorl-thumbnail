@@ -7983,15 +7983,6 @@ body.contest .navbar {
     display: inline;
   }
 }
-.unread_count {
-  color: #FFFFFF;
-  background-color: #67E2B8;
-  float: right;
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  display: inline-block;
-}
 .notification-thumb {
   border-radius: 50%;
   height: 34px;
@@ -8087,6 +8078,157 @@ body.contest .navbar {
 }
 .notifications li:last-child {
   border-bottom: none;
+}
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+header {
+  height: 50px;
+  background-color: black;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+  line-height: 50px;
+}
+.wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+}
+.ncp-badge {
+  border: none !important;
+  position: absolute;
+  top: -6px;
+  background-color: #67E2B8;
+  display: inline-block;
+  color: white;
+  text-align: center;
+}
+.notifications-toggler {
+  padding: 0 !important;
+  position: relative;
+  float: right;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  background-color: #333333;
+  display: inline-block;
+  text-align: center;
+  margin-top: 9px;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+  padding-left: 1px;
+}
+.notifications-toggler svg {
+  height: 100%;
+}
+.notifications-toggler img {
+  vertical-align: middle;
+}
+.notifications-toggler path {
+  -webkit-transition: fill .2s;
+  transition: fill .2s;
+}
+.notifications-toggler:hover,
+.notifications-toggler.active {
+  background-color: #ffffff !important;
+}
+.notifications-toggler.active path,
+.notifications-toggler:hover path {
+  fill: #000000 !important;
+}
+.ncp-notifications {
+  display: none;
+  font-size: 12px;
+  position: absolute;
+  top: 50px;
+  right: -16px;
+  width: 100%;
+  max-width: 320px;
+  color: #cccccc;
+  background: -webkit-linear-gradient(#000000, #333333);
+  background: -o-linear-gradient(#000000, #333333);
+  background: -moz-linear-gradient(#000000, #333333);
+  background: linear-gradient(#000000, #333333);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+}
+.ncp-notifications strong {
+  color: white;
+}
+.ncp-notifications ul {
+  list-style: none;
+}
+.ncp-notifications li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  padding: 10px;
+  zoom: 1;
+  height: 54px;
+  display: block;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+.ncp-notifications li:after {
+  clear: both;
+}
+.ncp-notifications li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.ncp-notifications small {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.ncp-notifications img {
+  margin-right: 10px;
+  vertical-align: top;
+}
+.ncp-notifications .ncp-image {
+  height: 34px;
+  float: left;
+}
+.ncp-notifications span {
+  display: block;
+}
+.ncp-notifications .ncp-message {
+  float: left;
+  max-width: 200px;
+  height: 34px;
+}
+.ncp-notifications .ncp-message p {
+  line-height: 15px;
+  letter-spacing: 0.01rem;
+}
+.ncp-notifications .ncp-time {
+  line-height: 1;
+  font-size: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  letter-spacing: 0.01rem;
+}
+.ncp-notifications li:before,
+.ncp-notifications li:after {
+  display: table;
+  content: '';
+  zoom: 1;
+}
+.ncp-placeholder {
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.ncp-button {
+  display: block;
 }
 #search-result .btn {
   margin-bottom: 20px;

@@ -1,7 +1,6 @@
     {% load thumbnail apparel_extras staticfiles %}
-
-
     {% load tz %}
+
     <li class="dropdown notifications">
         <a class="dropdown-toggle notifications-toggler" href="{{ request.user.url_likes }}" data-toggle="dropdown" data-user="{{ request.user.id }}">
 				<?xml version="1.0" encoding="utf-8" standalone="no"?>
@@ -12,7 +11,7 @@
                         </g>
                     </g>
 				</svg>
-				{% if request.user.unread_count > 0 %}<span id="unread_count" class="ncp-badge">{{ request.user.unread_count }}</span>{% endif %}
+				{% if request.user.unread_count > 0 %}<span id="unread_count" class="unread_count ncp-badge badge">{{ request.user.unread_count }}</span>{% endif %}
         </a>
         <ul class="ncp-notifications dropdown-menu notification-list" style="width: 400px !important;">
             {% localtime on %}
@@ -26,7 +25,7 @@
                         </span>
                         <span class="ncp-message">
                             <span class="ncp-placeholder">
-                                <p>
+                                <p>F
                                     <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong></a> liked your look
                                     <a href="{{ event.look.get_absolute_url }}">
                                         <strong>{{ event.look.title }}</strong>
@@ -131,32 +130,9 @@
     </li>
 
     <script>
-    /*$(".notification-dropdown").click(function() {
-        $('.timestamp').each(function(i, obj) {
-            var text = obj.textContent;
-            text = text.replace('minutes', 'min');
-            text = text.replace('minute', 'min');
-            text = text.replace(' ago', '');
-            text = text.replace('hour', 'hr');
-            text = text.replace('hours', 'hrs');
-            obj.textContent = text;
-        });
-        var user_id = $(this).data("user");
-        document.getElementById("unread_count").style.display = 'none';
-        $.ajax({
-            type: "post",
-            url: "{% url 'notifications-seen' %}",
-            data: { user_id: user_id},
-            success: function (response) {
-                var json = jQuery.parseJSON(response);
-            }
-        });
-        
-    });
-
     $('.dropdown-menu').click(function(e) {
           e.stopPropagation();
-    });*/
+    });
 
     /*
     Display panel
@@ -164,25 +140,40 @@
     */
     $(document).ready(function(){
         $( '.notifications-toggler' ).click(function(e) {
-		/* Mark all notifications as seen */
-		var user_id = $(this).data("user");
-        document.getElementById("unread_count").style.display = 'none';
-        $.ajax({
-            type: "post",
-            url: "{% url 'notifications-seen' %}",
-            data: { user_id: user_id},
-            success: function (response) {
-                var json = jQuery.parseJSON(response);
+            $('.ncp-time').each(function(i, obj) {
+                var text = obj.textContent;
+                text = text.replace('minutes', 'min');
+                text = text.replace('minute', 'min');
+                text = text.replace(' ago', '');
+                text = text.replace('hour', 'hr');
+                text = text.replace('hours', 'hrs');
+                obj.textContent = text;
+            });
+            if ( $( '.ncp-notifications' ).is( ':visible') ) {
+                $( '.notifications-toggler' ).removeClass( 'active' );
             }
-        });
-        return false;
+            else {
+                $( '.notifications-toggler' ).addClass( 'active' );
+    		}
+            /* Mark all notifications as seen */
+            var user_id = $(this).data("user");
+            document.getElementById("unread_count").style.display = 'none';
+            $.ajax({
+                type: "post",
+                url: "{% url 'notifications-seen' %}",
+                data: { user_id: user_id},
+                success: function (response) {
+                    var json = jQuery.parseJSON(response);
+                }
+            });
+            return false;
         });
 
         $(document).on( 'click', function(event) {
+            $( '.notifications-toggler' ).toggleClass( 'active' );
             if (!$(event.target).closest( '.ncp-notifications' ).length) {
                 if ( $( '.ncp-notifications' ).is( ':visible') ) {
                     $( '.ncp-notifications' ).fadeOut(200);
-                    $( '.notifications-toggler' ).toggleClass( 'active' );
                 }
             }
         });
