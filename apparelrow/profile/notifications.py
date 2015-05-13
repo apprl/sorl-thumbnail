@@ -657,24 +657,33 @@ def create_individual_summary(user, period):
     merge_vars['follows'] = []
     for event in events:
         if event.type == "LIKELOOK":
+            #only include 3 items
+            if merge_vars['looklikes'].length == 3:
+                continue
             details = {
                 'name': event.look.title,
-                'imgurl': retrieve_full_url(event.look.static_image.url),
+                'imgurl': event.look.static_image.url,
                 'url': retrieve_full_url(event.look.get_absolute_url()),
             }
             merge_vars['looklikes'].append(details)
             look_likes.append(event)
             is_not_empty = True
         elif event.type == "SALE":
+            #only include 3 items
+            if merge_vars['sales'].length == 3:
+                continue
             details = {
                 'name': event.product.product_name,
-                'imgurl': retrieve_full_url(get_thumbnail(event.product.product_image, '500').url),
+                'imgurl': get_thumbnail(event.product.product_image, '500').url,
                 'url': retrieve_full_url(event.product.get_absolute_url()),
             }
             merge_vars['sales'].append(details)
             sales.append(event)
             is_not_empty = True
         elif event.type == "FOLLOW":
+            #only include 3 items
+            if merge_vars['follows'].length == 3:
+                continue
             details = {
                 'name': event.actor.display_name,
                 'imgurl': get_avatar_url(event.actor),
@@ -686,6 +695,9 @@ def create_individual_summary(user, period):
 
     merge_vars['products'] = []
     for productlike in latest_likes:
+        #only include 3 items
+        if merge_vars['products'].length == 3:
+            continue
         product = productlike.product
         details = {
             'name': product.product_name,
