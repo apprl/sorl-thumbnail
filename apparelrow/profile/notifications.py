@@ -648,6 +648,9 @@ def create_individual_summary(user, period):
     new_followers = []
     sales = []
 
+    #add check for empty summaries
+    is_not_empty = False
+
     merge_vars = dict()
     merge_vars['looklikes'] = []
     merge_vars['sales'] = []
@@ -661,6 +664,7 @@ def create_individual_summary(user, period):
             }
             merge_vars['looklikes'].append(details)
             look_likes.append(event)
+            is_not_empty = True
         elif event.type == "SALE":
             details = {
                 'name': event.product.product_name,
@@ -669,6 +673,7 @@ def create_individual_summary(user, period):
             }
             merge_vars['sales'].append(details)
             sales.append(event)
+            is_not_empty = True
         elif event.type == "FOLLOW":
             details = {
                 'name': event.actor.display_name,
@@ -677,6 +682,7 @@ def create_individual_summary(user, period):
             }
             merge_vars['follows'].append(details)
             new_followers.append(event)
+            is_not_empty = True
 
     merge_vars['products'] = []
     for productlike in latest_likes:
@@ -687,11 +693,13 @@ def create_individual_summary(user, period):
             'url': retrieve_full_url(product.get_absolute_url()),
         }
         merge_vars['products'].append(details)
+        is_not_empty = True
 
     merge_vars['PERIOD'] = period_name
     merge_vars['PROFILEURL'] = retrieve_full_url(user.get_absolute_url())
 
-    notify_with_mandrill_template([user], "SummaryMail", merge_vars)
+    if is_not_empty:
+        notify_with_mandrill_template([user], "SummaryMail", merge_vars)
 
 def create_look_like_summary(period):
     period_name, interesting_time = calculate_period(period)
