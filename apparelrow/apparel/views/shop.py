@@ -436,7 +436,7 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
         nginx_key = reverse('embed-shop', args=[embed_shop_id])
         log.info("Hitting the app server for embedded shop %s " % (nginx_key))
         temp_response = browse_products(temp_request, template, shop, embed_shop, language)
-        get_cache('nginx').set(nginx_key, temp_response.content, 60*60*2)
+        get_cache('nginx').set(nginx_key, temp_response.content, 60*60*3)
     return response
 
 def browse_products(request, template='apparel/browse.html', shop=None, embed_shop=None, language=None,gender=None, **kwargs):
