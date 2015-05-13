@@ -373,18 +373,6 @@ def shop_widget(request, shop_id=None):
     content['object'] = shop_embed
     response = render(request, 'apparel/fragments/shop_widget.html', content)
 
-    """nginx_key = reverse('embed-shop', args=[shop_embed.id])
-    # If request is considered an AJAX request we will receive and cache json which we do not want. Depending on
-    if request.META.get("HTTP_X_REQUESTED_WITH",None):
-        request.META["HTTP_X_REQUESTED_WITH"] = None
-    cached_shop_response = embed_shop(request,embed_shop_id=shop_embed.id)
-    if not cached_shop_response.status_code == 200:
-        log.error("Unable to embed shop (%s/%s) (embed,shop) url (%s) in nginx upstream cache because received %s." %
-                  (shop_embed.id,shop.id,nginx_key,cached_shop_response.status_code,))
-    # Should already be fine but will check it anyways
-    if not get_cache('nginx').set(nginx_key,None):
-        get_cache('nginx').set(nginx_key, cached_shop_response.content, 60*60*24*20)
-    """
     return response
 
 
@@ -420,9 +408,12 @@ def embed_shop(request, template='apparel/shop_embed.html', embed_shop_id=None):
     language = embed_shop.language
 
     response = browse_products(request, template, shop, embed_shop, language)
-    if not request.is_ajax():
-        # This should probably be done in an async job in the future
-
+    if not request.is_ajax() and not request.META.get("QUERY_STRING",None):
+        """
+         This should probably be done in an async job in the future
+         Slightly redundant code here, if query string is NONE then we wouldnt need to remove the filtering parameters
+         so this needs improvement.
+        """
         temp_request = HttpRequest()
         temp_request.GET = deepcopy(request.GET)
         temp_request.META = request.META

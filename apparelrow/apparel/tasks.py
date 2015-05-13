@@ -51,7 +51,10 @@ def empty_embed_shop_cache(embed_shop_id):
     """
     nginx_key = reverse('embed-shop', args=[embed_shop_id])
     logging.info("Removing embedded shop %s from memcached" % nginx_key)
+    key = settings.NGINX_SHOP_RESET_KEY % embed_shop_id
     get_cache('nginx').delete(nginx_key)
+    # Remove semaphore
+    get_cache('nginx').delete(key)
 
 # @task(name='apparelrow.apparel.tasks.empty_embed_shop_cache', max_retries=5, ignore_result=True)
 # def empty_embed_shop_cache(embed_shop_id):
