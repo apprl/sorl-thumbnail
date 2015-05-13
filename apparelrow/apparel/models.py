@@ -1044,8 +1044,8 @@ def shop_product_save(instance, **kwargs):
     for shop_embed in ShopEmbed.objects.filter(shop=instance.shop_embed):
         key = settings.NGINX_SHOP_RESET_KEY % shop_embed.id
         if not get_cache("nginx").get(key,None):
-            get_cache('nginx').set(key, "True", 60*5) # Preventing the shop to be reset more often than every five minutes
-            empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=60)
+            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every ten minutes
+            empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=120)
 
 #
 # Shop
