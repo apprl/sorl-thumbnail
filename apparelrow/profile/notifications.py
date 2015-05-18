@@ -648,28 +648,42 @@ def create_individual_summary(user, period):
     new_followers = []
     sales = []
 
+    #add check for empty summaries
+    is_not_empty = False
+
     merge_vars = dict()
     merge_vars['looklikes'] = []
     merge_vars['sales'] = []
     merge_vars['follows'] = []
     for event in events:
         if event.type == "LIKELOOK":
+            #only include 3 items
+            if len(merge_vars['looklikes']) == 3:
+                continue
             details = {
                 'name': event.look.title,
-                'imgurl': retrieve_full_url(event.look.static_image.url),
+                'imgurl': event.look.static_image.url,
                 'url': retrieve_full_url(event.look.get_absolute_url()),
             }
             merge_vars['looklikes'].append(details)
             look_likes.append(event)
+            is_not_empty = True
         elif event.type == "SALE":
+            #only include 3 items
+            if len(merge_vars['sales']) == 3:
+                continue
             details = {
                 'name': event.product.product_name,
-                'imgurl': retrieve_full_url(get_thumbnail(event.product.product_image, '500').url),
+                'imgurl': get_thumbnail(event.product.product_image, '500').url,
                 'url': retrieve_full_url(event.product.get_absolute_url()),
             }
             merge_vars['sales'].append(details)
             sales.append(event)
+            is_not_empty = True
         elif event.type == "FOLLOW":
+            #only include 3 items
+            if len(merge_vars['follows']) == 3:
+                continue
             details = {
                 'name': event.actor.display_name,
                 'imgurl': get_avatar_url(event.actor),
@@ -677,9 +691,13 @@ def create_individual_summary(user, period):
             }
             merge_vars['follows'].append(details)
             new_followers.append(event)
+            is_not_empty = True
 
     merge_vars['products'] = []
     for productlike in latest_likes:
+        #only include 3 items
+        if len(merge_vars['products']) == 3:
+            continue
         product = productlike.product
         details = {
             'name': product.product_name,
@@ -687,11 +705,13 @@ def create_individual_summary(user, period):
             'url': retrieve_full_url(product.get_absolute_url()),
         }
         merge_vars['products'].append(details)
+        is_not_empty = True
 
     merge_vars['PERIOD'] = period_name
     merge_vars['PROFILEURL'] = retrieve_full_url(user.get_absolute_url())
 
-    notify_with_mandrill_template([user], "SummaryMail", merge_vars)
+    if is_not_empty:
+        notify_with_mandrill_template([user], "SummaryMail", merge_vars)
 
 def create_look_like_summary(period):
     period_name, interesting_time = calculate_period(period)
