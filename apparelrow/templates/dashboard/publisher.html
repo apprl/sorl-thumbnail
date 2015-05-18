@@ -170,8 +170,8 @@
         </ul>
         <ul class="list-inline monthly-list">
             <li>{% blocktrans %}Commission earnings: {{ currency }} {{ month_commission }}{% endblocktrans %}</li>
-            {%  comment %}<li>{% blocktrans %}Clicks: {{ month_clicks }}{% endblocktrans %}</li>{%  endcomment %}
             <li>{% blocktrans %}Sales: {{ month_sales }}{% endblocktrans %}</li>
+            <li>{% blocktrans %}Clicks: {{ month_clicks }}{% endblocktrans %}</li>
             {%  comment %}<li>{% blocktrans with conversion_rate=month_conversion_rate|floatdot %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</li>{%  endcomment %}
         </ul>
         {% if request.user.referral_partner %}

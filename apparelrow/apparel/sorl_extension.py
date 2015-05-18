@@ -91,10 +91,12 @@ class CustomCircularEngine(PILEngine):
         return image
 
     def circular(self, image, geometry, options):
-        # Create circular mask
-        mask = Image.new('L', geometry, 0)
+        # Create circular mask, super size to then resize with antialiasing
+        bigsize = (geometry[0]*3, geometry[1]*3)
+        mask = Image.new('L', bigsize , 0)
         draw = ImageDraw.Draw(mask)
-        draw.ellipse((0, 0) + geometry, fill=255)
+        draw.ellipse((0, 0) + bigsize, fill=255)
+        mask.resize(geometry, Image.ANTIALIAS)
 
         # Resize image
         output = ImageOps.fit(image, mask.size, centering=(0.5, 0.5))
