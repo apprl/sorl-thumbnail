@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
+
     <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
@@ -16,7 +17,8 @@
     <link rel="apple-touch-icon" sizes="120x120" href="{% static "images/apple-touch-icon-120x120.png" %}">
     <link rel="apple-touch-icon" sizes="152x152" href="{% static "images/apple-touch-icon-152x152.png" %}">
     <link href='http://fonts.googleapis.com/css?family=Lato:400|IM+Fell+Great+Primer:400italic' rel='stylesheet' type='text/css'>
-
+    <meta property="og:image" content="{% static "images/share-image.jpg" %}">
+    <link rel="image_src" href="{% static "images/share-image.jpg" %}">
 
     {% compressed_css 'bootstrap' %}
     {% block extra-styles %}
@@ -101,6 +103,16 @@
     </script>
 </head>
 <body class="{% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
+    <!-- Google Tag Manager -->
+    <noscript><iframe src="//www.googletagmanager.com/ns.html?id={{ GOOGLE_TAG_MANAGER_CONTAINER_ID }}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ GOOGLE_TAG_MANAGER_CONTAINER_ID }}');</script>
+    <!-- End Google Tag Manager -->
+
     <div id="fb-root"></div>
     <script type="text/javascript">
         (function(d){
@@ -184,8 +196,7 @@
                     </li>
                     {% endif %}
                 </ul>
-
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right hidden-xs">
                     {% if request.user.is_authenticated %}
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}    
                     {% endif %}

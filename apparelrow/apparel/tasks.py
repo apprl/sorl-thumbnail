@@ -46,9 +46,20 @@ def google_analytics_event(cid, category, action, label=None, value=None):
 
 @task(name='apparelrow.apparel.tasks.empty_embed_shop_cache', max_retries=5, ignore_result=True)
 def empty_embed_shop_cache(embed_shop_id):
-    for x in itertools.product((x[0] for x in settings.LANGUAGES), ['A', 'M', 'W']):
-        get_cache('nginx').delete(reverse('shop-embed', args=[embed_shop_id, x[0], x[1]]))
+    """
+        Invalidate embedded shops 2.0 from cache
+    """
+    nginx_key = reverse('embed-shop', args=[embed_shop_id])
+    logging.info("Removing embedded shop %s from memcached" % nginx_key)
+    key = settings.NGINX_SHOP_RESET_KEY % embed_shop_id
+    get_cache('nginx').delete(nginx_key)
+    # Remove semaphore
+    get_cache('nginx').delete(key)
 
+# @task(name='apparelrow.apparel.tasks.empty_embed_shop_cache', max_retries=5, ignore_result=True)
+# def empty_embed_shop_cache(embed_shop_id):
+#    for x in itertools.product((x[0] for x in settings.LANGUAGES), ['A', 'M', 'W']):
+#        get_cache('nginx').delete(reverse('shop-embed', args=[embed_shop_id, x[0], x[1]]))
 
 @task(name='apparelrow.apparel.tasks.empty_embed_look_cache', max_retries=5, ignore_result=True)
 def empty_embed_look_cache(look_slug):

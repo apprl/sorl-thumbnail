@@ -7,6 +7,8 @@ from django.db.models.loading import get_model
 from django.test.utils import override_settings
 from decimal import Decimal
 from django.conf import settings
+from apparelrow.apparel.models import Shop, ShopEmbed
+from apparelrow.dashboard.tests import reverse
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -447,3 +449,61 @@ class TestProfileLikes(TestCase):
         owner_like = ProductLike.objects.filter(user=owner_user, product=product)
         self.assertEqual(len(owner_like), 0)
 
+
+class TestEmbeddingShops(TestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        #self.product1 = get_model('apparel', 'Product').objects.create()
+        #self.product2 = get_model('apparel', 'Product').objects.create()
+
+    @unittest.skip("Review this test")
+    def test_create_shop(self):
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+        self.assertEquals(Shop.objects.count(),0)
+        self.assertEquals(ShopEmbed.objects.count(),0)
+        #self.assertTrue( get_model('apparel', 'Product').objects.all().count() > 0 )
+        data = {"published":False,"title":"asdfasdfa","show_liked":False,"components":[{"product":
+        {"image_medium":"/media/cache/d977424fd3a3f97af91e56dc026d186a/fa/fa194102addee4a2554214ad037b90c90c617d52.jpg",
+        "image_look":"/media/cache/247c1e41bf054ef49085a6f7a24e77a7/fa/fa194102addee4a2554214ad037b90c90c617d52.jpg",
+        "currency":"USD","url":"http://localhost:8000/en/redirect/2864777/Ext-Site/0/","product_name":"Gabrielle top",
+        "price":"20","image_small":"/media/cache/373f13670c71403a969502b410483b9e/fa/fa194102addee4a2554214ad037b90c90c617d52.jpg",
+        "brand_name":"365","availability":True,"discount":False,"id":"","discount_price":"0","slug":"365-gabrielle-top"}},
+        {"product":{"image_medium":"/media/cache/846da68b1374f6120adafa5d8b4688dc/34/34a50db94764ee6a07a4ab7ca00e664651fa6e8b.jpg",
+        "image_look":"/media/cache/22e4c36ad8a551979c13dd51babb25a5/34/34a50db94764ee6a07a4ab7ca00e664651fa6e8b.jpg",
+        "currency":"USD","url":"http://localhost:8000/en/redirect/2864747/Ext-Site/0/","product_name":"Deep Blue Pinpoint",
+        "price":"117","image_small":"/media/cache/c7740bf7554c65c31b1cde9aa18029ec/34/34a50db94764ee6a07a4ab7ca00e664651fa6e8b.jpg",
+        "brand_name":"Shirtonomy","availability":True,"discount":False,"id":"",
+        "discount_price":"0","slug":"shirtonomy-deep-blue-pinpoint"}}]}
+
+        self.product1 = get_model('apparel', 'Product').objects.create(**{"sku":1})
+        self.product2 = get_model('apparel', 'Product').objects.create(**{"sku":2})
+        self.assertTrue(get_model('apparel', 'Product').objects.count() > 0)
+        self.assertTrue(self.product1.id)
+        self.assertTrue(self.product2.id)
+        data.get("components")[0]["product"]["id"] = self.product1.id
+        data.get("components")[1]["product"]["id"] = self.product2.id
+        self.assertTrue(data.get("components")[0]["product"]["id"])
+        self.assertTrue(data.get("components")[1]["product"]["id"])
+        response = self.client.post(reverse('create_shop')[3:],data=json.dumps(data),content_type='application/json',)
+        self.assertEqual(response.status_code, 201)
+        content = json.loads(response.content)
+        self.assertEqual(content.get("published"), True)
+        self.assertEqual(content.get("user"), "normal_user")
+        self.assertEqual(content.get("url"), "/shop/create/api/1")
+        self.assertEqual(content.get("id"), 1)
+        self.assertEquals(Shop.objects.count(),1)
+        response = self.client.get(content.get("url"),follow=True)
+        content = json.loads(response.content)
+        self.assertEqual(content.get("published"), True)
+        self.assertEqual(content.get("user"), "normal_user")
+        self.assertEqual(content.get("url"), "/shop/create/api/1")
+        self.assertEqual(content.get("id"), 1)
+        response = self.client.post(reverse('shop-widget',args=(content.get("id"),))[3:])
+        url = reverse('embed-shop',args=(content.get("id"),))
+        self.client.get(url)
+        from django.core.cache import get_cache
+        cache = get_cache('nginx')
+        nginx_key = reverse('embed-shop', args=[1])
+        self.assertIsNotNone(cache.get(nginx_key,None))

@@ -16,11 +16,10 @@ class Command(BaseCommand):
         cache = get_cache('nginx')
 
         # Empty shop embed
-        for user_id in get_user_model().objects.values_list('pk', flat=True):
-            for x in itertools.product((x[0] for x in settings.LANGUAGES), ['A', 'M', 'W']):
-                key = reverse('shop-embed', args=[user_id, x[0], x[1]])
-                cache.delete(key)
-                print 'Deleting %s' % key
+        for embed_shop_id in get_model('apparel','ShopEmbed').objects.values_list('id',flat=True):
+            key = reverse('embed-shop', args=[embed_shop_id])
+            cache.delete(key)
+            print 'Deleting %s' % key
 
         # Empty look embed
         for look_slug in get_model('apparel', 'Look').objects.values_list('slug', flat=True):
