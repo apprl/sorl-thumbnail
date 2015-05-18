@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from django.db.models.signals import post_save
 from django.core.mail import mail_admins
 
-from apparelrow.apparel.models import Product, VendorProduct
+from apparelrow.apparel.models import Product
 from apparelrow.apparel.search import ApparelSearch
 
 class Command(BaseCommand):

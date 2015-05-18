@@ -235,6 +235,7 @@ def minorupdate():
 
 @task
 def scrapingstatus():
+
     run("sh get_stats.sh")
 
 @task
@@ -246,4 +247,28 @@ def importer(vendor):
 def fetchall():
     with project():
         run("git fetch --all")
+
+@task
+def test():
+    local("python manage.py test")
+
+@task
+def test_dashboard():
+    local("python manage.py test apparelrow.dashboard")
+
+@task
+def test_apparel():
+    local("python manage.py test apparelrow.apparel")
+
+@task
+def test_importer():
+    local("python manage.py test apparelrow.importer")
+
+@task
+def test_profile():
+    local("python manage.py test apparelrow.profile")
+
+@task
+def test_advertiser():
+    local("python manage.py test advertiser")
 
