@@ -185,15 +185,16 @@
                     </li>
                     {% endif %}
                 </ul>
+                {% if request.user.is_authenticated %}
                 <ul class="nav navbar-nav navbar-right hidden-xs">
-                    {% if request.user.is_authenticated %}
-                        {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}    
-                    {% endif %}
+                        {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}
                 </ul>
+                {% endif %}
 
                 <ul class="nav navbar-nav navbar-nav-main">
                     {% if request.user.is_authenticated %}
                     <li class="visible-xs"><a href="{% multi_gender_url request 'feed' 'index' %}"><span>{% trans "Your APPRL" %}</span></a></li>
+                    <li class="visible-xs"><a class="notification-mini" data-user="{{ request.user.id }}" href="#"><span>{% trans "Notifications" %}</span>{% if request.user.unread_count > 0 %}<span class="unread_count badge">{{ request.user.unread_count }}</span>{% endif %}</a></li>
                     {% endif %}
                     <li class="{% selected_url request "/shop" "/products" %}"><a data-shop="true" href="{% multi_gender_url request 'shop' 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
                     <li class="{% selected_url request "/looks" %}"><a href="{% multi_gender_url request 'look' 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
@@ -326,6 +327,20 @@
         </span>
     </div>
     <script>
+    $(document).ready(function(){
+        $(".notification-mini").click(function() {
+            var user_id = $(this).data("user");
+            $.ajax({
+                type: "post",
+                url: "{% url 'notifications-seen' %}",
+                data: { user_id: user_id },
+                success: function (response) {
+                    window.location.href = "{% url 'notifications-page' %}";
+                }
+            });
+
+        });
+    });
     $(function(){
         $(document).on( 'scroll', function(){
      
