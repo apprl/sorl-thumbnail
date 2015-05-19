@@ -1,5 +1,6 @@
 import logging
 import uuid
+from django.core.cache import get_cache
 import os.path
 import decimal
 import datetime
@@ -453,7 +454,10 @@ def product_like_post_save(sender, instance, **kwargs):
     # understanding fully the consequences.
     like_shop_ids = get_model('apparel','ShopEmbed').objects.filter(shop__user=instance.user,shop__show_liked=True).values_list("id",flat=True)
     for shop_embed in get_model('apparel','ShopEmbed').objects.filter(id__in=like_shop_ids):
-        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=30)
+        key = settings.NGINX_SHOP_RESET_KEY % shop_embed.id
+        if not get_cache("nginx").get(key,None):
+            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every five minutes
+            empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=300)
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -1038,8 +1042,12 @@ class ShopProduct(models.Model):
 @receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save_cache')
 def shop_product_save(instance, **kwargs):
     for shop_embed in ShopEmbed.objects.filter(shop=instance.shop_embed):
-        empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=60)
-
+        key = settings.NGINX_SHOP_RESET_KEY % shop_embed.id
+        if not get_cache("nginx").get(key,None):
+            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every ten minutes
+            empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=120)
+        else:
+            logger.debug("Key: %s still active, will wait for shop reset." % key)
 #
 # Shop
 #

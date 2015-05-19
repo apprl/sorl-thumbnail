@@ -642,6 +642,7 @@ GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
 GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT = 'UA-21990268-2'
 GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN = 'apprl.com'
+GOOGLE_TAG_MANAGER_CONTAINER_ID = 'GTM-T2Q72N'
 
 # Rosetta Google Translate
 # To register a site https://ssl.bing.com/webmaster/home/mysites
@@ -674,6 +675,7 @@ APPAREL_MULTI_GENDER_COOKIE = 'multigender'
 APPAREL_LOCATION_COOKIE = 'location'
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
+NGINX_SHOP_RESET_KEY = "shopembed-reset-%s"
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/rss-feed/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR = 'images/brand-avatar.png'
@@ -787,6 +789,8 @@ CELERY_ROUTES = ({
     'apparel.notifications.look_like_weekly': {'queue': 'background'},
     'apparel.notifications.product_like_daily': {'queue': 'background'},
     'apparel.notifications.product_like_weekly': {'queue': 'background'},
+    'apparel.notifications.user_activity_daily': {'queue': 'background'},
+    'apparel.notifications.user_activity_weekly': {'queue': 'background'},
     'apparel.notifications.earnings_daily': {'queue': 'background'},
     'apparel.notifications.earnings_weekly': {'queue': 'background'}},)
 

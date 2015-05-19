@@ -6,7 +6,7 @@ import logging
 import logging.config
 
 from settings_common import *
-DEBUG = True
+DEBUG = False
 EMAIL_DEBUG = True
 
 #SERVER_APP_ROOT = os.path.join(PROJECT_ROOT, '..')
@@ -96,6 +96,6 @@ if EMAIL_DEBUG:
     EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT,'../logs/emails')
 
 
-ALLOWED_HOSTS = ['{{ hostname }}s.apprl.com',]
+ALLOWED_HOSTS = ['{{ hostname }}s.apprl.com','dev-admin.apprl.com']
 
 GEOIP_URL = 'http://localhost:4999/ip/%s'

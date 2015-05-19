@@ -401,7 +401,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         look_photo_url = look_like.look.static_image.url
         merge_vars['LOOKPHOTOURL'] = look_photo_url
         if sender.image:
-            profile_photo_url = get_thumbnail(sender.avatar_circular_medium(), '500').url
+            profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
@@ -436,7 +436,7 @@ def get_avatar_url(user):
     retrieve full url to a profile picture
     """
     if user.image:
-        profile_photo_url =  retrieve_full_url(get_thumbnail(user.avatar_circular_medium(), '500').url)
+        profile_photo_url =  retrieve_full_url(get_thumbnail(user.avatar_circular_medium, '500').url)
     elif user.facebook_user_id:
         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % user.facebook_user_id
     else:
@@ -467,7 +467,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         merge_vars['PROFILEURL'] = sender_link
 
         if sender.image:
-            profile_photo_url = get_thumbnail(sender.avatar_circular_medium(), '500').url
+            profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
         elif sender.facebook_user_id:
             profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
         else:
@@ -515,7 +515,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             sender_link = retrieve_full_url(sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
             if sender.image:
-                profile_photo_url = get_thumbnail(sender.avatar_circular_medium(), '500').url
+                profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
             elif sender.facebook_user_id:
                 profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
             else:
@@ -631,6 +631,14 @@ def send_activity_summaries(period):
     for user in users_to_notify:
         create_individual_summary(user, period)
 
+#@periodic_task(name='apparel.notifications.user_activity_daily', run_every=crontab(minute='0', hour='15'))
+def send_activity_daily_summaries():
+    send_activity_summaries("D")
+
+#@periodic_task(name='apparel.notifications.user_activity_weekly', run_every=crontab(minute='0', hour='15',day_of_week='saturday'))
+def send_activity_weekly_summaries():
+    send_activity_summaries("W")
+
 def create_individual_summary(user, period):
     period_name, ref_time = calculate_period(period)
     events = get_model('profile', 'NotificationEvent').objects.filter(owner=user, created__gte=ref_time)
@@ -640,28 +648,42 @@ def create_individual_summary(user, period):
     new_followers = []
     sales = []
 
+    #add check for empty summaries
+    is_not_empty = False
+
     merge_vars = dict()
     merge_vars['looklikes'] = []
     merge_vars['sales'] = []
     merge_vars['follows'] = []
     for event in events:
         if event.type == "LIKELOOK":
+            #only include 3 items
+            if len(merge_vars['looklikes']) == 3:
+                continue
             details = {
                 'name': event.look.title,
-                'imgurl': retrieve_full_url(event.look.static_image.url),
+                'imgurl': event.look.static_image.url,
                 'url': retrieve_full_url(event.look.get_absolute_url()),
             }
             merge_vars['looklikes'].append(details)
             look_likes.append(event)
+            is_not_empty = True
         elif event.type == "SALE":
+            #only include 3 items
+            if len(merge_vars['sales']) == 3:
+                continue
             details = {
                 'name': event.product.product_name,
-                'imgurl': retrieve_full_url(get_thumbnail(event.product.product_image, '500').url),
+                'imgurl': get_thumbnail(event.product.product_image, '500').url,
                 'url': retrieve_full_url(event.product.get_absolute_url()),
             }
             merge_vars['sales'].append(details)
             sales.append(event)
+            is_not_empty = True
         elif event.type == "FOLLOW":
+            #only include 3 items
+            if len(merge_vars['follows']) == 3:
+                continue
             details = {
                 'name': event.actor.display_name,
                 'imgurl': get_avatar_url(event.actor),
@@ -669,9 +691,13 @@ def create_individual_summary(user, period):
             }
             merge_vars['follows'].append(details)
             new_followers.append(event)
+            is_not_empty = True
 
     merge_vars['products'] = []
     for productlike in latest_likes:
+        #only include 3 items
+        if len(merge_vars['products']) == 3:
+            continue
         product = productlike.product
         details = {
             'name': product.product_name,
@@ -679,11 +705,13 @@ def create_individual_summary(user, period):
             'url': retrieve_full_url(product.get_absolute_url()),
         }
         merge_vars['products'].append(details)
+        is_not_empty = True
 
     merge_vars['PERIOD'] = period_name
     merge_vars['PROFILEURL'] = retrieve_full_url(user.get_absolute_url())
 
-    notify_with_mandrill_template([user], "SummaryMail", merge_vars)
+    if is_not_empty:
+        notify_with_mandrill_template([user], "SummaryMail", merge_vars)
 
 def create_look_like_summary(period):
     period_name, interesting_time = calculate_period(period)
@@ -732,11 +760,11 @@ def create_product_like_summary(period):
     return like_dict, users_to_notify
 
 
-#@periodic_task(name='apparel.notifications.look_like_daily', run_every=crontab(minute='0', hour='8',))
+#@periodic_task(name='apparel.notifications.look_like_daily', run_every=crontab(minute='0', hour='20',))
 def send_look_like_daily_summaries():
     send_look_like_summaries(period="D")
 
-#@periodic_task(name='apparel.notifications.look_like_weekly', run_every=crontab(minute='0', hour='12',day_of_week='friday'))
+#@periodic_task(name='apparel.notifications.look_like_weekly', run_every=crontab(minute='0', hour='20',day_of_week='wednesday'))
 def send_look_like_weekly_summaries():
     send_look_like_summaries(period="W")
 
@@ -767,7 +795,7 @@ def send_look_like_summaries(period="D"):
             for liker in look_likes[look]:
                 if not(liker == user and len(likers) <= 20):
                     if liker.image:
-                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium(), '100').url
+                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium, '100').url
                     elif liker.facebook_user_id:
                         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
                     else:
@@ -799,11 +827,11 @@ def send_look_like_summaries(period="D"):
 
     return
 
-#@periodic_task(name='apparel.notifications.product_like_daily', run_every=crontab(minute='0', hour='8',))
+#@periodic_task(name='apparel.notifications.product_like_daily', run_every=crontab(minute='30', hour='9',))
 def send_product_like_daily_summaries():
     send_product_like_summaries("D")
 
-#@periodic_task(name='apparel.notifications.product_like_weekly', run_every=crontab(minute='0', hour='8',day_of_week='friday'))
+#@periodic_task(name='apparel.notifications.product_like_weekly', run_every=crontab(minute='30', hour='9',day_of_week='monday'))
 def send_product_like_weekly_summaries():
     send_product_like_summaries("W")
 
@@ -836,7 +864,7 @@ def send_product_like_summaries(period="D"):
             for liker in product_likes[product]:
                 if not(liker == user and len(likers) <= 20):
                     if liker.image:
-                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium(), '100').url
+                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium, '100').url
                     elif liker.facebook_user_id:
                         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
                     else:
@@ -868,11 +896,11 @@ def send_product_like_summaries(period="D"):
 
     return
 
-#@periodic_task(name='apparel.notifications.earnings_daily', run_every=crontab(minute='0', hour='8',))
+#@periodic_task(name='apparel.notifications.earnings_daily', run_every=crontab(minute='0', hour='7',))
 def send_earning_daily_summary():
     send_earning_summaries("D")
 
-#@periodic_task(name='apparel.notifications.earnings_weekly', run_every=crontab(minute='0', hour='8',day_of_week='friday'))
+#@periodic_task(name='apparel.notifications.earnings_weekly', run_every=crontab(minute='0', hour='7',day_of_week='friday'))
 def send_earning_weekly_summary():
     send_earning_summaries("W")
 
