@@ -3,7 +3,7 @@
 
 {% block content %}
     <!-- Email address -->
-    <div class="row top-buffer">
+    <div class="row">
         <h2 id="email-address">{% trans "E-mail Address" %}</h2>
         <p>{% trans "Here you can set which e-mail adress you want to receive messages and updates to from Apprl." %}</p>
         {% if email_change %}
@@ -98,7 +98,7 @@
 
     <!-- Location -->
     <div class="row top-buffer">
-        <h2 id="password">{% trans "Your Location" %}</h2>
+        <h2 id="location" name="location">{% trans "Your Location" %}</h2>
         <p>{% trans "Your location affects what retailers and products are shown on the site as well as the displayed currency." %}</p>
         <div class="form-horizontal">
             <div class="form-group">
