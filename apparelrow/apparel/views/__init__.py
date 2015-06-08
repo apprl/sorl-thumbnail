@@ -599,7 +599,9 @@ def look_like(request, slug, action):
     if not created:
         look_like.active = default_active
         look_like.save()
-    NotificationEvent.objects.push_notification(look.user, "LIKELOOK", request.user, look=look)
+
+    if not (look.user == request.user):
+        NotificationEvent.objects.push_notification(look.user, "LIKELOOK", request.user, look=look)
 
     if action == 'like':
         process_like_look_created.delay(look.user, request.user, look_like)
