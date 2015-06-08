@@ -649,7 +649,7 @@ def dashboard_group_admin(request, pk):
 
     raise Http404
 
-@cache_page(60 * 15)
+#@cache_page(60 * 15)
 def dashboard_admin(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_superuser:
         if year is None and month is None:
@@ -694,23 +694,6 @@ def dashboard_admin(request, year=None, month=None):
         # Commission per month
         month_commission = decimal.Decimal('0.0')
         partner_commission = decimal.Decimal('0.0')
-        result = Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                             .filter(sale_date__range=(start_date_query, end_date_query), type=Sale.COST_PER_ORDER) \
-                             .order_by('sale_date') \
-                             .values('sale_date', 'converted_commission', 'commission', 'user_id')
-
-        sales_count = [0, 0, 0] #total, publisher, apprl
-        for sale in result:
-            data_per_month[sale['sale_date'].date()][0] += sale['converted_commission']
-            sales_count[0] += 1
-            if sale['user_id']:
-                sales_count[1] += 1
-                data_per_month[sale['sale_date'].date()][1] += sale['commission']
-                partner_commission += sale['commission']
-            else:
-                sales_count[2] += 1
-            month_commission += sale['converted_commission']
-        apprl_commission = month_commission - partner_commission
 
         # Clicks per month
         clicks = get_model('statistics', 'ProductStat')\
@@ -772,30 +755,64 @@ def dashboard_admin(request, year=None, month=None):
 
             earning.clicks = get_clicks_from_sale(earning.sale)
 
-        for sale in get_model('dashboard', 'Sale').objects.filter(sale_date__range=(start_date_query, end_date_query),
-                                                                  status__gte=Sale.PENDING):
-            if sale.type==get_model('dashboard', 'Sale').COST_PER_CLICK:
+
+
+
+
+
+        sales_count = [0, 0, 0] #total, publisher, apprl
+        total_apprl_earnings = 0
+        total_publisher_earnings = 0
+        total_cpo_publisher_earnings = 0
+        cpo_publisher_earnings = 0
+        apprl_ppc_earnings = 0
+        absolute_total_earnings = 0
+
+        sales_result = Sale.objects.filter(status__gte=Sale.PENDING,
+                                           sale_date__range=(start_date_query, end_date_query))
+        for sale in sales_result:
+            sale_earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=sale, status__gte=Sale.PENDING)
+            for earning in sale_earnings:
+                absolute_total_earnings += earning.amount
+                if sale.type == Sale.COST_PER_CLICK:
+                    data_per_month[earning.date.date()][6] += earning.amount
+                    if earning.user:
+                        data_per_month[earning.date.date()][4] += earning.amount
+                    else:
+                        apprl_ppc_earnings += earning.amount
+                elif sale.type == Sale.COST_PER_ORDER:
+                    data_per_month[earning.date.date()][0] += earning.amount
+                    total_cpo_publisher_earnings += earning.amount
+                    if earning.user:
+                        data_per_month[earning.date.date()][1] += earning.amount
+                        cpo_publisher_earnings += earning.amount
+
+                if earning.user_earning_type == 'apprl_commission':
+                    total_apprl_earnings += earning.amount
+                else:
+                    total_publisher_earnings += earning.amount
+
+
+            # Clicks
+            if sale.type == Sale.COST_PER_CLICK:
                 if sale.user_id != 0:
                     data_per_month[sale.sale_date.date()][5] += get_clicks_from_sale(sale)
                 else:
                     data_per_month[sale.sale_date.date()][7] += get_clicks_from_sale(sale)
 
+            if sale.type == Sale.COST_PER_ORDER:
+                sales_count[0] += 1
+                if sale.user_id:
+                    sales_count[1] += 1
+                else:
+                    sales_count[2] += 1
 
         ppc_clicks_publisher = sum([x[5] for x in data_per_month.values()])
         ppc_clicks_apprl = sum([x[7] for x in data_per_month.values()])
 
-        ppc_result = Sale.objects.filter(status__range=(Sale.PENDING, Sale.CONFIRMED)) \
-                             .filter(sale_date__range=(start_date_query, end_date_query), type=Sale.COST_PER_CLICK) \
-                             .order_by('sale_date') \
-                             .values('sale_date', 'converted_commission', 'commission', 'user_id')
-
-        for sale in ppc_result:
-            data_per_month[sale['sale_date'].date()][6] += sale['converted_commission']
-
         # Calculate CPC earnings
         publisher_ppc_earnings = sum([x[4] for x in data_per_month.values()])
         total_ppc_earnings = sum([x[6] for x in data_per_month.values()])
-        apprl_ppc_earnings = total_ppc_earnings - publisher_ppc_earnings
 
         # Calculate CPO clicks
         commission_clicks_publisher = click_partner - ppc_clicks_publisher
@@ -805,22 +822,22 @@ def dashboard_admin(request, year=None, month=None):
         # Build table in the dashboard admin top
         headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
                     'Commission CR']
-        total_top = ['%.2f EUR' % (total_ppc_earnings + month_commission),
-                     '%.2f EUR' % month_commission,
+        total_top = ['%.2f EUR' % (absolute_total_earnings),
+                     '%.2f EUR' % total_cpo_publisher_earnings,
                      ('%.2f EUR' % total_ppc_earnings),
                      (ppc_clicks_publisher + ppc_clicks_apprl),
                      commission_clicks_total,
                      sales_count[0],
                      get_conversion_rate(sales_count[0], commission_clicks_total)]
-        publisher_top = ['%.2f EUR' % (partner_commission + total_ppc_earnings),
-                         '%.2f EUR' % partner_commission,
+        publisher_top = ['%.2f EUR' % (total_publisher_earnings),
+                         '%.2f EUR' % cpo_publisher_earnings,
                          '%.2f EUR' % publisher_ppc_earnings,
                          ppc_clicks_publisher,
                          commission_clicks_publisher,
                          sales_count[1],
                          get_conversion_rate(sales_count[1], commission_clicks_publisher)]
-        apprl_top = ['%.2f' % (apprl_commission + apprl_ppc_earnings),
-                     '%.2f' % apprl_commission,
+        apprl_top = ['%.2f' % (total_apprl_earnings),
+                     '%.2f' % (total_cpo_publisher_earnings - cpo_publisher_earnings),
                      '%.2f' % apprl_ppc_earnings,
                      ppc_clicks_apprl,
                      commission_clicks_apprl,
