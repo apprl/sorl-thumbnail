@@ -5,6 +5,7 @@ from django.views.generic import RedirectView
 urlpatterns = patterns('',
     url(r'^flow/$', 'apparelrow.profile.views.flow', name='login-flow-redirect'),
     url(r'^settings/$', 'apparelrow.profile.views.settings_email', name='settings'),
+    url(r'^notifications/$', 'apparelrow.profile.views.notifications', name='notifications-page'),
     url(r'^settings/notification/$', 'apparelrow.profile.views.settings_notification', name='settings-notification'),
     url(r'^settings/email/$', 'apparelrow.profile.views.settings_email', name='settings-email'),
     url(r'^settings/password/$', 'apparelrow.profile.views.settings_password', name='settings-password'),

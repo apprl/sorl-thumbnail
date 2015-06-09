@@ -732,3 +732,7 @@ def login_as_user(request, user_id):
             return HttpResponseRedirect('/')
 
     raise Http404
+
+@login_required
+def notifications(request):
+    return render(request, 'profile/notifications.html')
