@@ -19,6 +19,8 @@ import logging
 
 logger = logging.getLogger( __name__ )
 MAX_NETWORK_LEVELS = 10
+
+
 class Sale(models.Model):
     """
     Sale
