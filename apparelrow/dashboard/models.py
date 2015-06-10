@@ -18,6 +18,7 @@ from apparelrow.apparel.base_62_converter import dehydrate
 import logging
 
 logger = logging.getLogger( __name__ )
+MAX_NETWORK_LEVELS = 10
 
 
 class Sale(models.Model):
@@ -412,9 +413,9 @@ def create_user_earnings(sale):
                     publisher_commission = total_commission * cut
                     apprl_commission = total_commission - publisher_commission
 
-                
-                    if user.owner_network:
-                        publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale, product)
+                    if user.owner_network and not user.owner_network.id == user.id:
+                        publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale,
+                                                                                 product, MAX_NETWORK_LEVELS)
 
                     get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
                                                                          from_product=product, from_user=user,
@@ -438,39 +439,41 @@ def create_user_earnings(sale):
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
 
-def create_earnings_publisher_network(user, publisher_commission, sale, product):
+def create_earnings_publisher_network(user, publisher_commission, sale, product, counter):
     owner = user.owner_network
-    owner_tribute = owner.owner_network_cut
-    if owner_tribute > 1 or owner_tribute < 0:
-        logger.warning('Owner network cut must be a value between 0 and 1 for user %s'%(owner))
-        raise
-    commission_group_user = user.partner_group
+    counter -= 1
+    if owner and not user.id == owner.id and not counter == 0:
+        owner_tribute = owner.owner_network_cut
+        if owner_tribute > 1 or owner_tribute < 0:
+            logger.warning('Owner network cut must be a value between 0 and 1 for user %s'%(owner))
+            raise
+        commission_group_user = user.partner_group
 
-    if commission_group_user:
-        try:
-            commission_group_cut = Cut.objects.get(group=commission_group_user, vendor=sale.vendor)
-        except Cut.DoesNotExist:
-            logger.warning('Cut matching query does not exist %s - %s' % (commission_group_user, sale.vendor))
-            return
+        if commission_group_user:
+            try:
+                commission_group_cut = Cut.objects.get(group=commission_group_user, vendor=sale.vendor)
+            except Cut.DoesNotExist:
+                logger.warning('Cut matching query does not exist %s - %s' % (commission_group_user, sale.vendor))
+                return
 
-         # Handle exceptions for owner cuts
-        try:
-            data_exceptions = commission_group_cut.rules_exceptions
-            for data in data_exceptions:
-                if data['sid'] == user.id:
-                    owner_tribute = decimal.Decimal(data['tribute'])
-        except:
-            pass
+             # Handle exceptions for owner cuts
+            try:
+                data_exceptions = commission_group_cut.rules_exceptions
+                for data in data_exceptions:
+                    if data['sid'] == user.id:
+                        owner_tribute = decimal.Decimal(data['tribute'])
+            except:
+                pass
 
-    owner_earning = publisher_commission * owner_tribute
-    publisher_commission -= owner_earning
+        owner_earning = publisher_commission * owner_tribute
+        publisher_commission -= owner_earning
 
-    if owner.owner_network:
-        owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product)
+        if owner.owner_network:
+            owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product, counter)
 
-    earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER else 'publisher_network_click_tribute'
+        earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER else 'publisher_network_click_tribute'
 
-    get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type=earning_type, sale=sale,
-                                                          from_product=product, from_user=user, amount=owner_earning,
-                                                          date=sale.sale_date, status=sale.status)
+        get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type=earning_type, sale=sale,
+                                                              from_product=product, from_user=user, amount=owner_earning,
+                                                              date=sale.sale_date, status=sale.status)
     return publisher_commission
