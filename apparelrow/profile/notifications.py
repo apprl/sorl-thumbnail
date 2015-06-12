@@ -178,7 +178,7 @@ def retrieve_url(path):
     if domain[-1] == "/":
         if path[0] == "/":
             path = path.replace("/","",1)
-    return '%s%s' % (domain, path)
+    return 'http://%s%s' % (domain, path)
 
 def retrieve_full_url(path):
     """
