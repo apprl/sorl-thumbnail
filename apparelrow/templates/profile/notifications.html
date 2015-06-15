@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load thumbnail apparel_extras staticfiles %}
+{% load tz %}
+
+{% block extra-title %}{% trans "Notifications" %} | {% endblock %}
+
+{% block body-classes %}settings-page{% endblock %}
+{% block body %}
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Notifications" %}</h1>
+        </div>
+    </div>
+
+    <!-- Custom page styles -->
+    <style>
+        .npa-notification {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+            display: table;
+            width: 100%;
+        }
+        .npa-notification span {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .npa-notification .npa-image {
+            width: 34px;
+            margin-right: 10px;
+        }
+        .npa-notification:last-of-type {
+            border: 0;
+        }
+        .npa-notification .npa-time {
+            color: #999;
+            display: none;
+            line-height: 44px;
+            text-align: right;
+        }
+        .npa-notification .npa-message p {
+            font-size: 12px;
+            margin: 0;
+            line-height: 14px;
+            padding: 0 10px 0 10px;
+        }
+        .npa-notification .npa-action {
+            text-align: right;
+        }
+
+        @media (min-width: 640px) {
+            .npa-notification .npa-time {
+                display: block;
+            }
+            .npa-notification .npa-action {
+                width: 120px;
+            }
+        }
+
+        @media (min-width: 800px) {
+            .npa-notification .npa-message p {
+                font-size: 14px;
+                padding: 0 10px 0 20px;
+            }
+            .npa-notification .npa-action {
+                width: 160px;
+            }
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-lg-12">
+            {% localtime on %}
+                {% for event in request.user.notifications %}
+                    <div class="npa-notification">
+                        {% if event.type == "LIKELOOK" %}
+                            <span class="npa-image">
+                                <a href="{{ event.actor.url_likes }}">
+                                    <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32">
+                                </a>
+                            </span>
+                            <span class="npa-message">
+                                <p>
+                                    <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong></a> liked your look
+                                    <a href="{{ event.look.get_absolute_url }}">
+                                        <strong>{{ event.look.title }}</strong>
+                                    </a>
+                                </p>
+                            </span>
+                        {% elif event.type == "FB" %}
+                            <span class="npa-image">
+                                <a href="{{ event.actor.url_likes }}">
+                                    <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/>
+                                </a>
+                            </span>
+                            <span class="npa-message">
+                                <p>Your Facebook friend <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> is now on APPRL!</span></a>
+                                </p>
+                            </span>
+                        {% elif event.type == "SALE" %}
+                            <span class="npa-image">
+                                <a href="{{ event.product.get_absolute_url }}">
+                                    {% thumbnail event.product.product_image "32" crop="noop" as im %}
+                                    <img class="img-circle" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/>
+                                    {% endthumbnail %}
+                                </a>
+                            </span>
+                            <span class="npa-message">
+                               <p>
+                                   <a href="{{ event.product.get_absolute_url }}">
+                                       <strong>{{ event.product }}</strong>
+                                   </a> is on sale!
+                               </p>
+                            </span>
+
+                        {% elif event.type == "FOLLOW" %}
+                            <span class="npa-image">
+                                <a href="{{ event.actor.url_likes }}">
+                                    <img class="img-circle"  src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/>
+                                </a></span>
+                            <span class="npa-message">
+                                <p>
+                                    <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> started following you!</a>
+                                </p>
+                            </span>
+                        {% endif %}
+                        <span class="npa-time">{{ event.created|since }}</span>
+                        <span class="npa-action">{% include 'apparel/fragments/follow.html' with profile=event.actor%}</span>
+                </div>
+            {% empty %}
+                <div class="npa-notification">
+                        <span class="npa-message">
+                            You don't have any notifications yet!
+                        </span>
+                </div>
+            {% endfor %}
+            {% endlocaltime %}
+        </div>
+    </div>
+{% endblock %}
