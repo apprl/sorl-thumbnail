@@ -77,7 +77,9 @@
 
                 window.location.href = '/a/admin/' + year + '/' + month + '/';
             });
-            new Tablesort($('table#clicks_tb').get(0));
+            if ($('table#clicks_tb').length) {
+                new Tablesort($('table#clicks_tb').get(0));
+            }
         });
             /*
             Load detail click earning details for clicks in a modal
