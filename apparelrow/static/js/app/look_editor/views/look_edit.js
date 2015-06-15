@@ -209,9 +209,9 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         } else if(this.pending_link) {
             var new_component = this._create_photo_component(this._get_hotspot(e));
             new_component.set('link', this.pending_link.toJSON());
-            console.log(new_component);
+
             this.model.components.add(new_component);
-            console.log(this.model.components);
+
             this.pending_product = false;
             this.pending_event = false;
             App.Events.trigger('look_edit:linked_placed');

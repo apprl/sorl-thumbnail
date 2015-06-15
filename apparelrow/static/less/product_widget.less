@@ -24,6 +24,27 @@
       font-weight: bold;
       color: #555;
     }
+
+    .previous {
+      position: absolute;
+      top: 50%;
+      left: 0px;
+      .translate(0, -50%);
+      width: 40px;
+      height: auto;
+      z-Index: 10;
+      cursor: pointer;
+    }
+    .next {
+      position: absolute;
+      top: 50%;
+      right: 0px;
+      .translate(0, -50%);
+      width: 40px;
+      height: auto;
+      z-Index: 10;
+      cursor: pointer;
+    }
   }
 }
 
@@ -93,6 +114,10 @@
       }
     }
   }
+}
+
+.show-liked .product-image-container .hover .btn.delete {
+  display: none !important;
 }
 
 .shop-list {
