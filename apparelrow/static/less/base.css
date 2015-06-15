@@ -11075,7 +11075,10 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 #product-widget-product-list .product-image-container .hover .btn {
   margin-bottom: 10px;
 }
-.show-liked .product-image-container .hover .btn.delete {
+.show-liked .product-image-container .product-image {
+  opacity: 1 !important;
+}
+.show-liked .product-image-container .hover {
   display: none !important;
 }
 .shop-list .shop:nth-child(3n+1) {

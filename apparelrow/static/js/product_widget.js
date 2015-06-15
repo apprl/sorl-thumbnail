@@ -42,7 +42,6 @@ jQuery(document).ready(function() {
             $items = $ul.children('li');
         }
 
-        running = false;
         $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { running = false; }});
     }
 
