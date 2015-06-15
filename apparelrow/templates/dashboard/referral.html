@@ -15,7 +15,7 @@
 
     <p>
     <strong>{% trans "This is how it works" %}</strong>
-    <ol>
+    <ol class="list-left-margin">
         <li>{% trans "Send invites to bloggers using the form or link below" %}</li>
         <li>{% trans "Every blogger that joins Apprl via the link in your invite will instantly get €20 on their Apprl account" %}</li>
         <li>{% blocktrans %}You will then make 2-4&#37; of all sales the person you have invited generates for a 6 month period without any effort at all{% endblocktrans %}</li>
@@ -54,7 +54,8 @@
         </div>
     </div>
 
-    <!-- p><strong>{% trans "This is how it works:" %}</strong></p>
+    {% comment %}
+    <p><strong>{% trans "This is how it works:" %}</strong></p>
     <ol>
         <li>{% trans "Share your invitation link with the person you wish to invite and ask them to click it and apply to APPRL." %}</li>
         <li>{% trans "For every publisher/blogger that signs up to APPRL via your invitation link, they will become a “referral publisher” to you for 6 months." %}</li>
@@ -65,7 +66,7 @@
             <a href="{{ dashboard_url }}">your statistics</a>.{% endblocktrans %}</li>
     </ol>
 
-    <br-->
+    <br>{% endcomment %}
     <p><strong>{% trans "The following have applied to Apprl via your link:" %}</strong></p>
     <ul class="list-unstyled">
         {% for referral in referrals %}

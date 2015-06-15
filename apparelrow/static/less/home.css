@@ -7359,6 +7359,9 @@ a:focus {
 .top-buffer {
   margin-top: 20px;
 }
+.list-left-margin {
+  margin-left: 1.5em;
+}
 body {
   background-color: #e6e6e6;
   padding-top: 50px;
@@ -8025,22 +8028,6 @@ body.contest .navbar {
 .notifications {
   max-height: 55px;
 }
-.notification-list {
-  color: #AFAFAF;
-  background: #000000;
-  width: 500px;
-  table-layout: fixed;
-  border: none !important;
-  padding: 0px;
-  background: -webkit-linear-gradient(#000000, #333333);
-  /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(#000000, #333333);
-  /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(#000000, #333333);
-  /* For Firefox 3.6 to 15 */
-  background: linear-gradient(#000000, #333333);
-  /* Standard syntax */
-}
 .notification-bg-circle {
   border-radius: 50%;
   width: 32px;
@@ -8126,21 +8113,16 @@ header {
   margin: 0 auto;
   position: relative;
 }
-.ncp-badge {
+.unread_count {
+  border: none !important;
   position: absolute;
-  top: -2px;
-  right: -6px;
-  font-size: 12px;
-  border-radius: 50%;
+  top: -6px;
   background-color: #67E2B8;
   display: inline-block;
-  width: 16px;
-  height: 16px;
   color: white;
   text-align: center;
-  line-height: 16px;
 }
-.notifications-toggler {
+.notification-dropdown {
   padding: 0 !important;
   position: relative;
   float: right;
@@ -8155,28 +8137,29 @@ header {
   transition: background-color 0.2s;
   padding-left: 1px;
 }
-.notifications-toggler svg {
+.notification-dropdown svg {
   height: 100%;
 }
-.notifications-toggler img {
+.notification-dropdown img {
   vertical-align: middle;
 }
-.notifications-toggler path {
+.notification-dropdown path {
   -webkit-transition: fill .2s;
   transition: fill .2s;
 }
-.notifications-toggler:hover,
-.notifications-toggler.active {
+.notification-dropdown:hover,
+.notification-dropdown.active {
   background-color: #ffffff !important;
 }
-.notifications-toggler.active path,
-.notifications-toggler:hover path {
+.notification-dropdown.active path,
+.notification-dropdown:hover path {
   fill: #000000 !important;
 }
 .ncp-notifications {
   display: none;
-  font-size: 12px;
+  font-size: 12px !important ;
   position: absolute;
+  padding: 0px 0px;
   top: 50px;
   right: -16px;
   width: 100%;
@@ -8187,6 +8170,16 @@ header {
   background: -moz-linear-gradient(#000000, #333333);
   background: linear-gradient(#000000, #333333);
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+}
+.ncp-notifications a {
+  display: block;
+  text-decoration: none;
+  color: #ccc;
+  width: 100%;
+  height: 100%;
+  letter-spacing: 0.01rem;
+  padding: 0 !important;
+  white-space: normal !important;
 }
 .ncp-notifications strong {
   color: white;
@@ -8199,7 +8192,7 @@ header {
   position: relative;
   padding: 10px;
   zoom: 1;
-  height: 54px;
+  height: 100%;
   display: block;
   -webkit-transition: background-color 0.2s;
   transition: background-color 0.2s;
@@ -8207,8 +8200,16 @@ header {
 .ncp-notifications li:after {
   clear: both;
 }
+.ncp-notifications li:last-child {
+  cursor: pointer;
+  text-align: center;
+}
 .ncp-notifications li:hover {
   background-color: rgba(255, 255, 255, 0.1);
+  height: 100%;
+}
+.ncp-notifications li a:hover {
+  background-color: transparent;
 }
 .ncp-notifications small {
   position: absolute;
@@ -10109,6 +10110,10 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   text-transform: uppercase;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+.publisher-panel .btn-success {
+  margin: 15px;
+  width: 100%;
+}
 .publisher-panel .btn-default {
   background-color: #000 !important;
   background-image: #000 !important;
@@ -10304,6 +10309,7 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 }
 .look-detail-page .share {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 .look-detail-page .tooltip {
   display: none;

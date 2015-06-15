@@ -91,7 +91,7 @@ class LocationMiddleware(object):
 
     def process_response(self, request, response):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
-        if not request.session.get('location',None):
+        if not request.session.get('location',None) and not cookie_value:
             try:
                 # Depending on localeurl strip path method
                 location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
@@ -103,10 +103,11 @@ class LocationMiddleware(object):
                 response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
             except:
                 pass
-        elif not cookie_value:
-            response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session.get('location'), max_age=45 * 24 * 60 * 60)
-        elif not request.session.get('location') == cookie_value:
-            response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session['location'], max_age=45 * 24 * 60 * 60)
+        if request.session.get('location',None):
+            if not cookie_value:
+                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session.get('location'), max_age=45 * 24 * 60 * 60)
+            elif not request.session.get('location') == cookie_value:
+                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session['location'], max_age=45 * 24 * 60 * 60)
         return response
 
 class InternalReferralMiddleware(object):

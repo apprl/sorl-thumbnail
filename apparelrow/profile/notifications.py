@@ -170,6 +170,16 @@ def notify_with_mandrill_template(users, notification_name, merge_vars):
 
     activate(current_language)
 
+def retrieve_url(path):
+    """
+        append current hostname to front of URL
+    """
+    domain = Site.objects.get_current().domain
+    if domain[-1] == "/":
+        if path[0] == "/":
+            path = path.replace("/","",1)
+    return 'http://%s%s' % (domain, path)
+
 def retrieve_full_url(path):
     """
         append current hostname to front of URL
@@ -392,7 +402,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
     if notify_user and sender:
         merge_vars = {}
         domain = Site.objects.get_current().domain
-        sender_link = retrieve_full_url(sender.get_absolute_url())
+        sender_link = retrieve_url(sender.get_absolute_url()) # this method is returning a static URL
         merge_vars['PROFILEURL'] = sender_link
         look_url_link = 'http://%s%s' % (domain, look_like.look.get_absolute_url())
         merge_vars['LOOKURL'] = look_url_link
@@ -463,7 +473,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
 
     if notify_user and sender:
         merge_vars = dict()
-        sender_link = retrieve_full_url(sender.get_absolute_url())
+        sender_link = retrieve_url(sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
 
         if sender.image:
@@ -512,7 +522,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
 
         if recipient.facebook_friends == 'A' and sender:
             merge_vars = dict()
-            sender_link = retrieve_full_url(sender.get_absolute_url())
+            sender_link = retrieve_url(sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
             if sender.image:
                 profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
@@ -589,8 +599,8 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['PRODUCTPHOTOURL'] = product_photo_url
             merge_vars['BRANDNAME'] = product.manufacturer.name
             merge_vars['PRODUCTNAME'] = product.product_name
-            merge_vars['PRODUCTLINK'] = "http://%s%s" % (domain,product.get_absolute_url())
-            merge_vars['BUYLINK'] = "http://%sredirect/%s/Product/0/" % (domain, product.pk)
+            merge_vars['PRODUCTLINK'] = "http://%s/%s" % (domain,product.get_absolute_url())
+            merge_vars['BUYLINK'] = "http://%s/redirect/%s/Product/0/" % (domain, product.pk)
             merge_vars['OLDPRICE'] = locale_original_price
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
@@ -800,7 +810,7 @@ def send_look_like_summaries(period="D"):
                         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
                     else:
                         profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
-                    sender_link = retrieve_full_url(liker.get_absolute_url())
+                    sender_link = retrieve_url(liker.get_absolute_url())
                     likers.append({"USERNAME" : liker.display_name,
                                    "PROFILEURL" : sender_link,
                                    "PROFILEPICTUREURL" : profile_photo_url,
@@ -869,7 +879,7 @@ def send_product_like_summaries(period="D"):
                         profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
                     else:
                         profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
-                    sender_link = retrieve_full_url(liker.get_absolute_url())
+                    sender_link = retrieve_url(liker.get_absolute_url())
                     likers.append({"USERNAME" : liker.display_name,
                                    "PROFILEURL" : sender_link,
                                    "PROFILEPICTUREURL" : profile_photo_url,
