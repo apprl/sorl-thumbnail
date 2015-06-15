@@ -60,21 +60,24 @@
         }
         .previous img {
             height: 75px;
+            display: block;
         }
         .next {
             position: absolute;
             display: block;
             z-index:10;
         }
+
         .next img {
             height: 58px;
+            display: block;
         }
     </style>
   </head>
   <body class="product-widget-embed">
-    <div class="navigation"><a href="#" class="previous"><img src="{% static "images/left_arrow.svg" %}"/></a><a href="#" class="next"><img src="{% static "images/right_arrow.svg" %}"/></a></div>
-    <div class="slidecontainer">
+<div class="navigation"><a href="#" class="previous"><img src="{% static "images/left_arrow.svg" %}"/></a><a href="#" class="next"><img src="{% static "images/right_arrow.svg" %}"/></a></div>
 
+  <div class="slidecontainer">
         <ul>
           {% for component in components %}
           <li>
@@ -90,6 +93,7 @@
     <script type="text/javascript" src="{% static 'js/jquery/jquery-1.9.1.min.js' %}"></script>
     <script type="text/javascript">
         var nrchildren = 1;
+        var embedHeight = false;
         var embedId = '{{ embed_id }}';
         var embed_type = '{{ object.product_widget.type }}';
     </script>

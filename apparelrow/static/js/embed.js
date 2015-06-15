@@ -42,9 +42,12 @@ jQuery(document).ready(function() {
 
             if(isPhoto) {
                 height = $('body').height();
-            } else { // TODO: No hardcoded width adding
-                height = Math.ceil(($('body').width() * 1.03) * (embedHeight / embedWidth));
+            } else if(embedHeight) { // TODO: No hardcoded width adding
+                height = Math.ceil($('body').width() * 1.03 * (embedHeight / embedWidth));
+            } else {
+                height = Math.ceil($('body').width() * 1.03);
             }
+
 
             parent.postMessage(height +"|"+ embedId, parentHost);
         }

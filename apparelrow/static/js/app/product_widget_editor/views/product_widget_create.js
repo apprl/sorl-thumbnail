@@ -11,20 +11,21 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:delete', this.delete_product_widget, this);
         App.Events.on('widget:reset', this.reset, this);
         App.Events.on('widget:save', this.save_product_widget, this);
-        App.Events.on('widget:publish', this.publish_product_widget, this);
-        App.Events.on('widget:unpublish', this.unpublish_product_widget, this);
         App.Events.on('widget:product_display', this.product_display, this);
+        App.Events.on('widget:touchmenu', this.alter_buttons, this);
 
         App.Events.on('product:delete', this.resize, this);
 
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
+        this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
 
         // ProductWidget editor popup
         this.product_widget_edit_popup = new App.Views.ProductWidgetEditPopup({parent_view: this});
 
-        App.Events.on('widget:product:add', this.pending_add_component, this)
+        App.Events.on('widget:product:add', this.pending_add_component, this);
+        App.Events.on('product:delete', function() { this.update_title(-1); }, this);
         this.model.components.on('add', this.add_component, this);
 
         $(window).on('resize', _.bind(this.resize, this));
@@ -41,25 +42,26 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         mc.on('swipeleft swiperight', _.bind(function(e) { this.slide(e.type == 'swipeleft' ? -1 : 1); }, this));
 
         App.Views.ProductWidgetCreate.__super__.initialize(this);
-        $(window).trigger('resize');
-        $('.body-header-col-right ul').hide();
-        if (this.model.get('id')) {
-            $('.body-header-col-right .btn-reset').parent().hide();
-        } else {
-            $('.body-header-col-right .btn-delete').parent().hide();
-        }
-        $('#product-widget-product-list').hide();
 
-        this.init_footer();
+        $('.body-header-col-right ul').hide();
+        $(window).trigger('resize');
+
+        $('#product-widget-product-list').hide();
     },
     init_products: function() {
         if (!this.model.attributes.id) {
             $('#product-widget-display-settings').show();
-            $('#product-widget-product-list').hide();
         } else {
-            $('#product-widget-product-list').show();
             this.product_display(this.model.get('show_liked'));
         }
+        $('.body-header-col-right ul').show();
+
+        if (this.model.get('show_liked')) {
+            $('#modal_embed_product_widget #id_name').parent().hide();
+            $('.body-header-col-right .btn-embed').click();
+        }
+        $('.body-header-col-right .btn-delete').parent().show();
+        $('.body-header-col-right .btn-reset').parent().hide();
         if(this.model.attributes.hasOwnProperty('products')) {
             for (var i = 0; i < this.model.attributes.products.length; i++) {
                 var product = this.model.attributes.products[i];
@@ -76,14 +78,20 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     },
     product_display: function(show_liked) {
         this.model.set('show_liked', show_liked);
-
+        this.init_footer();
         if(show_liked) {
             if (!this.model.attributes.id) {
-                this.save_product_widget({ title: "My liked products", 'callback': function() {
+                this.save_product_widget({ title: "My liked products", 'callback': function(id) {
                     $("#embed_product_widget_form #id_name").val("My liked products");
                     window.product_widget_create.init_products();
+                    external_product_widget_id = id;
                 }});
             }
+            $('body').addClass('show-liked');
+            $('.widget-footer .btn-add-item').prop('disabled', true);
+            $('#modal_embed_product_widget .modal-footer').find('.btn.hidden').removeClass('hidden');
+            $('#modal_embed_product_widget .modal-footer').find('.btn:first').addClass('hidden');
+            $('#product-chooser .disabled .info').show();
             $('#product-widget-display-settings').find('.buttons').hide();
         } else {
             $('#product-chooser').find('.disabled').hide();
@@ -91,7 +99,6 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             $('#product-widget-product-list').removeClass('liked-products');
             $('.body-header-col-right ul').show();
             $('.body-header-col-right .btn-delete').parent().hide();
-            this.init_footer();
         }
         $('#product-widget-product-list').show();
         $('#product-widget-preview').removeClass('splash');
