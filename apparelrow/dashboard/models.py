@@ -292,6 +292,42 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
 
         sale, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
 
+AGGREGATED_DATA_TYPES = (
+    ('aggregated_from_total', 'Total Aggregation'),
+    ('aggregated_from_product', 'Aggregated From Product'),
+    ('aggregated_from_publisher', 'Aggregated From Publisher'),
+    ('simple_earning', 'Simple User Earning'),
+)
+
+
+class AggregatedData(models.Model):
+    date = models.DateTimeField(default=timezone.now)
+    user_id = models.PositiveIntegerField(default=0)
+    user_name = models.CharField(max_length=100)
+    user_username = models.CharField(max_length=100)
+
+    sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    referral_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    network_sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    network_click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    sale_plus_click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    total_network_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+
+    sales = models.PositiveIntegerField(default=0)
+    network_sales = models.PositiveIntegerField(default=0)
+    referral_sales = models.PositiveIntegerField(default=0)
+    paid_clicks = models.PositiveIntegerField(default=0)
+    total_clicks = models.PositiveIntegerField(default=0)
+
+    type = models.CharField(max_length=100, choices=AGGREGATED_DATA_TYPES)
+
+    aggregated_from_id = models.PositiveIntegerField(default=0)
+    aggregated_from_name = models.CharField(max_length=100)
+    aggregated_from_slug = models.CharField(max_length=100)
+    aggregated_from_link = models.CharField(max_length=200)
+    aggregated_from_image = models.CharField(max_length=200)
+
 USER_EARNING_TYPES = (
     ('apprl_commission', 'APPRL Earnings'),
     ('referral_sale_commission', 'Referral Sale Earnings'),
@@ -302,6 +338,7 @@ USER_EARNING_TYPES = (
     ('publisher_network_click_tribute', 'Network Earnings per Clicks'),
     ('publisher_sale_click_commission', 'Earnings per Clicks'),
 )
+
 
 class UserEarning(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, on_delete=models.PROTECT)
