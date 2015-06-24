@@ -79,7 +79,7 @@ class LocationMiddleware(object):
                         request.session['location'] = cookie_value
                         save_location(request, cookie_value)
                 except KeyError:
-                    pass
+                    request.session['location'] = cookie_value
             else:
                 save_location(request, cookie_value)
         else:
