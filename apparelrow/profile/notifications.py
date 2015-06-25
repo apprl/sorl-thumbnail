@@ -410,10 +410,8 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         merge_vars['LOOKNAME'] = look_name
         look_photo_url = look_like.look.static_image.url
         merge_vars['LOOKPHOTOURL'] = look_photo_url
-        if sender.image:
-            profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
-        elif sender.facebook_user_id:
-            profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+        if sender.image or sender.facebook_user_id:
+            profile_photo_url = sender.avatar_circular_large
         else:
             profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
@@ -445,10 +443,8 @@ def get_avatar_url(user):
     """
     retrieve full url to a profile picture
     """
-    if user.image:
-        profile_photo_url =  retrieve_full_url(get_thumbnail(user.avatar_circular_medium, '500').url)
-    elif user.facebook_user_id:
-        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % user.facebook_user_id
+    if user.image or user.facebook_user_id:
+        profile_photo_url =  retrieve_full_url(user.avatar_circular_large)
     else:
         profile_photo_url = retrieve_full_url(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
     return profile_photo_url
@@ -476,10 +472,8 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         sender_link = retrieve_url(sender.get_absolute_url())
         merge_vars['PROFILEURL'] = sender_link
 
-        if sender.image:
-            profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
-        elif sender.facebook_user_id:
-            profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+        if sender.image or sender.facebook_user_id:
+            profile_photo_url = sender.avatar_circular_large
         else:
             profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
@@ -524,10 +518,8 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             merge_vars = dict()
             sender_link = retrieve_url(sender.get_absolute_url())
             merge_vars['PROFILEURL'] = sender_link
-            if sender.image:
-                profile_photo_url = get_thumbnail(sender.avatar_circular_medium, '500').url
-            elif sender.facebook_user_id:
-                profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % sender.facebook_user_id
+            if sender.image or sender.facebook_user_id:
+                profile_photo_url = sender.avatar_circular_large
             else:
                 profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
@@ -804,10 +796,8 @@ def send_look_like_summaries(period="D"):
                 continue
             for liker in look_likes[look]:
                 if not(liker == user and len(likers) <= 20):
-                    if liker.image:
-                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium, '100').url
-                    elif liker.facebook_user_id:
-                        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
+                    if liker.image or liker.facebook_user_id:
+                        profile_photo_url = liker.avatar_circular_large
                     else:
                         profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
                     sender_link = retrieve_url(liker.get_absolute_url())
@@ -873,10 +863,8 @@ def send_product_like_summaries(period="D"):
                 continue
             for liker in product_likes[product]:
                 if not(liker == user and len(likers) <= 20):
-                    if liker.image:
-                        profile_photo_url = get_thumbnail(liker.avatar_circular_medium, '100').url
-                    elif liker.facebook_user_id:
-                        profile_photo_url = 'http://graph.facebook.com/%s/picture?width=208' % liker.facebook_user_id
+                    if liker.image or liker.facebook_user_id:
+                        profile_photo_url = liker.avatar_circular_large
                     else:
                         profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
                     sender_link = retrieve_url(liker.get_absolute_url())
