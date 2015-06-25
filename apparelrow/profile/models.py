@@ -16,6 +16,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
+from django.templatetags.static import static
 from sorl.thumbnail import get_thumbnail, default
 
 from apparelrow.profile.notifications import process_follow_user
@@ -322,6 +323,7 @@ class User(AbstractUser):
         """ Small size circular avatar using CustomCircularEngine """
         old_engine = default.engine
         default.engine = CustomCircularEngine()
+        image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_CIRCULAR)
         if self.image:
             image = get_thumbnail(self.image, '50x50', format="PNG").url
         elif self.facebook_user_id:
@@ -335,6 +337,7 @@ class User(AbstractUser):
         """ Medium size circular avatar using CustomCircularEngine """
         old_engine = default.engine
         default.engine = CustomCircularEngine()
+        image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_MEDIUM_CIRCULAR)
         if self.image:
             image = get_thumbnail(self.image, '125x125', format="PNG").url
         if self.facebook_user_id:
@@ -348,6 +351,7 @@ class User(AbstractUser):
         """ Large size circular avatar using CustomCircularEngine """
         old_engine = default.engine
         default.engine = CustomCircularEngine()
+        image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
         if self.image:
             image = get_thumbnail(self.image, '208x208', format="PNG").url
         elif self.facebook_user_id:
