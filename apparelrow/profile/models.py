@@ -262,8 +262,7 @@ class User(AbstractUser):
     def avatar_small(self):
         if self.image:
             return get_thumbnail(self.image, '32x32', crop='center').url
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
 
         if self.is_brand:
@@ -275,8 +274,7 @@ class User(AbstractUser):
     def avatar(self):
         if self.image:
             return get_thumbnail(self.image, '50x50', crop='center').url
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_user_id
 
         if self.is_brand:
@@ -288,8 +286,7 @@ class User(AbstractUser):
     def avatar_medium(self):
         if self.image:
             return get_thumbnail(self.image, '125').url
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
 
         if self.is_brand:
@@ -301,8 +298,7 @@ class User(AbstractUser):
     def avatar_large(self):
         if self.image:
             return get_thumbnail(self.image, '208').url
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
         if self.is_brand:
@@ -313,8 +309,7 @@ class User(AbstractUser):
     def avatar_large_absolute_uri(self, request):
         if self.image:
             return request.build_absolute_uri(get_thumbnail(self.image, '208').url)
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
         if self.is_brand:
@@ -329,7 +324,7 @@ class User(AbstractUser):
         default.engine = CustomCircularEngine()
         if self.image:
             image = get_thumbnail(self.image, '50x50', format="PNG").url
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             image_path = 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
             image = get_thumbnail(image_path, '50x50', format="PNG").url
         default.engine = old_engine
@@ -355,7 +350,7 @@ class User(AbstractUser):
         default.engine = CustomCircularEngine()
         if self.image:
             image = get_thumbnail(self.image, '208x208', format="PNG").url
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             image_path = 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
             image = get_thumbnail(image_path, '208x208', format="PNG").url
         default.engine = old_engine
