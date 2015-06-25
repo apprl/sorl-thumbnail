@@ -16,6 +16,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.functional import cached_property
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
+from django.templatetags.static import static
 from sorl.thumbnail import get_thumbnail, default
 
 from apparelrow.profile.notifications import process_follow_user
@@ -262,8 +263,7 @@ class User(AbstractUser):
     def avatar_small(self):
         if self.image:
             return get_thumbnail(self.image, '32x32', crop='center').url
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
 
         if self.is_brand:
@@ -275,8 +275,7 @@ class User(AbstractUser):
     def avatar(self):
         if self.image:
             return get_thumbnail(self.image, '50x50', crop='center').url
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_user_id
 
         if self.is_brand:
@@ -288,8 +287,7 @@ class User(AbstractUser):
     def avatar_medium(self):
         if self.image:
             return get_thumbnail(self.image, '125').url
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
 
         if self.is_brand:
@@ -301,8 +299,7 @@ class User(AbstractUser):
     def avatar_large(self):
         if self.image:
             return get_thumbnail(self.image, '208').url
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
         if self.is_brand:
@@ -313,8 +310,7 @@ class User(AbstractUser):
     def avatar_large_absolute_uri(self, request):
         if self.image:
             return request.build_absolute_uri(get_thumbnail(self.image, '208').url)
-
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
         if self.is_brand:
@@ -327,9 +323,10 @@ class User(AbstractUser):
         """ Small size circular avatar using CustomCircularEngine """
         old_engine = default.engine
         default.engine = CustomCircularEngine()
+        image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_CIRCULAR)
         if self.image:
             image = get_thumbnail(self.image, '50x50', format="PNG").url
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             image_path = 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
             image = get_thumbnail(image_path, '50x50', format="PNG").url
         default.engine = old_engine
@@ -340,6 +337,7 @@ class User(AbstractUser):
         """ Medium size circular avatar using CustomCircularEngine """
         old_engine = default.engine
         default.engine = CustomCircularEngine()
+        image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_MEDIUM_CIRCULAR)
         if self.image:
             image = get_thumbnail(self.image, '125x125', format="PNG").url
         if self.facebook_user_id:
@@ -353,9 +351,10 @@ class User(AbstractUser):
         """ Large size circular avatar using CustomCircularEngine """
         old_engine = default.engine
         default.engine = CustomCircularEngine()
+        image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
         if self.image:
             image = get_thumbnail(self.image, '208x208', format="PNG").url
-        if self.facebook_user_id:
+        elif self.facebook_user_id:
             image_path = 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
             image = get_thumbnail(image_path, '208x208', format="PNG").url
         default.engine = old_engine
