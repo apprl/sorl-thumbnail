@@ -126,7 +126,7 @@
                         {% endif %}
                         <span class="npa-time">{{ event.created|since }}</span>
 
-                            <span class="npa-action">{% if not event.type == "SALE" %}{% include 'apparel/fragments/follow.html' with profile=event.actor%}{% endif %}</span
+                            <span class="npa-action">{% if not event.type == "SALE" %}{% include 'apparel/fragments/follow.html' with profile=event.actor%}{% endif %}</span>
                     </div>
             {% empty %}
                 <div class="npa-notification">
