@@ -111,7 +111,7 @@ VENDOR_LOCATION_MAPPING = {
     "Nelly":["SE"],
     "Nelly No":["NO"],
     "Gina Tricot NO":["NO"],
-    "Gina Tricot":["SE"],
+    "Gina Tricot SE":["SE"],
     "Panos Emporio":["SE"],
     "Boozt se":["SE"],
     "Boozt no":["NO"],
