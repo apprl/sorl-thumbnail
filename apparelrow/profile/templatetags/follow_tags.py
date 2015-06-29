@@ -20,10 +20,14 @@ class DisplayActivityFollowUrl(Node):
 
     def render(self, context):
         actor_instance = self.actor.resolve(context)
-        if self.follow:
-            return reverse('follow', kwargs={'profile_id': actor_instance.pk})
+        try:
+            if self.follow:
+                return reverse('follow', kwargs={'profile_id': actor_instance.pk})
 
-        return reverse('unfollow', kwargs={'profile_id': actor_instance.pk})
+            return reverse('unfollow', kwargs={'profile_id': actor_instance.pk})
+        except AttributeError, msg:
+            # This inactivates the Follow button due the user does not exist
+            pass
 
 @register.tag
 def unfollow_tag(parser, token):
