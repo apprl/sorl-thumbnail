@@ -19,6 +19,9 @@ class Store(models.Model):
     cookie_days = models.PositiveIntegerField(null=False, blank=False, default=30)
     vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, related_name='store')
 
+    class Meta:
+        ordering = ('identifier',)
+
     def __unicode__(self):
         return u'%s' % (self.identifier)
 

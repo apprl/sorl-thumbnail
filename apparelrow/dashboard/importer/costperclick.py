@@ -66,6 +66,12 @@ class Importer(BaseImporter):
                         sale['status'] = get_model('dashboard', 'Sale').PENDING
                         sale['adjusted_date'] = dateutil.parser.parse('%s'%datetime.date.today())
                         sale['type'] = get_model('dashboard', 'Sale').COST_PER_CLICK
+                        try:
+                            store = get_model('advertiser', 'Store').objects.get(vendor=vendor)
+                            sale['store_id'] = store.identifier
+
+                        except get_model('advertiser', 'Store').DoesNotExist:
+                            sale['store_id'] = None
                         sale = self.validate(sale)
                         if not sale:
                             continue
