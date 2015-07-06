@@ -23,7 +23,12 @@ class Command(BaseCommand):
 
     def update(self, row):
         instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
-        if row['store_id']:
+        try:
+            store = get_model('advertiser', 'Store').objects.get(vendor=row['vendor'])
+            store_id = store.identifier
+        except get_model('advertiser', 'Store').DoesNotExist:
+            store_id = None
+        if store_id:
             defaults = {
                 'ip_address': '127.0.0.1',
                 'status': Transaction.ACCEPTED,
@@ -36,7 +41,7 @@ class Command(BaseCommand):
                 'original_order_value': instance.original_amount,
                 'original_commission': instance.original_commission,
             }
-            transaction, _ = Transaction.objects.get_or_create(store_id=row['store_id'],
+            transaction, _ = Transaction.objects.get_or_create(store_id=store_id,
                                                                order_id=row['original_sale_id'], defaults=defaults)
 
         if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
