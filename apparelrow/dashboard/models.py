@@ -307,7 +307,7 @@ USER_EARNING_TYPES = (
 class UserEarning(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, blank=False, on_delete=models.PROTECT)
     user_earning_type = models.CharField(max_length=100, null=False, blank=False, choices=USER_EARNING_TYPES)
-    sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
+    sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.CASCADE)
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=False, on_delete=models.PROTECT)
     amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2)
