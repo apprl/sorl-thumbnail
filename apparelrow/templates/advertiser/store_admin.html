@@ -120,9 +120,8 @@
         <div class="col-md-12">{% trans "Total clicks generated:" %} <strong>{{ total_clicks_per_month }}</strong></div>
     {% endif %}
 
-    {% if vendor.is_cpo %}
-        <div class="col-md-12">{% trans "Total accepted commission:" %} <strong>{{ total_accepted_commission|floatdot|intcomma }} EUR</strong></div>
-    {% endif %}
+        <div class="col-md-12">{% trans "Invoiced & unpaid:" %} <strong>{{ accepted_commission|floatdot|intcomma }} EUR</strong></div>
+        <div class="col-md-12">{% trans "To be paid:" %} <strong>{{ commission_to_be_paid|floatdot|intcomma }} EUR</strong></div>
         <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 10px;"></div>
 
     </div>
@@ -150,12 +149,8 @@
             </ul>
             {% endif %}
 
-            {% if vendor.is_cpo %}
             <ul class="list-inline monthly-list">
-                <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatdot|intcomma }} EUR</li>
-            </ul>
-            {% endif %}
-
+                <li class="last">{% trans "Accepted commission:" %} {{ monthly_commission|floatdot|intcomma }} EUR</li>
             </ul>
         </div>
     </div>

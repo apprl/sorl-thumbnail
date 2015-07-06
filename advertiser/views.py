@@ -275,16 +275,14 @@ def store_admin(request, year=None, month=None):
     start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
     end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
-
     end_date_clicks_query = end_date_query
     if end_date >= datetime.date.today():
         end_date_clicks_query = datetime.datetime.combine(
             datetime.date.today() - datetime.timedelta(1), datetime.time(23, 59, 59, 999999))
-
     total_clicks_per_month = 0
     clicks_delivered_per_month = 0
     clicks_cost_per_month = 0
-    currency = None
+    currency = "EUR"
 
     if store.vendor.is_cpc:
         total_clicks_per_month = get_total_clicks_per_vendor(store.vendor)
@@ -298,17 +296,26 @@ def store_admin(request, year=None, month=None):
                                       .prefetch_related('products')
 
     accepted_commission = decimal.Decimal(0.00)
-    accepted_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier) \
-                                        .filter(created__gte=start_date_query, created__lte=end_date_query) \
-                                        .aggregate(Sum('commission'))
-    if accepted_query['commission__sum']:
-        accepted_commission = accepted_query['commission__sum']
+    accepted_query = get_model('advertiser', 'StoreInvoice').objects.filter(is_paid=False, store=store)
 
-    total_accepted_commission = decimal.Decimal(0.00)
-    total_accepted_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier) \
+    for row in accepted_query:
+        accepted_commission += row.get_total()
+
+    monthly_commission = decimal.Decimal(0.00)
+    accepted_per_month_query = Transaction.objects.filter(status=Transaction.ACCEPTED,
+                                                          created__gte=start_date_query, created__lte=end_date_query,
+                                                          store_id=store.identifier) \
                                               .aggregate(Sum('commission'))
-    if total_accepted_query['commission__sum']:
-        total_accepted_commission = total_accepted_query['commission__sum']
+
+    if accepted_per_month_query['commission__sum']:
+        monthly_commission = accepted_per_month_query['commission__sum']
+
+    commission_to_be_paid = decimal.Decimal(0.00)
+    to_be_paid_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier,
+                                                  cookie_date__lte=end_date_clicks_query, invoice=None) \
+                                              .aggregate(Sum('commission'))
+    if to_be_paid_query['commission__sum']:
+        commission_to_be_paid = to_be_paid_query['commission__sum']
 
     dt1 = request.user.date_joined.date()
     dt2 = datetime.date.today()
@@ -366,7 +373,8 @@ def store_admin(request, year=None, month=None):
                                                           'currency': currency,
                                                           'click_cost': click_cost,
                                                           'accepted_commission': accepted_commission,
-                                                          'total_accepted_commission': total_accepted_commission,
+                                                          'monthly_commission': monthly_commission,
+                                                          'commission_to_be_paid': commission_to_be_paid,
                                                           'data_per_month': data_per_month,
                                                           'clicks_per_day': clicks_per_day,
                                                           'total_clicks_per_month': total_clicks_per_month,
