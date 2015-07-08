@@ -7,7 +7,7 @@ import operator
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import get_model, Sum
+from django.db.models import get_model, Sum, Count
 from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -310,12 +310,12 @@ def store_admin(request, year=None, month=None):
     if accepted_per_month_query['commission__sum']:
         monthly_commission = accepted_per_month_query['commission__sum']
 
-    commission_to_be_paid = decimal.Decimal(0.00)
-    to_be_paid_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier,
+    commission_to_be_invoiced = decimal.Decimal(0.00)
+    to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier,
                                                   cookie_date__lte=end_date_clicks_query, invoice=None) \
                                               .aggregate(Sum('commission'))
-    if to_be_paid_query['commission__sum']:
-        commission_to_be_paid = to_be_paid_query['commission__sum']
+    if to_be_invoiced_query['commission__sum']:
+        commission_to_be_invoiced = to_be_invoiced_query['commission__sum']
 
     dt1 = request.user.date_joined.date()
     dt2 = datetime.date.today()
@@ -324,6 +324,13 @@ def store_admin(request, year=None, month=None):
     dates = [datetime.datetime(year=yr, month=mn, day=1) for (yr, mn) in (
         ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
     )]
+
+    sales_generated = 0
+    total_sales_query = get_model('dashboard', 'Sale').objects.filter(vendor=store.vendor,
+                                                                    status__gte=get_model('dashboard', 'Sale').PENDING) \
+                                                           .aggregate(sales=Count('id'))
+    if 'sales' in total_sales_query:
+        sales_generated = total_sales_query['sales']
 
     # Chart data (transactions and clicks)
     data_per_month = {}
@@ -362,6 +369,8 @@ def store_admin(request, year=None, month=None):
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             logger.warning("No cost per click defined for vendor %s"%store.vendor)
 
+
+
     return render(request, 'advertiser/store_admin.html', {'transactions': transactions,
                                                           'store': request.user.advertiser_store,
                                                           'dates': dates,
@@ -374,12 +383,13 @@ def store_admin(request, year=None, month=None):
                                                           'click_cost': click_cost,
                                                           'accepted_commission': accepted_commission,
                                                           'monthly_commission': monthly_commission,
-                                                          'commission_to_be_paid': commission_to_be_paid,
+                                                          'commission_to_be_invoiced': commission_to_be_invoiced,
                                                           'data_per_month': data_per_month,
                                                           'clicks_per_day': clicks_per_day,
                                                           'total_clicks_per_month': total_clicks_per_month,
                                                           'clicks_delivered_per_month': clicks_delivered_per_month,
                                                           'clicks_cost_per_month': clicks_cost_per_month,
+                                                          'sales_generated': sales_generated,
                                                           })
 
 @login_required

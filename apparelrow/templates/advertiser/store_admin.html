@@ -115,13 +115,16 @@
     </div>
 
     <div class="row subnav-page" style="margin-bottom: 10px;">
-        <div class="col-md-12">{% trans "Balance:" %} <strong>{{ store.balance }} EUR</strong></div>
+        <div class="col-md-12">{% trans "Invoiced & unpaid:" %} <strong>{{ accepted_commission|floatdot|intcomma }} EUR</strong></div>
+        <div class="col-md-12">{% trans "To be invoiced:" %} <strong>{{ commission_to_be_invoiced|floatdot|intcomma }} EUR</strong></div>
+
     {% if vendor.is_cpc %}
-        <div class="col-md-12">{% trans "Total clicks generated:" %} <strong>{{ total_clicks_per_month }}</strong></div>
+        <div class="col-md-12">{% trans "Total clicks to your store:" %} <strong>{{ total_clicks_per_month }}</strong></div>
+    {% endif %}
+    {% if vendor.is_cpo %}
+        <div class="col-md-12">{% trans "Total sales generated:" %} <strong>{{ sales_generated }}</strong></div>
     {% endif %}
 
-        <div class="col-md-12">{% trans "Invoiced & unpaid:" %} <strong>{{ accepted_commission|floatdot|intcomma }} EUR</strong></div>
-        <div class="col-md-12">{% trans "To be paid:" %} <strong>{{ commission_to_be_paid|floatdot|intcomma }} EUR</strong></div>
         <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 10px;"></div>
 
     </div>
