@@ -301,18 +301,17 @@ def store_admin(request, year=None, month=None):
     for row in accepted_query:
         accepted_commission += row.get_total()
 
-    monthly_commission = decimal.Decimal(0.00)
-    accepted_per_month_query = Transaction.objects.filter(status=Transaction.ACCEPTED,
+    monthly_sales = decimal.Decimal(0.00)
+    accepted_per_month_query = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING],
                                                           created__gte=start_date_query, created__lte=end_date_query,
                                                           store_id=store.identifier) \
-                                              .aggregate(Sum('commission'))
+                                              .aggregate(Sum('order_value'))
 
-    if accepted_per_month_query['commission__sum']:
-        monthly_commission = accepted_per_month_query['commission__sum']
+    if accepted_per_month_query['order_value__sum']:
+        monthly_sales = accepted_per_month_query['order_value__sum']
 
     commission_to_be_invoiced = decimal.Decimal(0.00)
-    to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier,
-                                                  cookie_date__lte=end_date_clicks_query, invoice=None) \
+    to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
                                               .aggregate(Sum('commission'))
     if to_be_invoiced_query['commission__sum']:
         commission_to_be_invoiced = to_be_invoiced_query['commission__sum']
@@ -328,9 +327,9 @@ def store_admin(request, year=None, month=None):
     sales_generated = 0
     total_sales_query = get_model('dashboard', 'Sale').objects.filter(vendor=store.vendor,
                                                                     status__gte=get_model('dashboard', 'Sale').PENDING) \
-                                                           .aggregate(sales=Count('id'))
-    if 'sales' in total_sales_query:
-        sales_generated = total_sales_query['sales']
+                                                           .aggregate(amount=Sum('converted_amount'))
+    if 'amount' in total_sales_query:
+        sales_generated = total_sales_query['amount']
 
     # Chart data (transactions and clicks)
     data_per_month = {}
@@ -338,7 +337,8 @@ def store_admin(request, year=None, month=None):
         data_per_month[start_date.replace(day=day)] = [0, 0]
 
     for transaction in transactions:
-        data_per_month[transaction.created.date()][0] += 1
+        if transaction.status in [Transaction.ACCEPTED, Transaction.PENDING]:
+            data_per_month[transaction.created.date()][0] += transaction.order_value
 
     clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_clicks_query) \
                                                            .filter(vendor=store.vendor) \
@@ -352,17 +352,29 @@ def store_admin(request, year=None, month=None):
         try:
             click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=store.vendor)
             for row in clicks:
+                #if row.amount > 0 and row.clicks > 0:
                 date_key = datetime.datetime.strftime(row.created, "%Y%m%d")
                 if not date_key in clicks_per_day:
                     start_date_query = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
                     end_date_query = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
-                    clicks_per_day[date_key] = {}
-                    clicks_per_day[date_key]['date'] = row.created
-                    clicks_per_day[date_key]['amount'], _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
-                    clicks_per_day[date_key]['clicks'] = 0
+                    amount, _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
                     product = get_model('apparel', 'Product').objects.get(slug=row.product)
-                    clicks_per_day[date_key]['name'] = product.product_name
-                clicks_per_day[date_key]['clicks'] += 1
+                    dict = {
+                        'date': row.created,
+                        'amount': amount,
+                        'clicks': 0,
+                        'name': product.product_name
+                    }
+                    if dict['amount'] > 0:
+                        clicks_per_day[date_key] = dict
+                    #clicks_per_day[date_key] = {}
+                    #clicks_per_day[date_key]['date'] = row.created
+                    #clicks_per_day[date_key]['amount'], _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
+                    #clicks_per_day[date_key]['clicks'] = 0
+                    #product = get_model('apparel', 'Product').objects.get(slug=row.product)
+                    #clicks_per_day[date_key]['name'] = product.product_name
+                if date_key in clicks_per_day:
+                    clicks_per_day[date_key]['clicks'] += 1
 
             # Sort clicks per day
             clicks_per_day = sorted(clicks_per_day.items(), key=operator.itemgetter(0), reverse=True)
@@ -382,7 +394,7 @@ def store_admin(request, year=None, month=None):
                                                           'currency': currency,
                                                           'click_cost': click_cost,
                                                           'accepted_commission': accepted_commission,
-                                                          'monthly_commission': monthly_commission,
+                                                          'monthly_sales': monthly_sales,
                                                           'commission_to_be_invoiced': commission_to_be_invoiced,
                                                           'data_per_month': data_per_month,
                                                           'clicks_per_day': clicks_per_day,
