@@ -861,7 +861,6 @@ def dashboard_admin(request, year=None, month=None):
                                                         'currency': 'EUR',
                                                         'earnings': earnings,
                                                         'monthly_array': monthly_array})
-
     return HttpResponseNotFound()
 
 def get_top_summary(current_user):
@@ -1090,6 +1089,7 @@ def dashboard(request, year=None, month=None):
                                                             'ppc_clicks': ppc_clicks,
                                                             'is_owner': is_owner})
     return HttpResponseRedirect(reverse('index-publisher'))
+
 
 def dashboard_info(request):
     return render(request, 'dashboard/info.html')
@@ -1818,62 +1818,70 @@ class AdminDashboardView(TemplateView):
                     earning.from_user_name = "APPRL"
                 earning.clicks = get_clicks_from_sale(earning.sale)
 
+            apprl_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
+            total_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
+            publisher_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
+
             # Aggregated Sum per month
-            apprl_data = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query), user_id=0, type='aggregated_from_total').\
-                aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                          sale_plus_click_earnings=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
+            apprl_query = AggregatedData.objects.\
+                filter(date__range=(start_date_query, end_date_query), user_id=0, type='aggregated_from_total')
+
+            if apprl_query.exists():
+                apprl_data = apprl_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
+                          sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
                           total_clicks=Sum('total_clicks'), sales=Sum('sales'))
+                apprl_top[0] = '%.2f EUR' % apprl_data['sale_clicks']
+                apprl_top[1] = '%.2f EUR' % apprl_data['sale_earnings']
+                apprl_top[2] = '%.2f EUR' % apprl_data['click_earnings']
+                apprl_top[3] = apprl_data['paid_clicks']
+                apprl_top[4] = apprl_data['total_clicks'] - apprl_data['paid_clicks']
+                apprl_top[5] = apprl_data['sales']
+                apprl_top[6] = get_conversion_rate(apprl_data['sales'], apprl_data['total_clicks'] - apprl_data['paid_clicks'])
 
-            total_data = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query), type='aggregated_from_total').\
-                aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                          sale_plus_click_earnings=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
+            total_query = AggregatedData.objects.\
+                filter(date__range=(start_date_query, end_date_query), type='aggregated_from_total')
+
+            if total_query.exists():
+                total_data = total_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
+                          sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
                           total_clicks=Sum('total_clicks'), referral_earnings=Sum('referral_earnings'),
                           network_sale_earnings=Sum('network_sale_earnings'),
                           network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
+                total_earnings = total_data['sale_clicks'] + total_data['referral_earnings'] + \
+                             total_data['network_sale_earnings'] + total_data['network_click_earnings']
+                total_commission = total_data['sale_earnings'] + total_data['referral_earnings'] + total_data['network_sale_earnings']
+                total_ppc = total_data['click_earnings'] + total_data['network_click_earnings']
+                total_top[0] = '%.2f EUR' % total_earnings
+                total_top[1] = '%.2f EUR' % total_commission
+                total_top[2] = '%.2f EUR' % total_ppc
+                total_top[3] = total_data['paid_clicks']
+                total_top[4] = total_data['total_clicks'] - total_data['paid_clicks']
+                total_top[5] = total_data['sales']
+                total_top[6] = get_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
 
-            publisher_data = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query), user_id__gt=0, type='aggregated_from_total').\
-                aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                          sale_plus_click_earnings=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
+            publisher_query = AggregatedData.objects.\
+                filter(date__range=(start_date_query, end_date_query), user_id__gt=0, type='aggregated_from_total')
+            if publisher_query.exists():
+                publisher_data = publisher_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
+                          sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
                           total_clicks=Sum('total_clicks'), referral_earnings=Sum('referral_earnings'),
                           network_sale_earnings=Sum('network_sale_earnings'),
                           network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
+                publisher_total = publisher_data['sale_clicks'] + total_data['referral_earnings']\
+                              + total_data['network_sale_earnings'] + total_data['network_click_earnings']
+                publisher_commission = publisher_data['sale_earnings'] + total_data['referral_earnings']\
+                                       + total_data['network_sale_earnings']
+                publisher_ppc = publisher_data['click_earnings'] + publisher_data['network_click_earnings']
+                publisher_top[0] = '%.2f EUR' % publisher_total
+                publisher_top[1] = '%.2f EUR' % publisher_commission
+                publisher_top[2] = '%.2f EUR' % publisher_ppc
+                publisher_top[3] = publisher_data['paid_clicks']
+                publisher_top[4] = publisher_data['total_clicks'] - publisher_data['paid_clicks']
+                publisher_top[5] = publisher_data['sales']
+                publisher_top[6] = get_conversion_rate(publisher_data['sales'], publisher_data['total_clicks'] - publisher_data['paid_clicks'])
 
             headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
                     'Commission CR']
-            total_total = total_data['sale_plus_click_earnings'] + total_data['referral_earnings'] \
-                          + total_data['network_sale_earnings'] + total_data['network_click_earnings']
-            total_commission = total_data['sale_earnings'] + total_data['referral_earnings'] + total_data['network_sale_earnings']
-            total_ppc = total_data['click_earnings'] + total_data['network_click_earnings']
-
-            publisher_total = publisher_data['sale_plus_click_earnings'] + total_data['referral_earnings']\
-                              + total_data['network_sale_earnings'] + total_data['network_click_earnings']
-            publisher_commission = publisher_data['sale_earnings'] + total_data['referral_earnings']\
-                                   + total_data['network_sale_earnings']
-            publisher_ppc = publisher_data['click_earnings'] + publisher_data['network_click_earnings']
-            total_top = ['%.2f EUR' % total_total,
-                         '%.2f EUR' % total_commission,
-                         '%.2f EUR' % total_ppc,
-                         total_data['paid_clicks'],
-                         total_data['total_clicks'] - total_data['paid_clicks'],
-                         total_data['sales'],
-                         get_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])]
-            publisher_top = ['%.2f EUR' % publisher_total,
-                             '%.2f EUR' % publisher_commission,
-                             '%.2f EUR' % publisher_ppc,
-                             publisher_data['paid_clicks'],
-                             publisher_data['total_clicks'] - publisher_data['paid_clicks'],
-                             publisher_data['sales'],
-                             get_conversion_rate(publisher_data['sales'], publisher_data['total_clicks'] - publisher_data['paid_clicks'])]
-            apprl_top = ['%.2f' % apprl_data['sale_plus_click_earnings'],
-                         '%.2f' % apprl_data['sale_earnings'],
-                         '%.2f' % apprl_data['click_earnings'],
-                         apprl_data['paid_clicks'],
-                         apprl_data['total_clicks'] - apprl_data['paid_clicks'],
-                         apprl_data['sales'],
-                         get_conversion_rate(apprl_data['sales'], apprl_data['total_clicks'] - apprl_data['paid_clicks'])]
             monthly_array = zip(headings, total_top, publisher_top, apprl_top)
 
             context_data = {'years_choices': years_choices, 'months_choices': months_choices,
