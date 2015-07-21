@@ -12,9 +12,11 @@ class Migration(SchemaMigration):
         db.create_table(u'dashboard_aggregateddata', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('date', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('user_id', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('user_id', self.gf('django.db.models.fields.PositiveIntegerField')(default=0, db_index=True)),
             ('user_name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('user_username', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('user_link', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('user_image', self.gf('django.db.models.fields.CharField')(max_length=200)),
             ('sale_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
             ('click_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
             ('referral_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
@@ -207,7 +209,9 @@ class Migration(SchemaMigration):
             'total_clicks': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'total_network_earnings': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '10', 'decimal_places': '2'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'user_id': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'user_id': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'db_index': 'True'}),
+            'user_image': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'user_link': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'user_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'user_username': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
