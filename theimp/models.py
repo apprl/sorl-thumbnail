@@ -128,6 +128,7 @@ class CategoryMapping(BaseModel):
             "vendor_id":self.vendor_id,
             "category":self.category,
             "apparel_mapped_category_id":self.mapped_category_id,
+            "apparel_category":' > '.join([c.name for c in self.mapped_category.get_ancestors(include_self=True)]),
             "created": assigned_timezone.localize(self.created).strftime(fmt) if self.created else None,
             "modified": assigned_timezone.localize(self.modified).strftime(fmt) if self.modified else None,
         })

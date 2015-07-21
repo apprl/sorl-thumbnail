@@ -72,6 +72,12 @@ class Brand(models.Model):
     def __unicode__(self):
         return u'%s' % self.name
 
+    def to_dict(self):
+        return {
+            'apparel_id': self.id,
+            'name': self.name
+        }
+
     class Meta:
         ordering = ['name']
         verbose_name = 'Brand'
@@ -194,6 +200,12 @@ class Category(MPTTModel):
     def __unicode__(self):
         return u"%s" % self.name
 
+    def to_dict(self):
+        return {
+            'apparel_id': self.id,
+            'name':' > '.join([c.name for c in self.get_ancestors(include_self=True)])
+        }
+
     class Exporter:
         export_fields = ['name', 'name_order', 'option_types']
 
@@ -203,6 +215,7 @@ class Category(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['name_order']
+
 
 models.signals.post_save.connect(invalidate_model_handler, sender=Category)
 models.signals.post_delete.connect(invalidate_model_handler, sender=Category)
