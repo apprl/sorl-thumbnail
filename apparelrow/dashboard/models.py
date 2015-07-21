@@ -302,9 +302,11 @@ AGGREGATED_DATA_TYPES = (
 
 class AggregatedData(models.Model):
     date = models.DateTimeField(default=timezone.now)
-    user_id = models.PositiveIntegerField(default=0)
+    user_id = models.PositiveIntegerField(default=0, db_index=True)
     user_name = models.CharField(max_length=100)
     user_username = models.CharField(max_length=100)
+    user_link = models.CharField(max_length=200)
+    user_image = models.CharField(max_length=200)
 
     sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
