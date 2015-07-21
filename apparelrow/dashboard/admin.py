@@ -68,7 +68,7 @@ admin.site.register(StoreCommission, StoreCommissionAdmin)
 
 
 class UserEarningAdmin(admin.ModelAdmin):
-    list_display = ('id',   'user', 'user_earning_type', 'from_product', 'from_user', 'amount', 'date', 'status', 'paid')
+    list_display = ('id', 'user', 'user_earning_type', 'from_product', 'from_user', 'amount', 'date', 'status', 'paid')
     search_fields = ('user__name', 'user_earning_type', 'status', 'paid')
 
 admin.site.register(UserEarning, UserEarningAdmin)
@@ -82,7 +82,8 @@ class AggregatedDataAdmin(admin.ModelAdmin):
     list_display = ('id', 'type', 'date', 'user_id', 'user_name', 'user_username', 'sale_earnings', 'click_earnings',
                     'sale_plus_click_earnings', 'referral_earnings', 'network_sale_earnings', 'network_click_earnings',
                     'total_network_earnings', 'aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug',
+                    'aggregated_from_image', 'aggregated_from_link',
                     'sales', 'network_sales', 'referral_sales', 'paid_clicks', 'total_clicks')
-    search_fields = ('user_id', 'user_name', 'user_username')
+    search_fields = ('id', 'user_id', 'user_name', 'user_username')
     list_filter = ('type', )
 admin.site.register(AggregatedData, AggregatedDataAdmin)
