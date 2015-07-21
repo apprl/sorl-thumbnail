@@ -10,6 +10,7 @@ import logging
 
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 log = logging.getLogger(__name__)
 
@@ -176,3 +177,23 @@ def get_total_clicks_per_vendor(vendor):
     today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
     return get_model('statistics', 'ProductStat').objects.filter(vendor=vendor).exclude(created__range=(today_min, today_max)).count()
+
+def get_user_attributes(user):
+    user_id = 0 if not user else user.id
+    user_name = 'APPRL' if user_id == 0 else ''
+    user_username = 'APPRL' if user_id == 0 else ''
+    if user:
+        user_name = user.name if user.name else ''
+        user_username = user.username if user.username else ''
+    return user_id, user_name, user_username
+
+def get_user_thumbnail_and_link(user):
+    user_link = ''
+    user_image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
+    if user:
+        try:
+            user_link = reverse('profile-likes', args=[user.slug])
+            user_image = user.avatar
+        except IOError:
+            pass
+    return user_image, user_link
