@@ -121,6 +121,7 @@ class Payment(models.Model):
     cancelled = models.BooleanField(default=False)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
+    earnings = models.CharField(max_length=1000, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
