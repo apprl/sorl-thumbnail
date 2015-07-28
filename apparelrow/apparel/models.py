@@ -234,6 +234,7 @@ class Product(models.Model):
         help_text=_("Ued for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the static_brand"))
+    product_key = models.CharField(max_length=512, null=True, blank=True)
     product_name  = models.CharField(max_length=200, null=True, blank=True)
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True, db_index=True)
     date_published= models.DateTimeField(_("Time published"), null=True, blank=True)
@@ -241,6 +242,7 @@ class Product(models.Model):
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image'))
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
+
     # FIXME: Could we have ForeignKey to VendorProduct instead?
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     feed_gender   = models.CharField(_('Feed gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
