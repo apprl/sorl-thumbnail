@@ -50,6 +50,7 @@ from apparelrow.activity_feed.views import user_feed
 
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
+from pysolr import Solr
 
 logger = logging.getLogger("apparel.debug")
 
@@ -821,7 +822,9 @@ def authenticated_backend(request):
 
 def product_lookup_by_domain(request, domain, key):
     model = get_model('apparel', 'DomainDeepLinking')
+    domain = '.'.join(domain.split('.')[-2:]) # remove subdomains
     results = model.objects.extra(where=["%s LIKE domain||'%%'"], params=[domain])
+
     if not results:
         raise Http404
 
@@ -837,11 +840,16 @@ def product_lookup_by_domain(request, domain, key):
     return None, None
 
 def product_lookup_by_theimp(request, key):
-    products = get_model('theimp', 'Product').objects.extra(where=["%s LIKE key||'%%'"], params=[key])
-    if len(products) < 1:
+    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1} #, 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'
+    connection = Solr(settings.SOLR_URL)
+    result = connection.search('*:*', **kwargs)
+
+    dict = result.__dict__
+    if dict['hits'] < 1:
         return None
-    json_data = json.loads(products[0].json)
-    return json_data.get('site_product', None)
+    product_id = dict['docs'][0]['django_id']
+
+    return product_id
 
 def parse_luisaviaroma_fragment(fragment):
     seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)

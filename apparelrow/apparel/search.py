@@ -301,6 +301,7 @@ def get_product_document(instance, rebuild=False):
         document['name'] = instance.product_name
 
         # Search fields
+        document['product_key'] = instance.product_key
         document['product_name'] = instance.product_name
         document['description'] = instance.description
         document['manufacturer_name'] = instance.manufacturer.name
