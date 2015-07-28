@@ -839,7 +839,7 @@ def product_lookup_by_domain(request, domain, key):
     return None, None
 
 def product_lookup_by_theimp(request, key):
-    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1} #, 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'
+    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1}
     connection = Solr(settings.SOLR_URL)
     result = connection.search('*:*', **kwargs)
 
