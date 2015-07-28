@@ -45,9 +45,11 @@ class ResultContainer:
     def __init__(self, **entries):
         self.__dict__.update(entries)
 
-def more_like_this_product(body, gender, limit):
+def more_like_this_product(body, gender, location, limit):
     kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
+    kwargs['fq'].append('market_ss:%s' % location)
+
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
     connection = Solr(settings.SOLR_URL)
     result = connection.more_like_this('', mlt_fields, **kwargs)

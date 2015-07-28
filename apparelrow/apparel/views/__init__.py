@@ -336,7 +336,7 @@ def product_detail(request, slug):
             'looks_with_product': looks_with_product,
             'looks_with_product_count': looks_with_product_count,
             'object_url': request.build_absolute_uri(),
-            'more_like_this': more_like_this_product(mlt_body, product.gender, 9),
+            'more_like_this': more_like_this_product(mlt_body, product.gender, request.session.get('location','ALL'), 9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
             'product_full_image': product_full_image,
             'product_brand_full_url': product_brand_full_url,
