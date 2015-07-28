@@ -17,7 +17,7 @@ class ProductItem:
         try:
             self.data = json.loads(self.product.json)
         except (AttributeError, TypeError, ValueError):
-            logger.exception('Could not parse JSON [Product: %s - %s]' % (self.product.pk, self.product.key))
+            logger.exception('Could not parse JSON [Product: %s - %s]' % (self.product.pk, self.product.product_name))
 
     def validate_keys(self):
         for key in [ProductItem.KEY_SCRAPED, ProductItem.KEY_PARSED, ProductItem.KEY_FINAL]:

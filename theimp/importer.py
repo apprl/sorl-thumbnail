@@ -115,6 +115,7 @@ class Importer(object):
             raise SiteImportError('invalid category mapping')
 
         site_product = self.site_product_model.objects.create(
+            product_key = item.get_scraped('key'),
             product_name = item.get_final('name'),
             description = item.get_final('description'),
             category_id = category.mapped_category_id,
@@ -141,6 +142,7 @@ class Importer(object):
             raise SiteImportError('invalid category mapping')
 
         site_product.product_name = item.get_final('name')
+        site_product.product_key = item.get_scraped('key')
         site_product.description = item.get_final('description')
         site_product.category_id = category.mapped_category_id
         site_product.manufacturer_id = brand.mapped_brand_id
