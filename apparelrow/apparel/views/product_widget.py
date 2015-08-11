@@ -132,7 +132,7 @@ def product_widget_instance_to_dict(product_widget):
                     'discount_price': product.default_vendor.locale_discount_price,
                 })
     else:
-        for product in product_widget_dict.products.all():
+        for product in product_widget.products.all():
             if product.default_vendor:
                 manufacturer_name = product.manufacturer.name if product.manufacturer else None
                 product_widget_dict['products'].append({
@@ -335,7 +335,7 @@ def product_widget_widget(request, product_widget_id=None):
     content['slug'] = uuid.uuid4().hex
     product_widget_embed.save()
     content['object'] = product_widget_embed
-    print product_widget_embed.product_widget.type
+
     return render(request, 'apparel/fragments/product_widget_widget.html', content)
 
 

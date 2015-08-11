@@ -1,5 +1,5 @@
 {% load static from staticfiles %}
-{% load thumbnail cache compressed buy_extras %}
+{% load l10n i18n thumbnail thumbnail_extras buy_extras cache compressed buy_extras localeurl_tags %}
 {% spaceless %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
@@ -28,12 +28,17 @@
         })();
     </script>
     <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
         .slidecontainer {
             overflow: hidden;
             position: relative;
             margin: 0 auto;
         }
-        ul {
+        ul.productcontainer {
             margin: 0px;
             padding: 0px;
             overflow: hidden;
@@ -42,7 +47,7 @@
             left: 0px;
             list-style: none;
         }
-        ul li {
+        ul li.product {
             float: left;
         }
         ul li img {
@@ -67,25 +72,63 @@
             display: block;
             z-index:10;
         }
-
         .next img {
             height: 58px;
             display: block;
         }
+        .caption {
+            text-align: center;
+            color: #333;
+            margin-top: 10px;
+            height: 60px;
+        }
+
+        .caption h4 {
+            margin: 0px 0px 5px 0px;
+        }
+
+        .caption a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .caption ul {
+            padding: 0px;
+            margin: 0px;
+        }
+        .caption li {
+            display: inline-block;
+        }
+
     </style>
   </head>
   <body class="product-widget-embed">
 <div class="navigation"><a href="#" class="previous"><img src="{% static "images/left_arrow.svg" %}"/></a><a href="#" class="next"><img src="{% static "images/right_arrow.svg" %}"/></a></div>
 
   <div class="slidecontainer">
-        <ul>
+        <ul class="productcontainer">
           {% for component in components %}
-          <li>
+          <li class="product">
             {% thumbnail component.product_image "300" upscale="False" crop="noop" format="PNG" transparent=True as im %}
             <a rel="nofollow" target="_blank" href="{% if component.default_vendor and component.default_vendor.availability != 0 %}{% buy_url component.id component.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid component.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.slug }}" data-vendor="{{ component.default_vendor.vendor }}" data-price="{{ component.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }};">
               <img src="{{ im.url }}" title="{{ component }}" width="{{ im.width }}" height="{{ im.height }}"/>
             </a>
             {% endthumbnail %}
+            <div class="caption">
+                <h4><a href="{{ component.get_absolute_url|chlocale:LANGUAGE_CODE }}">{{ component.manufacturer }}</a></h4>
+                <ul class="list-inline">
+                    {% if component.availability and component.default_vendor and object.default_vendor.availability != 0 %}
+                    {% if component.default_vendor.original_discount_price %}
+                    <li class="discount-price" data-price="{{ component.default_vendor.original_discount_price|unlocalize }}" data-currency="{{ component.default_vendor.original_currency }}">{{ component.default_vendor.original_discount_price|floatformat:0|custom_intcomma }} {{ component.default_vendor.original_currency }}</li>
+                    <li class="price discounted" data-price="{{ component.default_vendor.original_price|unlocalize }}" data-currency="{{ component.default_vendor.original_currency }}">{{ component.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ component.default_vendor.original_currency }}</li>
+                    {% else %}
+                    <li class="price" data-price="{{ component.default_vendor.original_price|unlocalize }}" data-currency="{{ component.default_vendor.original_currency }}">{{ component.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ component.default_vendor.original_currency }}</li>
+                    {% endif %}
+                    {% else %}
+                    <li class="sold-out">{% trans "Sold out" %}</li>
+                    {% endif %}
+                </ul>
+            </div>
           </li>
           {% endfor %}
         </ul>

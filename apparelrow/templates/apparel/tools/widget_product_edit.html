@@ -19,12 +19,12 @@
         });
     </script>
     <div id="preview-header" class="preview-header">
-        {%  trans 'My widget preview' %}
+        {%  trans '0 products selected' %}
     </div>
     <div class="product-list-container">
+        <a class="previous"><img src="{%  static 'images/left_arrow.svg' %}"/></a>
+        <a class="next"><img src="{%  static 'images/right_arrow.svg' %}"/></a>
         <div id="product-widget-product-list" class="">
-            <a class="previous"><img src="{%  static 'images/left_arrow.svg' %}"/></a>
-            <a class="next"><img src="{%  static 'images/right_arrow.svg' %}"/></a>
             <ul class="product-list list-unstyled"></ul>
         </div>
     </div>

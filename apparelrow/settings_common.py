@@ -369,9 +369,7 @@ PIPELINE_JS = {
         'output_filename': 'js/compiled/embed.js',
     },
     'product_widget': {
-        'source_filenames': ('js/embed.js',
-                             'js/product_widget.js',
-                             'js/jquery/jquery.apprl-tooltip.js',
+        'source_filenames': ('js/product_widget.js',
                              'js/vendor/hammer.min.js'),
         'output_filename': 'js/compiled/product_widget.js',
     },

@@ -1,6 +1,8 @@
 App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     el: '#product-widget-preview',
     template: _.template($('#shop_component_product').html()),
+    indexes: [],
+    current_index: 0,
 
     initialize: function() {
         this.model.fetch({
@@ -13,8 +15,18 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:save', this.save_product_widget, this);
         App.Events.on('widget:product_display', this.product_display, this);
         App.Events.on('widget:touchmenu', this.alter_buttons, this);
+        App.Events.on('product:delete', function() {
+            this.update_title(-1);
+            this.indexes.splice(this.indexes.indexOf(this.current_index), 1);
+            for (var i=0; i<this.indexes.length; i++) {
+                if (this.indexes[i] > this.current_index) this.indexes[i]--;
+            }
+            if (this.current_index > 0) {
+                this.current_index--;
+            }
+            this.resize();
+        }, this);
 
-        App.Events.on('product:delete', this.resize, this);
 
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
@@ -25,7 +37,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.product_widget_edit_popup = new App.Views.ProductWidgetEditPopup({parent_view: this});
 
         App.Events.on('widget:product:add', this.pending_add_component, this);
-        App.Events.on('product:delete', function() { this.update_title(-1); }, this);
+
         this.model.components.on('add', this.add_component, this);
 
         $(window).on('resize', _.bind(this.resize, this));
@@ -40,6 +52,8 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
 
         var mc = new Hammer(this.$productlist[0]);
         mc.on('swipeleft swiperight', _.bind(function(e) { this.slide(e.type == 'swipeleft' ? -1 : 1); }, this));
+
+        this.$controls = [this.$el.find('.previous'), this.$el.find('.next')];
 
         App.Views.ProductWidgetCreate.__super__.initialize(this);
 
@@ -104,11 +118,21 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         $('#product-widget-preview').removeClass('splash');
         this.resize();
     },
+    update_title: function(delta, val) {
+        var $title = this.$el.find('#preview-header');
+        var nr = parseInt(/\d+/.exec($title.html()), 10);
+        val = val == undefined ? nr + delta : val;
+
+        $title.html($title.html().replace(nr, val));
+        // Hide/show slide-controls
+        $('.previous, .next').toggle(val > 1);
+    },
     reset: function() {
         this.model.components.each(_.bind(function (model) {
             this.model.components.remove(model);
             model.destroy();
         }), this);
+        this.update_title(0, 0);
         this.$container.find('ul').children().remove();
     },
     resize: function() {
@@ -118,18 +142,25 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         $header = $('#preview-header:visible')
         new_height -= ($header.length ? $header.height() + 16 : 0)+ ($footer.length ? $footer.height() : 0);
         this.$container.css('height', new_height);
-        var imageratio = 1.14;
+        var imageratio = 1;
         if (this.$container.width()/this.$container.height() > imageratio) {
-            this.$productlist.height(new_height*0.9).width(new_height*0.9/imageratio);
+            this.$productlist.height(new_height*0.7).width(new_height*0.7/imageratio);
         } else {
-            this.$productlist.width(this.$container.width()*0.9).height(this.$container.width()*0.9*imageratio);
+            this.$productlist.width(this.$container.width()*0.7).height(this.$container.width()*0.7*imageratio);
         }
-        this.$productlist.find('ul.product-list').width(this.model.components.length*this.$productlist.width()).css('left', '0px');
-        this.$productlist.find('ul.product-list > li').width(this.$productlist.width()).height(this.$productlist.height());
+        this.$productlist.find('ul.product-list').width(this.model.components.length*this.$productlist.width()).css('left', -1*this.indexes.indexOf(this.current_index)*this.$productlist.width());
+        this.$productlist.find('ul.product-list img.fake-product-image').width(this.$productlist.width()).height(this.$productlist.height());
+        var controlpos = Math.max(5, (this.$container.width() - this.$productlist.width())/2 - this.$controls[0].width());
+        this.$controls[0].css('left', controlpos);
+        this.$controls[1].css('right', controlpos);
+    },
+    highlight_last: function() {
+        var $ul = this.$productlist.find('ul.product-list');
+        var childwidth = $ul.parent().width();
     },
     pending_add_component: function(product) {
         this._create_product_component(product);
-        this.resize();
+        this.current_index = this.indexes.length-1;
     },
     _create_product_component: function(product) {
         var self = this;
@@ -143,8 +174,21 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.model._dirty = true;
     },
     add_component: function(model, collection) {
+        this.update_title(1);
         var view = new App.Views.ProductWidgetComponentProduct({ model: model, collection: collection });
-        this.$('.product-list-container ul.product-list').append(view.render().el);
+        var i;
+        if (!this.indexes.length) {
+            this.indexes.push(0);
+            i=0;
+        } else {
+            i = this.indexes.indexOf(this.indexes.length - 1);
+            this.indexes.splice(i+1, 0, this.indexes.length);
+        }
+        if (this.indexes.length == 1) {
+            this.$('.product-list-container ul.product-list').append(view.render().el);
+        } else {
+            this.$('.product-list-container ul.product-list li.col-product-item:eq('+i+')').after(view.render().el);
+        }
     },
     publish_product_widget: function(values) {
         this.model.set('published', true);
@@ -161,13 +205,21 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.running = true;
         var newleft = $ul.position().left + direction*childwidth;
 
+        var i = this.indexes.indexOf(this.current_index) - direction;
         if (newleft > 0) {
             $ul.children('li.col-product-item').last().detach().prependTo($ul);
             $ul.css('left', ($ul.position().left - childwidth) + 'px');
+            this.indexes.unshift(this.indexes.pop());
+            i = 0;
         } else if(newleft <= -1*$ul.width() ) {
             $ul.children('li.col-product-item').first().detach().appendTo($ul);
             $ul.css('left', ($ul.position().left + childwidth) + 'px');
+            this.indexes.push(this.indexes.shift());
+            i = this.indexes.length-1;
         }
+
+        this.current_index = this.indexes[i];
+
         var self = this;
         $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { self.running = false; }});
     },
