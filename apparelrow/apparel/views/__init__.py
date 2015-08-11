@@ -823,18 +823,23 @@ def authenticated_backend(request):
 def product_lookup_by_domain(request, domain, key):
     model = get_model('apparel', 'DomainDeepLinking')
     domain = '.'.join(domain.split('.')[-2:])
+
     results = model.objects.filter(domain__icontains=domain)
 
     if not results:
         raise Http404
 
-    instance = results[0]
+    if len(results) > 1 :
+        for item in results:
+            if item.domain in key:
+                instance = item
+    else:
+        instance = results[0]
     if instance.template:
         user_id = request.user.pk
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
-
         return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
     return None, None
 
@@ -844,8 +849,12 @@ def product_lookup_by_theimp(request, key):
     result = connection.search('*:*', **kwargs)
 
     dict = result.__dict__
+    logger.debug("Query executed in %s milliseconds" % dict['qtime'])
+
     if dict['hits'] < 1:
+        logger.debug("No results found")
         return None
+    logger.debug("%s results found" % dict['hits'])
     product_id = dict['docs'][0]['django_id']
 
     return product_id
@@ -860,16 +869,22 @@ def product_lookup_asos_nelly(url):
     parsedurl = urlparse.urlsplit(url)
     path = parsedurl.path
     if("nelly" in parsedurl.netloc):
-        #get rid of categories for nelly links, only keep product name (last two "/"")
-        noToRemove = path.count("/") - 1
-        while noToRemove > 0:
-            pos = path.find("/")
-            path = path[pos+1:]
-            noToRemove -= 1
-        key = path
+        # get rid of categories for nelly links, only keep product name (last two "/"")
+        temp_path = path.rstrip('/') # remove last slash if it exists
+        product_slug = temp_path.rsplit('/', 2)[1] # get the "righest" element after a slash
+        search_result = re.search(r'iid=(\w+)?', product_slug)
+        if search_result:
+            prodId = search_result.group(1)
+            key = "%s?iid=%s" % (path, prodId)
+        else:
+            return None
     elif("asos" in parsedurl.netloc):
-        prodId = re.search(r'iid=(\w+)?', parsedurl.query).group(1)
-        key = "%s?iid=%s" % (path, prodId)
+        search_result = re.search(r'iid=(\w+)?', parsedurl.query)
+        if search_result:
+            prodId = search_result.group(1)
+            key = "%s?iid=%s" % (path, prodId)
+        else:
+            return None
     elif("luisaviaroma" in parsedurl.netloc):
         if parsedurl.fragment: # the "original" links don't have this, they should never land here though
             key = parse_luisaviaroma_fragment(parsedurl.fragment)
@@ -877,7 +892,7 @@ def product_lookup_asos_nelly(url):
             key = url
     else:
         return None
-    products = get_model('theimp', 'Product').objects.filter(key__icontains=key)
+    products = get_model('theimp', 'Product').objects.filter(key__icontains=key) #TODO this has to be changed to Solr
     if len(products) < 1:
         return None
 
@@ -895,7 +910,7 @@ def product_lookup(request):
     except ValueError:
         product_pk = None
 
-
+    original_key = key
     if key and not product_pk:
         product_pk = product_lookup_by_theimp(request, key)
         if not product_pk:
@@ -905,11 +920,9 @@ def product_lookup(request):
                 temp = list(key)
                 temp.insert(4, 's')
                 key = ''.join(temp)
-
             product_pk = product_lookup_by_theimp(request, key)
             if not product_pk:
                 product_pk = product_lookup_asos_nelly(key)
-
 
     # TODO: must go through theimp database right now to fetch site product by real url
     #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
@@ -929,7 +942,7 @@ def product_lookup(request):
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
-        product_short_link, vendor = product_lookup_by_domain(request, domain, key)
+        product_short_link, vendor = product_lookup_by_domain(request, domain, original_key)
         if product_short_link is not None:
             product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link, user=request.user, vendor=vendor)
             product_short_link = reverse('domain-short-link', args=[product_short_link.link()])
