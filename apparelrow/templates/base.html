@@ -276,6 +276,9 @@
                                 </ul>
                             {% endif %}
                             </li>
+                            {% if request.user.is_authenticated %}
+                            <li><a href="{% url 'settings' %}#location"><span>Change location »</span></a></li>
+                            {% endif %}
                             <li><br></li>
                             <li><a href="{% url 'index-retailers' %}"><i>{% trans "Do you have a store?" %}</i></a></li>
                             <li><a href="{% url 'index-publisher' %}"><i>{% trans "Are you a blogger?" %}</i></a></li>

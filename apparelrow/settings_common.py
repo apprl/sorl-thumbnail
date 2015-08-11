@@ -111,7 +111,7 @@ VENDOR_LOCATION_MAPPING = {
     "Nelly":["SE"],
     "Nelly No":["NO"],
     "Gina Tricot NO":["NO"],
-    "Gina Tricot":["SE"],
+    "Gina Tricot SE":["SE"],
     "Panos Emporio":["SE"],
     "Boozt se":["SE"],
     "Boozt no":["NO"],
@@ -679,8 +679,11 @@ NGINX_SHOP_RESET_KEY = "shopembed-reset-%s"
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/rss-feed/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR = 'images/brand-avatar.png'
+APPAREL_DEFAULT_AVATAR_CIRCULAR = 'images/brand-avatar-circular.png'
 APPAREL_DEFAULT_AVATAR_MEDIUM = 'images/brand-avatar-medium.png'
+APPAREL_DEFAULT_AVATAR_MEDIUM_CIRCULAR = 'images/brand-avatar-medium-circular.png'
 APPAREL_DEFAULT_AVATAR_LARGE = 'images/brand-avatar-large.png'
+APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR = 'images/brand-avatar-large-circular.png'
 APPAREL_DEFAULT_BRAND_AVATAR = 'images/brand-avatar.png'
 APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM = 'images/brand-avatar-medium.png'
 APPAREL_DEFAULT_BRAND_AVATAR_LARGE = 'images/brand-avatar-large.png'

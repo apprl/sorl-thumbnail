@@ -27,6 +27,12 @@ class Command(BaseCommand):
             default=None,
             help='Rebuild solr on this host'
         ),
+        make_option('--vendor_id',
+            action='store',
+            dest='vendor_id',
+            default=None,
+            help='Isolate rebuild for this vendor(id). Only supported for products.'
+        ),
     )
 
     def handle(self, *args, **options):
@@ -54,7 +60,10 @@ class Command(BaseCommand):
             if options['clean_rebuild']:
                 clean_index(app_label_map[options['model']], options['model'], url=url)
 
-            rebuild_count = rebuild_map[options['model']](url=url)
+            if options['model'] == 'product':
+                rebuild_count = rebuild_map[options['model']](url=url,vendor_id=options.get('vendor_id',None))
+            else:
+                rebuild_count = rebuild_map[options['model']](url=url)
             print 'Reindex %s %ss' % (rebuild_count, options['model'])
         else:
             if options['clean_rebuild']:
