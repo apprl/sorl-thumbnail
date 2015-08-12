@@ -32,7 +32,7 @@ class AsosSpider(CSVFeedSpider, AffiliateMixin):
         item['description'] = row.get('ProductShortDescription')
         item['brand'] = row.get('ProductManufacturerBrand')
         item['gender'] = row.get('MerchantProductCategory')
-        item['colors'] = row.get('ExtraTextOne')
+        item['colors'] = row.get('ExtraTextTwo') 
         item['regular_price'] = row.get('ProductPriceOld')
         item['discount_price'] = row.get('ProductPrice')
         item['currency'] = row.get('CurrencySymbolOfPrice')

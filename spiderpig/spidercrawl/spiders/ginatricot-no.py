@@ -25,6 +25,7 @@ class GinaTricotNOSpider(CSVFeedSpider, AffiliateMixin):
         'gender',
         'custom_label_0',
         'custom_label_1',
+        'custom_label_2',
     )
 
     def parse_row(self, response, row):
