@@ -36,7 +36,7 @@ def calculate_balance(store_id):
 
         if old_balance >= -settings.APPAREL_ADVERTISER_MINIMUM_STORE_INVOICE and \
                         store.balance <= -settings.APPAREL_ADVERTISER_MINIMUM_STORE_INVOICE:
-            mail_managers('Store invoce', 'Now you can create a StoreInvoce for the store %s' % store_id)
+            mail_managers('Store invoice', 'Now you can create a StoreInvoice for the store %s' % store_id)
 
         return balance
     except Store.DoesNotExist:
