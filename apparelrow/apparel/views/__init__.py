@@ -270,8 +270,29 @@ def store_short_link(request, short_link, user_id=None):
 # Products
 #
 
+def get_product_from_slug(slug, **kwargs):
+    try:
+        product = Product.objects.get(slug=slug, **kwargs)
+    except Product.MultipleObjectsReturned:
+        products = Product.objects.filter(slug=slug, **kwargs)
+        counter = 0
+        for item in products:
+            item_saved = False
+            while not item_saved:
+                slug = "%s-%s" % (item.slug, counter)
+                counter += 1
+                if not Product.objects.filter(slug=slug).exists():
+                    item.slug = slug
+                    item.save()
+                    item_saved = True
+        product = products[0]
+    except Product.DoesNotExist:
+        raise Http404("No Product matches the given query.")
+    return product
+
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, published=True, gender__isnull=False)
+    kwargs = {'published':True, 'gender__isnull':False}
+    product = get_product_from_slug(slug, **kwargs)
 
     is_liked = False
     if request.user.is_authenticated():
@@ -357,7 +378,8 @@ def product_generate_short_link(request, slug):
     if not request.user.is_authenticated() or not request.user.is_partner:
         raise Http404
 
-    product = get_object_or_404(Product, slug=slug, published=True)
+    kwargs = {'published':True}
+    product = get_product_from_slug(slug, **kwargs)
     product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
     product_short_link = reverse('product-short-link', args=[product_short_link.link()])
     product_short_link = request.build_absolute_uri(product_short_link)
