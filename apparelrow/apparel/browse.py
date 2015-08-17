@@ -287,7 +287,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
 
     result.update(browse_text=browse_text)
 
-    paged_result.html = [o.template for o in paged_result.object_list if o]
+    paged_result.html = [o.template for o in paged_result.object_list if o and hasattr(o, 'template')]
     paged_result.object_list = []
 
     if not paged_result.html:
