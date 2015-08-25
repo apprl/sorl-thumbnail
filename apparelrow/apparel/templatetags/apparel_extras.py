@@ -435,5 +435,5 @@ def look_component_style(component, width, height):
 
 @register.simple_tag
 def multiply(value, arg):
-    result = int(value)*arg
+    result = decimal.Decimal(value) * arg
     return "%s" % (format(result, '.2f'))

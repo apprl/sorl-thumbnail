@@ -339,15 +339,17 @@ def product_detail(request, slug):
     # Cost per click
     default_vendor = product.default_vendor
     cost_per_click = 0
-    if default_vendor and default_vendor.vendor.is_cpc:
-        try:
-            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
-            click_cut = cut * publisher_cut
-            cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
-            rate = currency_exchange('EUR', cost_per_click.currency)
-            cost_per_click = "%.2f" % (decimal.Decimal(cost_per_click.amount * rate) * click_cut)
-        except get_model('dashboard', 'ClickCost').DoesNotExist:
-            logger.warning("ClickCost not defined for default vendor %s of the product %s" % (product.default_vendor, product.product_name))
+    if default_vendor:
+        user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
+        click_cut = cut * publisher_cut
+        if default_vendor.vendor.is_cpc:
+            earning_cut = click_cut
+            try:
+                cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
+            except get_model('dashboard', 'ClickCost').DoesNotExist:
+                logger.warning("ClickCost not defined for default vendor %s of the product %s" % (product.default_vendor, product.product_name))
+        else:
+            earning_cut = earning_cut * click_cut
 
     return render_to_response(
         'apparel/product_detail.html',
