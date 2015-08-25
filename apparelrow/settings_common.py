@@ -884,6 +884,14 @@ LOGGING = {
             'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'affiliate_networks.log'),
             'backupCount': 30,
         },
+        'live_test': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
+            'formatter': 'simple',
+            'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'live_test.log'),
+            'backupCount': 30,
+        },
     },
     'loggers': {
         '': {
@@ -940,6 +948,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
             'handlers': ['affiliate_networks'],
+        },
+        'live_test': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'handlers': ['live_test'],
         }
     }
 }
