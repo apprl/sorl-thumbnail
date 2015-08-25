@@ -305,7 +305,7 @@ def product_detail(request, slug):
 
     # More alternatives
     #alternative = get_product_alternative(product)
-    alternative, alternative_url = more_alternatives(product, 9)
+    alternative, alternative_url = more_alternatives(product, request.session.get('location','ALL'), 9)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)

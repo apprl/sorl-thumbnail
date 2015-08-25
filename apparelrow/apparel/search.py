@@ -55,7 +55,7 @@ def more_like_this_product(body, gender, location, limit):
     result = connection.more_like_this('', mlt_fields, **kwargs)
     return result
 
-def more_alternatives(product, limit):
+def more_alternatives(product, location, limit):
     colors_pk = list(map(str, product.colors_pk))
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(translation.get_language(), settings.APPAREL_BASE_CURRENCY)
     query_arguments = {'rows': limit, 'start': 0,
@@ -64,6 +64,7 @@ def more_alternatives(product, limit):
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
     query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
     query_arguments['fq'].append('category:%s' % (product.category_id))
+    query_arguments['fq'].append('market_ss:%s' % location)
     if colors_pk:
         query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
     search = ApparelSearch('*:*', **query_arguments)
