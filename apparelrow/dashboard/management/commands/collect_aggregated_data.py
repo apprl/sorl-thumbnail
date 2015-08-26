@@ -6,8 +6,6 @@ from django.contrib.auth import get_user_model
 import decimal
 import calendar
 from django.db.models import Count
-from django.views.generic import TemplateView
-from django.core.urlresolvers import reverse
 
 from apparelrow.dashboard.views import get_clicks_from_sale
 from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_attributes, \
