@@ -358,7 +358,9 @@ class UserEarning(models.Model):
 def sale_post_save(sender, instance, created, **kwargs):
     logger.info("Sale with id %s saved with user id %s and type %s" % (instance.id, instance.user_id, instance.type))
     with transaction.atomic():
-        if not created:
+        if created:
+            create_earnings(instance)
+        else:
             if get_model('dashboard', 'UserEarning').objects.filter(sale=instance).exists():
                 earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=instance)
                 if instance.status >= Sale.CONFIRMED:
@@ -367,7 +369,9 @@ def sale_post_save(sender, instance, created, **kwargs):
                         earning.save()
                 else:
                     get_model('dashboard', 'UserEarning').objects.filter(sale=instance).delete()
-        create_earnings(instance)
+                    create_earnings(instance)
+            else:
+                create_earnings(instance)
 
 def create_earnings(instance):
     if not instance.is_promo:
