@@ -3,6 +3,7 @@ import json
 import decimal
 
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models, transaction
 from django.db.models import get_model
 from django.db.models.signals import pre_save, post_save
@@ -370,6 +371,14 @@ def sale_post_save(sender, instance, created, **kwargs):
                 else:
                     get_model('dashboard', 'UserEarning').objects.filter(sale=instance).delete()
                     create_earnings(instance)
+                str_date = instance.sale_date.strftime('%Y-%m-%d')
+                update_list = cache.get(settings.APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA)
+                if update_list:
+                    if not str_date in update_list:
+                        update_list = "%s,%s" % (update_list, str_date)
+                        cache.set(settings.APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA, update_list)
+                else:
+                    cache.set(settings.APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA, str_date)
             else:
                 create_earnings(instance)
 
