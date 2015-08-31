@@ -1524,6 +1524,7 @@ class TestPayments(TransactionTestCase):
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
 
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 3)
 
         sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
 
@@ -1531,6 +1532,7 @@ class TestPayments(TransactionTestCase):
         self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
         sale.status = get_model('dashboard', 'Sale').CONFIRMED
         sale.save()
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 3)
 
         # Ready payments
         management.call_command('dashboard_payment', verbosity=0, interactive=False)
@@ -1732,7 +1734,7 @@ class TestPayments(TransactionTestCase):
         earnings_ids_list = get_model('dashboard', 'UserEarning').objects.\
             filter(user=temp_user, status=Sale.CONFIRMED, paid=Sale.PAID_READY).values_list('id', flat=True)
 
-        payment = get_model('dashboard', 'Payment').objects.get(pk=1)
+        payment = get_model('dashboard', 'Payment').objects.get(user=temp_user, paid=False)
         items = json.loads(payment.earnings)
 
         for earning_id in items:
@@ -1745,3 +1747,83 @@ class TestPayments(TransactionTestCase):
         self.assertEqual(payment.amount, total_query['amount__sum'])
 
 
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory',
+                   APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA='cache_aggregated_test')
+class TestAggregatedData(TransactionTestCase):
+    def setUp(self):
+        self.owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        self.owner_user.owner_network_cut = 0.1
+        self.owner_user.name = 'owner_user'
+        self.owner_user.save()
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        self.vendor_cpc = get_model('apparel', 'Vendor').objects.create(name='mystorecpc', is_cpc=True, is_cpo=False)
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+        self.cut = get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=self.vendor, cut=0.6,
+                                                                referral_cut=0.2)
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        self.store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=self.vendor)
+
+        store_user_cpc = get_user_model().objects.create_user('storecpc', 'storecpc@xvid.se', 'store')
+        self.storecpc = get_model('advertiser', 'Store').objects.create(identifier='mystorecpc',
+                                                                user=store_user_cpc,
+                                                                vendor=self.vendor_cpc)
+
+        self.user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        self.user.partner_group = self.group
+        self.user.name = 'user'
+        self.user.owner_network = self.owner_user
+        self.user.save()
+
+        category = get_model('apparel', 'Category').objects.create(name='Category')
+        manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
+        self.product = get_model('apparel', 'Product').objects.create(
+            product_name='Product',
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            product_image='no real image',
+            published=True
+        )
+        get_model('apparel', 'VendorProduct').objects.create(product=self.product, vendor=self.vendor_cpc)
+        get_model('dashboard', 'ClickCost').objects.create(vendor=self.vendor_cpc, amount=1.00, currency="EUR")
+
+    def test_aggregated_data(self):
+        # Sale and User earnings must be created
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (self.user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 3)
+
+        str_date = datetime.date.today().strftime('%Y-%m-%d')
+        management.call_command('collect_aggregated_data', date=str_date, verbosity=0, interactive=False)
+
+        # Check total aggregated data generated in total
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 4)
+
+        # Check total aggregated data generated by type
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.filter(type="aggregated_from_total").
+                         count(), 3)
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.filter(type="aggregated_from_publisher").
+                         count(), 1)
+
+        for data in get_model('dashboard', 'AggregatedData').objects.filter(type="aggregated_from_total"):
+            if data.user_id == self.user.id:
+                self.assertEqual(data.sale_earnings, decimal.Decimal(540))
+
+            elif data.user_id == self.owner_user.id:
+                self.assertEqual(data.network_sale_earnings, decimal.Decimal(60))
+                self.assertEqual(data.network_click_earnings, decimal.Decimal(0))
+            elif data.user_id == 0:
+                self.assertEqual(data.user_name, 'APPRL')
+                self.assertEqual(data.sale_earnings, decimal.Decimal(400))
