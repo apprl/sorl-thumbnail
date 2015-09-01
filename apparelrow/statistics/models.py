@@ -3,8 +3,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
 
 from apparelrow.apparel.tasks import product_popularity
+from apparelrow.apparel.models import Product
+from apparelrow.statistics.utils import get_country_by_ip_string
+
+import logging
+logger = logging.getLogger( __name__ )
 
 
 PERIOD_TYPES = (
@@ -69,9 +77,28 @@ class ProductStat(models.Model):
     referer = models.TextField(null=True, blank=True)
     user_agent = models.TextField(null=True, blank=True)
     ip = models.GenericIPAddressField()
+    valid = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-created']
+
+@receiver(post_save, sender=ProductStat, dispatch_uid='productstat_post_save')
+def productstat_post_save(sender, instance, created, **kwargs):
+    if created:
+        try:
+            product = Product.objects.get(slug=instance.product)
+            if product.default_vendor and product.default_vendor.vendor.is_cpc:
+                country = get_country_by_ip_string(instance.ip)
+                if country:
+                    vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
+                    if not country in vendor_markets:
+                        instance.valid = False
+                        instance.save()
+                else:
+                    instance.valid = False
+                    instance.save()
+        except Product.DoesNotExist:
+            logger.warning("Product %s does not exist" % instance.product)
 
 
 class NotificationEmailStats(models.Model):

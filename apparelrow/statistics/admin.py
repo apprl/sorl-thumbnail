@@ -38,7 +38,7 @@ admin.site.register(ProductClick, ProductClickAdmin)
 
 
 class ProductStatAdmin(admin.ModelAdmin):
-    list_display = ('action', 'user_id', 'page', 'product', 'vendor', 'price', 'created', 'ip')
+    list_display = ('action', 'user_id', 'page', 'product', 'vendor', 'price', 'created', 'ip', 'valid')
     list_filter = ('action', 'page', 'created', 'vendor')
 
     def has_add_permission(self, request):

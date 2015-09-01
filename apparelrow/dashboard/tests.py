@@ -12,7 +12,7 @@ from django.conf import settings
 from django.core import mail
 from django.core import signing
 from django.core.urlresolvers import reverse as _reverse
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
@@ -24,8 +24,6 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor, get_total_clicks_per_vendor
 from apparelrow.apparel.utils import currency_exchange
-from apparelrow.dashboard.admin import PaymentAdmin
-from jsonfield import JSONField
 
 
 

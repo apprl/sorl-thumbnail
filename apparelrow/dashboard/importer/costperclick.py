@@ -20,13 +20,13 @@ class Importer(BaseImporter):
             """(SELECT PS.vendor, PS.user_id, count(PS.id)
                FROM statistics_productstat PS, profile_user U, apparel_vendor V
                WHERE PS.user_id = U.id AND U.is_partner = True AND  PS.vendor = V.name AND V.is_cpc = True
-               AND PS.created BETWEEN %s AND %s
+               AND PS.valid = True AND PS.created BETWEEN %s AND %s
                GROUP BY PS.user_id, PS.vendor)
                UNION
                (SELECT PS.vendor, PS.user_id, count(PS.id)
                FROM statistics_productstat PS, apparel_vendor V
                WHERE PS.user_id=0 AND  PS.vendor = V.name AND V.is_cpc = True
-               AND PS.created BETWEEN %s AND %s
+               AND PS.valid = True AND PS.created BETWEEN %s AND %s
                GROUP BY PS.user_id, PS.vendor)""", values)
         data = cursor.fetchall()
         return data
