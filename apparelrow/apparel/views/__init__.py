@@ -436,10 +436,19 @@ def product_track(request, pk, page='Default', sid=0):
     if posted_referer == client_referer and 'redirect' in client_referer:
         return HttpResponse()
 
-    product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
-                            get_user_agent(request), sid, page)
+    product = None
+    try:
+        product = get_model('apparel', 'Product').objects.get(pk=pk)
+    except get_model('apparel', 'Product').DoesNotExist:
+        pass
 
-    return HttpResponse()
+    product_cookie = request.COOKIES.get(product.slug, None)
+    response = HttpResponse()
+    if product and product_cookie is None:
+        product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
+                            get_user_agent(request), sid, page)
+        response.set_cookie(product.slug, '', settings.APPAREL_PRODUCT_MAX_AGE)
+    return response
 
 
 def product_popup(request):

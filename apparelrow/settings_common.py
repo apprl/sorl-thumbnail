@@ -180,6 +180,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
     #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
@@ -674,6 +675,7 @@ APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA = 'cache_aggregated_link'
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MULTI_GENDER_COOKIE = 'multigender'
 APPAREL_LOCATION_COOKIE = 'location'
+APPAREL_PRODUCT_MAX_AGE = 24 * 60 * 60
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 NGINX_SHOP_RESET_KEY = "shopembed-reset-%s"
