@@ -19,30 +19,33 @@ jQuery(document).ready(function() {
 
     var $ul = $('ul.productcontainer');
     var $items = $ul.children('li.product');
-    var childwidth = 0;
     var index = 0;
     var running = false;
-    var ratio = 1;
     var visiblechildren;
     var doslide = false;
     var $container = $('.slidecontainer');
+    var padding = 20;
+    var $slidenext = $('.next');
+    var $slideprevious = $('.previous');
+    var itemwidth = 0;
+
     function slide(direction) {
         if (running) return;
         running = true;
         index -= direction;
         if (index < 0) {
             $items.last().detach().prependTo($ul);
-            $ul.css('left', ($ul.position().left - childwidth) + 'px');
+            $ul.css('left', ($ul.position().left - itemwidth) + 'px');
             index = 0;
             $items = $ul.children('li');
-        } else if (index + visiblechildren > $items.length || ($ul.width() + direction*childwidth + $ul.position().left < $container.width())) {
+        } else if (index + visiblechildren > $items.length || ($ul.width() + direction*itemwidth + $ul.position().left < $container.width())) {
             $items.first().detach().appendTo($ul);
-            $ul.css('left', ($ul.position().left + childwidth) + 'px');
+            $ul.css('left', ($ul.position().left + itemwidth) + 'px');
             index -= 1;
             $items = $ul.children('li');
         }
 
-        $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { running = false; }});
+        $ul.animate({'left': '+=' + direction*itemwidth}, {'complete': function() { running = false; }});
     }
 
     var mc = new Hammer($('.slidecontainer')[0]);
@@ -50,14 +53,14 @@ jQuery(document).ready(function() {
 
     function enableslide() {
         if (!doslide) {
-            $('.previous').on('click', function () {
+            $slideprevious.on('click', function () {
                 slide(1);
             });
-            $('.next').on('click', function () {
+            $slidenext.on('click', function () {
                 slide(-1);
             });
         }
-        $('.next').parent().show();
+        $slidenext.parent().show();
         doslide = true;
     }
 
@@ -73,9 +76,10 @@ jQuery(document).ready(function() {
         var imgratio;
         var maxheight = 0;
         var $images = $('a.product img');
-        childwidth = 0;
+        var childwidth = 0;
+        var margin = 120;
         $('.navigation').width($window.width());
-        var captionheight = $('.caption').length ? $('.caption').first().height() : 0;
+        var captionheight = $('.caption').length ? $('.caption').first().height() + 10 : 0;
 
         $images.each(function(item, i) {
             $this = $(this);
@@ -90,8 +94,9 @@ jQuery(document).ready(function() {
             maxheight = Math.max(maxheight, $this.height());
             childwidth = Math.max(childwidth, $this.width());
         });
-        if ((childwidth + 116) > $window.width()) {
-            var width = ($window.width() - 116);
+
+        if ((childwidth + margin + padding) > $window.width()) {
+            var width = ($window.width() - margin - padding);
             imgratio = $this.attr('width')/$this.attr('height');
             width = (width/imgratio - captionheight) * imgratio;
             $images.each(function(item, i) {
@@ -100,30 +105,34 @@ jQuery(document).ready(function() {
             childwidth = width;
         }
 
+        itemwidth = $items.first().width() + padding;
+
         if (embed_type == 'single') {
-            $container.width(childwidth);
+            $container.width($items[0].width());
             if ($items.length > 1) {
                 enableslide();
             } else {
                 disableslide();
             }
             visiblechildren = 1;
-            $ul.css('left', -1*index*childwidth);
+            $ul.css('left', -1*index*itemwidth);
         } else {
-            $container.width($window.width() - 116);
-            visiblechildren = Math.floor($container.width()/childwidth);
+            $container.width($window.width() - margin);
+            visiblechildren = Math.floor($container.width()/(itemwidth+padding));
             if (Math.floor(visiblechildren) < $items.length) {
                 enableslide();
             } else {
                 disableslide()
             }
-            $ul.css('left', ($container.width() - $items.length*childwidth)/2);
+            $ul.css('left', ($container.width() - $items.length*(itemwidth))/2);
         }
 
         var containermargin = parseInt($container.css('marginLeft').substr(0, $container.css('marginLeft').length -2));
-        $ul.width($items.length * childwidth);
-        $('.previous').css({left: Math.max(5, containermargin-58), top: (($container.height()-captionheight)/2-20)+'px'});
-        $('.next').css({right: Math.max(5, containermargin-58), top: (($container.height()-captionheight)/2-10)+'px'});
+        // Set width of list
+        $ul.width($items.length * itemwidth);
+
+        $slideprevious.css({left: Math.max(10, containermargin-$slideprevious.width() - 10), top: (($container.height()-captionheight - $slidenext.height())/2)+'px'});
+        $slidenext.css({right: Math.max(10, containermargin-$slideprevious.width() - 10), top: (($container.height()-captionheight - $slidenext.height())/2)+'px'});
     }
 
     enableslide();

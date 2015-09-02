@@ -30,6 +30,7 @@
     <style>
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
             margin: 0;
             padding: 0;
         }
@@ -49,6 +50,8 @@
         }
         ul li.product {
             float: left;
+            padding: 0px 10px;
+            box-sizing: border-box;
         }
         ul li img {
             width: 100%;
@@ -64,7 +67,7 @@
             z-index:10;
         }
         .previous img {
-            height: 75px;
+            height: 40px;
             display: block;
         }
         .next {
@@ -73,14 +76,14 @@
             z-index:10;
         }
         .next img {
-            height: 58px;
+            height: 40px;
             display: block;
         }
         .caption {
             text-align: center;
             color: #333;
-            margin-top: 10px;
             height: 60px;
+            padding-top:10px;
         }
 
         .caption h4 {
@@ -103,7 +106,7 @@
     </style>
   </head>
   <body class="product-widget-embed">
-<div class="navigation"><a href="#" class="previous"><img src="{% static "images/left_arrow.svg" %}"/></a><a href="#" class="next"><img src="{% static "images/right_arrow.svg" %}"/></a></div>
+<div class="navigation"><a href="#" class="previous"><img src="{% static "images/left_arrow.png" %}"/></a><a href="#" class="next"><img src="{% static "images/right_arrow.png" %}"/></a></div>
 
   <div class="slidecontainer">
         <ul class="productcontainer">
