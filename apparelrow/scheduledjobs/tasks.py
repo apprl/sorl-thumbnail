@@ -101,10 +101,18 @@ def clearsessions():
     management.call_command('clearsessions')
 
 # daily just before midnight
-@periodic_task(name='apparelrow.scheduledjobs.tasks.recalculate_earnings', run_every=crontab(minute='59',hour='23'), max_retries=5, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.recalculate_earnings', run_every=crontab(minute='59',hour='23'), max_retries=3, ignore_result=True)
 def recalculate_earnings():
     from django.core import management
     management.call_command('update_aggregated_data')
+
+
+# daily afternoon
+@periodic_task(name='apparelrow.scheduledjobs.tasks.check_chrome_extension', run_every=crontab(minute='30',hour='15'), ignore_result=True)
+def check_chrome_extension():
+    from django.core import management
+    management.call_command('deeplink_live_test')
+
 
 @task(name='apparelrow.scheduledjobs.tasks.run_vendor_product_importer', max_retries=5, ignore_result=True)
 def run_vendor_importer(vendor):
