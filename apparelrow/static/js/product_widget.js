@@ -108,7 +108,7 @@ jQuery(document).ready(function() {
         itemwidth = $items.first().width() + padding;
 
         if (embed_type == 'single') {
-            $container.width($items[0].width());
+            $container.width(itemwidth);
             if ($items.length > 1) {
                 enableslide();
             } else {
@@ -130,7 +130,6 @@ jQuery(document).ready(function() {
         var containermargin = parseInt($container.css('marginLeft').substr(0, $container.css('marginLeft').length -2));
         // Set width of list
         $ul.width($items.length * itemwidth);
-
         $slideprevious.css({left: Math.max(10, containermargin-$slideprevious.width() - 10), top: (($container.height()-captionheight - $slidenext.height())/2)+'px'});
         $slidenext.css({right: Math.max(10, containermargin-$slideprevious.width() - 10), top: (($container.height()-captionheight - $slidenext.height())/2)+'px'});
     }

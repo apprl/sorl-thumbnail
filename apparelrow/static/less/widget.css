@@ -570,6 +570,9 @@ html.look-type-C .collage {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
+.widget-page .modal .modal-footer .btn + .btn {
+  margin-left: 0px;
+}
 .create-product-widget-page #product-widget-preview {
   width: 100%;
   float: left;

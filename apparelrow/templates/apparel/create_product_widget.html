@@ -6,9 +6,13 @@
 {% block full-body %}
 
     {% if external_product_widget_id %}
-        {% include "apparel/tools/widget_header.html" with title='Edit widget' type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+        {% with 'Edit '|add:type|add:' widget' as title %}
+        {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+        {% endwith %}
     {% else %}
-        {% include "apparel/tools/widget_header.html" with title='Create widget' type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+        {% with 'Create '|add:type|add:' widget' as title %}
+        {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+        {% endwith %}
     {% endif %}
 
     <div id="content">
@@ -18,7 +22,7 @@
             </div>
 
             <div class="col-md-6 visible-md visible-lg">
-                {% include "apparel/tools/product_picker.html" with enabled=product_picker liked_info="This widget automatically includes all your liked products. If you wish to create a widget where you can manually choose what to include, create a new shop." %}
+                {% include "apparel/tools/product_picker.html" with enabled=product_picker liked_info="This widget automatically includes all your liked products. If you wish to create a widget where you can manually choose what to include, create a new widget." %}
             </div>
         </div>
     </div>

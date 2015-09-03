@@ -7297,6 +7297,9 @@ a:focus {
 }
 .modal {
   z-index: 10040;
+  /*.modal-footer {
+        padding-right: 30px;
+    }*/
 }
 .modal .modal-content {
   border-radius: 0;
@@ -7328,9 +7331,6 @@ a:focus {
 .modal .modal-header h4 {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 18px;
-}
-.modal .modal-footer {
-  padding-right: 30px;
 }
 .modal-backdrop.in {
   opacity: 0.7;
@@ -11092,11 +11092,15 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 #product-widget-product-list .product-image-container .hover {
   bottom: auto;
   top: 50%;
+  left: 50%;
+  right: auto;
+  width: 50%;
+  min-width: 170px;
   z-index: 2;
-  -webkit-transform: translate(0, -50%);
-  -ms-transform: translate(0, -50%);
-  -o-transform: translate(0, -50%);
-  transform: translate(0, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 #product-widget-product-list .product-image-container .hover .btn {
   margin-bottom: 10px;
@@ -11700,6 +11704,9 @@ html.look-type-C .collage {
   border-bottom: 4px solid;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
+}
+.widget-page .modal .modal-footer .btn + .btn {
+  margin-left: 0px;
 }
 .create-product-widget-page #product-widget-preview {
   width: 100%;

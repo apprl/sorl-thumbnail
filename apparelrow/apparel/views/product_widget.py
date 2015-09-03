@@ -317,8 +317,11 @@ def product_widget_widget(request, product_widget_id=None):
         else:
             content['width'] = int(content['width'])
 
-    if content['height'] =='':
-        content['height'] = 400
+    if content['height'] == '':
+        if product_widget.type == 'single':
+            content['height'] = 300
+        else:
+            content['height'] = 200
     content['height'] = int(content['height'])
     if content['height'] < 50:
         content['height'] = 50
