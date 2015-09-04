@@ -21,8 +21,31 @@
         "pk": 883414,
         "model": "apparel.product",
         "fields": {
-            "modified": "2015-04-13T13:21:47.432"
+            "modified": "2015-04-13T13:21:47.432",
+            "published": true,
+            "sku": "1",
+            "product_key": "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
         }
+    },
+    {
+        "pk": 883415,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:21:47.432",
+            "published": true,
+            "sku": "2",
+            "product_key": "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
+        }
+    },
+    {
+        "pk": 883416,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:21:47.432",
+            "published": true,
+            "sku": "3",
+            "product_key": "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+            }
     },
     {
         "pk": 883415,

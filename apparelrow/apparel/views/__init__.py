@@ -901,7 +901,7 @@ def product_lookup_asos_nelly(url):
             key = url
     else:
         return None
-    products = get_model('apparel', 'Product').objects.filter(published=True,key__icontains=key) #TODO this has to be changed to Solr
+    products = get_model('apparel', 'Product').objects.filter(published=True,product_key__icontains=key) #TODO this has to be changed to Solr
     if len(products) < 1:
         return None
 
