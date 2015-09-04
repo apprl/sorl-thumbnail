@@ -1599,9 +1599,9 @@ class DashboardView(TemplateView):
 
             # Get aggregated data per day
             aggregated_per_day = AggregatedData.objects.\
-                filter(user_id=request.user.id, date__range=(start_date_query, end_date_query),
-                       type='aggregated_from_total').\
-                values('date', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
+                filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
+                       data_type='aggregated_from_total').\
+                values('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
                        'network_sale_earnings')
 
 
@@ -1610,11 +1610,11 @@ class DashboardView(TemplateView):
                 data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
 
             for row in aggregated_per_day:
-                data_per_day[row['date'].date()][0] += row['sale_earnings']
-                data_per_day[row['date'].date()][1] += row['referral_earnings']
-                data_per_day[row['date'].date()][2] += row['click_earnings']
-                data_per_day[row['date'].date()][3] += row['total_clicks']
-                data_per_day[row['date'].date()][4] += row['network_sale_earnings']
+                data_per_day[row['created'].date()][0] += row['sale_earnings']
+                data_per_day[row['created'].date()][1] += row['referral_earnings']
+                data_per_day[row['created'].date()][2] += row['click_earnings']
+                data_per_day[row['created'].date()][3] += row['total_clicks']
+                data_per_day[row['created'].date()][4] += row['network_sale_earnings']
 
             # Summary earning
             month_earnings = sum([x[0] for x in data_per_day.values()])
@@ -1626,8 +1626,8 @@ class DashboardView(TemplateView):
 
             # Aggregated sum per month
             sum_data = AggregatedData.objects.\
-                filter(user_id=request.user.id, date__range=(start_date_query, end_date_query),
-                       type='aggregated_from_total').\
+                filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
+                       data_type='aggregated_from_total').\
                 aggregate(Sum('sale_earnings'), Sum('click_earnings'), Sum('referral_earnings'),
                           Sum('network_sale_earnings'), Sum('network_click_earnings'), Sum('sales'),
                           Sum('network_sales'), Sum('referral_sales'), Sum('paid_clicks'), Sum('total_clicks'))
@@ -1647,8 +1647,8 @@ class DashboardView(TemplateView):
 
             # Aggregate publishers per month
             top_publishers = AggregatedData.objects.\
-                filter(user_id=request.user.id, date__range=(start_date_query, end_date_query),
-                       type='aggregated_from_publisher').\
+                filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
+                       data_type='aggregated_from_publisher').\
                 values('user_id', 'aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
                        'aggregated_from_link').\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
@@ -1657,8 +1657,8 @@ class DashboardView(TemplateView):
 
             # Aggregate products per month
             top_products = AggregatedData.objects.\
-                filter(user_id=request.user.id, date__range=(start_date_query, end_date_query),
-                       type='aggregated_from_product').\
+                filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
+                       data_type='aggregated_from_product').\
                 values('aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
                        'aggregated_from_link').\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
@@ -1758,8 +1758,8 @@ class AdminDashboardView(TemplateView):
 
             # Get aggregated data per day
             aggregated_per_day = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query), type='aggregated_from_total').\
-                values('date', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
+                filter(created__range=(start_date_query, end_date_query), data_type='aggregated_from_total').\
+                values('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
                        'paid_clicks', 'network_sale_earnings', 'network_click_earnings', 'user_id')
 
             data_per_day = {}
@@ -1768,25 +1768,25 @@ class AdminDashboardView(TemplateView):
 
             for row in aggregated_per_day:
                 # Total commission
-                data_per_day[row['date'].date()][0] += row['sale_earnings'] + row['referral_earnings'] + row['network_sale_earnings']
-                data_per_day[row['date'].date()][2] += row['click_earnings'] + row['network_click_earnings']
+                data_per_day[row['created'].date()][0] += row['sale_earnings'] + row['referral_earnings'] + row['network_sale_earnings']
+                data_per_day[row['created'].date()][2] += row['click_earnings'] + row['network_click_earnings']
                 if not row['user_id'] == 0:
-                    data_per_day[row['date'].date()][1] += row['sale_earnings'] + row['referral_earnings'] + row['network_sale_earnings'] # publisher commission
-                    data_per_day[row['date'].date()][4] += row['total_clicks']  #publisher clicks
-                data_per_day[row['date'].date()][3] += row['total_clicks'] # total clicks
-                data_per_day[row['date'].date()][5] += row['paid_clicks'] #paid clicks
+                    data_per_day[row['created'].date()][1] += row['sale_earnings'] + row['referral_earnings'] + row['network_sale_earnings'] # publisher commission
+                    data_per_day[row['created'].date()][4] += row['total_clicks']  #publisher clicks
+                data_per_day[row['created'].date()][3] += row['total_clicks'] # total clicks
+                data_per_day[row['created'].date()][5] += row['paid_clicks'] #paid clicks
 
             # Aggregate publishers per month
             top_publishers = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query),
-                       type='aggregated_from_total').\
+                filter(created__range=(start_date_query, end_date_query),
+                       data_type='aggregated_from_total').\
                 values('user_id', 'user_name', 'user_username', 'user_link', 'user_image', 'aggregated_from_link').\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
                          total_network_earnings=Sum('total_network_earnings'),
                          total_clicks=Sum('total_clicks')).order_by('-total_earnings')
             # Aggregate products per month
             top_products = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query), type='aggregated_from_product').\
+                filter(created__range=(start_date_query, end_date_query), data_type='aggregated_from_product').\
                 values('aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
                        'aggregated_from_link').\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
@@ -1824,7 +1824,7 @@ class AdminDashboardView(TemplateView):
 
             # Aggregated Sum per month
             apprl_query = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query), user_id=0, type='aggregated_from_total')
+                filter(created__range=(start_date_query, end_date_query), user_id=0, data_type='aggregated_from_total')
 
             if apprl_query.exists():
                 apprl_data = apprl_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
@@ -1839,7 +1839,7 @@ class AdminDashboardView(TemplateView):
                 apprl_top[6] = get_conversion_rate(apprl_data['sales'], apprl_data['total_clicks'] - apprl_data['paid_clicks'])
 
             total_query = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query), type='aggregated_from_total')
+                filter(created__range=(start_date_query, end_date_query), data_type='aggregated_from_total')
 
             if total_query.exists():
                 total_data = total_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
@@ -1860,7 +1860,7 @@ class AdminDashboardView(TemplateView):
                 total_top[6] = get_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
 
             publisher_query = AggregatedData.objects.\
-                filter(date__range=(start_date_query, end_date_query), user_id__gt=0, type='aggregated_from_total')
+                filter(created__range=(start_date_query, end_date_query), user_id__gt=0, data_type='aggregated_from_total')
             if publisher_query.exists():
                 publisher_data = publisher_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
                           sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),

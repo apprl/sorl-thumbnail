@@ -8,6 +8,36 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'AggregatedData'
+        db.create_table(u'dashboard_aggregateddata', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
+            ('user_id', self.gf('django.db.models.fields.PositiveIntegerField')(default=0, db_index=True)),
+            ('user_name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('user_username', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('user_link', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('user_image', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('sale_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
+            ('click_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
+            ('referral_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
+            ('network_sale_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
+            ('network_click_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
+            ('sale_plus_click_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
+            ('total_network_earnings', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=10, decimal_places=2)),
+            ('sales', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('network_sales', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('referral_sales', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('paid_clicks', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('total_clicks', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('data_type', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('aggregated_from_id', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('aggregated_from_name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('aggregated_from_slug', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('aggregated_from_link', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('aggregated_from_image', self.gf('django.db.models.fields.CharField')(max_length=200)),
+        ))
+        db.send_create_signal(u'dashboard', ['AggregatedData'])
+
         # Adding field 'Payment.earnings'
         db.add_column(u'dashboard_payment', 'earnings',
                       self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True),
@@ -15,6 +45,9 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting model 'AggregatedData'
+        db.delete_table(u'dashboard_aggregateddata')
+
         # Deleting field 'Payment.earnings'
         db.delete_column(u'dashboard_payment', 'earnings')
 
@@ -86,6 +119,7 @@ class Migration(SchemaMigration):
             'options': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Option']", 'symmetrical': 'False', 'blank': 'True'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
             'product_image': ('sorl.thumbnail.fields.ImageField', [], {'max_length': '255'}),
+            'product_key': ('django.db.models.fields.CharField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
             'product_name': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'published': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'sku': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
@@ -170,7 +204,8 @@ class Migration(SchemaMigration):
             'aggregated_from_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'aggregated_from_slug': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'click_earnings': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '10', 'decimal_places': '2'}),
-            'date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'data_type': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'network_click_earnings': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '10', 'decimal_places': '2'}),
             'network_sale_earnings': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '10', 'decimal_places': '2'}),
@@ -183,7 +218,6 @@ class Migration(SchemaMigration):
             'sales': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'total_clicks': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'total_network_earnings': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '10', 'decimal_places': '2'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'user_id': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'db_index': 'True'}),
             'user_image': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'user_link': ('django.db.models.fields.CharField', [], {'max_length': '200'}),

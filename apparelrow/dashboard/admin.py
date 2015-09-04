@@ -79,11 +79,11 @@ class ClickCostAdmin(admin.ModelAdmin):
 admin.site.register(ClickCost, ClickCostAdmin)
 
 class AggregatedDataAdmin(admin.ModelAdmin):
-    list_display = ('id', 'type', 'date', 'user_id', 'user_name', 'user_username', 'sale_earnings', 'click_earnings',
+    list_display = ('id', 'data_type', 'created', 'user_id', 'user_name', 'user_username', 'sale_earnings', 'click_earnings',
                     'sale_plus_click_earnings', 'referral_earnings', 'network_sale_earnings', 'network_click_earnings',
                     'total_network_earnings', 'aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug',
                     'aggregated_from_image', 'aggregated_from_link',
                     'sales', 'network_sales', 'referral_sales', 'paid_clicks', 'total_clicks')
     search_fields = ('id', 'user_id', 'user_name', 'user_username')
-    list_filter = ('type', )
+    list_filter = ('data_type', )
 admin.site.register(AggregatedData, AggregatedDataAdmin)

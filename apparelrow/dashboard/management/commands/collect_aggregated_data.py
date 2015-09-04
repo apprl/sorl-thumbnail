@@ -32,14 +32,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         Sale = get_model('dashboard', 'Sale')
-        date = options.get('date')
-        if date:
-            date_array = date.split("-")
+        q_date = options.get('date')
+        if q_date:
+            date_array = q_date.split("-")
             year = int(date_array[0])
             month = int(date_array[1])
 
             if len(date_array) > 2:
-                start_date_query = datetime.datetime.strptime(date, '%Y-%m-%d')
+                start_date_query = datetime.datetime.strptime(q_date, '%Y-%m-%d')
                 end_date_query = start_date_query
             else:
                 start_date_query = datetime.date(year, month, 1)
@@ -57,14 +57,14 @@ class Command(BaseCommand):
         earnings = get_model('dashboard', 'UserEarning').objects.filter(date__range=(start_date, end_date))
 
         # Remove all existent data for the given date
-        get_model('dashboard', 'AggregatedData').objects.filter(date__range=(start_date, end_date)).delete()
+        get_model('dashboard', 'AggregatedData').objects.filter(created__range=(start_date, end_date)).delete()
 
         for row in earnings:
             user_id, user_name, user_username = get_user_attributes(row.user)
             earning_amount = decimal.Decimal(row.amount)
 
             instance, created = get_model('dashboard', 'AggregatedData').objects.\
-            get_or_create(user_id=user_id, date=row.date.date(), type='aggregated_from_total',
+            get_or_create(user_id=user_id, created=row.date.date(), data_type='aggregated_from_total',
                           user_name=user_name, user_username=user_username)
             # Aggregate earnings by type
             if row.user_earning_type in ('referral_sale_commission', 'referral_signup_commission'):
@@ -104,7 +104,7 @@ class Command(BaseCommand):
             # Aggregated data for products
             if row.from_product:
                 product_instance, product_created = get_model('dashboard', 'AggregatedData').objects.\
-                    get_or_create(user_id=user_id, date=row.date.date(), type='aggregated_from_product', aggregated_from_id=row.from_product.id)
+                    get_or_create(user_id=user_id, created=row.date.date(), data_type='aggregated_from_product', aggregated_from_id=row.from_product.id)
                 if product_created:
                     product_instance.user_image, product_instance.user_link = get_user_thumbnail_and_link(row.user)
                     product_instance.user_name = user_name
@@ -135,7 +135,7 @@ class Command(BaseCommand):
 
             if row.user_earning_type in ('publisher_network_tribute', 'publisher_network_click_tribute'):
                 publisher_instance, publisher_created = get_model('dashboard', 'AggregatedData').objects.\
-                    get_or_create(user_id=user_id, date=row.date.date(), type='aggregated_from_publisher',
+                    get_or_create(user_id=user_id, created=row.date.date(), data_type='aggregated_from_publisher',
                                   aggregated_from_id=row.from_user.id, user_name=user_name, user_username=user_username)
                 publisher_earning = get_model('dashboard', 'UserEarning').objects.\
                     get(user=row.from_user, date__range=(start_date, end_date), sale=row.sale)
@@ -152,7 +152,7 @@ class Command(BaseCommand):
 
                     if row.from_product:
                         product_instance, product_created = get_model('dashboard', 'AggregatedData').objects.\
-                    get_or_create(user_id=user_id, date=row.date.date(), type='aggregated_from_product',
+                    get_or_create(user_id=user_id, created=row.date.date(), data_type='aggregated_from_product',
                                   aggregated_from_id=row.from_product.id)
                         if product_created:
                             product_instance.user_image, product_instance.user_link = get_user_thumbnail_and_link(row.user)
@@ -188,7 +188,7 @@ class Command(BaseCommand):
             annotate(clicks=Count('user_id')).order_by('clicks')
         for row in total_clicks:
             instance, created = get_model('dashboard', 'AggregatedData').objects.\
-                get_or_create(user_id=row['user_id'], date=row['created'].date(), type='aggregated_from_total')
+                get_or_create(user_id=row['user_id'], created=row['created'].date(), data_type='aggregated_from_total')
             if created and not (row['user_id'] == 0):
                 row_user = get_user_model().objects.get(id=row['user_id'])
                 instance.user_image, instance.user_link = get_user_thumbnail_and_link(row_user)
@@ -208,7 +208,7 @@ class Command(BaseCommand):
                 user = get_user_model().objects.get(id=row['user_id'])
                 if product:
                     product_instance, product_created = get_model('dashboard', 'AggregatedData').objects.\
-                        get_or_create(user_id=row['user_id'], date=row['created'].date(), type='aggregated_from_product',
+                        get_or_create(user_id=row['user_id'], created=row['created'].date(), data_type='aggregated_from_product',
                                       aggregated_from_id=product.id, aggregated_from_name=product.product_name,
                                       aggregated_from_slug=product.slug)
 
@@ -237,7 +237,7 @@ class Command(BaseCommand):
                     if user.owner_network:
                         owner = user.owner_network
                         ownerp_instance, ownerp_created = get_model('dashboard', 'AggregatedData').objects.\
-                            get_or_create(user_id=owner.id, date=row['created'].date(), type='aggregated_from_product',
+                            get_or_create(user_id=owner.id, created=row['created'].date(), data_type='aggregated_from_product',
                                       aggregated_from_id=product.id, aggregated_from_name=product.product_name,
                                       aggregated_from_slug=product.slug)
                         if ownerp_created:

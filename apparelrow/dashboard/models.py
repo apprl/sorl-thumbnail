@@ -303,7 +303,7 @@ AGGREGATED_DATA_TYPES = (
 
 
 class AggregatedData(models.Model):
-    date = models.DateTimeField(default=timezone.now)
+    created = models.DateTimeField(default=timezone.now)
     user_id = models.PositiveIntegerField(default=0, db_index=True)
     user_name = models.CharField(max_length=100)
     user_username = models.CharField(max_length=100)
@@ -324,7 +324,7 @@ class AggregatedData(models.Model):
     paid_clicks = models.PositiveIntegerField(default=0)
     total_clicks = models.PositiveIntegerField(default=0)
 
-    type = models.CharField(max_length=100, choices=AGGREGATED_DATA_TYPES)
+    data_type = models.CharField(max_length=100, choices=AGGREGATED_DATA_TYPES)
 
     aggregated_from_id = models.PositiveIntegerField(default=0)
     aggregated_from_name = models.CharField(max_length=100)
