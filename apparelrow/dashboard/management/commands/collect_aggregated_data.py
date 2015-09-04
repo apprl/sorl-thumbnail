@@ -124,7 +124,7 @@ class Command(BaseCommand):
                 product_instance.save()
 
                 if product_created:
-                    clicks_count = get_model('statistics', 'ProductStat', valid=True).objects.\
+                    clicks_count = get_model('statistics', 'ProductStat', is_valid=True).objects.\
                         filter(user_id=user_id, vendor=row.sale.vendor.name, product=row.from_product.slug,
                                created__range=(start_date, end_date)).count()
                     if row.sale.vendor.is_cpc:
@@ -142,7 +142,7 @@ class Command(BaseCommand):
                 if publisher_created:
                     publisher_instance.user_image, publisher_instance.user_link = get_user_thumbnail_and_link(row.user)
                     stats = get_model('statistics', 'ProductStat').objects.\
-                        filter(created__range=(start_date, end_date), user_id=row.from_user.id, valid=True).\
+                        filter(created__range=(start_date, end_date), user_id=row.from_user.id, is_valid=True).\
                         aggregate(clicks=Count('user_id'))
                     publisher_instance.total_clicks += stats['clicks']
                 if row.user_earning_type == 'publisher_network_tribute':
@@ -184,7 +184,7 @@ class Command(BaseCommand):
 
         # Total clicks
         total_clicks = get_model('statistics', 'ProductStat').objects.\
-            filter(created__range=(start_date, end_date), valid=True).values('user_id', 'created').\
+            filter(created__range=(start_date, end_date), is_valid=True).values('user_id', 'created').\
             annotate(clicks=Count('user_id')).order_by('clicks')
         for row in total_clicks:
             instance, created = get_model('dashboard', 'AggregatedData').objects.\
@@ -198,7 +198,7 @@ class Command(BaseCommand):
 
         # Aggregate ProductStat
         aggregated_product_stat = get_model('statistics', 'ProductStat').objects.\
-            filter(created__range=(start_date, end_date), valid=True).values('user_id', 'product', 'vendor', 'created').\
+            filter(created__range=(start_date, end_date), is_valid=True).values('user_id', 'product', 'vendor', 'created').\
             annotate(clicks=Count('product')).order_by('clicks')
 
         for row in aggregated_product_stat:

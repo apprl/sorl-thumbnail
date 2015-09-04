@@ -8,15 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'ProductStat.valid'
-        db.add_column(u'statistics_productstat', 'valid',
+        # Adding field 'ProductStat.is_valid'
+        db.add_column(u'statistics_productstat', 'is_valid',
                       self.gf('django.db.models.fields.BooleanField')(default=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'ProductStat.valid'
-        db.delete_column(u'statistics_productstat', 'valid')
+        # Deleting field 'ProductStat.is_valid'
+        db.delete_column(u'statistics_productstat', 'is_valid')
 
 
     models = {
@@ -267,13 +267,13 @@ class Migration(SchemaMigration):
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ip': ('django.db.models.fields.GenericIPAddressField', [], {'max_length': '39'}),
+            'is_valid': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'page': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'price': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'product': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'referer': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'user_agent': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'user_id': ('django.db.models.fields.IntegerField', [], {'default': '0', 'null': 'True', 'blank': 'True'}),
-            'valid': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'vendor': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         }
     }

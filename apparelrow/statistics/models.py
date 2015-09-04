@@ -77,7 +77,7 @@ class ProductStat(models.Model):
     referer = models.TextField(null=True, blank=True)
     user_agent = models.TextField(null=True, blank=True)
     ip = models.GenericIPAddressField()
-    valid = models.BooleanField(default=True)
+    is_valid = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-created']
@@ -92,10 +92,10 @@ def productstat_post_save(sender, instance, created, **kwargs):
                 if country:
                     vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
                     if not country in vendor_markets:
-                        instance.valid = False
+                        instance.is_valid = False
                         instance.save()
                 else:
-                    instance.valid = False
+                    instance.is_valid = False
                     instance.save()
         except Product.DoesNotExist:
             logger.warning("Product %s does not exist" % instance.product)
