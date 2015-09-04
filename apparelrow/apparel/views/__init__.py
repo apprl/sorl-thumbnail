@@ -855,7 +855,7 @@ def product_lookup_by_domain(request, domain, key):
 def product_lookup_by_theimp(request, key):
     kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1}
     connection = Solr(settings.SOLR_URL)
-    result = connection.search('*:*', **kwargs)
+    result = connection.search('django_ct:apprl.product', **kwargs)
 
     dict = result.__dict__
     logger.debug("Query executed in %s milliseconds" % dict['qtime'])
@@ -901,7 +901,7 @@ def product_lookup_asos_nelly(url):
             key = url
     else:
         return None
-    products = get_model('theimp', 'Product').objects.filter(key__icontains=key) #TODO this has to be changed to Solr
+    products = get_model('apparel', 'Product').objects.filter(published=True,key__icontains=key) #TODO this has to be changed to Solr
     if len(products) < 1:
         return None
 
