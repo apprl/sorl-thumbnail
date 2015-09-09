@@ -215,7 +215,6 @@ $(document).ready(function() {
         var element = $(this).addClass('selected');
         if (element.data('view') == 'latest') {
             $('#product-sort li a').removeClass('selected');
-            $('#product-sort li a[data-sort="lat"]').addClass('selected');
         } else {
             $('#product-sort li a').removeClass('selected');
             $('#product-sort li a[data-sort="pop"]').addClass('selected');
