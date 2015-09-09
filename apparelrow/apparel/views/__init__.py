@@ -11,6 +11,7 @@ import urlparse
 from apparelrow.apparel.utils import currency_exchange
 import decimal
 import re
+import tldextract
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
@@ -831,10 +832,12 @@ def authenticated_backend(request):
 
 def product_lookup_by_domain(request, domain, key):
     model = get_model('apparel', 'DomainDeepLinking')
-    domain = '.'.join(domain.split('.')[-2:])
+    domain = extract_domain_with_suffix(domain)
 
+    # domain:          example.com
+    # Deeplink.domain: example.com/se
     results = model.objects.filter(domain__icontains=domain)
-
+    instance = None
     if not results:
         raise Http404
 
@@ -844,6 +847,7 @@ def product_lookup_by_domain(request, domain, key):
                 instance = item
     else:
         instance = results[0]
+
     if instance.template:
         user_id = request.user.pk
         key_split = urlparse.urlsplit(key)
@@ -880,13 +884,8 @@ def product_lookup_asos_nelly(url):
     if("nelly" in parsedurl.netloc):
         # get rid of categories for nelly links, only keep product name (last two "/"")
         temp_path = path.rstrip('/') # remove last slash if it exists
-        product_slug = temp_path.rsplit('/', 2)[1] # get the "righest" element after a slash
-        search_result = re.search(r'iid=(\w+)?', product_slug)
-        if search_result:
-            prodId = search_result.group(1)
-            key = "%s?iid=%s" % (path, prodId)
-        else:
-            return None
+        key = temp_path.split('/')[-1] # get the "righest" element after a slash
+
     elif("asos" in parsedurl.netloc):
         search_result = re.search(r'iid=(\w+)?', parsedurl.query)
         if search_result:
@@ -1241,3 +1240,12 @@ def facebook_friends_widget(request):
     return render_to_response('apparel/fragments/facebook_friends.html', {
         'facebook_friends': friends,
     }, context_instance=RequestContext(request))
+
+
+def extract_domain_with_suffix(domain):
+    try:
+        extracted = tldextract.extract(domain)
+        return "%s.%s" % (extracted.domain, extracted.suffix)
+    except Exception, msg:
+        logger.info("Domain supplied could not be extracted: %s [%s]" % (domain,msg))
+        return None

@@ -48,6 +48,35 @@
             }
     },
     {
+        "pk": 883598,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:21:47.432",
+            "published": true,
+            "sku": "4",
+            "product_key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN"
+            }
+    },
+    {
+        "pk": 883602,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:23:03.589",
+            "published": true,
+            "sku": "5",
+            "product_key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"}
+    },
+    {
+        "pk": 883607,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:23:03.589",
+            "published": true,
+            "sku": "6",
+            "product_key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        }
+    },
+    {
         "pk": 883415,
         "model": "theimp.product",
         "fields": {
