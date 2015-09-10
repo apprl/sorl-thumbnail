@@ -21,7 +21,6 @@ def reverse_locale(*args, **kwargs):
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestProfile(TransactionTestCase):
     def test_signup(self):
-        print "Testing signing up"
         c = Client()
         response = c.post(reverse_locale('auth_register_email'), {'first_name': 'test',
                                                                             'last_name': 'svensson',
@@ -31,7 +30,7 @@ class TestProfile(TransactionTestCase):
                                                                             'password2': 'test',
                                                                             'gender': 'M'})
 
-        user = get_user_model().objects.get(email='test@xvid.se')
+        user = get_user_model().objects.get(username='test')
         self.assertFalse(user.is_active)
 
         mailbox = mail.outbox
