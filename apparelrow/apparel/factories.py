@@ -17,13 +17,13 @@ class BrandFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Brand %s' % n)
 
 
-@factory.django.mute_signals(signals.post_delete, signals.post_save)
+#@factory.django.mute_signals(signals.post_delete, signals.post_save)
 class ProductFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = models.Product
-    product_name = factory.Sequence(lambda n: 'Weird Skirt %s' % n)
-    slug = factory.Sequence(lambda n: 'weird-skirt-%s' % n)
+    product_name = factory.Sequence(lambda n: 'Crazy Skirt %s' % n)
+    slug = factory.Sequence(lambda n: 'crazy-skirt-%s' % n)
     manufacturer = factory.SubFactory(BrandFactory)
 
 

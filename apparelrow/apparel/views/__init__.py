@@ -856,7 +856,7 @@ def product_lookup_by_domain(request, domain, key):
         return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
     return None, None
 
-def product_lookup_by_theimp(request, key):
+def product_lookup_by_solr(request, key):
     kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1}
     connection = Solr(settings.SOLR_URL)
     result = connection.search('django_ct:apprl.product', **kwargs)
@@ -899,8 +899,10 @@ def product_lookup_asos_nelly(url):
         else:
             key = url
     else:
-        return None
-    products = get_model('apparel', 'Product').objects.filter(published=True,product_key__icontains=key) #TODO this has to be changed to Solr
+        logger.debug("Product %s is not a special case, trying exact string match." % url)
+        key = url
+
+    products = extract_apparel_product_with_url(key)
     if len(products) < 1:
         return None
 
@@ -920,7 +922,7 @@ def product_lookup(request):
 
     original_key = key
     if key and not product_pk:
-        product_pk = product_lookup_by_theimp(request, key)
+        product_pk = product_lookup_by_solr(request, key)
         if not product_pk:
             if key.startswith('https'):
                 key = key.replace('https', 'http')
@@ -928,9 +930,9 @@ def product_lookup(request):
                 temp = list(key)
                 temp.insert(4, 's')
                 key = ''.join(temp)
-            product_pk = product_lookup_by_theimp(request, key)
+            product_pk = product_lookup_by_solr(request, key)
             if not product_pk:
-                product_pk = product_lookup_asos_nelly(key)
+                product_pk = product_lookup_asos_nelly(original_key)
 
     # TODO: must go through theimp database right now to fetch site product by real url
     #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
@@ -945,21 +947,21 @@ def product_lookup(request):
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
         product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
-        product_short_link = reverse('product-short-link', args=[product_short_link.link()])
-        product_short_link = request.build_absolute_uri(product_short_link)
+        product_short_link_str = reverse('product-short-link', args=[product_short_link.link()])
+        product_short_link_str = request.build_absolute_uri(product_short_link_str)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
-        product_short_link, vendor = product_lookup_by_domain(request, domain, original_key)
-        if product_short_link is not None:
-            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link, user=request.user, vendor=vendor)
-            product_short_link = reverse('domain-short-link', args=[product_short_link.link()])
-            product_short_link = request.build_absolute_uri(product_short_link)
+        product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
+        if product_short_link_str is not None:
+            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str, user=request.user, vendor=vendor)
+            product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
+            product_short_link_str = request.build_absolute_uri(product_short_link_str)
 
     return JSONResponse({
         'product_pk': product_pk,
         'product_link': product_link,
-        'product_short_link': product_short_link,
+        'product_short_link': product_short_link_str,
         'product_liked': product_liked
     })
 
@@ -1249,3 +1251,6 @@ def extract_domain_with_suffix(domain):
     except Exception, msg:
         logger.info("Domain supplied could not be extracted: %s [%s]" % (domain,msg))
         return None
+
+def extract_apparel_product_with_url(key):
+    return get_model('apparel', 'Product').objects.filter(published=True,product_key__icontains=key)

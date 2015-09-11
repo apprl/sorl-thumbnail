@@ -76,6 +76,26 @@
             "product_key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
         }
     },
+
+    {
+        "pk": 883603,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:23:31.888",
+            "published": true,
+            "sku": "7",
+            "product_key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/"
+        }
+    },
+    {
+        "pk": 883604,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:23:31.925",
+            "published": true,
+            "product_key": "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
+        }
+    },
     {
         "pk": 883415,
         "model": "theimp.product",

@@ -54,9 +54,11 @@ class TestChromeExtension(TestCase):
         ("www.gramshoes.com","Gram Shoes"),
         ("confidentliving.se","ConfidentLiving"),
         ("www.room21.no","Room 21 no"),
-        ("www.rum21.se","Rum 21 se")]
+        ("www.rum21.se","Rum 21 se"),
+        ("example.com","Example")]
         for domain,vendor in domaindeeplinks:
-            DomainDeepLinkingFactory(domain=domain,vendor__name=vendor)
+            ddl = DomainDeepLinkingFactory.create(domain=domain,vendor__name=vendor,template='http://example.com/my-template')
+            #print "Creating DomainDeeplinking %s, %s " % (ddl.id,ddl.domain)
 
 
     def _login(self):
@@ -77,7 +79,7 @@ class TestChromeExtension(TestCase):
         response = self.client.get('/backend/authenticated/')
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['profile'], u'http://testserver/en/profile/normal_user/')
+        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/')
         self.assertEqual(json_content['authenticated'], True)
 
     def test_product_lookup_not_logged_in(self):
@@ -87,10 +89,11 @@ class TestChromeExtension(TestCase):
     def test_product_lookup_not_found(self):
         self._login()
 
-        response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=example.com')
+        response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=weird.com')
         self.assertEqual(response.status_code, 404)
 
-    def test_product_lookups(self):
+
+    """def test_product_lookups(self):
         product0 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/white-twill")
         product1 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/sky-twill")
         product2 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/blue-twill")
@@ -107,6 +110,7 @@ class TestChromeExtension(TestCase):
         for product in vendor.product_set.all():
             print product
         #print product.default_vendor
+    """
 
     def test_product_lookup_by_domain(self):
         self._login()
@@ -124,38 +128,47 @@ class TestChromeExtension(TestCase):
 
         self.assertEqual(json_content['product_pk'], None)
         self.assertEqual(json_content['product_link'], None)
-        self.assertEqual(json_content['product_short_link'], 'http://testserver/en/pd/4C92/')
+        self.assertEqual(json_content['product_short_link'], 'http://testserver/pd/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_lookup_by_url(self):
         self._login()
 
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         category = get_model('apparel', 'Category').objects.create(name='Category')
         manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
+        product_key = 'http://example.com/example?someproduct=12345'
         product = get_model('apparel', 'Product').objects.create(
             product_name='Product',
             category=category,
             manufacturer=manufacturer,
             gender='M',
             product_image='no real image',
-            published=True
+            published=True,
+            product_key=product_key
         )
-        theimp_vendor = get_model('theimp', 'Vendor').objects.create(name='Vendor', vendor=vendor)
-        theimp_product = get_model('theimp', 'Product').objects.create(
-            key='http://example.com/example',
-            vendor=theimp_vendor,
-            json='{"site_product": 1}'
-        )
+        """product = ProductFactory.create(
+            product_name='Product',
+            #category=category,
+            manufacturer__name="manufacturer",
+            gender='M',
+            product_image='no real image',
+            published=True,
+            product_key=product_key
+        )"""
 
-        response = self.client.get('/backend/product/lookup/?key=http://example.com/example&domain=example.com')
+        print "Creating product %s,%s" % (product.id,product)
+        print "Product key is %s" % (product.product_key)
+        #print "Creating Domain Deeplinking %s, domain %s" % (ddl,ddl.domain)
+        self.assertIsNotNone( product.id )
+        response = self.client.get('/backend/product/lookup/?key=%s' % product_key)
         self.assertEqual(response.status_code, 200)
         json_content = json.loads(response.content)
 
         self.assertEqual(json_content['product_pk'], 1)
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
-        self.assertEqual(json_content['product_short_link'], 'http://testserver/en/p/4C92/')
+        self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
 class TestChromeExtensionSpecials(TestCase):
@@ -512,7 +525,7 @@ class TestEmbeddingShops(TestCase):
         #self.product1 = get_model('apparel', 'Product').objects.create()
         #self.product2 = get_model('apparel', 'Product').objects.create()
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_create_shop(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
         self.assertTrue(is_logged_in)
@@ -541,8 +554,10 @@ class TestEmbeddingShops(TestCase):
         data.get("components")[1]["product"]["id"] = self.product2.id
         self.assertTrue(data.get("components")[0]["product"]["id"])
         self.assertTrue(data.get("components")[1]["product"]["id"])
-        response = self.client.post(reverse('create_shop')[3:],data=json.dumps(data),content_type='application/json',)
-        self.assertEqual(response.status_code, 201)
+        print "Trying to call url %s " % reverse('create_shop')
+        response = self.client.post(reverse('create_shop'),data=json.dumps(data),content_type='application/json',)
+        print response.status_code
+        self.assertTrue(response.status_code in [201])
         content = json.loads(response.content)
         self.assertEqual(content.get("published"), True)
         self.assertEqual(content.get("user"), "normal_user")
@@ -555,10 +570,15 @@ class TestEmbeddingShops(TestCase):
         self.assertEqual(content.get("user"), "normal_user")
         self.assertEqual(content.get("url"), "/shop/create/api/1")
         self.assertEqual(content.get("id"), 1)
-        response = self.client.post(reverse('shop-widget',args=(content.get("id"),))[3:])
+        print "Calling shop widget %s" % reverse('shop-widget',args=(content.get("id"),))
+        response = self.client.post(reverse('shop-widget',args=(content.get("id"),)))
+        print response.status_code
+        self.assertTrue(response.status_code in [200])
         url = reverse('embed-shop',args=(content.get("id"),))
+        print "Calling %s to be embedded into the cache." % url
         self.client.get(url)
         from django.core.cache import get_cache
         cache = get_cache('nginx')
         nginx_key = reverse('embed-shop', args=[1])
+        print "Checking cache key for: %s" % nginx_key
         self.assertIsNotNone(cache.get(nginx_key,None))
