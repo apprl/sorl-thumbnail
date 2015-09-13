@@ -22,14 +22,13 @@ def reverse_locale(*args, **kwargs):
 class TestProfile(TransactionTestCase):
     def test_signup(self):
         c = Client()
-        response = c.post(reverse_locale('auth_register_email'), {'first_name': 'test',
-                                                                            'last_name': 'svensson',
-                                                                            'username': 'test',
-                                                                            'email': 'test@xvid.se',
-                                                                            'password1': 'test',
-                                                                            'password2': 'test',
-                                                                            'gender': 'M'})
-
+        response = c.post(reverse('auth_register_email'), {'first_name': 'test',
+                                                                    'last_name': 'svensson',
+                                                                    'username': 'test',
+                                                                    'email': 'test@xvid.se',
+                                                                    'password1': 'test',
+                                                                    'password2': 'test',
+                                                                    'gender': 'M'})
         user = get_user_model().objects.get(username='test')
         self.assertFalse(user.is_active)
 
