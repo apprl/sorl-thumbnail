@@ -213,12 +213,13 @@ $(document).ready(function() {
     $(document).on('click', '.shop-view li a', function() {
         $('.shop-view li a').removeClass('selected');
         var element = $(this).addClass('selected');
-        if (element.data('view') == 'latest') {
+        /*if (element.data('view') == 'latest') {
             $('#product-sort li a').removeClass('selected');
         } else {
             $('#product-sort li a').removeClass('selected');
-            $('#product-sort li a[data-sort="pop"]').addClass('selected');
-        }
+        }*/
+        $('#product-sort li a').removeClass('selected');
+        $('#product-sort li a[data-sort="pop"]').addClass('selected');
         filter(getQuery());
         return false;
     });
@@ -311,7 +312,14 @@ window.fetchPage = function(page, callback) {
 window.parsePage = function(link) {
     var attr_href = link.attr('href');
     if (typeof attr_href !== 'undefined' && attr_href !== false) {
-        return parseInt(link.attr('href').split('=')[1], 10);
+        param_obj = link.attr('href').split('?')[1];
+        params_array = param_obj.split('&');
+        for (var i=0; i<params_array.length; i++) {
+            var pair = params_array[i].split("=");
+            if (pair[0] == "page") {
+                return parseInt(pair[1], 10);
+            }
+        }
     }
     return false;
 }
