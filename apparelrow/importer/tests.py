@@ -21,7 +21,7 @@ import unittest
 """ FXRate """
 class FXRateImporterTest(TestCase):
     def setUp(self):
-        self.sample_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'fixtures/fxrates-samples.rss')
+        self.sample_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'fixtures/fxrates-samples.xml')
 
     def tearDown(self):
         pass
@@ -72,7 +72,6 @@ class FXRateImporterTest(TestCase):
         self.assertTrue(importer.import_feed(self.sample_file))
         self.assertEqual(
             [
-                (u'AED', Decimal('0.576030'), u'SEK'),
                 (u'ARS', Decimal('0.631380'), u'SEK'),
                 (u'EUR', Decimal('0.113460'), u'SEK'),
                 (u'GBP', Decimal('0.097210'), u'SEK')
@@ -87,7 +86,7 @@ class FXRateImporterTest(TestCase):
         )
 
         self.assertTrue(importer.run())
-        self.assertEqual(4, FXRate.objects.count())
+        self.assertEqual(3, FXRate.objects.count())
 
 
 class FXRateModelTest(TestCase):
