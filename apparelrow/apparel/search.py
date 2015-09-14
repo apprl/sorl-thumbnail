@@ -223,20 +223,31 @@ def shop_product_delete(instance, **kwargs):
     product_save(instance.product)
 
 
-def rebuild_product_index(url=None):
+def rebuild_product_index(url=None, vendor_id=None):
     connection = Solr(url or settings.SOLR_URL)
     product_count = 0
     product_buffer = collections.deque()
 
-    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified').iterator():
+    products = get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified')
+
+    if vendor_id:
+        products = products.filter(vendors=vendor_id)
+
+    for product in products.iterator():
         document, boost = get_product_document(product, rebuild=True)
         if document is not None and document['published']:
             product_buffer.append(document)
+            if vendor_id:
+                logger.info("Rebuilding product: %s %s %s" % (product.id,product.product_name,product.default_vendor ))
             if len(product_buffer) == 100:
                 connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
                 product_buffer.clear()
 
-    for product in get_model('apparel', 'Product').valid_objects.iterator():
+    valid_products = get_model('apparel', 'Product').valid_objects
+    if vendor_id:
+        valid_products = valid_products.filter(vendors=vendor_id)
+
+    for product in valid_products.iterator():
         document, boost = get_product_document(product, rebuild=True)
         if document is not None and document['published']:
             product_buffer.append(document)

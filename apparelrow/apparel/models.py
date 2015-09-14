@@ -471,8 +471,8 @@ def product_like_post_save(sender, instance, **kwargs):
     for shop_embed in get_model('apparel','ShopEmbed').objects.filter(id__in=like_shop_ids):
         key = settings.NGINX_SHOP_RESET_KEY % shop_embed.id
         if not get_cache("nginx").get(key,None):
-            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every five minutes
-            empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=300)
+            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every ten minutes
+            empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=300) # Schedules the job 5 minutes into the future
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):

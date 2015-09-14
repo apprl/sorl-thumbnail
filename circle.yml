@@ -1,0 +1,6 @@
+dependencies:
+    override:
+        - pip install -r etc/requirements.txt
+test:
+    override:
+        - python manage.py test apparelrow.dashboard
