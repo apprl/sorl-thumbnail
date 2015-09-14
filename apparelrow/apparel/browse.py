@@ -195,7 +195,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     is_brand = None
     if 'is_brand' in kwargs and kwargs['is_brand']:
         is_brand = kwargs['is_brand']
-    #query_arguments, result = update_query_view(request, view, is_authenticated, query_arguments, gender, result, user_id, user_gender, is_brand)
+    query_arguments, result = update_query_view(request, view, is_authenticated, query_arguments, gender, result, user_id, user_gender, is_brand)
 
     # Query string
     query_string = request.GET.get('q')
