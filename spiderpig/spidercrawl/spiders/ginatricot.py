@@ -31,7 +31,7 @@ class GinaTricotSpider(CSVFeedSpider, AffiliateMixin):
     def parse_row(self, response, row):
         item = Product()
         item['key'] = row.get('link')
-        item['sku'] = row.get('id')
+        item['sku'] = row.get('id') + "1"
         item['name'] = row.get('title')
         item['vendor'] = self.name
         item['url'] = row.get('link')

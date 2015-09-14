@@ -527,7 +527,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.assertTrue(vp.variations.get(id=5).options.get(option_type=self.type_color, value='red'), 'New item created with red color')
         self.assertTrue(vp.variations.get(id=5).options.get(option_type=self.type_size, value='M'), 'New item created with red color')
 
-@unittest.skip("Old test, not valid anymore")
+@unittest.skip("Old test suite, not valid anymore")
 class TestProductImage(TestCase):
     def setUp(self):
         self.log = ImportLog.objects.create(
@@ -542,12 +542,14 @@ class TestProductImage(TestCase):
         self.api.dataset = copy.deepcopy(SAMPLE_DICT)
         self.api._product_image = '/dummy/path.jpeg'
 
+    @unittest.skip("Old test, not relevant anymore")
     def tearDown(self):
         # FIXME: Remove local image if it exists
         fp = os.path.join(settings.MEDIA_ROOT, settings.APPAREL_PRODUCT_IMAGE_ROOT, 'cool-clothes-store', '__image.jpg')
         if os.path.exists(fp):
             os.remove(fp)
 
+    @unittest.skip("Old test, not relevant anymore")
     def test_product_image_path(self):
         self.assertTrue(settings.APPAREL_PRODUCT_IMAGE_ROOT, 'APPAREL_PRODUCT_IMAGE_ROOT setting exists')
         self.assertEqual(
@@ -564,6 +566,7 @@ class TestProductImage(TestCase):
     #def test_product_image_no_url(self):
     #    self.assertRaises(IncompleteDataSet, self.api._product_image, None)
 
+    @unittest.skip("Old test, not relevant anymore")
     def test_product_image(self):
         pass
 
@@ -574,8 +577,7 @@ class TestProductImage(TestCase):
         #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, p)), 'File downloaded')
         #
 
-    #@unittest.skip("Review this test")
-    """
+    @unittest.skip("Old test, not relevant anymore")
     def test_product_image_http_error(self):
         self.api.dataset['product']['image-url'] = 'http://www.hanssonlarsson.se/test/404.jpg'
         self.api._product_image = None
@@ -601,10 +603,9 @@ class TestProductImage(TestCase):
 
         p = self.api.product_image
         self.assertEqual(stat.st_mtime, os.stat(os.path.join(settings.MEDIA_ROOT, p)).st_mtime, 'File not change after downloading')'''
-    """
+
 
     # This test is for the old importer that is no longer in production
-    @skipTest("Old test, not valid anumore")
     def test_product_image_import(self):
 
         #Product image is downloaded during import

@@ -1,4 +1,5 @@
 from scrapy.contrib.spiders import XMLFeedSpider
+import urlparse
 
 from spiderpig.spidercrawl.items import Product, ProductLoader
 from spiderpig.spidercrawl.spiders import AffiliateMixin, PriceMixin
@@ -13,6 +14,10 @@ class GramSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
 
     def parse_node(self, response, node):
         in_stock = node.xpath('g:availability/text()').extract()[0]
+        url = node.xpath('link/text()').extract()[0]
+
+        parsed = urlparse.urlparse(url)
+        product_link = urlparse.parse_qs(parsed.query)['url']
 
         currency = ''
         regular_price = node.xpath('g:price/text()').extract()
@@ -30,7 +35,7 @@ class GramSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
         l.add_xpath('sku', 'g:id/text()')
         l.add_xpath('name', 'title/text()')
         l.add_value('vendor', self.name)
-        l.add_xpath('url', 'link/text()')
+        l.add_value('url', product_link)
         l.add_value('affiliate', self.AFFILIATE_AAN)
         l.add_xpath('category', 'g:product_type/text()')
         l.add_xpath('description', 'description/text()')
