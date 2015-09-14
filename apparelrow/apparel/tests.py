@@ -72,7 +72,7 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_short_link'], 'http://testserver/pd/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_lookup_by_url(self):
         self._login()
 

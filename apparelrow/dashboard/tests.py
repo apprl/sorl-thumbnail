@@ -70,7 +70,7 @@ class TestDashboard(TransactionTestCase):
         self.assertFalse(normal_user.referral_partner_code)
         self.assertEqual(normal_user.get_referral_url(), None)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -91,7 +91,7 @@ class TestDashboard(TransactionTestCase):
         value = signing.get_cookie_signer(salt=cookie_key).unsign(signed_cookie_value, max_age=None)
         self.assertEqual(str(value), str(referral_user.pk))
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_referral_link_disabled(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -108,7 +108,7 @@ class TestDashboard(TransactionTestCase):
         self.assertRedirects(response, reverse('publisher-contact'))
         self.assertNotIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_publisher_signup_from_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -129,7 +129,7 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(len(mail.outbox), 3)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_publisher_signup_from_referral_link_already_authenticated(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -152,7 +152,7 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(len(mail.outbox), 3)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_signup_from_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -197,7 +197,7 @@ class TestDashboard(TransactionTestCase):
         self.assertEqual(sale.commission, decimal.Decimal(20))
         self.assertEqual(sale.currency, 'EUR')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_signup_from_own_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -214,7 +214,7 @@ class TestDashboard(TransactionTestCase):
         self.assertIsNone(referral_user.referral_partner_parent)
         self.assertIsNone(referral_user.referral_partner_parent_date)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_signup_from_invalid_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -247,7 +247,7 @@ class TestDashboard(TransactionTestCase):
         # Invalid referral link should not result in a promo sale of 20 EUR
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 0)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_visit_two_referral_links(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -291,7 +291,7 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_referral_sale(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -1623,7 +1623,7 @@ class TestSalesPerClick(TransactionTestCase):
         management.call_command('clicks_summary', verbosity=0, interactive=False)
         self.assertEqual(get_total_clicks_per_vendor(self.vendor), 100)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_detail_clicks_amount(self):
         ''' Test that detailed data for clicks per day is being generated correctly
         '''

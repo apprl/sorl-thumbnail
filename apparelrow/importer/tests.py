@@ -434,7 +434,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.assertTrue(self.product.options.filter(pk=o2.pk), 'Exiting option untouched')
         self.assertTrue(self.product.options.filter(option_type=self.type_size, value='XS'), 'Added size "M"')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability(self):
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
 
@@ -457,7 +457,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.assertEqual(var_3.in_stock, 24, 'Got correct stock level for XtraSmall')
         self.assertTrue(var_3.options.get(option_type=self.type_size, value='XS'), 'Got size: xs option')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability_null(self):
         del self.api.dataset['product']['variations'][0]['availability']
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
@@ -465,7 +465,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         var_1 = vp.variations.get(id=1)
         self.assertEqual(var_1.in_stock, None, 'Got correct stock level when availability attribute is missing')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability_true(self):
         self.api.dataset['product']['variations'][0]['availability'] = True
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
@@ -473,7 +473,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         var_1 = vp.variations.get(id=1)
         self.assertEqual(var_1.in_stock, -1, 'Got correct stock level when availability is true')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability_false(self):
         self.api.dataset['product']['variations'][0]['availability'] = False
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
@@ -481,7 +481,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         var_1 = vp.variations.get(id=1)
         self.assertEqual(var_1.in_stock, 0, 'Got correct stock level when availability is false')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability_modify(self):
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
         original_in_stock_1 = vp.variations.get(id=1).in_stock
@@ -559,7 +559,7 @@ class TestProductImage(TestCase):
             )
         )
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_image_no_url(self):
         self.assertRaises(IncompleteDataSet, self.api._product_image, None)
 
@@ -573,7 +573,7 @@ class TestProductImage(TestCase):
         #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, p)), 'File downloaded')
         #
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_image_http_error(self):
         self.api.dataset['product']['image-url'] = 'http://www.hanssonlarsson.se/test/404.jpg'
         self.api._product_image = None
@@ -656,7 +656,7 @@ class TestDataSetImport(TransactionTestCase):
         if apparel.Category.objects.count() > 0:
             self.fail('Objects not rolled back, are all product-related tables created with the InnoDB engine?')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_import_dberror(self):
         # TODO Understand the purpose of this test
         self.dataset['product']['product-url'] = 'x' * 300
