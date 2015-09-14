@@ -213,11 +213,6 @@ $(document).ready(function() {
     $(document).on('click', '.shop-view li a', function() {
         $('.shop-view li a').removeClass('selected');
         var element = $(this).addClass('selected');
-        /*if (element.data('view') == 'latest') {
-            $('#product-sort li a').removeClass('selected');
-        } else {
-            $('#product-sort li a').removeClass('selected');
-        }*/
         $('#product-sort li a').removeClass('selected');
         $('#product-sort li a[data-sort="pop"]').addClass('selected');
         filter(getQuery());
