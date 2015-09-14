@@ -41,7 +41,7 @@ class TestChromeExtension(TestCase):
         response = self.client.get('/backend/authenticated/')
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['profile'], u'http://testserver/en/profile/normal_user/')
+        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/')
         self.assertEqual(json_content['authenticated'], True)
 
     def test_product_lookup_not_logged_in(self):
@@ -69,7 +69,7 @@ class TestChromeExtension(TestCase):
 
         self.assertEqual(json_content['product_pk'], None)
         self.assertEqual(json_content['product_link'], None)
-        self.assertEqual(json_content['product_short_link'], 'http://testserver/en/pd/4C92/')
+        self.assertEqual(json_content['product_short_link'], 'http://testserver/pd/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
     @unittest.skip("Review this test")
