@@ -457,7 +457,6 @@ class TestEmbeddingShops(TestCase):
         #self.product1 = get_model('apparel', 'Product').objects.create()
         #self.product2 = get_model('apparel', 'Product').objects.create()
 
-    @unittest.skip("Review this test")
     def test_create_shop(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
         self.assertTrue(is_logged_in)
@@ -486,8 +485,10 @@ class TestEmbeddingShops(TestCase):
         data.get("components")[1]["product"]["id"] = self.product2.id
         self.assertTrue(data.get("components")[0]["product"]["id"])
         self.assertTrue(data.get("components")[1]["product"]["id"])
-        response = self.client.post(reverse('create_shop')[3:],data=json.dumps(data),content_type='application/json',)
-        self.assertEqual(response.status_code, 201)
+        print "Trying to call url %s " % reverse('create_shop')
+        response = self.client.post(reverse('create_shop'),data=json.dumps(data),content_type='application/json',)
+        print response.status_code
+        self.assertTrue(response.status_code in [201])
         content = json.loads(response.content)
         self.assertEqual(content.get("published"), True)
         self.assertEqual(content.get("user"), "normal_user")
@@ -500,10 +501,15 @@ class TestEmbeddingShops(TestCase):
         self.assertEqual(content.get("user"), "normal_user")
         self.assertEqual(content.get("url"), "/shop/create/api/1")
         self.assertEqual(content.get("id"), 1)
-        response = self.client.post(reverse('shop-widget',args=(content.get("id"),))[3:])
+        print "Calling shop widget %s" % reverse('shop-widget',args=(content.get("id"),))
+        response = self.client.post(reverse('shop-widget',args=(content.get("id"),)))
+        print response.status_code
+        self.assertTrue(response.status_code in [200])
         url = reverse('embed-shop',args=(content.get("id"),))
+        print "Calling %s to be embedded into the cache." % url
         self.client.get(url)
         from django.core.cache import get_cache
         cache = get_cache('nginx')
         nginx_key = reverse('embed-shop', args=[1])
+        print "Checking cache key for: %s" % nginx_key
         self.assertIsNotNone(cache.get(nginx_key,None))
