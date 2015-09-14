@@ -100,7 +100,7 @@ class TestChromeExtension(TestCase):
 
         self.assertEqual(json_content['product_pk'], 1)
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
-        self.assertEqual(json_content['product_short_link'], 'http://testserver/en/p/4C92/')
+        self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
 class TestChromeExtensionSpecials(TestCase):
