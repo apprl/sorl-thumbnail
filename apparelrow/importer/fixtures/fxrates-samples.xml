@@ -1,0 +1,46 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+<channel>
+<title>Exchange Rates For Swedish Krona</title>
+<link>
+http://themoneyconverter.com/SEK/Exchange_Rates_For_Swedish_Krona.aspx
+</link>
+<description>RSS Exchange Rate Feed for Swedish Krona</description>
+<lastBuildDate>Thu, 10 Sep 2015 13:06:34 GMT</lastBuildDate>
+<language>en-US</language>
+<copyright>
+Copyright: (C) The Money Converter, see http://themoneyconverter.com
+</copyright>
+<docs>http://themoneyconverter.com/RSSFeeds.aspx</docs>
+<ttl>61</ttl>
+<image>
+<title>Exchange Rates For Swedish Krona</title>
+<url>
+http://themoneyconverter.com/images/TheMoneyConverter_sml.jpg
+</url>
+<link>
+http://themoneyconverter.com/SEK/Exchange_Rates_For_Swedish_Krona.aspx
+</link>
+</image>
+<item>
+<title>ARS/SEK</title>
+<link>http://themoneyconverter.com/SEK/ARS.aspx</link>
+<pubDate>Thu, 10 Sep 2015 13:06:33 GMT</pubDate>
+<description>1 Swedish Krona = 0.631380 Argentine Peso</description>
+<category>South America</category>
+</item>
+<item>
+<title>EUR/SEK</title>
+<link>http://themoneyconverter.com/SEK/EUR.aspx</link>
+<pubDate>Thu, 10 Sep 2015 13:06:33 GMT</pubDate>
+<description>1 Swedish Krona = 0.113460 Euro</description>
+<category>Europe</category>
+</item>
+<item>
+<title>GBP/SEK</title>
+<link>http://themoneyconverter.com/SEK/GBP.aspx</link>
+<pubDate>Thu, 10 Sep 2015 13:06:33 GMT</pubDate>
+<description>1 Swedish Krona = 0.097210 British Pound Sterling</description>
+<category>Europe</category>
+</item>
+</channel>
+</rss>
