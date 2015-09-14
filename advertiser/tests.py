@@ -299,7 +299,7 @@ class AdvertiserLinkTest(TransactionTestCase, AdvertiserMixin):
         self.assertContains(response, 'Missing store_id parameter.', count=1, status_code=400)
 
     def test_url_parameter(self):
-        url = '/sv/shop/women/'
+        url = '/shop/women/'
 
         response = self.client.get('%s?store_id=mystore&url=%s' % (reverse('advertiser-link'), url), follow=True)
         self.assertRedirects(response, url, status_code=302, target_status_code=200)
