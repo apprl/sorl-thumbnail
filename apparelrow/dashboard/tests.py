@@ -176,9 +176,6 @@ class TestDashboard(TransactionTestCase):
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertIsNotNone(registered_user)
 
-        # Click on activation email
-        for email in mail.outbox:
-            print email.body
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         # Sometimes a trailing \r is caugt
