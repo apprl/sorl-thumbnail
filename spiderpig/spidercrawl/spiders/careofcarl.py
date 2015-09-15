@@ -5,6 +5,8 @@ from scrapy.contrib.spiders import CSVFeedSpider
 from spiderpig.spidercrawl.items import Product
 from spiderpig.spidercrawl.spiders import AffiliateMixin
 
+import HTMLParser
+
 
 key_regex1 = re.compile(r'\?url=(.+)$')
 
@@ -38,6 +40,8 @@ class CareOfCarlSpider(CSVFeedSpider, AffiliateMixin):
         return super(CareOfCarlSpider, self).parse_rows(response)
 
     def parse_row(self, response, row):
+        parser = HTMLParser.HTMLParser()
+        description = parser.unescape(row.get('Product description'))
         item = Product()
         item['key'] = row.get('Product link')
         item['sku'] = row.get('ProductID')
@@ -46,10 +50,10 @@ class CareOfCarlSpider(CSVFeedSpider, AffiliateMixin):
         item['url'] = row.get('Product link')
         item['affiliate'] = self.AFFILIATE_AAN
         item['category'] = row.get('Category')
-        item['description'] = row.get('Product description')
+        item['description'] = description
         item['brand'] = row.get('Manufacturer')
         item['gender'] = 'M'
-        item['colors'] = row.get('Product name') + row.get('Product description')
+        item['colors'] = row.get('Product name') + description
         item['regular_price'] = row.get('Price')
         item['discount_price'] = item['regular_price']
         item['currency'] = 'SEK'

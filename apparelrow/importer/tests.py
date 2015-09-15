@@ -21,7 +21,7 @@ import unittest
 """ FXRate """
 class FXRateImporterTest(TestCase):
     def setUp(self):
-        self.sample_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'fixtures/fxrates-samples.rss')
+        self.sample_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'fixtures/fxrates-samples.xml')
 
     def tearDown(self):
         pass
@@ -72,7 +72,6 @@ class FXRateImporterTest(TestCase):
         self.assertTrue(importer.import_feed(self.sample_file))
         self.assertEqual(
             [
-                (u'AED', Decimal('0.576030'), u'SEK'),
                 (u'ARS', Decimal('0.631380'), u'SEK'),
                 (u'EUR', Decimal('0.113460'), u'SEK'),
                 (u'GBP', Decimal('0.097210'), u'SEK')
@@ -87,7 +86,7 @@ class FXRateImporterTest(TestCase):
         )
 
         self.assertTrue(importer.run())
-        self.assertEqual(4, FXRate.objects.count())
+        self.assertEqual(3, FXRate.objects.count())
 
 
 class FXRateModelTest(TestCase):
@@ -336,6 +335,7 @@ class TestImporterAPIBasic(TestCase):
 
 
 #TODO Problem with this function, ask Klas
+@unittest.skip("Old test, not valid anymore")
 class TestImporterAPIProduct(TransactionTestCase):
     """
     Test importing a product and all related objects
@@ -458,7 +458,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.assertEqual(var_3.in_stock, 24, 'Got correct stock level for XtraSmall')
         self.assertTrue(var_3.options.get(option_type=self.type_size, value='XS'), 'Got size: xs option')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability_null(self):
         del self.api.dataset['product']['variations'][0]['availability']
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
@@ -466,7 +466,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         var_1 = vp.variations.get(id=1)
         self.assertEqual(var_1.in_stock, None, 'Got correct stock level when availability attribute is missing')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability_true(self):
         self.api.dataset['product']['variations'][0]['availability'] = True
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
@@ -474,7 +474,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         var_1 = vp.variations.get(id=1)
         self.assertEqual(var_1.in_stock, -1, 'Got correct stock level when availability is true')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability_false(self):
         self.api.dataset['product']['variations'][0]['availability'] = False
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
@@ -482,7 +482,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         var_1 = vp.variations.get(id=1)
         self.assertEqual(var_1.in_stock, 0, 'Got correct stock level when availability is false')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_product_availability_modify(self):
         vp = apparel.VendorProduct.objects.get(product=self.product, vendor=self.api.vendor)
         original_in_stock_1 = vp.variations.get(id=1).in_stock
@@ -527,7 +527,7 @@ class TestImporterAPIProduct(TransactionTestCase):
         self.assertTrue(vp.variations.get(id=5).options.get(option_type=self.type_color, value='red'), 'New item created with red color')
         self.assertTrue(vp.variations.get(id=5).options.get(option_type=self.type_size, value='M'), 'New item created with red color')
 
-
+@unittest.skip("Old test suite, not valid anymore")
 class TestProductImage(TestCase):
     def setUp(self):
         self.log = ImportLog.objects.create(
@@ -542,12 +542,14 @@ class TestProductImage(TestCase):
         self.api.dataset = copy.deepcopy(SAMPLE_DICT)
         self.api._product_image = '/dummy/path.jpeg'
 
+    @unittest.skip("Old test, not relevant anymore")
     def tearDown(self):
         # FIXME: Remove local image if it exists
         fp = os.path.join(settings.MEDIA_ROOT, settings.APPAREL_PRODUCT_IMAGE_ROOT, 'cool-clothes-store', '__image.jpg')
         if os.path.exists(fp):
             os.remove(fp)
 
+    @unittest.skip("Old test, not relevant anymore")
     def test_product_image_path(self):
         self.assertTrue(settings.APPAREL_PRODUCT_IMAGE_ROOT, 'APPAREL_PRODUCT_IMAGE_ROOT setting exists')
         self.assertEqual(
@@ -560,21 +562,22 @@ class TestProductImage(TestCase):
             )
         )
 
-    @unittest.skip("Review this test")
-    def test_product_image_no_url(self):
-        self.assertRaises(IncompleteDataSet, self.api._product_image, None)
+    #@unittest.skip("Review this test")
+    #def test_product_image_no_url(self):
+    #    self.assertRaises(IncompleteDataSet, self.api._product_image, None)
 
+    @unittest.skip("Old test, not relevant anymore")
     def test_product_image(self):
         pass
 
-        # FIXME: I cannot figure out how to connect to a test server and execute this test.
+        # TODO FIXME: I cannot figure out how to connect to a test server and execute this test.
         #p = self.api.product_image()
         #
         #self.assertEqual(p, self.api.product_image_path, "Returns product_image_path property")
         #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, p)), 'File downloaded')
         #
 
-    @unittest.skip("Review this test")
+    @unittest.skip("Old test, not relevant anymore")
     def test_product_image_http_error(self):
         self.api.dataset['product']['image-url'] = 'http://www.hanssonlarsson.se/test/404.jpg'
         self.api._product_image = None
@@ -601,10 +604,12 @@ class TestProductImage(TestCase):
         p = self.api.product_image
         self.assertEqual(stat.st_mtime, os.stat(os.path.join(settings.MEDIA_ROOT, p)).st_mtime, 'File not change after downloading')'''
 
+
+    # This test is for the old importer that is no longer in production
     def test_product_image_import(self):
-        """
-        Product image is downloaded during import
-        """
+
+        #Product image is downloaded during import
+
         pass
         # FIXME: I cannot figure out how to connect to a test server and execute this test.
 
@@ -657,11 +662,12 @@ class TestDataSetImport(TransactionTestCase):
         if apparel.Category.objects.count() > 0:
             self.fail('Objects not rolled back, are all product-related tables created with the InnoDB engine?')
 
-    @unittest.skip("Review this test")
-    def test_import_dberror(self):
-        # TODO Understand the purpose of this test
-        self.dataset['product']['product-url'] = 'x' * 300
-        self.assertRaises(ImporterError, self.api.import_dataset, self.dataset)
+    # This test belongs to the old
+    #@unittest.skip("Review this test")
+    #def test_import_dberror(self):
+    #    # TODO Understand the purpose of this test
+    #    self.dataset['product']['product-url'] = 'x' * 300
+    #    self.assertRaises(ImporterError, self.api.import_dataset, self.dataset)
 
 
 """ MAPPER """
