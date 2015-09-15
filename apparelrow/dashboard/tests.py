@@ -158,6 +158,7 @@ class TestDashboard(TransactionTestCase):
         referral_user.referral_partner = True
         referral_user.is_partner = True
         referral_user.save()
+        self.assertIsNotNone(referral_user.get_referral_url())
 
         # Visit referral URL
         response = self.client.get(referral_user.get_referral_url(), follow=True)
@@ -171,14 +172,26 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
+        self.assertEquals(response.status_code,302)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertIsNotNone(registered_user)
 
         # Click on activation email
+        for email in mail.outbox:
+            print email.body
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
-        response = self.client.get(activation_url)
-
+        # Sometimes a trailing \r is caugt
+        activation_url = activation_url.strip()
+        self.assertTrue("\r" not in activation_url)
+        print "Activation URL found in email: %s" % activation_url
+        response = self.client.get(activation_url, follow=True)
+        print "Requesting url, status code: %s" % response.status_code
+        if response.status_code == 404:
+            print "Available activation codes in database:"
+            for user in get_user_model().objects.all():
+                print "Code: %s" % user.confirmation_key
+        self.assertTrue(response.status_code in [200,201],"User activation for %s has failed, responsecode: %s" % (registered_user,response.status_code))
         # We should now be marked with a parent user (from referral URL)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
@@ -235,7 +248,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
-
+        self.assertEquals(response.status_code,302)
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         response = self.client.get(activation_url)
@@ -265,6 +278,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'gender': 'M'})
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
+        activation_url = activation_url.strip()
         response = self.client.get(activation_url)
 
         registered_user = get_user_model().objects.get(email='test@xvid.se')
@@ -300,6 +314,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL, register by email and activate account
         response = self.client.get(referral_user.get_referral_url(), follow=True)
+        self.assertTrue(response.status_code in [200,201])
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
                                                                      'last_name': 'svensson',
                                                                      'username': 'test',
@@ -307,8 +322,10 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
+        self.assertEquals(response.status_code,302)
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
+        activation_url = activation_url.strip()
         response = self.client.get(activation_url)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
 
