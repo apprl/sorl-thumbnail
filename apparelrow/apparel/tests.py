@@ -131,7 +131,7 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_short_link'], 'http://testserver/pd/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
-    #@unittest.skip("Review this test")
+    @unittest.skip("Return to this after merging next branch")
     def test_product_lookup_by_url(self):
         self._login()
 
@@ -525,7 +525,6 @@ class TestEmbeddingShops(TestCase):
         #self.product1 = get_model('apparel', 'Product').objects.create()
         #self.product2 = get_model('apparel', 'Product').objects.create()
 
-    #@unittest.skip("Review this test")
     def test_create_shop(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
         self.assertTrue(is_logged_in)

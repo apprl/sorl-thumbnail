@@ -69,7 +69,7 @@ class TestDashboard(TransactionTestCase):
         self.assertFalse(normal_user.referral_partner_code)
         self.assertEqual(normal_user.get_referral_url(), None)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -90,7 +90,7 @@ class TestDashboard(TransactionTestCase):
         value = signing.get_cookie_signer(salt=cookie_key).unsign(signed_cookie_value, max_age=None)
         self.assertEqual(str(value), str(referral_user.pk))
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_referral_link_disabled(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -107,7 +107,7 @@ class TestDashboard(TransactionTestCase):
         self.assertRedirects(response, reverse('publisher-contact'))
         self.assertNotIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_publisher_signup_from_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -128,7 +128,7 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(len(mail.outbox), 3)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_publisher_signup_from_referral_link_already_authenticated(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -151,12 +151,13 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(len(mail.outbox), 3)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_signup_from_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
         referral_user.is_partner = True
         referral_user.save()
+        self.assertIsNotNone(referral_user.get_referral_url())
 
         # Visit referral URL
         response = self.client.get(referral_user.get_referral_url(), follow=True)
@@ -170,14 +171,23 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
+        self.assertEquals(response.status_code,302)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertIsNotNone(registered_user)
 
-        # Click on activation email
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
-        response = self.client.get(activation_url)
-
+        # Sometimes a trailing \r is caugt
+        activation_url = activation_url.strip()
+        self.assertTrue("\r" not in activation_url)
+        print "Activation URL found in email: %s" % activation_url
+        response = self.client.get(activation_url, follow=True)
+        print "Requesting url, status code: %s" % response.status_code
+        if response.status_code == 404:
+            print "Available activation codes in database:"
+            for user in get_user_model().objects.all():
+                print "Code: %s" % user.confirmation_key
+        self.assertTrue(response.status_code in [200,201],"User activation for %s has failed, responsecode: %s" % (registered_user,response.status_code))
         # We should now be marked with a parent user (from referral URL)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
@@ -196,7 +206,7 @@ class TestDashboard(TransactionTestCase):
         self.assertEqual(sale.commission, decimal.Decimal(20))
         self.assertEqual(sale.currency, 'EUR')
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_signup_from_own_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -213,7 +223,7 @@ class TestDashboard(TransactionTestCase):
         self.assertIsNone(referral_user.referral_partner_parent)
         self.assertIsNone(referral_user.referral_partner_parent_date)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_signup_from_invalid_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -234,7 +244,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
-
+        self.assertEquals(response.status_code,302)
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         response = self.client.get(activation_url)
@@ -246,7 +256,7 @@ class TestDashboard(TransactionTestCase):
         # Invalid referral link should not result in a promo sale of 20 EUR
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 0)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_visit_two_referral_links(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -264,6 +274,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'gender': 'M'})
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
+        activation_url = activation_url.strip()
         response = self.client.get(activation_url)
 
         registered_user = get_user_model().objects.get(email='test@xvid.se')
@@ -290,7 +301,7 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_referral_sale(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -299,6 +310,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL, register by email and activate account
         response = self.client.get(referral_user.get_referral_url(), follow=True)
+        self.assertTrue(response.status_code in [200,201])
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
                                                                      'last_name': 'svensson',
                                                                      'username': 'test',
@@ -306,8 +318,10 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
+        self.assertEquals(response.status_code,302)
         welcome_mail_body = mail.outbox[2].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
+        activation_url = activation_url.strip()
         response = self.client.get(activation_url)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
 
@@ -1423,7 +1437,7 @@ class TestSalesPerClick(TransactionTestCase):
         management.call_command('clicks_summary', verbosity=0, interactive=False)
         self.assertEqual(get_total_clicks_per_vendor(self.vendor), 100)
 
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_detail_clicks_amount(self):
         ''' Test that detailed data for clicks per day is being generated correctly
         '''
