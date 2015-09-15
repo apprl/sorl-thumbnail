@@ -328,7 +328,7 @@ def store_admin(request, year=None, month=None):
     total_sales_query = get_model('dashboard', 'Sale').objects.filter(vendor=store.vendor,
                                                                     status__gte=get_model('dashboard', 'Sale').PENDING) \
                                                            .aggregate(amount=Sum('converted_amount'))
-    if 'amount' in total_sales_query:
+    if 'amount' in total_sales_query and total_sales_query['amount']:
         sales_generated = total_sales_query['amount']
 
     # Chart data (transactions and clicks)
