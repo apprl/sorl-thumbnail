@@ -5,14 +5,16 @@ String.prototype.capitalize = function() {
 /*
     Load detail click earning details for clicks in a modal
  */
-function load_detailed_data_clicks(json_detail, date, vendor, currency){
+function load_detailed_data_clicks(jsonDetail, date, vendor, currency, isStore){
     var html = "<table>";
-    for (i = 0; i < json_detail.length; i++){
+    for (i = 0; i < jsonDetail.length; i++){
         html += "<tr>" +
-                "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
-                "<td class='center'>"  + json_detail[i].clicks + "</td>" +
-                "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
-                "<tr>";
+                "<td><a href=\""+jsonDetail[i].product_url+"\">" + jsonDetail[i].product_name + "</a></td>" +
+                "<td class='center'>"  + jsonDetail[i].clicks + "</td>"
+        if (!isStore){
+            html += "<td class='center'>" + currency + " " + jsonDetail[i].product_earning.toFixed(2) + "</td>";
+        }
+        html += "<tr>";
     }
     html += "</table>";
     $("#content-clicks").html(html);
