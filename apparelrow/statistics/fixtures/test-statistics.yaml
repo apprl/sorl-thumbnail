@@ -9,6 +9,14 @@
     name: CPC Vendor
     is_cpc: True
     is_cpo: False
+    clicks_limit: 10
+
+- model: apparel.vendor
+  pk: 3
+  fields:
+    name: CPC Other Vendor
+    is_cpc: True
+    is_cpo: False
 
 - model: apparel.brand
   pk: 1
@@ -51,6 +59,30 @@
     date_added: "2015-03-16 17:41:28"
     slug: brand-cpc-product
 
+- model: apparel.product
+  pk: 4
+  fields:
+    product_name: Other Product
+    sku: hej4
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-16 17:41:28"
+    slug: brand-cpc-other-product
+
+- model: apparel.product
+  pk: 5
+  fields:
+    product_name: Other Product
+    sku: hej5
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-16 17:41:28"
+    slug: brand-cpc-other-product-no-limit
+
 - model: apparel.vendorproduct
   pk: 1
   fields:
@@ -58,7 +90,6 @@
     vendor: 1
     original_currency: SEK
     _original_price: 42.00
-
 
 - model: apparel.vendorproduct
   pk: 2
@@ -68,12 +99,27 @@
     original_currency: SEK
     _original_price: 12.00
 
-
 - model: apparel.vendorproduct
   pk: 3
   fields:
     product: 3
     vendor: 2
+    original_currency: SEK
+    _original_price: 42.00
+
+- model: apparel.vendorproduct
+  pk: 4
+  fields:
+    product: 4
+    vendor: 2
+    original_currency: SEK
+    _original_price: 42.00
+
+- model: apparel.vendorproduct
+  pk: 5
+  fields:
+    product: 5
+    vendor: 3
     original_currency: SEK
     _original_price: 42.00
 
