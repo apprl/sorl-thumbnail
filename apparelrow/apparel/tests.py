@@ -3,12 +3,10 @@ from apparelrow.apparel.views import product_lookup_asos_nelly
 import unittest
 
 from django.contrib.auth import get_user_model
-from django.db.models.loading import get_model
 from django.test.utils import override_settings
 from decimal import Decimal
 from django.conf import settings
 from apparelrow.apparel.models import Shop, ShopEmbed
-from apparelrow.dashboard.tests import reverse
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
