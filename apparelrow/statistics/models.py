@@ -84,7 +84,17 @@ class ProductStat(models.Model):
 
 @receiver(post_save, sender=ProductStat, dispatch_uid='productstat_post_save')
 def productstat_post_save(sender, instance, created, **kwargs):
-    if created:
+    """
+    Checks if a valid click should be revoked due to the click does not belong to a market that the vendor is shipping to.
+    :param sender:
+    :param instance:
+    :param created:
+    :param kwargs:
+    :return:
+    """
+
+    # Only do this check if the instance is created and the instance is valid. If not valid there is not really any point.
+    if created and instance.is_valid:
         try:
             product = Product.objects.get(slug=instance.product)
             if product.default_vendor and product.default_vendor.vendor.is_cpc:

@@ -963,3 +963,5 @@ LOGGING = {
 }
 
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
+GEOIP_DEBUG=False
+GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"

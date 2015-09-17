@@ -11,7 +11,7 @@ import redis
 
 
 @task(name='statistics.tasks.product_buy_click', max_retries=5, ignore_result=True)
-def product_buy_click(product_id, referer, ip, user_agent, user_id, page):
+def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie_already_exists):
     """
     Buy click stats for products
     """
@@ -47,7 +47,8 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page):
         page=page,
         referer=referer,
         ip=ip,
-        user_agent=user_agent)
+        user_agent=user_agent,
+        is_valid=bool(not cookie_already_exists))
 
 
 @periodic_task(name='statistics.tasks.active_users', run_every=crontab(hour='04', minute='55'), max_retries=2, ignore_result=True)

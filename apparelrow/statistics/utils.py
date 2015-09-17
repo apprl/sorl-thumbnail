@@ -46,15 +46,18 @@ def get_country_by_ip(request):
 
 def get_country_by_ip_string(ip):
     import requests
-    from apparelrow.settings import GEOIP_URL
+
+    from django.conf import settings
+    if settings.GEOIP_DEBUG:
+        return settings.GEOIP_RETURN_LOCATION
     import logging
     log = logging.getLogger(__name__)
     json_obj = None
     try:
-        resp = requests.get(GEOIP_URL % ip,timeout=0.5)
+        resp = requests.get(settings.GEOIP_URL % ip,timeout=1.0)
         json_obj = resp.json()
     except Timeout,msg:
-        log.warning('Timeout occurred in geoip lookup function. > 500ms response time. Service down? [%s]' % msg)
+        log.warning('Timeout occurred in geoip lookup function. > 1000ms response time. Service down? [%s]' % msg)
     except Exception,msg:
         log.warning('Reply from geoip service not complient with json? [%s]' % msg)
 
