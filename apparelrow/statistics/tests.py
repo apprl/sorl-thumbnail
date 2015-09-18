@@ -108,8 +108,8 @@ class TestProductStat(TestCase):
         Tests that only one click could be made to the same product from the same browser, once a day
         """
         from apparelrow.apparel.factories import ProductFactory,VendorFactory,VendorProductFactory
-        vendor_se = VendorFactory.create(name="CPC VENDOR SE")
-        vendor_no = VendorFactory.create(name="CPC VENDOR NO")
+        vendor_se = VendorFactory.create(name="CPC Vendor SE",is_cpc=True)
+        vendor_no = VendorFactory.create(name="CPC Vendor NO",is_cpc=True)
         vendors = [vendor_se,vendor_no]
         products = [ProductFactory.create() for i in range(20)]
         for index, product in enumerate(products):
