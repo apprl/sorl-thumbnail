@@ -7,6 +7,8 @@ from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.core import management
 from django.conf import settings
+from django.core import mail
+from django.conf import settings
 
 
 
@@ -139,3 +141,53 @@ class TestProductStat(TestCase):
         response = self.client.post(reverse('product-track', args=[products[0].pk, 'Ext-Link', user.pk]), follow=True)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), 3+20+1)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(is_valid=True).count(), 2+10)
+
+    def test_clicks_limit_per_vendor_not_exceeded_custom_value(self):
+        """
+        Test an email is not sent to the admins when a limit is not exceeded
+        """
+        ip = "192.128.2.3"
+        vendor = get_model('apparel', 'Vendor').objects.get(pk=2)
+        product = get_model('apparel', 'Product').objects.get(slug='brand-cpc-product')
+        user = get_user_model().objects.get(username='normal_user')
+        sent_mails = len(mail.outbox)
+
+        for i in range(0, vendor.clicks_limit - 1):
+            get_model('statistics', 'ProductStat').objects.create(product=product.product_name, page="BuyReferral",
+                                                                  user_id=user.id, vendor=vendor.name,
+                                                                  ip=ip, created=datetime.date.today())
+
+        self.assertGreaterEqual(len(mail.outbox), sent_mails)
+
+    def test_clicks_limit_per_vendor_exceeded_custom_value(self):
+        """
+        Test an email is  sent to the admins when a limit is exceeded and limit
+        of clicks has been defined
+        """
+        ip = "192.128.2.3"
+        vendor = get_model('apparel', 'Vendor').objects.get(pk=2)
+        product = get_model('apparel', 'Product').objects.get(slug='brand-cpc-product')
+        user = get_user_model().objects.get(username='normal_user')
+        sent_mails = len(mail.outbox)
+
+        for i in range(0, vendor.clicks_limit):
+            get_model('statistics', 'ProductStat').objects.create(product=product.product_name, page="BuyReferral",
+                                                                  user_id=user.id, vendor=vendor.name,
+                                                                  ip=ip, created=datetime.date.today())
+        self.assertGreaterEqual(len(mail.outbox), sent_mails + 1)
+
+    def test_clicks_limit_per_vendor_exceeded_default_value(self):
+        """
+        Test an email is  sent to the admins when a limit is exceeded and limit
+        of clicks has not been defined
+        """
+        product = get_model('apparel', 'Product').objects.get(slug='brand-cpc-other-product-no-limit')
+        vendor = get_model('apparel', 'Vendor').objects.get(pk=3)
+        user = get_user_model().objects.get(username='normal_user')
+        ip = "192.128.2.3"
+        sent_mails = len(mail.outbox)
+        for i in range(0, settings.APPAREL_DEFAULT_CLICKS_LIMIT):
+            get_model('statistics', 'ProductStat').objects.create(product=product.product_name, page="BuyReferral",
+                                                                  user_id=user.id, vendor=vendor.name,
+                                                                  ip=ip, created=datetime.date.today())
+        self.assertGreaterEqual(len(mail.outbox), sent_mails + 1)
