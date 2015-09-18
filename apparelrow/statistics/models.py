@@ -11,8 +11,6 @@ from apparelrow.apparel.tasks import product_popularity
 from apparelrow.apparel.models import Product
 from apparelrow.statistics.utils import get_country_by_ip_string
 
-import datetime
-import calendar
 
 import logging
 logger = logging.getLogger( __name__ )
