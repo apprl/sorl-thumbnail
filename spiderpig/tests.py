@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 __author__ = 'klaswikblad'
 
-from .utils import unzip
+from spiderpig.utils import unzip
 from spiderpig.spidercrawl.middlewares import DownloadZipMiddleware
 import zipfile
 from scrapy.http import Response
 import os
-from django.utils.translation import ugettext_lazy as _
+from django.test import TestCase
 
-
-class TestScrapyMiddleWare:
+class TestScrapyMiddleWare(TestCase):
     testzipfile = None
     encrypted_data = None
     decrypted_data = None
