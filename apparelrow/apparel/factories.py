@@ -56,6 +56,13 @@ class VendorProductFactory(factory.django.DjangoModelFactory):
         model = models.VendorProduct
     product = factory.SubFactory(ProductFactory)
     vendor = factory.SubFactory(VendorFactory)
+    original_price = 20
+    original_currency = "SEK"
+    discount_price    = 15
+    discount_currency = "SEK"
+    original_discount_currency = "SEK"
+    availability  = 10
+
 
 
 class DomainDeepLinkingFactory(factory.django.DjangoModelFactory):
