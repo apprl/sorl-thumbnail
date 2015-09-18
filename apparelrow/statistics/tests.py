@@ -5,9 +5,7 @@ from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
-from django.core import management
-from django.conf import settings
-from django.core import mail
+from django.core import management, mail
 from django.conf import settings
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -114,7 +112,9 @@ class TestProductStat(TestCase):
             get_model('statistics', 'ProductStat').objects.create(product=product.product_name, page="BuyReferral",
                                                                   user_id=user.id, vendor=vendor.name,
                                                                   ip=ip, created=datetime.date.today())
-
+        management.call_command('check_clicks_limit_per_vendor', verbosity=0, interactive=False)
+        vendor = get_model('apparel', 'Vendor').objects.get(pk=2)  # get updated instance of vendor
+        self.assertFalse(vendor.is_limit_reached)
         self.assertGreaterEqual(len(mail.outbox), sent_mails)
 
     def test_clicks_limit_per_vendor_exceeded_custom_value(self):
@@ -127,12 +127,29 @@ class TestProductStat(TestCase):
         product = get_model('apparel', 'Product').objects.get(slug='brand-cpc-product')
         user = get_user_model().objects.get(username='normal_user')
         sent_mails = len(mail.outbox)
+        for i in range(0, vendor.clicks_limit):
+            get_model('statistics', 'ProductStat').objects.create(product=product.product_name, page="BuyReferral",
+                                                                  user_id=user.id, vendor=vendor.name,
+                                                                  ip=ip, created=datetime.date.today())
+        self.assertFalse(vendor.is_limit_reached)
+        management.call_command('check_clicks_limit_per_vendor')
+
+        vendor = get_model('apparel', 'Vendor').objects.get(pk=2)  # get updated instance of vendor
+        self.assertTrue(vendor.is_limit_reached)
+        self.assertGreaterEqual(len(mail.outbox), sent_mails + 1)
+
+        # Check that an email is only sent one time
 
         for i in range(0, vendor.clicks_limit):
             get_model('statistics', 'ProductStat').objects.create(product=product.product_name, page="BuyReferral",
                                                                   user_id=user.id, vendor=vendor.name,
                                                                   ip=ip, created=datetime.date.today())
+        self.assertTrue(vendor.is_limit_reached)
+        management.call_command('check_clicks_limit_per_vendor')
+
+        vendor = get_model('apparel', 'Vendor').objects.get(pk=2)  # get updated instance of vendor
         self.assertGreaterEqual(len(mail.outbox), sent_mails + 1)
+
 
     def test_clicks_limit_per_vendor_exceeded_default_value(self):
         """
@@ -148,4 +165,8 @@ class TestProductStat(TestCase):
             get_model('statistics', 'ProductStat').objects.create(product=product.product_name, page="BuyReferral",
                                                                   user_id=user.id, vendor=vendor.name,
                                                                   ip=ip, created=datetime.date.today())
+        self.assertFalse(vendor.is_limit_reached)
+        management.call_command('check_clicks_limit_per_vendor')
+        vendor = get_model('apparel', 'Vendor').objects.get(pk=3)  # get updated instance of vendor
+        self.assertTrue(vendor.is_limit_reached)
         self.assertGreaterEqual(len(mail.outbox), sent_mails + 1)

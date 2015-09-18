@@ -168,7 +168,11 @@ class Vendor(models.Model):
     is_cpc = models.BooleanField(default=False, help_text=_('Cost per click'), db_index=True)
     is_cpo = models.BooleanField(default=True, help_text=_('Cost per order'), db_index=True)
 
-    clicks_limit = models.IntegerField(_('Limit of clicks per month'), null=True, blank=True, help_text=_('Only used for PPC vendors. An email notification is sent when this number of clicks has been reached during a month'))
+    clicks_limit = models.IntegerField(_('Limit of clicks per month'), null=True, blank=True,
+                        help_text=_('Only used for PPC vendors. An email notification is sent when this number of '
+                                    'clicks has been reached during a month'))
+    is_limit_reached = models.BooleanField(default=False, help_text=_('Limit has been exceeded for the current month '
+                                                      'and email has been sent to the admin group'), db_index=True)
 
     class Meta:
         ordering = ['name']

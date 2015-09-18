@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models import get_model
-from django.core.mail import mail_admins
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,8 +11,6 @@ from apparelrow.apparel.tasks import product_popularity
 from apparelrow.apparel.models import Product
 from apparelrow.statistics.utils import get_country_by_ip_string
 
-import datetime
-import calendar
 
 import logging
 logger = logging.getLogger( __name__ )
@@ -90,18 +86,6 @@ class ProductStat(models.Model):
 @receiver(post_save, sender=ProductStat, dispatch_uid='productstat_post_save')
 def productstat_post_save(sender, instance, created, **kwargs):
     if created:
-        start_date = datetime.date.today().replace(day=1)
-        end_date = start_date
-        end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-
-        vendor = get_model('apparel', 'Vendor').objects.get(name=instance.vendor)
-        if vendor.is_cpc:
-            clicks_limit = vendor.clicks_limit if vendor.clicks_limit else settings.APPAREL_DEFAULT_CLICKS_LIMIT
-            clicks_amount = get_model('statistics', 'ProductStat').objects.\
-                filter(vendor=instance.vendor, created__range=(start_date, end_date)).count()
-            if clicks_amount == clicks_limit:
-                mail_admins('Clicks limit reached', 'Limit for clicks for vendor %s has been reached' % instance.vendor)
-
         try:
             product = Product.objects.get(slug=instance.product)
             if product.default_vendor and product.default_vendor.vendor.is_cpc:

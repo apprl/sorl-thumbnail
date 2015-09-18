@@ -13,10 +13,18 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
                       keep_default=False)
 
+        # Adding field 'Vendor.is_limit_reached'
+        db.add_column(u'apparel_vendor', 'is_limit_reached',
+                      self.gf('django.db.models.fields.BooleanField')(default=False, db_index=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
         # Deleting field 'Vendor.clicks_limit'
         db.delete_column(u'apparel_vendor', 'clicks_limit')
+
+        # Deleting field 'Vendor.is_limit_reached'
+        db.delete_column(u'apparel_vendor', 'is_limit_reached')
 
 
     models = {
@@ -310,6 +318,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_cpc': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'is_cpo': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
+            'is_limit_reached': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'logotype': ('django.db.models.fields.files.ImageField', [], {'max_length': '127', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_index': 'True'}),
             'provider': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
