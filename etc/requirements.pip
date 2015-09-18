@@ -43,3 +43,6 @@ jsonfield==1.0.0
 django_user_agents==0.3.0
 ua-parser==0.3.6
 user-agents==0.3.2
+tldextract==1.7.1
+factory-boy==2.5.2
+fake-factory==0.5.2

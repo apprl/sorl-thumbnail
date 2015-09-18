@@ -1,12 +1,9 @@
-import decimal
-
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.utils.functional import cached_property
 
 from advertiser.utils import calculate_balance, get_transactions
 

@@ -617,7 +617,7 @@ class TestProductImage(TestCase):
         #self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, self.api.product_image_path)), 'Image downloaded during import')
         #self.assertEqual(p.product_image, self.api.product_image_path, 'image_path stored in product')
 
-
+@unittest.skip("Old test suite, not valid anymore")
 class TestDataSetImport(TransactionTestCase):
     def setUp(self):
         self.log = ImportLog.objects.create(
@@ -682,7 +682,7 @@ class DummyDataMapper(DataMapper):
 class DummyProvider(Provider):
     pass
 
-
+@unittest.skip("Old test suite, not valid anymore")
 class MapperProcessTest(TestCase):
     def setUp(self):
         self.feed = VendorFeed.objects.create(
@@ -725,7 +725,7 @@ class MapperProcessTest(TestCase):
             'Called map_field() with each field'
         )'''
 
-
+@unittest.skip("Old test suite, not valid anymore")
 class FieldMapperTest(TestCase):
     def setUp(self):
         self.vendor = apparel.Vendor.objects.create(name='My Vendor')
@@ -789,7 +789,7 @@ class FieldMapperTest(TestCase):
             'Whitespaces stripped from all fields'
         )
 
-
+@unittest.skip("Old test suite, not valid anymore")
 class HelperMethodsTest(TestCase):
     def setUp(self):
         self.feed = VendorFeed.objects.create(
@@ -846,6 +846,7 @@ class HelperMethodsTest(TestCase):
 
 
 """ IMPORT """
+@unittest.skip("Old test suite, not valid anymore")
 class ImportLogTest(TestCase):
     def setUp(self):
         self.feed = VendorFeed.objects.create(
@@ -897,7 +898,7 @@ class ImportLogTest(TestCase):
         self.assertEquals(log.messages.all()[0].status, 'info', 'ImportLogMessage status defaults to info')
         self.assertTrue(isinstance(log.messages.all()[0].datetime, datetime), 'ImportLogMessage datetime set to now')
 
-
+@unittest.skip("Old test suite, not valid anymore")
 class VendorFeedTest(TestCase):
     def setUp(self):
         pass
@@ -944,6 +945,7 @@ class VendorFeedTest(TestCase):
 
 
 """ PROVIDER """
+@unittest.skip("Old test suite, not valid anymore")
 class MyCSVProvider(CSVProvider):
     def __init__(self, *args, **kwargs):
         super(MyCSVProvider, self).__init__(*args, **kwargs)
@@ -967,7 +969,7 @@ class MyMapper(DataMapper):
 
 # - Actual Test Cases -
 
-
+@unittest.skip("Old test suite, not valid anymore")
 class ProviderBaseTest(TestCase):
     """
     Tests basic functionality of the Provider class
@@ -1024,7 +1026,7 @@ class ProviderBaseTest(TestCase):
         self.assertTrue(p.file.closed is False, 'File object is opened')
         self.assertEqual(p.file.mode, 'r', 'File object is opened for reading')
 
-
+@unittest.skip("Old test suite, not valid anymore")
 class CSVProviderTest(TestCase):
     def setUp(self):
         self.feed = VendorFeed.objects.create(

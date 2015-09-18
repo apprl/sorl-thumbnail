@@ -11,6 +11,7 @@ import urlparse
 from apparelrow.apparel.utils import currency_exchange
 import decimal
 import re
+import tldextract
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
@@ -50,6 +51,7 @@ from apparelrow.activity_feed.views import user_feed
 
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
+from pysolr import Solr
 
 logger = logging.getLogger("apparel.debug")
 
@@ -304,7 +306,7 @@ def product_detail(request, slug):
 
     # More alternatives
     #alternative = get_product_alternative(product)
-    alternative, alternative_url = more_alternatives(product, 9)
+    alternative, alternative_url = more_alternatives(product, request.session.get('location','ALL'), 9)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)
@@ -336,7 +338,7 @@ def product_detail(request, slug):
             'looks_with_product': looks_with_product,
             'looks_with_product_count': looks_with_product_count,
             'object_url': request.build_absolute_uri(),
-            'more_like_this': more_like_this_product(mlt_body, product.gender, 9),
+            'more_like_this': more_like_this_product(mlt_body, product.gender, request.session.get('location','ALL'), 9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
             'product_full_image': product_full_image,
             'product_brand_full_url': product_brand_full_url,
@@ -435,10 +437,19 @@ def product_track(request, pk, page='Default', sid=0):
     if posted_referer == client_referer and 'redirect' in client_referer:
         return HttpResponse()
 
-    product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
-                            get_user_agent(request), sid, page)
+    product = None
+    try:
+        product = get_model('apparel', 'Product').objects.get(pk=pk)
+    except get_model('apparel', 'Product').DoesNotExist:
+        pass
 
-    return HttpResponse()
+    cookie_already_exists = bool(request.COOKIES.get(product.slug, None))
+    response = HttpResponse()
+    if product:
+        product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
+                            get_user_agent(request), sid, page, cookie_already_exists)
+        response.set_cookie(product.slug, '1', settings.APPAREL_PRODUCT_MAX_AGE)
+    return response
 
 
 def product_popup(request):
@@ -821,27 +832,45 @@ def authenticated_backend(request):
 
 def product_lookup_by_domain(request, domain, key):
     model = get_model('apparel', 'DomainDeepLinking')
-    results = model.objects.extra(where=["%s LIKE domain||'%%'"], params=[domain])
+    domain = extract_domain_with_suffix(domain)
+
+    # domain:          example.com
+    # Deeplink.domain: example.com/se
+    results = model.objects.filter(domain__icontains=domain)
+    instance = None
     if not results:
         raise Http404
 
-    instance = results[0]
+    if len(results) > 1 :
+        for item in results:
+            if item.domain in key:
+                instance = item
+    else:
+        instance = results[0]
+
     if instance.template:
         user_id = request.user.pk
-
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
-
         return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
     return None, None
 
-def product_lookup_by_theimp(request, key):
-    products = get_model('theimp', 'Product').objects.extra(where=["%s LIKE key||'%%'"], params=[key])
-    if len(products) < 1:
+def product_lookup_by_solr(request, key):
+    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1}
+    connection = Solr(settings.SOLR_URL)
+    result = connection.search('django_ct:apprl.product', **kwargs)
+
+    dict = result.__dict__
+    logger.debug("Query executed in %s milliseconds" % dict['qtime'])
+
+    if dict['hits'] < 1:
+        logger.debug("No results found")
         return None
-    json_data = json.loads(products[0].json)
-    return json_data.get('site_product', None)
+    logger.debug("%s results found" % dict['hits'])
+    product_id = dict['docs'][0]['django_id']
+
+    return product_id
 
 def parse_luisaviaroma_fragment(fragment):
     seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)
@@ -853,24 +882,27 @@ def product_lookup_asos_nelly(url):
     parsedurl = urlparse.urlsplit(url)
     path = parsedurl.path
     if("nelly" in parsedurl.netloc):
-        #get rid of categories for nelly links, only keep product name (last two "/"")
-        noToRemove = path.count("/") - 1
-        while noToRemove > 0:
-            pos = path.find("/")
-            path = path[pos+1:]
-            noToRemove -= 1
-        key = path
+        # get rid of categories for nelly links, only keep product name (last two "/"")
+        temp_path = path.rstrip('/') # remove last slash if it exists
+        key = temp_path.split('/')[-1] # get the "righest" element after a slash
+
     elif("asos" in parsedurl.netloc):
-        prodId = re.search(r'iid=(\w+)?', parsedurl.query).group(1)
-        key = "%s?iid=%s" % (path, prodId)
+        search_result = re.search(r'iid=(\w+)?', parsedurl.query)
+        if search_result:
+            prodId = search_result.group(1)
+            key = "%s?iid=%s" % (path, prodId)
+        else:
+            return None
     elif("luisaviaroma" in parsedurl.netloc):
         if parsedurl.fragment: # the "original" links don't have this, they should never land here though
             key = parse_luisaviaroma_fragment(parsedurl.fragment)
         else:
             key = url
     else:
-        return None
-    products = get_model('theimp', 'Product').objects.filter(key__icontains=key)
+        logger.debug("Product %s is not a special case, trying exact string match." % url)
+        key = url
+
+    products = extract_apparel_product_with_url(key)
     if len(products) < 1:
         return None
 
@@ -888,9 +920,9 @@ def product_lookup(request):
     except ValueError:
         product_pk = None
 
-
+    original_key = key
     if key and not product_pk:
-        product_pk = product_lookup_by_theimp(request, key)
+        product_pk = product_lookup_by_solr(request, key)
         if not product_pk:
             if key.startswith('https'):
                 key = key.replace('https', 'http')
@@ -898,11 +930,9 @@ def product_lookup(request):
                 temp = list(key)
                 temp.insert(4, 's')
                 key = ''.join(temp)
-
-            product_pk = product_lookup_by_theimp(request, key)
+            product_pk = product_lookup_by_solr(request, key)
             if not product_pk:
-                product_pk = product_lookup_asos_nelly(key)
-
+                product_pk = product_lookup_asos_nelly(original_key)
 
     # TODO: must go through theimp database right now to fetch site product by real url
     #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
@@ -917,21 +947,21 @@ def product_lookup(request):
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
         product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
-        product_short_link = reverse('product-short-link', args=[product_short_link.link()])
-        product_short_link = request.build_absolute_uri(product_short_link)
+        product_short_link_str = reverse('product-short-link', args=[product_short_link.link()])
+        product_short_link_str = request.build_absolute_uri(product_short_link_str)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
-        product_short_link, vendor = product_lookup_by_domain(request, domain, key)
-        if product_short_link is not None:
-            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link, user=request.user, vendor=vendor)
-            product_short_link = reverse('domain-short-link', args=[product_short_link.link()])
-            product_short_link = request.build_absolute_uri(product_short_link)
+        product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
+        if product_short_link_str is not None:
+            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str, user=request.user, vendor=vendor)
+            product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
+            product_short_link_str = request.build_absolute_uri(product_short_link_str)
 
     return JSONResponse({
         'product_pk': product_pk,
         'product_link': product_link,
-        'product_short_link': product_short_link,
+        'product_short_link': product_short_link_str,
         'product_liked': product_liked
     })
 
@@ -1212,3 +1242,15 @@ def facebook_friends_widget(request):
     return render_to_response('apparel/fragments/facebook_friends.html', {
         'facebook_friends': friends,
     }, context_instance=RequestContext(request))
+
+
+def extract_domain_with_suffix(domain):
+    try:
+        extracted = tldextract.extract(domain)
+        return "%s.%s" % (extracted.domain, extracted.suffix)
+    except Exception, msg:
+        logger.info("Domain supplied could not be extracted: %s [%s]" % (domain,msg))
+        return None
+
+def extract_apparel_product_with_url(key):
+    return get_model('apparel', 'Product').objects.filter(published=True,product_key__icontains=key)

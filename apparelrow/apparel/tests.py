@@ -3,12 +3,10 @@ from apparelrow.apparel.views import product_lookup_asos_nelly
 import unittest
 
 from django.contrib.auth import get_user_model
-from django.db.models.loading import get_model
 from django.test.utils import override_settings
 from decimal import Decimal
 from django.conf import settings
 from apparelrow.apparel.models import Shop, ShopEmbed
-from apparelrow.dashboard.tests import reverse
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -16,12 +14,50 @@ from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
-
-
+from factories import *
 
 """ CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestChromeExtension(TestCase):
+
+    def setUp(self):
+        domaindeeplinks = [("nelly.com","Nelly"),
+        ("www.luisaviaroma.com","Luisaviaroma"),
+        ("www.mrporter.com","Mr Porter"),
+        ("www.theoutnet.com","The Outnet"),
+        ("www.ssense.com","SSENSE"),
+        ("www.oki-ni.com","Oki-Ni"),
+        ("www.asos.com","ASOS"),
+        ("www.net-a-porter.com","Net-a-Porter"),
+        ("www.vrients.com","Vrients"),
+        ("www.minimarket.se","Minimarket"),
+        ("elevenfiftynine.se","Elevenfiftynine"),
+        ("www.carinwester.com","Carin Wester"),
+        ("www.mq.se","MQ"),
+        ("www.jc.se","JC"),
+        ("www.wolfandbadger.com","Wolf & Badger"),
+        ("shirtonomy.se","Shirtonomy"),
+        ("eleven.se","Eleven"),
+        ("www.menlook.com","Menlook"),
+        ("www.philipb.com","Philip B"),
+        ("altewaisaome.com","Altewaisaome"),
+        ("www.laurenbbeauty.com","Lauren B"),
+        ("www.houseofdagmar.se","Dagmar"),
+        ("www.qvc.com","QVC"),
+        ("www.filippa-k.com/se","Filippa K"),
+        ("www.boozt.com/se","Boozt se"),
+        ("www.boozt.com/no","Boozt no"),
+        ("www.monicavinader.com","Monica Vinader"),
+        ("www.aldoshoes.com","ALDO"),
+        ("www.gramshoes.com","Gram Shoes"),
+        ("confidentliving.se","ConfidentLiving"),
+        ("www.room21.no","Room 21 no"),
+        ("www.rum21.se","Rum 21 se"),
+        ("example.com","Example")]
+        for domain,vendor in domaindeeplinks:
+            ddl = DomainDeepLinkingFactory.create(domain=domain,vendor__name=vendor,template='http://example.com/my-template')
+            #print "Creating DomainDeeplinking %s, %s " % (ddl.id,ddl.domain)
+
 
     def _login(self):
         normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
@@ -51,8 +87,28 @@ class TestChromeExtension(TestCase):
     def test_product_lookup_not_found(self):
         self._login()
 
-        response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=example.com')
+        response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=weird.com')
         self.assertEqual(response.status_code, 404)
+
+
+    """def test_product_lookups(self):
+        product0 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/white-twill")
+        product1 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/sky-twill")
+        product2 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/blue-twill")
+        self.assertIsNotNone(product0.product_name)
+        self.assertIsNotNone(product0.id)
+        vendor0 = VendorFactory.create()
+        vendor1 = VendorFactory.create()
+        vendor2 = VendorFactory.create()
+        print vendor1
+        vendor = NellyVendorWithProductFactory()
+        for product in vendor.product_set.all():
+            print product
+        vendor = AsosVendorWithProductFactory()
+        for product in vendor.product_set.all():
+            print product
+        #print product.default_vendor
+    """
 
     def test_product_lookup_by_domain(self):
         self._login()
@@ -64,7 +120,8 @@ class TestChromeExtension(TestCase):
             template='http://example.com/my-template'
         )
 
-        response = self.client.get('/backend/product/lookup/?key=example.com/se/shoes?product=123&domain=example.com/se/shoes')
+        response = self.client.get('/backend/product/lookup/?key=http://example.com/se/shoes?product=123&domain=example.com')
+        self.assertEquals(response.status_code,200)
         json_content = json.loads(response.content)
 
         self.assertEqual(json_content['product_pk'], None)
@@ -79,22 +136,31 @@ class TestChromeExtension(TestCase):
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         category = get_model('apparel', 'Category').objects.create(name='Category')
         manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
+        product_key = 'http://example.com/example?someproduct=12345'
         product = get_model('apparel', 'Product').objects.create(
             product_name='Product',
             category=category,
             manufacturer=manufacturer,
             gender='M',
             product_image='no real image',
-            published=True
+            published=True,
+            product_key=product_key
         )
-        theimp_vendor = get_model('theimp', 'Vendor').objects.create(name='Vendor', vendor=vendor)
-        theimp_product = get_model('theimp', 'Product').objects.create(
-            key='http://example.com/example',
-            vendor=theimp_vendor,
-            json='{"site_product": 1}'
-        )
+        """product = ProductFactory.create(
+            product_name='Product',
+            #category=category,
+            manufacturer__name="manufacturer",
+            gender='M',
+            product_image='no real image',
+            published=True,
+            product_key=product_key
+        )"""
 
-        response = self.client.get('/backend/product/lookup/?key=http://example.com/example&domain=example.com')
+        print "Creating product %s,%s" % (product.id,product)
+        print "Product key is %s" % (product.product_key)
+        #print "Creating Domain Deeplinking %s, domain %s" % (ddl,ddl.domain)
+        self.assertIsNotNone( product.id )
+        response = self.client.get('/backend/product/lookup/?key=%s' % product_key)
         self.assertEqual(response.status_code, 200)
         json_content = json.loads(response.content)
 

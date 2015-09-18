@@ -168,6 +168,12 @@ class Vendor(models.Model):
     is_cpc = models.BooleanField(default=False, help_text=_('Cost per click'), db_index=True)
     is_cpo = models.BooleanField(default=True, help_text=_('Cost per order'), db_index=True)
 
+    clicks_limit = models.IntegerField(_('Limit of clicks per month'), null=True, blank=True,
+                        help_text=_('Only used for PPC vendors. An email notification is sent when this number of '
+                                    'clicks has been reached during a month'))
+    is_limit_reached = models.BooleanField(default=False, help_text=_('Limit has been exceeded for the current month '
+                                                      'and email has been sent to the admin group'), db_index=True)
+
     class Meta:
         ordering = ['name']
         verbose_name = 'Vendor'
@@ -234,6 +240,7 @@ class Product(models.Model):
         help_text=_("Ued for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the static_brand"))
+    product_key = models.CharField(max_length=512, null=True, blank=True)
     product_name  = models.CharField(max_length=200, null=True, blank=True)
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True, db_index=True)
     date_published= models.DateTimeField(_("Time published"), null=True, blank=True)
@@ -241,6 +248,7 @@ class Product(models.Model):
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image'))
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
+
     # FIXME: Could we have ForeignKey to VendorProduct instead?
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     feed_gender   = models.CharField(_('Feed gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)

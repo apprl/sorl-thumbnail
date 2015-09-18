@@ -8,40 +8,18 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'ComponentLink'
-        db.create_table(u'apparel_componentlink', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'apparel', ['ComponentLink'])
-
-        # Adding field 'LookComponent.link'
-        db.add_column(u'apparel_lookcomponent', 'link',
-                      self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['apparel.ComponentLink'], null=True),
+        # Adding field 'ProductStat.is_valid'
+        db.add_column(u'statistics_productstat', 'is_valid',
+                      self.gf('django.db.models.fields.BooleanField')(default=True),
                       keep_default=False)
 
 
-        # Changing field 'LookComponent.product'
-        db.alter_column(u'apparel_lookcomponent', 'product_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apparel.Product'], null=True))
-
     def backwards(self, orm):
-        # Deleting model 'ComponentLink'
-        db.delete_table(u'apparel_componentlink')
+        # Deleting field 'ProductStat.is_valid'
+        db.delete_column(u'statistics_productstat', 'is_valid')
 
-        # Deleting field 'LookComponent.link'
-        db.delete_column(u'apparel_lookcomponent', 'link_id')
-
-
-        # Changing field 'LookComponent.product'
-        db.alter_column(u'apparel_lookcomponent', 'product_id', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['apparel.Product']))
 
     models = {
-        u'apparel.backgroundimage': {
-            'Meta': {'object_name': 'BackgroundImage'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
-        },
         u'apparel.brand': {
             'Meta': {'ordering': "['name']", 'object_name': 'Brand'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -76,97 +54,6 @@ class Migration(SchemaMigration):
             'singular_name_sv': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
         },
-        u'apparel.componentlink': {
-            'Meta': {'object_name': 'ComponentLink'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
-        },
-        u'apparel.domaindeeplinking': {
-            'Meta': {'object_name': 'DomainDeepLinking'},
-            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'template': ('django.db.models.fields.CharField', [], {'max_length': '512'}),
-            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
-        },
-        u'apparel.facebookaction': {
-            'Meta': {'object_name': 'FacebookAction'},
-            'action': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'action_id': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'object_type': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'object_url': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'facebook_actions'", 'to': u"orm['profile.User']"})
-        },
-        u'apparel.internalreferral': {
-            'Meta': {'ordering': "['-created']", 'object_name': 'InternalReferral'},
-            'cookie_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'db_index': 'True'}),
-            'created': ('django.db.models.fields.DateTimeField', [], {}),
-            'expired': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'expires': ('django.db.models.fields.DateTimeField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'old_cookie_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'page': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'sid': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'user_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'})
-        },
-        u'apparel.look': {
-            'Meta': {'ordering': "['user', 'title']", 'object_name': 'Look'},
-            'component': ('django.db.models.fields.CharField', [], {'max_length': '1', 'blank': 'True'}),
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'gender': ('django.db.models.fields.CharField', [], {'default': "'U'", 'max_length': '1'}),
-            'height': ('django.db.models.fields.IntegerField', [], {'default': '524'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('sorl.thumbnail.fields.ImageField', [], {'max_length': '255', 'blank': 'True'}),
-            'image_height': ('django.db.models.fields.IntegerField', [], {'default': '524'}),
-            'image_width': ('django.db.models.fields.IntegerField', [], {'default': '694'}),
-            'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
-            'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('title',)", 'overwrite': 'False'}),
-            'static_image': ('sorl.thumbnail.fields.ImageField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'tags': ('tagging.fields.TagField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'look'", 'to': u"orm['profile.User']"}),
-            'width': ('django.db.models.fields.IntegerField', [], {'default': '694'})
-        },
-        u'apparel.lookcomponent': {
-            'Meta': {'object_name': 'LookComponent'},
-            'component_of': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
-            'flipped': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'height': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'left': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['apparel.ComponentLink']", 'null': 'True'}),
-            'look': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'components'", 'to': u"orm['apparel.Look']"}),
-            'positioned': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['apparel.Product']", 'null': 'True'}),
-            'rotation': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'top': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'width': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'z_index': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
-        },
-        u'apparel.lookembed': {
-            'Meta': {'ordering': "['-created']", 'object_name': 'LookEmbed'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'identifier': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
-            'look': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'embeds'", 'to': u"orm['apparel.Look']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'look_embeds'", 'to': u"orm['profile.User']"}),
-            'width': ('django.db.models.fields.IntegerField', [], {}),
-            'width_type': ('django.db.models.fields.CharField', [], {'default': "'px'", 'max_length': '2'})
-        },
-        u'apparel.looklike': {
-            'Meta': {'unique_together': "(('look', 'user'),)", 'object_name': 'LookLike'},
-            'active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'look': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'likes'", 'to': u"orm['apparel.Look']"}),
-            'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'look_likes'", 'to': u"orm['profile.User']"})
-        },
         u'apparel.option': {
             'Meta': {'ordering': "['option_type']", 'unique_together': "(('option_type', 'value'),)", 'object_name': 'Option'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -199,125 +86,13 @@ class Migration(SchemaMigration):
             'options': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Option']", 'symmetrical': 'False', 'blank': 'True'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
             'product_image': ('sorl.thumbnail.fields.ImageField', [], {'max_length': '255'}),
+            'product_key': ('django.db.models.fields.CharField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
             'product_name': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'published': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'sku': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('static_brand', 'product_name')", 'overwrite': 'False'}),
             'static_brand': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100'}),
             'vendors': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Vendor']", 'through': u"orm['apparel.VendorProduct']", 'symmetrical': 'False'})
-        },
-        u'apparel.productlike': {
-            'Meta': {'unique_together': "(('product', 'user'),)", 'object_name': 'ProductLike'},
-            'active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'likes'", 'to': u"orm['apparel.Product']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'product_likes'", 'to': u"orm['profile.User']"})
-        },
-        u'apparel.productusedweekly': {
-            'Meta': {'object_name': 'ProductUsedWeekly'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"})
-        },
-        u'apparel.productwidget': {
-            'Meta': {'object_name': 'ProductWidget'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Product']", 'through': u"orm['apparel.ProductWidgetProduct']", 'symmetrical': 'False'}),
-            'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'show_liked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('title',)", 'overwrite': 'False'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'type': ('django.db.models.fields.CharField', [], {'default': "'single'", 'max_length': '10'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'product_widget'", 'to': u"orm['profile.User']"})
-        },
-        u'apparel.productwidgetembed': {
-            'Meta': {'object_name': 'ProductWidgetEmbed'},
-            'height': ('django.db.models.fields.IntegerField', [], {'default': '526'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
-            'product_widget': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'parent_widget'", 'to': u"orm['apparel.ProductWidget']"}),
-            'show_filters': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'show_filters_collapsed': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'show_product_brand': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'product_widget_embed'", 'to': u"orm['profile.User']"}),
-            'width': ('django.db.models.fields.IntegerField', [], {'default': '696'}),
-            'width_type': ('django.db.models.fields.CharField', [], {'default': "'px'", 'max_length': '2'})
-        },
-        u'apparel.productwidgetproduct': {
-            'Meta': {'object_name': 'ProductWidgetProduct'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"}),
-            'product_widget_embed': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.ProductWidget']"})
-        },
-        u'apparel.shop': {
-            'Meta': {'object_name': 'Shop'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Product']", 'through': u"orm['apparel.ShopProduct']", 'symmetrical': 'False'}),
-            'published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'show_liked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '80', 'separator': "u'-'", 'blank': 'True', 'populate_from': "('title',)", 'overwrite': 'False'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop'", 'to': u"orm['profile.User']"})
-        },
-        u'apparel.shopembed': {
-            'Meta': {'object_name': 'ShopEmbed'},
-            'height': ('django.db.models.fields.IntegerField', [], {'default': '526'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
-            'shop': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'parent_shop'", 'to': u"orm['apparel.Shop']"}),
-            'show_filters': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'show_filters_collapsed': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'show_product_brand': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'shop_embed'", 'to': u"orm['profile.User']"}),
-            'width': ('django.db.models.fields.IntegerField', [], {'default': '696'}),
-            'width_type': ('django.db.models.fields.CharField', [], {'default': "'px'", 'max_length': '2'})
-        },
-        u'apparel.shopproduct': {
-            'Meta': {'object_name': 'ShopProduct'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"}),
-            'shop_embed': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Shop']"})
-        },
-        u'apparel.shortdomainlink': {
-            'Meta': {'unique_together': "(('url', 'user'),)", 'object_name': 'ShortDomainLink'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '512'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'short_domain_links'", 'to': u"orm['profile.User']"}),
-            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
-        },
-        u'apparel.shortproductlink': {
-            'Meta': {'unique_together': "(('product', 'user'),)", 'object_name': 'ShortProductLink'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'short_product_links'", 'to': u"orm['profile.User']"})
-        },
-        u'apparel.shortstorelink': {
-            'Meta': {'object_name': 'ShortStoreLink'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'template': ('django.db.models.fields.CharField', [], {'max_length': '512'}),
-            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
-        },
-        u'apparel.synonymfile': {
-            'Meta': {'object_name': 'SynonymFile'},
-            'content': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        },
-        u'apparel.temporaryimage': {
-            'Meta': {'object_name': 'TemporaryImage'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '255'}),
-            'user_id': ('django.db.models.fields.IntegerField', [], {'default': '0'})
         },
         u'apparel.vendor': {
             'Meta': {'ordering': "['name']", 'object_name': 'Vendor'},
@@ -368,13 +143,6 @@ class Migration(SchemaMigration):
             'vendor_brand': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'vendor_products'", 'null': 'True', 'to': u"orm['apparel.VendorBrand']"}),
             'vendor_category': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'vendor_products'", 'null': 'True', 'to': u"orm['apparel.VendorCategory']"})
         },
-        u'apparel.vendorproductvariation': {
-            'Meta': {'object_name': 'VendorProductVariation'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'in_stock': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'options': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Option']", 'symmetrical': 'False'}),
-            'vendor_product': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'variations'", 'to': u"orm['apparel.VendorProduct']"})
-        },
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -408,6 +176,7 @@ class Migration(SchemaMigration):
             'about': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'blog_url': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'brand': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'user'", 'unique': 'True', 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': u"orm['apparel.Brand']", 'blank': 'True', 'null': 'True'}),
+            'brand_summaries': ('django.db.models.fields.CharField', [], {'default': "'W'", 'max_length': '1'}),
             'comment_look_comment': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
             'comment_look_created': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
             'comment_product_comment': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
@@ -415,6 +184,7 @@ class Migration(SchemaMigration):
             'confirmation_key': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '32', 'null': 'True', 'blank': 'True'}),
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'discount_notification': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'earning_summaries': ('django.db.models.fields.CharField', [], {'default': "'D'", 'max_length': '1'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'facebook_access_token': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'facebook_access_token_expire': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
@@ -425,8 +195,10 @@ class Migration(SchemaMigration):
             'fb_share_like_look': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'fb_share_like_product': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
+            'follow_recommendations': ('django.db.models.fields.CharField', [], {'default': "'W'", 'max_length': '1'}),
             'follow_user': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
             'followers_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'friend_summaries': ('django.db.models.fields.CharField', [], {'default': "'W'", 'max_length': '1'}),
             'gender': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -445,6 +217,7 @@ class Migration(SchemaMigration):
             'like_look_created': ('django.db.models.fields.CharField', [], {'default': "'A'", 'max_length': '1'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
             'login_flow': ('django.db.models.fields.CharField', [], {'default': "'complete'", 'max_length': '20'}),
+            'look_like_summaries': ('django.db.models.fields.CharField', [], {'default': "'D'", 'max_length': '1'}),
             'manual_about': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'manual_about_da': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'manual_about_en': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
@@ -458,14 +231,51 @@ class Migration(SchemaMigration):
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
             'popularity_men': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8'}),
+            'product_like_summaries': ('django.db.models.fields.CharField', [], {'default': "'D'", 'max_length': '1'}),
             'referral_partner': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'referral_partner_code': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
             'referral_partner_parent': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'null': 'True', 'blank': 'True'}),
             'referral_partner_parent_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'slug': ('django.db.models.fields.CharField', [], {'max_length': '100', 'unique': 'True', 'null': 'True'}),
+            'summary_mails': ('django.db.models.fields.CharField', [], {'default': "'W'", 'max_length': '1'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+        },
+        u'statistics.activeuser': {
+            'Meta': {'ordering': "['-period_key']", 'object_name': 'ActiveUser'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'period_key': ('django.db.models.fields.CharField', [], {'max_length': '24'}),
+            'period_type': ('django.db.models.fields.CharField', [], {'default': "'D'", 'max_length': '1'}),
+            'period_value': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
+        },
+        u'statistics.notificationemailstats': {
+            'Meta': {'ordering': "['notification_name']", 'object_name': 'NotificationEmailStats'},
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'notification_count': ('django.db.models.fields.IntegerField', [], {}),
+            'notification_name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+        },
+        u'statistics.productclick': {
+            'Meta': {'ordering': "['-click_count']", 'object_name': 'ProductClick'},
+            'click_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']"})
+        },
+        u'statistics.productstat': {
+            'Meta': {'ordering': "['-created']", 'object_name': 'ProductStat'},
+            'action': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'ip': ('django.db.models.fields.GenericIPAddressField', [], {'max_length': '39'}),
+            'is_valid': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'page': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'price': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'product': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'referer': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'user_agent': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'user_id': ('django.db.models.fields.IntegerField', [], {'default': '0', 'null': 'True', 'blank': 'True'}),
+            'vendor': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         }
     }
 
-    complete_apps = ['apparel']
+    complete_apps = ['statistics']

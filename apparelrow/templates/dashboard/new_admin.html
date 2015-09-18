@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% load i18n l10n cache dashboard_extras %}
+{% load static from staticfiles %}
+
+{% block extra-title %}{% trans "Publisher Admin" %} | {% endblock %}
+{% block 'extra-scripts' %}
+    <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
+    <script type='text/javascript' src='http://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {'packages':['LineChart']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'Total commission ({{ currency }})');
+        data.addColumn('number', 'Publisher commission ({{ currency }})');
+        data.addColumn('number', 'Clicks earnings');
+        data.addRows([
+          {% for sale_date, data in data_per_day.items %}
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1|unlocalize }}, {{ data.2|unlocalize }}],
+          {% endfor %}
+        ]);
+        data.sort(0);
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        var options = {};
+        chart.draw(data, options);
+
+        // Click chart
+        var clicksData = new google.visualization.DataTable();
+        clicksData.addColumn('date', 'Date');
+        clicksData.addColumn('number', 'Total clicks');
+        clicksData.addColumn('number', 'Publisher clicks');
+        clicksData.addColumn('number', 'PPC clicks');
+        clicksData.addRows([
+          {% for sale_date, data in data_per_day.items %}
+          [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.3 }}, {{ data.4 }}, {{ data.5 }}],
+          {% endfor %}
+        ]);
+        clicksData.sort(0);
+        var clicksChart = new google.visualization.LineChart(document.getElementById('clicks_chart'));
+        clicksChart.draw(clicksData, {});
+      }
+      $(document).ready(function() {
+        $('.month-select').change(function() {
+            var month = $('.month-select').find(':selected').data('month');
+            var year = $('.year-select').find(':selected').data('year');
+            window.location.href = '/publisher/new_admin/' + year + '/' + month + '/';
+
+        });
+        $('.year-select').change(function() {
+            var month = $('.month-select').find(':selected').data('month');
+            var year = $('.year-select').find(':selected').data('year');
+            window.location.href = '/publisher/new_admin/' + year + '/' + month + '/';
+        });
+        new Tablesort($('table#all-earnings').get(0));
+        new Tablesort($('table#top-products').get(0));
+        new Tablesort($('table#top-products-more').get(0));
+        new Tablesort($('table#top-publishers').get(0));
+        new Tablesort($('table#top-publishers-more').get(0))
+      });
+            /*
+            Load detail click earning details for clicks in a modal
+        */
+        function load_detailed_data_clicks(json_detail, date, vendor, currency){
+            var html = "<table>";
+            for (i = 0; i < json_detail.length; i++){
+                html += "<tr>" +
+                        "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
+                        "<td class='center'>"  + json_detail[i].clicks + "</td>" +
+                        "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
+                        "<tr>";
+            }
+            html += "</table>";
+            $("#content-clicks").html(html);
+            $("#modal-date").html(date);
+            $("#modal-vendor").html(vendor);
+            $("#modal_detail_clicks").modal("show");
+};
+    </script>
+{% endblock %}
+
+{% block body-classes %}publisher-page{% endblock body-classes %}
+{% block body %}
+
+    {% include 'apparel/admin/header.html' %}
+
+    <div class="row publisher-admin">
+        <div class="col-lg-12">
+            <p>
+                <label>{% trans "Show: " %}
+                    <select class="month-select">
+                        {% for item_month in months_choices %}
+                        <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="year-select">
+                        {% for item_year in years_choices %}
+                        <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </p>
+            {% for heading, total, publisher, apprl in monthly_array %}
+            <ul class="list-inline">
+                <li>{% blocktrans %}{{ heading }} - {% endblocktrans %}</li>
+                <li>{% blocktrans %}Total {{ total }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Publisher {{ publisher }}{% endblocktrans %}</li>
+                <li>{% blocktrans %}Apprl {{ apprl }}{% endblocktrans %}</li>
+            </ul>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="chart_div" style="width: 100%; height: 300px"></div>
+            <div id="clicks_chart" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 table-responsive">
+            <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2></div>
+            <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a></small></h2></div>
+            <table id="top-publishers" class="sortable table">
+                <thead>
+                    <tr>
+                        <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
+                        <th class="col-md-5 hidden-xs center"></th>
+                        <th class="col-md-2 center">{% trans "Clicks" %}</th>
+                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        {% comment %} <th class="col-md-2 center">{% trans "Network earnings" %}</th>{% endcomment %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for publisher in top_publishers|top_five %}
+                    <tr>
+                        <td data-sort="{{ publisher.user_name }}" class="col-md-1 product-image center">
+                            <a href="{{ publisher.user_link }}">
+                                <img src="{{ publisher.user_image }}">
+                            </a>
+                        </td>
+                        <td class="col-md-5 hidden-xs">
+                            <a href="{{ publisher.user_link }}">{{ publisher.user_name }}</a>
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
+                            {{ publisher.total_clicks }}
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
+                            {{ currency }} {{ publisher.total_earnings }}
+                        </td>
+                       {% comment %} <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
+                            {{ currency }} {{ publisher.total_network_earnings }}
+                        </td>{% endcomment %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 table-responsive">
+            <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2></div>
+            <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a></small></h2></div>
+            <table id="top-products" class="sortable table">
+                <thead>
+                    <tr>
+                        <th class="col-md-1 product-image center">{% trans "Product" %}</th>
+                        <th class="col-md-5 hidden-xs center"></th>
+                        <th class="col-md-2 center">{% trans "Clicks" %}</th>
+                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        <th class="col-md-2 center">{% trans "Network earnings" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in top_products|top_five %}
+                    <tr>
+                        <td data-sort="{{ product.aggregated_from_name }}" class="col-md-1 product-image center">
+                            <a href="{{ product.aggregated_from_link }}">
+                                <img src="{{ product.aggregated_from_image }}">
+                            </a>
+                        </td>
+                        <td class="col-md-5 hidden-xs">
+                            <a href="{{ product.aggregated_from_link }}">
+                                {{ product.aggregated_from_name }}
+                            </a>
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ product.total_clicks }}" >
+                            {{ product.total_clicks }}
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ product.total_earnings }}" >
+                            {{ currency }} {{ product.total_earnings }}
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ product.total_network_earnings }}" >
+                            {{ currency }} {{ product.total_network_earnings }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{% trans "All earnings" %} {{ month_display }} {{ year }}</h2>
+            <table class="sortable table" id="all-earnings">
+                <thead>
+                    <tr>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Sale id" %}</th>
+                        <th>{% trans "Product" %}</th>
+                        <th></th>
+                        <th>{% trans "User" %}</th>
+                        <th></th>
+                        <th>{% trans "From" %}</th>
+                        <th>{% trans "Earnings" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for earning in earnings %}
+                    <tr>
+                        <td data-sort="{{ earning.date|date:"U" }}">{{ earning.date }}</td>
+                        <td data-sort="{{ earning.sale }}">{{ earning.sale.id }}</td>
+                        {% if earning.user_earning_type == "publisher_sale_click_commission"  %}
+                            <td colspan="2" >
+                                {% trans "Clicks to " %}{{ earning.sale.vendor }}
+                                <a class="click-detail" data-user="{{ earning.sale.user_id }}"
+                                   data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
+                                   data-date_display="{{ earning.date.date }}"
+                                   data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
+                                    ({% trans "Click for details" %})
+                                </a>
+                            </td>
+                        {% elif earning.user_earning_type == "publisher_network_click_tribute"  %}
+                            <td colspan="2">
+                                {% if earning.from_user %}{% trans "Clicks by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %} to {{ earning.sale.vendor }}{% endif %}
+                                <a class="click-detail" data-user="{{ earning.sale.user_id }}"
+                                   data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
+                                   data-date_display="{{ earning.date.date }}"
+                                   data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
+                                    ({% trans "Click for details" %})
+                                </a>
+                            </td>
+                        {% else %}
+                        <td data-sort="{{ earning.product_name }}">{% if earning.product_image %}<a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a>{% endif %}</td>
+                        <td><a href="{{ earning.product_link }}">{{ earning.product_name }}</a></td>
+                        {% endif %}
+                        <td data-sort="{{ earning.from_user_name }}">{% if earning.from_user_avatar %}<a href="{{ earning.from_user_link }}"><img src="{{ earning.from_user_avatar }}"></a>{% endif %}</td>
+                        <td><a href="{{ earning.from_user_link }}">{{ earning.from_user_name }}</a></td>
+                        <td data-sort="{{ earning.get_user_earning_type_display }}">{{ earning.get_user_earning_type_display }}</td>
+                        <td data-sort="{{ earning.amount }}">{{ earning.amount }} {{ currency }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+<script>
+    $(".click-detail").click(function() {
+        var user_id = $(this).data("user");
+        var vendor = $(this).data("vendor");
+        var date = $(this).data("date");
+        var date_display = $(this).data("date_display");
+        var amount = $(this).data("amount");
+        var clicks = $(this).data("clicks");
+        $.ajax({
+            type: "post",
+            url: "{% url 'clicks-detail' %}",
+            data: { user_id: user_id, vendor : vendor, date : date, amount: amount, clicks: clicks},
+            success: function (response) {
+                var json = jQuery.parseJSON(response);
+                load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}");
+            }
+        });
+    });
+</script>
+{% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
+{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products month=month_display year=year is_admin=True currency=currency only %}
+{% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers month=month_display year=year is_admin=True currency=currency only %}
+{% endblock body %}

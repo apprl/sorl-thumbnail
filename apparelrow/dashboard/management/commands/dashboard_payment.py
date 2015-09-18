@@ -1,5 +1,6 @@
 import logging
 import datetime
+import json
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -22,6 +23,7 @@ class Command(BaseCommand):
         today = datetime.date.today()
         sales_per_user = {}
         sales_per_user_ids = {}
+
         for earning in UserEarning.objects.filter(status__gte=Sale.CONFIRMED, paid__lte=Sale.PAID_READY, user_id__gt=0):
             if earning.user:
                 if earning.user.id not in sales_per_user:
@@ -43,7 +45,8 @@ class Command(BaseCommand):
                 Payment.objects.filter(user_id=key).update(cancelled=True)
 
                 # Create payment and make sure it is not cancelled
-                payment, created = Payment.objects.get_or_create(user_id=key, details=details, amount=value)
+                payment, created = Payment.objects.get_or_create(user_id=key, details=details, amount=value,
+                                                                 earnings=json.dumps(sales_per_user_ids[key]))
                 if not created:
                     payment.cancelled = False
                     payment.save()

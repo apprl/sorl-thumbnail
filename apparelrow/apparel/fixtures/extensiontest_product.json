@@ -21,7 +21,79 @@
         "pk": 883414,
         "model": "apparel.product",
         "fields": {
-            "modified": "2015-04-13T13:21:47.432"
+            "modified": "2015-04-13T13:21:47.432",
+            "published": true,
+            "sku": "1",
+            "product_key": "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
+        }
+    },
+    {
+        "pk": 883415,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:21:47.432",
+            "published": true,
+            "sku": "2",
+            "product_key": "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
+        }
+    },
+    {
+        "pk": 883416,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:21:47.432",
+            "published": true,
+            "sku": "3",
+            "product_key": "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+            }
+    },
+    {
+        "pk": 883598,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:21:47.432",
+            "published": true,
+            "sku": "4",
+            "product_key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN"
+            }
+    },
+    {
+        "pk": 883602,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:23:03.589",
+            "published": true,
+            "sku": "5",
+            "product_key": "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"}
+    },
+    {
+        "pk": 883607,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:23:03.589",
+            "published": true,
+            "sku": "6",
+            "product_key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        }
+    },
+
+    {
+        "pk": 883603,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:23:31.888",
+            "published": true,
+            "sku": "7",
+            "product_key": "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/"
+        }
+    },
+    {
+        "pk": 883604,
+        "model": "apparel.product",
+        "fields": {
+            "modified": "2015-04-13T13:23:31.925",
+            "published": true,
+            "product_key": "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
         }
     },
     {

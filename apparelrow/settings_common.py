@@ -180,6 +180,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
     #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
@@ -668,11 +669,14 @@ APPAREL_DASHBOARD_MINIMUM_PAYOUT = 50 # EUR
 APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT = '0.15'
 APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME = 'referral_cookie'
 APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '20'
+APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA = 'cache_aggregated_link'
 
 # INTERNAL APPAREL CONFIGURATIONS
+APPAREL_DEFAULT_CLICKS_LIMIT = 7500
 APPAREL_GENDER_COOKIE = 'gender'
 APPAREL_MULTI_GENDER_COOKIE = 'multigender'
 APPAREL_LOCATION_COOKIE = 'location'
+APPAREL_PRODUCT_MAX_AGE = 24 * 60 * 60
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 NGINX_SHOP_RESET_KEY = "shopembed-reset-%s"
@@ -787,6 +791,8 @@ CELERY_ROUTES = ({
     'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.clicks_summary': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.recalculate_earnings': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.check_chrome_extension': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'},
     'apparel.notifications.look_like_daily': {'queue': 'background'},
     'apparel.notifications.look_like_weekly': {'queue': 'background'},
@@ -884,6 +890,14 @@ LOGGING = {
             'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'affiliate_networks.log'),
             'backupCount': 30,
         },
+        'live_test': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
+            'formatter': 'simple',
+            'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'live_test.log'),
+            'backupCount': 30,
+        },
     },
     'loggers': {
         '': {
@@ -940,8 +954,15 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
             'handlers': ['affiliate_networks'],
+        },
+        'live_test': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'handlers': ['live_test'],
         }
     }
 }
 
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
+GEOIP_DEBUG=False
+GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"

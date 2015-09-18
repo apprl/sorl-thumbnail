@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'klaswikblad'
 
-from spiderpig.utils import unzip
-from spiderpig.spidercrawl.middlewares import DownloadZipMiddleware
 import zipfile
 from scrapy.http import Response
 import os
-from django.utils.translation import ugettext_lazy as _
+from django.test import TestCase
 
-
-class TestScrapyMiddleWare:
+class TestScrapyMiddleWare(TestCase):
     testzipfile = None
     encrypted_data = None
     decrypted_data = None
@@ -40,7 +37,7 @@ class TestScrapyMiddleWare:
         Test for middleware detection of incoming zipfiles both by reading the filename and the
         characteristics signature of the file.
         """
-
+        from .spidercrawl.middlewares import DownloadZipMiddleware
         response = Response(url="http://someurl.com/bjornborg.csv.zip")
         response = response.replace(body=self.encrypted_data)
         middleware = DownloadZipMiddleware()
@@ -52,7 +49,7 @@ class TestScrapyMiddleWare:
         """
         Test for unpacking zipfile
         """
-
+        from .utils import unzip
         data_test = self.encrypted_data
         print unzip(data_test)[:100]
         print self.decrypted_data[:100]

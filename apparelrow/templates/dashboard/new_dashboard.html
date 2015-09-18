@@ -3,6 +3,7 @@
 {% load static from staticfiles %}
 
 {% block extra-title %}{% trans "Publisher" %} | {% endblock %}
+
 {% block 'extra-scripts' %}
     <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
@@ -107,13 +108,13 @@
             $('.month-select').change(function() {
                 var month = $('.month-select').find(':selected').data('month');
                 var year = $('.year-select').find(':selected').data('year');
-                window.location.href = '/publisher/dashboard/' + year + '/' + month + '/';
+                window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
 
             });
             $('.year-select').change(function() {
                 var month = $('.month-select').find(':selected').data('month');
                 var year = $('.year-select').find(':selected').data('year');
-                window.location.href = '/publisher/dashboard/' + year + '/' + month + '/';
+                window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
             });
 
             new Tablesort($('table#earnings').get(0));
@@ -224,34 +225,32 @@
                 <table id="top-publishers" class="sortable table">
                     <thead>
                         <tr>
-                            <th class="col1 product-image center">{% trans "Publisher" %}</th>
-                            <th class="col2 hidden-xs center"></th>
-                            <th class="hidden-xs center">{% trans "Commission earnings" %}</th>
-                            <th class="hidden-xs center">{% trans "Click earnings" %}</th>
-                            <th class="center">{% trans "Total earnings" %}</th>
-                            <th class="center">{% trans "Total network earnings" %}</th>
+                            <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
+                            <th class="col-md-5 hidden-xs center"></th>
+                            <th class="col-md-2 center">{% trans "Clicks" %}</th>
+                            <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                            <th class="col-md-2 center">{% trans "Network earnings" %}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for publisher in top_publishers|top_five %}
                         <tr>
-                            <td data-sort="{{ publisher.user }}" class="col1 product-image center">
-                                <img src="{{ publisher.publisher_image }}">
+                            <td data-sort="{{ publisher.aggregated_from_name }}" class="col-md-1 product-image center">
+                                <a href="{{ publisher.aggregated_from_link }}">
+                                    <img src="{{ publisher.aggregated_from_image }}">
+                                </a>
                             </td>
-                            <td class="col2 hidden-xs">
-                                <a href="{{ publisher.publisher_link }}">{{ publisher.user }}</a>
+                            <td class="col-md-5 hidden-xs">
+                                <a href="{{ publisher.aggregated_from_link }}">{{ publisher.aggregated_from_name }}</a>
                             </td>
-                            <td class="hidden-xs center" data-sort="{{ publisher.publisher_earnings }}">
-                                {{ currency }} {{ publisher.publisher_earnings|floatdot }}
+                            <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
+                                {{ publisher.total_clicks }}
                             </td>
-                            <td class="hidden-xs center" data-sort="{{ publisher.publisher_click_earnings }}">
-                                {{ currency }} {{ publisher.publisher_click_earnings|floatdot }}
+                            <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
+                                {{ currency }} {{ publisher.total_earnings }}
                             </td>
-                            <td class="center" data-sort="{{ publisher.total_network_earnings }}">
-                                {{ currency }} {{ publisher.total_network_earnings|floatdot }}
-                            </td>
-                            <td class="center" data-sort="{{ publisher.network_earnings }}">
-                                {{ currency }} {{ publisher.network_earnings|floatdot }}
+                            <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
+                                {{ currency }} {{ publisher.total_network_earnings }}
                             </td>
                         </tr>
                         {% empty %}
@@ -272,30 +271,35 @@
             <table id="top-products" class="sortable table">
                 <thead>
                     <tr>
-                        <th class="col1 product-image center">{% trans "Product" %}</th>
-                        <th class="col2 hidden-xs center"></th>
-                        <th class="col3 center hidden-xs center">{% trans "Clicks" %}</th>
-                        <th class="center">{% trans "Sales" %}</th>
-                        <th class="center hidden-xs">{% trans "Conversion rate" %}</th>
-                        <th class="hidden-xs center">{% trans "Sales generated" %}</th>
-                        <th class="center">{% trans "Total earnings" %}</th>
+                        <th class="col-md-1 product-image center">{% trans "Product" %}</th>
+                        <th class="col-md-5 hidden-xs center"></th>
+                        <th class="col-md-2 center">{% trans "Clicks" %}</th>
+                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        <th class="col-md-2 center">{% trans "Network earnings" %}</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                      <td colspan="7"><i>Products from stores paying per click are not currently included</i></td>
-                    </tr>
-                </tfoot>
                 <tbody>
-                    {% for product in most_sold_products|top_five %}
+                    {% for product in top_products|top_five %}
                     <tr>
-                        <td data-sort="{{ product.product }}" class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
-                        <td class="col2 hidden-xs"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
-                        <td class="col3 center hidden-xs">{{ product.clicks }}</td>
-                        <td class="center">{% if product.sales == 0 %}-{% else %}{{ product.sales }}{% endif %}</td>
-                        <td class="hidden-xs center">{{ product.sales|commission_rate:product.clicks }}</td>
-                        <td class="hidden-xs center">{{ currency }} {{ product.converted_amount|floatdot }}</td>
-                        <td class="center">{{ currency }} {{ product.total_earnings|floatdot }}</td>
+                        <td data-sort="{{ product.aggregated_from_name }}" class="col-md-1 product-image center">
+                            <a href="{{ product.aggregated_from_link }}">
+                                <img src="{{ product.aggregated_from_image }}">
+                            </a>
+                        </td>
+                        <td class="col-md-5 hidden-xs">
+                            <a href="{{ product.aggregated_from_link }}">
+                                {{ product.aggregated_from_name }}
+                            </a>
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ product.total_clicks }}" >
+                            {{ product.total_clicks }}
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ product.total_earnings }}" >
+                            {{ currency }} {{ product.total_earnings }}
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ product.total_network_earnings }}" >
+                            {{ currency }} {{ product.total_network_earnings }}
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -330,7 +334,7 @@
                             {% if earning.user_earning_type == "referral_sale_commission" %}
                                 <!-- If referral, show user -->
                                 <td class="hidden-xs" class="center hidden-xs"></td>
-                                <td class="hidden-xs" data-sort="{{ earning.from_user }}">{% trans "Referral sale by" %} <a href="{{ earning.from_user }}">{{ earning.from_user }}</a></td>
+                                <td class="hidden-xs" data-sort="{{ earning.from_user }}">{% trans "Referral sale by" %} <a href="{{ earning.from_user.get_absolute_url }}">{{ earning.from_user }}</a></td>
                                 <td class="hidden-xs">{% trans "Referral" %}</td>
                             {% elif earning.extra_sale.is_promo %}
                                 <!-- Referral Signup -->
@@ -340,7 +344,7 @@
                             {% elif earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute" %}
                                 <!-- Clicks -->
                                 <td class="hidden-xs" colspan="2">
-                                    {% if earning.from_user %}{% trans "Clicks by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}{% endif %}
+                                    {% if earning.from_user %}{% trans "Clicks by " %} <a href="{{ earning.from_user.get_absolute_url }}"> {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}{% endif %}</a>
                                 </td>
                                 <td >{% trans "Clicks to " %}{{ earning.sale.vendor }}</td>
                             {% else %}
@@ -358,7 +362,7 @@
                                         {{ earning.extra_sale.link }}
                                     {% else %}
                                         {% if earning.user_earning_type == 'publisher_network_tribute' %}
-                                            {% trans "Sale by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}
+                                            {% trans "Sale by " %} <a href="{{ earning.from_user.get_absolute_url }}">{% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}</a>
                                         {% elif earning.user_earning_type == 'publisher_sale_commission' %}
                                             {% if earning.extra_sale.product_link %}<a href="{{ earning.extra_sale.product_link }}">{{ earning.extra_sale.product }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.extra_sale.product }}{% endif %}{% endif %}
                                         {% else %}
@@ -413,7 +417,7 @@
 </script>
 
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
-{% include 'dashboard/fragments/dialog_top_products.html' with request=request csrf_token=csrf_token next=next most_sold_products=most_sold_products is_admin=False currency=currency month=month_display year=year  only  %}
-{% include 'dashboard/fragments/dialog_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year only %}
+{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products is_admin=False currency=currency month=month_display year=year  only  %}
+{% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year only %}
 {% include 'dashboard/modal_more_info.html' %}
 {% endblock body %}
