@@ -105,10 +105,10 @@ class Parser(object):
         item.data[ProductItem.KEY_FINAL] = {}
         if validated:
             for key in item.data[ProductItem.KEY_PARSED].keys():
-                if (key == 'brand_id' or key == 'brand') and ProductItem.KEY_MANUAL in item.data and item.data[ProductItem.KEY_MANUAL]['brand']:
+                if (key == 'brand_id' or key == 'brand') and ProductItem.KEY_MANUAL in item.data and item.data[ProductItem.KEY_MANUAL].get('brand',None):
                     item.data[ProductItem.KEY_FINAL]['brand'] = item.product.brand_mapping.mapped_brand.name
                     item.data[ProductItem.KEY_FINAL]['brand_id'] = item.product.brand_mapping.mapped_brand.pk
-                elif (key == 'category_id' or key == 'category') and ProductItem.KEY_MANUAL in item.data and item.data[ProductItem.KEY_MANUAL]['category']:
+                elif (key == 'category_id' or key == 'category') and ProductItem.KEY_MANUAL in item.data and item.data[ProductItem.KEY_MANUAL].get('category',None):
                     item.data[ProductItem.KEY_FINAL]['category'] = item.product.category_mapping.mapped_category.name
                     item.data[ProductItem.KEY_FINAL]['category_id'] = item.product.category_mapping.mapped_category.pk
                 else:
@@ -131,7 +131,7 @@ class Parser(object):
                 return False
 
         # Validate and setup manual brand if needed (ugly hack)
-        if ProductItem.KEY_MANUAL in item.data and item.data[ProductItem.KEY_MANUAL]['brand']:
+        if ProductItem.KEY_MANUAL in item.data and item.data[ProductItem.KEY_MANUAL].get('brand',None):
             manual_brand_id = item.data[ProductItem.KEY_MANUAL]['brand']
             try:
                 brand = get_model('apparel', 'Brand').objects.get(pk=int(manual_brand_id))
@@ -147,7 +147,7 @@ class Parser(object):
                 return False
 
         # Validate and setup manual category if needed (ugly hack)
-        if ProductItem.KEY_MANUAL in item.data and item.data[ProductItem.KEY_MANUAL]['category']:
+        if ProductItem.KEY_MANUAL in item.data and item.data[ProductItem.KEY_MANUAL].get('category',None):
             manual_category_id = item.data[ProductItem.KEY_MANUAL]['category']
             try:
                 category = get_model('apparel', 'Category').objects.get(pk=int(manual_category_id))
