@@ -8,7 +8,7 @@ from scrapy.http import HtmlResponse, Response
 from scrapy import log
 
 from spiderpig.spidercrawl.settings import USER_AGENT_LIST
-from spiderpig.utils import unzip
+
 
 
 class DownloadGzipMiddleware(object):
@@ -40,6 +40,7 @@ class DownloadZipMiddleware(object):
         return False
 
     def process_response(self, request, response, spider):
+        from spiderpig.utils import unzip
         if isinstance(response, Response) and self.custom_is_zipped(response):
             response = response.replace(body=unzip(response.body))
         return response
