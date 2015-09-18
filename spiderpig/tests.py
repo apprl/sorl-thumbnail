@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'klaswikblad'
 
-from spiderpig.utils import unzip
+from .utils import unzip
 from spiderpig.spidercrawl.middlewares import DownloadZipMiddleware
 import zipfile
 from scrapy.http import Response
