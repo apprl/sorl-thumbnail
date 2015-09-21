@@ -272,8 +272,29 @@ def store_short_link(request, short_link, user_id=None):
 # Products
 #
 
+def get_product_from_slug(slug, **kwargs):
+    try:
+        product = Product.objects.get(slug=slug, **kwargs)
+    except Product.MultipleObjectsReturned:
+        products = Product.objects.filter(slug=slug, **kwargs)
+        counter = 0
+        for item in products:
+            item_saved = False
+            while not item_saved:
+                slug = "%s-%s" % (item.slug, counter)
+                counter += 1
+                if not Product.objects.filter(slug=slug).exists():
+                    item.slug = slug
+                    item.save()
+                    item_saved = True
+        product = products[0]
+    except Product.DoesNotExist:
+        raise Http404("No Product matches the given query.")
+    return product
+
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, published=True, gender__isnull=False)
+    kwargs = {'published':True, 'gender__isnull':False}
+    product = get_product_from_slug(slug, **kwargs)
 
     is_liked = False
     if request.user.is_authenticated():
@@ -315,18 +336,18 @@ def product_detail(request, slug):
     except (TypeError, ValueError, AttributeError):
         sid = 0
 
+    # Get the store commission
     earning_cut = product.get_product_earning(request.user)
 
     # Cost per click
     default_vendor = product.default_vendor
     cost_per_click = 0
     if default_vendor and default_vendor.vendor.is_cpc:
+        user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
+        click_cut = cut * publisher_cut
+        earning_cut = click_cut
         try:
-            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
-            click_cut = cut * publisher_cut
             cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
-            rate = currency_exchange('EUR', cost_per_click.currency)
-            cost_per_click = "%.2f" % (decimal.Decimal(cost_per_click.amount * rate) * click_cut)
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             logger.warning("ClickCost not defined for default vendor %s of the product %s" % (product.default_vendor, product.product_name))
 
@@ -359,7 +380,8 @@ def product_generate_short_link(request, slug):
     if not request.user.is_authenticated() or not request.user.is_partner:
         raise Http404
 
-    product = get_object_or_404(Product, slug=slug, published=True)
+    kwargs = {'published':True}
+    product = get_product_from_slug(slug, **kwargs)
     product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
     product_short_link = reverse('product-short-link', args=[product_short_link.link()])
     product_short_link = request.build_absolute_uri(product_short_link)

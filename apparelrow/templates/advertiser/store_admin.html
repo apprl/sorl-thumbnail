@@ -12,7 +12,7 @@
         function drawChart() {
             var data = new google.visualization.DataTable();
             data.addColumn('date', 'Date');
-            data.addColumn('number', '{% trans "Transactions" %}');
+            data.addColumn('number', '{% trans "Sales" %} ({{ currency }})');
             data.addColumn('number', '{% trans "Clicks" %}');
             data.addRows([
             {% for date, amount in data_per_month.items %}
@@ -28,6 +28,10 @@
             var view = new google.visualization.DataView(data);
             //var chart = new google.visualization.LineChart(document.getElementById('transaction_chart'));
             //var options = {legend: {position: 'none'}};
+            var max_value = right.max;
+            while (max_value % 4 != 0) {
+                max_value++;
+            }
 
             {% if vendor.is_cpo %}
             var series = {
@@ -50,17 +54,17 @@
                         0: {
                             minValue: 0,
                             maxValue: (left.min == 0 && left.max == 0) ? 1 : null,
-                            title: '{% trans "Earnings" %} ({{ currency }})',
+                            title: '{% trans "Sales" %} ({{ currency }})',
                             textStyle: {color: '#3366cc'},
                             titleTextStyle: {color: '#3366cc'}
                         },
                         {% endif %}
                         {% if vendor.is_cpo %}1{% else %}0{% endif %}: {
                             minValue: 0,
-                            maxValue: (right.min == 0 && right.max == 0) ? 1 : null,
+                            maxValue: (right.min == 0 && right.max <= 4) ? 4 : max_value,
                             title: '{% trans "Clicks" %}',
                             textStyle: {color: '#dc3912'},
-                            titleTextStyle: {color: '#dc3912'}
+                            titleTextStyle: {color: '#dc3912'},
                         }
                     },
                     legend: { position: 'top' },
@@ -81,24 +85,26 @@
                 new Tablesort($('table#clicks_tb').get(0));
             }
         });
-            /*
-            Load detail click earning details for clicks in a modal
+        /*
+        Load detail click earning details for clicks in a modal
         */
-        function load_detailed_data_clicks(json_detail, date, vendor, currency){
+        function load_detailed_data_clicks(jsonDetail, date, vendor, currency, isStore){
             var html = "<table>";
-            for (i = 0; i < json_detail.length; i++){
+            for (i = 0; i < jsonDetail.length; i++){
                 html += "<tr>" +
-                        "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
-                        "<td class='center'>"  + json_detail[i].clicks + "</td>" +
-                        "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
-                        "<tr>";
+                        "<td><a href=\""+jsonDetail[i].product_url+"\">" + jsonDetail[i].product_name + "</a></td>" +
+                        "<td class='center'>"  + jsonDetail[i].clicks + "</td>"
+                if (!isStore){
+                    html += "<td class='center'>" + currency + " " + jsonDetail[i].product_earning.toFixed(2) + "</td>";
+                }
+                html += "<tr>";
             }
             html += "</table>";
             $("#content-clicks").html(html);
             $("#modal-date").html(date);
             $("#modal-vendor").html(vendor);
             $("#modal_detail_clicks").modal("show");
-};
+        }
     </script>
 {% endblock %}
 
@@ -115,14 +121,19 @@
     </div>
 
     <div class="row subnav-page" style="margin-bottom: 10px;">
-        <div class="col-md-12">{% trans "Balance:" %} <strong>{{ store.balance }} EUR</strong></div>
-    {% if vendor.is_cpc %}
-        <div class="col-md-12">{% trans "Total clicks generated:" %} <strong>{{ total_clicks_per_month }}</strong></div>
-    {% endif %}
+        {% if vendor.is_cpc %}
+        <div class="col-md-12">{% trans "Total clicks to your store:" %} <strong>{{ total_clicks_per_month }}</strong></div>
+        {% endif %}
 
-    {% if vendor.is_cpo %}
-        <div class="col-md-12">{% trans "Total accepted commission:" %} <strong>{{ total_accepted_commission|floatdot|intcomma }} EUR</strong></div>
-    {% endif %}
+        {% if vendor.is_cpo %}
+        <div class="col-md-12">{% trans "Total sales generated:" %} <strong>EUR {{ sales_generated|floatdot|intcomma }}</strong></div>
+        {% endif %}
+        <div class="col-md-12"><br></div>
+        <div class="col-md-12">{% trans "Invoiced & unpaid:" %} <strong>EUR {{ accepted_commission|floatdot|intcomma }}</strong></div>
+        <div class="col-md-12">{% trans "To be invoiced:" %} <strong>EUR {{ commission_to_be_invoiced|floatdot|intcomma }}</strong></div>
+
+
+
         <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 10px;"></div>
 
     </div>
@@ -143,20 +154,14 @@
 
             {% if vendor.is_cpc %}
             <ul class="list-inline monthly-list">
-                <li class="last">{% trans "Number of clicks delivered:" %} {{ clicks_delivered_per_month }} </li>
-            </ul>
-            <ul class="list-inline monthly-list">
-                <li class="last">{% trans "Value:" %} {{ clicks_cost_per_month|floatdot|intcomma }} {{ currency }}</li>
+                <li class="last">{% trans "Clicks to your store this month:" %} {{ clicks_delivered_per_month }} </li>
             </ul>
             {% endif %}
-
             {% if vendor.is_cpo %}
             <ul class="list-inline monthly-list">
-                <li class="last">{% trans "Accepted commission this month:" %} {{ accepted_commission|floatdot|intcomma }} EUR</li>
+                <li class="last"> {% trans "Sales generated this month:" %} EUR {{ monthly_sales|floatdot|intcomma }}</li>
             </ul>
             {% endif %}
-
-            </ul>
         </div>
     </div>
 
@@ -181,8 +186,8 @@
                 {% for transaction in transactions %}
                 <tr class="{% cycle 'odd' 'even' %}">
                     <td>{{ transaction.order_id }}</td>
-                    <td>{{ transaction.order_value }} {{ transaction.currency }}</td>
-                    <td>{{ transaction.commission }} {{ transaction.currency }}</td>
+                    <td>{{ transaction.currency }} {{ transaction.order_value }}</td>
+                    <td>{{ transaction.currency }} {{ transaction.commission }}</td>
                     <td class="hidden-xs">
                         {% for product in transaction.products.all %}
                             {{ product.quantity }} {{ product.sku }}<br>
@@ -224,11 +229,10 @@
                 </thead>
                 <tbody>
                     {% for key, row in clicks_per_day %}
-                        {% if row.amount > 0 and row.clicks > 0 %}
                         <tr class="{% cycle 'odd' 'even' %}">
                             <td class="hidden-xs" data-sort="{{ row.date|date:"U" }}">{{ row.date.date }}</td>
                             <td>{{ row.clicks }}</td>
-                            <td>{{ row.amount|floatdot }} {{ currency }}</td>
+                            <td>{{ currency }} {{ row.amount|floatdot }}</td>
                             <td>
                                 <a class="btn btn-primary click-detail" data-vendor="{{ vendor }}"
                                    data-date="{{ row.date|date:"U" }}" data-amount="{{ row.amount|floatdot }}"
@@ -237,7 +241,6 @@
                                 </a>
                             </td>
                         </tr>
-                        {% endif %}
                     {% empty %}
                     <tr>
                         <td colspan="6">{% trans "No clicks" %}</td>
@@ -273,12 +276,12 @@
             data: { user_id: user_id, vendor : vendor, date : date, currency: currency, amount: amount, clicks: clicks},
             success: function (response) {
                 var json = jQuery.parseJSON(response);
-                load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}");
+                load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}", true);
             }
         });
     });
 </script>
 {% endif %}
 
-{% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token  only  %}
+{% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token is_store=True only  %}
 {% endblock body %}

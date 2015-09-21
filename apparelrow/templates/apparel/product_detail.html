@@ -145,8 +145,8 @@
                                 </p>
                             {% elif object.default_vendor.vendor.is_cpc %}
                                  <p class="earning-box">You will earn approx.
-                                     <span class="currency">EUR</span>
-                                     {{ cost_per_click }}
+                                     <span class="currency">{{ cost_per_click.locale_currency }}</span>
+                                     {% multiply cost_per_click.locale_price earning_cut %}
                                     per click to this item
                                 </p>
                             {% endif %}
