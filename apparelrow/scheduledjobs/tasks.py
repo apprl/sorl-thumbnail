@@ -32,7 +32,7 @@ def run_importer():
     management.call_command('brand_updates')
 
 # Run importer at midnight
-@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute='0',hour='14'), max_retries=1, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute='0',hour='17'), max_retries=1, ignore_result=True)
 def initiate_product_importer():
     from django.core import management
     from theimp.models import Vendor
@@ -100,7 +100,26 @@ def clearsessions():
     log.info('Running clearsessions job.')
     management.call_command('clearsessions')
 
+# daily just before midnight
+@periodic_task(name='apparelrow.scheduledjobs.tasks.recalculate_earnings', run_every=crontab(minute='59',hour='23'), max_retries=3, ignore_result=True)
+def recalculate_earnings():
+    from django.core import management
+    management.call_command('update_aggregated_data')
+
+
+# daily afternoon
+@periodic_task(name='apparelrow.scheduledjobs.tasks.check_chrome_extension', run_every=crontab(minute='30',hour='15'), ignore_result=True)
+def check_chrome_extension():
+    from django.core import management
+    management.call_command('deeplink_live_test')
+
+
 @task(name='apparelrow.scheduledjobs.tasks.run_vendor_product_importer', max_retries=5, ignore_result=True)
 def run_vendor_importer(vendor):
     log.info('Initiating import for vendor %s.' % vendor)
     Importer().run(dry=False, vendor=vendor)
+
+@task(name='apparelrow.scheduledjobs.tasks.check_clicks_limits_per_vendor', run_every=crontab(minute='0'), max_retries=5, ignore_result=True)
+def check_clicks_limits_per_vendor():
+    from django.core import management
+    management.call_command('check_clicks_limits_per_vendor')

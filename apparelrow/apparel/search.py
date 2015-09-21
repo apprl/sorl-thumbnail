@@ -45,15 +45,17 @@ class ResultContainer:
     def __init__(self, **entries):
         self.__dict__.update(entries)
 
-def more_like_this_product(body, gender, limit):
+def more_like_this_product(body, gender, location, limit):
     kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
+    kwargs['fq'].append('market_ss:%s' % location)
+
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
     connection = Solr(settings.SOLR_URL)
     result = connection.more_like_this('', mlt_fields, **kwargs)
     return result
 
-def more_alternatives(product, limit):
+def more_alternatives(product, location, limit):
     colors_pk = list(map(str, product.colors_pk))
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(translation.get_language(), settings.APPAREL_BASE_CURRENCY)
     query_arguments = {'rows': limit, 'start': 0,
@@ -62,6 +64,7 @@ def more_alternatives(product, limit):
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
     query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
     query_arguments['fq'].append('category:%s' % (product.category_id))
+    query_arguments['fq'].append('market_ss:%s' % location)
     if colors_pk:
         query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
     search = ApparelSearch('*:*', **query_arguments)
@@ -220,20 +223,31 @@ def shop_product_delete(instance, **kwargs):
     product_save(instance.product)
 
 
-def rebuild_product_index(url=None):
+def rebuild_product_index(url=None, vendor_id=None):
     connection = Solr(url or settings.SOLR_URL)
     product_count = 0
     product_buffer = collections.deque()
 
-    for product in get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified').iterator():
+    products = get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified')
+
+    if vendor_id:
+        products = products.filter(vendors=vendor_id)
+
+    for product in products.iterator():
         document, boost = get_product_document(product, rebuild=True)
         if document is not None and document['published']:
             product_buffer.append(document)
+            if vendor_id:
+                logger.info("Rebuilding product: %s %s %s" % (product.id,product.product_name,product.default_vendor ))
             if len(product_buffer) == 100:
                 connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
                 product_buffer.clear()
 
-    for product in get_model('apparel', 'Product').valid_objects.iterator():
+    valid_products = get_model('apparel', 'Product').valid_objects
+    if vendor_id:
+        valid_products = valid_products.filter(vendors=vendor_id)
+
+    for product in valid_products.iterator():
         document, boost = get_product_document(product, rebuild=True)
         if document is not None and document['published']:
             product_buffer.append(document)
@@ -299,6 +313,7 @@ def get_product_document(instance, rebuild=False):
         document['name'] = instance.product_name
 
         # Search fields
+        document['product_key'] = instance.product_key
         document['product_name'] = instance.product_name
         document['description'] = instance.description
         document['manufacturer_name'] = instance.manufacturer.name

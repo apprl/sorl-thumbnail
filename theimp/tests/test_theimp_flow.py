@@ -80,7 +80,7 @@ class TheimpFlowTest(TransactionTestCase):
 
 
     @patch('theimp.importer.logger')
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_flow(self, mock_logger):
         # Create a product from scraped data
         key = 'http://example.com/product/product-name.html'
@@ -263,7 +263,7 @@ class TheimpFlowTest(TransactionTestCase):
 
 
     @patch('theimp.importer.logger')
-    @unittest.skip("Review this test")
+    #@unittest.skip("Review this test")
     def test_find_site_product_flow(self, mock_logger):
         key = 'http://example.com/product/product-name.html'
         json_data = json.dumps({
@@ -309,7 +309,7 @@ class TheimpFlowTest(TransactionTestCase):
         self.assertEqual(site_product.category.name, 'Category')
         self.assertEqual(list(site_product.colors), ['red'])
         self.assertIsNotNone(site_product.default_vendor)
-        self.assertEqual(site_product.default_vendor.buy_url, 'http://example.com/product/product-name.html')
+        self.assertEqual(site_product.default_vendor.buy_url, u'http://apprl.com/a/link/?store_id=fifth_avenue&url=http%3A%2F%2Fexample.com%2Fproduct%2Fproduct-name.html' )
 
         # Update slug
         site_product.slug = 'fifth-avenue-shoe-repair-product-name-10'

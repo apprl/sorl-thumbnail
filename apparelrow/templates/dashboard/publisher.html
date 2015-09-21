@@ -13,19 +13,28 @@
             var data = new google.visualization.DataTable();
             data.addColumn('date', 'X');
             data.addColumn('number', '{% trans "Commission Earnings" %} ({{ currency }})');
-            data.addColumn('number', '{% trans "Referral earnings" %} ({{ currency }})');
-            data.addColumn('number', '{% trans "Network earnings" %} ({{ currency }})');
+            data.addColumn('number', '{% trans "Referral earnings" %} ({{ currency }})')
             data.addColumn('number', '{% trans "Click earnings" %} ({{ currency }})');
             data.addColumn('number', '{% trans "Clicks" %}');
+            data.addColumn('number', '{% trans "Network earnings" %} ({{ currency }})');
             data.addRows([
             {% for sale_date, data in data_per_day.items %}
                 {% if forloop.last %}
-                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.3|unlocalize }}, {{ data.4|unlocalize }}, {{ data.1 }}]
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1|unlocalize }}, {{ data.2|unlocalize }}, {{ data.3 }}, {{ data.4|unlocalize }}]
                 {% else %}
-                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.3|unlocalize }}, {{ data.4|unlocalize }}, {{ data.1 }}],
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1|unlocalize }}, {{ data.2|unlocalize }}, {{ data.3 }}, {{ data.4|unlocalize }}],
                 {% endif %}
             {% endfor %}
             ]);
+            {% comment %}data.addRows([
+            {% for sale_date, data in data_per_day.items %}
+                {% if forloop.last %}
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.4|unlocalize }}, {{ data.1 }}, {{ data.3|unlocalize }}]
+                {% else %}
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.4|unlocalize }}, {{ data.1 }}, {{ data.3|unlocalize }}],
+                {% endif %}
+            {% endfor %}
+            ]);{% endcomment %}
             data.sort(0);
             var left = data.getColumnRange(1);
             var right = data.getColumnRange(2);
@@ -37,9 +46,9 @@
                 var series = {
                     0: {targetAxisIndex: 0},
                     1: {targetAxisIndex: 0, color: '#ff9900'},
-                    2: {targetAxisIndex: 0, color: '#2c2c2c'},
-                    3: {targetAxisIndex: 0, color: '#ababab'},
-                    4: {targetAxisIndex: 1, color: '#dc3912'}
+                    2: {targetAxisIndex: 0, color: '#ababab'},
+                    3: {targetAxisIndex: 1, color: '#dc3912'},
+                    4: {targetAxisIndex: 0, color: '#2c2c2c'}
                 };
                 {% else %}
                 var series = {
@@ -48,15 +57,15 @@
                     2: {targetAxisIndex: 0, color: '#ababab'},
                     3: {targetAxisIndex: 1, color: '#dc3912'}
                 };
-                view.setColumns([0, 1, 2, 4, 5]);
+                view.setColumns([0, 1, 2, 3, 4]);
                 {% endif %}
             {% else %}
                 {% if is_owner %}
                 var series = {
                     0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#2c2c2c'},
-                    2: {targetAxisIndex: 0, color: '#ababab'},
-                    3: {targetAxisIndex: 1, color: '#dc3912'}
+                    1: {targetAxisIndex: 0, color: '#ababab'},
+                    2: {targetAxisIndex: 1, color: '#dc3912'},
+                    3: {targetAxisIndex: 0, color: '#2c2c2c'}
                 };
                 view.setColumns([0, 1, 3, 4, 5]);
                 {% else %}
@@ -65,7 +74,7 @@
                     1: {targetAxisIndex: 0, color: '#ababab'},
                     2: {targetAxisIndex: 1, color: '#dc3912'}
                 };
-                view.setColumns([0, 1, 4, 5]);
+                view.setColumns([0, 1, 3, 4]);
                 {% endif %}
             {% endif %}
             var chart = new google.visualization.ChartWrapper({
@@ -143,11 +152,11 @@
     {% include 'dashboard/body_header.html' %}
 
     <div class="row subnav-page">
-        <div class="col-sm-3">{% trans "Pending earnings: " %}<strong>{{ currency }} {{ sales_pending|floatdot }}</strong></div>
-        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Confirmed earnings: " %}<strong>{{ currency }} {{ total_confirmed|floatdot }}</strong></div>
-        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Pending payment: " %}<strong>{{ currency }} {{ pending_payment|floatdot }}</strong></div>
+        <div class="col-sm-3">{% trans "Pending earnings: " %}<strong>{{ currency }} {% if pending_earnings %}{{ pending_earnings|floatdot }}{% else %}0.00{% endif %}</strong></div>
+        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Confirmed earnings: " %}<strong>{{ currency }} {% if confirmed_earnings %}{{ confirmed_earnings|floatdot }}{% else %}0.00{% endif %}</strong></div>
+        <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Pending payment: " %}<strong>{{ currency }} {% if pending_payment %}{{ pending_payment|floatdot }}{% else %}0.00{% endif %}</strong></div>
         <div class="col-sm-3"><a data-toggle="modal" href="#modal_publisher_info">{% trans "How payments work" %}</a></div>
-        <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 45px;">{% trans "In total, " %}<strong>{{ currency }} {{ total_earned }}</strong> {% trans "has been paid out to you" %}</div>
+        <div class="col-sm-12" style="border-bottom: 2px solid #DDD; text-align:center; margin:10px; padding-bottom: 45px;">{% trans "In total, " %}<strong>{{ currency }} {{ total_earned|floatdot }}</strong> {% trans "has been paid out to you" %}</div>
     </div>
 
     <div class="row">
@@ -171,29 +180,26 @@
             <li><b>{% blocktrans %}Total earnings: {{ currency }} {{ total_commission }}{% endblocktrans %}</b></li>
         </ul>
         <ul class="list-inline monthly-list">
-            <li>{% blocktrans %}Commission earnings: {{ currency }} {{ month_commission }}{% endblocktrans %}</li>
-            <li>{% blocktrans %}Sales: {{ month_sales }}{% endblocktrans %}</li>
+            <li>{% blocktrans %}Commission earnings:{% endblocktrans %} {{ currency }} {% if month_commission %}{{ month_commission }}{% else %}0.00{% endif %}</li>
+            <li>{% blocktrans %}Sales:{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0.00{% endif %}</li>
             <li>{% blocktrans %}Clicks: {{ month_clicks }}{% endblocktrans %}</li>
             {%  comment %}<li>{% blocktrans with conversion_rate=month_conversion_rate|floatdot %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</li>{%  endcomment %}
         </ul>
         {% if request.user.referral_partner %}
         <ul class="list-inline monthly-list">
             <li>{% blocktrans %}Referral earnings: {{ currency }} {{ referral_commission }}{% endblocktrans %}</li>
-            <li>{% blocktrans %}Referrals: {{referral_sales}}{% endblocktrans %}</li>
-        </ul>
-        {% endif %}
-        {% if is_owner %}
-        <ul class="list-inline monthly-list">
-            <li>{% blocktrans %}Network earnings: {{ currency }} {{ network_commission }}{% endblocktrans %}</li>
-            <li>{% blocktrans %}Clicks: {{ network_clicks }}{% endblocktrans %}</li>
-            <li>{% blocktrans %}Sales: {{ network_sales }}{% endblocktrans %}</li>
-            <li>{% blocktrans %}Conversion rate: {% endblocktrans %}{{ network_sales|commission_rate:network_clicks  }}</li>
+            <li>{% blocktrans %}Referrals:{% endblocktrans %} {% if referral_sales %}{{referral_sales}}{% else %}0.00{% endif %}</li>
         </ul>
         {% endif %}
         <ul class="list-inline monthly-list">
             <li>{% blocktrans %}Click earnings: {{ currency }} {{ ppc_earnings }}{% endblocktrans %}</li>
             <li>{% blocktrans %}Clicks: {{ ppc_clicks }}{% endblocktrans %}</li>
         </ul>
+        {% if is_owner %}
+        <ul class="list-inline monthly-list">
+            <li>{% blocktrans %}Network earnings: {{ currency }} {{ network_commission }}{% endblocktrans %}</li>
+        </ul>
+        {% endif %}
     </div>
 
     <div class="row">

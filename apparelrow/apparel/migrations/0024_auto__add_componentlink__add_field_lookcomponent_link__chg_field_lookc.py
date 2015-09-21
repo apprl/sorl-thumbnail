@@ -323,6 +323,8 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['name']", 'object_name': 'Vendor'},
             'homepage': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_cpc': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
+            'is_cpo': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
             'logotype': ('django.db.models.fields.files.ImageField', [], {'max_length': '127', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'db_index': 'True'}),
             'provider': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
