@@ -137,17 +137,22 @@
                                 <p class="earning-box">You will earn approx. <span class="currency">{{ object.default_vendor.locale_currency }}</span>
                                     {% if object.default_vendor.locale_discount_price %}
                                         {% multiply object.default_vendor.locale_discount_price earning_cut %}
-                                    {% else %}
+                                    {% elif %}
                                         {% multiply object.default_vendor.locale_price earning_cut %}
                                     {% endif %}
 
                                     per generated sale of this item
                                 </p>
                             {% elif object.default_vendor.vendor.is_cpc %}
-                                 <p class="earning-box">You will earn approx.
-                                     <span class="currency">{{ cost_per_click.locale_currency }}</span>
-                                     {% multiply cost_per_click.locale_price earning_cut %}
-                                    per click to this item
+                                 <p class="earning-box">
+                                     {% if cost_per_click.locale_price %}
+                                        You will earn approx.
+                                            <span class="currency">{{ cost_per_click.locale_currency }}</span>
+                                            {% multiply cost_per_click.locale_price earning_cut %}
+                                            per click to this item
+                                     {% else %}
+                                        Settings for CPC is missing.
+                                    {% endif %}
                                 </p>
                             {% endif %}
                             <br>
