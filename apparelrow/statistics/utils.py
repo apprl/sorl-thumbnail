@@ -29,7 +29,7 @@ def get_country_by_ip(request):
     log = logging.getLogger(__name__)
     json_obj = None
     try:
-        resp = requests.get(GEOIP_URL % get_client_ip(request),timeout=0.5)
+        resp = requests.get(GEOIP_URL % get_client_ip(request),timeout=1.0)
         json_obj = resp.json()
     except Timeout,msg:
         log.warning('Timeout occurred in geoip lookup function. > 500ms response time. Service down? [%s]' % msg)

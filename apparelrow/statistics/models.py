@@ -100,15 +100,21 @@ def productstat_post_save(sender, instance, created, **kwargs):
             product = Product.objects.get(slug=instance.product)
             if product.default_vendor and product.default_vendor.vendor.is_cpc:
                 country = get_country_by_ip_string(instance.ip)
-                if country:
+                if country and not country == "ALL":
+                    logger.debug("Click verification: %s belongs to %s" % (instance.ip,country))
                     vendor_name = product.default_vendor.vendor.name
                     vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor_name, None)
                     if not country in vendor_markets:
+                        logger.debug("Click from %s for vendor %s is NOT verified for markets %s." % (instance.ip,vendor_name,vendor_markets))
                         instance.is_valid = False
                         instance.save()
+                    else:
+                        logger.debug("Click from %s for vendor %s is verified for markets %s." % (instance.ip,vendor_name,vendor_markets))
                 else:
-                    instance.is_valid = False
-                    instance.save()
+                    logger.debug("No info from lookup for ip: %s" % instance.ip)
+            else:
+                logger.debug("Not running lookup due to default vendor %s not being CPC." % product.default_vendor)
+
         except Product.DoesNotExist:
             logger.warning("Product %s does not exist" % instance.product)
 
