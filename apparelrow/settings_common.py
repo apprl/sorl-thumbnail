@@ -909,12 +909,12 @@ LOGGING = {
             'handlers': ['app_core','sentry'],
         },
         'requests': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'propagate': False,
             'handlers': ['app_core'],
         },
         'pysolr': {
-            'level': 'ERROR',
+            'level': 'WARNING',
             'propagate': False,
             'handlers': ['app_core'],
         },
