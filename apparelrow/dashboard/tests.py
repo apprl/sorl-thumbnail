@@ -1884,7 +1884,7 @@ class TestAggregatedData(TransactionTestCase):
                 self.assertEqual(data.sale_earnings, decimal.Decimal(400))
 
         # Sale is canceled
-        sale = get_model('dashboard', 'Sale').objects.get(pk=1)
+        sale = get_model('dashboard', 'Sale').objects.all()[0]
         sale.status = get_model('dashboard', 'Sale').DECLINED
         sale.save()
 
