@@ -929,7 +929,7 @@ LOGGING = {
             'handlers': ['app_core'],
         },
         'apparelrow': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False,
             'handlers': ['app_core'],
         },

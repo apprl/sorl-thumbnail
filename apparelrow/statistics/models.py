@@ -13,7 +13,7 @@ from apparelrow.statistics.utils import get_country_by_ip_string
 
 
 import logging
-logger = logging.getLogger( __name__ )
+logger = logging.getLogger( "apparelrow" )
 
 
 PERIOD_TYPES = (
@@ -95,6 +95,7 @@ def productstat_post_save(sender, instance, created, **kwargs):
     """
 
     # Only do this check if the instance is created and the instance is valid. If not valid there is not really any point.
+    logger.info("Signal for post save reached")
     if created and instance.is_valid:
         try:
             product = Product.objects.get(slug=instance.product)
