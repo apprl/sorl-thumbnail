@@ -51,7 +51,7 @@ def get_country_by_ip_string(ip):
     if settings.GEOIP_DEBUG:
         return settings.GEOIP_RETURN_LOCATION
     import logging
-    log = logging.getLogger(__name__)
+    log = logging.getLogger( __name__ )
     json_obj = None
     try:
         resp = requests.get(settings.GEOIP_URL % ip,timeout=1.0)

@@ -928,10 +928,10 @@ LOGGING = {
             'propagate': False,
             'handlers': ['app_core'],
         },
-        'apparel.debug': {
-            'level': 'DEBUG',
+        'apparelrow': {
+            'level': 'INFO',
             'propagate': False,
-            'handlers': ['apparel_debug'],
+            'handlers': ['app_core'],
         },
         'advertiser': {
             'level': 'ERROR',

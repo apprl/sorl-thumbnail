@@ -117,6 +117,8 @@ def productstat_post_save(sender, instance, created, **kwargs):
 
         except Product.DoesNotExist:
             logger.warning("Product %s does not exist" % instance.product)
+    else:
+        logger.info("Product click is not valid, no ip check")
 
 
 class NotificationEmailStats(models.Model):

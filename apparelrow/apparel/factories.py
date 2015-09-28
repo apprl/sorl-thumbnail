@@ -5,6 +5,7 @@ import factory
 from factory import lazy_attribute
 from django.db.models import signals, get_model
 from apparelrow.apparel import models
+from apparelrow.statistics import models as stat_models
 import factory.django
 from faker import Faker
 import datetime as dt
@@ -63,6 +64,21 @@ class VendorProductFactory(factory.django.DjangoModelFactory):
     original_discount_currency = "SEK"
     availability  = 10
 
+
+class ProductStatFactory(factory.django.DjangoModelFactory):
+    action = 'BuyReferral'
+    price = 900
+    user_id = 1
+    page = 'Product'
+    ip = '83.250.7.29'
+    is_valid = 'True'
+
+    @lazy_attribute
+    def created(self):
+        return dt.datetime.now() - dt.timedelta(days=randint(5, 50))
+
+    class Meta:
+        model = stat_models.ProductStat
 
 
 class DomainDeepLinkingFactory(factory.django.DjangoModelFactory):
