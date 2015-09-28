@@ -886,7 +886,7 @@ def get_top_summary(current_user):
 
     return pending_earnings, confirmed_earnings, pending_payment, total_earned
 
-@cache_page(60 * 60 * 12)
+#@cache_page(60 * 60 * 12)
 def dashboard(request, year=None, month=None):
     """
     Display publisher data per month for logged in user.
@@ -913,7 +913,6 @@ def dashboard(request, year=None, month=None):
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
-
 
         # Enumerate months
         dt1 = request.user.date_joined.date()
@@ -1619,8 +1618,8 @@ class DashboardView(TemplateView):
             # Summary earning
             month_earnings = sum([x[0] for x in data_per_day.values()])
             network_earnings = sum([x[3] for x in data_per_day.values()])
-            referral_earnings = sum([x[2] for x in data_per_day.values()])
-            ppc_earnings = sum([x[4] for x in data_per_day.values()])
+            referral_earnings = sum([x[1] for x in data_per_day.values()])
+            ppc_earnings = sum([x[2] for x in data_per_day.values()])
 
             total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings
 
@@ -1634,7 +1633,7 @@ class DashboardView(TemplateView):
 
             non_paid_clicks = 0
             paid_clicks = 0
-            if sum_data['total_clicks__sum'] and sum_data['paid_clicks__sum']:
+            if 'total_clicks__sum' in sum_data and 'paid_clicks__sum' in sum_data:
                 paid_clicks = sum_data['paid_clicks__sum']
                 non_paid_clicks = sum_data['total_clicks__sum'] - sum_data['paid_clicks__sum']
 
@@ -1708,6 +1707,8 @@ class DashboardView(TemplateView):
                             'user_earnings': user_earnings,
                             'ppc_clicks': paid_clicks,
                             'month_clicks': non_paid_clicks,
+                            'referral_commission': referral_earnings,
+                            'ppc_earnings': ppc_earnings,
                             }
             return render(request, 'dashboard/new_dashboard.html', context_data)
         return HttpResponseRedirect(reverse('new-dashboard'))
