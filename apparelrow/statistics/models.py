@@ -95,12 +95,13 @@ def productstat_post_save(sender, instance, created, **kwargs):
     """
 
     # Only do this check if the instance is created and the instance is valid. If not valid there is not really any point.
-    logger.info("Signal for post save reached")
+    # logger.info("Signal for post save reached")
     if created and instance.is_valid:
         try:
             product = Product.objects.get(slug=instance.product)
             if product.default_vendor and product.default_vendor.vendor.is_cpc:
                 country = get_country_by_ip_string(instance.ip)
+                logger.info("Country: %s" % country)
                 if country and not country == "ALL":
                     logger.info("Click verification: %s belongs to %s" % (instance.ip,country))
                     vendor_name = product.default_vendor.vendor.name
@@ -108,6 +109,7 @@ def productstat_post_save(sender, instance, created, **kwargs):
                     if not country in vendor_markets:
                         logger.info("Click from %s for vendor %s is NOT verified for markets %s." % (instance.ip,vendor_name,vendor_markets))
                         instance.is_valid = False
+                        instance.vendor = vendor_name
                         instance.save()
                     else:
                         logger.info("Click from %s for vendor %s is verified for markets %s." % (instance.ip,vendor_name,vendor_markets))
@@ -119,7 +121,7 @@ def productstat_post_save(sender, instance, created, **kwargs):
         except Product.DoesNotExist:
             logger.warning("Product %s does not exist" % instance.product)
     else:
-        logger.info("Product click is not valid, no ip check")
+        logger.info("Product click is not valid or is not created, no ip check")
 
 
 class NotificationEmailStats(models.Model):
