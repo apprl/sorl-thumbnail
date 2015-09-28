@@ -54,7 +54,8 @@ class Command(BaseCommand):
         end_date = datetime.datetime.combine(end_date_query, datetime.time(23, 59, 59, 999999))
 
         # Get all earnings for the given date
-        earnings = get_model('dashboard', 'UserEarning').objects.filter(date__range=(start_date, end_date))
+        earnings = get_model('dashboard', 'UserEarning').objects.filter(date__range=(start_date, end_date),
+                                                                        status__gte=get_model('dashboard', 'Sale').PENDING)
 
         # Remove all existent data for the given date
         get_model('dashboard', 'AggregatedData').objects.filter(created__range=(start_date, end_date)).delete()
@@ -202,67 +203,73 @@ class Command(BaseCommand):
             annotate(clicks=Count('product')).order_by('clicks')
 
         for row in aggregated_product_stat:
-            product = get_model('apparel', 'Product').objects.get(slug=row['product'])
-            vendor = get_model('apparel', 'Vendor').objects.get(name=row['vendor'])
             try:
+                product = get_model('apparel', 'Product').objects.get(slug=row['product'])
+                vendor = get_model('apparel', 'Vendor').objects.get(name=row['vendor'])
                 user = get_user_model().objects.get(id=row['user_id'])
-                if product:
-                    product_instance, product_created = get_model('dashboard', 'AggregatedData').objects.\
-                        get_or_create(user_id=row['user_id'], created=row['created'].date(), data_type='aggregated_from_product',
-                                      aggregated_from_id=product.id, aggregated_from_name=product.product_name,
-                                      aggregated_from_slug=product.slug)
+                product_instance, product_created = get_model('dashboard', 'AggregatedData').objects.\
+                    get_or_create(user_id=row['user_id'], created=row['created'].date(), data_type='aggregated_from_product',
+                                  aggregated_from_id=product.id, aggregated_from_name=product.product_name,
+                                  aggregated_from_slug=product.slug)
 
-                    if product_created:
-                        _, product_instance.user_name, product_instance.username = get_user_attributes(user)
-                        product_instance.user_image, product_instance.user_link = get_user_thumbnail_and_link(user)
-                        product_instance.aggregated_from_image, product_instance.aggregated_from_link = get_product_thumbnail_and_link(product)
+                if product_created:
+                    _, product_instance.user_name, product_instance.username = get_user_attributes(user)
+                    product_instance.user_image, product_instance.user_link = get_user_thumbnail_and_link(user)
+                    product_instance.aggregated_from_image, product_instance.aggregated_from_link = get_product_thumbnail_and_link(product)
+
+                if vendor.is_cpc:
+                    product_instance.paid_clicks += decimal.Decimal(row['clicks'])
+                    try:
+                        earning = get_model('dashboard', 'UserEarning').objects.get(user_id=row['user_id'],
+                                                                          user_earning_type='publisher_sale_click_commission',
+                                                                          date=row['created'].date())
+                        clicks_number = get_clicks_from_sale(earning.sale)
+                        click_cost = 0
+                        if clicks_number > 0:
+                            click_cost = earning.amount / clicks_number
+                        clicks = decimal.Decimal(row['clicks'])
+                        product_instance.click_earnings += click_cost * clicks
+                        product_instance.sale_plus_click_earnings += click_cost * clicks
+                    except get_model('dashboard', 'UserEarning').DoesNotExist:
+                        logger.warning("Click earning for user %s date %s does not exist" % (user.id, row['created'].date()))
+
+                product_instance.total_clicks += decimal.Decimal(row['clicks'])
+                product_instance.save()
+
+                if user.owner_network:
+                    owner = user.owner_network
+                    ownerp_instance, ownerp_created = get_model('dashboard', 'AggregatedData').objects.\
+                        get_or_create(user_id=owner.id, created=row['created'].date(), data_type='aggregated_from_product',
+                                  aggregated_from_id=product.id, aggregated_from_name=product.product_name,
+                                  aggregated_from_slug=product.slug)
+                    if ownerp_created:
+                        ownerp_instance.user_image, ownerp_instance.user_link = get_user_thumbnail_and_link(owner)
+                        ownerp_instance.aggregated_from_image, ownerp_instance.aggregated_from_link = get_product_thumbnail_and_link(product)
+                        _, ownerp_instance.user_name, ownerp_instance.username = get_user_attributes(owner)
 
                     if vendor.is_cpc:
-                        product_instance.paid_clicks += decimal.Decimal(row['clicks'])
+                        ownerp_instance.paid_clicks += decimal.Decimal(row['clicks'])
                         try:
-                            earning = get_model('dashboard', 'UserEarning').objects.get(user_id=row['user_id'],
-                                                                              user_earning_type='publisher_sale_click_commission',
+                            earning = get_model('dashboard', 'UserEarning').objects.get(user_id=owner.id,
+                                                                              user_earning_type='publisher_network_click_tribute',
+                                                                              from_user=user,
                                                                               date=row['created'].date())
                             clicks_number = get_clicks_from_sale(earning.sale)
-                            click_cost = earning.amount / clicks_number
-                            clicks = decimal.Decimal(row['clicks'])
-                            product_instance.click_earnings += click_cost * clicks
-                            product_instance.sale_plus_click_earnings += click_cost * clicks
-                        except get_model('dashboard', 'UserEarning').DoesNotExist:
-                            logger.warning("Click earning for user %s date %s does not exist" % (user.id, row['created'].date()))
-
-                    product_instance.total_clicks += decimal.Decimal(row['clicks'])
-                    product_instance.save()
-
-                    if user.owner_network:
-                        owner = user.owner_network
-                        ownerp_instance, ownerp_created = get_model('dashboard', 'AggregatedData').objects.\
-                            get_or_create(user_id=owner.id, created=row['created'].date(), data_type='aggregated_from_product',
-                                      aggregated_from_id=product.id, aggregated_from_name=product.product_name,
-                                      aggregated_from_slug=product.slug)
-                        if ownerp_created:
-                            ownerp_instance.user_image, ownerp_instance.user_link = get_user_thumbnail_and_link(owner)
-                            ownerp_instance.aggregated_from_image, ownerp_instance.aggregated_from_link = get_product_thumbnail_and_link(product)
-                            _, ownerp_instance.user_name, ownerp_instance.username = get_user_attributes(owner)
-
-                        if vendor.is_cpc:
-                            ownerp_instance.paid_clicks += decimal.Decimal(row['clicks'])
-                            try:
-                                earning = get_model('dashboard', 'UserEarning').objects.get(user_id=owner.id,
-                                                                                  user_earning_type='publisher_network_click_tribute',
-                                                                                  from_user=user,
-                                                                                  date=row['created'].date())
-                                clicks_number = get_clicks_from_sale(earning.sale)
+                            click_cost = 0
+                            if clicks_number > 0:
                                 click_cost = earning.amount / clicks_number
-                                clicks = decimal.Decimal(row['clicks'])
-                                ownerp_instance.click_earnings += click_cost * clicks
-                                ownerp_instance.sale_plus_click_earnings += click_cost * clicks
-                            except get_model('dashboard', 'UserEarning').DoesNotExist:
-                                logger.warning("Click earning for user %s date %s does not exist" % (owner.id, row['created'].date()))
+                            clicks = decimal.Decimal(row['clicks'])
+                            ownerp_instance.click_earnings += click_cost * clicks
+                            ownerp_instance.sale_plus_click_earnings += click_cost * clicks
+                        except get_model('dashboard', 'UserEarning').DoesNotExist:
+                            logger.warning("Click earning for user %s date %s does not exist" % (owner.id, row['created'].date()))
 
-                        ownerp_instance.total_clicks += decimal.Decimal(row['clicks'])
-                        ownerp_instance.save()
-
+                    ownerp_instance.total_clicks += decimal.Decimal(row['clicks'])
+                    ownerp_instance.save()
+            except get_model('apparel', 'Product').DoesNotExist:
+                logger.warning("Product %s does not exist" % row['product'])
+            except get_model('apparel', 'Vendor').DoesNotExist:
+                logger.warning("Vendor %s does not exist" % row['vendor'])
             except get_user_model().DoesNotExist:
                 logger.warning("User %s does not exist" % row['user_id'])
                 pass
