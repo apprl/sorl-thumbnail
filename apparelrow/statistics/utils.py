@@ -44,6 +44,7 @@ def get_country_by_ip(request):
         log.info('No country found for ip %s.' % get_client_ip(request))
         return "ALL"
 
+# Todo: For me this method breaks the DRY principle pretty monumentally. /K
 def get_country_by_ip_string(ip):
     import requests
 
