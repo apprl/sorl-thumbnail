@@ -1274,5 +1274,6 @@ def extract_domain_with_suffix(domain):
         logger.info("Domain supplied could not be extracted: %s [%s]" % (domain,msg))
         return None
 
+# Todo: move this to product manager 
 def extract_apparel_product_with_url(key):
     return get_model('apparel', 'Product').objects.filter(published=True,product_key__icontains=key)
