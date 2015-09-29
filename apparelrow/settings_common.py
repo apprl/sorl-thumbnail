@@ -796,6 +796,7 @@ CELERY_ROUTES = ({
     'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.recalculate_earnings': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.check_chrome_extension': {'queue': 'background'},
+    'apparelrow.scheduledjobs.tasks.check_clicks_limits_per_vendor': {'queue':'standard'},
     'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'},
     'apparel.notifications.look_like_daily': {'queue': 'background'},
     'apparel.notifications.look_like_weekly': {'queue': 'background'},
