@@ -119,7 +119,7 @@ def run_vendor_importer(vendor):
     log.info('Initiating import for vendor %s.' % vendor)
     Importer().run(dry=False, vendor=vendor)
 
-@task(name='apparelrow.scheduledjobs.tasks.check_clicks_limits_per_vendor', run_every=crontab(minute='0'), max_retries=5, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.check_clicks_limits_per_vendor', run_every=crontab(minute='5'), max_retries=5, ignore_result=True)
 def check_clicks_limits_per_vendor():
     from django.core import management
     management.call_command('check_clicks_limits_per_vendor')
