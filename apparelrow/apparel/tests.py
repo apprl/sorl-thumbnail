@@ -356,6 +356,12 @@ class TestProductDetails(TestCase):
         earning_product = self.product.get_product_earning(self.user)
         self.assertIsNone(earning_product)
 
+    def test_extracting_suffix(self):
+        from apparelrow.apparel.views import extract_domain_with_suffix
+        domain = "https://account.manning.com/support/index?someparameter=1"
+        self.assertEquals("manning.com",extract_domain_with_suffix(domain))
+
+
 
 class TestProfileLikes(TestCase):
     def setUp(self):

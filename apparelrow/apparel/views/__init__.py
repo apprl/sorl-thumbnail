@@ -1268,7 +1268,8 @@ def facebook_friends_widget(request):
 
 def extract_domain_with_suffix(domain):
     try:
-        extracted = tldextract.extract(domain)
+        tld_ext = tldextract.TLDExtract(cache_file=False)
+        extracted = tld_ext( domain )
         return "%s.%s" % (extracted.domain, extracted.suffix)
     except Exception, msg:
         logger.info("Domain supplied could not be extracted: %s [%s]" % (domain,msg))
