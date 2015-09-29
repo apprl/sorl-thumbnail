@@ -870,7 +870,7 @@ def product_lookup_by_domain(request, domain, key):
     else:
         instance = results[0]
 
-    if instance.template:
+    if instance and instance.template:
         user_id = request.user.pk
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
