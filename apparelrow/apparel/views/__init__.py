@@ -465,9 +465,9 @@ def product_track(request, pk, page='Default', sid=0):
     except get_model('apparel', 'Product').DoesNotExist:
         pass
 
-    cookie_already_exists = bool(request.COOKIES.get(product.slug, None))
     response = HttpResponse()
     if product:
+        cookie_already_exists = bool(request.COOKIES.get(product.slug, None))
         product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
                             get_user_agent(request), sid, page, cookie_already_exists)
         response.set_cookie(product.slug, '1', settings.APPAREL_PRODUCT_MAX_AGE)
