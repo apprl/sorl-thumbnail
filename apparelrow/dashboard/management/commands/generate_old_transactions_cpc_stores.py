@@ -24,7 +24,7 @@ class Command(BaseCommand):
                         if len(transaction) == 0:
                             defaults = {
                                 'ip_address': '127.0.0.1',
-                                'status': Transaction.ACCEPTED,
+                                'status': Transaction.PENDING,
                                 'cookie_date': row.sale_date,
                                 'currency': row.currency,
                                 'original_currency': row.original_currency,
