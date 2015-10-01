@@ -19,7 +19,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
     try:
         product = get_model('apparel', 'Product').objects.get(pk=product_id)
     except get_model('apparel', 'Product').DoesNotExist:
-        if page != 'Ext-Store':
+        if page != 'Ext-Store' and page != 'Ext-Link':
             return
 
     if product_id:
