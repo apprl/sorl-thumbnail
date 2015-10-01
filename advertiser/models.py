@@ -59,12 +59,15 @@ class StoreInvoice(models.Model):
 
         super(StoreInvoice, self).save(*args, **kwargs)
 
-    def get_total(self, currency=None):
-        total = self.transactions.aggregate(total=models.Sum('commission')).get('total', 0)
+    def get_total(self):
+        total = self.transactions.aggregate(total=models.Sum('original_commission')).get('total', 0)
+        currency = 'EUR'
+        if self.transactions.count() > 0:
+            currency = self.transactions.all()[0].original_currency
         if not total:
-            return 0
+            return 0, currency
 
-        return total
+        return total, currency
 
 @receiver(post_save, sender=StoreInvoice, dispatch_uid='store_invoice_post_save')
 def store_invoice_post_save(sender, instance, created, **kwargs):
