@@ -105,7 +105,7 @@ def productstat_post_save(sender, instance, created, **kwargs):
                 if country and not country == "ALL":
                     logger.info("Click verification: %s belongs to %s" % (instance.ip,country))
                     vendor_name = product.default_vendor.vendor.name
-                    vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor_name, None)
+                    vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor_name, [])
                     if not country in vendor_markets:
                         logger.info("Click from %s for vendor %s is NOT verified for markets %s." % (instance.ip,vendor_name,vendor_markets))
                         instance.is_valid = False
