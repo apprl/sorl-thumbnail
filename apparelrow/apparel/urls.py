@@ -110,6 +110,7 @@ urlpatterns = patterns('',
     url(r'^redirect/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.product_redirect', name='product-redirect'),
     url(r'^redirect/(?P<pk>[\d]+)/(?P<page>[\w-]+)/(?P<sid>[\d]+)/$', 'apparelrow.apparel.views.product_redirect', name='product-redirect'),
     url(r'^track/(?P<pk>[\d]+)/(?P<page>[\w-]+)/(?P<sid>[\d]+)/$', 'apparelrow.apparel.views.product_track', name='product-track'),
+    url(r'^track/(?P<pk>[\d]+)/(?P<page>[\w-]+)/(?P<sid>[\d]+)/(?P<vendor>[\w]+)/$', 'apparelrow.apparel.views.product_track', name='product-track'),
 
     # Short product link
     url(r'^p/(?P<short_link>[\w]+)/$', 'apparelrow.apparel.views.product_short_link', name='product-short-link'),
