@@ -11,7 +11,7 @@ import redis
 
 
 @task(name='statistics.tasks.product_buy_click', max_retries=5, ignore_result=True)
-def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie_already_exists, vendor=None):
+def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie_already_exists):
     """
     Buy click stats for products
     """
