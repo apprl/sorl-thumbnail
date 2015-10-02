@@ -586,3 +586,47 @@ class TestEmbeddingShops(TestCase):
         nginx_key = reverse('embed-shop', args=[1])
         print "Checking cache key for: %s" % nginx_key
         self.assertIsNotNone(cache.get(nginx_key,None))
+
+
+class TestShortLinks(TestCase):
+    def setUp(self):
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='My Store 12')
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.save()
+
+    def test_store_link(self):
+        template = "http://www.anrdoezrs.net/links/4125005/type/dlg/sid/{sid}/http://www.nastygal.com/"
+        store_link = get_model('apparel', 'ShortStoreLink').objects.create(vendor=self.vendor, template=template)
+
+        stats_count = get_model('statistics', 'ProductStat').objects.count()
+
+        referer = reverse('store-short-link-userid', kwargs={'short_link': store_link.link(), 'user_id': self.user.id})
+
+        # Make the call directly to product-track, since the client doesn't follow the redirect made
+        # from template in jQuery
+        url = reverse('product-track', kwargs={'pk': 0, 'page': 'Ext-Store', 'sid': self.user.id})
+        response = self.client.post(url, {'referer': referer}, **{'HTTP_REFERER': referer})
+        self.assertEqual(response.status_code, 200)
+
+        # A ProductStat were created
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count + 1)
+
+        product_stat = get_model('statistics', 'ProductStat').objects.all()[0]
+        self.assertEqual(product_stat.page, 'Ext-Store')
+        self.assertEqual(product_stat.vendor, self.vendor.name)
+        self.assertEqual(product_stat.user_id, self.user.id)
+        self.assertEqual(product_stat.action, 'StoreLinkClick')
+
+    def test_store_link_invalid(self):
+        stats_count = get_model('statistics', 'ProductStat').objects.count()
+        url = reverse('store-short-link-userid', kwargs={'short_link': 'random', 'user_id': self.user.id})
+
+        response = self.client.post(url, follow=True)
+        self.assertEqual(response.status_code, 404)
+
+        # No ProductStat were created
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
+
