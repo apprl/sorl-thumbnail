@@ -1056,6 +1056,9 @@ def dashboard(request, year=None, month=None):
 
         total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings
 
+        # Total summary for user
+        pending_earnings, confirmed_earnings, pending_payment, total_earned = get_top_summary(request.user)
+
         return render(request, 'dashboard/publisher.html', {'data_per_day': data_per_day,
                                                             'total_sales': sales_total,
                                                             'sales_pending': sales_pending,
@@ -1072,6 +1075,8 @@ def dashboard(request, year=None, month=None):
                                                             'month_display': month_display,
                                                             'sales': sales,
                                                             'user_earnings': user_earnings,
+                                                            'pending_earnings': pending_earnings,
+                                                            'confirmed_earnings': confirmed_earnings,
                                                             'total_earned': total_earned,
                                                             'is_after_june': is_after_june,
                                                             'most_sold_products': network_total_products,

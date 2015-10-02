@@ -20,9 +20,9 @@
             data.addRows([
             {% for sale_date, data in data_per_day.items %}
                 {% if forloop.last %}
-                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1|unlocalize }}, {{ data.2|unlocalize }}, {{ data.3 }}, {{ data.4|unlocalize }}]
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.4|unlocalize }}, {{ data.1 }}, {{ data.3|unlocalize }}]
                 {% else %}
-                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.1|unlocalize }}, {{ data.2|unlocalize }}, {{ data.3 }}, {{ data.4|unlocalize }}],
+                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.4|unlocalize }}, {{ data.1 }}, {{ data.3|unlocalize }}],
                 {% endif %}
             {% endfor %}
             ]);

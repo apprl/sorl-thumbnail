@@ -126,11 +126,11 @@
         {% endif %}
 
         {% if vendor.is_cpo %}
-        <div class="col-md-12">{% trans "Total sales generated:" %} <strong>EUR {{ sales_generated|floatdot|intcomma }}</strong></div>
+        <div class="col-md-12">{% trans "Total sales generated:" %} <strong>{{ currency }} {{ sales_generated|floatdot|intcomma }}</strong></div>
         {% endif %}
         <div class="col-md-12"><br></div>
-        <div class="col-md-12">{% trans "Invoiced & unpaid:" %} <strong>EUR {{ accepted_commission|floatdot|intcomma }}</strong></div>
-        <div class="col-md-12">{% trans "To be invoiced:" %} <strong>EUR {{ commission_to_be_invoiced|floatdot|intcomma }}</strong></div>
+        <div class="col-md-12">{% trans "Invoiced & unpaid:" %} <strong>{{ currency }} {{ accepted_commission|floatdot|intcomma }}</strong></div>
+        <div class="col-md-12">{% trans "To be invoiced:" %} <strong>{{ currency }} {{ commission_to_be_invoiced|floatdot|intcomma }}</strong></div>
 
 
 
