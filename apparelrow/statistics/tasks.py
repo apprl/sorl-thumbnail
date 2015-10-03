@@ -27,7 +27,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
         if page != 'Ext-Store' and page != 'Ext-Link':
             return
 
-    if product_id:
+    if product_id and not product_id == '0':
         get_model('statistics', 'ProductClick').objects.increment_clicks(product_id)
 
     if product and product.default_vendor:

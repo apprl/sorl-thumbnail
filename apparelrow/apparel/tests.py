@@ -602,8 +602,8 @@ class TestShortLinks(TestCase):
         store_link = get_model('apparel', 'ShortStoreLink').objects.create(vendor=self.vendor, template=template)
 
         stats_count = get_model('statistics', 'ProductStat').objects.count()
-
-        referer = reverse('store-short-link-userid', kwargs={'short_link': store_link.link(), 'user_id': self.user.id})
+        store_link_str = store_link.link()
+        referer = reverse('store-short-link-userid', kwargs={'short_link': store_link_str, 'user_id': self.user.id})
 
         # Make the call directly to product-track, since the client doesn't follow the redirect made
         # from template in jQuery
@@ -624,7 +624,7 @@ class TestShortLinks(TestCase):
         stats_count = get_model('statistics', 'ProductStat').objects.count()
         url = reverse('store-short-link-userid', kwargs={'short_link': 'random', 'user_id': self.user.id})
 
-        response = self.client.post(url, follow=True)
+        response = self.client.post(url, follow=False)
         self.assertEqual(response.status_code, 404)
 
         # No ProductStat were created
