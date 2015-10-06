@@ -69,3 +69,23 @@ def get_country_by_ip_string(ip):
     else:
         log.info('No country found for ip %s.' % ip)
         return "ALL"
+
+
+def extract_short_link_from_url(parsed_url, user_id=None):
+    """
+    Gets the short code from parsed url, works regardless of locale redirects are in function
+    :param parsed_url: full url userid included
+    :param user_id: if user id is supplied in the url
+    :return: short url code
+    """
+    if not user_id:
+        if parsed_url.endswith("/"):
+            return parsed_url.split("/")[-2]
+        else:
+            return parsed_url.split("/")[-1]
+
+    else:
+        if parsed_url.endswith("/"):
+            return parsed_url.split("/")[-3]
+        else:
+            return parsed_url.split("/")[-2]
