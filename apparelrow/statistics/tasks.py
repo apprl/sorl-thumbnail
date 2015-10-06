@@ -13,6 +13,7 @@ from django.core.urlresolvers import resolve
 from urlparse import urlparse
 
 import redis
+from apparelrow.statistics.utils import extract_short_link_from_url
 
 
 @task(name='statistics.tasks.product_buy_click', max_retries=5, ignore_result=True)
@@ -42,8 +43,8 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
     action = 'BuyReferral'
     if page == 'Ext-Store':
         parsed_url = urlparse(referer.split("\n")[1])
-        match = resolve(parsed_url.path[3:])
-        short_link = match.kwargs['short_link']
+        short_link = extract_short_link_from_url(parsed_url.path, user_id)
+        #short_link = match.kwargs['short_link']
         _, vendor = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
         action = 'StoreLinkClick'
 

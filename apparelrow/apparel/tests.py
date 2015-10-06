@@ -608,6 +608,7 @@ class TestShortLinks(TestCase):
         # Make the call directly to product-track, since the client doesn't follow the redirect made
         # from template in jQuery
         url = reverse('product-track', kwargs={'pk': 0, 'page': 'Ext-Store', 'sid': self.user.id})
+        print "requesting url: %s" % url
         response = self.client.post(url, {'referer': referer}, **{'HTTP_REFERER': referer})
         self.assertEqual(response.status_code, 200)
 
