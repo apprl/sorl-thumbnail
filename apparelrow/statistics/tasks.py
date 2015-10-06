@@ -42,7 +42,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
     action = 'BuyReferral'
     if page == 'Ext-Store':
         parsed_url = urlparse(referer.split("\n")[1])
-        match = resolve(parsed_url.path)
+        match = resolve(parsed_url.path[3:])
         short_link = match.kwargs['short_link']
         _, vendor = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
         action = 'StoreLinkClick'
