@@ -22,6 +22,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
     """
     Buy click stats for products
     """
+
     product = None
     try:
         product = get_model('apparel', 'Product').objects.get(pk=product_id)
@@ -45,14 +46,14 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
     if page == 'Ext-Store':
         parsed_url = urlparse(referer.split("\n")[1])
         log.info("External store click found, trying to fetch vendor for link: %s and user_id: %s" % (parsed_url.path, user_id))
-        short_link = extract_short_link_from_url(parsed_url.path, user_id)
+        short_link = extract_short_link_from_url(parsed_url.path, int(user_id))
         log.info("Extracting short link: %s from url. Trying to fetch ShortStoreLink object." % short_link)
         #short_link = match.kwargs['short_link']
         try:
             _, vendor = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
             log.info("Found vendor %s." % vendor)
         except Exception, msg:
-            log.info("Failed to extract vendor and ShortStoreLink [%s] Error:[%s]." % msg)
+            log.info("Failed to extract vendor and ShortStoreLink [%s] Error:[%s]." % (parsed_url.path,msg))
         action = 'StoreLinkClick'
 
     get_model('statistics', 'ProductStat').objects.create(

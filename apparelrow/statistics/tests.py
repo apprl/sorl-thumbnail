@@ -225,5 +225,7 @@ class TestProductStat(TestCase):
         self.assertEquals("4C93", extract_short_link_from_url(short_url_locale_2))
         short_url_locale_3 = u'en/s/4C94/123'
         self.assertEquals("4C94", extract_short_link_from_url(short_url_locale_3, 123))
-        short_url_locale_3 = u'/sv/s/4C95/456'
-        self.assertEquals("4C95", extract_short_link_from_url(short_url_locale_3,456))
+        short_url_locale_4 = u'/sv/s/4C95/456'
+        self.assertEquals("4C95", extract_short_link_from_url(short_url_locale_4,456))
+        short_url_locale_5 = u'http://staging.apprl.com/sv/s/4C96/'
+        self.assertEquals("4C96", extract_short_link_from_url(short_url_locale_5))
