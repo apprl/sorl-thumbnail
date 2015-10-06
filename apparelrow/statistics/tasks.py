@@ -3,15 +3,20 @@ import datetime
 from django.conf import settings
 from django.db.models import get_model
 from django.template.defaultfilters import floatformat
+from apparelrow.apparel.models import ShortStoreLink
+
 
 from celery.task import task, periodic_task
 from celery.schedules import crontab
+
+from django.core.urlresolvers import resolve
+from urlparse import urlparse
 
 import redis
 
 
 @task(name='statistics.tasks.product_buy_click', max_retries=5, ignore_result=True)
-def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie_already_exists, vendor=None):
+def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie_already_exists):
     """
     Buy click stats for products
     """
@@ -22,7 +27,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
         if page != 'Ext-Store' and page != 'Ext-Link':
             return
 
-    if product_id:
+    if product_id and not product_id == '0':
         get_model('statistics', 'ProductClick').objects.increment_clicks(product_id)
 
     if product and product.default_vendor:
@@ -36,6 +41,10 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
 
     action = 'BuyReferral'
     if page == 'Ext-Store':
+        parsed_url = urlparse(referer.split("\n")[1])
+        match = resolve(parsed_url.path)
+        short_link = match.kwargs['short_link']
+        _, vendor = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
         action = 'StoreLinkClick'
 
     get_model('statistics', 'ProductStat').objects.create(

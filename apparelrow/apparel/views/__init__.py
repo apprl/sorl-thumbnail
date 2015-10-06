@@ -257,14 +257,15 @@ def store_short_link(request, short_link, user_id=None):
     """
     Takes a short short link and redirect to associated url.
     """
-    user_id = 0
-    name = ''
     try:
         url, name = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
     except ShortStoreLink.DoesNotExist:
         raise Http404
 
-    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store', 'event': 'StoreLinkClick', 'vendor': name})
+    if user_id is None:
+        user_id = 0
+
+    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store', 'event': 'StoreLinkClick'})
 
 
 #
@@ -405,15 +406,15 @@ def domain_short_link(request, short_link):
     """
     Takes a short short link and redirect to associated url.
     """
-    name = ''
-    user_id = 0
-
     try:
         url, name, user_id = ShortDomainLink.objects.get_short_domain_for_link(short_link)
     except ShortDomainLink.DoesNotExist:
         raise Http404
 
-    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Link', 'event': 'BuyReferral', 'vendor': name})
+    if user_id is None:
+        user_id = 0
+
+    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Link', 'event': 'BuyReferral'})
 
 
 
@@ -449,7 +450,7 @@ def product_redirect(request, pk, page='Default', sid=0):
 
 
 @require_POST
-def product_track(request, pk, page='Default', sid=0, vendor=None):
+def product_track(request, pk, page='Default', sid=0):
     """
     Fires a product_buy_click task when called.
     """
@@ -468,11 +469,11 @@ def product_track(request, pk, page='Default', sid=0, vendor=None):
     if product:
         cookie_already_exists = bool(request.COOKIES.get(product.slug, None))
         product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
-                            get_user_agent(request), sid, page, cookie_already_exists, vendor)
+                            get_user_agent(request), sid, page, cookie_already_exists)
         response.set_cookie(product.slug, '1', settings.APPAREL_PRODUCT_MAX_AGE)
     else:
         product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
-                            get_user_agent(request), sid, page, False, vendor)
+                            get_user_agent(request), sid, page, False)
     return response
 
 
