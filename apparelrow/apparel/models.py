@@ -504,7 +504,7 @@ class ShortStoreLinkManager(models.Manager):
             instance = ShortStoreLink.objects.get(pk=calculated_id)
         except:
             logger.error("Short store link can not be found, Short link: %s and desaturated id: %s" % (short_link, calculated_id))
-            raise ShortStoreLink.DoesNotExist()
+            raise ShortStoreLink.DoesNotExist("Unable to find ShirtStoreLink for id:%s" % calculated_id)
         if user_id is None:
             user_id = 0
 
