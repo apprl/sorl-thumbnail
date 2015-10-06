@@ -129,7 +129,7 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_short_link'], 'http://testserver/pd/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
-    @unittest.skip("Return to this after merging next branch")
+
     def test_product_lookup_by_url(self):
         self._login()
 
@@ -614,7 +614,7 @@ class TestShortLinks(TestCase):
         # A ProductStat were created
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count + 1)
 
-        product_stat = get_model('statistics', 'ProductStat').objects.all()[0]
+        product_stat = get_model('statistics', 'ProductStat').objects.latest("created")
         self.assertEqual(product_stat.page, 'Ext-Store')
         self.assertEqual(product_stat.vendor, self.vendor.name)
         self.assertEqual(product_stat.user_id, self.user.id)
