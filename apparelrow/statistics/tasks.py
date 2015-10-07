@@ -3,7 +3,7 @@ import datetime
 from django.conf import settings
 from django.db.models import get_model
 from django.template.defaultfilters import floatformat
-from apparelrow.apparel.models import ShortStoreLink
+from apparelrow.apparel.models import ShortStoreLink, ShortDomainLink
 
 
 from celery.task import task, periodic_task
@@ -55,6 +55,12 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
         except Exception, msg:
             log.info("Failed to extract vendor and ShortStoreLink [%s] Error:[%s]." % (parsed_url.path,msg))
         action = 'StoreLinkClick'
+    elif page == 'Ext-Link' and not product:
+        parsed_url = urlparse(referer.split("\n")[1])
+        log.info("External domain click found, trying to fetch vendor for link: %s " % parsed_url.path)
+        short_link = extract_short_link_from_url(parsed_url.path)
+        log.info("Extracting short link: %s from url. Trying to fetch ShortDomainLink object." % short_link)
+        _, vendor, _ = ShortDomainLink.objects.get_short_domain_for_link(short_link)
 
     get_model('statistics', 'ProductStat').objects.create(
         action=action,
