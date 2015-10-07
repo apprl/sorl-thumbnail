@@ -164,7 +164,7 @@ class TestChromeExtension(TestCase):
         self.assertEqual(response.status_code, 200)
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['product_pk'], product.id)
+        self.assertEqual(int(json_content['product_pk']), product.id)
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)

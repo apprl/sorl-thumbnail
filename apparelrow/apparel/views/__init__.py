@@ -882,9 +882,9 @@ def product_lookup_by_domain(request, domain, key):
     return None, None
 
 def product_lookup_by_solr(request, key):
-    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1}
+    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1, 'django_ct': "apparel.product"}
     connection = Solr(settings.SOLR_URL)
-    result = connection.search('django_ct:apprl.product', **kwargs)
+    result = connection.search("*", **kwargs)
 
     dict = result.__dict__
     logger.debug("Query executed in %s milliseconds" % dict['qtime'])
@@ -906,6 +906,7 @@ def parse_luisaviaroma_fragment(fragment):
 def product_lookup_asos_nelly(url):
     parsedurl = urlparse.urlsplit(url)
     path = parsedurl.path
+    key = None
     if("nelly" in parsedurl.netloc):
         # get rid of categories for nelly links, only keep product name (last two "/"")
         temp_path = path.rstrip('/') # remove last slash if it exists
@@ -923,15 +924,12 @@ def product_lookup_asos_nelly(url):
             key = parse_luisaviaroma_fragment(parsedurl.fragment)
         else:
             key = url
-    else:
-        logger.debug("Product %s is not a special case, trying exact string match." % url)
-        key = url
 
-    products = extract_apparel_product_with_url(key)
-    if len(products) < 1:
-        return None
-
-    return products[0].pk
+    if key:
+        products = extract_apparel_product_with_url(key)
+        if len(products) >= 1:
+            return products[0].pk
+    return None
     #json_data = json.loads(products[0].json)
     #return json_data.get('site_product', None)
 
