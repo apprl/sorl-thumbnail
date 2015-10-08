@@ -26,7 +26,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
     product_name = factory.Sequence(lambda n: 'Crazy Skirt %s' % n)
     slug = factory.Sequence(lambda n: 'crazy-skirt-%s' % n)
     manufacturer = factory.SubFactory(BrandFactory)
-
+    #product_image = factory.django.ImageField(from_path="static/products/",from_file=u'full/21/210ad55035c97924a7186312a4def89bd5e5884a.jpg',color='blue')
 
 class UserFactory(factory.django.DjangoModelFactory):
 

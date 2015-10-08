@@ -53,7 +53,7 @@ from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 from pysolr import Solr
 
-logger = logging.getLogger("apparel.debug")
+logger = logging.getLogger("apparelrow")
 
 FAVORITES_PAGE_SIZE = 30
 LOOK_PAGE_SIZE = 12
@@ -858,12 +858,13 @@ def authenticated_backend(request):
 def product_lookup_by_domain(request, domain, key):
     model = get_model('apparel', 'DomainDeepLinking')
     domain = extract_domain_with_suffix(domain)
-
+    logger.info("Lookup by domain, will try and find a match for domain [%s]" % domain)
     # domain:          example.com
     # Deeplink.domain: example.com/se
     results = model.objects.filter(domain__icontains=domain)
     instance = None
     if not results:
+        logger.info("No domain found for %s, returning 404" % domain)
         raise Http404
 
     if len(results) > 1 :
@@ -874,6 +875,7 @@ def product_lookup_by_domain(request, domain, key):
         instance = results[0]
 
     if instance and instance.template:
+        logger.info("Domain [%s / %s] was a match for %s." % (instance.domain, instance.vendor, domain))
         user_id = request.user.pk
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
@@ -882,17 +884,18 @@ def product_lookup_by_domain(request, domain, key):
     return None, None
 
 def product_lookup_by_solr(request, key):
+    logger.info("Trying to lookup %s from SOLR." % key)
     kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1, 'django_ct': "apparel.product"}
     connection = Solr(settings.SOLR_URL)
     result = connection.search("*", **kwargs)
 
     dict = result.__dict__
-    logger.debug("Query executed in %s milliseconds" % dict['qtime'])
+    logger.info("Query executed in %s milliseconds" % dict['qtime'])
 
     if dict['hits'] < 1:
-        logger.debug("No results found")
+        logger.info("No results found for key %s." % key)
         return None
-    logger.debug("%s results found" % dict['hits'])
+    logger.info("%s results found" % dict['hits'])
     product_id = dict['docs'][0]['django_id']
 
     return product_id
@@ -936,17 +939,19 @@ def product_lookup_asos_nelly(url):
 def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
-
     key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
+    logger.info("Request to lookup product for %s sent, trying to extract PK from request." % key)
     try:
         product_pk = long(smart_unicode(urllib.unquote(smart_str(request.GET.get('pk', '')))))
     except ValueError:
         product_pk = None
+        logger.info("No clean Product pk extracted.")
 
     original_key = key
     if key and not product_pk:
         product_pk = product_lookup_by_solr(request, key)
         if not product_pk:
+            logger.info("Failed to extract product from solr, will change the protocol and try again.")
             if key.startswith('https'):
                 key = key.replace('https', 'http')
             elif key.startswith('http'):
@@ -955,11 +960,16 @@ def product_lookup(request):
                 key = ''.join(temp)
             product_pk = product_lookup_by_solr(request, key)
             if not product_pk:
+                logger.info("Failed to extract product from solr for %s" % key)
                 product_pk = product_lookup_asos_nelly(original_key)
-
+            else:
+                logger.info("Successfully found product in SOLR for key %s" % key)
+        else:
+            logger.info("Successfully found product in SOLR for key %s" % key)
     # TODO: must go through theimp database right now to fetch site product by real url
     #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
     #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
+
 
     #json_data = json.loads(imported_product.json)
     #product_pk = json_data.get('site_product', None)
@@ -972,10 +982,13 @@ def product_lookup(request):
         product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
         product_short_link_str = reverse('product-short-link', args=[product_short_link.link()])
         product_short_link_str = request.build_absolute_uri(product_short_link_str)
+        logger.info("Product match found for key, creating short product link [%s]." % product_short_link_str)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
+        logger.info("No product found for key, falling back to domain deep linking.")
         product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
+        logger.info("No product found for key, falling back to domain deep linking.")
         if product_short_link_str is not None:
             product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str, user=request.user, vendor=vendor)
             product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
