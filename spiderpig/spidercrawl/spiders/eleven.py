@@ -42,18 +42,21 @@ class ElevenSpider(CSVFeedSpider, AffiliateMixin):
     """
 
     def parse_row(self, response, row):
+        description = row.get('Beskrivning')
+        name = row.get('Produkttitel')
+
         item = Product()
         item['key'] = row.get(u'Länk')
         item['sku'] = row.get('Tillverkarens prod.nr./SKU') if row.get('Tillverkarens prod.nr./SKU',None) else row.get('Produktnummer')
-        item['name'] = row.get('Produkttitel')
+        item['name'] = name
         item['vendor'] = self.name
         item['url'] = row.get(u'Länk') + "?utm_source=apprl&utm_medium=affiliate&utm_campaign=apprl"
         item['affiliate'] = self.AFFILIATE_AAN
         item['category'] = "%s -> %s" % (row.get(u'MAN, WOMAN, UNISEX'),row.get('Grupp') )
-        item['description'] = row.get('Beskrivning')
+        item['description'] = description
         item['brand'] = row.get(u'Märke/Tillverkare')
         item['gender'] = row.get(u'MAN, WOMAN, UNISEX')
-        item['colors'] = ''
+        item['colors'] = name + ' ' + description
 
         regular_price = row.get('Ordinarie Pris')
         discount_price = row.get('Pris (inkl. moms)')

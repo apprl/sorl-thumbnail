@@ -1,5 +1,8 @@
 import json
-from apparelrow.apparel.views import product_lookup_asos_nelly
+from pysolr import Solr
+from sorl.thumbnail import get_thumbnail
+from apparelrow.apparel.search import product_save
+from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr
 import unittest
 
 from django.contrib.auth import get_user_model
@@ -19,6 +22,7 @@ from factories import *
 """ CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestChromeExtension(TestCase):
+    django_image_file = None
 
     def setUp(self):
         domaindeeplinks = [("nelly.com","Nelly"),
@@ -57,6 +61,17 @@ class TestChromeExtension(TestCase):
         for domain,vendor in domaindeeplinks:
             ddl = DomainDeepLinkingFactory.create(domain=domain,vendor__name=vendor,template='http://example.com/my-template')
             #print "Creating DomainDeeplinking %s, %s " % (ddl.id,ddl.domain)
+        from PIL import Image
+        from StringIO import StringIO
+
+        from django.core.files.base import ContentFile
+
+        image_file = StringIO()
+        image = Image.new('RGBA', size=(50,50), color=(256,0,0))
+        image.save(image_file, 'png')
+        image_file.seek(0)
+
+        self.django_image_file = ContentFile(image_file.read(), 'test.png')
 
 
     def _login(self):
@@ -129,23 +144,38 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_short_link'], 'http://testserver/pd/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
-    @unittest.skip("Return to this after merging next branch")
+
     def test_product_lookup_by_url(self):
         self._login()
-
+        product_key = 'http://example.com/example?someproduct=12345'
+        product_id = product_lookup_by_solr(None, product_key)
+        if product_id:
+            print "Found already existing product in SOLR database, removing."
+            connection = Solr(settings.SOLR_URL)
+            product_solr_id = "apparel.product.%s" % product_id
+            connection.delete(id=product_solr_id, commit=True, waitFlush=True)
+            print "%s has been removed from index." % product_solr_id
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         category = get_model('apparel', 'Category').objects.create(name='Category')
         manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
-        product_key = 'http://example.com/example?someproduct=12345'
-        product = get_model('apparel', 'Product').objects.create(
+        product = ProductFactory.create(
             product_name='Product',
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
             published=True,
-            product_key=product_key
+            product_key=product_key,
+            availability=True,
+            product_image=self.django_image_file
         )
+        self.assertIsNotNone(product.product_image)
+        self.assertIsNotNone(get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url)
+        vendorproduct = VendorProductFactory.create(vendor=vendor, product=product, availability=True)
+        del product.default_vendor
+        product_save(product, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(product.id)
+        self.assertIsNotNone(product.default_vendor)
         """product = ProductFactory.create(
             product_name='Product',
             #category=category,
@@ -164,7 +194,8 @@ class TestChromeExtension(TestCase):
         self.assertEqual(response.status_code, 200)
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['product_pk'], 1)
+        self.assertIsNotNone(json_content['product_pk'])
+        self.assertEqual(int(json_content['product_pk']), product.id)
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
@@ -586,3 +617,48 @@ class TestEmbeddingShops(TestCase):
         nginx_key = reverse('embed-shop', args=[1])
         print "Checking cache key for: %s" % nginx_key
         self.assertIsNotNone(cache.get(nginx_key,None))
+
+
+class TestShortLinks(TestCase):
+    def setUp(self):
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='My Store 12')
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.save()
+
+    def test_store_link(self):
+        template = "http://www.anrdoezrs.net/links/4125005/type/dlg/sid/{sid}/http://www.nastygal.com/"
+        store_link = get_model('apparel', 'ShortStoreLink').objects.create(vendor=self.vendor, template=template)
+
+        stats_count = get_model('statistics', 'ProductStat').objects.count()
+        store_link_str = store_link.link()
+        referer = reverse('store-short-link-userid', kwargs={'short_link': store_link_str, 'user_id': self.user.id})
+
+        # Make the call directly to product-track, since the client doesn't follow the redirect made
+        # from template in jQuery
+        url = reverse('product-track', kwargs={'pk': 0, 'page': 'Ext-Store', 'sid': self.user.id})
+        print "requesting url: %s" % url
+        response = self.client.post(url, {'referer': referer}, **{'HTTP_REFERER': referer})
+        self.assertEqual(response.status_code, 200)
+
+        # A ProductStat were created
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count + 1)
+
+        product_stat = get_model('statistics', 'ProductStat').objects.latest("created")
+        self.assertEqual(product_stat.page, 'Ext-Store')
+        self.assertEqual(product_stat.vendor, self.vendor.name)
+        self.assertEqual(product_stat.user_id, self.user.id)
+        self.assertEqual(product_stat.action, 'StoreLinkClick')
+
+    def test_store_link_invalid(self):
+        stats_count = get_model('statistics', 'ProductStat').objects.count()
+        url = reverse('store-short-link-userid', kwargs={'short_link': 'random', 'user_id': self.user.id})
+
+        response = self.client.post(url, follow=False)
+        self.assertEqual(response.status_code, 404)
+
+        # No ProductStat were created
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
+

@@ -497,8 +497,14 @@ SHORT_CONSTANT = 999999
 
 class ShortStoreLinkManager(models.Manager):
     def get_for_short_link(self, short_link, user_id=None):
-        instance = ShortStoreLink.objects.get(pk=(saturate(short_link) - SHORT_CONSTANT))
-
+        calculated_id = None
+        instance = None
+        try:
+            calculated_id = saturate(short_link) - SHORT_CONSTANT
+            instance = ShortStoreLink.objects.get(pk=calculated_id)
+        except:
+            logger.error("Short store link can not be found, Short link: %s and desaturated id: %s" % (short_link, calculated_id))
+            raise ShortStoreLink.DoesNotExist("Unable to find ShirtStoreLink for id:%s" % calculated_id)
         if user_id is None:
             user_id = 0
 

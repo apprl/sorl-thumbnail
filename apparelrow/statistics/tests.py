@@ -212,3 +212,20 @@ class TestProductStat(TestCase):
         vendor = get_model('apparel', 'Vendor').objects.get(pk=3)  # get updated instance of vendor
         self.assertTrue(vendor.is_limit_reached)
         self.assertGreaterEqual(len(mail.outbox), sent_mails + 1)
+
+    def test_extract_short_link_from_url(self):
+        from apparelrow.statistics.utils import extract_short_link_from_url
+        url = u'/s/4C90/234/'
+        self.assertEquals("4C90", extract_short_link_from_url(url, 234))
+        short_url = u'/s/4C91/'
+        self.assertEquals("4C91", extract_short_link_from_url(short_url))
+        short_url_locale_1 = u'en/s/4C92/'
+        self.assertEquals("4C92", extract_short_link_from_url(short_url_locale_1))
+        short_url_locale_2 = u'/sv/s/4C93/'
+        self.assertEquals("4C93", extract_short_link_from_url(short_url_locale_2))
+        short_url_locale_3 = u'en/s/4C94/123'
+        self.assertEquals("4C94", extract_short_link_from_url(short_url_locale_3, 123))
+        short_url_locale_4 = u'/sv/s/4C95/456'
+        self.assertEquals("4C95", extract_short_link_from_url(short_url_locale_4,456))
+        short_url_locale_5 = u'http://staging.apprl.com/sv/s/4C96/'
+        self.assertEquals("4C96", extract_short_link_from_url(short_url_locale_5))

@@ -34,7 +34,7 @@
                     referer: '{{ request.META.HTTP_REFERER }}',
                     sid: '{{ user_id }}',
                     page: '{{ page }}'};
-        jQuery.post('{% url "product-track" 0 page user_id vendor %}', data);
+        jQuery.post('{% url "product-track" 0 page user_id %}', data);
         setTimeout(function() {
             window.location.replace('{{ redirect_url|safe }}');
         }, 1300);
