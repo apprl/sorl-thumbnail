@@ -31,6 +31,9 @@ class Room21NOSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorMixi
             product_type = product_type_array[1] if len(product_type_array) > 1 else product_type_array[0]
             product_type = ' > '.join(product_type.split(" > ")[-2:])
 
+            description = node.xpath('description/text()').extract()[0]
+            name = node.xpath('title/text()').extract()[0]
+
             category = ''
             if google_category or product_type:
                 category = ' > '.join([x for x in [google_category, product_type] if x])
@@ -38,13 +41,13 @@ class Room21NOSpider(XMLFeedSpider, AffiliateMixin, PriceMixin, KeyExtractorMixi
             l = ProductLoader(item=Product(), selector=node)
             l.add_xpath('key', 'link/text()')
             l.add_xpath('sku', 'g:id/text()')
-            l.add_xpath('name', 'title/text()')
+            l.add_value('name', name)
             l.add_value('vendor', self.name)
             l.add_xpath('url', 'link/text()')
             l.add_value('affiliate', self.AFFILIATE_AAN)
-            l.add_xpath('description', 'description/text()')
+            l.add_value('description', description)
             l.add_xpath('brand', 'g:brand/text()')
-            l.add_xpath('colors', 'g:material/text()')
+            l.add_value('colors', name + ' ' + description)
             l.add_value('regular_price', regular_price)
             l.add_value('discount_price', discount_price if discount_price else regular_price)
             l.add_value('currency', currency)

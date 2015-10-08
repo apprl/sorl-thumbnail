@@ -40,7 +40,7 @@ class BooztSESpider(CSVFeedSpider, AffiliateMixin):
         item['description'] = row.get('description')
         item['brand'] = row.get('brand')
         item['gender'] = row.get('TDCategoryName')
-        item['colors'] = row.get('color')
+        item['colors'] = row.get('fields')
         item['regular_price'] = row.get('previousPrice')
         item['discount_price'] = row.get('price')
         item['currency'] = row.get('currency')

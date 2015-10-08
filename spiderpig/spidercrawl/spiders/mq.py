@@ -35,19 +35,21 @@ class MqSpider(XMLFeedSpider, AffiliateMixin):
         else:
             category = None
 
+        description = node.xpath('description/text()').extract()[0]
+        name = node.xpath('name/text()').extract()[0]
+
         l = ProductLoader(item=Product(), selector=node)
         l.add_xpath('key', 'link/text()')
         l.add_xpath('sku', '@id')
-        l.add_xpath('name', 'name/text()')
+        l.add_value('name', name)
         l.add_value('vendor', self.name)
         l.add_xpath('url', 'link/text()')
         l.add_value('affiliate', self.AFFILIATE_AAN)
         l.add_value('category', category)
-        l.add_xpath('description', 'description/text()')
+        l.add_value('description', description)
         l.add_xpath('brand', 'brand/text()')
         l.add_xpath('gender', 'Categories/*[1]/text()')
-        #l.add_xpath('colors', 'colors/text()')
-        l.add_value('colors', 'noop') # TODO: no color field
+        l.add_value('colors', name + " " + description)
         l.add_xpath('regular_price', 'price/text()')
         l.add_xpath('discount_price', 'new_price/text()')
         l.add_xpath('currency', 'currency/text()')

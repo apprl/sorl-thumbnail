@@ -9,18 +9,21 @@ class NividasSpider(XMLFeedSpider, AffiliateMixin, PriceMixin):
     itertag = 'product'
 
     def parse_node(self, response, node):
+        description = node.xpath('product-text-description/text()').extract()[0]
+        name = node.xpath('product-name/text()').extract()[0]
+
         l = ProductLoader(item=Product(), selector=node)
         l.add_xpath('key', 'product-url/text()')
         l.add_xpath('sku', 'product-id/text()')
-        l.add_xpath('name', 'product-name/text()')
+        l.add_value('name', name)
         l.add_value('vendor', self.name)
         l.add_xpath('url', 'product-url/text()')
         l.add_value('affiliate', self.AFFILIATE_AAN)
         l.add_xpath('category', 'product-category/text()')
-        l.add_xpath('description', 'product-text-description/text()')
+        l.add_value('description', description)
         l.add_xpath('brand', 'brand-name/text()')
         l.add_xpath('gender', 'gender/text()')
-        l.add_xpath('colors', 'product-text-description/product-name/text()')
+        l.add_value('colors', name + " " + description)
         l.add_xpath('regular_price', 'price/text()')
         l.add_xpath('discount_price', 'price/text()')
         l.add_value('currency', 'SEK')
