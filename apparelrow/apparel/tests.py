@@ -58,7 +58,6 @@ class TestChromeExtension(TestCase):
             ddl = DomainDeepLinkingFactory.create(domain=domain,vendor__name=vendor,template='http://example.com/my-template')
             #print "Creating DomainDeeplinking %s, %s " % (ddl.id,ddl.domain)
 
-
     def _login(self):
         normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         is_logged_in = self.client.login(username='normal_user', password='normal')
@@ -89,7 +88,6 @@ class TestChromeExtension(TestCase):
 
         response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=weird.com')
         self.assertEqual(response.status_code, 404)
-
 
     """def test_product_lookups(self):
         product0 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/white-twill")
@@ -129,7 +127,6 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_short_link'], 'http://testserver/pd/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
-
     def test_product_lookup_by_url(self):
         self._login()
 
@@ -146,6 +143,7 @@ class TestChromeExtension(TestCase):
             published=True,
             product_key=product_key
         )
+        get_model('apparel', 'VendorProduct').objects.create(product=product, vendor=vendor)
         """product = ProductFactory.create(
             product_name='Product',
             #category=category,
@@ -164,7 +162,7 @@ class TestChromeExtension(TestCase):
         self.assertEqual(response.status_code, 200)
         json_content = json.loads(response.content)
 
-        self.assertEqual(int(json_content['product_pk']), product.id)
+        self.assertEqual(json_content['product_pk'], product.id)
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)

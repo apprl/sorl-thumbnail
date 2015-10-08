@@ -895,7 +895,7 @@ def product_lookup_by_solr(request, key):
     logger.debug("%s results found" % dict['hits'])
     product_id = dict['docs'][0]['django_id']
 
-    return product_id
+    return int(product_id)
 
 def parse_luisaviaroma_fragment(fragment):
     seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)
