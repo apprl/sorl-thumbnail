@@ -274,7 +274,7 @@ def get_product_document(instance, rebuild=False):
     boost = {}
 
     if instance.published == True and instance.category and instance.manufacturer and instance.gender:
-        availability = instance.availability and instance.default_vendor and instance.default_vendor.availability != 0
+        availability = bool(instance.availability and instance.default_vendor and instance.default_vendor.availability != 0)
         discount = False
         price = stored_price = stored_discount = decimal.Decimal('0.0')
         currency = 'EUR'

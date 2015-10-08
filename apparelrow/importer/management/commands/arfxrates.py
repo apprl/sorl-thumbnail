@@ -118,7 +118,7 @@ class Command(BaseCommand):
                         currency=options['currency']
                     )
                 ]
-            except FXRates.DoesNotExist:
+            except FXRate.DoesNotExist:
                 raise CommandError('No fx rate matching base currency %s and currency %s' % (
                     options['base_currency'],
                     options['currency']

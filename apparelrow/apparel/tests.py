@@ -1,5 +1,8 @@
 import json
-from apparelrow.apparel.views import product_lookup_asos_nelly
+from pysolr import Solr
+from sorl.thumbnail import get_thumbnail
+from apparelrow.apparel.search import product_save
+from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr
 import unittest
 
 from django.contrib.auth import get_user_model
@@ -19,6 +22,7 @@ from factories import *
 """ CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestChromeExtension(TestCase):
+    django_image_file = None
 
     def setUp(self):
         domaindeeplinks = [("nelly.com","Nelly"),
@@ -57,6 +61,17 @@ class TestChromeExtension(TestCase):
         for domain,vendor in domaindeeplinks:
             ddl = DomainDeepLinkingFactory.create(domain=domain,vendor__name=vendor,template='http://example.com/my-template')
             #print "Creating DomainDeeplinking %s, %s " % (ddl.id,ddl.domain)
+        from PIL import Image
+        from StringIO import StringIO
+
+        from django.core.files.base import ContentFile
+
+        image_file = StringIO()
+        image = Image.new('RGBA', size=(50,50), color=(256,0,0))
+        image.save(image_file, 'png')
+        image_file.seek(0)
+
+        self.django_image_file = ContentFile(image_file.read(), 'test.png')
 
 
     def _login(self):
@@ -132,20 +147,35 @@ class TestChromeExtension(TestCase):
 
     def test_product_lookup_by_url(self):
         self._login()
-
+        product_key = 'http://example.com/example?someproduct=12345'
+        product_id = product_lookup_by_solr(None, product_key)
+        if product_id:
+            print "Found already existing product in SOLR database, removing."
+            connection = Solr(settings.SOLR_URL)
+            product_solr_id = "apparel.product.%s" % product_id
+            connection.delete(id=product_solr_id, commit=True, waitFlush=True)
+            print "%s has been removed from index." % product_solr_id
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         category = get_model('apparel', 'Category').objects.create(name='Category')
         manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
-        product_key = 'http://example.com/example?someproduct=12345'
-        product = get_model('apparel', 'Product').objects.create(
+        product = ProductFactory.create(
             product_name='Product',
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
             published=True,
-            product_key=product_key
+            product_key=product_key,
+            availability=True,
+            product_image=self.django_image_file
         )
+        self.assertIsNotNone(product.product_image)
+        self.assertIsNotNone(get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url)
+        vendorproduct = VendorProductFactory.create(vendor=vendor, product=product, availability=True)
+        del product.default_vendor
+        product_save(product, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(product.id)
+        self.assertIsNotNone(product.default_vendor)
         """product = ProductFactory.create(
             product_name='Product',
             #category=category,
@@ -164,7 +194,8 @@ class TestChromeExtension(TestCase):
         self.assertEqual(response.status_code, 200)
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['product_pk'], product.id)
+        self.assertIsNotNone(json_content['product_pk'])
+        self.assertEqual(int(json_content['product_pk']), product.id)
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
