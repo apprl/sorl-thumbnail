@@ -370,6 +370,7 @@ def product_detail(request, slug):
             'alternative_url': alternative_url,
             'earning_cut': earning_cut,
             'cost_per_click': cost_per_click,
+            'has_share_image': True
         }, context_instance=RequestContext(request),
     )
 
@@ -781,7 +782,8 @@ def look_detail(request, slug):
             'base_url': base_url,
             'is_liked': is_liked,
             'wrapper_element': wrapper_element,
-            'resolution': '%sx%s' % (look.width, look.height,)
+            'resolution': '%sx%s' % (look.width, look.height,),
+            'has_share_image': True
         },
         context_instance=RequestContext(request),
     )
