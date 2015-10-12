@@ -5,15 +5,15 @@ import decimal
 import os
 import calendar
 import json
-import factory
-import unittest
 from django.db.models import Sum
+from apparelrow.dashboard.factories import *
+
 
 from django.conf import settings
 from django.core import mail
 from django.core import signing
 from django.core.urlresolvers import reverse as _reverse
-from django.test import TransactionTestCase
+from django.test import TransactionTestCase, TestCase
 from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
@@ -1491,7 +1491,6 @@ class TestSalesPerClick(TransactionTestCase):
         sale_amount = 100 * click_cost.amount
         self.assertEqual(get_model('dashboard', 'Sale').objects.get().amount, sale_amount)
 
-
         self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 1)
         user_earning = get_model('dashboard', 'UserEarning').objects.get()
         self.assertEqual(user_earning.user_earning_type, 'apprl_commission')
@@ -1761,6 +1760,7 @@ class TestPayments(TransactionTestCase):
         self.assertEqual(payment.amount, total_query['amount__sum'])
 
 
+
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory',
                    APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA='cache_aggregated_test')
 class TestAggregatedData(TransactionTestCase):
@@ -1905,3 +1905,51 @@ class TestAggregatedData(TransactionTestCase):
             elif data.user_id == 0:
                 self.assertEqual(data.user_name, 'APPRL')
                 self.assertEqual(data.sale_earnings, decimal.Decimal(0))
+
+class TestPaymentHistory(TestCase):
+
+    def test_few_earnings_payments_history(self):
+        user = UserFactory.create()
+        vendor = VendorFactory.create()
+        CutFactory.create(vendor=vendor, group=user.partner_group, cut=0.67)
+
+        for index in range(1, 11):
+            SaleFactory.create(user_id=user.id, vendor=vendor)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(
+            user_earning_type='publisher_sale_commission').count(), 10)
+
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Payment').objects.all().count(), 1)
+
+        payment = get_model('dashboard', 'Payment').objects.all()[0]
+        earnings_dict = json.loads(payment.earnings)
+
+        earnings = get_model('dashboard', 'UserEarning').objects.filter(user_earning_type='publisher_sale_commission')
+        for item in earnings:
+            self.assertIn(item.id, earnings_dict)
+
+    def test_multiple_earnings_payments_history(self):
+        user = UserFactory.create()
+        vendor = VendorFactory.create()
+        CutFactory.create(vendor=vendor, group=user.partner_group, cut=0.67)
+
+        for index in range(1, 101):
+            SaleFactory.create(user_id=user.id, vendor=vendor)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(
+            user_earning_type='publisher_sale_commission').count(), 100)
+
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Payment').objects.all().count(), 1)
+
+        payment = get_model('dashboard', 'Payment').objects.all()[0]
+        earnings_dict = json.loads(payment.earnings)
+
+        earnings = get_model('dashboard', 'UserEarning').objects.filter(user_earning_type='publisher_sale_commission')
+        for item in earnings:
+            self.assertIn(item.id, earnings_dict)
