@@ -1946,10 +1946,3 @@ class TestPaymentHistory(TestCase):
         management.call_command('dashboard_payment', verbosity=0, interactive=False)
 
         self.assertEqual(get_model('dashboard', 'Payment').objects.all().count(), 1)
-
-        payment = get_model('dashboard', 'Payment').objects.all()[0]
-        earnings_dict = json.loads(payment.earnings)
-
-        earnings = get_model('dashboard', 'UserEarning').objects.filter(user_earning_type='publisher_sale_commission')
-        for item in earnings:
-            self.assertIn(item.id, earnings_dict)
