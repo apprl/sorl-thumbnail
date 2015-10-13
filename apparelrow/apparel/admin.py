@@ -446,6 +446,7 @@ admin.site.register(Option, OptionAdmin)
 class VendorAdmin(admin.ModelAdmin):
     list_display = ('name', 'provider')
     raw_id_fields = ['user']
+    readonly_fields = ('is_limit_reached',)
 
 admin.site.register(Vendor, VendorAdmin)
 
