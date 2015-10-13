@@ -365,21 +365,21 @@ def store_admin(request, year=None, month=None):
                     start_date_query = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
                     end_date_query = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
                     amount, _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
-                    product = get_model('apparel', 'Product').objects.get(slug=row.product)
+                    product_name = row.product
+                    try:
+                        product = get_model('apparel', 'Product').objects.get(slug=row.product)
+                        product_name  = product.product_name
+                    except get_model('apparel', 'Product').DoesNotExist:
+                        logger.warning("Product %s does not exist." % row.product)
+
                     dict = {
                         'date': row.created,
                         'amount': amount,
                         'clicks': 0,
-                        'name': product.product_name
+                        'name': product_name
                     }
                     if dict['amount'] > 0:
                         clicks_per_day[date_key] = dict
-                    #clicks_per_day[date_key] = {}
-                    #clicks_per_day[date_key]['date'] = row.created
-                    #clicks_per_day[date_key]['amount'], _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
-                    #clicks_per_day[date_key]['clicks'] = 0
-                    #product = get_model('apparel', 'Product').objects.get(slug=row.product)
-                    #clicks_per_day[date_key]['name'] = product.product_name
                 if date_key in clicks_per_day:
                     clicks_per_day[date_key]['clicks'] += 1
 
