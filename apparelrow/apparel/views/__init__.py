@@ -916,7 +916,7 @@ def product_lookup_asos_nelly(url):
         # get rid of categories for nelly links, only keep product name (last two "/"")
         temp_path = path.rstrip('/') # remove last slash if it exists
         key = temp_path.split('/')[-1] # get the "righest" element after a slash
-
+        key = "/%s/" % key
     elif("asos" in parsedurl.netloc):
         search_result = re.search(r'iid=(\w+)?', parsedurl.query)
         if search_result:
