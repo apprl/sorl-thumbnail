@@ -176,7 +176,8 @@ def get_total_clicks_per_vendor(vendor):
     """
     today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-    return get_model('statistics', 'ProductStat').objects.filter(vendor=vendor).exclude(created__range=(today_min, today_max)).count()
+    return get_model('statistics', 'ProductStat').objects.filter(vendor=vendor, is_valid=True).\
+        exclude(created__range=(today_min, today_max)).count()
 
 def get_user_attributes(user):
     user_id = 0 if not user else user.id
