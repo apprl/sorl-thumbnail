@@ -250,8 +250,10 @@ def link(request):
 
 def get_original_currency_from_sales(vendor):
     currency = "EUR"
-    if len(get_model('dashboard', 'Sale').objects.filter(vendor=vendor)) > 0:
-        currency = get_model('dashboard', 'Sale').objects.filter(vendor=vendor)[0].original_currency
+    click_cost_query = get_model('dashboard', 'ClickCost').objects.filter(vendor=vendor)
+
+    if len(click_cost_query) > 0:
+        currency = click_cost_query[0].currency
     return currency
 
 @login_required
@@ -302,11 +304,32 @@ def store_admin(request, year=None, month=None):
                                       .prefetch_related('products')
 
     accepted_commission = decimal.Decimal(0.00)
-    accepted_query = get_model('advertiser', 'StoreInvoice').objects.filter(is_paid=False, store=store)
+    commission_to_be_invoiced = decimal.Decimal(0.00)
 
-    for row in accepted_query:
-        total, _ = row.get_total()
-        accepted_commission += total
+    if store.vendor.is_cpc:
+        accepted_query = get_model('advertiser', 'StoreInvoice').objects.filter(is_paid=False, store=store)
+
+        for row in accepted_query:
+            total, _ = row.get_total()
+            accepted_commission += total
+
+        to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
+                                              .aggregate(Sum('original_commission'))
+        if to_be_invoiced_query['original_commission__sum']:
+            commission_to_be_invoiced = to_be_invoiced_query['original_commission__sum']
+    elif store.vendor.is_cpo:
+        currency = "EUR"
+
+        invoices = get_model('advertiser', 'StoreInvoice').objects.filter(is_paid=False, store=store)
+
+        for row in invoices:
+            total = row.transactions.aggregate(total=Sum('commission')).get('total', 0)
+            accepted_commission += total
+
+        to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
+                                              .aggregate(Sum('commission'))
+        if to_be_invoiced_query['commission__sum']:
+            commission_to_be_invoiced = to_be_invoiced_query['commission__sum']
 
     monthly_sales = decimal.Decimal(0.00)
     accepted_per_month_query = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING],
@@ -316,12 +339,6 @@ def store_admin(request, year=None, month=None):
 
     if accepted_per_month_query['order_value__sum']:
         monthly_sales = accepted_per_month_query['order_value__sum']
-
-    commission_to_be_invoiced = decimal.Decimal(0.00)
-    to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
-                                              .aggregate(Sum('original_commission'))
-    if to_be_invoiced_query['original_commission__sum']:
-        commission_to_be_invoiced = to_be_invoiced_query['original_commission__sum']
 
     dt1 = request.user.date_joined.date()
     dt2 = datetime.date.today()
@@ -334,7 +351,7 @@ def store_admin(request, year=None, month=None):
     sales_generated = 0
     total_sales_query = get_model('dashboard', 'Sale').objects.filter(vendor=store.vendor,
                                                                     status__gte=get_model('dashboard', 'Sale').PENDING) \
-                                                           .aggregate(amount=Sum('original_amount'))
+                                                           .aggregate(amount=Sum('converted_amount'))
     if 'amount' in total_sales_query and total_sales_query['amount']:
         sales_generated = total_sales_query['amount']
 
