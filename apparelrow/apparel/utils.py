@@ -161,7 +161,7 @@ def get_brand_and_category(look):
             try:
                 yield (u'%s' % (c.product.manufacturer.name,), c.product)
             except:
-                yield (u'', c.product)
+                yield (u'-', c.product)
 
 def set_query_parameter(url, param_name, param_value):
     """
