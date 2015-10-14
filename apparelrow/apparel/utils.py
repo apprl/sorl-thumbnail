@@ -158,8 +158,10 @@ def get_brand_and_category(look):
         if singular:
             yield (u'%s - %s' % (singular, c.product.manufacturer), c.product)
         else:
-            yield (u'%s' % (c.product.manufacturer.name,), c.product)
-
+            try:
+                yield (u'%s' % (c.product.manufacturer.name,), c.product)
+            except:
+                yield (u'', c.product)
 
 def set_query_parameter(url, param_name, param_value):
     """
