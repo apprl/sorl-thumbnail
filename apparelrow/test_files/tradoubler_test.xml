@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report title="Avslut- och leadrapport" name="aAffiliateEventBreakdownReport" time="2015-10-13 15:48">
+	<matrix rowcount="447">
+		<columns>
+			<programName type="string">Program Namn</programName>
+			<currentStatusExcel type="string">Program Prepayment Status</currentStatusExcel>
+			<timeOfVisit type="datetime">Tidpunkt för besöket</timeOfVisit>
+			<timeOfEvent type="datetime">Tidpunkt för event</timeOfEvent>
+			<timeInSession type="string">Tidpunkt i session</timeInSession>
+			<lastModified type="datetime">Tidpunkt Senast uppdaterad</lastModified>
+			<leadNR type="string">Leadnummer</leadNR>
+			<orderNR type="string">Ordernummer</orderNR>
+			<epi1 type="string">EPI EPI 1</epi1>
+			<eventName type="string">Event Namn</eventName>
+			<pendingStatus type="string">Event Status</pendingStatus>
+			<pendingReason type="string">Anledning</pendingReason>
+			<siteName type="string">Webbplats Namn</siteName>
+			<graphicalElementName type="string">Annons Namn</graphicalElementName>
+			<productName type="string">Produktinfo Namn</productName>
+			<productNumber type="string">Produktinfo ID</productNumber>
+			<productNrOf type="string">Produktinfo #</productNrOf>
+			<productValue type="decimal">Produktinfo Produktvärde</productValue>
+			<orderValue type="decimal">Ordervärde</orderValue>
+			<affiliateCommission type="decimal">Ersättning Publisher</affiliateCommission>
+		</columns>
+		<rows>
+			<row>
+				<programName>Boozt.com</programName>
+				<currentStatusExcel>Ok</currentStatusExcel>
+				<timeOfVisit>2015-07-01 15:27:12 UTC+1</timeOfVisit>
+				<timeOfEvent>2015-07-01 15:41:59 UTC+1</timeOfEvent>
+				<timeInSession>Y</timeInSession>
+				<lastModified>2015-07-29 15:42:56 CEST</lastModified>
+				<leadNR></leadNR>
+				<orderNR>BZ3068666</orderNR>
+				<epi1>1-3325062-Ext-Link</epi1>
+				<eventName>Boozt.com</eventName>
+				<pendingStatus>A</pendingStatus>
+				<pendingReason>Accepted by autoapprove</pendingReason>
+				<siteName>Apprl Norge</siteName>
+				<graphicalElementName>Eget grafiskt element</graphicalElementName>
+				<productName></productName>
+				<productNumber></productNumber>
+				<productNrOf></productNrOf>
+				<productValue></productValue>
+				<orderValue>1602.9076</orderValue>
+				<affiliateCommission>352.63968</affiliateCommission>
+			</row>
+			<row>
+				<programName>Boozt.com</programName>
+				<currentStatusExcel>Ok</currentStatusExcel>
+				<timeOfVisit>2015-06-23 18:25:30 UTC+1</timeOfVisit>
+				<timeOfEvent>2015-07-02 20:05:02 UTC+1</timeOfEvent>
+				<timeInSession>N</timeInSession>
+				<lastModified>2015-07-30 20:05:09 CEST</lastModified>
+				<leadNR></leadNR>
+				<orderNR>BZ3074012</orderNR>
+				<epi1>1-3291270-Ext-Link</epi1>
+				<eventName>Boozt.com</eventName>
+				<pendingStatus>A</pendingStatus>
+				<pendingReason>Accepted by autoapprove</pendingReason>
+				<siteName>Apprl Norge</siteName>
+				<graphicalElementName>Eget grafiskt element</graphicalElementName>
+				<productName></productName>
+				<productNumber></productNumber>
+				<productNrOf></productNrOf>
+				<productValue></productValue>
+				<orderValue>1025.7537</orderValue>
+				<affiliateCommission>225.6658</affiliateCommission>
+			</row>
+			<row>
+				<programName>Boozt.com</programName>
+				<currentStatusExcel>Ok</currentStatusExcel>
+				<timeOfVisit>2015-06-23 16:37:47 UTC+1</timeOfVisit>
+				<timeOfEvent>2015-07-02 20:18:49 UTC+1</timeOfEvent>
+				<timeInSession>N</timeInSession>
+				<lastModified>2015-07-30 20:20:10 CEST</lastModified>
+				<leadNR></leadNR>
+				<orderNR>BZ3074062</orderNR>
+				<epi1>1-3291270-Ext-Link</epi1>
+				<eventName>Boozt.com</eventName>
+				<pendingStatus>A</pendingStatus>
+				<pendingReason>Accepted by autoapprove</pendingReason>
+				<siteName>Apprl Norge</siteName>
+				<graphicalElementName>Eget grafiskt element</graphicalElementName>
+				<productName></productName>
+				<productNumber></productNumber>
+				<productNrOf></productNrOf>
+				<productValue></productValue>
+				<orderValue>1502.7133</orderValue>
+				<affiliateCommission>330.59692</affiliateCommission>
+			</row>
+			<row>
+				<programName>Boozt.com</programName>
+				<currentStatusExcel>Ok</currentStatusExcel>
+				<timeOfVisit>2015-07-02 20:15:53 UTC+1</timeOfVisit>
+				<timeOfEvent>2015-07-02 20:20:20 UTC+1</timeOfEvent>
+				<timeInSession>Y</timeInSession>
+				<lastModified>2015-07-30 20:20:59 CEST</lastModified>
+				<leadNR></leadNR>
+				<orderNR>BZ3074061</orderNR>
+				<epi1>1-3261510-Ext-Link</epi1>
+				<eventName>Boozt.com</eventName>
+				<pendingStatus>A</pendingStatus>
+				<pendingReason>Accepted by autoapprove</pendingReason>
+				<siteName>Apprl Norge</siteName>
+				<graphicalElementName>Eget grafiskt element</graphicalElementName>
+				<productName></productName>
+				<productNumber></productNumber>
+				<productNrOf></productNrOf>
+				<productValue></productValue>
+				<orderValue>402.3951</orderValue>
+				<affiliateCommission>88.526924</affiliateCommission>
+			</row>
+			<row>
+				<programName>Boozt.com</programName>
+				<currentStatusExcel>Ok</currentStatusExcel>
+				<timeOfVisit>2015-07-03 08:00:25 UTC+1</timeOfVisit>
+				<timeOfEvent>2015-07-03 09:50:19 UTC+1</timeOfEvent>
+				<timeInSession>N</timeInSession>
+				<lastModified>2015-07-31 09:50:36 CEST</lastModified>
+				<leadNR></leadNR>
+				<orderNR>BZ3075980</orderNR>
+				<epi1>1-3240525-Ext-Link</epi1>
+				<eventName>Boozt.com</eventName>
+				<pendingStatus>A</pendingStatus>
+				<pendingReason>Accepted by autoapprove</pendingReason>
+				<siteName>Apprl</siteName>
+				<graphicalElementName>Eget grafiskt element</graphicalElementName>
+				<productName></productName>
+				<productNumber></productNumber>
+				<productNrOf></productNrOf>
+				<productValue></productValue>
+				<orderValue>4580.286</orderValue>
+				<affiliateCommission>1007.66296</affiliateCommission>
+			</row>
+			<row>
+				<programName>Boozt.com</programName>
+				<currentStatusExcel>Ok</currentStatusExcel>
+				<timeOfVisit>2015-07-03 10:43:20 UTC+1</timeOfVisit>
+				<timeOfEvent>2015-07-03 10:58:35 UTC+1</timeOfEvent>
+				<timeInSession>Y</timeInSession>
+				<lastModified>2015-07-31 10:58:40 CEST</lastModified>
+				<leadNR></leadNR>
+				<orderNR>BZ3076265</orderNR>
+				<epi1>1-3281932-Ext-Link</epi1>
+				<eventName>Boozt.com</eventName>
+				<pendingStatus>A</pendingStatus>
+				<pendingReason>Accepted by autoapprove</pendingReason>
+				<siteName>Apprl Norge</siteName>
+				<graphicalElementName>Eget grafiskt element</graphicalElementName>
+				<productName></productName>
+				<productNumber></productNumber>
+				<productNrOf></productNrOf>
+				<productValue></productValue>
+				<orderValue>1150.8702</orderValue>
+				<affiliateCommission>253.19148</affiliateCommission>
+			</row>
+			<row>
+				<programName>Boozt.com</programName>
+				<currentStatusExcel>Ok</currentStatusExcel>
+				<timeOfVisit>2015-07-03 11:35:46 UTC+1</timeOfVisit>
+				<timeOfEvent>2015-07-03 12:01:43 UTC+1</timeOfEvent>
+				<timeInSession>Y</timeInSession>
+				<lastModified>2015-07-31 12:03:38 CEST</lastModified>
+				<leadNR></leadNR>
+				<orderNR>BZ3076491</orderNR>
+				<epi1>1-3240525-Ext-Link</epi1>
+				<eventName>Boozt.com</eventName>
+				<pendingStatus>A</pendingStatus>
+				<pendingReason>Accepted by autoapprove</pendingReason>
+				<siteName>Apprl</siteName>
+				<graphicalElementName>Eget grafiskt element</graphicalElementName>
+				<productName></productName>
+				<productNumber></productNumber>
+				<productNrOf></productNrOf>
+				<productValue></productValue>
+				<orderValue>780.5384</orderValue>
+				<affiliateCommission>171.71844</affiliateCommission>
+			</row>
+		</rows>
+	</matrix>
+</report>

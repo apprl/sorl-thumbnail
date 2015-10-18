@@ -1267,11 +1267,19 @@ class TestUserEarnings(TransactionTestCase):
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestAffiliateNetworks(TransactionTestCase):
     def setUp(self):
+        FXRate = get_model('importer', 'FXRate')
+        FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
+        FXRate.objects.create(currency='EUR', base_currency='SEK', rate='0.118160')
+        FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
+        FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
+
         self.user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
         self.user.location = 'SE'
         self.user.save()
 
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        self.boozt_se_vendor = get_model('apparel', 'Vendor').objects.create(name='Boozt se')
+        self.boozt_no_vendor = get_model('apparel', 'Vendor').objects.create(name='Boozt no')
 
         for i in range(1, 10):
             get_model('apparel', 'Product').objects.create(sku=str(i))
@@ -1311,6 +1319,21 @@ class TestAffiliateNetworks(TransactionTestCase):
         self.assertAlmostEqual(sale.original_amount, decimal.Decimal('150.55'))
         self.assertAlmostEqual(sale.original_commission, decimal.Decimal('9.03'))
         self.assertGreater(sale.status, sale_model.PENDING)
+
+    def test_tradedoubler_boozt_parser(self):
+        text = open(os.path.join(settings.PROJECT_ROOT, 'test_files/tradoubler_test.xml')).read()
+
+        management.call_command('dashboard_import', 'tradedoubler', data=text, verbosity=0, interactive=False)
+
+        sale_model = get_model('dashboard', 'Sale')
+
+        self.assertEqual(sale_model.objects.filter(affiliate="Tradedoubler").count(), 7)
+
+        boozt_se_sales = sale_model.objects.filter(vendor=self.boozt_se_vendor).count()
+        self.assertEqual(boozt_se_sales, 2)
+
+        boozt_no_sales = sale_model.objects.filter(vendor=self.boozt_no_vendor).count()
+        self.assertEqual(boozt_no_sales, 5)
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
