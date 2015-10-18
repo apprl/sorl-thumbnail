@@ -128,7 +128,10 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
         try:
             product = get_model('apparel', 'Product').objects.get(slug=row['product'])
             row['product_url'] = reverse('product-detail', args=[row['product']])
-            row['product_name'] = product.product_name
+            row['product_name'] = ''
+            if product.manufacturer:
+                row['product_name'] += "%s - " % product.manufacturer.name
+            row['product_name'] += product.product_name if product.product_name else product.slug
             row['product_earning'] = float(int(row['clicks']) * click_cost)
         except get_model('apparel', 'Product').DoesNotExist:
             log.warn("Product %s does not exist" % row['product'])

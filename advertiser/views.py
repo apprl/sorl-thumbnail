@@ -212,7 +212,6 @@ def link(request):
     if not store_id:
         return HttpResponseBadRequest('Missing store_id parameter.')
 
-
     # Old cookie ID
     old_cookie_id = None
     cookie_data = request.get_signed_cookie(get_cookie_name(store_id), default=False)
@@ -256,11 +255,55 @@ def get_original_currency_from_sales(vendor):
         currency = click_cost_query[0].currency
     return currency
 
+def get_top_summary_store(store):
+    Transaction = get_model('advertiser', 'Transaction')
+    accepted_commission = decimal.Decimal(0.00)
+    commission_to_be_invoiced = decimal.Decimal(0.00)
+
+    if store.vendor.is_cpc:
+        accepted_query = get_model('advertiser', 'StoreInvoice').objects.filter(is_paid=False, store=store)
+
+        for row in accepted_query:
+            total, _ = row.get_total()
+            accepted_commission += total
+
+        to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
+                                              .aggregate(Sum('original_commission'))
+        if to_be_invoiced_query['original_commission__sum']:
+            commission_to_be_invoiced = to_be_invoiced_query['original_commission__sum']
+    elif store.vendor.is_cpo:
+        invoices = get_model('advertiser', 'StoreInvoice').objects.filter(is_paid=False, store=store)
+
+        for row in invoices:
+            total = row.transactions.aggregate(total=Sum('commission')).get('total', 0)
+            accepted_commission += total
+
+        to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
+                                              .aggregate(Sum('commission'))
+        if to_be_invoiced_query['commission__sum']:
+            commission_to_be_invoiced = to_be_invoiced_query['commission__sum']
+
+    return accepted_commission, commission_to_be_invoiced
+
+def get_monthly_click_value(store, start_date, end_date):
+    Transaction = get_model('advertiser', 'Transaction')
+    monthly_click_value = decimal.Decimal(0.00)
+    if store.vendor.is_cpc:
+        monthly_click_value_query = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING],
+                                                               cookie_date__gte=start_date,
+                                                               cookie_date__lte=end_date,
+                                                               store_id=store.identifier) \
+                                              .aggregate(Sum('original_commission'))
+        if monthly_click_value_query['original_commission__sum']:
+            monthly_click_value = monthly_click_value_query['original_commission__sum']
+    return monthly_click_value
+
 @login_required
 def store_admin(request, year=None, month=None):
     """
     Administration panel for a store.
     """
+    Transaction = get_model('advertiser', 'Transaction')
     try:
         store = request.user.advertiser_store
     except get_model('advertiser', 'Store').DoesNotExist:
@@ -286,102 +329,38 @@ def store_admin(request, year=None, month=None):
     if end_date >= datetime.date.today():
         end_date_clicks_query = datetime.datetime.combine(
             datetime.date.today() - datetime.timedelta(1), datetime.time(23, 59, 59, 999999))
-    total_clicks_per_month = 0
-    clicks_delivered_per_month = 0
-    clicks_cost_per_month = 0
 
-    currency = get_original_currency_from_sales(store.vendor)
+    currency = "EUR"
 
-    if store.vendor.is_cpc:
-        total_clicks_per_month = get_total_clicks_per_vendor(store.vendor)
-        clicks_delivered_per_month = get_number_clicks(store.vendor, start_date_query, end_date_clicks_query)
-        clicks_cost_per_month, _ = get_clicks_amount(store.vendor, start_date_query, end_date_clicks_query)
+    # Get top summary
+    accepted_commission, commission_to_be_invoiced = get_top_summary_store(store)
 
-    Transaction = get_model('advertiser', 'Transaction')
-    transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
-                                      .filter(created__gte=start_date_query, created__lte=end_date_query) \
-                                      .filter(store_id=store.identifier) \
-                                      .prefetch_related('products')
-
-    accepted_commission = decimal.Decimal(0.00)
-    commission_to_be_invoiced = decimal.Decimal(0.00)
-
-    if store.vendor.is_cpc:
-        accepted_query = get_model('advertiser', 'StoreInvoice').objects.filter(is_paid=False, store=store)
-
-        for row in accepted_query:
-            total, _ = row.get_total()
-            accepted_commission += total
-
-        to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
-                                              .aggregate(Sum('original_commission'))
-        if to_be_invoiced_query['original_commission__sum']:
-            commission_to_be_invoiced = to_be_invoiced_query['original_commission__sum']
-    elif store.vendor.is_cpo:
-        currency = "EUR"
-
-        invoices = get_model('advertiser', 'StoreInvoice').objects.filter(is_paid=False, store=store)
-
-        for row in invoices:
-            total = row.transactions.aggregate(total=Sum('commission')).get('total', 0)
-            accepted_commission += total
-
-        to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
-                                              .aggregate(Sum('commission'))
-        if to_be_invoiced_query['commission__sum']:
-            commission_to_be_invoiced = to_be_invoiced_query['commission__sum']
-
-    monthly_sales = decimal.Decimal(0.00)
-    accepted_per_month_query = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING],
-                                                          created__gte=start_date_query, created__lte=end_date_query,
-                                                          store_id=store.identifier) \
-                                              .aggregate(Sum('order_value'))
-
-    if accepted_per_month_query['order_value__sum']:
-        monthly_sales = accepted_per_month_query['order_value__sum']
-
-    dt1 = request.user.date_joined.date()
-    dt2 = datetime.date.today()
-    start_month = dt1.month
-    end_months = (dt2.year - dt1.year) * 12 + dt2.month + 1
-    dates = [datetime.datetime(year=yr, month=mn, day=1) for (yr, mn) in (
-        ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
-    )]
-
-    sales_generated = 0
-    total_sales_query = get_model('dashboard', 'Sale').objects.filter(vendor=store.vendor,
-                                                                    status__gte=get_model('dashboard', 'Sale').PENDING) \
-                                                           .aggregate(amount=Sum('converted_amount'))
-    if 'amount' in total_sales_query and total_sales_query['amount']:
-        sales_generated = total_sales_query['amount']
-
-    # Chart data (transactions and clicks)
-    data_per_month = {}
-    for day in range(1, (end_date - start_date).days + 2):
-        data_per_month[start_date.replace(day=day)] = [0, 0]
-
-    for transaction in transactions:
-        if transaction.status in [Transaction.ACCEPTED, Transaction.PENDING]:
-            data_per_month[transaction.created.date()][0] += transaction.order_value
-
+    # Get clicks delivered under the given period for the store
     clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_clicks_query) \
                                                            .filter(vendor=store.vendor) \
                                                            .order_by('created')
-    for click in clicks:
-        data_per_month[click.created.date()][1] += 1
 
+    # Initialize variables for CPC stores
+    total_clicks_per_month = 0
+    clicks_delivered_per_month = 0
+    clicks_cost_per_month = 0
     clicks_per_day = {}
     click_cost = None
+
     if store.vendor.is_cpc:
+        currency = get_original_currency_from_sales(store.vendor)
+        total_clicks_per_month = get_total_clicks_per_vendor(store.vendor)
+        clicks_delivered_per_month = get_number_clicks(store.vendor, start_date_query, end_date_clicks_query)
+        clicks_cost_per_month, _ = get_clicks_amount(store.vendor, start_date_query, end_date_clicks_query)
         try:
             click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=store.vendor)
             for row in clicks:
                 #if row.amount > 0 and row.clicks > 0:
                 date_key = datetime.datetime.strftime(row.created, "%Y%m%d")
                 if not date_key in clicks_per_day:
-                    start_date_query = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
-                    end_date_query = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
-                    amount, _ = get_clicks_amount(store.vendor, start_date_query, end_date_query)
+                    row_start_date = datetime.datetime.combine(row.created, datetime.time(0, 0, 0, 0))
+                    row_end_date = datetime.datetime.combine(row.created, datetime.time(23, 59, 59, 999999))
+                    amount, _ = get_clicks_amount(store.vendor, row_start_date, row_end_date)
                     product_name = row.product
                     try:
                         product = get_model('apparel', 'Product').objects.get(slug=row.product)
@@ -405,27 +384,77 @@ def store_admin(request, year=None, month=None):
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             logger.warning("No cost per click defined for vendor %s"%store.vendor)
 
+    # Get monthly click value
+    monthly_click_value = get_monthly_click_value(store, start_date_query, end_date_clicks_query)
 
+    # Get all transactions for store for the given month - CPO
+    transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
+                                      .filter(created__gte=start_date_query, created__lte=end_date_query) \
+                                      .filter(store_id=store.identifier) \
+                                      .prefetch_related('products')
 
-    return render(request, 'advertiser/store_admin.html', {'transactions': transactions,
-                                                          'store': request.user.advertiser_store,
-                                                          'dates': dates,
-                                                          'selected_date': 'abc',
-                                                          'year': year,
-                                                          'month': month,
-                                                          'month_display': month_display,
-                                                          'vendor': store.vendor,
-                                                          'currency': currency,
-                                                          'click_cost': click_cost,
-                                                          'accepted_commission': accepted_commission,
-                                                          'monthly_sales': monthly_sales,
-                                                          'commission_to_be_invoiced': commission_to_be_invoiced,
-                                                          'data_per_month': data_per_month,
-                                                          'clicks_per_day': clicks_per_day,
-                                                          'total_clicks_per_month': total_clicks_per_month,
-                                                          'clicks_delivered_per_month': clicks_delivered_per_month,
-                                                          'clicks_cost_per_month': clicks_cost_per_month,
-                                                          'sales_generated': sales_generated,
+    monthly_sales = decimal.Decimal(0.00)
+    sales_generated = 0
+
+    if store.vendor.is_cpo:
+        accepted_per_month_query = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING],
+                                                              created__gte=start_date_query, created__lte=end_date_query,
+                                                              store_id=store.identifier) \
+                                                  .aggregate(Sum('order_value'))
+
+        if accepted_per_month_query['order_value__sum']:
+            monthly_sales = accepted_per_month_query['order_value__sum']
+
+        total_sales_query = get_model('dashboard', 'Sale').objects.filter(vendor=store.vendor,
+                                                                    status__gte=get_model('dashboard', 'Sale').PENDING) \
+                                                           .aggregate(amount=Sum('converted_amount'))
+        if 'amount' in total_sales_query and total_sales_query['amount']:
+            sales_generated = total_sales_query['amount']
+
+    dt1 = request.user.date_joined.date()
+    dt2 = datetime.date.today()
+    start_month = dt1.month
+    end_months = (dt2.year - dt1.year) * 12 + dt2.month + 1
+    dates = [datetime.datetime(year=yr, month=mn, day=1) for (yr, mn) in (
+        ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
+    )]
+
+    # Chart data (transactions and clicks)
+    data_per_month = {}
+    for day in range(1, (end_date - start_date).days + 2):
+        data_per_month[start_date.replace(day=day)] = [0, 0]
+
+    for transaction in transactions:
+        if transaction.status in [Transaction.ACCEPTED, Transaction.PENDING]:
+            data_per_month[transaction.created.date()][0] += transaction.order_value
+
+    for click in clicks:
+        data_per_month[click.created.date()][1] += 1
+
+    return render(request, 'advertiser/store_admin.html', { # General data
+                                                            'transactions': transactions,
+                                                            'store': request.user.advertiser_store,
+                                                            'dates': dates,
+                                                            'year': year,
+                                                            'month': month,
+                                                            'month_display': month_display,
+                                                            'vendor': store.vendor,
+                                                            'currency': currency,
+                                                            'accepted_commission': accepted_commission,
+                                                            'commission_to_be_invoiced': commission_to_be_invoiced,
+                                                            'data_per_month': data_per_month,
+
+                                                            # CPO data
+                                                            'sales_generated': sales_generated,
+                                                            'monthly_sales': monthly_sales,
+
+                                                            # CPC data
+                                                            'click_cost': click_cost,
+                                                            'clicks_delivered_per_month': clicks_delivered_per_month,
+                                                            'monthly_click_value': monthly_click_value,
+                                                            'clicks_cost_per_month': clicks_cost_per_month,
+                                                            'total_clicks_per_month': total_clicks_per_month,
+                                                            'clicks_per_day': clicks_per_day,
                                                           })
 
 @login_required
