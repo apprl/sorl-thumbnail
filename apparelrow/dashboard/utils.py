@@ -125,16 +125,27 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
                """, values)
     data = dictfetchall(cursor)
     for row in data:
-        try:
-            product = get_model('apparel', 'Product').objects.get(slug=row['product'])
+        if row['product']:
+            row['product_name'] = row['product']
             row['product_url'] = reverse('product-detail', args=[row['product']])
-            row['product_name'] = ''
-            if product.manufacturer:
-                row['product_name'] += "%s - " % product.manufacturer.name
-            row['product_name'] += product.product_name if product.product_name else product.slug
-            row['product_earning'] = float(int(row['clicks']) * click_cost)
-        except get_model('apparel', 'Product').DoesNotExist:
-            log.warn("Product %s does not exist" % row['product'])
+            row['product_url'] = reverse('product-detail', args=[row['product']])
+            try:
+                product = get_model('apparel', 'Product').objects.get(slug=row['product'])
+                row['product_name'] = ''
+                if product.manufacturer:
+                    row['product_name'] += "%s - " % product.manufacturer.name
+                row['product_name'] += product.product_name if product.product_name else product.slug
+            except get_model('apparel', 'Product').DoesNotExist:
+                log.warn("Product %s does not exist" % row['product'])
+        else:
+            row['product_name'] = "Other clicks to %s page" % row['vendor']
+            row['product_url'] = ''
+            try:
+                vendor = get_model('apparel', 'Vendor').objects.get(name=row['vendor'])
+                row['product_url'] = '%s?store=%s' % (reverse('shop'), vendor.id)
+            except:
+                log.warn("Vendor %s does not exist" % row['vendor'])
+        row['product_earning'] = float(int(row['clicks']) * click_cost)
     return data
 
 def get_product_thumbnail_and_link(product):
