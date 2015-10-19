@@ -230,7 +230,7 @@ class TestProductStat(TestCase):
         short_url_locale_5 = u'http://staging.apprl.com/sv/s/4C96/'
         self.assertEquals("4C96", extract_short_link_from_url(short_url_locale_5))
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="NO",VENDOR_LOCATION_MAPPING={"PPC Vendor SE":["SE"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=False, VENDOR_LOCATION_MAPPING={"PPC Vendor SE": ["SE"], "default": ["ALL","SE","NO","US"],})
     def test_valid_clicks_location(self):
         ip_pool = ()
 
