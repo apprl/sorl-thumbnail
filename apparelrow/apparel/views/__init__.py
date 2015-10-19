@@ -902,21 +902,49 @@ def product_lookup_by_solr(request, key):
 
     return int(product_id)
 
-def parse_luisaviaroma_fragment(fragment):
-    seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)
-    collectionId = re.search(r'CollectionId=(\w+)?', fragment).group(1)
-    itemId = re.search(r'ItemId=(\w+)?', fragment).group(1).zfill(3)
-    return "%s-%s%s" % (seasonId, collectionId, itemId)
+def product_lookup_solr_fragment(key, vendor_id=None):
+    logger.info("Trying to lookup %s from SOLR." % key)
+    kwargs = {'fq': ['product_key:*%s*' % (key,)], 'rows':1, 'django_ct': "apparel.product"}
+    if vendor_id:
+        kwargs['fq'].append('store_id:\"%s\"' % (vendor_id,))
+    connection = Solr(settings.SOLR_URL)
+    result = connection.search("*", **kwargs)
 
-def product_lookup_asos_nelly(url):
+    dict = result.__dict__
+    logger.info("Query executed in %s milliseconds" % dict['qtime'])
+
+    if dict['hits'] < 1:
+        logger.info("No results found for key %s." % key)
+        return None
+    logger.info("%s results found" % dict['hits'])
+    product_id = dict['docs'][0]['django_id']
+
+    return int(product_id)
+
+def parse_luisaviaroma_fragment(fragment):
+    try:
+        seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)
+        collectionId = re.search(r'CollectionId=(\w+)?', fragment).group(1)
+        itemId = re.search(r'ItemId=(\w+)?', fragment).group(1).zfill(3)
+        return "%s-%s%s" % (seasonId, collectionId, itemId)
+    except AttributeError:
+        return None
+
+def product_lookup_asos_nelly(url, is_nelly_product=False):
     parsedurl = urlparse.urlsplit(url)
     path = parsedurl.path
     key = None
+    vendor_id = None
     if("nelly" in parsedurl.netloc):
-        # get rid of categories for nelly links, only keep product name (last two "/"")
-        temp_path = path.rstrip('/') # remove last slash if it exists
-        key = temp_path.split('/')[-1] # get the "righest" element after a slash
-        key = "/%s/" % key
+        if is_nelly_product:
+            # get rid of categories for nelly links, only keep product name (last two "/"")
+            temp_path = path.rstrip('/') # remove last slash if it exists
+            key = temp_path.split('/')[-1] # get the "righest" element after a slash
+            key = "/%s/" % key
+            try:
+                vendor_id = get_model('apparel', 'Vendor').objects.get(name="Nelly").id
+            except get_model('apparel', 'Vendor').DoesNotExist:
+                logger.warning("Vendor Nelly does not exist")
     elif("asos" in parsedurl.netloc):
         search_result = re.search(r'iid=(\w+)?', parsedurl.query)
         if search_result:
@@ -931,9 +959,10 @@ def product_lookup_asos_nelly(url):
             key = url
 
     if key:
-        products = extract_apparel_product_with_url(key)
-        if len(products) >= 1:
-            return products[0].pk
+        product_pk = product_lookup_solr_fragment(key, vendor_id)
+        if product_pk:
+            return product_pk
+
     return None
     #json_data = json.loads(products[0].json)
     #return json_data.get('site_product', None)
@@ -949,6 +978,8 @@ def product_lookup(request):
         product_pk = None
         logger.info("No clean Product pk extracted.")
 
+    is_nelly_product = request.GET.get('is_product', False)
+
     original_key = key
     if key and not product_pk:
         product_pk = product_lookup_by_solr(request, key)
@@ -963,7 +994,7 @@ def product_lookup(request):
             product_pk = product_lookup_by_solr(request, key)
             if not product_pk:
                 logger.info("Failed to extract product from solr for %s" % key)
-                product_pk = product_lookup_asos_nelly(original_key)
+                product_pk = product_lookup_asos_nelly(original_key, is_nelly_product)
             else:
                 logger.info("Successfully found product in SOLR for key %s" % key)
         else:
