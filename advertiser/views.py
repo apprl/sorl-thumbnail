@@ -62,7 +62,7 @@ def pixel(request):
     # TODO: do we need to verify domain?
 
     # Load models
-    Transaction = get_model('advertiser', 'Transaction')
+    transaction_model = get_model('advertiser', 'Transaction')
     Product = get_model('advertiser', 'Product')
     Store = get_model('advertiser', 'Store')
     Cookie = get_model('advertiser', 'Cookie')
@@ -75,11 +75,11 @@ def pixel(request):
         pass
 
     # Cookie data
-    status = Transaction.INVALID
+    status = transaction_model.INVALID
     cookie_datetime = custom = None
     cookie_data = request.get_signed_cookie(get_cookie_name(store_id), default=False)
     if cookie_data and store:
-        status = Transaction.TOO_OLD
+        status = transaction_model.TOO_OLD
         cookie_datetime, cookie_id = cookie_data.split('|')
         cookie_datetime = dateutil.parser.parse(cookie_datetime)
         try:
@@ -87,7 +87,7 @@ def pixel(request):
 
             if cookie_datetime + datetime.timedelta(days=store.cookie_days) >= timezone.now():
                 custom = cookie_instance.custom
-                status = Transaction.PENDING
+                status = transaction_model.PENDING
         except Cookie.DoesNotExist as e:
             email_body = render_to_string('advertiser/email_default_error.txt', locals())
             mail_superusers('Advertiser Pixel Warning: could not find cookie in database', email_body)
@@ -126,9 +126,9 @@ def pixel(request):
 
     # Handle exception when there is more than one transaction retrieved from the query
     try:
-        transaction, created = Transaction.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
-    except Transaction.MultipleObjectsReturned, ex:
-        duplicates = Transaction.objects.filter(store_id=store_id, order_id=order_id)
+        transaction, created = transaction_model.objects.get_or_create(store_id=store_id, order_id=order_id, defaults=defaults)
+    except transaction_model.MultipleObjectsReturned, ex:
+        duplicates = transaction_model.objects.filter(store_id=store_id, order_id=order_id)
         logger.warning('Multiple transactions returned for store %s and order %s. Ids for duplicates are [%s].' % (store_id, order_id, ",".join(duplicates.values_list('id',flat=True))) )
             # Return 1x1 transparent pixel
         content = b'GIF89a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;'
@@ -144,7 +144,7 @@ def pixel(request):
                 setattr(transaction, attr, val)
         transaction.save()
     else:
-        if transaction.status == Transaction.PENDING:
+        if transaction.status == transaction_model.PENDING:
             defaults.update({'order_id': order_id, 'store_id': store_id, 'pk': transaction.pk})
             email_body = render_to_string('advertiser/email_success.txt',
                                           {'defaults': defaults, 'request': request})
@@ -256,7 +256,7 @@ def get_original_currency_from_sales(vendor):
     return currency
 
 def get_top_summary_store(store):
-    Transaction = get_model('advertiser', 'Transaction')
+    transaction_model = get_model('advertiser', 'Transaction')
     accepted_commission = decimal.Decimal(0.00)
     commission_to_be_invoiced = decimal.Decimal(0.00)
 
@@ -267,7 +267,7 @@ def get_top_summary_store(store):
             total, _ = row.get_total()
             accepted_commission += total
 
-        to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
+        to_be_invoiced_query = transaction_model.objects.filter(status=transaction_model.ACCEPTED, store_id=store.identifier, invoice=None) \
                                               .aggregate(Sum('original_commission'))
         if to_be_invoiced_query['original_commission__sum']:
             commission_to_be_invoiced = to_be_invoiced_query['original_commission__sum']
@@ -278,7 +278,8 @@ def get_top_summary_store(store):
             total = row.transactions.aggregate(total=Sum('commission')).get('total', 0)
             accepted_commission += total
 
-        to_be_invoiced_query = Transaction.objects.filter(status=Transaction.ACCEPTED, store_id=store.identifier, invoice=None) \
+        to_be_invoiced_query = transaction_model.objects.filter(status=transaction_model.ACCEPTED,
+                                                                store_id=store.identifier, invoice=None) \
                                               .aggregate(Sum('commission'))
         if to_be_invoiced_query['commission__sum']:
             commission_to_be_invoiced = to_be_invoiced_query['commission__sum']
@@ -286,10 +287,11 @@ def get_top_summary_store(store):
     return accepted_commission, commission_to_be_invoiced
 
 def get_monthly_click_value(store, start_date, end_date):
-    Transaction = get_model('advertiser', 'Transaction')
+    transaction_model = get_model('advertiser', 'Transaction')
     monthly_click_value = decimal.Decimal(0.00)
     if store.vendor.is_cpc:
-        monthly_click_value_query = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING],
+        monthly_click_value_query = transaction_model.objects.filter(status__in=[transaction_model.ACCEPTED,
+                                                                                 transaction_model.PENDING],
                                                                cookie_date__gte=start_date,
                                                                cookie_date__lte=end_date,
                                                                store_id=store.identifier) \
@@ -303,7 +305,7 @@ def store_admin(request, year=None, month=None):
     """
     Administration panel for a store.
     """
-    Transaction = get_model('advertiser', 'Transaction')
+    transaction_model = get_model('advertiser', 'Transaction')
     try:
         store = request.user.advertiser_store
     except get_model('advertiser', 'Store').DoesNotExist:
@@ -388,7 +390,8 @@ def store_admin(request, year=None, month=None):
     monthly_click_value = get_monthly_click_value(store, start_date_query, end_date_clicks_query)
 
     # Get all transactions for store for the given month - CPO
-    transactions = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING, Transaction.REJECTED]) \
+    transactions = transaction_model.objects.filter(status__in=[transaction_model.ACCEPTED, transaction_model.PENDING,
+                                                                transaction_model.REJECTED]) \
                                       .filter(created__gte=start_date_query, created__lte=end_date_query) \
                                       .filter(store_id=store.identifier) \
                                       .prefetch_related('products')
@@ -397,7 +400,8 @@ def store_admin(request, year=None, month=None):
     sales_generated = 0
 
     if store.vendor.is_cpo:
-        accepted_per_month_query = Transaction.objects.filter(status__in=[Transaction.ACCEPTED, Transaction.PENDING],
+        accepted_per_month_query = transaction_model.objects.filter(status__in=[transaction_model.ACCEPTED,
+                                                                                transaction_model.PENDING],
                                                               created__gte=start_date_query, created__lte=end_date_query,
                                                               store_id=store.identifier) \
                                                   .aggregate(Sum('order_value'))
@@ -425,7 +429,7 @@ def store_admin(request, year=None, month=None):
         data_per_month[start_date.replace(day=day)] = [0, 0]
 
     for transaction in transactions:
-        if transaction.status in [Transaction.ACCEPTED, Transaction.PENDING]:
+        if transaction.status in [transaction_model.ACCEPTED, transaction_model.PENDING]:
             data_per_month[transaction.created.date()][0] += transaction.order_value
 
     for click in clicks:
@@ -498,7 +502,7 @@ def store_admin_reject(request, transaction_id):
                                                                        'message': message,
                                                                        'store_id': transaction.store_id,
                                                                        'order_id': transaction.order_id})
-        mail_superusers('Transaction rejected', email_body)
+        mail_superusers('transaction_model rejected', email_body)
 
     return render(request, 'advertiser/modal_reject.html', {'transaction': transaction})
 
