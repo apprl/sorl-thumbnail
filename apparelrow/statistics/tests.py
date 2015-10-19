@@ -230,44 +230,32 @@ class TestProductStat(TestCase):
         short_url_locale_5 = u'http://staging.apprl.com/sv/s/4C96/'
         self.assertEquals("4C96", extract_short_link_from_url(short_url_locale_5))
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="NO",VENDOR_LOCATION_MAPPING={"PPC Vendor SE":["SE"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="DK",VENDOR_LOCATION_MAPPING={"PPC Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
     def test_valid_clicks_location(self):
-        ip_pool = ()
-
-        # ALL
-        for index in range(0,10):
-            ip_pool += ('194.224.40.17%s' % index,)
-        # NO
-        for index in range(0,10):
-            ip_pool += ('2.150.59.15%s' % index,)
-        # US
-        for index in range(0,10):
-            ip_pool += ('66.249.64.15%s' % index,)
-        # SE
-        for index in range(0,10):
-            ip_pool += ('109.104.22.8%s' % index,)
 
         # Vendor Market: ["SE"]
-        vendor = VendorFactory.create(name="PPC Vendor SE", is_cpc=True, is_cpo=False)
+        vendor = VendorFactory.create(name="PPC Vendor DK", is_cpc=True, is_cpo=False)
         product = ProductFactory.create(slug="product")
         VendorProductFactory.create(vendor=vendor, product=product)
 
-        for ip in ip_pool:
-            ProductStatFactory.create(ip=ip, vendor=vendor.name, product=product.slug)
+        clicks = 10
+        for i in range(clicks):
+            ProductStatFactory.create(ip="1.2.3.4", vendor=vendor.name, product=product.slug)
 
-        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), len(ip_pool))
-        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug, is_valid=True).count(), 10)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug, is_valid=True).count(), clicks)
 
         # Vendor Market: ["ALL","SE","NO","US"]
         all_vendor = VendorFactory.create(name="PPC Vendor default", is_cpc=True, is_cpo=False)
         other_product = ProductFactory.create(slug='other-product')
         VendorProductFactory.create(vendor=all_vendor, product=other_product)
 
-        for ip in ip_pool:
-            ProductStatFactory.create(ip=ip, vendor=all_vendor.name, product=other_product.slug)
+        for i in range(clicks):
+            ProductStatFactory.create(ip="5.6.7.8", vendor=all_vendor.name, product=other_product.slug)
 
-        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), len(ip_pool))
-        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), len(ip_pool))
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), 0)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=False).count(), clicks)
 
 
 
