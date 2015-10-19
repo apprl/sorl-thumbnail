@@ -69,6 +69,7 @@ LANGUAGES = (
 LANGUAGES_DISPLAY = (
     ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
+    ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
 )
 SHORT_LANGUAGES = (
@@ -80,6 +81,7 @@ SHORT_LANGUAGES = (
 SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
+    ('da', gettext(u'Dnk (DKK)')),
     ('no', gettext(u'Nor (NOK)')),
 )
 SHORT_LANGUAGES_LIST_DISPLAY = ('en','sv','no')
@@ -125,6 +127,7 @@ VENDOR_LOCATION_MAPPING = {
 
 LOCATION_MAPPING = (
     ('SE', gettext('Sweden (SEK)')),
+    ('DK', gettext('Denmark (DKK)')),
     ('NO', gettext('Norway (NOK)')),
     ('US', gettext('USA (USD)')),
     ('ALL', gettext('International (USD)')),
@@ -132,7 +135,8 @@ LOCATION_MAPPING = (
 
 LOCATION_LANGUAGE_MAPPING = (
                              ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
-                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[2]),
+                             ("DK", gettext("Denmark (DKK)"), LANGUAGES_DISPLAY[2]),
+                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[3]),
                              ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
                              ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
 )
