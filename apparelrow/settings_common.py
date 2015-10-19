@@ -119,7 +119,7 @@ VENDOR_LOCATION_MAPPING = {
     "QVC":["US"],
     "Room 21 no":["NO"],
     "Rum 21 se":["SE"],
-    "default":["ALL","SE","NO","US"],
+    "default":["ALL","SE","NO","US","DK"],
 }
 
 LOCATION_MAPPING = (
