@@ -370,14 +370,14 @@ def store_admin(request, year=None, month=None):
                     except get_model('apparel', 'Product').DoesNotExist:
                         logger.warning("Product %s does not exist." % row.product)
 
-                    dict = {
+                    temp_dict = {
                         'date': row.created,
                         'amount': amount,
                         'clicks': 0,
                         'name': product_name
                     }
-                    if dict['amount'] > 0:
-                        clicks_per_day[date_key] = dict
+                    if temp_dict['amount'] > 0:
+                        clicks_per_day[date_key] = temp_dict
                 if date_key in clicks_per_day:
                     clicks_per_day[date_key]['clicks'] += 1
 
