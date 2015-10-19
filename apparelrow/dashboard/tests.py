@@ -1469,11 +1469,11 @@ class TestSalesPerClick(TransactionTestCase):
         yesterday = (datetime.date.today() - datetime.timedelta(1))
         ip = "192.128.2.3"
         for i in range(0, 52):
-            get_model('statistics', 'ProductStat').objects.create(product=self.product.product_name, page="BuyReferral",
+            get_model('statistics', 'ProductStat').objects.create(product=self.product.slug, page="BuyReferral",
                                                                   user_id=self.user.id, vendor=self.vendor.name,
                                                                   ip=ip, created=yesterday)
         for i in range(0, 48):
-            get_model('statistics', 'ProductStat').objects.create(product=self.product3.product_name, page="BuyReferral",
+            get_model('statistics', 'ProductStat').objects.create(product=self.product3.slug, page="BuyReferral",
                                                                   user_id=self.user.id, vendor=self.vendor.name,
                                                                   ip=ip, created=yesterday)
         management.call_command('clicks_summary', verbosity=0, interactive=False)
