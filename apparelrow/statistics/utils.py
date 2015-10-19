@@ -45,9 +45,9 @@ def get_country_by_ip_string(ip_string):
     try:
         resp = requests.get(settings.GEOIP_URL % ip_string,timeout=1.0)
         json_obj = resp.json()
-    except Timeout,msg:
+    except Timeout, msg:
         log.warning('Timeout occurred in geoip lookup function. > 1000ms response time. Service down? [%s]' % msg)
-    except Exception,msg:
+    except Exception, msg:
         log.warning('Reply from geoip service not complient with json? [%s]' % msg)
 
     if json_obj and json_obj.get("iso_code",None):

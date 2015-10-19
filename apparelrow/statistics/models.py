@@ -95,7 +95,6 @@ def productstat_post_save(sender, instance, created, **kwargs):
     """
 
     # Only do this check if the instance is created and the instance is valid. If not valid there is not really any point.
-    # logger.info("Signal for post save reached")
     if created and instance.is_valid:
         try:
             product = Product.objects.get(slug=instance.product)
@@ -106,10 +105,11 @@ def productstat_post_save(sender, instance, created, **kwargs):
                 vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor_name, [])
 
                 logger.info("Click verification: %s belongs to market for vendor %s" % (country, vendor_name))
-                if len(vendor_markets) == 0:
+                if not vendor_markets or len(vendor_markets) == 0:
                     vendor_markets = settings.VENDOR_LOCATION_MAPPING.get("default")
+                    logger.info("Click verification: No vendor market entry for vendor %s, falling back on default." % (vendor_name))
                 if country not in vendor_markets:
-                    logger.info("%s does not belong to market for vendor %s" % (country, vendor_name))
+                    logger.info("%s does not belong to market for vendor %s, %s" % (country, vendor_name,vendor_markets))
                     instance.is_valid = False
                     instance.vendor = vendor_name
                     instance.save()

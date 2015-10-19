@@ -257,5 +257,35 @@ class TestProductStat(TestCase):
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), 0)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=False).count(), clicks)
 
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="ALL",VENDOR_LOCATION_MAPPING={"PPC Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+    def test_clicks_from_unmapped_location(self):
+
+        # Vendor Market: ["SE"]
+        vendor = VendorFactory.create(name="PPC Vendor DK", is_cpc=True, is_cpo=False)
+        product = ProductFactory.create(slug="product")
+        VendorProductFactory.create(vendor=vendor, product=product)
+
+        clicks = 1
+        for i in range(clicks):
+            ProductStatFactory.create(ip="1.2.3.4", vendor=vendor.name, product=product.slug)
+
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug, is_valid=True).count(), 0)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug, is_valid=False).count(), 1)
+
+        # Vendor Market: ["ALL","SE","NO","US"]
+        all_vendor = VendorFactory.create(name="PPC Vendor default", is_cpc=True, is_cpo=False)
+        other_product = ProductFactory.create(slug='other-product')
+        VendorProductFactory.create(vendor=all_vendor, product=other_product)
+
+        for i in range(clicks):
+            ProductStatFactory.create(ip="5.6.7.8", vendor=all_vendor.name, product=other_product.slug)
+
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=False).count(), 0)
+
+
+
 
 
