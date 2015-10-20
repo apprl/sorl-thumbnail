@@ -29,23 +29,25 @@
       position: absolute;
       top: 50%;
       left: 0px;
-      .translate(0, -50%);
-      width: 40px;
-      height: auto;
       z-Index: 10;
       cursor: pointer;
       display: none;
+      img {
+        width: 30px;
+        height: auto;
+      }
     }
     .next {
       position: absolute;
       top: 50%;
       right: 0px;
-      .translate(0, -50%);
-      width: 40px;
-      height: auto;
       z-Index: 10;
       cursor: pointer;
       display: none;
+      img {
+        width: 30px;
+        height: auto;
+      }
     }
   }
 }
@@ -56,22 +58,12 @@
   position: relative;
   top: 50%;
   transform: translate(0, -50%);
-  .previous {
-    display: block;
-    /*position: absolute;*/
-    top: 50%;
-    /*transform: translate(0, -50%);*/
-    left: -10px;
-  }
-  .next {
-    display: block;
-    /*position: absolute;*/
-    top: 50%;
-    /*transform: translate(0, -50%);*/
-    right: -10px;
-  }
+
   .product-list {
     position: relative;
+    overflow:hidden;
+    top: 50%;
+    transform: translate(0, -50%);
   }
   .col-product-item {
     float: left;
@@ -111,8 +103,8 @@
       top: 50%;
       left: 50%;
       right: auto;
-      width: 50%;
-      min-width: 170px;
+      width: 70%;
+      min-width: 110px;
       z-index: 2;
       .translate(-50%, -50%);
       .btn {

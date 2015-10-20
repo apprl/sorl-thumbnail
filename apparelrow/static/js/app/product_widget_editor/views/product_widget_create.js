@@ -16,7 +16,6 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:product_display', this.product_display, this);
         App.Events.on('widget:touchmenu', this.alter_buttons, this);
         App.Events.on('product:delete', function() {
-            this.update_title(-1);
             this.indexes.splice(this.indexes.indexOf(this.current_index), 1);
             for (var i=0; i<this.indexes.length; i++) {
                 if (this.indexes[i] > this.current_index) this.indexes[i]--;
@@ -24,6 +23,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             if (this.current_index > 0) {
                 this.current_index--;
             }
+            this.update_title(-1);
             this.resize();
         }, this);
 
@@ -32,6 +32,9 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
         this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+
+
+        this.num_multi = 2;
 
         // ProductWidget editor popup
         this.product_widget_edit_popup = new App.Views.ProductWidgetEditPopup({parent_view: this});
@@ -124,16 +127,34 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         val = val == undefined ? nr + delta : val;
 
         $title.html($title.html().replace(nr, val));
-        // Hide/show slide-controls
-        $('.previous, .next').toggle(val > 1);
+    },
+    toggle_navigation: function() {
+        $ul = this.$productlist.find('ul.product-list');
+        if (external_product_widget_type == 'single') {
+            if (this.model.components.length > 0) {
+                var index = this.indexes.indexOf(this.current_index);
+                $('.next').toggle(index < this.indexes.length-1);
+                $('.previous').toggle(index > 0);
+            } else {
+                $('.previous, .next').toggle(false);
+            }
+        } else {
+            if (this.model.components.length > this.num_multi) {
+                var childwidth = $ul.parent().width()/this.num_multi;
+                $('.next').toggle(Math.round(($ul.width()+$ul.position().left)/childwidth) > this.num_multi);
+                $('.previous').toggle(Math.round($ul.position().left) != 0);
+            } else {
+                $('.previous, .next').toggle(false);
+            }
+        }
     },
     reset: function() {
         this.model.components.each(_.bind(function (model) {
             this.model.components.remove(model);
             model.destroy();
         }), this);
-        this.update_title(0, 0);
         this.$container.find('ul').children().remove();
+        this.update_title(0, 0);
     },
     resize: function() {
         var window_height = $(window).height(),
@@ -148,11 +169,26 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         } else {
             this.$productlist.width(this.$container.width()*0.7).height(this.$container.width()*0.7*imageratio);
         }
-        this.$productlist.find('ul.product-list').width(this.model.components.length*this.$productlist.width()).css('left', -1*this.indexes.indexOf(this.current_index)*this.$productlist.width());
-        this.$productlist.find('ul.product-list img.fake-product-image').width(this.$productlist.width()).height(this.$productlist.height());
-        var controlpos = Math.max(5, (this.$container.width() - this.$productlist.width())/2 - this.$controls[0].width());
+        var controlpos;
+        if (external_product_widget_type == 'single') {
+            this.$productlist.find('ul.product-list').width(this.model.components.length*this.$productlist.width()).css('left', -1*this.indexes.indexOf(this.current_index)*this.$productlist.width());
+            this.$productlist.find('ul.product-list img.fake-product-image').width(this.$productlist.width()).height(this.$productlist.height());
+            controlpos = Math.max(5, (this.$container.width() - this.$productlist.width())/2 - this.$controls[0].width());
+        } else {
+            this.$productlist.find('ul.product-list').width(this.model.components.length*this.$productlist.width()/this.num_multi);
+
+            this.$productlist.find('ul.product-list img.fake-product-image').width(this.$productlist.width()/this.num_multi).height(this.$productlist.height()/this.num_multi);
+            if (this.model.components.length > this.num_multi) {
+                this.$productlist.find('ul.product-list').css('left',  Math.max(-1*(this.indexes.length-this.num_multi)*this.$productlist.width()/this.num_multi, -1*this.indexes.indexOf(this.current_index)*this.$productlist.width()/this.num_multi));
+            } else {
+                this.$productlist.find('ul.product-list').css('left', 0);
+            }
+
+            controlpos = Math.max(5, (this.$container.width() - this.$productlist.width())/2 - this.$controls[0].width());
+        }
         this.$controls[0].css('left', controlpos);
         this.$controls[1].css('right', controlpos);
+        this.toggle_navigation();
     },
     highlight_last: function() {
         var $ul = this.$productlist.find('ul.product-list');
@@ -174,7 +210,6 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.model._dirty = true;
     },
     add_component: function(model, collection) {
-        this.update_title(1);
         var view = new App.Views.ProductWidgetComponentProduct({ model: model, collection: collection });
         var i;
         if (!this.indexes.length) {
@@ -189,6 +224,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         } else {
             this.$('.product-list-container ul.product-list li.col-product-item:eq('+i+')').after(view.render().el);
         }
+        this.update_title(1);
     },
     publish_product_widget: function(values) {
         this.model.set('published', true);
@@ -202,11 +238,13 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         if (this.running) return;
         var $ul = this.$productlist.find('ul.product-list');
         var childwidth = $ul.parent().width();
+        if (external_product_widget_type == 'multiple') {
+            childwidth = childwidth/this.num_multi;
+        }
         this.running = true;
         var newleft = $ul.position().left + direction*childwidth;
-
         var i = this.indexes.indexOf(this.current_index) - direction;
-        if (newleft > 0) {
+        /*if (newleft > 0) {
             $ul.children('li.col-product-item').last().detach().prependTo($ul);
             $ul.css('left', ($ul.position().left - childwidth) + 'px');
             this.indexes.unshift(this.indexes.pop());
@@ -216,12 +254,12 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             $ul.css('left', ($ul.position().left + childwidth) + 'px');
             this.indexes.push(this.indexes.shift());
             i = this.indexes.length-1;
-        }
+        }*/
 
         this.current_index = this.indexes[i];
 
         var self = this;
-        $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { self.running = false; }});
+        $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() {self.toggle_navigation(); self.running = false; }});
     },
     delete_product_widget: function() {
         this.model._dirty = false;
