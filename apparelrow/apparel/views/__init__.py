@@ -13,6 +13,7 @@ import decimal
 import re
 import tldextract
 
+from solrq import Q as SQ
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
@@ -44,7 +45,8 @@ from apparelrow.apparel.models import Brand, Product, ProductLike
 from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortStoreLink, ShortDomainLink
 from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
-from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, select_from_multi_gender, JSONResponse, JSONPResponse
+from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
+    select_from_multi_gender, JSONResponse, JSONPResponse
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 
 from apparelrow.activity_feed.views import user_feed
@@ -107,6 +109,7 @@ def brand_redirect(request, pk):
     brand = get_object_or_404(Brand, pk=pk)
     return HttpResponsePermanentRedirect(brand.user.get_absolute_url())
 
+
 #
 # Notifications
 #
@@ -165,16 +168,19 @@ def notification_follow_brand(request):
     url = request.build_absolute_uri(profile.get_absolute_url())
     return render(request, 'apparel/notifications/follow_brand.html', {'object': profile, 'url': url})
 
+
 def notifications_seen_all(request):
     if request.method == 'POST' and request.is_ajax():
         user_id = request.POST.get('user_id', None)
-        queryset = get_model('profile', 'NotificationEvent').objects.filter(owner_id = user_id)
+        queryset = get_model('profile', 'NotificationEvent').objects.filter(owner_id=user_id)
         for notificationevent in queryset:
             notificationevent.seen = True
             notificationevent.save()
         return HttpResponse()
     else:
         return HttpResponseNotAllowed("Only POST requests allowed")
+
+
 #
 # Facebook calls
 #
@@ -207,6 +213,7 @@ def facebook_share(request, activity):
     return HttpResponse(
         json.dumps(dict(success=True, message=_('Shared to your Facebook timeline!').encode('utf-8'), error='')),
         mimetype='application/json')
+
 
 #
 # Follow/Unfollow
@@ -265,7 +272,9 @@ def store_short_link(request, short_link, user_id=None):
     if user_id is None:
         user_id = 0
 
-    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store', 'event': 'StoreLinkClick'})
+    return render(request, 'redirect_no_product.html',
+                  {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store',
+                   'event': 'StoreLinkClick'})
 
 
 #
@@ -292,16 +301,19 @@ def get_product_from_slug(slug, **kwargs):
         raise Http404("No Product matches the given query.")
     return product
 
+
 def product_detail(request, slug):
-    kwargs = {'published':True, 'gender__isnull':False}
+    kwargs = {'published': True, 'gender__isnull': False}
     product = get_product_from_slug(slug, **kwargs)
 
     is_liked = False
     if request.user.is_authenticated():
         is_liked = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
 
-    looks_with_product = Look.published_objects.filter(user__is_hidden=False, components__product=product).distinct().order_by('-modified')[:2]
-    looks_with_product_count = Look.published_objects.filter(user__is_hidden=False, components__product=product).distinct().count()
+    looks_with_product = Look.published_objects.filter(user__is_hidden=False,
+                                                       components__product=product).distinct().order_by('-modified')[:2]
+    looks_with_product_count = Look.published_objects.filter(user__is_hidden=False,
+                                                             components__product=product).distinct().count()
 
     # Likes
     likes = product.likes.filter(active=True, user__is_hidden=False).order_by('modified').select_related('user')
@@ -326,8 +338,8 @@ def product_detail(request, slug):
                                 ', '.join([x.name for x in product.categories]))
 
     # More alternatives
-    #alternative = get_product_alternative(product)
-    alternative, alternative_url = more_alternatives(product, request.session.get('location','ALL'), 9)
+    # alternative = get_product_alternative(product)
+    alternative, alternative_url = more_alternatives(product, request.session.get('location', 'ALL'), 9)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)
@@ -349,7 +361,8 @@ def product_detail(request, slug):
         try:
             cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
         except get_model('dashboard', 'ClickCost').DoesNotExist:
-            logger.warning("ClickCost not defined for default vendor %s of the product %s" % (product.default_vendor, product.product_name))
+            logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
+                product.default_vendor, product.product_name))
 
     return render_to_response(
         'apparel/product_detail.html',
@@ -359,7 +372,8 @@ def product_detail(request, slug):
             'looks_with_product': looks_with_product,
             'looks_with_product_count': looks_with_product_count,
             'object_url': request.build_absolute_uri(),
-            'more_like_this': more_like_this_product(mlt_body, product.gender, request.session.get('location','ALL'), 9),
+            'more_like_this': more_like_this_product(mlt_body, product.gender, request.session.get('location', 'ALL'),
+                                                     9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
             'product_full_image': product_full_image,
             'product_brand_full_url': product_brand_full_url,
@@ -374,6 +388,7 @@ def product_detail(request, slug):
         }, context_instance=RequestContext(request),
     )
 
+
 def product_generate_short_link(request, slug):
     """
     Generate a short product link and return it in a JSON response.
@@ -381,7 +396,7 @@ def product_generate_short_link(request, slug):
     if not request.user.is_authenticated() or not request.user.is_partner:
         raise Http404
 
-    kwargs = {'published':True}
+    kwargs = {'published': True}
     product = get_product_from_slug(slug, **kwargs)
     product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
     product_short_link = reverse('product-short-link', args=[product_short_link.link()])
@@ -415,8 +430,8 @@ def domain_short_link(request, short_link):
     if user_id is None:
         user_id = 0
 
-    return render(request, 'redirect_no_product.html', {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Link', 'event': 'BuyReferral'})
-
+    return render(request, 'redirect_no_product.html',
+                  {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Link', 'event': 'BuyReferral'})
 
 
 def product_redirect(request, pk, page='Default', sid=0):
@@ -470,11 +485,11 @@ def product_track(request, pk, page='Default', sid=0):
     if product:
         cookie_already_exists = bool(request.COOKIES.get(product.slug, None))
         product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
-                            get_user_agent(request), sid, page, cookie_already_exists)
+                                get_user_agent(request), sid, page, cookie_already_exists)
         response.set_cookie(product.slug, '1', settings.APPAREL_PRODUCT_MAX_AGE)
     else:
         product_buy_click.delay(pk, '%s\n%s' % (posted_referer, client_referer), get_client_ip(request),
-                            get_user_agent(request), sid, page, False)
+                                get_user_agent(request), sid, page, False)
     return response
 
 
@@ -493,7 +508,7 @@ def product_popup(request):
         if request.user and request.user.is_authenticated():
             product_result['liked'] = ProductLike.objects.filter(product=product, active=True,
                                                                  user=request.user).exists()
-            #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
+            # product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
 
         result.append(product_result)
 
@@ -514,7 +529,7 @@ def look_popup(request):
         temp_result = {'liked': False}
         if request.user and request.user.is_authenticated():
             temp_result['liked'] = LookLike.objects.filter(look=look, active=True, user=request.user).exists()
-            #product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
+            # product_result['likes'] = ProductLike.objects.filter(product=product, active=True).count()
 
         result.append(temp_result)
 
@@ -591,7 +606,7 @@ def _product_like(request, product, action):
         owner_user = request.user.owner_network
         if owner_user.is_subscriber:
             product_like, created = ProductLike.objects.get_or_create(user=owner_user, product=product,
-                                                              defaults={'active': default_active})
+                                                                      defaults={'active': default_active})
             if not created:
                 product_like.active = default_active
                 product_like.save()
@@ -665,7 +680,7 @@ def look_list(request, search=None, contains=None, gender=None):
 
     queryset = Look.published_objects.filter(user__is_hidden=False)
 
-    #add different tabs views
+    # add different tabs views
     view = request.GET.get('view', 'all')
     profile = request.user
     is_authenticated = request.user.is_authenticated()
@@ -679,7 +694,7 @@ def look_list(request, search=None, contains=None, gender=None):
                            'defType': 'edismax',
                            'fq': ['django_ct:apparel.look', gender_field],
                            'start': 0,
-                           'rows': 500} # XXX: maximum search results, sync this with the count that is displayed in the search result box
+                           'rows': 500}  # XXX: maximum search results, sync this with the count that is displayed in the search result box
         results = ApparelSearch(request.GET.get('q'), **query_arguments)
         queryset = queryset.filter(id__in=[doc.django_id for doc in results.get_docs()])
     elif view and view != 'all':
@@ -688,13 +703,14 @@ def look_list(request, search=None, contains=None, gender=None):
         elif view == 'friends':
             user_ids = []
             if is_authenticated:
-                user_ids = get_model('profile', 'Follow').objects.filter(user=request.user, active=True).values_list('user_follow_id', flat=True)
-                queryset = queryset.filter(gender__in=gender_list.get(gender)).filter(user__in=user_ids).order_by('-created')
+                user_ids = get_model('profile', 'Follow').objects.filter(user=request.user, active=True).values_list(
+                    'user_follow_id', flat=True)
+                queryset = queryset.filter(gender__in=gender_list.get(gender)).filter(user__in=user_ids).order_by(
+                    '-created')
     elif contains:
         queryset = queryset.filter(components__product__slug=contains).distinct()
     else:
         queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
-
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page', 1))
 
@@ -857,6 +873,7 @@ def authenticated_backend(request):
         profile = request.build_absolute_uri(request.user.get_absolute_url())
     return JSONResponse({'authenticated': request.user and request.user.is_authenticated(), 'profile': profile})
 
+
 def product_lookup_by_domain(request, domain, key):
     model = get_model('apparel', 'DomainDeepLinking')
     domain = extract_domain_with_suffix(domain)
@@ -869,7 +886,7 @@ def product_lookup_by_domain(request, domain, key):
         logger.info("No domain found for %s, returning 404" % domain)
         raise Http404
 
-    if len(results) > 1 :
+    if len(results) > 1:
         for item in results:
             if item.domain in key:
                 instance = item
@@ -885,9 +902,10 @@ def product_lookup_by_domain(request, domain, key):
         return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
     return None, None
 
+
 def product_lookup_by_solr(request, key):
     logger.info("Trying to lookup %s from SOLR." % key)
-    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows':1, 'django_ct': "apparel.product"}
+    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows': 1, 'django_ct': "apparel.product"}
     connection = Solr(settings.SOLR_URL)
     result = connection.search("*", **kwargs)
 
@@ -902,9 +920,13 @@ def product_lookup_by_solr(request, key):
 
     return int(product_id)
 
+
+# TODO: Offending the DRY principle
 def product_lookup_solr_fragment(key, vendor_id=None):
     logger.info("Trying to lookup %s from SOLR." % key)
-    kwargs = {'fq': ['product_key:*%s*' % (key,)], 'rows':1, 'django_ct': "apparel.product"}
+    #qs_string = "%s" %
+    qs = embed_wildcard_solr_query( str(SQ(product_key=key)) )
+    kwargs = {'fq': [qs], 'rows': 1, 'django_ct': "apparel.product"}
     if vendor_id:
         kwargs['fq'].append('store_id:\"%s\"' % (vendor_id,))
     connection = Solr(settings.SOLR_URL)
@@ -921,6 +943,7 @@ def product_lookup_solr_fragment(key, vendor_id=None):
 
     return int(product_id)
 
+
 def parse_luisaviaroma_fragment(fragment):
     try:
         seasonId = re.search(r'SeasonId=(\w+)?', fragment).group(1)
@@ -930,34 +953,40 @@ def parse_luisaviaroma_fragment(fragment):
     except AttributeError:
         return None
 
-def product_lookup_asos_nelly(url, is_nelly_product=False):
+
+def extract_asos_nelly_product_url(url, is_nelly_product=False):
     parsedurl = urlparse.urlsplit(url)
     path = parsedurl.path
     key = None
     vendor_id = None
-    if("nelly" in parsedurl.netloc):
+    if ("nelly" in parsedurl.netloc):
         if is_nelly_product:
             # get rid of categories for nelly links, only keep product name (last two "/"")
-            temp_path = path.rstrip('/') # remove last slash if it exists
-            key = temp_path.split('/')[-1] # get the "righest" element after a slash
+            temp_path = path.rstrip('/')  # remove last slash if it exists
+            key = temp_path.split('/')[-1]  # get the "righest" element after a slash
             key = "/%s/" % key
             try:
                 vendor_id = get_model('apparel', 'Vendor').objects.get(name="Nelly").id
             except get_model('apparel', 'Vendor').DoesNotExist:
                 logger.warning("Vendor Nelly does not exist")
-    elif("asos" in parsedurl.netloc):
+    elif ("asos" in parsedurl.netloc):
         search_result = re.search(r'iid=(\w+)?', parsedurl.query)
         if search_result:
             prodId = search_result.group(1)
             key = "%s?iid=%s" % (path, prodId)
         else:
             return None
-    elif("luisaviaroma" in parsedurl.netloc):
-        if parsedurl.fragment: # the "original" links don't have this, they should never land here though
+    elif ("luisaviaroma" in parsedurl.netloc):
+        if parsedurl.fragment:  # the "original" links don't have this, they should never land here though
             key = parse_luisaviaroma_fragment(parsedurl.fragment)
         else:
             key = url
+    return (key, vendor_id)
 
+
+def product_lookup_asos_nelly(url, is_nelly_product=False):
+    key, vendor_id = extract_asos_nelly_product_url(url, is_nelly_product)
+    # key = urllib.quote_plus(key)
     if key:
         product_pk = product_lookup_solr_fragment(key, vendor_id)
         if product_pk:
@@ -966,6 +995,7 @@ def product_lookup_asos_nelly(url, is_nelly_product=False):
     return None
     #json_data = json.loads(products[0].json)
     #return json_data.get('site_product', None)
+
 
 def product_lookup(request):
     if not request.user.is_authenticated():
@@ -1000,7 +1030,7 @@ def product_lookup(request):
         else:
             logger.info("Successfully found product in SOLR for key %s" % key)
     # TODO: must go through theimp database right now to fetch site product by real url
-    #key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
+    # key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
     #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
 
 
@@ -1016,14 +1046,16 @@ def product_lookup(request):
         product_short_link_str = reverse('product-short-link', args=[product_short_link.link()])
         product_short_link_str = request.build_absolute_uri(product_short_link_str)
         logger.info("Product match found for key, creating short product link [%s]." % product_short_link_str)
-        product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
+        product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product,
+                                                                           active=True).exists()
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
         logger.info("No product found for key, falling back to domain deep linking.")
         product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
         logger.info("No product found for key, falling back to domain deep linking.")
         if product_short_link_str is not None:
-            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str, user=request.user, vendor=vendor)
+            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
+                                                                                user=request.user, vendor=vendor)
             product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
             product_short_link_str = request.build_absolute_uri(product_short_link_str)
 
@@ -1069,7 +1101,7 @@ def user_list(request, gender=None, brand=False):
     else:
         # XXX: is this solution good enough?
         # XXX: nope, too slow
-        #queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender__in=gender_list.get(gender)).distinct()
+        # queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender__in=gender_list.get(gender)).distinct()
         queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
 
     extra_parameter = None
@@ -1110,7 +1142,7 @@ def user_list(request, gender=None, brand=False):
 
 def index(request, gender=None):
     if request.user.is_authenticated():
-        #dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
+        # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
         if gender == 'none':
             gender = None
         return user_feed(request, gender=gender)
@@ -1128,6 +1160,7 @@ def jobs(request):
 
 def founders(request):
     return render(request, 'apparel/founders.html')
+
 
 #
 # Contest Stylesearch
@@ -1153,6 +1186,7 @@ def contest_stylesearch_charts(request):
                 .order_by('-num_likes', 'created')[:10]
 
     return render(request, 'apparel/contest_stylesearch_charts.html', {'looks': looks})
+
 
 #
 # Contest XMAS
@@ -1205,6 +1239,7 @@ def contest_xmas_menlook_charts(request):
 
     return render(request, 'apparel/contest_xmas_menlook_charts.html', {'looks': looks, 'is_closed': is_closed})
 
+
 #
 # Contest TOPMODEL
 #
@@ -1253,6 +1288,7 @@ def contest_topmodel(request):
 def contest_jc(request):
     return render(request, 'apparel/contest_jc.html', {})
 
+
 def contest_jc_charts(request):
     start_date = datetime.datetime(2014, 6, 6, 0, 0, 0)
     end_date = datetime.datetime(2014, 8, 30, 23, 59, 59)
@@ -1266,9 +1302,10 @@ def contest_jc_charts(request):
     if timezone.now() > end_date:
         is_closed = True
 
-    valid_looks = get_model('apparel', 'Look').published_objects.filter(components__product__category=category_id,published=True)
+    valid_looks = get_model('apparel', 'Look').published_objects.filter(components__product__category=category_id,
+                                                                        published=True)
 
-    looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date),published=True,
+    looks = get_model('apparel', 'Look').published_objects.filter(created__range=(start_date, end_date), published=True,
                                                                   likes__created__lte=end_date,
                                                                   likes__active=True,
                                                                   pk__in=valid_looks) \
@@ -1277,7 +1314,6 @@ def contest_jc_charts(request):
                 .order_by('-num_likes', 'created')[:10]
 
     return render(request, 'apparel/contest_jc_charts.html', {'looks': looks, 'is_closed': is_closed})
-
 
 
 def apparel_set_language(request):
@@ -1316,12 +1352,16 @@ def facebook_friends_widget(request):
 def extract_domain_with_suffix(domain):
     try:
         tld_ext = tldextract.TLDExtract(cache_file=False)
-        extracted = tld_ext( domain )
+        extracted = tld_ext(domain)
         return "%s.%s" % (extracted.domain, extracted.suffix)
     except Exception, msg:
-        logger.info("Domain supplied could not be extracted: %s [%s]" % (domain,msg))
+        logger.info("Domain supplied could not be extracted: %s [%s]" % (domain, msg))
         return None
 
-# Todo: move this to product manager 
+
+# Todo: move this to product manager
 def extract_apparel_product_with_url(key):
-    return get_model('apparel', 'Product').objects.filter(published=True,product_key__icontains=key)
+    return get_model('apparel', 'Product').objects.filter(published=True, product_key__icontains=key)
+
+def embed_wildcard_solr_query(qs_string):
+    return "%s*%s*" % (qs_string[:qs_string.index(':')+1],qs_string[qs_string.index(':')+1:])
