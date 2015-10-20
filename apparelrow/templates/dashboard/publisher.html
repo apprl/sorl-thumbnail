@@ -130,7 +130,7 @@
             var html = "<table>";
             for (i = 0; i < jsonDetail.length; i++){
                 html += "<tr>" +
-                        "<td><a href=\""+jsonDetail[i].product_url+"\">" + jsonDetail[i].product_name + "</a></td>" +
+                        "<td><a href=\""+jsonDetail[i].product_url+"\" target=\"_blank\">" + jsonDetail[i].product_name + "</a></td>" +
                         "<td class='center'>"  + jsonDetail[i].clicks + "</td>"
                 if (!isStore){
                     html += "<td class='center'>" + currency + " " + jsonDetail[i].product_earning.toFixed(2) + "</td>";
