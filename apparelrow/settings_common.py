@@ -97,7 +97,7 @@ MAX_MIN_CURRENCY = {
 }
 
 VENDOR_LOCATION_MAPPING = {
-    "Shirtonomy":["ALL","SE"],
+    "Shirtonomy":["DK","SE"],
     "Ted & Teresa":["SE"],
     "ConfidentLiving":["SE"],
     "MQ":["SE"],

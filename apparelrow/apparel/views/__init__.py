@@ -1359,7 +1359,7 @@ def extract_domain_with_suffix(domain):
         return None
 
 
-# Todo: move this to product manager
+# Todo: move this to product manager (also deprecated now since 20151020)
 def extract_apparel_product_with_url(key):
     return get_model('apparel', 'Product').objects.filter(published=True, product_key__icontains=key)
 
