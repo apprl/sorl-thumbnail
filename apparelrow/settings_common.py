@@ -69,6 +69,7 @@ LANGUAGES = (
 LANGUAGES_DISPLAY = (
     ('en', gettext(u'English ($)')),
     ('sv', gettext(u'Swedish (SEK)')),
+    ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
 )
 SHORT_LANGUAGES = (
@@ -80,6 +81,7 @@ SHORT_LANGUAGES = (
 SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
+    ('da', gettext(u'Dnk (DKK)')),
     ('no', gettext(u'Nor (NOK)')),
 )
 SHORT_LANGUAGES_LIST_DISPLAY = ('en','sv','no')
@@ -97,7 +99,7 @@ MAX_MIN_CURRENCY = {
 }
 
 VENDOR_LOCATION_MAPPING = {
-    "Shirtonomy":["SE"],
+    "Shirtonomy":["DK","SE"],
     "Ted & Teresa":["SE"],
     "ConfidentLiving":["SE"],
     "MQ":["SE"],
@@ -120,11 +122,12 @@ VENDOR_LOCATION_MAPPING = {
     "QVC":["US"],
     "Room 21 no":["NO"],
     "Rum 21 se":["SE"],
-    "default":["ALL","SE","NO","US"],
+    "default":["ALL","SE","NO","US","DK"],
 }
 
 LOCATION_MAPPING = (
     ('SE', gettext('Sweden (SEK)')),
+    ('DK', gettext('Denmark (DKK)')),
     ('NO', gettext('Norway (NOK)')),
     ('US', gettext('USA (USD)')),
     ('ALL', gettext('International (USD)')),
@@ -132,7 +135,8 @@ LOCATION_MAPPING = (
 
 LOCATION_LANGUAGE_MAPPING = (
                              ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
-                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[2]),
+                             ("DK", gettext("Denmark (DKK)"), LANGUAGES_DISPLAY[2]),
+                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[3]),
                              ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
                              ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
 )
@@ -796,7 +800,6 @@ CELERY_ROUTES = ({
     'apparelrow.scheduledjobs.tasks.clicks_summary': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.recalculate_earnings': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.collect_calculate_earnings': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.check_chrome_extension': {'queue': 'background'},
     'apparelrow.scheduledjobs.tasks.check_clicks_limit_per_vendor': {'queue':'standard'},
     'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'},

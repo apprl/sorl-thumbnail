@@ -130,7 +130,7 @@
             var html = "<table>";
             for (i = 0; i < jsonDetail.length; i++){
                 html += "<tr>" +
-                        "<td><a href=\""+jsonDetail[i].product_url+"\">" + jsonDetail[i].product_name + "</a></td>" +
+                        "<td><a href=\""+jsonDetail[i].product_url+"\" target=\"_blank\">" + jsonDetail[i].product_name + "</a></td>" +
                         "<td class='center'>"  + jsonDetail[i].clicks + "</td>"
                 if (!isStore){
                     html += "<td class='center'>" + currency + " " + jsonDetail[i].product_earning.toFixed(2) + "</td>";
@@ -267,47 +267,6 @@
         </div>
     {% endif %}
 
-    <div class="row">
-        <div class="col-lg-12 table-responsive">
-            <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2></div>
-            <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a></small></h2></div>
-            <table id="top-products" class="sortable table">
-                <thead>
-                    <tr>
-                        <th class="col1 product-image center">{% trans "Product" %}</th>
-                        <th class="col2 hidden-xs center"></th>
-                        <th class="col3 center hidden-xs center">{% trans "Clicks" %}</th>
-                        <th class="center">{% trans "Sales" %}</th>
-                        <th class="center hidden-xs">{% trans "Conversion rate" %}</th>
-                        <th class="hidden-xs center">{% trans "Sales generated" %}</th>
-                        <th class="center">{% trans "Total earnings" %}</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                      <td colspan="7"><i>Products from stores paying per click are not currently included</i></td>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    {% for product in most_sold_products|top_five %}
-                    <tr>
-                        <td data-sort="{{ product.product }}" class="col1 product-image center"><a href="{{ product.product_link }}"><img src="{{ product.product_image }}"></a></td>
-                        <td class="col2 hidden-xs"><a href="{{ product.product_link }}">{{ product.product }}</a></td>
-                        <td class="col3 center hidden-xs">{{ product.clicks }}</td>
-                        <td class="center">{% if product.sales == 0 %}-{% else %}{{ product.sales }}{% endif %}</td>
-                        <td class="hidden-xs center">{{ product.sales|commission_rate:product.clicks }}</td>
-                        <td class="hidden-xs center">{{ currency }} {{ product.converted_amount|floatdot }}</td>
-                        <td class="center">{{ currency }} {{ product.total_earnings|floatdot }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3">{% trans "No sales yet." %}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-lg-12 table-responsive">
@@ -415,7 +374,6 @@
 </script>
 
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token is_store=False only  %}
-{% include 'dashboard/fragments/dialog_top_products.html' with request=request csrf_token=csrf_token next=next most_sold_products=most_sold_products is_admin=False currency=currency month=month_display year=year  only  %}
 {% include 'dashboard/fragments/dialog_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year only %}
 {% include 'dashboard/modal_more_info.html' %}
 {% endblock body %}

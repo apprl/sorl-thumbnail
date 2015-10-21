@@ -1,8 +1,9 @@
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.search import product_save
-from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr
+from apparelrow.apparel.search import product_save, get_product_document
+from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, extract_asos_nelly_product_url, \
+    embed_wildcard_solr_query
 import unittest
 
 from django.contrib.auth import get_user_model
@@ -219,95 +220,158 @@ class TestChromeExtensionSpecials(TestCase):
 
     def test_product_asos_nelly_luisaviaroma(self):
         #1st ASOS product
-        #original
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883414)
-        #after click
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate&r=2"
-        self.assertEqual(product_lookup_asos_nelly(key), 883414)
-        #manual search
-        key = "http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2108486&clr=Grey&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=101&gridsize=3&gridrow=2&gridcolumn=3"
-        self.assertEqual(product_lookup_asos_nelly(key), 883414)
-        #from "last viewed"
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&CTARef=Recently%20Viewed"
-        self.assertEqual(product_lookup_asos_nelly(key), 883414)
+        # original
+        # after click
+        # manual search
+        # from "last viewed"
+        original_keys = ["http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate",
+                        "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate&r=2",
+                        #"http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2108486&clr=Grey&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=101&gridsize=3&gridrow=2&gridcolumn=3",
+                        "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&CTARef=Recently%20Viewed"]
+        template_key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
 
         #2nd ASOS product
         #original
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883415)
         #after click
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883415)
-        #manual search
-        key = "http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2109266&clr=White&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=100&gridsize=3&gridrow=2&gridcolumn=2"
-        self.assertEqual(product_lookup_asos_nelly(key), 883415)
+        # manual search, removed
+        #key = "http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2109266&clr=White&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=100&gridsize=3&gridrow=2&gridcolumn=2"
+        original_keys = [ "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate",
+                          "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"]
+        template_key =    "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
+
 
         #3rd ASOS product
         #original
-        key = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883416)
         #after click
-        key = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883416)
         #manual search
-        key = "http://www.asos.com/asos/asos-mix-and-match-halter-leopard-print-bikini-top/prod/pgeproduct.aspx?iid=2125546&clr=Leopardprint&SearchQuery=Mix+and+Match+Halter+Leopard+Print+Bikini+Top&SearchRedirect=true"
-        self.assertEqual(product_lookup_asos_nelly(key), 883416)
+        #key = "http://www.asos.com/asos/asos-mix-and-match-halter-leopard-print-bikini-top/prod/pgeproduct.aspx?iid=2125546&clr=Leopardprint&SearchQuery=Mix+and+Match+Halter+Leopard+Print+Bikini+Top&SearchRedirect=true"
+        #self.assertEqual(product_lookup_asos_nelly(key), product_id)
+        original_keys = ["http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate",
+                         "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+                         ]
+        template_key = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key), 883416)
 
         #1st Luisaviaroma product
         #original
-        key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN"
-        self.assertEqual(product_lookup_asos_nelly(key), 883598)
         #after click
-        key = "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing"
-        self.assertEqual(product_lookup_asos_nelly(key), 883598)
         #manual search
-        key = "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&VendorColorId=TTYzMDU30&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode="
-        self.assertEqual(product_lookup_asos_nelly(key), 883598)
+
+        original_keys = ["http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN",
+                         "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing",
+                         "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&VendorColorId=TTYzMDU30&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode=",
+                         ]
+        template_key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key), 883598)
+
+        #self.assertEqual(product_lookup_asos_nelly(key), 883598)
 
         #2nd Luisaviaroma product
         #original
-        key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"
-        self.assertEqual(product_lookup_asos_nelly(key), 883602)
         #after click
-        key = "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing"
-        self.assertEqual(product_lookup_asos_nelly(key), 883602)
         #manual search
-        key = "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&VendorColorId=TTYzMTAy0&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode="
-        self.assertEqual(product_lookup_asos_nelly(key), 883602)
+        original_keys = ["http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN",
+                         "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing",
+                         "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&VendorColorId=TTYzMTAy0&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode=",
+                         ]
+
+        template_key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
+
+        #self.assertEqual(product_lookup_asos_nelly(key), 883602)
 
         #1st Nelly product
         #original
-        key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883607)
         #after click
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883607)
         #manual search
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883607)
+        original_keys = ["http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/",
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+
+                        ]
+        template_key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883607)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883607)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883607)
 
         #2nd Nelly product
         #original
-        key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883603)
         #after click
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883603)
         #manual search
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883603)
         #made up category
-        key = "http://nelly.com/se/somecategory/somesubcategory/otherparam/closet-1153/quilt-effect-dress-601764-2350/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883603)
+        original_keys = ["http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/",
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/",
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/",
+                         "http://nelly.com/se/somecategory/somesubcategory/otherparam/closet-1153/quilt-effect-dress-601764-2350/"
+                        ]
+        template_key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883603)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883603)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883603)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883603)
 
         #3rd Nelly product from pivotaltracker story
         #original
-        key = "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883604)
         #other
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54"
-        self.assertEqual(product_lookup_asos_nelly(key), 883604)
+        original_keys = ["http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/",
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54"
+                         ]
+        template_key = "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883604)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883604)
+
+    def test_embed_wildcard_solr_query(self):
+        test_strings = [
+                    ("product_key:asbasf://asdfkh+asdf","product_key:*asbasf://asdfkh+asdf*"),
+                    ("product_key:/wmns\-nike\-air\-max\-thea\-118540\-54/","product_key:*/wmns\-nike\-air\-max\-thea\-118540\-54/*"),
+                    ("id:apparel.product.883624","id:*apparel.product.883624*"),
+                    ("pro:asb","pro:*asb*"),
+                        ]
+        for i1,i2 in test_strings:
+            self.assertEquals(i2,embed_wildcard_solr_query(i1))
 
 
 class TestProductDetails(TestCase):
@@ -662,3 +726,53 @@ class TestShortLinks(TestCase):
         # No ProductStat were created
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
 
+
+def _send_product_to_solr(product_key):
+
+    django_image_file = _create_dummy_image()
+    _cleanout_product(product_key)
+    vendor = VendorFactory.create()
+    category = CategoryFactory.create()
+    manufacturer = BrandFactory.create()
+    product = ProductFactory.create(
+        product_name='Product',
+        category=category,
+        manufacturer=manufacturer,
+        gender='M',
+        published=True,
+        product_key=product_key,
+        availability=True,
+        product_image=django_image_file
+    )
+    assert(product.product_image)
+    assert(get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url)
+    vendorproduct = VendorProductFactory.create(vendor=vendor, product=product, availability=True)
+    del product.default_vendor
+    product_save(product, commit=True)
+    return product.id
+
+def _cleanout_products(product_keys):
+    for product_key in product_keys:
+        _cleanout_product(product_key)
+
+def _cleanout_product(product_key):
+    product_id = product_lookup_by_solr(None, product_key)
+    if product_id:
+        print "Found already existing product in SOLR database, removing."
+        connection = Solr(settings.SOLR_URL)
+        product_solr_id = "apparel.product.%s" % product_id
+        connection.delete(id=product_solr_id, commit=True, waitFlush=True)
+        print "%s has been removed from index." % product_solr_id
+    else:
+        print "No previous products found"
+
+def _create_dummy_image():
+    from PIL import Image
+    from StringIO import StringIO
+    from django.core.files.base import ContentFile
+    image_file = StringIO()
+    image = Image.new('RGBA', size=(50,50), color=(256,0,0))
+    image.save(image_file, 'png')
+    image_file.seek(0)
+
+    return ContentFile(image_file.read(), 'test.png')
