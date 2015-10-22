@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
@@ -102,10 +103,15 @@ class TestChromeExtension(TestCase):
 
     def test_product_lookup_not_found(self):
         self._login()
-
+        import urllib
         response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=weird.com')
         self.assertEqual(response.status_code, 404)
 
+    def test_encode_and_lookup_utf_urls(self):
+        self._login()
+        url = '/backend/product/lookup/?key=http%3A%2F%2Fnelly.com%2Fse%2Fkl%25C3%25A4der-f%25C3%25B6r-kvinnor%2Fkl%25C3%25A4der%2Ffestkl%25C3%25A4nningar%2F%23hits%3D144%26sort%3DLastArrival%26priceTo%3D299&domain=nelly.com%2Fse%2Fkl%25C3%25A4der-f%25C3%25B6r-kvinnor%2Fkl%25C3%25A4der%2Ffestkl%25C3%25A4nningar%2F&is_product=0'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
     """def test_product_lookups(self):
         product0 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/white-twill")
