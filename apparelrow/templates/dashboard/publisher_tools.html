@@ -139,6 +139,29 @@
                         </div>
                     </div>
                 </li>
+
+                <!-- Chrome extension -->
+                <li class="col-discover-item clickable-boxes">
+                    <div class="user-medium panel publisher-panel">
+                        <a data-toggle="modal" data-target="#modal_tool_text_link">
+                            <div class="image" align=center>
+                                <img src="{% static 'images/tools/ApprlChromeExtension_Icon.jpg' %}" />
+                            </div>
+                        </a>
+                        <div class="text">
+                            <div class="bg"></div>
+                            <div class="title">
+                                <span>{% trans "Chrome Extension" %}</span>
+                            </div>
+                            <div class="desc">
+                                <span>{% trans "Get links and like products directly from retailers’ sites" %}</span>
+                            </div>
+                            <a class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" data-target="#modal_tool_chrome_ext">
+                                {% trans "Get started" %}
+                            </a>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -148,68 +171,28 @@
 {% include 'dashboard/fragments/dialog_tool_collage.html' with request=request csrf_token=csrf_token next=next only %}
 {% include 'dashboard/fragments/dialog_tool_tagged_photo.html' with request=request csrf_token=csrf_token next=next only %}
 {% include 'dashboard/fragments/dialog_tool_text_link.html' with request=request csrf_token=csrf_token next=next only %}
+{% include 'dashboard/fragments/dialog_tool_chrome_ext.html' with request=request csrf_token=csrf_token next=next only %}
 
 <script type="text/javascript">
     $('.modal').on('shown.bs.modal', function (e) {
         resizeSliderContainer(this);
     });
-    $('#modal_tool_shop').on('shown.bs.modal', function (e) {
-        $('#modal_tool_shop .iosSlider').iosSlider('destroy');
-        $('#modal_tool_shop .iosSlider').iosSlider({
+    $('.modal').on('shown.bs.modal', function () {
+        var modalSlider = $(this).find('.iosSlider')
+        modalSlider.iosSlider('destroy');
+        var prevButton = $(this).find('.tools_prevButton');
+        var nextButton = $(this).find('.tools_nextButton');
+        var sliderContainer = $(this).find('.slider-container');
+        modalSlider.iosSlider({
             scrollbar: false,
             snapToChildren: true,
             desktopClickDrag: true,
-            navPrevSelector: $('#modal_tool_shop .tools_prevButton'),
-            navNextSelector: $('#modal_tool_shop .tools_nextButton'),
+            navPrevSelector: prevButton,
+            navNextSelector: nextButton,
             autoSlide: true,
             infiniteSlider: true,
             onSliderLoaded: function(){
-                $('#modal_tool_shop').find(".slider-container").css('visibility','visible');
-            }
-        });
-    });
-    $('#modal_tool_collage').on('shown.bs.modal', function (e) {
-        $('#modal_tool_collage .iosSlider').iosSlider('destroy');
-        $('#modal_tool_collage .iosSlider').iosSlider({
-            scrollbar: false,
-            snapToChildren: true,
-            desktopClickDrag: true,
-            navPrevSelector: $('#modal_tool_collage .tools_prevButton'),
-            navNextSelector: $('#modal_tool_collage .tools_nextButton'),
-            autoSlide: true,
-            infiniteSlider: true,
-            onSliderLoaded: function(){
-                $('#modal_tool_collage').find(".slider-container").css('visibility','visible');
-            }
-        });
-    });
-    $('#modal_tool_tagged_photo').on('shown.bs.modal', function (e) {
-        $('#modal_tool_tagged_photo .iosSlider').iosSlider('destroy');
-        $('#modal_tool_tagged_photo .iosSlider').iosSlider({
-            scrollbar: false,
-            snapToChildren: true,
-            desktopClickDrag: true,
-            navPrevSelector: $('#modal_tool_tagged_photo .tools_prevButton'),
-            navNextSelector: $('#modal_tool_tagged_photo .tools_nextButton'),
-            autoSlide: true,
-            infiniteSlider: true,
-            onSliderLoaded: function(){
-                $('#modal_tool_tagged_photo').find(".slider-container").css('visibility','visible');
-            }
-        });
-    });
-    $('#modal_tool_text_link').on('shown.bs.modal', function (e) {
-        $('#modal_tool_text_link .iosSlider').iosSlider('destroy');
-        $('#modal_tool_text_link .iosSlider').iosSlider({
-            scrollbar: false,
-            snapToChildren: true,
-            desktopClickDrag: true,
-            navPrevSelector: $('#modal_tool_text_link .tools_prevButton'),
-            navNextSelector: $('#modal_tool_text_link .tools_nextButton'),
-            autoSlide: true,
-            infiniteSlider: true,
-            onSliderLoaded: function(){
-                $('#modal_tool_text_link').find(".slider-container").css('visibility','visible');
+                sliderContainer.css('visibility','visible');
             }
         });
     });
