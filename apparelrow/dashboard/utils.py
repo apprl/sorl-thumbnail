@@ -182,7 +182,7 @@ def get_number_clicks(vendor, start_date_query, end_date_query):
         Return total number of clicks for a Vendor in a given date range
     """
     return get_model('statistics', 'ProductStat').objects.\
-        filter(vendor=vendor, created__range=[start_date_query, end_date_query]).count()
+        filter(vendor=vendor, created__range=[start_date_query, end_date_query], is_valid=True).count()
 
 def get_total_clicks_per_vendor(vendor):
     """
