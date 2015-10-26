@@ -978,8 +978,7 @@ def extract_asos_nelly_product_url(url, is_nelly_product=False):
         if search_result:
             prodId = search_result.group(1)
             key = "%s?iid=%s" % (path, prodId)
-        else:
-            return None
+
     elif ("luisaviaroma" in parsedurl.netloc):
         if parsedurl.fragment:  # the "original" links don't have this, they should never land here though
             key = parse_luisaviaroma_fragment(parsedurl.fragment)
