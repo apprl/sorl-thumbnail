@@ -925,7 +925,11 @@ def product_lookup_by_solr(request, key):
 def product_lookup_solr_fragment(key, vendor_id=None):
     logger.info("Trying to lookup %s from SOLR." % key)
     #qs_string = "%s" %
-    qs = embed_wildcard_solr_query( str(SQ(product_key=key)) )
+    try:
+        key = str(SQ(product_key=key))
+    except:
+        key = str(SQ(product_key=key.encode('utf-8')))
+    qs = embed_wildcard_solr_query( key )
     kwargs = {'fq': [qs], 'rows': 1, 'django_ct': "apparel.product"}
     if vendor_id:
         kwargs['fq'].append('store_id:\"%s\"' % (vendor_id,))
@@ -974,8 +978,7 @@ def extract_asos_nelly_product_url(url, is_nelly_product=False):
         if search_result:
             prodId = search_result.group(1)
             key = "%s?iid=%s" % (path, prodId)
-        else:
-            return None
+
     elif ("luisaviaroma" in parsedurl.netloc):
         if parsedurl.fragment:  # the "original" links don't have this, they should never land here though
             key = parse_luisaviaroma_fragment(parsedurl.fragment)
@@ -1365,3 +1368,4 @@ def extract_apparel_product_with_url(key):
 
 def embed_wildcard_solr_query(qs_string):
     return "%s*%s*" % (qs_string[:qs_string.index(':')+1],qs_string[qs_string.index(':')+1:])
+
