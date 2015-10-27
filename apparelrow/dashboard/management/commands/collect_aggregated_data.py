@@ -125,8 +125,8 @@ class Command(BaseCommand):
                 product_instance.save()
 
                 if product_created:
-                    clicks_count = get_model('statistics', 'ProductStat', is_valid=True).objects.\
-                        filter(user_id=user_id, vendor=row.sale.vendor.name, product=row.from_product.slug,
+                    clicks_count = get_model('statistics', 'ProductStat').objects.\
+                        filter(is_valid=True, user_id=user_id, vendor=row.sale.vendor.name, product=row.from_product.slug,
                                created__range=(start_date, end_date)).count()
                     if row.sale.vendor.is_cpc:
                         product_instance.paid_clicks = clicks_count

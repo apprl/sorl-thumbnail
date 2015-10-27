@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.search import product_save, get_product_document
-from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, extract_asos_nelly_product_url, \
-    embed_wildcard_solr_query
+from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
+    extract_asos_nelly_product_url
 import unittest
 
 from django.contrib.auth import get_user_model
@@ -102,10 +103,15 @@ class TestChromeExtension(TestCase):
 
     def test_product_lookup_not_found(self):
         self._login()
-
+        import urllib
         response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=weird.com')
         self.assertEqual(response.status_code, 404)
 
+    def test_encode_and_lookup_utf_urls(self):
+        self._login()
+        url = '/backend/product/lookup/?key=http%3A%2F%2Fnelly.com%2Fse%2Fkl%25C3%25A4der-f%25C3%25B6r-kvinnor%2Fkl%25C3%25A4der%2Ffestkl%25C3%25A4nningar%2F%23hits%3D144%26sort%3DLastArrival%26priceTo%3D299&domain=nelly.com%2Fse%2Fkl%25C3%25A4der-f%25C3%25B6r-kvinnor%2Fkl%25C3%25A4der%2Ffestkl%25C3%25A4nningar%2F&is_product=0'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
     """def test_product_lookups(self):
         product0 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/white-twill")
@@ -142,7 +148,7 @@ class TestChromeExtension(TestCase):
 
         self.assertEqual(json_content['product_pk'], None)
         self.assertEqual(json_content['product_link'], None)
-        self.assertEqual(json_content['product_short_link'], 'http://testserver/pd/4C92/')
+        self.assertTrue(json_content['product_short_link'].startswith('http://testserver/pd/4C9'))
         self.assertEqual(json_content['product_liked'], False)
 
 
@@ -218,6 +224,49 @@ class TestChromeExtensionSpecials(TestCase):
         self.assertIsNotNone(vendor)
         self.assertIsNotNone(product)
 
+    def test_extract_asos_nelly_product_url(self):
+        asos_url = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
+        key, vendor_id = extract_asos_nelly_product_url(asos_url)
+        self.assertEquals(key, "/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486")
+
+        url_cause_exception = "https://www.asos.com/women/"
+        key, vendor_id = extract_asos_nelly_product_url(url_cause_exception)
+        self.assertIsNone(key)
+        self.assertIsNone(vendor_id)
+
+        asos_url_2 = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
+        key, vendor_id = extract_asos_nelly_product_url(asos_url_2)
+        self.assertEquals(key, "/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266")
+
+        asos_url_3 = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+        key, vendor_id = extract_asos_nelly_product_url(asos_url_3)
+        self.assertEquals(key, "/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546")
+
+        luis_avairoma_url_4 = "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing"
+        key, vendor_id = extract_asos_nelly_product_url(luis_avairoma_url_4)
+        self.assertEquals(key, "60I-CD1014")
+
+        luis_avairoma_url_5 = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"
+        key, vendor_id = extract_asos_nelly_product_url(luis_avairoma_url_5)
+        self.assertEquals(key, luis_avairoma_url_5)
+
+        nelly_url_6 = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        key, vendor_id = extract_asos_nelly_product_url(nelly_url_6, True)
+        self.assertEquals(key, "/scuba-wrap-dress-917910-29/")
+
+        nelly_url_7 = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        key, vendor_id = extract_asos_nelly_product_url(nelly_url_7, True)
+        self.assertEquals(key, "/scuba-wrap-dress-917910-29/")
+
+        nelly_url_8 = "http://nelly.com/se/somecategory/somesubcategory/otherparam/closet-1153/quilt-effect-dress-601764-2350/"
+        key, vendor_id = extract_asos_nelly_product_url(nelly_url_8, True)
+        self.assertEquals(key, "/quilt-effect-dress-601764-2350/")
+
+        nelly_url_9 = "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
+        key, vendor_id = extract_asos_nelly_product_url(nelly_url_9, True)
+        self.assertEquals(key, "/wmns-nike-air-max-thea-118540-54/")
+
+
     def test_product_asos_nelly_luisaviaroma(self):
         #1st ASOS product
         # original
@@ -231,6 +280,7 @@ class TestChromeExtensionSpecials(TestCase):
         template_key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
         _cleanout_products(original_keys)
         product_id = _send_product_to_solr(product_key=template_key)
+
         for original_key in original_keys:
             self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
 
