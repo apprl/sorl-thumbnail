@@ -147,6 +147,10 @@ urlpatterns = patterns('',
     url(r'^backend/authenticated/$', 'apparelrow.apparel.views.authenticated_backend', name='backend-authenticated'),
     url(r'^backend/product/lookup/$', 'apparelrow.apparel.views.product_lookup', name='backend-product-lookup'),
 
+    # Dashboard backend
+    url(r'^backend/detail/earnings/$', 'apparelrow.dashboard.views.render_detail_earnings', name='detail-earnings'),
+    url(r'^backend/detail/clicks/$', 'apparelrow.dashboard.views.clicks_detail', name='clicks-detail'),
+
     # Looks
     url(r'^looks/create/$', 'apparelrow.apparel.views.looks.create', name='look-create'),
     url(r'^looks/create/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.looks.create_and_like', name='look-create-like'),

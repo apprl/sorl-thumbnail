@@ -18,17 +18,14 @@ from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.template.loader import render_to_string
 
-
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
 from apparelrow.dashboard.tasks import send_email_task
-from apparelrow.dashboard.utils import get_referral_user_from_cookie, get_cuts_for_user_and_vendor, get_clicks_list, \
-    get_product_thumbnail_and_link
+from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.profile.tasks import mail_managers_task
-from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 
 
@@ -81,6 +78,27 @@ def get_available_stores(current_location):
         except KeyError:
             vendors.append(store_name)
     return vendors
+
+def render_detail_earnings(request):
+    """
+        Return a list of user earning details given a date range when an AJAX request is made
+    """
+    if request.method == 'POST' and request.is_ajax():
+        month = request.POST.get('month', None)
+        year = request.POST.get('year', None)
+        if month and year:
+            if month == '0':
+                start_date = datetime.date(int(year), int(1), 1)
+                end_date = start_date
+                end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
+            else:
+                start_date = datetime.date(int(year), int(month), 1)
+
+                end_date = start_date
+                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+            earnings = retrieve_user_earnings(start_date, end_date)
+            json_data = json.dumps(earnings)
+            return HttpResponse(json_data)
 
 def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
     user_criteria = ''
@@ -1520,21 +1538,9 @@ def publishers(request, year=None, month=None):
                                                             'currency': 'EUR'})
     return HttpResponseRedirect(reverse('index-publisher'))
 
-def get_clicks_from_sale(sale):
-    """
-        Returns number of clicks generated from the given sale
-    """
-    user_id = sale.user_id
-    start_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(0, 0, 0, 0))
-    end_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(23, 59, 59, 999999))
-    vendor_name = sale.vendor
-    clicks = get_model('statistics', 'ProductStat').objects.filter(vendor=vendor_name, user_id=user_id,
-                                                          created__range=[start_date_query, end_date_query]).count()
-    return clicks
-
 def clicks_detail(request):
     """
-        Returns a list of click details given an user, vendor and date
+        Return a list of click details given an user, vendor and date
     """
     if request.method == 'POST' and request.is_ajax():
         user_id = request.POST.get('user_id', None)
@@ -1799,31 +1805,6 @@ class AdminDashboardView(TemplateView):
                          total_network_earnings=Sum('total_network_earnings'),
                          total_clicks=Sum('total_clicks')).order_by('-total_earnings')
 
-            # Retrieve user earnings
-            earnings = get_model('dashboard', 'UserEarning').objects\
-                .filter(date__range=(start_date_query, end_date_query), status__gte=Sale.PENDING)\
-                .order_by('-date')
-            for earning in earnings:
-                earning.product_image = ''
-                earning.product_link = ''
-                earning.product_name= ''
-                try:
-                    product = get_model('apparel', 'Product').objects.get(id=earning.sale.product_id)
-                    earning.product_image, earning.product_link = get_product_thumbnail_and_link(product)
-                    earning.product_name = product.product_name
-                except get_model('apparel', 'Product').DoesNotExist:
-                    pass
-                earning.from_user_link = ''
-                if earning.user:
-                    earning.from_user_link = reverse('profile-likes', args=[earning.user.slug])
-                    earning.from_user_name = earning.user.slug
-                    earning.from_user_avatar = earning.user.avatar
-                    if earning.user.name:
-                        earning.from_user_name = earning.user.name
-                else:
-                    earning.from_user_name = "APPRL"
-                earning.clicks = get_clicks_from_sale(earning.sale)
-
             apprl_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
             total_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
             publisher_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
@@ -1896,7 +1877,6 @@ class AdminDashboardView(TemplateView):
                             'month': month, 'month_display': month_display,
                             'top_publishers': top_publishers,
                             'top_products': top_products,
-                            'earnings': earnings,
                             'monthly_array': monthly_array,
                             }
             return render(request, 'dashboard/new_admin.html', context_data)
