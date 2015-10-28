@@ -1486,7 +1486,7 @@ class TestSalesPerClick(TransactionTestCase):
         # Simulate a POST call for clicks detail
         dict_data = {'user_id': self.user.id, 'vendor': self.vendor.name, 'clicks': 100, 'amount': user_earning.amount,
                      'date': calendar.timegm(yesterday.timetuple())}
-        response = self.client.post(reverse('clicks-detail'), dict_data,
+        response = self.client.get(reverse('clicks-detail'), dict_data,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         response_dict = json.loads(response.content)

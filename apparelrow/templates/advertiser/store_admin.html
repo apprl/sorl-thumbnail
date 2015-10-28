@@ -272,7 +272,7 @@
         var clicks = $(this).data("clicks");
         var currency = 'original';
         $.ajax({
-            type: "post",
+            type: "get",
             url: "{% url 'clicks-detail' %}",
             data: { user_id: user_id, vendor : vendor, date : date, currency: currency, amount: amount, clicks: clicks},
             success: function (response) {

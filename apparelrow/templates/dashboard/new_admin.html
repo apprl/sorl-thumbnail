@@ -58,7 +58,7 @@
         new Tablesort($('table#top-publishers').get(0));
         new Tablesort($('table#top-publishers-more').get(0))
       });
-            /*
+        /*
             Load detail click earning details for clicks in a modal
         */
         function load_detailed_data_clicks(json_detail, date, vendor, currency){
@@ -75,7 +75,7 @@
             $("#modal-date").html(date);
             $("#modal-vendor").html(vendor);
             $("#modal_detail_clicks").modal("show");
-};
+        };
     </script>
 {% endblock %}
 
@@ -212,8 +212,10 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h2>{% trans "All earnings" %} {{ month_display }} {{ year }}</h2>
-            <table class="sortable table" id="all-earnings">
+            <h2>{% trans "Last earnings" %} {{ month_display }} {{ year }}</h2>
+
+            <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
+            <table class="sortable table" id="all-earnings" style="display: none;">
                 <thead>
                     <tr>
                         <th>{% trans "Date" %}</th>
@@ -226,45 +228,10 @@
                         <th>{% trans "Earnings" %}</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for earning in earnings %}
-                    <tr>
-                        <td data-sort="{{ earning.date|date:"U" }}">{{ earning.date }}</td>
-                        <td data-sort="{{ earning.sale }}">{{ earning.sale.id }}</td>
-                        {% if earning.user_earning_type == "publisher_sale_click_commission"  %}
-                            <td colspan="2" >
-                                {% trans "Clicks to " %}{{ earning.sale.vendor }}
-                                <a class="click-detail" data-user="{{ earning.sale.user_id }}"
-                                   data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
-                                   data-date_display="{{ earning.date.date }}"
-                                   data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
-                                    ({% trans "Click for details" %})
-                                </a>
-                            </td>
-                        {% elif earning.user_earning_type == "publisher_network_click_tribute"  %}
-                            <td colspan="2">
-                                {% if earning.from_user %}{% trans "Clicks by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %} to {{ earning.sale.vendor }}{% endif %}
-                                <a class="click-detail" data-user="{{ earning.sale.user_id }}"
-                                   data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
-                                   data-date_display="{{ earning.date.date }}"
-                                   data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
-                                    ({% trans "Click for details" %})
-                                </a>
-                            </td>
-                        {% else %}
-                        <td data-sort="{{ earning.product_name }}">{% if earning.product_image %}<a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a>{% endif %}</td>
-                        <td><a href="{{ earning.product_link }}">{{ earning.product_name }}</a></td>
-                        {% endif %}
-                        <td data-sort="{{ earning.from_user_name }}">{% if earning.from_user_avatar %}<a href="{{ earning.from_user_link }}"><img src="{{ earning.from_user_avatar }}"></a>{% endif %}</td>
-                        <td><a href="{{ earning.from_user_link }}">{{ earning.from_user_name }}</a></td>
-                        <td data-sort="{{ earning.get_user_earning_type_display }}">{{ earning.get_user_earning_type_display }}</td>
-                        <td data-sort="{{ earning.amount }}">{{ earning.amount }} {{ currency }}</td>
-                    </tr>
-                    {% empty %}
+                <tbody id="body-earnings">
                     <tr>
                         <td colspan="6">{% trans "No sales yet." %}</td>
                     </tr>
-                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -278,7 +245,7 @@
         var amount = $(this).data("amount");
         var clicks = $(this).data("clicks");
         $.ajax({
-            type: "post",
+            type: "get",
             url: "{% url 'clicks-detail' %}",
             data: { user_id: user_id, vendor : vendor, date : date, amount: amount, clicks: clicks},
             success: function (response) {
@@ -286,6 +253,53 @@
                 load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}");
             }
         });
+    });
+
+    function load_detailed_earnings(data, currency) {
+        htmlString = "";
+        if (data.length > 0){
+            for (i = 0; i < data.length; i++){
+                htmlString += "<tr>";
+                htmlString += "<td data-sort=\""+data[i].date+"\">"+data[i].date_string+"</td>";
+                htmlString += "<td data-sort=\""+data[i].sale_id+"\">"+data[i].sale_id+"</td>";
+                if (data[i].user_earning_type == "publisher_sale_click_commission"){
+                    htmlString += "<td colspan=\"2\">";
+                    htmlString += "Clicks to " + data[i].sale_vendor + "</td>" ;
+                    htmlString += "<a class=\"click-detail\" data-user=\""+data[i].user_id+"\" data-vendor=\""+data[i].vendor+"\"" +
+                           "data-date=\""+data[i].date+"\" data-date_display=\""+data[i].date_string+"\"" +
+                           "data-amount=\""+data[i].amount+"\" data-clicks=\""+data[i].clicks+"\" > Click for details </a>";
+                    htmlString += "</td>";
+                } else if (data[i].user_earning_type == "publisher_network_click_tribute"){
+                    htmlString += "<td colspan=\"2\">";
+                    htmlString += "Clicks by " + data[i].from_user_name + " to " + data[i].sale_vendor + "</td>" ;
+                    htmlString += "<a class=\"click-detail\" data-user=\""+data[i].user_id+"\" data-vendor=\""+data[i].vendor+"\"" +
+                           "data-date=\""+data[i].date+"\" data-date_display=\""+data[i].date_string+"\"" +
+                           "data-amount=\""+data[i].amount+"\" data-clicks=\""+data[i].clicks+"\" > Click for details </a>";
+                    htmlString += "</td>";
+                } else {
+                    htmlString += "<td data-sort=\""+data[i].product_name+"\"> <a href=\""+data[i].product_link+"\"><img src=\""+data[i].product_image+"\"></a></td>";
+                    htmlString += "<td><a href=\""+data[i].product_link+"\">"+data[i].product_name+"</a></td>";
+                }
+                htmlString += "<td data-sort=\""+data[i].from_user_name+"\"><a href=\""+data[i].from_user_link+"\"><img src=\""+data[i].from_user_avatar+"\"></a></td>";
+                htmlString += "<td><a href=\""+data[i].from_user_link+"\">"+data[i].from_user_name+"</td>";
+                htmlString += "<td data-sort=\""+data[i].user_earning_type_display+"\">"+data[i].user_earning_type_display+"</td>";
+                htmlString += "<td data-sort=\""+data[i].amount+"\">"+data[i].amount+" " + currency + "</td>";
+                htmlString += "</tr>";
+            }
+            $('#body-earnings').html(htmlString);
+            $('#all-earnings').show();
+        }
+        $('#loading-img').hide();
+    }
+
+    $.ajax({
+        type: "get",
+        url: "{% url 'detail-earnings' %}",
+        data: { month: {{ month }}, year : {{ year }}},
+        success: function (response) {
+            var json = jQuery.parseJSON(response);
+            load_detailed_earnings(json, "{{ currency }}");
+        }
     });
 </script>
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
