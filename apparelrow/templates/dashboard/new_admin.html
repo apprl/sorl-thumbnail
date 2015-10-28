@@ -245,7 +245,7 @@
         var amount = $(this).data("amount");
         var clicks = $(this).data("clicks");
         $.ajax({
-            type: "post",
+            type: "get",
             url: "{% url 'clicks-detail' %}",
             data: { user_id: user_id, vendor : vendor, date : date, amount: amount, clicks: clicks},
             success: function (response) {
@@ -293,7 +293,7 @@
     }
 
     $.ajax({
-        type: "post",
+        type: "get",
         url: "{% url 'detail-earnings' %}",
         data: { month: {{ month }}, year : {{ year }}},
         success: function (response) {

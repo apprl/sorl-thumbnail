@@ -83,9 +83,9 @@ def render_detail_earnings(request):
     """
         Return a list of user earning details given a date range when an AJAX request is made
     """
-    if request.method == 'POST' and request.is_ajax():
-        month = request.POST.get('month', None)
-        year = request.POST.get('year', None)
+    if request.method == 'GET' and request.is_ajax():
+        month = request.GET.get('month', None)
+        year = request.GET.get('year', None)
         if month and year:
             if month == '0':
                 start_date = datetime.date(int(year), int(1), 1)
@@ -1542,15 +1542,15 @@ def clicks_detail(request):
     """
         Return a list of click details given an user, vendor and date
     """
-    if request.method == 'POST' and request.is_ajax():
-        user_id = request.POST.get('user_id', None)
-        vendor = request.POST.get('vendor', None)
-        currency = request.POST.get('currency', 'EUR')
-        num_clicks = request.POST.get('clicks', 0)
-        amount_for_clicks = request.POST.get('amount', 0).replace(',', '.')
+    if request.method == 'GET' and request.is_ajax():
+        user_id = request.GET.get('user_id', None)
+        vendor = request.GET.get('vendor', None)
+        currency = request.GET.get('currency', 'EUR')
+        num_clicks = request.GET.get('clicks', 0)
+        amount_for_clicks = request.GET.get('amount', 0).replace(',', '.')
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
-            query_date = datetime.datetime.fromtimestamp(int(request.POST['date']))
+            query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
             data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
