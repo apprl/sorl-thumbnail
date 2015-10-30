@@ -742,37 +742,6 @@ def dashboard_admin(request, year=None, month=None):
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, limit=50)
 
-        earnings = get_model('dashboard', 'UserEarning').objects\
-            .filter(date__range=(start_date_query, end_date_query), status__gte=Sale.PENDING)\
-            .order_by('-date')
-        for earning in earnings:
-            earning.extra_sale = None
-            for sale in sales:
-                if earning.sale.id == sale['id']:
-                    earning.extra_sale = sale
-            sale = get_model('dashboard', 'Sale').objects.get(id=earning.sale.id)
-            earning.product_image = ''
-            earning.product_link = ''
-            earning.product_name= ''
-            try:
-                product = get_model('apparel', 'Product').objects.get(id=sale.product_id)
-                product_image, product_link = get_product_thumbnail_and_link(product)
-                earning.product_image = product_image
-                earning.product_link = product_link
-                earning.product_name = product.product_name
-            except get_model('apparel', 'Product').DoesNotExist:
-                pass
-            earning.from_user_link = ''
-            if earning.user:
-                earning.from_user_link = reverse('profile-likes', args=[earning.user.slug])
-                earning.from_user_name = earning.user.slug
-                earning.from_user_avatar = earning.user.avatar_small
-                if earning.user.name:
-                    earning.from_user_name = earning.user.name
-            else:
-                earning.from_user_name = "APPRL"
-
-            earning.clicks = get_clicks_from_sale(earning.sale)
 
         sales_count = [0, 0, 0] #total, publisher, apprl
         total_apprl_earnings = 0
@@ -877,7 +846,6 @@ def dashboard_admin(request, year=None, month=None):
                                                         'top_publishers': top_publishers,
                                                         'most_clicked_products': most_clicked_products,
                                                         'currency': 'EUR',
-                                                        'earnings': earnings,
                                                         'monthly_array': monthly_array})
     return HttpResponseNotFound()
 
