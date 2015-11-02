@@ -10,7 +10,7 @@ from django.db.models import Count
 from apparelrow.dashboard.models import Sale, UserEarning, AggregatedData
 from apparelrow.dashboard.views import get_clicks_from_sale
 from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_dict, get_user_thumbnail_and_link, \
-    get_user_attrs
+    get_user_attrs, get_day_range
 
 from django.core.management.base import BaseCommand
 
@@ -28,6 +28,40 @@ class Command(BaseCommand):
             default= None,
         ),
     )
+
+    def generate_aggregated_data_network_owner(self, owner, product, vendor, day, clicks, user):
+        start_date, end_date = get_day_range(day)
+        clicks = decimal.Decimal(clicks)
+
+        ownerp_instance, ownerp_created = AggregatedData.objects.\
+            get_or_create(user_id=owner.id, created=day, data_type='aggregated_from_product',
+                      aggregated_from_id=product.id, aggregated_from_name=product.product_name,
+                      aggregated_from_slug=product.slug)
+        if ownerp_created:
+            ownerp_instance.user_image, ownerp_instance.user_link = get_user_thumbnail_and_link(owner)
+            ownerp_instance.aggregated_from_image, ownerp_instance.aggregated_from_link = get_product_thumbnail_and_link(product)
+            _, ownerp_instance.user_name, ownerp_instance.user_username = get_user_attrs(owner)
+        if vendor.is_cpc:
+            ownerp_instance.paid_clicks += decimal.Decimal(clicks)
+            try:
+                sale = Sale.objects.get(user_id=user.id, sale_date__range=(start_date, end_date),
+                                        vendor=vendor, affiliate="cost_per_click")
+                earning = UserEarning.objects.get(user_id=owner.id,
+                                                  user_earning_type='publisher_network_click_tribute',
+                                                  from_user=user, date=day, sale=sale)
+                clicks_number = get_clicks_from_sale(earning.sale)
+                click_cost = 0
+                if clicks_number > 0:
+                    click_cost = earning.amount / clicks_number
+
+                ownerp_instance.click_earnings += click_cost * clicks
+                ownerp_instance.sale_plus_click_earnings += click_cost * clicks
+            except Sale.DoesNotExist:
+                logger.warning("Sale for user %s, owner %s, date %s does not exist" % (user.id, owner.id, day))
+            except UserEarning.DoesNotExist:
+                logger.warning("Click earning for user %s date %s does not exist" % (owner.id, day))
+        ownerp_instance.total_clicks += decimal.Decimal(clicks)
+        ownerp_instance.save()
 
     def get_date_range(self, q_date):
         if q_date:
@@ -57,6 +91,9 @@ class Command(BaseCommand):
             get_or_create(user_id=user_dict['user_id'], created=row.date.date(), data_type='aggregated_from_total',
                           user_name=user_dict['user_name'], user_username=user_dict['user_username'])
 
+        if created:
+            instance.user_image, instance.user_link = get_user_thumbnail_and_link(row.user)
+
         # Aggregate earnings by type
         if row.user_earning_type in ('referral_sale_commission', 'referral_signup_commission'):
             instance.referral_sales += 1
@@ -78,9 +115,6 @@ class Command(BaseCommand):
             instance.sale_plus_click_earnings += earning_amount
             instance.paid_clicks += get_clicks_from_sale(row.sale)
 
-        if created:
-            instance.user_image, instance.user_link = get_user_thumbnail_and_link(row.user)
-
         if user_dict['user_id'] == 0 and row.user_earning_type == 'apprl_commission':
             if row.sale.type == Sale.COST_PER_CLICK:
                 instance.click_earnings += earning_amount
@@ -94,57 +128,61 @@ class Command(BaseCommand):
         instance.save()
 
     def generate_aggregated_from_product(self, row, user_dict, earning_amount, start_date, end_date):
-        if row.from_product:
-            product_instance, product_created = AggregatedData.objects.\
-                get_or_create(user_id=user_dict['user_id'], created=row.date.date(), data_type='aggregated_from_product', aggregated_from_id=row.from_product.id)
-            if product_created:
-                product_instance.user_image, product_instance.user_link = get_user_thumbnail_and_link(row.user)
-                product_instance.user_name = user_dict['user_name']
-                product_instance.user_username = user_dict['user_name']
-                product_instance.aggregated_from_image, product_instance.aggregated_from_link = get_product_thumbnail_and_link(row.from_product)
+        logger.debug("Generating aggregated data for product %s" % row.from_product.product_name)
+        instance, created = AggregatedData.objects.\
+            get_or_create(user_id=user_dict['user_id'], created=row.date.date(), data_type='aggregated_from_product',
+                          aggregated_from_id=row.from_product.id)
+        if created:
+            logger.debug("Product %s has been created" % row.from_product.product_name)
+            instance.user_image, instance.user_link = get_user_thumbnail_and_link(row.user)
+            instance.user_name = user_dict['user_name']
+            instance.user_username = user_dict['user_name']
+            instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(row.from_product)
 
-            if row.user_earning_type in ('publisher_sale_commission', 'apprl_commission'):
-                product_instance.sale_earnings += row.amount
-                product_instance.sales += 1
-            elif row.user_earning_type == 'referral_sale_commission':
-                product_instance.referral_sales += 1
-                product_instance.referral_earnings += earning_amount
-            product_instance.aggregated_from_id = row.from_product.id
-            product_instance.aggregated_from_name = row.from_product.product_name \
-                if row.from_product.product_name else ''
-            product_instance.aggregated_from_slug = row.from_product.slug if row.from_product.slug else ''
-            product_instance.save()
+        if row.user_earning_type in ('publisher_sale_commission', 'apprl_commission'):
+            instance.sale_earnings += row.amount
+            instance.sales += 1
+        elif row.user_earning_type == 'referral_sale_commission':
+            instance.referral_sales += 1
+            instance.referral_earnings += earning_amount
+        instance.aggregated_from_id = row.from_product.id
+        instance.aggregated_from_name = row.from_product.product_name \
+            if row.from_product.product_name else ''
+        instance.aggregated_from_slug = row.from_product.slug if row.from_product.slug else ''
+        instance.save()
 
-            if product_created:
-                clicks_count = get_model('statistics', 'ProductStat').objects.\
-                    filter(is_valid=True, user_id=user_dict['user_id'], vendor=row.sale.vendor.name, product=row.from_product.slug,
-                           created__range=(start_date, end_date)).count()
-                if row.sale.vendor.is_cpc:
-                    product_instance.paid_clicks = clicks_count
-                product_instance.total_clicks = clicks_count
-                product_instance.aggregated_from_image, product_instance.aggregated_from_link = get_product_thumbnail_and_link(row.from_product)
-            product_instance.save()
+        if created:
+            clicks_count = get_model('statistics', 'ProductStat').objects.\
+                filter(is_valid=True, user_id=user_dict['user_id'], vendor=row.sale.vendor.name, product=row.from_product.slug,
+                       created__range=(start_date, end_date)).count()
+            if row.sale.vendor.is_cpc:
+                instance.paid_clicks = clicks_count
+            instance.total_clicks = clicks_count
+            user = None if user_dict['user_id'] == 0 else get_user_model().objects.get(id=user_dict['user_id'])
+            _, instance.user_name, instance.user_username = get_user_attrs(user)
+            instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(row.from_product)
+        instance.save()
 
     def generate_aggregated_from_publisher(self, row, user_dict, start_date, end_date):
         """
             Generate aggregated data from publisher when earning is a tribute
         """
         if row.user_earning_type in ('publisher_network_tribute', 'publisher_network_click_tribute'):
-            publisher_instance, publisher_created = AggregatedData.objects.\
+            instance, publisher_created = AggregatedData.objects.\
                 get_or_create(user_id=user_dict['user_id'], created=row.date.date(), data_type='aggregated_from_publisher',
                               aggregated_from_id=row.from_user.id, user_name=user_dict['user_name'], user_username=user_dict['user_username'])
             publisher_earning = UserEarning.objects.\
                 get(user=row.from_user, date__range=(start_date, end_date), sale=row.sale)
             if publisher_created:
-                publisher_instance.user_image, publisher_instance.user_link = get_user_thumbnail_and_link(row.user)
+                instance.user_image, instance.user_link = get_user_thumbnail_and_link(row.user)
                 stats = get_model('statistics', 'ProductStat').objects.\
                     filter(created__range=(start_date, end_date), user_id=row.from_user.id, is_valid=True).\
                     aggregate(clicks=Count('user_id'))
-                publisher_instance.total_clicks += stats['clicks']
+                instance.total_clicks += stats['clicks']
             if row.user_earning_type == 'publisher_network_tribute':
-                publisher_instance.sale_earnings += publisher_earning.amount
-                publisher_instance.network_sale_earnings += row.amount
-                publisher_instance.network_sales += 1
+                instance.sale_earnings += publisher_earning.amount
+                instance.network_sale_earnings += row.amount
+                instance.network_sales += 1
 
                 if row.from_product:
                     product_instance, product_created = AggregatedData.objects.\
@@ -166,16 +204,16 @@ class Command(BaseCommand):
                     product_instance.aggregated_from_slug = row.from_product.slug if row.from_product.slug else ''
                     product_instance.save()
             else:
-                publisher_instance.click_earnings += publisher_earning.amount
-                publisher_instance.network_click_earnings += row.amount
-                publisher_instance.paid_clicks += get_clicks_from_sale(row.sale)
-            publisher_instance.sale_plus_click_earnings += publisher_earning.amount
-            publisher_instance.total_network_earnings += row.amount
-            publisher_instance.aggregated_from_id = row.from_user.id
-            publisher_instance.aggregated_from_name = row.from_user.name if row.from_user.name else ''
-            publisher_instance.aggregated_from_slug = row.from_user.username if row.from_user.username else ''
-            publisher_instance.aggregated_from_image, publisher_instance.aggregated_from_link = get_user_thumbnail_and_link(row.from_user)
-            publisher_instance.save()
+                instance.click_earnings += publisher_earning.amount
+                instance.network_click_earnings += row.amount
+                instance.paid_clicks += get_clicks_from_sale(row.sale)
+            instance.sale_plus_click_earnings += publisher_earning.amount
+            instance.total_network_earnings += row.amount
+            instance.aggregated_from_id = row.from_user.id
+            instance.aggregated_from_name = row.from_user.name if row.from_user.name else ''
+            instance.aggregated_from_slug = row.from_user.username if row.from_user.username else ''
+            instance.aggregated_from_image, instance.aggregated_from_link = get_user_thumbnail_and_link(row.from_user)
+            instance.save()
 
     def generate_aggregated_clicks_from_publisher(self, start_date, end_date):
         # Total clicks under the given period group by user
@@ -189,13 +227,16 @@ class Command(BaseCommand):
         for row in clicks_query:
             instance, created = AggregatedData.objects.\
                 get_or_create(user_id=row['user_id'], created=row['day'], data_type='aggregated_from_total')
-            if created and not (row['user_id'] == 0):
-                try:
-                    row_user = get_user_model().objects.get(id=row['user_id'])
-                    instance.user_image, instance.user_link = get_user_thumbnail_and_link(row_user)
-                    _, instance.user_name, instance.username = get_user_attrs(row_user)
-                except get_user_model().DoesNotExist:
-                    logger.warning("User %s does not exist" % row['user_id'])
+            if created:
+                if row['user_id'] == 0:
+                    _, instance.user_name, instance.user_username = get_user_attrs(None)
+                else:
+                    try:
+                        row_user = get_user_model().objects.get(id=row['user_id'])
+                        instance.user_image, instance.user_link = get_user_thumbnail_and_link(row_user)
+                        _, instance.user_name, instance.user_username = get_user_attrs(row_user)
+                    except get_user_model().DoesNotExist:
+                        logger.warning("User %s does not exist" % row['user_id'])
             instance.total_clicks += row['clicks']
             instance.save()
 
@@ -209,80 +250,69 @@ class Command(BaseCommand):
             order_by('clicks')
 
         for row in aggregated_product_stat:
+            user = None
+            product = None
+            vendor = None
+
+            # Try fetch product if it exists
             try:
                 product = get_model('apparel', 'Product').objects.get(slug=row['product'])
+            except get_model('apparel', 'Product').DoesNotExist:
+                logger.warning("Product %s does not exist" % row['product'])
+
+            # Try fetch vendor if it exists
+            try:
                 vendor = get_model('apparel', 'Vendor').objects.get(name=row['vendor'])
-                user = get_user_model().objects.get(id=row['user_id'])
-                product_instance, product_created = AggregatedData.objects.\
+            except get_model('apparel', 'Vendor').DoesNotExist:
+                logger.warning("Vendor %s does not exist" % row['vendor'])
+
+            # Try fetch user if it is not APPRL user and if user exists
+            if row['user_id'] != 0:
+                try:
+                    user = get_user_model().objects.get(id=row['user_id'])
+                except get_user_model().DoesNotExist:
+                    logger.warning("User %s does not exist" % row['user_id'])
+
+            # If product and vendor exist, generate aggregated data for product
+            if product and vendor:
+                # Get datetime range for entire day
+                start_date, end_date = get_day_range(row['day'])
+
+                # Generate AggregatedData for product
+                instance, created = AggregatedData.objects.\
                     get_or_create(user_id=row['user_id'], created=row['day'], data_type='aggregated_from_product',
                                   aggregated_from_id=product.id, aggregated_from_name=product.product_name,
                                   aggregated_from_slug=product.slug)
-
-                if product_created:
-                    _, product_instance.user_name, product_instance.username  = get_user_attrs(user)
-                    product_instance.user_image, product_instance.user_link = get_user_thumbnail_and_link(user)
-                    product_instance.aggregated_from_image, product_instance.aggregated_from_link = get_product_thumbnail_and_link(product)
+                if created:
+                    _, instance.user_name, instance.user_username  = get_user_attrs(user)
+                    instance.user_image, instance.user_link = get_user_thumbnail_and_link(user)
+                    instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(product)
 
                 if vendor.is_cpc:
-                    product_instance.paid_clicks += decimal.Decimal(row['clicks'])
+                    instance.paid_clicks += decimal.Decimal(row['clicks'])
                     try:
-                        sale = Sale.objects.get(user_id=row['user_id'], sale_date=row['day'], vendor=vendor)
-                        earning = UserEarning.objects.get(user_id=row['user_id'],
-                                                                          user_earning_type='publisher_sale_click_commission',
-                                                                          date=row['day'], sale=sale)
-                        clicks_number = get_clicks_from_sale(earning.sale)
+                        sale = Sale.objects.get(user_id=row['user_id'], sale_date__range=(start_date, end_date),
+                                                vendor=vendor, affiliate="cost_per_click")
+                        earning = UserEarning.objects.get(user_id=row['user_id'], date=row['day'], sale=sale,
+                                                          user_earning_type='publisher_sale_click_commission')
+                        clicks_amount = get_clicks_from_sale(earning.sale)
                         click_cost = 0
-                        if clicks_number > 0:
-                            click_cost = earning.amount / clicks_number
+                        if clicks_amount > 0:
+                            click_cost = earning.amount / clicks_amount
                         clicks = decimal.Decimal(row['clicks'])
-                        product_instance.click_earnings += click_cost * clicks
-                        product_instance.sale_plus_click_earnings += click_cost * clicks
+                        instance.click_earnings += click_cost * clicks
+                        instance.sale_plus_click_earnings += click_cost * clicks
                     except UserEarning.DoesNotExist:
-                        logger.warning("Click earning for user %s date %s does not exist" % (user.id, row['day']))
+                        logger.warning("Click earning for user %s date %s does not exist" % (row['user_id'], row['day']))
                     except Sale.DoesNotExist:
-                        logger.warning("Sale for user %s date %s does not exist" % (user.id, row['day']))
-                    except Exception as e:
-                        logger.warning('%s (%s)' % (e.message, type(e)))
+                        logger.warning("Sale for user %s date %s does not exist" % (row['user_id'], row['day']))
 
-                product_instance.total_clicks += decimal.Decimal(row['clicks'])
-                product_instance.save()
+                instance.total_clicks += decimal.Decimal(row['clicks'])
+                instance.save()
 
-                if user.owner_network:
-                    owner = user.owner_network
-                    ownerp_instance, ownerp_created = AggregatedData.objects.\
-                        get_or_create(user_id=owner.id, created=row['day'], data_type='aggregated_from_product',
-                                  aggregated_from_id=product.id, aggregated_from_name=product.product_name,
-                                  aggregated_from_slug=product.slug)
-                    if ownerp_created:
-                        ownerp_instance.user_image, ownerp_instance.user_link = get_user_thumbnail_and_link(owner)
-                        ownerp_instance.aggregated_from_image, ownerp_instance.aggregated_from_link = get_product_thumbnail_and_link(product)
-                        _, ownerp_instance.user_name, ownerp_instance.username  = get_user_attrs(owner)
-
-                    if vendor.is_cpc:
-                        ownerp_instance.paid_clicks += decimal.Decimal(row['clicks'])
-                        try:
-                            sale = Sale.objects.get(user_id=owner.id, sale_date=row['day'], vendor=vendor)
-                            earning = UserEarning.objects.get(user_id=owner.id,
-                                                              user_earning_type='publisher_network_click_tribute',
-                                                              from_user=user, date=row['day'], sale=sale)
-                            clicks_number = get_clicks_from_sale(earning.sale)
-                            click_cost = 0
-                            if clicks_number > 0:
-                                click_cost = earning.amount / clicks_number
-                            clicks = decimal.Decimal(row['clicks'])
-                            ownerp_instance.click_earnings += click_cost * clicks
-                            ownerp_instance.sale_plus_click_earnings += click_cost * clicks
-                        except UserEarning.DoesNotExist:
-                            logger.warning("Click earning for user %s date %s does not exist" % (owner.id, row['day']))
-
-                    ownerp_instance.total_clicks += decimal.Decimal(row['clicks'])
-                    ownerp_instance.save()
-            except get_model('apparel', 'Vendor').DoesNotExist:
-                logger.warning("Vendor %s does not exist" % row['vendor'])
-            except get_user_model().DoesNotExist:
-                logger.warning("User %s does not exist" % row['user_id'])
-            except Exception as e:
-                logger.warning('%s (%s)' % (e.message, type(e)))
+                if user and user.owner_network:
+                    self.generate_aggregated_data_network_owner(user.owner_network, product, vendor, row['day'],
+                                                                row['clicks'], user)
 
     def handle(self, *args, **options):
         start_date, end_date = self.get_date_range(options.get('date'))
@@ -303,7 +333,8 @@ class Command(BaseCommand):
 
             # Generate different aggregated data
             self.generate_aggregated_from_total(row, user_dict, earning_amount)
-            self.generate_aggregated_from_product(row, user_dict, earning_amount, start_date, end_date)
+            if row.from_product:
+                self.generate_aggregated_from_product(row, user_dict, earning_amount, start_date, end_date)
             self.generate_aggregated_from_publisher(row, user_dict, start_date, end_date)
 
         logger.debug("Generating aggregated clicks... ")

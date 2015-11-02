@@ -269,3 +269,7 @@ def retrieve_user_earnings(start_date, end_date, limit=40):
         earnings_list.append(temp_dict)
     return earnings_list
 
+def get_day_range(q_date):
+    start_date = datetime.datetime.combine(q_date, datetime.time(0, 0, 0, 0))
+    end_date = datetime.datetime.combine(q_date, datetime.time(23, 59, 59, 999999))
+    return start_date, end_date

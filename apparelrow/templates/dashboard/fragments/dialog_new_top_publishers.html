@@ -15,8 +15,11 @@
                         <th class="col-md-5 hidden-xs center"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
                         <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
-                        {% if is_admin %}
+                        {% if is_owner %}
                         <th class="col-md-2 center">{% trans "Network earnings" %}</th>
+                        {% endif %}
+                        {% if is_admin %}
+                        <th class="col-md-2 center">{% trans "Earning per click" %}</th>
                         {% endif %}
                     </tr>
                 </thead>
@@ -48,9 +51,15 @@
                         <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
                             {{ currency }} {{ publisher.total_earnings }}
                         </td>
-                        {% if is_admin %}
+                        {% if is_owner %}
                         <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
                             {{ currency }} {{ publisher.total_network_earnings }}
+                        </td>
+                        {% endif %}
+                        {% if is_admin %}
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|commission_rate:publisher.total_clicks }}">
+                            {% if publisher.total_clicks %}{{ currency }} {% endif %}
+                            {{ publisher.total_earnings|decimal_div:publisher.total_clicks }}
                         </td>
                         {% endif %}
                     </tr>

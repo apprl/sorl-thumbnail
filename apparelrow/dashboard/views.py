@@ -1582,7 +1582,6 @@ class DashboardView(TemplateView):
                 values('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
                        'network_sale_earnings')
 
-
             data_per_day = {}
             for day in range(0, (end_date - start_date).days + 2):
                 data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
@@ -1612,7 +1611,8 @@ class DashboardView(TemplateView):
 
             non_paid_clicks = 0
             paid_clicks = 0
-            if 'total_clicks__sum' in sum_data and 'paid_clicks__sum' in sum_data:
+            if 'total_clicks__sum' in sum_data and 'paid_clicks__sum' in sum_data and sum_data['total_clicks__sum'] \
+                    and sum_data['paid_clicks__sum']:
                 paid_clicks = sum_data['paid_clicks__sum']
                 non_paid_clicks = sum_data['total_clicks__sum'] - sum_data['paid_clicks__sum']
 
@@ -1626,9 +1626,8 @@ class DashboardView(TemplateView):
             # Aggregate publishers per month
             top_publishers = AggregatedData.objects.\
                 filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
-                       data_type='aggregated_from_publisher').\
-                values('user_id', 'aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
-                       'aggregated_from_link').\
+                       data_type='aggregated_from_total').exclude(user_id=0).\
+                values('user_id', 'user_name', 'user_username', 'user_image', 'user_link').\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
                          total_network_earnings=Sum('total_network_earnings'),
                          total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings')
@@ -1761,6 +1760,7 @@ class AdminDashboardView(TemplateView):
                 filter(created__range=(start_date_query, end_date_query),
                        data_type='aggregated_from_total').\
                 values('user_id', 'user_name', 'user_username', 'user_link', 'user_image', 'aggregated_from_link').\
+                exclude(user_id=0).\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
                          total_network_earnings=Sum('total_network_earnings'),
                          total_clicks=Sum('total_clicks')).order_by('-total_earnings')
@@ -1776,6 +1776,8 @@ class AdminDashboardView(TemplateView):
             apprl_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
             total_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
             publisher_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
+            avg_epc_array = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0]
+            clicks_array = [0, 0, 0]
 
             # Aggregated Sum per month
             apprl_query = AggregatedData.objects.\
@@ -1785,9 +1787,9 @@ class AdminDashboardView(TemplateView):
                 apprl_data = apprl_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
                           sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
                           total_clicks=Sum('total_clicks'), sales=Sum('sales'))
-                apprl_top[0] = '%.2f EUR' % apprl_data['sale_clicks']
-                apprl_top[1] = '%.2f EUR' % apprl_data['sale_earnings']
-                apprl_top[2] = '%.2f EUR' % apprl_data['click_earnings']
+                apprl_top[0] = 'EUR %.2f' % apprl_data['sale_clicks']
+                apprl_top[1] = 'EUR %.2f' % apprl_data['sale_earnings']
+                apprl_top[2] = 'EUR %.2f' % apprl_data['click_earnings']
                 apprl_top[3] = apprl_data['paid_clicks']
                 apprl_top[4] = apprl_data['total_clicks'] - apprl_data['paid_clicks']
                 apprl_top[5] = apprl_data['sales']
@@ -1806,13 +1808,26 @@ class AdminDashboardView(TemplateView):
                              total_data['network_sale_earnings'] + total_data['network_click_earnings']
                 total_commission = total_data['sale_earnings'] + total_data['referral_earnings'] + total_data['network_sale_earnings']
                 total_ppc = total_data['click_earnings'] + total_data['network_click_earnings']
-                total_top[0] = '%.2f EUR' % total_earnings
-                total_top[1] = '%.2f EUR' % total_commission
-                total_top[2] = '%.2f EUR' % total_ppc
+                total_top[0] = 'EUR %.2f' % total_earnings
+                total_top[1] = 'EUR %.2f' % total_commission
+                total_top[2] = 'EUR %.2f' % total_ppc
                 total_top[3] = total_data['paid_clicks']
-                total_top[4] = total_data['total_clicks'] - total_data['paid_clicks']
+                cpo_clicks = total_data['total_clicks'] - total_data['paid_clicks']
+                total_top[4] = cpo_clicks
                 total_top[5] = total_data['sales']
                 total_top[6] = get_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
+
+                # Calculate average earning per click
+                if total_data['total_clicks'] > 0:
+                    avg_epc_array[0] = "EUR %.2f" % (total_earnings / decimal.Decimal(total_data['total_clicks']))
+                if total_data['paid_clicks'] > 0:
+                    avg_epc_array[1] = "EUR %.2f" % (total_ppc / decimal.Decimal(total_data['paid_clicks']))
+                if cpo_clicks >0:
+                    avg_epc_array[2] = "EUR %.2f" % (total_commission / decimal.Decimal(cpo_clicks))
+
+                clicks_array[0] = total_data['total_clicks']
+                clicks_array[1] = total_data['paid_clicks']
+                clicks_array[2] = cpo_clicks
 
             publisher_query = AggregatedData.objects.\
                 filter(created__range=(start_date_query, end_date_query), user_id__gt=0, data_type='aggregated_from_total')
@@ -1827,9 +1842,9 @@ class AdminDashboardView(TemplateView):
                 publisher_commission = publisher_data['sale_earnings'] + total_data['referral_earnings']\
                                        + total_data['network_sale_earnings']
                 publisher_ppc = publisher_data['click_earnings'] + publisher_data['network_click_earnings']
-                publisher_top[0] = '%.2f EUR' % publisher_total
-                publisher_top[1] = '%.2f EUR' % publisher_commission
-                publisher_top[2] = '%.2f EUR' % publisher_ppc
+                publisher_top[0] = 'EUR %.2f' % publisher_total
+                publisher_top[1] = 'EUR %.2f' % publisher_commission
+                publisher_top[2] = 'EUR %.2f' % publisher_ppc
                 publisher_top[3] = publisher_data['paid_clicks']
                 publisher_top[4] = publisher_data['total_clicks'] - publisher_data['paid_clicks']
                 publisher_top[5] = publisher_data['sales']
@@ -1846,6 +1861,8 @@ class AdminDashboardView(TemplateView):
                             'top_publishers': top_publishers,
                             'top_products': top_products,
                             'monthly_array': monthly_array,
+                            'avg_epc_array': avg_epc_array,
+                            'clicks_array': clicks_array,
                             }
             return render(request, 'dashboard/new_admin.html', context_data)
         return HttpResponseRedirect(reverse('new-admin'))
