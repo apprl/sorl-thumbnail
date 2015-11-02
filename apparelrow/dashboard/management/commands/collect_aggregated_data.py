@@ -190,9 +190,12 @@ class Command(BaseCommand):
             instance, created = AggregatedData.objects.\
                 get_or_create(user_id=row['user_id'], created=row['day'], data_type='aggregated_from_total')
             if created and not (row['user_id'] == 0):
-                row_user = get_user_model().objects.get(id=row['user_id'])
-                instance.user_image, instance.user_link = get_user_thumbnail_and_link(row_user)
-                _, instance.user_name, instance.username = get_user_attrs(row_user)
+                try:
+                    row_user = get_user_model().objects.get(id=row['user_id'])
+                    instance.user_image, instance.user_link = get_user_thumbnail_and_link(row_user)
+                    _, instance.user_name, instance.username = get_user_attrs(row_user)
+                except get_user_model().DoesNotExist:
+                    logger.warning("User %s does not exist" % row['user_id'])
             instance.total_clicks += row['clicks']
             instance.save()
 
