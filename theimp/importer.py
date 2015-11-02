@@ -63,7 +63,7 @@ class Importer(object):
 
             yesterday = timezone.now() - datetime.timedelta(hours=48)
             for product_id in self.site_product_model.objects.filter(vendors=vendor.vendor_id, availability=True, modified__lte=yesterday).values_list('id', flat=True):
-                logger.debug('Setting availability to false for product with id %s due to the item has not been imported since %s or later ' % (yesterday,product_id,))
+                logger.debug('Setting availability to false for product with id %s due to the item has not been imported since %s or later [%s]' % (product_id,yesterday,vendor))
                 if not dry:
                     product = self.site_product_model.objects.get(pk=product_id)
                     product.availability=False
