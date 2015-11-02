@@ -17,8 +17,9 @@ TEMPLATE_DEBUG = DEBUG
 FORCE_SCRIPT_NAME = ''
 
 ADMINS = (
-    #('Joel Bohman', 'joelboh@gmail.com'),
+    # ('Joel Bohman', 'joelboh@gmail.com'),
     ('Klas Wikblad', 'klas@apprl.com'),
+    ('Emily Benitez', 'emily@apprl.com'),
 )
 
 MANAGERS = ADMINS + (
@@ -52,7 +53,7 @@ DECIMAL_SEPARATOR = '.'
 
 # Locale paths
 LOCALE_PATHS = (
-    os.path.join(SERVER_APP_ROOT, 'var','locale'),
+    os.path.join(SERVER_APP_ROOT, 'var', 'locale'),
 )
 
 # Language code for this installation. All choices can be found here:
@@ -84,7 +85,7 @@ SHORT_LANGUAGES_DISPLAY = (
     ('da', gettext(u'Dnk (DKK)')),
     ('no', gettext(u'Nor (NOK)')),
 )
-SHORT_LANGUAGES_LIST_DISPLAY = ('en','sv','no')
+SHORT_LANGUAGES_LIST_DISPLAY = ('en', 'sv', 'no')
 LANGUAGE_TO_CURRENCY = {
     'en': 'USD',
     'sv': 'SEK',
@@ -99,32 +100,32 @@ MAX_MIN_CURRENCY = {
 }
 
 VENDOR_LOCATION_MAPPING = {
-    "Shirtonomy":["DK","SE"],
-    "Ted & Teresa":["SE"],
-    "ConfidentLiving":["SE"],
-    "MQ":["SE"],
-    "Care of Carl":["SE","NO"],
+    "Shirtonomy": ["DK", "SE"],
+    "Ted & Teresa": ["SE"],
+    "ConfidentLiving": ["SE"],
+    "MQ": ["SE"],
+    "Care of Carl": ["SE", "NO"],
     "ALDO": ["US"],
-    "ASOS": ["SE","NO","ALL"],
-    "Eleven": ["SE","ALL"],
+    "ASOS": ["SE", "NO", "ALL"],
+    "Eleven": ["SE", "ALL"],
     "Happy Socks": ["SE"],
     "Elevenfiftynine": ["SE"],
-    "Frontmen": ["ALL","SE","NO","DK"],
+    "Frontmen": ["ALL", "SE", "NO", "DK"],
     "Filippa K": ["SE"],
     "JC": ["SE"],
-    "Nelly":["SE"],
-    "Nelly No":["NO"],
-    "Gina Tricot NO":["NO"],
-    "Gina Tricot SE":["SE"],
-    "Gina Tricot DK":["DK"],
-    "Panos Emporio":["SE"],
-    "Boozt se":["SE"],
-    "Boozt no":["NO"],
-    "ASOS no":["NO"],
-    "QVC":["US"],
-    "Room 21 no":["NO"],
-    "Rum 21 se":["SE"],
-    "default":["ALL","SE","NO","US","DK"],
+    "Nelly": ["SE"],
+    "Nelly No": ["NO"],
+    "Gina Tricot NO": ["NO"],
+    "Gina Tricot SE": ["SE"],
+    "Gina Tricot DK": ["DK"],
+    "Panos Emporio": ["SE"],
+    "Boozt se": ["SE"],
+    "Boozt no": ["NO"],
+    "ASOS no": ["NO"],
+    "QVC": ["US"],
+    "Room 21 no": ["NO"],
+    "Rum 21 se": ["SE"],
+    "default": ["ALL", "SE", "NO", "US", "DK"],
 }
 
 LOCATION_MAPPING = (
@@ -136,11 +137,11 @@ LOCATION_MAPPING = (
 )
 
 LOCATION_LANGUAGE_MAPPING = (
-                             ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
-                             ("DK", gettext("Denmark (DKK)"), LANGUAGES_DISPLAY[2]),
-                             ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[3]),
-                             ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
-                             ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
+    ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
+    ("DK", gettext("Denmark (DKK)"), LANGUAGES_DISPLAY[2]),
+    ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[3]),
+    ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
+    ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
 )
 
 # Locale url plugin
@@ -188,19 +189,19 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 
-    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Django-storages
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-#AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
-#AWS_SECRET_ACCESS_KEY = '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'
+# AWS_ACCESS_KEY_ID = 'AKIAIK3KEJCJEMGA2LTA'
+# AWS_SECRET_ACCESS_KEY = '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'
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
 AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
 AWS_HEADERS = {
-        'Expires': 'Sat, Nov 01 2015 20:00:00 GMT',
-        'Cache-Control': 'max-age=86400, public',
+    'Expires': 'Sat, Nov 01 2016 20:00:00 GMT',
+    'Cache-Control': 'max-age=86400, public',
 }
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_SECURE_URLS = False
@@ -260,7 +261,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-
 ROOT_URLCONF = 'apparelrow.urls'
 
 INSTALLED_APPS = (
@@ -278,13 +278,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     # External
-    'mptt',                 # External: Category tree
-    'sorl.thumbnail',       # External: Thumbnail module
+    'mptt',  # External: Category tree
+    'sorl.thumbnail',  # External: Thumbnail module
     'djcelery',
     'tagging',
-    'django_extensions',    # External: Used for auto-slug field
-    'south',                # External: Database migration
-    'modeltranslation',     # External: Used for category translation
+    'django_extensions',  # External: Used for auto-slug field
+    'south',  # External: Database migration
+    'modeltranslation',  # External: Used for category translation
     'jsmin',
     'pipeline',
     'storages',
@@ -297,10 +297,10 @@ INSTALLED_APPS = (
     # Internal
     'theimp',
     'advertiser',
-    'apparelrow.profile',              # Internal: User related module
-    'apparelrow.apparel',              # Internal: Product display module
-    'apparelrow.importer',             # Internal: Product importer module
-    'apparelrow.statistics',           # Internal: Click statistics module
+    'apparelrow.profile',  # Internal: User related module
+    'apparelrow.apparel',  # Internal: Product display module
+    'apparelrow.importer',  # Internal: Product importer module
+    'apparelrow.statistics',  # Internal: Click statistics module
     'apparelrow.dashboard',
     'apparelrow.activity_feed',
     'apparelrow.scheduledjobs',
@@ -315,7 +315,7 @@ STATICSITEMAPS_ROOT_SITEMAP = 'apparelrow.sitemaps.sitemaps'
 STATICSITEMAPS_ROOT_DIR = os.path.join(PROJECT_ROOT, 'sitemaps')
 STATICSITEMAPS_USE_GZIP = True
 STATICSITEMAPS_PING_GOOGLE = False
-STATICSITEMAPS_REFRESH_AFTER = 60 # every hour in minutes
+STATICSITEMAPS_REFRESH_AFTER = 60  # every hour in minutes
 
 # - PIPELINE SETTINGS -
 PIPELINE_COMPILERS = (
@@ -340,7 +340,7 @@ PIPELINE_CSS = {
         'output_filename': 'css/home.css',
         'extra_context': {
             'media': 'screen,projection',
-            }
+        }
     },
     'normalize': {
         'source_filenames': (
@@ -349,7 +349,7 @@ PIPELINE_CSS = {
         'output_filename': 'css/normalize.css',
         'extra_context': {
             'media': 'screen,projection',
-            }
+        }
     }
 }
 #PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.jsmin.JSMinCompressor'
@@ -414,7 +414,7 @@ PIPELINE_JS = {
                              'js/apparel.js',
                              'js/filtersetup.js',
                              'js/browse.js',
-                             ),
+        ),
         'output_filename': 'js/compiled/main.js',
     },
     'shop': {
@@ -477,7 +477,7 @@ PIPELINE_JS = {
 
             'js/app/shop_editor/shop_creator.js',
         ),
-      'output_filename': 'js/compiled/create_store.js',
+        'output_filename': 'js/compiled/create_store.js',
     },
     'create_product_widget': {
         'source_filenames': (
@@ -528,7 +528,7 @@ PIPELINE_JS = {
 
             'js/app/product_widget_editor/product_widget_creator.js',
         ),
-      'output_filename': 'js/compiled/create_product_widget.js',
+        'output_filename': 'js/compiled/create_product_widget.js',
     },
     'look_editor': {
         'source_filenames': ('js/vendor/underscore.js',
@@ -579,7 +579,7 @@ PIPELINE_JS = {
                              'js/app/look_editor/views/look_edit_toolbar.js',
                              'js/app/look_editor/views/custom_link.js',
                              'js/app/look_editor/look_editor.js',
-                             ),
+        ),
         'output_filename': 'js/compiled/look_editor.js',
     },
 }
@@ -645,7 +645,7 @@ CACHES = {
 }
 
 # GOOGLE ANALYTICS CONFIGURATION
-APPAREL_DOMAIN = '.apprl.com' # FIXME: We should probably get this from the Sites framework
+APPAREL_DOMAIN = '.apprl.com'  # FIXME: We should probably get this from the Sites framework
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-21990268-1'
 GOOGLE_ANALYTICS_DOMAIN = APPAREL_DOMAIN
 GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT = 'UA-21990268-2'
@@ -671,11 +671,11 @@ SOLR_CURRENCY_LOCAL = True
 SOLR_RELOAD_URL = 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=collection1'
 
 # ADVERTISER
-APPAREL_ADVERTISER_MINIMUM_STORE_INVOICE = 60 # EUR
+APPAREL_ADVERTISER_MINIMUM_STORE_INVOICE = 60  # EUR
 
 # DASHBOARD
 APPAREL_DASHBOARD_CUT_DEFAULT = '0.67'
-APPAREL_DASHBOARD_MINIMUM_PAYOUT = 50 # EUR
+APPAREL_DASHBOARD_MINIMUM_PAYOUT = 50  # EUR
 APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT = '0.15'
 APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME = 'referral_cookie'
 APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '20'
@@ -708,30 +708,32 @@ APPAREL_PRODUCT_IMAGE_ROOT = 'static/products'
 APPAREL_LOOK_IMAGE_ROOT = 'static/looks'
 APPAREL_EMAIL_IMAGE_ROOT = 'static/email'
 APPAREL_LOGO_IMAGE_ROOT = 'static/logos'
-APPAREL_PROFILE_IMAGE_ROOT ='static/profile'
+APPAREL_PROFILE_IMAGE_ROOT = 'static/profile'
 APPAREL_LOOK_MAX_SIZE = 470
 APPAREL_LOOK_FEATURED = 3
 APPAREL_LOOK_SIZE = (696, 526)
 APPAREL_IMPORTER_WAREHOUSE = os.path.join(PROJECT_ROOT, '..', '..', '..', 'shared', 'warehouse')
 APPAREL_IMPORTER_COLORS = (
-    (u'black'  , u'svart', u'night', u'coal',),
-    (u'grey'   , u'grå', u'mörkgrå', u'ljusgrå', u'gray', u'smut', u'charcoal', u'meadow', u'thyme', u'stone', u'cement', u'slate', u'salvia',),
-    (u'white'  , u'vit', u'chalk',),
-    (u'beige'  , u'khaki', u'sand', u'creme', u'camel', u'rye', u'chino', u'oatmeal',),
-    (u'brown'  , u'brun', u'mörkbrun', u'ljusbrun', u'chocolate', u'hickory', u'chicory', u'rum', u'herb',),
-    (u'red'    , u'röd', u'mörkröd', u'merlot', u'wine', u'bubble gum',),
-    (u'yellow' , u'gul',),
-    (u'green'  , u'grön', u'ljusgrön', u'mörkgrön', u'olive', u'oliv', u'arme', u'army', u'armé', u'sage', u'fatigue', u'military',),
-    (u'blue'   , u'blå', u'navy', u'bahama', u'sapphire', u'mörkblå', u'ljusblå'),
-    (u'silver' , u'silver',),
-    (u'gold'   , u'guld',),
-    (u'pink'   , u'rosa', u'cerise', u'ceris',),
-    (u'orange' , u'tangerine', ),
+    (u'black', u'svart', u'night', u'coal',),
+    (u'grey', u'grå', u'mörkgrå', u'ljusgrå', u'gray', u'smut', u'charcoal', u'meadow', u'thyme', u'stone', u'cement',
+     u'slate', u'salvia',),
+    (u'white', u'vit', u'chalk',),
+    (u'beige', u'khaki', u'sand', u'creme', u'camel', u'rye', u'chino', u'oatmeal',),
+    (u'brown', u'brun', u'mörkbrun', u'ljusbrun', u'chocolate', u'hickory', u'chicory', u'rum', u'herb',),
+    (u'red', u'röd', u'mörkröd', u'merlot', u'wine', u'bubble gum',),
+    (u'yellow', u'gul',),
+    (u'green', u'grön', u'ljusgrön', u'mörkgrön', u'olive', u'oliv', u'arme', u'army', u'armé', u'sage', u'fatigue',
+     u'military',),
+    (u'blue', u'blå', u'navy', u'bahama', u'sapphire', u'mörkblå', u'ljusblå'),
+    (u'silver', u'silver',),
+    (u'gold', u'guld',),
+    (u'pink', u'rosa', u'cerise', u'ceris',),
+    (u'orange', u'tangerine', ),
     (u'magenta', u'magenta',),
 )
 APPAREL_DECOMPRESS_UTILS = {
     'gzip': '/usr/bin/gunzip',
-    'zip':  '/usr/bin/unzip',
+    'zip': '/usr/bin/unzip',
 }
 APPAREL_DECOMPRESS_SUFFIX = {
     'gzip': '.gz',
@@ -759,60 +761,60 @@ CELERY_DEFAULT_EXCHANGE_TYPE = 'direct'
 CELERY_DEFAULT_ROUTING_KEY = 'standard'
 CELERY_CREATE_MISSING_QUEUES = True
 CELERY_QUEUES = {
-    'celery': {'exchange': 'celery', 'exchange_type': 'direct', 'routing_key': 'celery'},
+    'standard': {'exchange': 'standard', 'exchange_type': 'direct', 'routing_key': 'standard'},
     'background': {'exchange': 'background', 'exchange_type': 'direct', 'routing_key': 'background'},
 }
 CELERY_ROUTES = ({
-    'static_sitemaps.tasks.GenerateSitemap': {'queue': 'standard'},
-    'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
-    'profile.notifications.process_comment_look_created': {'queue': 'standard'},
-    'profile.notifications.process_comment_product_comment': {'queue': 'standard'},
-    'profile.notifications.process_comment_product_wardrobe': {'queue': 'standard'},
-    'profile.notifications.process_follow_user': {'queue': 'standard'},
-    'profile.notifications.process_like_look_created': {'queue': 'standard'},
-    'profile.notifications.process_sale_alert': {'queue': 'standard'},
-    'profile.notifications.facebook_friends': {'queue': 'standard'},
-    'profile.views.send_email_confirm_task': {'queue': 'standard'},
-    'profile.views.send_welcome_email_task': {'queue': 'standard'},
-    'dashboard.tasks.send_email_task': {'queue': 'standard'},
-    'apparel.email.mailchimp_subscribe': {'queue': 'standard'},
-    'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
-    'apparel.email.mailchimp_subscribe_members': {'queue': 'standard'},
-    'apparel.facebook_push_graph': {'queue': 'standard'},
-    'apparel.facebook_pull_graph': {'queue': 'standard'},
-    'apparelrow.apparel.tasks.google_analytics_event': {'queue': 'standard'},
-    'apparelrow.apparel.tasks.empty_embed_shop_cache': {'queue': 'standard'},
-    'apparelrow.apparel.tasks.empty_embed_look_cache': {'queue': 'standard'},
-    'apparelrow.apparel.tasks.look_popularity': {'queue': 'background'},
-    'apparelrow.apparel.tasks.product_popularity': {'queue': 'background'},
-    'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
-    'apparelrow.profile.tasks.mail_managers_task': {'queue': 'standard'},
-    'statistics.tasks.active_users': {'queue': 'standard'},
-    'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
-    'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
-    'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
-    'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.initiate_products_importer': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.run_vendor_product_importer': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.clicks_summary': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.recalculate_earnings': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.check_chrome_extension': {'queue': 'background'},
-    'apparelrow.scheduledjobs.tasks.check_clicks_limit_per_vendor': {'queue':'standard'},
-    'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'},
-    'apparel.notifications.look_like_daily': {'queue': 'background'},
-    'apparel.notifications.look_like_weekly': {'queue': 'background'},
-    'apparel.notifications.product_like_daily': {'queue': 'background'},
-    'apparel.notifications.product_like_weekly': {'queue': 'background'},
-    'apparel.notifications.user_activity_daily': {'queue': 'background'},
-    'apparel.notifications.user_activity_weekly': {'queue': 'background'},
-    'apparel.notifications.earnings_daily': {'queue': 'background'},
-    'apparel.notifications.earnings_weekly': {'queue': 'background'}},)
+                     'static_sitemaps.tasks.GenerateSitemap': {'queue': 'standard'},
+                     'profile.notifications.process_comment_look_comment': {'queue': 'standard'},
+                     'profile.notifications.process_comment_look_created': {'queue': 'standard'},
+                     'profile.notifications.process_comment_product_comment': {'queue': 'standard'},
+                     'profile.notifications.process_comment_product_wardrobe': {'queue': 'standard'},
+                     'profile.notifications.process_follow_user': {'queue': 'standard'},
+                     'profile.notifications.process_like_look_created': {'queue': 'standard'},
+                     'profile.notifications.process_sale_alert': {'queue': 'standard'},
+                     'profile.notifications.facebook_friends': {'queue': 'standard'},
+                     'profile.views.send_email_confirm_task': {'queue': 'standard'},
+                     'profile.views.send_welcome_email_task': {'queue': 'standard'},
+                     'dashboard.tasks.send_email_task': {'queue': 'standard'},
+                     'apparel.email.mailchimp_subscribe': {'queue': 'standard'},
+                     'apparel.email.mailchimp_unsubscribe': {'queue': 'standard'},
+                     'apparel.email.mailchimp_subscribe_members': {'queue': 'standard'},
+                     'apparel.facebook_push_graph': {'queue': 'standard'},
+                     'apparel.facebook_pull_graph': {'queue': 'standard'},
+                     'apparelrow.apparel.tasks.google_analytics_event': {'queue': 'standard'},
+                     'apparelrow.apparel.tasks.empty_embed_shop_cache': {'queue': 'standard'},
+                     'apparelrow.apparel.tasks.empty_embed_look_cache': {'queue': 'standard'},
+                     'apparelrow.apparel.tasks.look_popularity': {'queue': 'background'},
+                     'apparelrow.apparel.tasks.product_popularity': {'queue': 'background'},
+                     'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
+                     'apparelrow.profile.tasks.mail_managers_task': {'queue': 'standard'},
+                     'statistics.tasks.active_users': {'queue': 'standard'},
+                     'advertiser.tasks.send_text_email_task': {'queue': 'standard'},
+                     'advertiser.tasks.set_accepted_after_40_days': {'queue': 'standard'},
+                     'apparelrow.activity_feed.tasks.featured_activity': {'queue': 'standard'},
+                     'apparelrow.scheduledjobs.tasks.run_importer': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.initiate_products_importer': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.run_vendor_product_importer': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.popularity': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.check_availability': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.dashboard_import': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.dashboard_payment': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.vendor_check': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.clicks_summary': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.update_clicks_summary': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.recalculate_earnings': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.check_chrome_extension': {'queue': 'background'},
+                     'apparelrow.scheduledjobs.tasks.check_clicks_limit_per_vendor': {'queue': 'standard'},
+                     'apparelrow.scheduledjobs.tasks.clearsessions': {'queue': 'background'},
+                     'apparel.notifications.look_like_daily': {'queue': 'background'},
+                     'apparel.notifications.look_like_weekly': {'queue': 'background'},
+                     'apparel.notifications.product_like_daily': {'queue': 'background'},
+                     'apparel.notifications.product_like_weekly': {'queue': 'background'},
+                     'apparel.notifications.user_activity_daily': {'queue': 'background'},
+                     'apparel.notifications.user_activity_weekly': {'queue': 'background'},
+                     'apparel.notifications.earnings_daily': {'queue': 'background'},
+                     'apparel.notifications.earnings_weekly': {'queue': 'background'}},)
 
 # LOGGING CONFIGURATION
 LOGGING = {
@@ -852,7 +854,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'app_logger.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'app_logger.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -860,7 +862,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'apparel_debug.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'apparel_debug.log'),
             'maxBytes': 3000000,
             'backupCount': 8
         },
@@ -868,7 +870,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'importer.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'importer.log'),
             'maxBytes': 8000000,
             'backupCount': 10
         },
@@ -881,7 +883,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'dashboard.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'dashboard.log'),
             'maxBytes': 3000000,
             'backupCount': 8,
         },
@@ -889,7 +891,7 @@ LOGGING = {
             'level': 'NOTSET',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT,'..' , 'logs', 'theimp.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'theimp.log'),
             'maxBytes': 50000000,
             'backupCount': 10,
         },
@@ -898,7 +900,7 @@ LOGGING = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'when': 'midnight',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'affiliate_networks.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'affiliate_networks.log'),
             'backupCount': 30,
         },
         'live_test': {
@@ -906,15 +908,23 @@ LOGGING = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'when': 'midnight',
             'formatter': 'simple',
-            'filename': os.path.join(SERVER_APP_ROOT,'..', 'logs', 'live_test.log'),
+            'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'live_test.log'),
             'backupCount': 30,
         },
+        'check_urls': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'check_urls.log'),
+            'maxBytes': 3000000,
+            'backupCount': 8
+        }
     },
     'loggers': {
         '': {
             'level': 'INFO',
             'propagate': True,
-            'handlers': ['app_core','sentry'],
+            'handlers': ['app_core', 'sentry'],
         },
         'requests': {
             'level': 'WARNING',
@@ -967,13 +977,18 @@ LOGGING = {
             'handlers': ['affiliate_networks'],
         },
         'live_test': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False,
             'handlers': ['live_test'],
+        },
+        'url_redirect_tests': {
+            'level': 'INFO',
+            'propagate': False,
+            'handlers': ['check_urls'],
         }
     }
 }
 
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
-GEOIP_DEBUG=False
+GEOIP_DEBUG = False
 GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"
