@@ -106,7 +106,7 @@ VENDOR_LOCATION_MAPPING = {
     "MQ": ["SE"],
     "Care of Carl": ["SE", "NO"],
     "ALDO": ["US"],
-    "ASOS": ["SE", "NO", "ALL"],
+    "ASOS": ["SE", "NO", "DK", "ALL"],
     "Eleven": ["SE", "ALL"],
     "Happy Socks": ["SE"],
     "Elevenfiftynine": ["SE"],
