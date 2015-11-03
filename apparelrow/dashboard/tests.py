@@ -1929,6 +1929,27 @@ class TestAggregatedData(TransactionTestCase):
                 self.assertEqual(data.user_name, 'APPRL')
                 self.assertEqual(data.sale_earnings, decimal.Decimal(0))
 
+    def test_product_name_too_long(self):
+        category = get_model('apparel', 'Category').objects.get(name='Category')
+        manufacturer = get_model('apparel', 'Brand').objects.get(name='Brand')
+        product = get_model('apparel', 'Product').objects.create(
+            product_name='Adidas Originals adidas Originals White Tubular Runner Sneakers Green Blue White Brown Etc Etc Etc Etc Etc',
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            product_image='no real image',
+            published=True,
+            sku='wk-11111111'
+        )
+        self.assertGreater(len(product.product_name), 100)
+        get_model('dashboard', 'AggregatedData').objects.create(aggregated_from_name=product.product_name,
+                                                                aggregated_from_slug=product.slug)
+
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 1)
+        aggregated_data = get_model('dashboard', 'AggregatedData').objects.all()[0]
+        self.assertEqual(len(aggregated_data.aggregated_from_name), 100)
+
+
 class TestPaymentHistory(TestCase):
 
     def test_few_earnings_payments_history(self):

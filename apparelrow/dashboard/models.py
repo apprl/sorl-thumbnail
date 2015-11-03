@@ -343,6 +343,11 @@ USER_EARNING_TYPES = (
     ('publisher_sale_click_commission', 'Earnings per Clicks'),
 )
 
+@receiver(pre_save, sender=AggregatedData, dispatch_uid='aggregated_data_pre_save')
+def aggregated_data_pre_save(sender, instance, *args, **kwargs):
+    if len(instance.aggregated_from_name) > 100:
+        instance.aggregated_from_name = instance.aggregated_from_name[:100]
+
 
 class UserEarning(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, on_delete=models.PROTECT)
