@@ -1949,7 +1949,7 @@ class TestAggregatedData(TransactionTestCase):
 
         self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 1)
         aggregated_data = get_model('dashboard', 'AggregatedData').objects.latest("created")
-        self.assertEqual(len(aggregated_data.aggregated_from_name), 100)
+        self.assertEqual(len(aggregated_data.aggregated_from_name), 99)
 
 
     def test_fields_none_or_too_long(self):
