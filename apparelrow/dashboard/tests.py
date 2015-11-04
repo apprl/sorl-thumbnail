@@ -377,6 +377,8 @@ class TestDashboard(TransactionTestCase):
         pass
 
 
+
+
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestDashboardCuts(TransactionTestCase):
 
@@ -1946,8 +1948,28 @@ class TestAggregatedData(TransactionTestCase):
                                                                 aggregated_from_slug=product.slug)
 
         self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 1)
-        aggregated_data = get_model('dashboard', 'AggregatedData').objects.all()[0]
+        aggregated_data = get_model('dashboard', 'AggregatedData').objects.latest("created")
         self.assertEqual(len(aggregated_data.aggregated_from_name), 100)
+
+
+    def test_fields_none_or_too_long(self):
+        long_string = ""
+        for i in range(0,205):
+            long_string += "a"
+        self.assertGreater(len(long_string), 200)
+
+        AggregatedDataFactory.create(aggregated_from_name=None,aggregated_from_slug=None,
+                                     aggregated_from_link=None,aggregated_from_image=None)
+
+        AggregatedDataFactory.create(aggregated_from_name=long_string,aggregated_from_slug=long_string,
+                                     aggregated_from_link=long_string,aggregated_from_image=long_string)
+
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 2)
+        aggregated_data = get_model('dashboard', 'AggregatedData').objects.latest("created")
+        self.assertEqual(len(aggregated_data.aggregated_from_name), 99)
+        self.assertEqual(len(aggregated_data.aggregated_from_slug), 99)
+        self.assertEqual(len(aggregated_data.aggregated_from_link), 199)
+        self.assertEqual(len(aggregated_data.aggregated_from_image), 199)
 
 
 class TestPaymentHistory(TestCase):
