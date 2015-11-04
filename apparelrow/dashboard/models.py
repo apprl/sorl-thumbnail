@@ -345,8 +345,15 @@ USER_EARNING_TYPES = (
 
 @receiver(pre_save, sender=AggregatedData, dispatch_uid='aggregated_data_pre_save')
 def aggregated_data_pre_save(sender, instance, *args, **kwargs):
-    if len(instance.aggregated_from_name) > 100:
-        instance.aggregated_from_name = instance.aggregated_from_name[:100]
+    """
+    Trim the string if its larger than 100 chars.
+    :param sender:
+    :param instance:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    instance.aggregated_from_name = instance.aggregated_from_name[:99]
 
 
 class UserEarning(models.Model):
