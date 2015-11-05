@@ -177,7 +177,8 @@ class ProductAdmin(admin.ModelAdmin):
 
     def update_scraped_date(self, request, queryset):
         now = datetime.datetime.now()
-        rows_updated = queryset.update(modified=now)
+        date_limit = now - datetime.timedelta(days=7)
+        rows_updated = queryset.filter(modified__gt=date_limit).update(modified=now)
         self.message_user(request, _("%s successfully updated date") % rows_updated)
         return HttpResponseRedirect('')
     update_scraped_date.short_description = _("Update modified date for these products")
