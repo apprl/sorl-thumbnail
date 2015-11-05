@@ -16,7 +16,7 @@ import datetime
 crawl_group = datetime.datetime.today().day % 2
 
 suspended_group = ['qvc','menlook','nastygal','nelly-no','wolfnbadger','my-wardrobe','aldo','belstaff','bjornborg',
-                   'laurenb','monica-vinander','panos-emporio','mr-porter']
+                   'laurenb','monica-vinander','panos-emporio']
 priority_q = ['eleven','nelly','luisaviaroma','room21-no','rum21-se','ssense',
               'the-outnet','confident-living','net-a-porter','boozt-no','boozt-se','asos']
 cleaned_group = [spider for spider in spiders if spider not in priority_q]
