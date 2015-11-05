@@ -19,6 +19,7 @@ from theimp.importer import Importer
 from theimp.models import BrandMapping, CategoryMapping
 from theimp.parser import Parser
 from django.core.cache import cache
+import datetime
 
 class ProductJSONWidget(forms.Textarea):
 
@@ -148,7 +149,7 @@ class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ('key', 'is_validated', 'created', 'modified', 'vendor', 'parsed_date', 'imported_date')
     raw_id_fields = ('brand_mapping', 'category_mapping')
     search_fields = ('key',)
-    actions = ('parse_products','release_products','unrelease_products')
+    actions = ('parse_products','release_products','unrelease_products','update_scraped_date')
     save_on_top = True
     list_per_page = 20
 
@@ -173,6 +174,13 @@ class ProductAdmin(admin.ModelAdmin):
         self.message_user(request, _("%s successfully marked as not released") % rows_updated)
         return HttpResponseRedirect('')
     unrelease_products.short_description = _("Unrelease these products")
+
+    def update_scraped_date(self, request, queryset):
+        now = datetime.datetime.now()
+        rows_updated = queryset.update(modified=now)
+        self.message_user(request, _("%s successfully updated date") % rows_updated)
+        return HttpResponseRedirect('')
+    update_scraped_date.short_description = _("Update modified date for these products")
 
 class VendorAdmin(admin.ModelAdmin):
     exclude = ('is_active',)
