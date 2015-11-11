@@ -1156,6 +1156,9 @@ def index(request, gender=None):
 def about(request):
     return render(request, 'apparel/about.html')
 
+def contact(request):
+    return render(request, 'apparel/contact.html')
+
 
 def jobs(request):
     return render(request, 'apparel/jobs.html')

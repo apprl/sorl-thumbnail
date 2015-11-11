@@ -1,0 +1,205 @@
+/*
+	Theme v1.5
+	- Colors
+	- Fonts
+	- Breakpoints
+*/
+/* Colors ---------- */
+a {
+  color: black;
+}
+a:hover {
+  color: #666666;
+}
+nav {
+  background-color: black;
+}
+footer {
+  background-color: #eeeeee;
+}
+hr {
+  border-color: black;
+}
+.helper {
+  color: #808080;
+}
+.helper:hover {
+  color: #404040;
+}
+/* Fonts ---------- */
+@font-face {
+  font-family: 'Austin Light';
+  src: url('../fonts/Austin-Light.eot');
+  src: url('../fonts/Austin-Light.woff') format('woff'), url('../fonts/Austin-Light.ttf') format('truetype'), url('../fonts/Austin-Light.svg#svgAustinLight') format('svg');
+}
+@font-face {
+  font-family: 'Austin Bold';
+  src: url('../fonts/Austin-Bold.eot');
+  src: url('../fonts/Austin-Bold.woff') format('woff'), url('../fonts/Austin-Bold.ttf') format('truetype'), url('../fonts/Austin-Bold.svg#svgAustinBold') format('svg');
+}
+@font-face {
+  font-family: 'Neuzeit Book';
+  src: url('../fonts/Neuzeit-Book.eot');
+  src: url('../fonts/Neuzeit-Book.woff') format('woff'), url('../fonts/Neuzeit-Book.ttf') format('truetype'), url('../fonts/Neuzeit-Book.svg#svgNeuzeitBook') format('svg');
+}
+@font-face {
+  font-family: 'Neuzeit Heavy';
+  src: url('../fonts/Neuzeit-Heavy.eot');
+  src: url('../fonts/Neuzeit-Heavy.woff') format('woff'), url('../fonts/Neuzeit-Heavy.ttf') format('truetype'), url('../fonts/Neuzeit-Heavy.svg#svgNeuzeitHeavy') format('svg');
+}
+body {
+  font-family: 'Neuzeit Book', 'Helvetica Neue', sans-serif;
+}
+/* Breakpoints ---------- */
+.publisher-page .subnav-page,
+.store-page .subnav-page {
+  margin-bottom: 40px;
+}
+.publisher-page .subnav-page > div,
+.store-page .subnav-page > div {
+  font-size: 16px;
+  text-align: center;
+}
+.publisher-page .monthly-list,
+.store-page .monthly-list {
+  text-align: center;
+}
+.publisher-page .publisher-admin ul,
+.store-page .publisher-admin ul,
+.publisher-page .publisher-admin p,
+.store-page .publisher-admin p {
+  text-align: center;
+}
+body.store-index-page #content-container {
+  padding-bottom: 0;
+}
+body.store-index-page .body-header {
+  color: #ffffff;
+  border: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+body.store-index-page .body-header h1 {
+  margin-bottom: 20px;
+}
+body.store-index-page .inner-content {
+  background-color: #ffffff;
+  margin-bottom: 60px;
+  padding: 20px;
+}
+body.store-index-page .background {
+  background: #000000 url('../images/bg_bw5.jpg') no-repeat center top;
+}
+.create-store-page #shop-preview {
+  width: 100%;
+  float: left;
+  position: relative;
+}
+.create-store-page #shop-preview .product-list-container {
+  overflow: auto;
+  border: 2px solid #d9d9d9;
+  border-top: 0px;
+}
+.create-store-page #shop-preview .product-list-container > div {
+  padding-top: 10px;
+}
+.create-store-page #shop-preview.splash .product-list-container {
+  border-top: 2px solid #d9d9d9;
+}
+.create-store-page #shop-preview.splash .col-product-list h3 {
+  display: none;
+}
+.create-store-page #shop-preview.splash .preview-header {
+  display: none;
+}
+.create-store-page #shop-preview.no-filter .col-product-filter {
+  display: none;
+}
+.create-store-page #shop-preview .preview-header {
+  background: #e6e6e6;
+  width: 100%;
+  text-align: center;
+  padding: 9px 0px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #555;
+}
+@media (min-width: 1140px) {
+  .create-store-page #shop-preview .product-list .col-product-item {
+    width: 25%;
+  }
+}
+.create-store-page #shop-display-settings {
+  display: none;
+  position: absolute;
+  overflow: hidden;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+@media (min-width: 768px) {
+  .create-store-page #shop-display-settings {
+    width: 50%;
+  }
+}
+.no-filter #shop-product-list {
+  width: 100%;
+}
+#shop-product-list.liked-products .hover {
+  display: none !important;
+}
+#shop-product-list .product-image-container {
+  position: relative;
+}
+#shop-product-list .product-image-container .product-image {
+  opacity: 1;
+  max-width: 100%;
+  max-height: 100%;
+}
+#shop-product-list .product-image-container .product-image.product-image-actual {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+#shop-product-list .product-image-container .hover {
+  bottom: auto;
+  top: 50%;
+  z-index: 2;
+  -webkit-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  -o-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+#shop-product-list .product-image-container .hover .btn {
+  margin-bottom: 10px;
+}
+.shop-list .shop:nth-child(3n+1) {
+  clear: left;
+}
+.shop-list .shop .shop-title {
+  margin-top: 15px;
+  margin-bottom: 2px;
+}
+.shop-list .shop .shop-title a {
+  font-weight: 800;
+}
+.shop-list .shop:nth-child(-n+3) .shop-title {
+  margin-top: 0;
+}
+.shop-list .shop .status {
+  font-size: 90%;
+}
+.shop-list .shop .status.published {
+  color: green;
+}
+.shop-list .shop .status.unpublished {
+  color: red;
+}

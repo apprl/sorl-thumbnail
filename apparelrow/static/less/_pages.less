@@ -1,0 +1,276 @@
+/*
+	Pages v1.0
+*/
+
+/* Search ---------- */
+/*.page-search {
+	.result-container a {
+		font-size: 13px;
+	}
+}*/
+.search-result {
+    .btn {
+        margin-bottom: 20px;
+    }
+}
+
+.search-page {
+	h3 {
+		font-size: 18px;
+		padding-bottom: 5px;
+		border-bottom: 3px solid #000000;
+		margin-bottom: 15px;
+		a {
+			text-decoration: none;
+		}
+	}
+}
+
+/* Log In ---------- */
+/*.page-login {
+	main {
+		font-size: 13px;
+		form {
+			margin: 30px 0 15px 0;
+		}
+	}
+}*/
+
+
+
+
+//
+// Dashboard
+// ----------------------------------------------------------------------------
+
+.date-dropdown {
+  font-size: 16px; // At least nav-bar font size
+}
+
+.nopadding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.full_modal {
+  width: 60%;
+}
+
+.body-grey {
+  background: #EEEEEE !important;
+}
+
+.apprl-modal-tools-content {
+    padding-left: 0;
+    padding-right: 0;
+    background: #FFFFFF !important;
+    .slider-container {
+        visibility: hidden;
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding: 0 0 39% 0;
+        .iosSlider {
+            .tools_prevButton {
+                left:30px;
+            }
+            .tools_nextButton {
+                right:30px;
+            }
+        }
+    }
+}
+.publisher-panel {
+    background: #FFFFFF !important;
+    .image {
+        img {
+            width: 100%;
+        }
+        &:hover {
+          cursor: pointer;
+        }
+    }
+    .text {
+        padding-top: 10px;
+        text-align: center;
+        font-size: 18px;
+        .desc {
+            min-height: 60px;
+            padding: 10px;
+        }
+    }
+    .title {
+        span {
+            color: #000000;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+
+    }
+    /* redefined because it was overwritten */
+    .btn-success {
+        margin: 15px;
+        width: 100%;
+    }
+    .btn-default {
+        background-color: #000 !important;
+        background-image: #000 !important;
+        background: #000 !important;
+        border-color: #000 !important;
+
+        color: #FFFFFF;
+        margin: 15px;
+
+        &:hover {
+            background-color: #222222 !important;
+            background-image: #222222 !important;
+            background: #222222 !important;
+            border-color: #222222 !important;
+        }
+    }
+    h3 {
+        display:inline;
+    }
+}
+
+.apprl-tools {
+    h4.apprl-slash {
+      &::before {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+    }
+}
+
+.modal-tools-description {
+    padding: 30px 30px 0px 30px;
+    line-height: 30px;
+    h4 {
+      line-height: 40px;
+    }
+    p, h4 {
+      font-size: 20px
+    }
+}
+
+.modal-header-outside {
+  background-color: transparent !important;
+  border-bottom: 0px;
+  padding-right: 0px;
+}
+
+#modal_tool_shop, #modal_tool_collage, #modal_tool_tagged_photo, #modal_tool_text_link, #modal_tool_chrome_ext {
+    .btn-default {
+        margin-left:0px;
+        margin-right: 0px;
+        width: 100%;
+    }
+    .modal-content {
+        .modal-body {
+            padding: 0px;
+        }
+    }
+}
+
+.modal-tools-font {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    color: #000 !important;
+}
+
+.header-screens {
+    position:absolute;
+    top:200px;
+    text-align: right;
+    z-index:999;
+}
+
+/*
+LOOK UP: not sure if this is used?
+.iosSlider {
+    width: 100%;
+    height: 1500px;
+    border-top: 3px solid #000;
+    border-bottom: 3px solid #000;
+    .slider {
+        width: 100%;
+        height: 100%;
+        .item {
+            float: left;
+            width: 100%;
+            background: #fff;
+            img {
+              width: 100%;
+              height: auto;
+            }
+        }
+    }
+}*/
+
+.click-detail {
+  cursor: pointer;
+}
+
+@media (min-width: 1120px) {
+	#modal_tool_shop, #modal_tool_collage, #modal_tool_tagged_photo, #modal_tool_text_link, #modal_tool_chrome_ext {
+        .modal-dialog {
+            width: 1117px;
+        }
+    }
+}
+
+@media (max-width: 1190px) {
+  #modal_tool_shop, #modal_tool_collage, #modal_tool_tagged_photo, #modal_tool_text_link, #modal_tool_chrome_ext {
+      .modal-dialog {
+          width: 95%;
+          padding-left: 2.5%;
+          padding-right: 2.5%;
+      }
+  }
+  .modal-tools-description {
+      padding: 30px;
+      p, h4 {
+          font-size: 18px;
+      }
+  }
+  .apprl-modal-tools-content {
+      .slider-container {
+          .iosSlider {
+              .tools_prevButton {
+                  left: 30px;
+              }
+              .tools_nextButton {
+                  right: 30px;
+              }
+          }
+      }
+  }
+}
+
+@media (max-width: 767px) {
+    .header-screens {
+        text-align: center;
+        .image-header {
+            width: 300px;
+            margin-top: 80px;
+        }
+    }
+    .publisher-top {
+        h1.apprl-maintitle{
+          font-size: 32px;
+        }
+    }
+}
+
+
+
+.dashboard-info {
+    h4 {
+        padding-top: 60px;
+        margin-top: -30px;
+    }
+    #content-container img {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}

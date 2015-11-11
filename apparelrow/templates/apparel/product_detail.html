@@ -29,241 +29,267 @@
 {% block full-body %}
 
     <div class="container" itemscope itemtype="http://data-vocabulary.org/Product">
-        <div class="body-header">
-            <div class="body-header-col-full">
+        <div class="body-header center-sm">
+            <hgroup>
                 {% if object.manufacturer.user %}
                 <h1><a itemprop="brand" href="{{ object.manufacturer.user.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
                 {% else %}
                 <h1 itemprop="brand">{{ object.manufacturer }}</h1>
                 {% endif %}
-                {% if object.product_name %}<h2 itemprop="name">{{ object.product_name }}</h2>{% endif %}
-                {% if request.user.is_authenticated %}
-                <a class="btn btn-primary btn-product-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><span>{% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
-                {% else %}
-                <a class="btn btn-primary" data-toggle="modal" href="#" data-target="#modal_like_product"><span>{% trans "Like" %}</span> <span class="glyphicon glyphicon-heart"></span></a>
-                {% endif %}
-            </div>
+                {% if object.product_name %}<h3 itemprop="name">{{ object.product_name }}</h3>{% endif %}
+            </hgroup>
         </div>
 
         <div class="row">
             <div class="col-md-6">
-                <ol class="breadcrumb">
-                    <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <a itemprop="url" href="{% gender_url object.gender 'shop' %}">
-                            <span itemprop="title">{% trans object.get_gender_display %}</span>
-                        </a>
-                    </li>
-                    {% for category in object.categories %}
-                    <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
-                        <a itemprop="url" href="{% gender_url object.gender 'shop' %}?category={{ category.id }}">
-                            <span itemprop="title">{{ category }}</span>
-                        </a>
-                    </li>
-                    {% endfor %}
-                    <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
-                        {% if object.manufacturer.user %}
-                        <a itemprop="url" href="{{ object.manufacturer.user.get_absolute_url }}">
-                        {% else %}
-                        <a itemprop="url" href="{% gender_url object.gender 'shop' %}?manufacturer={{ object.manufacturer.id }}">
-                        {% endif %}
-                            <span itemprop="name">{{ object.manufacturer }}</span>
-                        </a>
-                    </li>
-                </ol>
+                <section class="center-sm">
+                    <ol class="breadcrumbs">
+                        <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                            <a itemprop="url" href="{% gender_url object.gender 'shop' %}">
+                                <span itemprop="title">{% trans object.get_gender_display %}</span>
+                            </a>
+                        </li>
+                        {% for category in object.categories %}
+                        <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                            <a itemprop="url" href="{% gender_url object.gender 'shop' %}?category={{ category.id }}">
+                                <span itemprop="title">{{ category }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                        <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                            {% if object.manufacturer.user %}
+                            <a itemprop="url" href="{{ object.manufacturer.user.get_absolute_url }}">
+                            {% else %}
+                            <a itemprop="url" href="{% gender_url object.gender 'shop' %}?manufacturer={{ object.manufacturer.id }}">
+                            {% endif %}
+                                <span itemprop="name">{{ object.manufacturer }}</span>
+                            </a>
+                        </li>
+                    </ol>
+                    <hr>
 
-                <div class="product-image">
-                    {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
-                    <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" class="img-responsive" />
-                    {% endthumbnail %}
-                </div>
-
-            </div><!-- end left column -->
+                    <div class="product-image">
+                        {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
+                        <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" class="img-responsive" />
+                        {% endthumbnail %}
+                    </div>
+                </section>
+            </div>
 
             <div class="col-md-6">
                 <div class="row">
                     <div class="col-lg-6">
+                        <section class="center-sm">
+                            {% cache CACHE_TIMEOUT product_detail_fragment object.id LANGUAGE_CODE %}
+                            <h4>{% trans "Product info" %}</h4>
+                            <hr>
 
-                        {% cache CACHE_TIMEOUT product_detail_fragment object.id LANGUAGE_CODE %}
-                        <h3>{% trans "Product info" %}</h3>
-                        <p class="bodycopy description" itemprop="description">{{ object.description }}</p>
+                            <div class="product-info" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
 
-                        <div class="product-info" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
+                                <p class="description" itemprop="description">{{ object.description }}</p>
 
-                            <p itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">
-                                {% if object.default_vendor %}
-                                    {% if object.default_vendor.availability == 0 %}
-                                    <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
-                                    {% else %}
-                                    <a rel="nofollow" target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
+                                <p class="seller" itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">
+                                    {% if object.default_vendor %}
+                                        {% if object.default_vendor.availability == 0 %}
+                                        <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span></a>
+                                        {% else %}
+                                        <a rel="nofollow" target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span></a>
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
-                            </p>
-                            <div class="product-vendors">
+                                </p>
                                 {% if object.default_vendor %}
-                                    <meta itemprop="condition" content="new" />
-                                    <meta itemprop="currency" content="{{ object.default_vendor.locale_currency }}" />
-                                    <meta itemprop="price" content="{{ object.default_vendor_price|floatformat:0|apprl_intcomma }}" />
+                                <meta itemprop="condition" content="new" />
+                                <meta itemprop="currency" content="{{ object.default_vendor.locale_currency }}" />
+                                <meta itemprop="price" content="{{ object.default_vendor_price|floatformat:0|apprl_intcomma }}" />
 
-                                    <div class="product-vendor">
-                                        <div class="computed-price">
-                                            {% if object.default_vendor.locale_discount_price %}
-                                            <span class="discount-price price">{{ object.default_vendor.locale_discount_price|floatformat:0|apprl_intcomma }}</span>
-                                            {% endif %}
-                                            <span class="price"{% if object.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.default_vendor.locale_price|floatformat:0|apprl_intcomma }}</span>
-                                            <span class="currency">{{ object.default_vendor.locale_currency }}</span>
-                                        </div>
+                                <div class="product-vendor">
+                                    <div class="computed-price">
+                                        {% if object.default_vendor.locale_discount_price %}
+                                        <span class="discount-price price">{{ object.default_vendor.locale_discount_price|floatformat:0|apprl_intcomma }}</span>
+                                        {% endif %}
+                                        <span class="price"{% if object.default_vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ object.default_vendor.locale_price|floatformat:0|apprl_intcomma }}</span>
+                                        <span class="currency">{{ object.default_vendor.locale_currency }}</span>
                                     </div>
+                                </div>
 
-                                    {% if object.default_vendor.original_currency != object.default_vendor.locale_currency %}
-                                    <small>{% blocktrans with object.default_vendor.original_currency as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}</small>
-                                    {% endif %}
+                                {% if object.default_vendor.original_currency != object.default_vendor.locale_currency %}
+                                <small>{% blocktrans with object.default_vendor.original_currency as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}</small>
+                                {% endif %}
 
-                                    {% if object.default_vendor.availability == 0 %}
-                                    <span itemprop="availability" content="out_of_stock" class="btn btn-default btn-lg btn-block disabled btn-sold-out">{% trans "Sold out" %}</span>
-                                    {% else %}
-                                    <a rel="nofollow" itemprop="availability" content="in_stock" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" target="_blank" class="btn btn-success btn-lg btn-block btn-buy" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
-                                    {% endif %}
+                                {% if request.user.is_authenticated %}
+                                <a class="hidden-xs btn btn-lg{% if is_liked %} btn-secondary{% endif %}" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Remove" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i> <span>{% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
                                 {% else %}
-                                    <span itemprop="availability" content="out_of_stock" class="btn btn-default btn-lg btn-block disabled btn-sold-out">{% trans "Sold out" %}</span>
+                                <a class="hidden-xs btn btn-lg" data-toggle="modal" href="#" data-target="#modal_like_product"><i class="fa fa-heart"></i> <span>{% trans "Save" %}</span></a>
+                                {% endif %}
+
+                                {% if object.default_vendor.availability == 0 %}
+                                <span itemprop="availability" content="out_of_stock" class="btn btn-lg disabled">{% trans "Sold out" %}</span>
+                                {% else %}
+                                <a rel="nofollow" itemprop="availability" content="in_stock" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" target="_blank" class="btn btn-primary btn-lg" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+                                {% endif %}
+                                {% else %}
+                                    <span itemprop="availability" content="out_of_stock" class="btn btn-lg disabled">{% trans "Sold out" %}</span>
+                                {% endif %}
+
+                                {% if request.user.is_authenticated and request.user.is_partner and object.default_vendor %}
+                                <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn">{% trans "Get product link" %}</a>
                                 {% endif %}
                             </div>
-                        </div>
-                        {% endcache %}
+                            {% endcache %}
 
-                        {% if request.user.is_authenticated and request.user.is_partner and object.default_vendor %}
-                        <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn btn-primary btn-block btn-short-link">{% trans "Get product link" %}</a>
-                        {% endif %}
+                            {% if object.default_vendor and earning_cut and request.user.is_partner %}
+                                 {% if object.default_vendor.vendor.is_cpo %}
+                                    <p class="earning-box">You will earn approx. <span class="currency">{{ object.default_vendor.locale_currency }}</span>
+                                        {% if object.default_vendor.locale_discount_price %}
+                                            {% multiply object.default_vendor.locale_discount_price earning_cut %}
+                                        {% else %}
+                                            {% multiply object.default_vendor.locale_price earning_cut %}
+                                        {% endif %}
 
-                        {% if object.default_vendor and earning_cut and request.user.is_partner %}
-                             {% if object.default_vendor.vendor.is_cpo %}
-                                <p class="earning-box">You will earn approx. <span class="currency">{{ object.default_vendor.locale_currency }}</span>
-                                    {% if object.default_vendor.locale_discount_price %}
-                                        {% multiply object.default_vendor.locale_discount_price earning_cut %}
-                                    {% else %}
-                                        {% multiply object.default_vendor.locale_price earning_cut %}
-                                    {% endif %}
-
-                                    per generated sale of this item
-                                </p>
-                            {% elif object.default_vendor.vendor.is_cpc %}
-                                 <p class="earning-box">
-                                     {% if cost_per_click.locale_price %}
-                                        You will earn approx.
-                                            <span class="currency">{{ cost_per_click.locale_currency }}</span>
-                                            {% multiply cost_per_click.locale_price earning_cut %}
-                                            per click to this item
-                                     {% else %}
-                                        Settings for CPC is missing.
-                                     {% endif %}
-                                </p>
+                                        per generated sale of this item
+                                    </p>
+                                {% elif object.default_vendor.vendor.is_cpc %}
+                                     <p class="earning-box">
+                                         {% if cost_per_click.locale_price %}
+                                            You will earn approx.
+                                                <span class="currency">{{ cost_per_click.locale_currency }}</span>
+                                                {% multiply cost_per_click.locale_price earning_cut %}
+                                                per click to this item
+                                         {% else %}
+                                            Settings for CPC is missing.
+                                         {% endif %}
+                                    </p>
+                                {% endif %}
+                                <br>
                             {% endif %}
-                            <br>
-                        {% endif %}
 
-                        {% include 'apparel/fragments/share.html' %}
-
+                            {% include 'apparel/fragments/share.html' %}
+                        </section>
                     </div>
 
                     <div class="col-lg-6">
+                        <section>
+                            {% cache CACHE_TIMEOUT product_detail_selected_by object.id LANGUAGE_CODE %}
+                            {% if partner_likes or object.manufacturer.user %}
+                            <a class="helper" href="#">{% trans "See all" %}</a>
+                            <h4>{% trans "Selected by" %} <span>(1)</span></h4>
+                            <hr>
 
-                        {% cache CACHE_TIMEOUT product_detail_selected_by object.id LANGUAGE_CODE %}
-                        {% if partner_likes or object.manufacturer.user %}
-                        <h3>{% trans "Selected by" %}</h3>
-                        <ul class="list-unstyled list-selected-by">
-                            {% for like in partner_likes %}
-                            <li class="clearfix">
-                                <a class="pull-left" href="{{ like.user.get_absolute_url }}"><img class="img-circle" src="{{ like.user.avatar }}" alt="{{ like.user.display_name }}"/></a>
-                                <div class="pull-left selected-by-text">
-                                    <a href="{{ like.user.get_absolute_url }}">{{ like.user.display_name }}</a><br>
-                                    <a target="_blank" href="{{ like.user.blog_url_external }}">{% trans "Go to blog »" %}</a>
-                                </div>
-                                <div class="pull-right">{% include 'apparel/fragments/follow.html' with request=request profile=like.user only %}</div>
-                            </li>
-                            {% endfor %}
-                            {% with object.manufacturer.user as user %}
-                            <li class="clearfix">
-                                <a class="pull-left" href="{{ user.get_absolute_url }}"><img class="img-circle" src="{{ user.avatar }}" alt="{{ user.display_name }}"/></a>
-                                <div class="pull-left selected-by-text">
-                                    <a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a>
-                                </div>
-                                <div class="pull-right">{% include 'apparel/fragments/follow.html' with request=request profile=user only %}</div>
-                            </li>
-                            {% endwith %}
-                        </ul>
-                        {% endif %}
-                        {% endcache %}
-
-                        <h3><a href="{% url 'product-look-list' contains=object.slug %}">{% trans "Looks with this item" %}</a></h3>
-                        <ul class="list-unstyled list-looks">
-                            {% for look in looks_with_product %}
-                            <li class="col-list-look">
-                                {% cache CACHE_TIMEOUT look_small_like_product look.id LANGUAGE_CODE %}
-                                <a title="{{ look.title }}" href="{% url 'look-detail' slug=look.slug %}">
-                                    <div class="look">
-                                        {% thumbnail look.static_image "300x226" is_collage=look.is_collage keep_size=True crop=False format="PNG" as im %}
-                                        <img id="look-{{ look.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-responsive" />
-                                        {% endthumbnail %}
+                            <ul class="list-selected-by center-sm">
+                                {% for like in partner_likes %}
+                                <li class="clearfix">
+                                    <a class="pull-left" href="{{ like.user.get_absolute_url }}"><img class="img-circle" src="{{ like.user.avatar }}" alt="{{ like.user.display_name }}"/></a>
+                                    <div class="pull-left selected-by-text">
+                                        <a href="{{ like.user.get_absolute_url }}">{{ like.user.display_name }}</a><br>
+                                        <a target="_blank" href="{{ like.user.blog_url_external }}">{% trans "Go to blog »" %}</a>
                                     </div>
-                                </a>
-                                {% endcache %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        {% if looks_with_product_count > 2 %}
-                        <a href="{% url 'product-look-list' contains=object.slug %}" class="btn btn-primary btn-block">{% trans "See all looks" %}</a>
-                        {% endif %}
-                        <a href="{% url 'look-create-like' slug=object.slug %}" class="btn btn-primary btn-block">{% trans "Add your look" %}</a>
+                                    <div class="pull-right">{% include 'apparel/fragments/follow.html' with request=request profile=like.user only %}</div>
+                                </li>
+                                {% endfor %}
+                                {% with object.manufacturer.user as user %}
+                                <li class="clearfix">
+                                    <a class="pull-left" href="{{ user.get_absolute_url }}"><img class="img-circle" src="{{ user.avatar }}" alt="{{ user.display_name }}"/></a>
+                                    <div class="pull-left selected-by-text">
+                                        <a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a>
+                                    </div>
+                                    <div class="pull-right">{% include 'apparel/fragments/follow.html' with request=request profile=user only %}</div>
+                                </li>
+                                {% endwith %}
+                            </ul>
+                            {% endif %}
+                            {% endcache %}
+                        </section>
 
-                        {% cache CACHE_TIMEOUT product_detail_likes object.id LANGUAGE_CODE %}
-                        <h3>{% trans "Likes" %}</h3>
-                        <ul id="likes-box" class="list-inline list-likes">
-                            <li{% if likes %} class="hide"{% endif %}><p>{% trans "Be the first one to like this product!" %}</p></li>
-                            {% for like in likes %}
-                            <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}"><img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a></li>
-                            {% endfor %}
-                        </ul>
-                        {% endcache %}
+                        <section>
+                            <a class="helper" href="{% url 'product-look-list' contains=object.slug %}">{% trans "See all" %}</a>
+                            <h4>{% trans "Looks with this item" %}</a> <span>(1)</span></h4>
+                            <hr>
+                            <ul class="list-looks center-sm">
+                                {% for look in looks_with_product %}
+                                <li class="col-list-look">
+                                    {% cache CACHE_TIMEOUT look_small_like_product look.id LANGUAGE_CODE %}
+                                    <a title="{{ look.title }}" href="{% url 'look-detail' slug=look.slug %}">
+                                        <div class="look">
+                                            {% thumbnail look.static_image "300x226" is_collage=look.is_collage keep_size=True crop=False format="PNG" as im %}
+                                            <img id="look-{{ look.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-responsive" />
+                                            {% endthumbnail %}
+                                        </div>
+                                    </a>
+                                    {% endcache %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% if looks_with_product_count > 2 %}
+                            <a href="{% url 'product-look-list' contains=object.slug %}" class="btn">{% trans "See all looks" %}</a>
+                            {% endif %}
+                            <a href="{% url 'look-create-like' slug=object.slug %}" class="btn">{% trans "Add your look" %}</a>
+                        </section>
 
+                        <section>
+                            {% cache CACHE_TIMEOUT product_detail_likes object.id LANGUAGE_CODE %}
+                            <h4>{% trans "Likes" %} <span>(1)</span></h4>
+                            <hr>
+                            <ul id="likes-box" class="list-likes">
+                                <li{% if likes %} class="hide"{% endif %}><p>{% trans "Be the first one to like this product!" %}</p></li>
+                                {% for like in likes %}
+                                <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}"><img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a></li>
+                                {% endfor %}
+                            </ul>
+                            {% endcache %}
+                        </section>
                     </div>
                 </div>
 
-            </div><!-- end right column -->
-        </div><!-- end row -->
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-xs-12">
-                <div class="product-similar">
-                    {% if alternative %}
-                    <div class="headline group">
-                        <h3>{% trans "Similar" %}</h3>
-                        <a href="{{ alternative_url }}">{% trans "See all »" %}</a>
-                    </div>
-                    <div id="more-alternatives">
-                        <ul>
-                            {% for product in alternative %}
-                            <li>
-                                <a href="{% url 'product-detail' slug=product.slug %}"><img src="{{ product.image_small }}"></a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-                    {% if more_like_this %}
-                    <h3>{% trans "You may also like" %}</h3>
-                    <div id="more-like-this">
-                        <ul>
-                            {% for product in more_like_this %}
-                            <li>
-                                <a href="{% url 'product-detail' slug=product.slug %}"><img src="{{ product.image_small }}"></a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
+                {% if alternative %}
+                <div class="headline group">
+                    <a class="helper" href="{{ alternative_url }}">{% trans "See all" %}</a>
+                    <h4>{% trans "Similar products" %} <span>(1)</span></h4>
+                    <hr>
                 </div>
+                <section id="more-alternatives">
+                    <ul class="list-products">
+                        {% for product in alternative %}
+                        <li>
+                            <a href="{% url 'product-detail' slug=product.slug %}"><img src="{{ product.image_small }}"></a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% endif %}
+                {% if more_like_this %}
+                <a class="helper" href="{{ alternative_url }}">{% trans "See all" %}</a>
+                <h4>{% trans "You might also like" %} <span>(1)</span></h4>
+                <hr>
+                <section id="more-like-this">
+                    <ul class="list-products">
+                        {% for product in more_like_this %}
+                        <li>
+                            <a href="{% url 'product-detail' slug=product.slug %}"><img src="{{ product.image_small }}"></a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% endif %}
             </div>
         </div>
     </div>
+
+    <ul class="actions visible-xs">
+        {% if request.user.is_authenticated %}
+        <a class="btn btn-sm btn-default{% if is_liked %} btn-secondary{% endif %}" href="#" data-liked-text="{% trans "" %}" data-unlike-text="{% trans "" %}" data-like-text="{% trans "" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i></a>
+        {% else %}
+        <a class="btn btn-sm btn-primary" data-toggle="modal" href="#" data-target="#modal_like_product"><i class="fa fa-heart"></i></a>
+        {% endif %}
+
+        {% if object.default_vendor.availability != 0 %}
+        <a rel="nofollow" itemprop="availability" content="in_stock" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" target="_blank" class="btn btn-sm btn-primary" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+        {% endif %}
+    </ul>
 
     {% block body-scripts %}
         <script>

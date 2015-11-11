@@ -1,0 +1,40 @@
+/*
+    Extensions v1.0
+*/
+
+// Additional grid breakpoint - 480px
+.col-is-6 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    @media (min-width: @screen-xs) {
+        float: left;
+        width: 50%;
+    }
+    @media (min-width: @screen-sm) {
+        width: 50%;
+    }
+    @media (min-width: @screen-md) {
+        width: 50%;
+    }
+}
+.hidden-is {
+    @media (min-width: @screen-xs) and (max-width: 767px) {
+        display: none;
+    }
+}
+
+// New ruleset for float attributes
+.pull-left {
+    float: none;
+    @media (min-width: @screen-sm) {
+        float: left;
+    }
+}
+.pull-right {
+    float: none;
+    @media (min-width: @screen-sm) {
+        float: right;
+    }
+}

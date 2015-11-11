@@ -1,0 +1,46 @@
+/*
+    Extensions v0.1
+*/
+.col-is-6 {
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+@media (min-width: 480px) {
+  .col-is-6 {
+    float: left;
+    width: 50%;
+  }
+}
+@media (min-width: 768px) {
+  .col-is-6 {
+    width: 50%;
+  }
+}
+@media (min-width: 992px) {
+  .col-is-6 {
+    width: 50%;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  .hidden-is {
+    display: none;
+  }
+}
+.pull-left {
+  float: none;
+}
+@media (min-width: 768px) {
+  .pull-left {
+    float: left;
+  }
+}
+.pull-right {
+  float: none;
+}
+@media (min-width: 768px) {
+  .pull-right {
+    float: right;
+  }
+}

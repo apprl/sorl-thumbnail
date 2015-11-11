@@ -1,0 +1,53 @@
+/*
+	Theme v1.5
+	- Colors
+	- Fonts
+	- Breakpoints
+*/
+/* Colors ---------- */
+a {
+  color: black;
+}
+a:hover {
+  color: #666666;
+}
+nav {
+  background-color: black;
+}
+footer {
+  background-color: #eeeeee;
+}
+hr {
+  border-color: black;
+}
+.helper {
+  color: #808080;
+}
+.helper:hover {
+  color: #404040;
+}
+/* Fonts ---------- */
+@font-face {
+  font-family: 'Austin Light';
+  src: url('../fonts/Austin-Light.eot');
+  src: url('../fonts/Austin-Light.woff') format('woff'), url('../fonts/Austin-Light.ttf') format('truetype'), url('../fonts/Austin-Light.svg#svgAustinLight') format('svg');
+}
+@font-face {
+  font-family: 'Austin Bold';
+  src: url('../fonts/Austin-Bold.eot');
+  src: url('../fonts/Austin-Bold.woff') format('woff'), url('../fonts/Austin-Bold.ttf') format('truetype'), url('../fonts/Austin-Bold.svg#svgAustinBold') format('svg');
+}
+@font-face {
+  font-family: 'Neuzeit Book';
+  src: url('../fonts/Neuzeit-Book.eot');
+  src: url('../fonts/Neuzeit-Book.woff') format('woff'), url('../fonts/Neuzeit-Book.ttf') format('truetype'), url('../fonts/Neuzeit-Book.svg#svgNeuzeitBook') format('svg');
+}
+@font-face {
+  font-family: 'Neuzeit Heavy';
+  src: url('../fonts/Neuzeit-Heavy.eot');
+  src: url('../fonts/Neuzeit-Heavy.woff') format('woff'), url('../fonts/Neuzeit-Heavy.ttf') format('truetype'), url('../fonts/Neuzeit-Heavy.svg#svgNeuzeitHeavy') format('svg');
+}
+body {
+  font-family: 'Neuzeit Book', 'Helvetica Neue', sans-serif;
+}
+/* Breakpoints ---------- */

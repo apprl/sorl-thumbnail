@@ -65,6 +65,7 @@ urlpatterns = patterns('',
 
     # About pages
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),
+    url(r'^contact/$', 'apparelrow.apparel.views.contact', name='contact'),
     url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
     url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
 
