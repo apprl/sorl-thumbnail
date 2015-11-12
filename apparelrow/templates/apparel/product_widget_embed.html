@@ -117,6 +117,7 @@
               <img src="{{ im.url }}" title="{{ component }}" width="{{ im.width }}" height="{{ im.height }}"/>
             </a>
             {% endthumbnail %}
+            {% if object.show_product_brand %}
             <div class="caption">
                 <h4><a href="{{ component.get_absolute_url|chlocale:LANGUAGE_CODE }}">{{ component.manufacturer }}</a></h4>
                 <ul class="list-inline">
@@ -132,6 +133,7 @@
                     {% endif %}
                 </ul>
             </div>
+            {% endif %}
           </li>
           {% endfor %}
         </ul>

@@ -3,6 +3,8 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     template: _.template($('#shop_component_product').html()),
     indexes: [],
     current_index: 0,
+    allowprev: false,
+    allownext: false,
 
     initialize: function() {
         this.model.fetch({
@@ -133,16 +135,18 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         if (external_product_widget_type == 'single') {
             if (this.model.components.length > 0) {
                 var index = this.indexes.indexOf(this.current_index);
-                $('.next').toggle(index < this.indexes.length-1);
-                $('.previous').toggle(index > 0);
+                this.allownext = index < this.indexes.length-1;
+                this.allowprev = index > 0;
+                $('.previous, .next').toggle(true);
             } else {
                 $('.previous, .next').toggle(false);
             }
         } else {
             if (this.model.components.length > this.num_multi) {
                 var childwidth = $ul.parent().width()/this.num_multi;
-                $('.next').toggle(Math.round(($ul.width()+$ul.position().left)/childwidth) > this.num_multi);
-                $('.previous').toggle(Math.round($ul.position().left) != 0);
+                this.allownext = Math.round(($ul.width()+$ul.position().left)/childwidth) > this.num_multi;
+                this.allowprev = Math.round($ul.position().left) != 0;
+                 $('.previous, .next').toggle(true);
             } else {
                 $('.previous, .next').toggle(false);
             }
@@ -236,6 +240,8 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     },
     slide: function(direction) {
         if (this.running) return;
+        if (direction == 1 && !this.allowprev) return;
+        if (direction == -1 && !this.allownext) return;
         var $ul = this.$productlist.find('ul.product-list');
         var childwidth = $ul.parent().width();
         if (external_product_widget_type == 'multiple') {

@@ -22,10 +22,10 @@ App.Views.ProductWidgetEditPopup = App.Views.WidgetBase.extend({
         $('body').append(this.$el);
     },
 
-    product_info: function(model) {
+    product_info: function(model, hide_add) {
         this.active_type = 'info';
         this.show(model);
-        this.render_info();
+        this.render_info(hide_add == true);
     },
     product_add: function(model) {
         // Do not show add product popup if we have a pending component waiting
@@ -68,7 +68,7 @@ App.Views.ProductWidgetEditPopup = App.Views.WidgetBase.extend({
         return false;
     },
 
-    render_info: function() {
+    render_info: function(hide_add) {
         App.Events.trigger('product:disable');
 
         this.delegateEvents();
@@ -82,8 +82,12 @@ App.Views.ProductWidgetEditPopup = App.Views.WidgetBase.extend({
         content.html(_.template($('#look_edit_popup_loading').html())());
         content.addClass('center');
         content.load(url, _.bind(function() {
+            if (hide_add) {
+                content.find('.btn-success').parent().hide();
+            } else {
+                content.find('.btn-success').parent().show();
+            }
             content.removeClass('center');
-            //this._center();
         }, this));
 
         //this._center();
