@@ -29,11 +29,20 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             this.resize();
         }, this);
 
-
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
         this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+        this.popup_dispatcher.add('dialog_few_products', new App.Views.DialogFewProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+
+
+        var self = this;
+        $(window).on('show.bs.modal', function(e) {
+            if ($(e.relatedTarget).hasClass('btn-embed') && self.model.components.length < 3 && external_product_widget_type == 'multiple') {
+                self.popup_dispatcher.show('dialog_few_products');
+                return e.preventDefault();
+            }
+        });
 
         this.num_multi = 3;
         this.list_width_factor = 0.8;

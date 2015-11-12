@@ -501,6 +501,7 @@ PIPELINE_JS = {
             'js/app/base/views/dialog_save.js',
             'js/app/base/views/dialog_login.js',
             'js/app/base/views/dialog_no_products.js',
+            'js/app/base/views/dialog_few_products.js',
             'js/app/product_widget_editor/views/product_widget_create.js',
             'js/app/product_widget_editor/views/product_widget_edit_popup.js',
             'js/app/look_editor/views/look_edit_filter_tabs.js',
