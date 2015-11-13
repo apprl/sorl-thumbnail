@@ -117,14 +117,14 @@ jQuery(document).ready(function() {
             visiblechildren = 1;
             $ul.css('left', -1*index*itemwidth);
         } else {
-            $container.width($window.width() - margin);
-            visiblechildren = Math.floor($container.width()/(itemwidth+padding));
+            visiblechildren = Math.floor(($window.width() - margin)/(itemwidth));
+            $container.width(visiblechildren*(itemwidth));
             if (Math.floor(visiblechildren) < $items.length) {
                 enableslide();
             } else {
                 disableslide()
             }
-            $ul.css('left', ($container.width() - $items.length*(itemwidth))/2);
+            $ul.css('left', -1*index*(itemwidth));
         }
 
         var containermargin = parseInt($container.css('marginLeft').substr(0, $container.css('marginLeft').length -2));
