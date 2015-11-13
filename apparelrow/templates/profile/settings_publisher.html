@@ -29,9 +29,9 @@ $(document).ready(function() {
 {% block content %}
         <div class="group translations form-group" data-orgnr-company="{% trans "Organization number" %}" data-orgnr-person="{% trans "Personal number" %}" data-banknr-company="{% trans "Bank account number 1" %}" data-banknr-person="{% trans "Bank account number" %}">
         <h2 id="events">{% trans "Publisher" %}</h2>
-        <p>{% blocktrans with userid=request.user.pk %}Your publisher ID is <strong>{{userid}}</strong>.{% endblocktrans %}</p><br>
+        <p>{% blocktrans with userid=request.user.pk %}Your publisher ID is <strong>{{userid}}</strong>.{% endblocktrans %}</p>
         <form class="form-horizontal" id="publisher-form" action="{% url 'settings-publisher' %}" method="post">{% csrf_token %}
-            <h4>{% trans "Your blog" %}</h4>
+            <h3>{% trans "Your site" %}</h3>
             <div class="form-group{% if form.blog_url.errors %} has-error{% endif %}">
                 <label for="id_{{ form.blog_url.html_name }}" class="col-sm-2 control-label">{{ form.blog_url.label }}</label>
                 <div class="col-sm-6">
@@ -41,7 +41,7 @@ $(document).ready(function() {
             </div>
 
 
-            <h4>{% trans "Your payment settings" %}</h4>
+            <h3>{% trans "Your payment settings" %}</h3>
             <div class="form-group{% if details_form.company.errors %} has-error{% endif %}">
                 <label for="id_{{ details_form.company.html_name }}" class="col-sm-2 control-label">{{ details_form.company.label }}</label>
                 <div class="col-sm-6">

@@ -2,6 +2,7 @@
 	Theme v1.5
 	- Colors
 	- Fonts
+	- Grid
 	- Breakpoints
 */
 /* Colors ---------- */
@@ -50,4 +51,5 @@ hr {
 body {
   font-family: 'Neuzeit Book', 'Helvetica Neue', sans-serif;
 }
+/* Grid ---------- */
 /* Breakpoints ---------- */

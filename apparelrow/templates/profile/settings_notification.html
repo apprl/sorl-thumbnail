@@ -5,19 +5,17 @@
         <h2 id="events">{% trans "E-mail Notifications & Newsletters" %}</h2>
         <form action="{% url 'settings-notification' %}" method="post">{% csrf_token %}
             <div class="form-content">
-                <br>
-                <h4>{% trans "Notifications" %}</h4>
+                <h3>{% trans "Notifications" %}</h3>
                 <p>{% trans "Here you can set which type of notifications you want to get via email" %}</p>
-                <br>
                 {% for field in notification_form %}
-                <div>{{ field.help_text }}</div>
+                <h5>{{ field.help_text }}</h5>
                 <div>{{ field }}</div>
                 {% endfor %}
                 <p>{{ newsletter_form.discount_notification }} {{ newsletter_form.discount_notification.help_text }}</p>
             </div>
+
             <div>
-                <br>
-                <h4>{% trans "Newsletter" %}</h4>
+                <h3>{% trans "Newsletter" %}</h3>
                 <p>{{ newsletter_form.newsletter }} {{ newsletter_form.newsletter.help_text }}</p>
             </div>
             <div>

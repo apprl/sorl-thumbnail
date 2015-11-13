@@ -33,12 +33,14 @@
 	text-transform: uppercase;
 	letter-spacing: 2px;
 	font-size: 12px;
+	max-width: none;
 	color: white;
 	font-family: @secondaryFontBold;
 	background-color: black;
     .animate();
 	&:hover, &:focus {
 		color: white;
+		outline: 0;
 		background-color: @darkGrey;
 		//box-shadow: 0 1px 6px 0 rgba(0,0,0,.12), 0 1px 6px 0 rgba(0,0,0,.12);
 	}
@@ -50,12 +52,18 @@
 		line-height: 40px;
 	}
 }
-main .btn {
+.product-page .btn {
 	margin: auto;
-	display: block;
 	@media (min-width: @screen-md) {
 		margin: 0;
 	}
+}
+main .btn {
+	//margin: auto;
+	display: block;
+	/*@media (min-width: @screen-md) {
+		margin: 0;
+	}*/
 }
 .btn-sm {
 	font-size: 11px;
@@ -112,22 +120,32 @@ main .btn {
 }
 
 /* Navigation ---------- */
-//.dropdown {
+.dropdown-menu {
+	border-radius: 0;
+	border: 0;
+	width: 100%;
+	max-width: 260px;
+	font-size: 13px;
+	margin: 0;
+	top: initial;
+	display: block;
+	opacity: 0;
+	visibility: hidden;
+	a {
+		color: @grey;
+	}
+	> li > a {
+		line-height: 24px;
+		padding: 5px 15px;
+	}
+	.animate();
+}
+.open {
 	.dropdown-menu {
-		border-radius: 0;
-		border: 0;
-		> li > a {
-			line-height: 24px;
-			padding: 5px 15px;
-		}
-		.animate();
+		opacity: 1;
+		visibility: visible;
 	}
-	@media (min-width: 768px) {
-		.dropdown-menu {
-			box-shadow: 0 1px 10px rgba(0,0,0,.3);
-		}
-	}
-//}
+}
 .scroll-top {
   display: none;
   border-radius: 50%;
@@ -175,43 +193,6 @@ main .btn {
 		}
 	}
 }
-
-/*.breadcrumbs {
-  font-size: 0;
-  margin: -3px 0 3px 0;
-  zoom: 1;
-}
-.breadcrumbs:before,
-.breadcrumbs:after {
-  display: table;
-  content: '';
-  zoom: 1;
-}
-.breadcrumbs:after {
-  clear: both;
-}
-.breadcrumbs li {
-  display: inline;
-}
-.breadcrumbs li:after {
-  font-size: 12px;
-  content: " / ";
-}
-.breadcrumbs li:last-child:after {
-  content: "";
-}
-.breadcrumbs a {
-  display: inline-block;
-  font-family: 'Neuzeit Heavy', Helvetica Neue, sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-.breadcrumbs a:hover {
-  color: #666666;
-}*/
-
-
 .page-menu {
 	background-color: @offwhite;
 	padding: 15px 0;

@@ -1,3 +1,6 @@
+/*
+    Profile v1.0
+*/
 
 .profile-welcome {
     background-color: #ffffff;
@@ -119,7 +122,7 @@
         }
         li a {
             padding: 5px;
-            color: @light_gray_color;
+            color: #eee;
             &.selected {
                 color: #000000;
             }
@@ -146,13 +149,13 @@
 
 .discover-list > .col-discover-item {
     .make-sm-column(12);
-    @media (min-width: @screen-tablet) {
+    @media (min-width: @screen-sm) {
         .make-sm-column(6);
     }
-    @media (min-width: @screen-desktop) {
+    @media (min-width: @screen-md) {
         .make-sm-column(4);
     }
-    @media (min-width: @screen-lg-desktop) {
+    @media (min-width: @screen-lg) {
         .make-sm-column(3);
     }
 }
@@ -203,11 +206,11 @@
     }
     .profile-content { text-align: center; }
     .profile-content .btn { vertical-align: text-bottom; }
-    @media (min-width: @screen-tablet) {
+    @media (min-width: @screen-sm) {
         .profile-content { text-align: left; }
     }
     .profile-navigation > div > ul {
-        .body-header-ul;
+        //.body-header-ul; WHATS THIS?
         margin-top: 10px;
         margin-bottom: 10px;
         display: block;

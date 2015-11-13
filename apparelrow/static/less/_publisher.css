@@ -1,0 +1,61 @@
+.publisher-page .subnav-page,
+.store-page .subnav-page {
+  margin-bottom: 40px;
+}
+.publisher-page .subnav-page > div,
+.store-page .subnav-page > div {
+  font-size: 16px;
+  text-align: center;
+}
+.publisher-page .monthly-list,
+.store-page .monthly-list {
+  text-align: center;
+}
+.publisher-page .publisher-admin ul,
+.store-page .publisher-admin ul,
+.publisher-page .publisher-admin p,
+.store-page .publisher-admin p {
+  text-align: center;
+}
+body.publisher-index-page #content-container {
+  padding-bottom: 0;
+}
+body.publisher-index-page .body-header {
+  color: #ffffff;
+  border: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+body.publisher-index-page .body-header h1 {
+  margin-bottom: 20px;
+}
+body.publisher-index-page .inner-content {
+  background-color: #ffffff;
+  margin-bottom: 60px;
+  padding: 20px;
+}
+body.publisher-index-page .background {
+  background: #000000 url('../images/bg_bw4.jpg') no-repeat center 40px;
+}
+body.publisher-referral-page .referral-row {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+body.publisher-referral-page .referral-row > div {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+body.publisher-referral-page .referral-link-container {
+  text-align: center;
+  padding: 20px 30px;
+}
+body.publisher-referral-page .referral-link-container.box {
+  background-color: #eee;
+}
+body.publisher-referral-page .referral-link-container p {
+  margin-top: 10px;
+}
+body.publisher-referral-page .referral-link-container textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}

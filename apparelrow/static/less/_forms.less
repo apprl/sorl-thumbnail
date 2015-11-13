@@ -1,12 +1,6 @@
 /*
-	Forms v0.1
+	Forms v1.0
 */
-
-/*.default-form input {
-    .form-control .custom-form {
-        width: 95%;
-    };
-}*/
 
 button, input, select, textarea {
     -webkit-appearance: none;
@@ -19,9 +13,8 @@ button, input, select, textarea {
     font-size: 14px;
     -webkit-transition: all .2s;
     transition: all .2s;
-    &:focus {
+    &:focus, &:active {
         outline: 0;
-        box-shadow: none;
     }
 }
 textarea {
@@ -146,4 +139,10 @@ textarea:focus {
 @keyframes highlight {
     0% { background-size: 0 2px, 100% 1px }
     100% { background-size: 100% 2px, 100% 1px }
+}
+.form-control {
+    box-shadow: none;
+    &:focus {
+        box-shadow: none;
+    }
 }

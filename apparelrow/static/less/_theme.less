@@ -2,97 +2,95 @@
 	Theme v1.5
 	- Colors
 	- Fonts
+	- Grid
 	- Breakpoints
 */
 
 /* Colors ---------- */
-@primaryColor:			#67e2b8;
-@secondaryColor:		#f64747;
-@darkGrey:				#333;
-@grey:					#666;
-@lightGrey:				#999;
-@offwhite:				#eee;
+@primaryColor:              #67e2b8;
+@secondaryColor:            #f64747;
+@darkGrey:                  #333;
+@grey:                      #666;
+@lightGrey:                 #ccc;
+@offwhite:                  #eee;
+
 a {
-	color: black;
-	&:hover {
-		color: @grey;
-	}
+    color: black;
+    &:hover {
+        color: @grey;
+    }
 }
 nav {
     background-color: black;
 }
 footer {
-	background-color: @offwhite;
+    background-color: @offwhite;
 }
 hr {
-	border-color: black;
+    border-color: black;
 }
 .helper {
-	color: lighten(black, 50%);
-	&:hover {
-		color: lighten(black, 25%);
-	}
+    color: lighten(black, 50%);
+    &:hover {
+        color: lighten(black, 25%);
+    }
 }
 
 /* Fonts ---------- */
 @font-face {
-  font-family: 'Austin Light';
-  src: url('../fonts/Austin-Light.eot');
-  src: url('../fonts/Austin-Light.woff') format('woff'),
-       url('../fonts/Austin-Light.ttf') format('truetype'),
-       url('../fonts/Austin-Light.svg#svgAustinLight') format('svg');
+    font-family: 'Austin Light';
+    src: url('../fonts/Austin-Light.eot');
+    src: url('../fonts/Austin-Light.woff') format('woff'),
+    url('../fonts/Austin-Light.ttf') format('truetype'),
+    url('../fonts/Austin-Light.svg#svgAustinLight') format('svg');
 }
 @font-face {
-  font-family: 'Austin Bold';
-  src: url('../fonts/Austin-Bold.eot');
-  src: url('../fonts/Austin-Bold.woff') format('woff'),
-       url('../fonts/Austin-Bold.ttf') format('truetype'),
-       url('../fonts/Austin-Bold.svg#svgAustinBold') format('svg');
+    font-family: 'Austin Bold';
+    src: url('../fonts/Austin-Bold.eot');
+    src: url('../fonts/Austin-Bold.woff') format('woff'),
+    url('../fonts/Austin-Bold.ttf') format('truetype'),
+    url('../fonts/Austin-Bold.svg#svgAustinBold') format('svg');
 }
 @font-face {
-  font-family: 'Neuzeit Book';
-  src: url('../fonts/Neuzeit-Book.eot');
-  src: url('../fonts/Neuzeit-Book.woff') format('woff'),
-       url('../fonts/Neuzeit-Book.ttf') format('truetype'),
-       url('../fonts/Neuzeit-Book.svg#svgNeuzeitBook') format('svg');
+    font-family: 'Neuzeit Book';
+    src: url('../fonts/Neuzeit-Book.eot');
+    src: url('../fonts/Neuzeit-Book.woff') format('woff'),
+    url('../fonts/Neuzeit-Book.ttf') format('truetype'),
+    url('../fonts/Neuzeit-Book.svg#svgNeuzeitBook') format('svg');
 }
 @font-face {
-  font-family: 'Neuzeit Heavy';
-  src: url('../fonts/Neuzeit-Heavy.eot');
-  src: url('../fonts/Neuzeit-Heavy.woff') format('woff'),
-       url('../fonts/Neuzeit-Heavy.ttf') format('truetype'),
-       url('../fonts/Neuzeit-Heavy.svg#svgNeuzeitHeavy') format('svg');
+    font-family: 'Neuzeit Heavy';
+    src: url('../fonts/Neuzeit-Heavy.eot');
+    src: url('../fonts/Neuzeit-Heavy.woff') format('woff'),
+    url('../fonts/Neuzeit-Heavy.ttf') format('truetype'),
+    url('../fonts/Neuzeit-Heavy.svg#svgNeuzeitHeavy') format('svg');
 }
-@primaryFont:			'Austin Light', serif;
-@primaryFontBold:		'Austin Bold', serif;
-@secondaryFont:			'Neuzeit Book', 'Helvetica Neue', sans-serif;
-@secondaryFontBold:		'Neuzeit Heavy', 'Helvetica Neue', sans-serif;
+
+@primaryFont: 'Austin Light', serif;
+@primaryFontBold: 'Austin Bold', serif;
+@secondaryFont: 'Neuzeit Book', 'Helvetica Neue', sans-serif;
+@secondaryFontBold: 'Neuzeit Heavy', 'Helvetica Neue', sans-serif;
+
 body {
-	font-family: @secondaryFont;
+    font-family: @secondaryFont;
 }
+
+/* Grid ---------- */
+@grid-columns:              12;
+@grid-gutter-width:         30px;
 
 /* Breakpoints ---------- */
-@screen-xs:           480px;
-@screen-sm:           768px;
-@screen-md:           992px;
-@screen-lg:           1140px;
+@screen-xs:                 480px;
+@screen-xs-max:             (@screen-sm - 1);
+@screen-is:                 640px;
+@screen-sm:                 768px;
+@screen-sm-max:             (@screen-md - 1);
+@screen-md:                 992px;
+@screen-lg:                 1140px;
+@grid-float-breakpoint:     @screen-sm;
+@grid-float-breakpoint-max: (@grid-float-breakpoint - 1);
 
-@gray-dark: #333;
-//@footer_bg_color: #e6e6e6;
-@gray_color: #999999;
-@dark_gray_color: #666666;
-@darkest_gray_color: #333333;
-@light_gray_color: #d9d9d9;
-@lighter_gray_color: #E6E6E6;
-@like-color: #e27b67; //#c95050;
-
-@blue-gray-color: #7d8991;
-
-@btn-custom-default-color: #bfbfbf;
-
-
-@brand-facebook: #3b5999;
-
-@brand-success: #67e2b8; //60d1ab;
-@brand-danger: #d65180;
-@brand-primary: #333;
+//@dark_gray_color: #666666;
+//@darkest_gray_color: #333333;
+//@light_gray_color: #d9d9d9;
+//@lighter_gray_color: #E6E6E6;

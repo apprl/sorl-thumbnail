@@ -20,14 +20,17 @@
   text-decoration: none;
 }
 /* Log In ---------- */
-/*.page-login {
-	main {
-		font-size: 13px;
-		form {
-			margin: 30px 0 15px 0;
-		}
-	}
-}*/
+body.login main {
+  font-size: 13px;
+}
+body.login main form {
+  margin-bottom: 30px;
+}
+body.login main .btn,
+body.login main input {
+  margin: 0;
+  max-width: none;
+}
 .date-dropdown {
   font-size: 16px;
 }

@@ -1,3 +1,7 @@
+/*
+    Widget v1.0
+*/
+
 #photo-markers {
   position: absolute;
   top: 0;
@@ -21,7 +25,7 @@
   }
 }
 
-@media (min-width: @screen-tablet) {
+@media (min-width: @screen-sm) {
   .widget-page {
     #popup-slim {
       .info-container {
@@ -121,10 +125,10 @@ html.look-type-C {
     }
 
     #product-tabs > li {
-        background-color: @lighter_gray_color;
+        background-color: #eee;
         > a {
             border-radius: 0;
-            border: 2px solid @lighter_gray_color;
+            border: 2px solid #eee;
             border-bottom: 0px;
             padding: 8px 13px;
             margin-bottom: 0px;
@@ -142,7 +146,7 @@ html.look-type-C {
             padding-right: 0px;
           }
         }
-        @media (max-width: @screen-xs-max) {
+        @media (max-width: @screen-is) {
           span {
             display: none;
           }
@@ -221,9 +225,9 @@ html.look-type-C {
     .product-list-container {
         padding: 0 10px;
         @media (min-width: @screen-md) {
-          border-left: 2px solid @light_gray_color;
-          border-right: 2px solid @light_gray_color;
-          border-bottom: 2px solid @light_gray_color;
+          border-left: 2px solid @lightGrey;
+          border-right: 2px solid @lightGrey;
+          border-bottom: 2px solid @lightGrey;
         }
         #product-list-empty, #product-list-unauthenticated {
             padding: 10px;
@@ -250,13 +254,13 @@ html.look-type-C {
                 @media (min-width: 600px) {
                   width: 25%;
                 }
-                @media (min-width: @screen-sm-min) {
+                @media (min-width: @screen-sm) {
                   width: 20%;
                 }
-                @media (min-width: @screen-md-min) {
+                @media (min-width: @screen-md) {
                   width: 33.33%;
                 }
-                @media (min-width: @screen-lg-min) {
+                @media (min-width: @screen-lg) {
                   width: 25%;
                 }
                 @media (min-width: 1600px) {
@@ -317,8 +321,8 @@ html.look-type-C {
           padding-bottom: 10px;
         }
         @media (min-width: @screen-md) {
-          border-left: 2px solid @light_gray_color;
-          border-right: 2px solid @light_gray_color;
+          border-left: 2px solid #eee;
+          border-right: 2px solid #eee;
         }
 
         .btn {
@@ -346,7 +350,7 @@ html.look-type-C {
                max-height: 240px;
                overflow-y: scroll;
            }
-          @media (max-width: @screen-xs-max) {
+          @media (max-width: @screen-is) {
             display: none;
             > li {
               padding-left: 0px;
@@ -467,7 +471,8 @@ html.look-type-C {
 }
 
 // Col product list override
-@media (max-width: @screen-sm-max) {
+// SCREEN SM MAX before
+@media (max-width: @screen-sm) {
   .create-shop .product-list-container .col-product-list .col-product-item {
     width: 50%;
     float: left;
@@ -561,7 +566,7 @@ html.look-type-C, html.look-type-P {
     position: relative;
     .product-list-container {
       overflow: auto;
-      border: 2px solid @light_gray_color;
+      border: 2px solid @lightGrey;
       border-top: 0px;
       > div {
         padding-top: 10px;
@@ -570,7 +575,7 @@ html.look-type-C, html.look-type-P {
 
     &.splash {
       .product-list-container {
-        border-top: 2px solid @light_gray_color;
+        border-top: 2px solid @lightGrey;
       }
       .col-product-list {
         h3 {
@@ -587,7 +592,7 @@ html.look-type-C, html.look-type-P {
       }
     }
     .preview-header {
-      background: @lighter_gray_color;
+      background: @offwhite;
       width: 100%;
       text-align: center;
       padding: 9px 0px;

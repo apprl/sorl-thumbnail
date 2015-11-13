@@ -26,18 +26,46 @@
 	}
 }
 
-/* Log In ---------- */
-/*.page-login {
-	main {
-		font-size: 13px;
-		form {
-			margin: 30px 0 15px 0;
-		}
-	}
-}*/
+/* Log In & Registration ---------- */
+//body.login, body.registration, body.registration-email { // Might not work
+.account {
+    main {
+        font-size: 13px;
+        form {
+            margin-bottom: 30px;
+            max-width: @screen-is;
+        }
+        .btn, input {
+            margin: 0;
+            max-width: none;
+        }
+        li {
+            display: inline-block;
+            margin-right: 15px;
+            &:last-child {
+                margin: 0;
+            }
+        }
+        @media (min-width: @screen-xs) {
+            .btn {
+                max-width: 260px;
+            }
+            input {
+                max-width: 320px;
+            }
+        }
+    }
+}
 
-
-
+/* Settings ---------- */
+.settings-page {
+    h2 {
+        margin-bottom: 10px;
+    }
+    h3, h5 {
+        margin: 15px 0 5px 0;
+    }
+}
 
 //
 // Dashboard

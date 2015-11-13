@@ -37,8 +37,8 @@ $(document).ready(function() {
                 <div id="profile-image">
                     <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_large }}" class="img-responsive"></a>
                     {% if request.user.is_authenticated and request.user == profile %}
-                    <a href="#edit" class="btn btn-success btn-sm btn-block btn-edit" style="display: none;">{% trans "Change picture" %}</a>
-                    <a href="#cancel" class="btn btn-danger btn-sm btn-block btn-cancel" style="display: none;">{% trans "Cancel" %}</a>
+                    <a href="#edit" class="btn btn-default" style="display: none;">{% trans "Change picture" %}</a>
+                    <a href="#cancel" class="btn btn-secondary" style="display: none;">{% trans "Cancel" %}</a>
                     {% include 'profile/fragments/change_image_form.html' with form_enctype='multipart/form-data' %}
                     {% endif %}
                 </div>
@@ -46,7 +46,7 @@ $(document).ready(function() {
             <div class="col-sm-10 profile-content">
                 <h1>{{ profile.display_name }}</h1>
                 {% if request.user.is_authenticated and request.user == profile %}
-                <a class="btn btn-primary btn-create-shop" data-slug="{{ request.user.slug }}" href="{% url 'create-shop' %}">{% trans "Create a shop on your site" %}</a>
+                <a class="btn btn-primary" data-slug="{{ request.user.slug }}" href="{% url 'create-shop' %}">{% trans "Create a shop" %}</a>
                 {% else %}
                 {% include 'apparel/fragments/follow.html' %}
                 {% endif %}
@@ -62,10 +62,10 @@ $(document).ready(function() {
                     <div class="form-group">
                         <textarea class="form-control" rows="5" name="description">{{ profile.about }}</textarea>
                     </div>
-                    <button class="btn btn-success btn-save-description">{% trans "Save description" %}</button>
-                    <button class="btn btn-danger btn-cancel-description">{% trans "Cancel" %}</button>
+                    <button class="btn btn-primary">{% trans "Save description" %}</button>
+                    <button class="btn btn-secondary">{% trans "Cancel" %}</button>
                 </form>
-                <a class="btn btn-primary btn-change-description" href="#">{% trans "Change description" %}</a>
+                <a class="btn btn-default" href="#">{% trans "Change description" %}</a>
                 {% endif %}
             </div>
         </div>
