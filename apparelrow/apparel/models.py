@@ -25,7 +25,7 @@ from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
 from apparelrow.apparel.utils import currency_exchange, get_brand_and_category
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
-from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache
+from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache, empty_embed_productwidget_cache
 
 from apparelrow.profile.notifications import process_sale_alert
 
@@ -1107,9 +1107,15 @@ class ProductWidgetProduct(models.Model):
     product_widget_embed = models.ForeignKey(ProductWidget, on_delete=models.CASCADE)
     product    = models.ForeignKey(Product, on_delete=models.CASCADE)
 
-#@receiver(post_save, sender=ProductWidgetProduct, dispatch_uid='product_widget_product_save_cache')
-#def shop_product_save(instance, **kwargs):
-#    empty_embed_shop_cache.apply_async(args=[instance.shop_embed.user.pk], countdown=1)
+@receiver(post_save, sender=ProductWidgetProduct, dispatch_uid='product_widget_product_save_cache')
+def productwidget_product_save(instance, **kwargs):
+    for productwidget_embed in ProductWidgetEmbed.objects.filter(product_widget=instance.product_widget_embed):
+        key = settings.NGINX_PRODUCTWIDGET_RESET_KEY % productwidget_embed.id
+        if not get_cache("nginx").get(key,None):
+            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every ten minutes
+            empty_embed_productwidget_cache.apply_async(args=[productwidget_embed.id], countdown=120)
+        else:
+            logger.debug("Key: %s still active, will wait for productwidget reset." % key)
 
 
 @receiver(look_saved, sender=Look, dispatch_uid='look_saved')

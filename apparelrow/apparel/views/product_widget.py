@@ -63,7 +63,6 @@ def create(request, type):
 def editor(request, template='apparel/create_product_widget.html', product_widget_id=None, **kwargs):
     if not request.user.is_authenticated():
         return HttpResponse('Unauthorized', status=401)
-
     product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
 
     if request.user.pk is not product_widget.user.pk:
@@ -71,6 +70,7 @@ def editor(request, template='apparel/create_product_widget.html', product_widge
 
     return render(request, template, {
         'external_product_widget_id': product_widget_id if product_widget_id is not None else 0,
+        'type': product_widget.type,
         'object': product_widget
     })
 
@@ -369,7 +369,7 @@ def embed_product_widget(request, template='apparel/product_widget_embed.html', 
         nginx_key = reverse('embed-product-widget', args=[embed_product_widget_id])
     except get_model('apparel', 'ProductWidgetEmbed').DoesNotExist:
         #nginx_key = reverse('look-embed', args=[slug])
-        pass
+        return
 
     # TODO: replace alternative code with get_product_alternative from apparel.utils
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
