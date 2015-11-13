@@ -286,7 +286,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     delete_product_widget: function() {
         this.model._dirty = false;
         this.model.destroy({success: function() {
-            window.location.replace('/productwidget/create');
+            window.location.replace(external_widget_url);
         }});
     },
     save_product_widget: function(values) {

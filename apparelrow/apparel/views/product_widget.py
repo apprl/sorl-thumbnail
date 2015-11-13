@@ -57,8 +57,8 @@ def _to_int(s):
 def create(request, type):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
-
-    return render(request, 'apparel/create_product_widget.html', {'external_product_widget_id': 0, 'type': type})
+    return render(request, 'apparel/create_product_widget.html', {'external_product_widget_id': 0, 'type': type,
+                                                                  'external_widget_url': request.user.url_widgets})
 
 def editor(request, template='apparel/create_product_widget.html', product_widget_id=None, **kwargs):
     if not request.user.is_authenticated():
@@ -71,7 +71,8 @@ def editor(request, template='apparel/create_product_widget.html', product_widge
     return render(request, template, {
         'external_product_widget_id': product_widget_id if product_widget_id is not None else 0,
         'type': product_widget.type,
-        'object': product_widget
+        'object': product_widget,
+        'external_widget_url': request.user.url_widgets
     })
 
 def product_widget_instance_to_dict(product_widget):
@@ -148,6 +149,18 @@ def product_widget_instance_to_dict(product_widget):
                 })
 
     return product_widget_dict
+
+def delete_productwidget(request, product_widget_id):
+    productwidget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
+
+    if request.user.is_authenticated() and request.user == productwidget.user:
+        productwidget.delete()
+        if get_model('apparel', 'ProductWidget').objects.filter(user=request.user).exists():
+            return HttpResponseRedirect(reverse('profile-widgets', args=(request.user.slug,)))
+        else:
+            return HttpResponseRedirect(reverse('profile-likes', args=(request.user.slug,)))
+    else:
+        return HttpResponseRedirect(reverse('profile-widgets', args=(request.user.slug,)))
 
 
 class ProductWidgetView(View):

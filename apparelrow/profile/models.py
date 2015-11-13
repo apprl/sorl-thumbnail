@@ -387,6 +387,10 @@ class User(AbstractUser):
         return reverse('profile-shops', args=[self.slug])
 
     @cached_property
+    def url_widgets(self):
+        return reverse('profile-widgets', args=[self.slug])
+
+    @cached_property
     def url_followers(self):
         if self.is_brand:
             return reverse('brand-followers', args=[self.slug])

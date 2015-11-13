@@ -1,0 +1,26 @@
+{% extends 'dialog_base.html' %}
+{% load i18n %}
+
+{% block modal_id %}modal_productwidget_delete{% endblock %}
+{% block modal_title %}{% trans "Are you sure?" %}{% endblock %}
+{% block modal_content %}
+<p class="shop_title">{% trans "Are you sure you permanently want to delete this product widget? If you have embedded the product widget on a site, the product widget will disappear from there, too." %}</p>
+{% endblock %}
+{% block modal_footer %}
+<p>
+    <a class="btn btn-success btn-delete-shop" href="#">{% trans "Yes" %}</a>
+    <a class="btn btn-danger" data-dismiss="modal" href="#">{% trans "No" %}</a>
+</p>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#modal_productwidget_delete').on('show.bs.modal', function (event) {
+            var $button = $(event.relatedTarget); // Button that triggered the modal
+            var productwidget_id = $button.data('productwidgetid'); // Extract info from data-* attributes
+            var $modal = $(this);
+            $modal.find('.btn-success').off('click').on('click', function() {
+                location.href = '{% url "delete-product-widget" 0 %}'.replace('0', productwidget_id);
+            });
+        });
+    });
+</script>
+{% endblock %}

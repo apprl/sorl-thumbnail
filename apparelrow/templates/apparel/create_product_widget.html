@@ -34,6 +34,7 @@
         var external_product_widget_id = {% if external_product_widget_id %}{{ external_product_widget_id }}{% else %}0{% endif %};
         var selected_gender = 'A';
         var external_product_widget_type = '{{  type }}';
+        var external_widget_url = '{{  external_widget_url }}'
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     {% compressed_js 'create_product_widget' %}
