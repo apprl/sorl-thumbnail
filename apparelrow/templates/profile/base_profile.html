@@ -72,7 +72,7 @@ $(document).ready(function() {
 
         <div class="profile-navigation row">
             <div class="col-lg-12">
-                {% with likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
+                {% with likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops widgets_url=profile.url_widgets followers_url=profile.url_followers following_url=profile.url_following %}
                 <ul class="list-inline">
                     <li>
                     {% if profile and profile.is_brand %}
@@ -95,8 +95,8 @@ $(document).ready(function() {
                     {% if profile.shops and request.user.is_authenticated and request.user == profile%}
 
                     <li>
-                        <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">
-                            {% blocktrans count profile.shops as shop_count %}{{shop_count}} Shop{% plural %}{{shop_count}} Shops{% endblocktrans %}
+                        <a{% if request.path == widgets_url %} class="selected"{% endif %} href="{{ widgets_url }}">
+                            {% blocktrans with profile.widget_count as widget_count %}{{widget_count}} Shops & Widgets{% endblocktrans %}
                         </a>
                     </li>
                     {% endif %}

@@ -189,6 +189,10 @@ class User(AbstractUser):
         return self.look.filter(published=True).count()
 
     @cached_property
+    def widget_count(self):
+        return self.shop.all().count() + self.product_widget.all().count()
+
+    @cached_property
     def shops(self):
         """Number of shops"""
         return self.shop.all().count()
