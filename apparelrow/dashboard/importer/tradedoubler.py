@@ -5,6 +5,8 @@ import logging
 from requests.exceptions import RequestException
 from apparelrow.dashboard.models import Sale
 from apparelrow.dashboard.importer.base import BaseImporter
+from django.db.models.loading import get_model
+
 
 logger = logging.getLogger('affiliate_networks')
 
@@ -35,13 +37,28 @@ class Importer(BaseImporter):
 
         return Sale.INCOMPLETE
 
+    def get_vendor(self, program_name, site_name):
+        if program_name == "Boozt.com":
+            vendor_name = 'Boozt se' if site_name == 'Apprl' else 'Boozt no'
+            try:
+                return get_model('apparel', 'Vendor').objects.get(name=vendor_name)
+            except get_model('apparel', 'Vendor').DoesNotExist:
+                logger.warning("Vendor %s does not exist." % vendor_name)
+                return None
+
+        _, vendor = self.map_vendor(program_name)
+        return vendor
+
     def get_data(self, start_date, end_date, data=None):
         logger.info("Tradedoubler - Start importing from Affiliate Network")
         url = self.url % (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
         try:
-            response = requests.get(url)
-            logger.debug("Tradedoubler - Request sent successfully with status code %s"%(response.status_code))
-            data = xmltodict.parse(response.text.encode('utf-8'))
+            if data:
+                data = xmltodict.parse(data)
+            else:
+                response = requests.get(url)
+                logger.debug("Tradedoubler - Request sent successfully with status code %s"%(response.status_code))
+                data = xmltodict.parse(response.text.encode('utf-8'))
 
             row_count = int(data['report']['matrix']['@rowcount'])
             if row_count > 1:
@@ -54,7 +71,7 @@ class Importer(BaseImporter):
                     data_row = {}
                     data_row['original_sale_id'] = row['orderNR']
                     data_row['affiliate'] = self.name
-                    _, data_row['vendor'] = self.map_vendor(row.get('programName', None))
+                    data_row['vendor'] = self.get_vendor(row.get('programName', None), row.get('siteName', None))
                     data_row['original_commission'] = row['affiliateCommission']
                     data_row['original_currency'] = 'SEK'
                     data_row['original_amount'] = row['orderValue']

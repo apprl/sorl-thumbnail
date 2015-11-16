@@ -125,13 +125,27 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
                """, values)
     data = dictfetchall(cursor)
     for row in data:
-        try:
-            product = get_model('apparel', 'Product').objects.get(slug=row['product'])
+        if row['product']:
+            row['product_name'] = row['product']
             row['product_url'] = reverse('product-detail', args=[row['product']])
-            row['product_name'] = product.product_name
-            row['product_earning'] = float(int(row['clicks']) * click_cost)
-        except get_model('apparel', 'Product').DoesNotExist:
-            log.warn("Product %s does not exist" % row['product'])
+            row['product_url'] = reverse('product-detail', args=[row['product']])
+            try:
+                product = get_model('apparel', 'Product').objects.get(slug=row['product'])
+                row['product_name'] = ''
+                if product.manufacturer:
+                    row['product_name'] += "%s - " % product.manufacturer.name
+                row['product_name'] += product.product_name if product.product_name else product.slug
+            except get_model('apparel', 'Product').DoesNotExist:
+                log.warn("Product %s does not exist" % row['product'])
+        else:
+            row['product_name'] = "Other clicks to %s page" % row['vendor']
+            row['product_url'] = ''
+            try:
+                vendor = get_model('apparel', 'Vendor').objects.get(name=row['vendor'])
+                row['product_url'] = '%s?store=%s' % (reverse('shop'), vendor.id)
+            except:
+                log.warn("Vendor %s does not exist" % row['vendor'])
+        row['product_earning'] = float(int(row['clicks']) * click_cost)
     return data
 
 def get_product_thumbnail_and_link(product):
@@ -168,7 +182,7 @@ def get_number_clicks(vendor, start_date_query, end_date_query):
         Return total number of clicks for a Vendor in a given date range
     """
     return get_model('statistics', 'ProductStat').objects.\
-        filter(vendor=vendor, created__range=[start_date_query, end_date_query]).count()
+        filter(vendor=vendor, created__range=[start_date_query, end_date_query], is_valid=True).count()
 
 def get_total_clicks_per_vendor(vendor):
     """
@@ -176,16 +190,33 @@ def get_total_clicks_per_vendor(vendor):
     """
     today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-    return get_model('statistics', 'ProductStat').objects.filter(vendor=vendor).exclude(created__range=(today_min, today_max)).count()
+    return get_model('statistics', 'ProductStat').objects.filter(vendor=vendor, is_valid=True).\
+        exclude(created__range=(today_min, today_max)).count()
 
-def get_user_attributes(user):
+def get_clicks_from_sale(sale):
+    """
+        Return number of clicks generated from the given sale
+    """
+    user_id = sale.user_id
+    start_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(0, 0, 0, 0))
+    end_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(23, 59, 59, 999999))
+    vendor_name = sale.vendor
+    clicks = get_model('statistics', 'ProductStat').objects.filter(vendor=vendor_name, user_id=user_id,
+                                                          created__range=[start_date_query, end_date_query]).count()
+    return clicks
+
+def get_user_attrs(user):
+    user_dict = get_user_dict(user)
+    return user_dict['user_id'], user_dict['user_name'], user_dict['user_username']
+
+def get_user_dict(user):
     user_id = 0 if not user else user.id
     user_name = 'APPRL' if user_id == 0 else ''
     user_username = 'APPRL' if user_id == 0 else ''
     if user:
         user_name = user.name if user.name else ''
         user_username = user.username if user.username else ''
-    return user_id, user_name, user_username
+    return {'user_id': user_id, 'user_name': user_name, 'user_username': user_username}
 
 def get_user_thumbnail_and_link(user):
     user_link = ''
@@ -197,3 +228,48 @@ def get_user_thumbnail_and_link(user):
         except IOError:
             pass
     return user_image, user_link
+
+def retrieve_user_earnings(start_date, end_date, limit=40):
+    """
+        Return a list of dictionaries with detailed data of User Earnings
+    """
+    earnings = get_model('dashboard', 'UserEarning').objects\
+        .filter(date__range=(start_date, end_date), status__gte=get_model('dashboard', 'Sale').PENDING)\
+        .order_by('-date')[:limit]
+    earnings_list = []
+    for earning in earnings:
+        temp_dict = {}
+        temp_dict['user_id'] = earning.sale.user_id
+        temp_dict['vendor'] = earning.sale.vendor.id
+        temp_dict['sale_id'] = earning.sale.id
+        temp_dict['sale_vendor'] = earning.sale.vendor.name
+        temp_dict['user_earning_type'] = earning.user_earning_type
+        temp_dict['user_earning_type_display'] = earning.get_user_earning_type_display()
+        temp_dict['product_image'] = ''
+        temp_dict['product_link'] = ''
+        temp_dict['product_name'] = ''
+        temp_dict['date_string'] = earning.date.strftime("%Y-%m-%d")
+        try:
+            product = get_model('apparel', 'Product').objects.get(id=earning.sale.product_id)
+            temp_dict['product_image'], temp_dict['product_link'] = get_product_thumbnail_and_link(product)
+            temp_dict['product_name'] = product.product_name
+        except get_model('apparel', 'Product').DoesNotExist:
+            pass
+        temp_dict['from_user_link'] = ''
+        if earning.user:
+            temp_dict['from_user_link'] = reverse('profile-likes', args=[earning.user.slug])
+            temp_dict['from_user_name'] = earning.user.slug
+            temp_dict['from_user_avatar'] = earning.user.avatar_small
+            if earning.user.name:
+                temp_dict['from_user_name'] = earning.user.name
+        else:
+            temp_dict['from_user_name'] = "APPRL"
+        temp_dict['clicks'] = get_clicks_from_sale(earning.sale)
+        temp_dict['amount'] = "%.2f" % earning.amount
+        earnings_list.append(temp_dict)
+    return earnings_list
+
+def get_day_range(q_date):
+    start_date = datetime.datetime.combine(q_date, datetime.time(0, 0, 0, 0))
+    end_date = datetime.datetime.combine(q_date, datetime.time(23, 59, 59, 999999))
+    return start_date, end_date

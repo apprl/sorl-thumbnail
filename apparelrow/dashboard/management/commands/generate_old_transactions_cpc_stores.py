@@ -37,4 +37,4 @@ class Command(BaseCommand):
                             transaction, created = Transaction.objects.get_or_create(store_id=store_id,
                                                                                order_id=row.original_sale_id, defaults=defaults)
                             if created:
-                                logger.warning("Transaction has been created for existent sale %s." % row.id)
+                                logger.info("Transaction has been created for existent sale %s." % row.id)

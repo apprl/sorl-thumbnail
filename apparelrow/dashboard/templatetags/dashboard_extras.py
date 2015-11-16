@@ -1,5 +1,6 @@
 from __future__ import division
 from django import template
+import decimal
 
 register = template.Library()
 
@@ -18,5 +19,12 @@ def top_five(value):
 @register.filter(name='floatdot')
 def floatdot(value):
     return ("%.2f" % value)
+
+@register.filter(name='decimal_div')
+def decimalDiv(value, arg):
+    if arg != 0:
+        return ("%.2f" % (decimal.Decimal(value)/decimal.Decimal(arg)))
+    else:
+        return "-"
 
 floatdot.is_safe = True

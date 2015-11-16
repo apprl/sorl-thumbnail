@@ -106,6 +106,12 @@ def recalculate_earnings():
     from django.core import management
     management.call_command('update_aggregated_data')
 
+# daily just after midnight
+@periodic_task(name='apparelrow.scheduledjobs.tasks.collect_calculate_earnings', run_every=crontab(minute='30',hour='0'), max_retries=3, ignore_result=True)
+def calculate_earnings():
+    from django.core import management
+    management.call_command('collect_aggregated_data')
+
 
 # daily afternoon
 @periodic_task(name='apparelrow.scheduledjobs.tasks.check_chrome_extension', run_every=crontab(minute='30',hour='15'), ignore_result=True)

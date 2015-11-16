@@ -18,17 +18,14 @@ from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.template.loader import render_to_string
 
-
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
 from apparelrow.dashboard.models import Sale, Payment, Signup
 from apparelrow.dashboard.tasks import send_email_task
-from apparelrow.dashboard.utils import get_referral_user_from_cookie, get_cuts_for_user_and_vendor, get_clicks_list, \
-    get_product_thumbnail_and_link
+from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.profile.tasks import mail_managers_task
-from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 
 
@@ -81,6 +78,27 @@ def get_available_stores(current_location):
         except KeyError:
             vendors.append(store_name)
     return vendors
+
+def render_detail_earnings(request):
+    """
+        Return a list of user earning details given a date range when an AJAX request is made
+    """
+    if request.method == 'GET' and request.is_ajax():
+        month = request.GET.get('month', None)
+        year = request.GET.get('year', None)
+        if month and year:
+            if month == '0':
+                start_date = datetime.date(int(year), int(1), 1)
+                end_date = start_date
+                end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
+            else:
+                start_date = datetime.date(int(year), int(month), 1)
+
+                end_date = start_date
+                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+            earnings = retrieve_user_earnings(start_date, end_date)
+            json_data = json.dumps(earnings)
+            return HttpResponse(json_data)
 
 def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
     user_criteria = ''
@@ -724,37 +742,6 @@ def dashboard_admin(request, year=None, month=None):
         # Most clicked products
         most_clicked_products = get_most_clicked_products(start_date_query, end_date_query, limit=50)
 
-        earnings = get_model('dashboard', 'UserEarning').objects\
-            .filter(date__range=(start_date_query, end_date_query), status__gte=Sale.PENDING)\
-            .order_by('-date')
-        for earning in earnings:
-            earning.extra_sale = None
-            for sale in sales:
-                if earning.sale.id == sale['id']:
-                    earning.extra_sale = sale
-            sale = get_model('dashboard', 'Sale').objects.get(id=earning.sale.id)
-            earning.product_image = ''
-            earning.product_link = ''
-            earning.product_name= ''
-            try:
-                product = get_model('apparel', 'Product').objects.get(id=sale.product_id)
-                product_image, product_link = get_product_thumbnail_and_link(product)
-                earning.product_image = product_image
-                earning.product_link = product_link
-                earning.product_name = product.product_name
-            except get_model('apparel', 'Product').DoesNotExist:
-                pass
-            earning.from_user_link = ''
-            if earning.user:
-                earning.from_user_link = reverse('profile-likes', args=[earning.user.slug])
-                earning.from_user_name = earning.user.slug
-                earning.from_user_avatar = earning.user.avatar_small
-                if earning.user.name:
-                    earning.from_user_name = earning.user.name
-            else:
-                earning.from_user_name = "APPRL"
-
-            earning.clicks = get_clicks_from_sale(earning.sale)
 
         sales_count = [0, 0, 0] #total, publisher, apprl
         total_apprl_earnings = 0
@@ -859,7 +846,6 @@ def dashboard_admin(request, year=None, month=None):
                                                         'top_publishers': top_publishers,
                                                         'most_clicked_products': most_clicked_products,
                                                         'currency': 'EUR',
-                                                        'earnings': earnings,
                                                         'monthly_array': monthly_array})
     return HttpResponseNotFound()
 
@@ -1520,31 +1506,19 @@ def publishers(request, year=None, month=None):
                                                             'currency': 'EUR'})
     return HttpResponseRedirect(reverse('index-publisher'))
 
-def get_clicks_from_sale(sale):
-    """
-        Returns number of clicks generated from the given sale
-    """
-    user_id = sale.user_id
-    start_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(0, 0, 0, 0))
-    end_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(23, 59, 59, 999999))
-    vendor_name = sale.vendor
-    clicks = get_model('statistics', 'ProductStat').objects.filter(vendor=vendor_name, user_id=user_id,
-                                                          created__range=[start_date_query, end_date_query]).count()
-    return clicks
-
 def clicks_detail(request):
     """
-        Returns a list of click details given an user, vendor and date
+        Return a list of click details given an user, vendor and date
     """
-    if request.method == 'POST' and request.is_ajax():
-        user_id = request.POST.get('user_id', None)
-        vendor = request.POST.get('vendor', None)
-        currency = request.POST.get('currency', 'EUR')
-        num_clicks = request.POST.get('clicks', 0)
-        amount_for_clicks = request.POST.get('amount', 0).replace(',', '.')
+    if request.method == 'GET' and request.is_ajax():
+        user_id = request.GET.get('user_id', None)
+        vendor = request.GET.get('vendor', None)
+        currency = request.GET.get('currency', 'EUR')
+        num_clicks = request.GET.get('clicks', 0)
+        amount_for_clicks = request.GET.get('amount', 0).replace(',', '.')
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
-            query_date = datetime.datetime.fromtimestamp(int(request.POST['date']))
+            query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
             data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
@@ -1608,7 +1582,6 @@ class DashboardView(TemplateView):
                 values('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
                        'network_sale_earnings')
 
-
             data_per_day = {}
             for day in range(0, (end_date - start_date).days + 2):
                 data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
@@ -1638,7 +1611,8 @@ class DashboardView(TemplateView):
 
             non_paid_clicks = 0
             paid_clicks = 0
-            if 'total_clicks__sum' in sum_data and 'paid_clicks__sum' in sum_data:
+            if 'total_clicks__sum' in sum_data and 'paid_clicks__sum' in sum_data and sum_data['total_clicks__sum'] \
+                    and sum_data['paid_clicks__sum']:
                 paid_clicks = sum_data['paid_clicks__sum']
                 non_paid_clicks = sum_data['total_clicks__sum'] - sum_data['paid_clicks__sum']
 
@@ -1652,9 +1626,8 @@ class DashboardView(TemplateView):
             # Aggregate publishers per month
             top_publishers = AggregatedData.objects.\
                 filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
-                       data_type='aggregated_from_publisher').\
-                values('user_id', 'aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
-                       'aggregated_from_link').\
+                       data_type='aggregated_from_total').exclude(user_id=0).\
+                values('user_id', 'user_name', 'user_username', 'user_image', 'user_link').\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
                          total_network_earnings=Sum('total_network_earnings'),
                          total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings')
@@ -1787,6 +1760,7 @@ class AdminDashboardView(TemplateView):
                 filter(created__range=(start_date_query, end_date_query),
                        data_type='aggregated_from_total').\
                 values('user_id', 'user_name', 'user_username', 'user_link', 'user_image', 'aggregated_from_link').\
+                exclude(user_id=0).\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
                          total_network_earnings=Sum('total_network_earnings'),
                          total_clicks=Sum('total_clicks')).order_by('-total_earnings')
@@ -1799,34 +1773,11 @@ class AdminDashboardView(TemplateView):
                          total_network_earnings=Sum('total_network_earnings'),
                          total_clicks=Sum('total_clicks')).order_by('-total_earnings')
 
-            # Retrieve user earnings
-            earnings = get_model('dashboard', 'UserEarning').objects\
-                .filter(date__range=(start_date_query, end_date_query), status__gte=Sale.PENDING)\
-                .order_by('-date')
-            for earning in earnings:
-                earning.product_image = ''
-                earning.product_link = ''
-                earning.product_name= ''
-                try:
-                    product = get_model('apparel', 'Product').objects.get(id=earning.sale.product_id)
-                    earning.product_image, earning.product_link = get_product_thumbnail_and_link(product)
-                    earning.product_name = product.product_name
-                except get_model('apparel', 'Product').DoesNotExist:
-                    pass
-                earning.from_user_link = ''
-                if earning.user:
-                    earning.from_user_link = reverse('profile-likes', args=[earning.user.slug])
-                    earning.from_user_name = earning.user.slug
-                    earning.from_user_avatar = earning.user.avatar
-                    if earning.user.name:
-                        earning.from_user_name = earning.user.name
-                else:
-                    earning.from_user_name = "APPRL"
-                earning.clicks = get_clicks_from_sale(earning.sale)
-
             apprl_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
             total_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
             publisher_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
+            avg_epc_array = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0]
+            clicks_array = [0, 0, 0]
 
             # Aggregated Sum per month
             apprl_query = AggregatedData.objects.\
@@ -1836,9 +1787,9 @@ class AdminDashboardView(TemplateView):
                 apprl_data = apprl_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
                           sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
                           total_clicks=Sum('total_clicks'), sales=Sum('sales'))
-                apprl_top[0] = '%.2f EUR' % apprl_data['sale_clicks']
-                apprl_top[1] = '%.2f EUR' % apprl_data['sale_earnings']
-                apprl_top[2] = '%.2f EUR' % apprl_data['click_earnings']
+                apprl_top[0] = 'EUR %.2f' % apprl_data['sale_clicks']
+                apprl_top[1] = 'EUR %.2f' % apprl_data['sale_earnings']
+                apprl_top[2] = 'EUR %.2f' % apprl_data['click_earnings']
                 apprl_top[3] = apprl_data['paid_clicks']
                 apprl_top[4] = apprl_data['total_clicks'] - apprl_data['paid_clicks']
                 apprl_top[5] = apprl_data['sales']
@@ -1857,13 +1808,26 @@ class AdminDashboardView(TemplateView):
                              total_data['network_sale_earnings'] + total_data['network_click_earnings']
                 total_commission = total_data['sale_earnings'] + total_data['referral_earnings'] + total_data['network_sale_earnings']
                 total_ppc = total_data['click_earnings'] + total_data['network_click_earnings']
-                total_top[0] = '%.2f EUR' % total_earnings
-                total_top[1] = '%.2f EUR' % total_commission
-                total_top[2] = '%.2f EUR' % total_ppc
+                total_top[0] = 'EUR %.2f' % total_earnings
+                total_top[1] = 'EUR %.2f' % total_commission
+                total_top[2] = 'EUR %.2f' % total_ppc
                 total_top[3] = total_data['paid_clicks']
-                total_top[4] = total_data['total_clicks'] - total_data['paid_clicks']
+                cpo_clicks = total_data['total_clicks'] - total_data['paid_clicks']
+                total_top[4] = cpo_clicks
                 total_top[5] = total_data['sales']
                 total_top[6] = get_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
+
+                # Calculate average earning per click
+                if total_data['total_clicks'] > 0:
+                    avg_epc_array[0] = "EUR %.2f" % (total_earnings / decimal.Decimal(total_data['total_clicks']))
+                if total_data['paid_clicks'] > 0:
+                    avg_epc_array[1] = "EUR %.2f" % (total_ppc / decimal.Decimal(total_data['paid_clicks']))
+                if cpo_clicks >0:
+                    avg_epc_array[2] = "EUR %.2f" % (total_commission / decimal.Decimal(cpo_clicks))
+
+                clicks_array[0] = total_data['total_clicks']
+                clicks_array[1] = total_data['paid_clicks']
+                clicks_array[2] = cpo_clicks
 
             publisher_query = AggregatedData.objects.\
                 filter(created__range=(start_date_query, end_date_query), user_id__gt=0, data_type='aggregated_from_total')
@@ -1878,9 +1842,9 @@ class AdminDashboardView(TemplateView):
                 publisher_commission = publisher_data['sale_earnings'] + total_data['referral_earnings']\
                                        + total_data['network_sale_earnings']
                 publisher_ppc = publisher_data['click_earnings'] + publisher_data['network_click_earnings']
-                publisher_top[0] = '%.2f EUR' % publisher_total
-                publisher_top[1] = '%.2f EUR' % publisher_commission
-                publisher_top[2] = '%.2f EUR' % publisher_ppc
+                publisher_top[0] = 'EUR %.2f' % publisher_total
+                publisher_top[1] = 'EUR %.2f' % publisher_commission
+                publisher_top[2] = 'EUR %.2f' % publisher_ppc
                 publisher_top[3] = publisher_data['paid_clicks']
                 publisher_top[4] = publisher_data['total_clicks'] - publisher_data['paid_clicks']
                 publisher_top[5] = publisher_data['sales']
@@ -1896,8 +1860,9 @@ class AdminDashboardView(TemplateView):
                             'month': month, 'month_display': month_display,
                             'top_publishers': top_publishers,
                             'top_products': top_products,
-                            'earnings': earnings,
                             'monthly_array': monthly_array,
+                            'avg_epc_array': avg_epc_array,
+                            'clicks_array': clicks_array,
                             }
             return render(request, 'dashboard/new_admin.html', context_data)
         return HttpResponseRedirect(reverse('new-admin'))

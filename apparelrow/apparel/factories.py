@@ -18,6 +18,14 @@ class BrandFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Brand %s' % n)
 
 
+class CategoryFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = models.Category
+    name = factory.Sequence(lambda n: 'Category %s' % n)
+
+
+
 #@factory.django.mute_signals(signals.post_delete, signals.post_save)
 class ProductFactory(factory.django.DjangoModelFactory):
 

@@ -343,6 +343,36 @@ USER_EARNING_TYPES = (
     ('publisher_sale_click_commission', 'Earnings per Clicks'),
 )
 
+@receiver(pre_save, sender=AggregatedData, dispatch_uid='aggregated_data_pre_save')
+def aggregated_data_pre_save(sender, instance, *args, **kwargs):
+    """
+    Trim the string if its larger than 100 chars.
+    :param sender:
+    :param instance:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    #if instance.aggregated_from_name:
+    if instance.aggregated_from_name:
+        instance.aggregated_from_name = instance.aggregated_from_name[:99]
+    else:
+        instance.aggregated_from_name = ""
+
+    if instance.aggregated_from_slug:
+        instance.aggregated_from_slug = instance.aggregated_from_slug[:99]
+    else:
+        instance.aggregated_from_slug = ""
+
+    if instance.aggregated_from_link:
+        instance.aggregated_from_link = instance.aggregated_from_link[:199]
+    else:
+        instance.aggregated_from_link = ""
+
+    if instance.aggregated_from_image:
+        instance.aggregated_from_image = instance.aggregated_from_image[:199]
+    else:
+        instance.aggregated_from_image = ""
 
 class UserEarning(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, on_delete=models.PROTECT)

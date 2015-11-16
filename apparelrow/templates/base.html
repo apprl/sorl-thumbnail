@@ -126,18 +126,20 @@
         }(document));
     </script>
 
-    <div class="contest-bar">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-11">
-                    <p><a href="{% url 'festivalsommar' %}">{% trans "FESTIVALSOMMAR MED JC" %} <span class="arrow">»</span><span class="long">{% trans "Skapa din festivallook och tävla om 10 000kr" %}</span></a></p>
-                </div>
-                <div class="col-xs-1">
-                    <a class="btn btn-primary btn-sm pull-right" href="{% url 'festivalsommar' %}">{% trans "TILL TÄVLINGEN" %}</a>
+    {% comment %}
+        <div class="contest-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-11">
+                        <p><a href="{% url 'festivalsommar' %}">{% trans "FESTIVALSOMMAR MED JC" %} <span class="arrow">»</span><span class="long">{% trans "Skapa din festivallook och tävla om 10 000kr" %}</span></a></p>
+                    </div>
+                    <div class="col-xs-1">
+                        <a class="btn btn-primary btn-sm pull-right" href="{% url 'festivalsommar' %}">{% trans "TILL TÄVLINGEN" %}</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endcomment %}
 
     <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
         <div class="container">

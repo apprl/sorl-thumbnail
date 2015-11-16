@@ -7,6 +7,7 @@ from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.core import management, mail
 from django.conf import settings
+from factories import *
 
 
 
@@ -100,19 +101,18 @@ class TestProductStat(TestCase):
         earning_apprl = get_model('dashboard', 'UserEarning').objects.get(user=None)
         self.assertEqual(earning_apprl.amount, clickcost.amount * (1 - decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)))
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"CPC Vendor SE":["SE"],"CPC Vendor NO":["NO"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"default":["ALL","SE","NO","US"],})
     def test_unique_clicks_per_day(self):
         """
         Tests that only one click could be made to the same product from the same browser, once a day
         """
-        from apparelrow.apparel.factories import ProductFactory,VendorFactory,VendorProductFactory
-        vendor_se = VendorFactory.create(name="CPC Vendor SE",is_cpc=True)
-        vendor_no = VendorFactory.create(name="CPC Vendor NO",is_cpc=True)
-        vendors = [vendor_se,vendor_no]
+
+        # Test with a vendor with default location so no need to pass IP
+        vendor_all = VendorFactory.create(name="CPC Vendor default market", is_cpc=True, is_cpo=False)
+
         products = [ProductFactory.create() for i in range(20)]
         for index, product in enumerate(products):
-            selector = divmod(index,2)[1]
-            VendorProductFactory.create(product=product,vendor=vendors[selector])
+            VendorProductFactory.create(product=product,vendor=vendor_all)
         for product in products:
             print "Testing product %s for default vendor, Vendor [%s]" % (product,product.default_vendor.vendor.name)
             self.assertIsNotNone(product.default_vendor)
@@ -133,12 +133,12 @@ class TestProductStat(TestCase):
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), 3)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(is_valid=True).count(), 2)
 
-        # Creating 20 different clicks and check id it works
+        # Creating 20 different clicks and check id it works. Every click is valid since it is different products.
         for product in products:
             response = self.client.post(reverse('product-track', args=[product.pk, 'Ext-Link', user.pk]), follow=True)
         response = self.client.post(reverse('product-track', args=[products[0].pk, 'Ext-Link', user.pk]), follow=True)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), 3+20+1)
-        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(is_valid=True).count(), 2+10)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(is_valid=True).count(), 2+20)
 
     def test_clicks_limit_per_vendor_not_exceeded_custom_value(self):
         """
@@ -229,3 +229,63 @@ class TestProductStat(TestCase):
         self.assertEquals("4C95", extract_short_link_from_url(short_url_locale_4,456))
         short_url_locale_5 = u'http://staging.apprl.com/sv/s/4C96/'
         self.assertEquals("4C96", extract_short_link_from_url(short_url_locale_5))
+
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="DK",VENDOR_LOCATION_MAPPING={"PPC Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+    def test_valid_clicks_location(self):
+
+        # Vendor Market: ["SE"]
+        vendor = VendorFactory.create(name="PPC Vendor DK", is_cpc=True, is_cpo=False)
+        product = ProductFactory.create(slug="product")
+        VendorProductFactory.create(vendor=vendor, product=product)
+
+        clicks = 10
+        for i in range(clicks):
+            ProductStatFactory.create(ip="1.2.3.4", vendor=vendor.name, product=product.slug)
+
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug, is_valid=True).count(), clicks)
+
+        # Vendor Market: ["ALL","SE","NO","US"]
+        all_vendor = VendorFactory.create(name="PPC Vendor default", is_cpc=True, is_cpo=False)
+        other_product = ProductFactory.create(slug='other-product')
+        VendorProductFactory.create(vendor=all_vendor, product=other_product)
+
+        for i in range(clicks):
+            ProductStatFactory.create(ip="5.6.7.8", vendor=all_vendor.name, product=other_product.slug)
+
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), 0)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=False).count(), clicks)
+
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="ALL",VENDOR_LOCATION_MAPPING={"PPC Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+    def test_clicks_from_unmapped_location(self):
+
+        # Vendor Market: ["SE"]
+        vendor = VendorFactory.create(name="PPC Vendor DK", is_cpc=True, is_cpo=False)
+        product = ProductFactory.create(slug="product")
+        VendorProductFactory.create(vendor=vendor, product=product)
+
+        clicks = 1
+        for i in range(clicks):
+            ProductStatFactory.create(ip="1.2.3.4", vendor=vendor.name, product=product.slug)
+
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug, is_valid=True).count(), 0)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug, is_valid=False).count(), 1)
+
+        # Vendor Market: ["ALL","SE","NO","US"]
+        all_vendor = VendorFactory.create(name="PPC Vendor default", is_cpc=True, is_cpo=False)
+        other_product = ProductFactory.create(slug='other-product')
+        VendorProductFactory.create(vendor=all_vendor, product=other_product)
+
+        for i in range(clicks):
+            ProductStatFactory.create(ip="5.6.7.8", vendor=all_vendor.name, product=other_product.slug)
+
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), clicks)
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=False).count(), 0)
+
+
+
+
+

@@ -5,15 +5,15 @@ import decimal
 import os
 import calendar
 import json
-import factory
-import unittest
 from django.db.models import Sum
+from apparelrow.dashboard.factories import *
+
 
 from django.conf import settings
 from django.core import mail
 from django.core import signing
 from django.core.urlresolvers import reverse as _reverse
-from django.test import TransactionTestCase
+from django.test import TransactionTestCase, TestCase
 from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
 from django.db.models.loading import get_model
@@ -375,6 +375,8 @@ class TestDashboard(TransactionTestCase):
 
     def test_referred_user_get_20_eur(self):
         pass
+
+
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -1267,11 +1269,19 @@ class TestUserEarnings(TransactionTestCase):
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestAffiliateNetworks(TransactionTestCase):
     def setUp(self):
+        FXRate = get_model('importer', 'FXRate')
+        FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
+        FXRate.objects.create(currency='EUR', base_currency='SEK', rate='0.118160')
+        FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
+        FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
+
         self.user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
         self.user.location = 'SE'
         self.user.save()
 
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        self.boozt_se_vendor = get_model('apparel', 'Vendor').objects.create(name='Boozt se')
+        self.boozt_no_vendor = get_model('apparel', 'Vendor').objects.create(name='Boozt no')
 
         for i in range(1, 10):
             get_model('apparel', 'Product').objects.create(sku=str(i))
@@ -1311,6 +1321,21 @@ class TestAffiliateNetworks(TransactionTestCase):
         self.assertAlmostEqual(sale.original_amount, decimal.Decimal('150.55'))
         self.assertAlmostEqual(sale.original_commission, decimal.Decimal('9.03'))
         self.assertGreater(sale.status, sale_model.PENDING)
+
+    def test_tradedoubler_boozt_parser(self):
+        text = open(os.path.join(settings.PROJECT_ROOT, 'test_files/tradoubler_test.xml')).read()
+
+        management.call_command('dashboard_import', 'tradedoubler', data=text, verbosity=0, interactive=False)
+
+        sale_model = get_model('dashboard', 'Sale')
+
+        self.assertEqual(sale_model.objects.filter(affiliate="Tradedoubler").count(), 7)
+
+        boozt_se_sales = sale_model.objects.filter(vendor=self.boozt_se_vendor).count()
+        self.assertEqual(boozt_se_sales, 2)
+
+        boozt_no_sales = sale_model.objects.filter(vendor=self.boozt_no_vendor).count()
+        self.assertEqual(boozt_no_sales, 5)
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -1446,11 +1471,11 @@ class TestSalesPerClick(TransactionTestCase):
         yesterday = (datetime.date.today() - datetime.timedelta(1))
         ip = "192.128.2.3"
         for i in range(0, 52):
-            get_model('statistics', 'ProductStat').objects.create(product=self.product.product_name, page="BuyReferral",
+            get_model('statistics', 'ProductStat').objects.create(product=self.product.slug, page="BuyReferral",
                                                                   user_id=self.user.id, vendor=self.vendor.name,
                                                                   ip=ip, created=yesterday)
         for i in range(0, 48):
-            get_model('statistics', 'ProductStat').objects.create(product=self.product3.product_name, page="BuyReferral",
+            get_model('statistics', 'ProductStat').objects.create(product=self.product3.slug, page="BuyReferral",
                                                                   user_id=self.user.id, vendor=self.vendor.name,
                                                                   ip=ip, created=yesterday)
         management.call_command('clicks_summary', verbosity=0, interactive=False)
@@ -1463,7 +1488,7 @@ class TestSalesPerClick(TransactionTestCase):
         # Simulate a POST call for clicks detail
         dict_data = {'user_id': self.user.id, 'vendor': self.vendor.name, 'clicks': 100, 'amount': user_earning.amount,
                      'date': calendar.timegm(yesterday.timetuple())}
-        response = self.client.post(reverse('clicks-detail'), dict_data,
+        response = self.client.get(reverse('clicks-detail'), dict_data,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         response_dict = json.loads(response.content)
@@ -1490,7 +1515,6 @@ class TestSalesPerClick(TransactionTestCase):
         click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.vendor)
         sale_amount = 100 * click_cost.amount
         self.assertEqual(get_model('dashboard', 'Sale').objects.get().amount, sale_amount)
-
 
         self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 1)
         user_earning = get_model('dashboard', 'UserEarning').objects.get()
@@ -1761,6 +1785,7 @@ class TestPayments(TransactionTestCase):
         self.assertEqual(payment.amount, total_query['amount__sum'])
 
 
+
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory',
                    APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA='cache_aggregated_test')
 class TestAggregatedData(TransactionTestCase):
@@ -1905,3 +1930,85 @@ class TestAggregatedData(TransactionTestCase):
             elif data.user_id == 0:
                 self.assertEqual(data.user_name, 'APPRL')
                 self.assertEqual(data.sale_earnings, decimal.Decimal(0))
+
+    def test_product_name_too_long(self):
+        category = get_model('apparel', 'Category').objects.get(name='Category')
+        manufacturer = get_model('apparel', 'Brand').objects.get(name='Brand')
+        product = get_model('apparel', 'Product').objects.create(
+            product_name='Adidas Originals adidas Originals White Tubular Runner Sneakers Green Blue White Brown Etc Etc Etc Etc Etc',
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            product_image='no real image',
+            published=True,
+            sku='wk-11111111'
+        )
+        self.assertGreater(len(product.product_name), 100)
+        get_model('dashboard', 'AggregatedData').objects.create(aggregated_from_name=product.product_name,
+                                                                aggregated_from_slug=product.slug)
+
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 1)
+        aggregated_data = get_model('dashboard', 'AggregatedData').objects.latest("created")
+        self.assertEqual(len(aggregated_data.aggregated_from_name), 99)
+
+
+    def test_fields_none_or_too_long(self):
+        long_string = ""
+        for i in range(0,205):
+            long_string += "a"
+        self.assertGreater(len(long_string), 200)
+
+        AggregatedDataFactory.create(aggregated_from_name=None,aggregated_from_slug=None,
+                                     aggregated_from_link=None,aggregated_from_image=None)
+
+        AggregatedDataFactory.create(aggregated_from_name=long_string,aggregated_from_slug=long_string,
+                                     aggregated_from_link=long_string,aggregated_from_image=long_string)
+
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 2)
+        aggregated_data = get_model('dashboard', 'AggregatedData').objects.latest("created")
+        self.assertEqual(len(aggregated_data.aggregated_from_name), 99)
+        self.assertEqual(len(aggregated_data.aggregated_from_slug), 99)
+        self.assertEqual(len(aggregated_data.aggregated_from_link), 199)
+        self.assertEqual(len(aggregated_data.aggregated_from_image), 199)
+
+
+class TestPaymentHistory(TestCase):
+
+    def test_few_earnings_payments_history(self):
+        user = UserFactory.create()
+        vendor = VendorFactory.create()
+        CutFactory.create(vendor=vendor, group=user.partner_group, cut=0.67)
+
+        for index in range(1, 11):
+            SaleFactory.create(user_id=user.id, vendor=vendor)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(
+            user_earning_type='publisher_sale_commission').count(), 10)
+
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Payment').objects.all().count(), 1)
+
+        payment = get_model('dashboard', 'Payment').objects.all()[0]
+        earnings_dict = json.loads(payment.earnings)
+
+        earnings = get_model('dashboard', 'UserEarning').objects.filter(user_earning_type='publisher_sale_commission')
+        for item in earnings:
+            self.assertIn(item.id, earnings_dict)
+
+    def test_multiple_earnings_payments_history(self):
+        user = UserFactory.create()
+        vendor = VendorFactory.create()
+        CutFactory.create(vendor=vendor, group=user.partner_group, cut=0.67)
+
+        for index in range(1, 101):
+            SaleFactory.create(user_id=user.id, vendor=vendor)
+
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(
+            user_earning_type='publisher_sale_commission').count(), 100)
+
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Payment').objects.all().count(), 1)

@@ -92,7 +92,7 @@
             var html = "<table>";
             for (i = 0; i < jsonDetail.length; i++){
                 html += "<tr>" +
-                        "<td><a href=\""+jsonDetail[i].product_url+"\">" + jsonDetail[i].product_name + "</a></td>" +
+                        "<td><a href=\""+jsonDetail[i].product_url+"\" target=\"_blank\">" + jsonDetail[i].product_name + "</a></td>" +
                         "<td class='center'>"  + jsonDetail[i].clicks + "</td>"
                 if (!isStore){
                     html += "<td class='center'>" + currency + " " + jsonDetail[i].product_earning.toFixed(2) + "</td>";
@@ -155,11 +155,12 @@
             {% if vendor.is_cpc %}
             <ul class="list-inline monthly-list">
                 <li class="last">{% trans "Clicks to your store this month:" %} {{ clicks_delivered_per_month }} </li>
+                <li class="last">{% trans "Value:" %} {{ currency }} {{ monthly_click_value }} </li>
             </ul>
             {% endif %}
             {% if vendor.is_cpo %}
             <ul class="list-inline monthly-list">
-                <li class="last"> {% trans "Sales generated this month:" %} EUR {{ monthly_sales|floatdot|intcomma }}</li>
+                <li class="last"> {% trans "Sales generated this month:" %} {{ currency }} {{ monthly_sales|floatdot|intcomma }}</li>
             </ul>
             {% endif %}
         </div>
@@ -271,7 +272,7 @@
         var clicks = $(this).data("clicks");
         var currency = 'original';
         $.ajax({
-            type: "post",
+            type: "get",
             url: "{% url 'clicks-detail' %}",
             data: { user_id: user_id, vendor : vendor, date : date, currency: currency, amount: amount, clicks: clicks},
             success: function (response) {

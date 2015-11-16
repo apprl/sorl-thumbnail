@@ -48,7 +48,7 @@ class Importer(BaseImporter):
                 response = client.service.getTransactionList(sDateType='transaction',
                                                              dStartDate=start_date.strftime('%Y-%m-%dT00:00:00'),
                                                              dEndDate=end_date.strftime('%Y-%m-%dT23:59:59'))
-                logger.debug("AffiliateWindow - Request sent successfully with status code %s"%(response.status_code))
+                logger.debug("AffiliateWindow - Request sent successfully")
 
                 response_count = response.getTransactionListCountReturn
                 if response_count.iRowsReturned > 0:
