@@ -52,7 +52,7 @@ def get_country_by_ip_string(ip_string):
 
     if json_obj and json_obj.get("iso_code",None):
         code = json_obj.get("iso_code","ALL")
-        code = code if code in ["SE","NO","US","DK","FI"] else "ALL"
+        code = code if code in ["SE", "NO", "US", "DK", "FI"] else "ALL"
         return code
     else:
         log.info('No country found for ip %s.' % ip_string)
