@@ -64,6 +64,7 @@ LANGUAGES = (
     ('sv', gettext(u'Swedish (SEK)')),
     ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
+    ('fi', gettext(u'Finnish (EUR)')),
 )
 
 # These languages get static templates in solr
@@ -72,18 +73,21 @@ LANGUAGES_DISPLAY = (
     ('sv', gettext(u'Swedish (SEK)')),
     ('da', gettext(u'Danish (DKK)')),
     ('no', gettext(u'Norwegian (NOK)')),
+    ('fi', gettext(u'Finnish (EUR)')),
 )
 SHORT_LANGUAGES = (
     ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
     ('da', gettext(u'Dnk (DKK)')),
     ('no', gettext(u'Nor (NOK)')),
+    ('fi', gettext(u'Fin (EUR)')),
 )
 SHORT_LANGUAGES_DISPLAY = (
     ('en', gettext(u'Eng ($)')),
     ('sv', gettext(u'Swe (SEK)')),
     ('da', gettext(u'Dnk (DKK)')),
     ('no', gettext(u'Nor (NOK)')),
+    ('fi', gettext(u'Fin (EUR)')),
 )
 SHORT_LANGUAGES_LIST_DISPLAY = ('en', 'sv', 'no')
 LANGUAGE_TO_CURRENCY = {
@@ -91,12 +95,14 @@ LANGUAGE_TO_CURRENCY = {
     'sv': 'SEK',
     'da': 'DKK',
     'no': 'NOK',
+    'fi': 'EUR',
 }
 MAX_MIN_CURRENCY = {
     'en': 1000,
     'sv': 10000,
     'da': 10000,
     'no': 10000,
+    'fi': 1000,
 }
 
 VENDOR_LOCATION_MAPPING = {
@@ -132,6 +138,7 @@ LOCATION_MAPPING = (
     ('SE', gettext('Sweden (SEK)')),
     ('DK', gettext('Denmark (DKK)')),
     ('NO', gettext('Norway (NOK)')),
+    ('FI', gettext('Finland (EUR)')),
     ('US', gettext('USA (USD)')),
     ('ALL', gettext('International (USD)')),
 )
@@ -142,6 +149,7 @@ LOCATION_LANGUAGE_MAPPING = (
     ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[3]),
     ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
     ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
+    ("FI", gettext("Finland (EUR)"), LANGUAGES_DISPLAY[4]),
 )
 
 # Locale url plugin
