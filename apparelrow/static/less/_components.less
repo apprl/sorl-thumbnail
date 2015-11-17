@@ -13,6 +13,11 @@
 	}
 }*/
 
+.profile-icon {
+	border-radius: 50%;
+	margin-right: 5px;
+}
+
 /* Links ---------- */
 .cta {
 	font-size: 24px;
@@ -37,6 +42,7 @@
 	color: white;
 	font-family: @secondaryFontBold;
 	background-color: black;
+	margin-bottom: 15px;
     .animate();
 	&:hover, &:focus {
 		color: white;
@@ -76,7 +82,7 @@ main .btn {
 .btn-lg {
 	height: 44px;
 	line-height: 48px;
-	@media (min-width: 768px) {
+	@media (min-width: @screen-md) {
 		height: 54px;
 		line-height: 60px;
 		font-size: 14px;
@@ -96,27 +102,69 @@ main .btn {
 	}
 }
 .btn-grey {
-	background-color: @lightGrey;
+	background-color: @lightGrey !important;
 	&:hover, &:focus {
-		background-color: darken(@lightGrey, 15%);
+		background-color: darken(@lightGrey, 15%) !important;
 	}
 }
 .btn-facebook {
-	background-color: #3b5999;
+	background-color: #3b5999 !important;
 	&:hover, &:focus {
-		background-color: darken(#3b5999, 15%);
+		background-color: darken(#3b5999, 15%) !important;
 	}
 }
 .btn-line {
-	background-color: transparent;
+	background-color: transparent !important;
 	border: 2px solid black;
+	&:hover, &:focus {
+		background-color: transparent !important;
+	}
 }
-.helper {
-	float: right;
-	font-size: 12px;
-	line-height: 1;
-	letter-spacing: 0;
-	font-family: @secondaryFontBold;
+.btn-edit {
+	line-height: 44px;
+	font-size: 16px;
+	letter-spacing: -1px;
+	padding: 0 !important;
+	background-color: @lightGrey;
+	width: 44px;
+	margin: auto;
+	&:hover {
+		background-color: darken(@lightGrey, 15%);
+	}
+	@media (min-width: @screen-sm) {
+		line-height: 34px;
+		width: 32px;
+		margin: 0;
+	}
+}
+.btn-filter {
+    margin: 0 auto 10px auto;
+    i {
+        font-size: 14px;
+        height: 44px;
+        line-height: 44px;
+        float: right;
+        .animate;
+    }
+    &.collapsed i {
+        -ms-transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+	@media (min-width: @screen-xs) {
+		max-width: 320px;
+	}
+}
+.btn-reset {
+	margin: auto;
+}
+section .btn {
+	margin-left: auto;
+	margin-right: auto;
+	@media (min-width: @screen-md) {
+		margin-left: initial;
+		margin-right: initial;
+	}
 }
 
 /* Navigation ---------- */
@@ -128,9 +176,6 @@ main .btn {
 	font-size: 13px;
 	margin: 0;
 	top: initial;
-	display: block;
-	opacity: 0;
-	visibility: hidden;
 	a {
 		color: @grey;
 	}
@@ -139,6 +184,11 @@ main .btn {
 		padding: 5px 15px;
 	}
 	.animate();
+	@media (min-width: @screen-sm) {
+		visibility: hidden;
+		display: block;
+		opacity: 0;
+	}
 }
 .open {
 	.dropdown-menu {
@@ -216,6 +266,42 @@ main .btn {
 		}
 	}
 }
+.sub-menu {
+    margin: 15px 0 30px 0;
+    //text-align: center;
+	font-size: 24px;
+	font-family: @primaryFont;
+	font-style: italic;
+	a {
+		color: @grey;
+		letter-spacing: 0;
+		border-bottom: 2px solid transparent;
+		.animate;
+		&:hover, &.selected {
+			color: black;
+			border-color: black;
+		}
+	}
+	span {
+		font-family: @secondaryFontBold;
+		font-size: 16px;
+		color: black;
+	}
+    li {
+        line-height: 25px;
+        display: inline-block;
+        margin-right: 15px;
+        &:last-child {
+            margin: 0;
+        }
+    }
+    /*@media (min-width: @screen-is) {
+        text-align: left;
+    }*/
+    @media (min-width: @screen-sm) {
+		font-size: 28px;
+    }
+}
 .pagination {
     width: 100%;
     .btn-pagination {
@@ -228,6 +314,13 @@ main .btn {
             display: inline-block;
         }
     }
+}
+.helper {
+	float: right;
+	font-size: 12px;
+	line-height: 1;
+	letter-spacing: 0;
+	font-family: @secondaryFontBold;
 }
 
 /* Modals ---------- */
@@ -272,6 +365,38 @@ main .btn {
 }
 
 /* Lists ---------- */
+.list-horizontal li {
+	display: inline-block;
+}
+.list-filter {
+	li {
+		line-height: 24px;
+	}
+	a:before {
+		content: '';
+		display: inline-block;
+		width: 14px;
+		height: 14px;
+		border: 2px solid #ccc;
+		cursor: pointer;
+		line-height: 18px;
+		margin: -4px 5px 0 0;
+		vertical-align: middle;
+		-webkit-transition: all .2s;
+		transition: all .2s;
+		box-shadow: inset 0 0 0 18px white;
+		background-color: white;
+		border-radius: 100%;
+	}
+	a.selected {
+		color: black;
+		&:before {
+			box-shadow: inset 0 0 0 2px white;
+			background-color: black;
+			border-color: black;
+		}
+	}
+}
 .list-likes {
 	text-align: center;
 	margin-bottom: 15px;
@@ -282,6 +407,22 @@ main .btn {
 	}
 	img {
 		max-height: 40px;
+	}
+}
+.list-brands {
+	li {
+		font-size: 14px;
+		line-height: 18px;
+	}
+}
+.list-tools {
+	.clearfix;
+	li {
+		float: left;
+		margin-right: 15px;
+		&:last-child {
+			margin: 0;
+		}
 	}
 }
 .list-products {
@@ -336,12 +477,6 @@ main .btn {
 			float: none;
 			width: 100%;
 		}
-	}
-}
-.product-image {
-	text-align: center;
-	picture {
-		margin: auto;
 	}
 }
 
@@ -426,18 +561,26 @@ main .btn {
 		&:hover {
 			color: black;
 			background-color: @offwhite;
-			//box-shadow: 0 1px 6px 0 rgba(0,0,0,.12), 0 1px 6px 0 rgba(0,0,0,.12);
 		}
 	}
 	@media (min-width: @screen-lg) {
 		text-align: center;
 	}
-	@media (max-width: 1199px) and (min-width: 992px) {
+	@media (max-width: @screen-md-max) and (min-width: @screen-md) {
 		text-align: left;
 	}
 }
 
 /* Filters ---------- */
+.panel {
+	margin: 0 auto 10px auto;
+	@media (min-width: @screen-xs) {
+		max-width: 320px;
+	}
+	@media (min-width: @screen-md) {
+		max-width: none;
+	}
+}
 .panel-heading {
 	background-color: black;
 	a {

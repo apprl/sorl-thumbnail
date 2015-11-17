@@ -88,17 +88,8 @@
 
     <div class="container" itemscope itemtype="http://data-vocabulary.org/Product">
         <div class="body-header">
-            <div class="body-header-col-full">
-                <div class="float-container">
-                    <h1>{{ object.title }} <span class="draft-text{% if object.published %} published{% endif %}">({% trans "Not published" %})</span></h1>
-                    {% if request.user.is_authenticated %}
-                    <a class="btn btn-primary btn-look-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span>{% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
-                    {% else %}
-                    <a class="btn btn-primary" data-toggle="modal" href="#" data-target="#modal_like_look"><span>{% trans "Like" %}</span> <span class="glyphicon glyphicon-heart"></span></a>
-                    {% endif %}
-                </div>
-                <h2>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></h2>
-            </div>
+            <h1>{{ object.title }} <span class="draft-text{% if object.published %} published{% endif %}">({% trans "Not published" %})</span></h1>
+            <h2>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></h2>
         </div>
 
         <div class="row">
@@ -106,10 +97,12 @@
 
                 <div class="look-main-content">
                     {% if request.user.is_authenticated and request.user == object.user %}
-                    <a class="btn btn-edit" href="{% url 'look-editor' object.slug %}">{% trans "Edit" %}</a>
-                    <a class="btn btn-delete" data-toggle="modal" href="#" data-target="#modal_look_delete_{{ object.id }}">{% trans "Delete" %}</a>
-                    <a class="btn btn-unpublish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_unpublish_{{ object.id }}">{% trans "Unpublish" %}</a>
-                    <a class="btn btn-publish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_publish_{{ object.id }}">{% trans "Publish" %}</a>
+                    <ul class="list-tools">
+                        <li><a class="btn btn-edit" href="{% url 'look-editor' object.slug %}"><i class="fa fa-pencil"></i></a></li>
+                        <li><a class="btn btn-delete btn-secondary" data-toggle="modal" href="#" data-target="#modal_look_delete_{{ object.id }}">{% trans "Delete" %}</a></li>
+                        <li><a class="btn btn-unpublish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_unpublish_{{ object.id }}">{% trans "Unpublish" %}</a></li>
+                        <li><a class="btn btn-publish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_publish_{{ object.id }}">{% trans "Publish" %}</a></li>
+                    </ul>
                     {% endif %}
 
                     {% cache CACHE_TIMEOUT look_detail_content object.id LANGUAGE_CODE %}
@@ -117,13 +110,13 @@
                     <div class="look-large collage">
                         <div id="collage-background" class="look-collage">
                             {% thumbnail object.image resolution crop="center" as im %}
-                            <img class="img-responsive" src="{{ im.url }}"">
+                            <img src="{{ im.url }}"">
                             {% endthumbnail %}
                             <div class="component-wrapper" style="width: {{ wrapper_element.width }}%; height: {{ wrapper_element.height }}%;">
                                 {% for component in object.collage_components.all %}
                                     {% thumbnail component.product.product_image "224x291" crop=False format="PNG" transparent=True as im %}
                                     <a href="{{ component.product.get_absolute_url }}" data-container="body" data-toggle="popover" data-placement="auto" data-trigger="click" class="product collage-image" style="{{ component.style_percentage }}">
-                                        <img src="{{ im.url }}" title="{{ component.product }}" style="width:{{ im.width }}px;height:{{im.height}}px;" class="img-responsive" />
+                                        <img src="{{ im.url }}" title="{{ component.product }}" style="width:{{ im.width }}px;height:{{im.height}}px;" />
                                     </a>
                                     {% endthumbnail %}
                                     {% include "apparel/fragments/look_product_tooltip.html" with owner=object.user product=component.product only %}
@@ -164,70 +157,87 @@
             <div class="col-md-6">
 
                 <div class="row">
-                    <div class="col-lg-6">
 
-                        {% cache CACHE_TIMEOUT look_detail object.id LANGUAGE_CODE %}
-                        <h3>{% trans "Look details" %}</h3>
-                        <ul class="brands list-unstyled">
-                            {% for text, product in object.category_and_brand_with_product %}
-                            <li><a href="{% internal_referral_url product.get_absolute_url object.user.pk %}">{{ text }}</a></li>
-                            {% endfor %}
-                        </ul>
+                        <div class="col-lg-6">
+                    <section class="center-sm">
+                            {% cache CACHE_TIMEOUT look_detail object.id LANGUAGE_CODE %}
+                            <h4>{% trans "Look details" %}</h4>
+                            <hr>
+                            <ul class="list-brands">
+                                {% for text, product in object.category_and_brand_with_product %}
+                                <li><a href="{% internal_referral_url product.get_absolute_url object.user.pk %}">{{ text }}</a></li>
+                                {% endfor %}
+                            </ul>
 
-                        <p class="total-price">
-                            <span class="price">
-                                {% blocktrans count object.category_and_brand_count as number %}{{ number }} article{% plural %}{{ number }} articles{% endblocktrans %}
-                            </span>
-                            {% if object.category_and_brand_count > 0 %}
-                            <span class="sum"> - {{ object.total_price|floatformat:0|apprl_intcomma }} {{ CURRENCY }}</span>
+                            <p class="total-price">
+                                <span class="price">
+                                    {% blocktrans count object.category_and_brand_count as number %}{{ number }} article{% plural %}{{ number }} articles{% endblocktrans %}
+                                </span>
+                                {% if object.category_and_brand_count > 0 %}
+                                <span class="sum"> - {{ object.total_price|floatformat:0|apprl_intcomma }} {{ CURRENCY }}</span>
+                                {% endif %}
+                            </p>
+                            <p class="created">{% trans "Created" %} {{ object.created|since }}</p>
+                            {% endcache %}
+
+                            {% comment %}
+                                Removed exclusive access, ticket #65018758
+                            {% if request.user == object.user %}
                             {% endif %}
-                        </p>
-                        <p class="created">{% trans "Created" %} {{ object.created|since }}</p>
-                        {% endcache %}
+                            {% endcomment %}
 
-                        {% comment %}
-                            Removed exclusive access, ticket #65018758
-                        {% if request.user == object.user %}
-                        {% endif %}
-                        {% endcomment %}
+                            {% if request.user.is_authenticated %}
+                            <a class="btn btn-default btn-lg{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Remove" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span><i class="fa fa-heart"></i> {% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
+                            {% else %}
+                            <a class="btn btn-default btn-lg" data-toggle="modal" href="#" data-target="#modal_like_look"><span><i class="fa fa-heart"></i> {% trans "Save" %}</span></a>
+                            {% endif %}
 
-                        <a class="btn btn-primary btn-block btn-embed" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
+                            <a class="btn btn-default" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
 
-                        {% include 'apparel/fragments/share.html' %}
+                            {% include 'apparel/fragments/share.html' %}
+                    </section>
 
-                    </div>
+                        </div>
+
                     <div class="col-lg-6">
+                        <section class="center-sm">
+                            {% if looks_by_user %}
+                            <h4>{% trans "More looks by" %} {{ object.user.display_name }}</h4>
+                            <hr>
+                            <ul class="list-unstyled list-looks">
+                                {% for look in looks_by_user %}
+                                <li class="col-list-look">
+                                    {% cache CACHE_TIMEOUT look_small_like_product look.id LANGUAGE_CODE %}
+                                    <a title="{{ look.title }}" href="{% url 'look-detail' slug=look.slug %}">
+                                        <div class="look-small {% if look.display_with_component == 'P' %}look-photo{% else %}look-collage{% endif %}">
+                                            {% thumbnail look.static_image "300x226" is_collage=look.is_collage keep_size=True crop=False format="PNG" as im %}
+                                            <img id="look-{{ look.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+                                            {% endthumbnail %}
+                                        </div>
+                                    </a>
+                                    {% endcache %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <a class="btn btn-default" href="{% url 'profile-looks' object.user.slug %}">{% blocktrans with firstname=object.user.first_name %}See all looks by {{firstname}}{% endblocktrans %}</a>
+                            {% endif %}
+                        </section>
 
-                        {% if looks_by_user %}
-                        <h3>{% trans "More looks by" %} {{ object.user.display_name }}</h3>
-                        <ul class="list-unstyled list-looks">
-                            {% for look in looks_by_user %}
-                            <li class="col-list-look">
-                                {% cache CACHE_TIMEOUT look_small_like_product look.id LANGUAGE_CODE %}
-                                <a title="{{ look.title }}" href="{% url 'look-detail' slug=look.slug %}">
-                                    <div class="look-small {% if look.display_with_component == 'P' %}look-photo{% else %}look-collage{% endif %}">
-                                        {% thumbnail look.static_image "300x226" is_collage=look.is_collage keep_size=True crop=False format="PNG" as im %}
-                                        <img id="look-{{ look.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-responsive" />
-                                        {% endthumbnail %}
-                                    </div>
-                                </a>
-                                {% endcache %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        <a class="btn btn-primary btn-block" href="{% url 'profile-looks' object.user.slug %}">{% blocktrans with firstname=object.user.first_name %}See all looks by {{firstname}}{% endblocktrans %}</a>
-                        {% endif %}
-
-                        {% cache CACHE_TIMEOUT look_detail_likes object.id LANGUAGE_CODE %}
-                        <h3>{% trans "Likes" %}</h3>
-                        <ul id="likes-box" class="list-inline list-likes">
-                            <li{% if likes %} class="hide"{% endif %}><p>{% trans "Be the first one to like this look!" %}</p></li>
-                            {% for like in likes %}
-                            <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}"><img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a></li>
-                            {% endfor %}
-                        </ul>
-                        {% endcache %}
-
+                        <section class="center-sm">
+                            {% cache CACHE_TIMEOUT look_detail_likes object.id LANGUAGE_CODE %}
+                            <h4>{% trans "Likes" %}</h4>
+                            <hr>
+                            {% if likes %}
+                            <ul id="likes-box" class="list-inline list-likes">
+                                {% for like in likes %}
+                                <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}"><img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a></li>
+                                {% endfor %}
+                            </ul>
+                            (% else %}
+                            <p>{% trans "Be the first one to like this look!" %}</p>
+                            {% endif %}
+                            {% endcache %}
+                        </section>
                     </div>
                 </div>
 

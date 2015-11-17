@@ -146,3 +146,32 @@ textarea:focus {
         box-shadow: none;
     }
 }
+.filter {
+    &:before {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #ccc;
+        cursor: pointer;
+        line-height: 14px;
+        border: 2px solid #999;
+        margin: -3px 5px 0 0;
+        vertical-align: middle;
+        background-color: transparent;
+        font-family: 'FontAwesome';
+        content: '\f00c';
+        font-size: 0;
+        color: transparent;
+        padding-left: 1px;
+        .animate;
+    }
+    &.selected {
+	    color: black;
+        &:before {
+            color: white;
+            background-color: black;
+            border-color: black;
+            font-size: 12px;
+        }
+    }
+}

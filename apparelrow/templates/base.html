@@ -173,7 +173,7 @@
                         <li class="visible-xs"><a href="{% url 'notifications-page' %}">{% trans "Notifications" %}</span>{% if request.user.unread_count > 0 %}<span class="unread_count badge">{{ request.user.unread_count }}</span>{% endif %}</a></li>
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}
                         <li class="dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
-                            <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="img-circle" src="{{ request.user.avatar_small }}"><span> {% trans 'You' %}</span> <b class="caret"></b></a>
+                            <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="profile-icon" src="{{ request.user.avatar_small }}"><span>{% trans 'You' %}<b class="caret"></b> </span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
                                 {% if request.user.advertiser_store %}
