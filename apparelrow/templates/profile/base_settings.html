@@ -23,10 +23,10 @@ $(document).ready(function() {
     <div class="row">
         <div class="col-sm-3">
             <ul class="page-menu">
-                <li><a href="{% url 'settings-email' %}">{% trans "Account" %}</a></li>
-                <li><a href="{% url 'settings-notification' %}">{% trans "Notifications" %}</a></li>
+                <li{% if 'email' in request.path %} class="selected"{% endif %}><a href="{% url 'settings-email' %}">{% trans "Account" %}</a></li>
+                <li{% if 'notification' in request.path %} class="selected"{% endif %}><a href="{% url 'settings-notification' %}">{% trans "Notifications" %}</a></li>
                 {% if request.user.is_authenticated and request.user.is_partner %}
-                <li><a href="{% url 'settings-publisher' %}">{% trans "Publisher" %}</a></li>
+                <li{% if 'publisher' in request.path %} class="selected"{% endif %}><a href="{% url 'settings-publisher' %}">{% trans "Publisher" %}</a></li>
                 {% endif %}
             </ul>
         </div>

@@ -7,7 +7,7 @@
     {% if not user_id or user_gender == 'A' %}
     <div class="panel{% if selected_categories %} active{% endif %}">
         <div class="panel-heading">
-            <a class="accordion-toggle" data-toggle="collapse" href="#collapseGender"><span id="product-gender-text">{% trans "Women’s / Men’s" %}</span><i class="fa fa-chevron-up"></i></a>
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseGender"><span id="product-gender-text">{% trans "Women's / Men's" %}</span><i class="fa fa-chevron-up"></i></a>
         </div>
         <div id="collapseGender" class="panel-collapse collapse">
             <div class="panel-body" id="product-gender">
@@ -15,8 +15,8 @@
                     {% if user_gender == 'A' %}
                     <li class="all"><a{% if not gender or gender == 'A' %} class="selected"{% endif %} data-gender="A" href="{% url 'shop' %}">{% trans "Show everything" %}</a></li>
                     {% endif %}
-                    <li class="women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} data-gender="W" href="{% url 'shop-women' %}">{% trans "Womens" %}</a></li>
-                    <li class="men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} data-gender="M" href="{% url 'shop-men' %}">{% trans "Mens" %}</a></li>
+                    <li class="women"><a id="option-W"{% if gender == "W" %} class="selected"{% endif %} data-gender="W" href="{% url 'shop-women' %}">{% trans "Women's" %}</a></li>
+                    <li class="men"><a id="option-M"{% if gender == "M" %} class="selected"{% endif %} data-gender="M" href="{% url 'shop-men' %}">{% trans "Men's" %}</a></li>
                 </ul>
             </div>
         </div>

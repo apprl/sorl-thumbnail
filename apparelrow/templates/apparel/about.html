@@ -11,20 +11,22 @@
 
     <div class="row">
         <div class="col-md-6 col-md-push-6">
-            <img src="{% static 'images/about_apprl.png' %}" class="img-responsive">
+            <img src="{% static 'images/about_apprl.jpg' %}" alt="About APPRL">
         </div>
         <div class="col-md-6 col-md-pull-6">
-            <h4>APPRL - The social commerce platform </h4>
-            <p>Apprl was founded from the simple insight that online shopping is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that.</p>
-            <p>Apprl is a social commerce platform that connects publishers, online stores and consumers through smart digital tools that make life easier for everyone.</p>
-            <ul>
-                <li>We help publishers to grow and earn money on their content (publishers <a href="{% url 'index-publisher' %}">apply here</a>)</li>
-                <li>We help online stores to drive sales and increase their reach (stores <a href="{% url 'index-retailers' %}">apply here</a>)</li>
-                <li>We help people to shop where they’re inspired and get inspired where they shop</li>
-            </ul>
-            <p>For example, bloggers can create their own <a target="_blank" href="http://www.tv3.se/top-model-sverige/top-model-shoppen">Apprl shop</a> in 5 minutes, a store can <a href="{% url 'profile-looks' 'menlook' %}">make their lookbook drive sales in social media</a> and shoppers can <a target="_blank" href="http://www.tv3.se/blog/elzana/i-love-fashion">buy directly from blogs</a> or <a href="{% multi_gender_url request 'look' 'look-list' %}">see how others have mixed & matched products before buying</a>.</p>
-            <p>We believe we can completely transform the way shopping works today through technology, mobility & outstanding user experiences.</p>
-            <p>Want to <a href="{% url 'jobs' %}">join our journey</a>?</p>
+            <article>
+                <h2>APPRL - The social commerce platform </h2>
+                <p>Apprl was founded from the simple insight that online shopping is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that.</p>
+                <p>Apprl is a social commerce platform that connects publishers, online stores and consumers through smart digital tools that make life easier for everyone.</p>
+                <ul>
+                    <li>&mdash; We help publishers to grow and earn money on their content (publishers <a href="{% url 'index-publisher' %}">apply here</a>)</li>
+                    <li>&mdash; We help online stores to drive sales and increase their reach (stores <a href="{% url 'index-retailers' %}">apply here</a>)</li>
+                    <li>&mdash; We help people to shop where they’re inspired and get inspired where they shop</li>
+                </ul>
+                <p>For example, bloggers can create their own <a target="_blank" href="http://www.tv3.se/top-model-sverige/top-model-shoppen">APPRL shop</a> in 5 minutes, a store can <a href="{% url 'profile-looks' 'menlook' %}">make their lookbook drive sales in social media</a> and shoppers can <a target="_blank" href="http://www.tv3.se/blog/elzana/i-love-fashion">buy directly from blogs</a> or <a href="{% multi_gender_url request 'look' 'look-list' %}">see how others have mixed & matched products before buying</a>.</p>
+                <p>We believe we can completely transform the way shopping works today through technology, mobility & outstanding user experiences.</p>
+                <p>Want to <a href="{% url 'jobs' %}">join our journey</a>?</p>
+            </article>
         </div>
     </div>
 

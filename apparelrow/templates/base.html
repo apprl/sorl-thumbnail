@@ -151,13 +151,13 @@
                         <li class="dropdown {% selected_url request "/brands" "/users" %}">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="{% multi_gender_url request 'user' 'user-list' %}"><span>{% trans "Discover" %} <b class="caret"></b></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{% multi_gender_url request 'look' 'look-list' %}">{% trans "Looks" %}</a></li>
+                                <li><a href="{% multi_gender_url request 'user' 'look-list' %}">{% trans "Looks" %}</a></li>
                                 <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
                                 <li><a href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></li>
                             </ul>
                         </li>
                         <li class="hidden-xs hidden-sm">
-                            <a class="btn btn-sm btn-primary"
+                            <a class="btn btn-primary"
                             {% if request.user.is_authenticated %}
                             href="{% url 'publisher-tools' %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %}</a>
                             {% else %}

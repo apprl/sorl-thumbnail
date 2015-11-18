@@ -1,19 +1,21 @@
 /*
 	Pages v1.0
+
+	- Search
+	- Log In & Registration
+	- Settings
+	- Discover (Members, Brands, Users)
+	- Home (Index)
+	- Dashboard
+	- Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
 */
 
 /* Search ---------- */
-/*.page-search {
-	.result-container a {
-		font-size: 13px;
-	}
-}*/
 .search-result {
     .btn {
         margin-bottom: 20px;
     }
 }
-
 .search-page {
 	h3 {
 		font-size: 18px;
@@ -67,14 +69,18 @@
     }
 }
 
-body.product-list h3 {
-    margin-bottom: 15px;
+/* Discover (Members, Brands, Users) ---------- */
+.discover-list-page .panel .panel-body {
+    border: none !important;
+}
+.discover-list .col-discover-item {
+    @media (min-width: @screen-xs) {
+        float: left;
+        width: 50%;
+    }
 }
 
-//
-// Index page
-// ----------------------------------------------------------------------------
-
+/* Home (Index) ---------- */
 body.index {
     #content-container {
         padding-bottom: 0;
@@ -170,10 +176,7 @@ body.index {
     }
 }
 
-//
-// Dashboard
-// ----------------------------------------------------------------------------
-
+/* Dashboard ---------- */
 .date-dropdown {
   font-size: 16px; // At least nav-bar font size
 }
@@ -393,8 +396,6 @@ LOOK UP: not sure if this is used?
     }
 }
 
-
-
 .dashboard-info {
     h4 {
         padding-top: 60px;
@@ -404,4 +405,9 @@ LOOK UP: not sure if this is used?
         margin-top: 10px;
         margin-bottom: 10px;
     }
+}
+
+/* Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies) ---------- */
+.dynamic-content ol {
+    list-style: decimal;
 }

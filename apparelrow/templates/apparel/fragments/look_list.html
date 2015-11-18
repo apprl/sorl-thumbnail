@@ -1,18 +1,15 @@
 {% load i18n %}
+{% if request.GET.view == 'friends' %}
+<p>{% trans "You currently don't follow anyone who has created looks" %}{% if gender == 'M' %}{% trans " for men." %}{% elif gender == 'W' %}{% trans " for women." %}{% else %}{% trans "." %}{% endif %}</p>
+<a class="btn btn-primary" href="{% url 'user-list-popular' %}">{% trans "Find members to follow" %}</a>
+{% endif %}
 <ul class="look-list list-unstyled row">
     {% for object in current_page.object_list %}
     <li class="col-sm-6">{% if is_profile %}{% include 'apparel/fragments/look_medium.html' with is_profile=is_profile %}{% else %}{% include 'apparel/fragments/look_medium_cache.html' %}{% endif %}</li>
     {% empty %}
-    {% if current_page.number == 1 %}
-    	{% if request.GET.view == 'friends' %}
-            <div class="message warning">
-                <p>{% trans "You currently don't follow anyone who has created looks" %}{% if gender == 'M' %}{% trans " for men." %}{% elif gender == 'W' %}{% trans " for women." %}{% else %}{% trans "." %}{% endif %}</p>
-                <a class="btn btn-success" href="{% url 'user-list-popular' %}">{% trans "Find members to follow!" %}</a>
-            </div>
-        {% else %}
-    		<li class="col-lg-12">{% trans "No results" %}</li>
-    	{% endif %}
-    {% endif %}
+    {% comment if current_page.number == 1 %}
+        <li class="col-lg-12">{% trans "No results" %}</li>
+    {% endcomment %}
     {% endfor %}
 </ul>
 <div class="pagination">

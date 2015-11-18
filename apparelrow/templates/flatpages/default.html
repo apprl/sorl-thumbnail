@@ -6,32 +6,32 @@
 {% block body-classes %}about-page{% endblock %}
 {% block body %}
     <div class="body-header">
-        <div class="body-header-col-full">
-            <h1>{% trans "Privacy Policy & Terms of Use" %}</h1>
-        </div>
+        <h1>{% trans "Privacy Policy & Terms of Use" %}</h1>
     </div>
 
     <div class="row">
         <div class="col-sm-3">
-            <ul class="list-group">
-                <li class="list-group-item"><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Terms of Use" %}</a></li>
+            <ul class="page-menu">
+                <li{% if 'terms-of-use' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Terms of Use" %}</a></li>
                 {% if request.user.is_authenticated and request.user.is_partner %}
-                <li class="list-group-item"><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/partner-villkor/' %}">{% trans "Publisher terms" %}</a></li>
+                <li{% if 'publisher-terms' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/publiher-terms/' %}">{% trans "Publisher terms" %}</a></li>
                 {% endif %}
-                <li class="list-group-item"><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/privacy-policy/' %}">{% trans "Privacy Policy" %}</a></li>
-                <li class="list-group-item"><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/acceptable-use-policy/' %}">{% trans "Acceptable Use Policy" %}</a></li>
-                <li class="list-group-item"><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/copyright-policy/' %}">{% trans "Copyright Policy" %}</a></li>
-                <li class="list-group-item"><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/trademark-policy/' %}">{% trans "Trademark Policy" %}</a></li>
-                <li class="list-group-item"><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
+                <li{% if 'privacy-policy' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/privacy-policy/' %}">{% trans "Privacy Policy" %}</a></li>
+                <li{% if 'acceptable-use-policy' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/acceptable-use-policy/' %}">{% trans "Acceptable Use Policy" %}</a></li>
+                <li{% if 'copyright-policy' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/copyright-policy/' %}">{% trans "Copyright Policy" %}</a></li>
+                <li{% if 'trademark-policy' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/trademark-policy/' %}">{% trans "Trademark Policy" %}</a></li>
+                <li{% if 'cookies' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
             </ul>
         </div>
         <div class="col-sm-9">
-            <h2>{{ flatpage.title }}</h2>
-            {% if LANGUAGE_CODE == 'sv' and 'about/terms-of-use/-partner-villkor' not in request.path %}
-            <p>Samtliga villkor är skrivna på Engelska för att kunna tillgängliggöra villkoren för så många som möjligt av våra användare. Är det något i våra villkor & policies som du inte förstår och vill ha förklarat på Svenska, hör av dig till oss på <a href="mailto:info@apprl.com">info@apprl.com</a>.</p>
-            {% endif %}
-            <div class="dynamic-content">
-                {{ flatpage.content }}
+            <div class="fineprint">
+                <h2>{{ flatpage.title }}</h2>
+                {% if LANGUAGE_CODE == 'sv' and 'about/terms-of-use/-partner-villkor' not in request.path %}
+                <p>Samtliga villkor är skrivna på Engelska för att kunna tillgängliggöra villkoren för så många som möjligt av våra användare. Är det något i våra villkor & policies som du inte förstår och vill ha förklarat på Svenska, hör av dig till oss på <a href="mailto:info@apprl.com">info@apprl.com</a>.</p>
+                {% endif %}
+                <div class="dynamic-content">
+                    {{ flatpage.content }}
+                </div>
             </div>
         </div>
     </div>

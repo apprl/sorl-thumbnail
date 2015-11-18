@@ -44,7 +44,6 @@ $(document).ready(function() {
                 </div>
             </div>
             <div class="col-sm-10 profile-content">
-                <a class="hidden-xs btn btn-primary btn-lg pull-right" data-slug="{{ request.user.slug }}" href="{% url 'create-shop' %}">{% trans "Create a shop" %}</a>
                 <h1>{{ profile.display_name }}</h1>
                 {% if request.user.is_authenticated and request.user == profile %}
                 {% else %}

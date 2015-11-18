@@ -15,32 +15,27 @@ function keepParam(uri)
 </script>
 
     <div class="body-header">
+        <h1>{% trans "Looks" %}</h1>
 
-        <div class="body-header-col-left">
-            <h1>{% trans "Looks" %}</h1>
-             <ul class="list-inline text-center">
-                <li><h2><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></h2></li>
-                <li><h2><a href="?view=latest" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></h2></li>
-                {% if request.user.is_authenticated %}
-                    <li><h2><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></h2></li>
-                {% endif %}
+         <ul class="sub-menu">
+            <li><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></li>
+            <li><a href="?view=latest" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></li>
+            {% endif %}
+        </ul>
 
-            </ul>
-        </div>
-        <div class="body-header-col-right">
-            <ul class="list-inline">
-                <li>{% include 'apparel/fragments/create_look_button.html' with request=request only %}</li>
-                <li>
-                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men’s" %}{% elif gender == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a id="allButton" href="{% url 'look-list' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Show all" %}</a></li>
-                        <li><a id="menButton" href="{% url 'look-list-men' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Only men’s" %}</a></li>
-                        <li><a id="womenButton" href="{% url 'look-list-women' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Only women’s" %}</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
+        <ul class="sidebar">
+            <li>{% include 'apparel/fragments/create_look_button.html' with request=request only %}</li>
+            <li class="dropdown">
+                <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men's" %}{% elif gender == 'W' %}{% trans "Only women's" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a id="allButton" href="{% url 'look-list' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Show all" %}</a></li>
+                    <li><a id="menButton" href="{% url 'look-list-men' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Only men's" %}</a></li>
+                    <li><a id="womenButton" href="{% url 'look-list-women' %}{% if request.GET.view == 'friends' %}?view=friends{% elif request.GET.view == 'latest' %}?view=latest{% endif %}">{% trans "Only women's" %}</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
 
     <div class="row">
