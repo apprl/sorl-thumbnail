@@ -112,11 +112,11 @@ VENDOR_LOCATION_MAPPING = {
     "MQ": ["SE"],
     "Care of Carl": ["SE", "NO"],
     "ALDO": ["US"],
-    "ASOS": ["SE", "NO", "DK", "ALL"],
-    "Eleven": ["SE", "ALL"],
+    "ASOS": ["FI", "SE", "NO", "DK", "ALL"],
+    "Eleven": ["SE"],
     "Happy Socks": ["SE"],
     "Elevenfiftynine": ["SE"],
-    "Frontmen": ["ALL", "SE", "NO", "DK"],
+    "Frontmen": ["ALL", "SE", "NO", "DK", "FI"],
     "Flattered": ["SE", "DK", "NO", "FI", "ALL"],
     "Filippa K": ["SE"],
     "Filippa K DK": ["DK"],
@@ -135,7 +135,7 @@ VENDOR_LOCATION_MAPPING = {
     "QVC": ["US"],
     "Room 21 no": ["NO"],
     "Rum 21 se": ["SE"],
-    "default": ["ALL", "SE", "NO", "US", "DK"],
+    "default": ["ALL", "SE", "NO", "US", "DK", "FI"],
 }
 
 LOCATION_MAPPING = (
