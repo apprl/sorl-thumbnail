@@ -87,7 +87,7 @@ h1.display {
 h1 {
     font-family: @primaryFont;
     font-size: 36px;
-    letter-spacing: -1px;
+    letter-spacing: -2px;
 }
 h2 {
     font-family: @secondaryFont;
@@ -95,7 +95,7 @@ h2 {
 }
 h3 {
     font-family: @primaryFont;
-    font-size: 24px;
+    font-size: 22px;
 }
 h4 {
     font-family: @secondaryFontBold;
@@ -118,11 +118,11 @@ small {
 }
 p {
     color: @grey;
-    a {
+    /*a {
         //font-family: @secondaryFontBold;
         //color: @darkGrey;
         color: black;
-    }
+    }*/
 }
 article {
     h2 {
@@ -142,10 +142,10 @@ article {
         font-size: 48px;
     }
     h2 {
-        font-size: 26px;
+        font-size: 24px;
     }
     h3 {
-        font-size: 26px;
+        font-size: 24px;
     }
 }
 
@@ -172,6 +172,7 @@ header {
                 span {
                     padding-bottom: 2px;
                     border-bottom: 2px solid transparent;
+                    .animate;
                     &:hover {
                         border-color: white;
                     }
@@ -246,6 +247,10 @@ header {
         }
     }
     .primary-nav {
+        margin-top: 1px;
+        .btn {
+            margin-top: -2px;
+        }
         @media (min-width: 768px) {
             float: left;
         }
@@ -269,9 +274,6 @@ header {
         float: left;
         line-height: 60px;
         margin-right: 30px;
-    }
-    .btn-primary {
-        margin-top: -4px;
     }
     .navbar-toggle {
         border: none;
@@ -525,6 +527,10 @@ main {
     text-align: center;
     margin-bottom: 30px;
     position: relative;
+    p {
+        margin-top: 15px;
+        max-width: 720px;
+    }
     @media (min-width: @screen-sm) {
         text-align: left;
     }

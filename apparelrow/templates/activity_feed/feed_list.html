@@ -25,9 +25,11 @@
 {% block body-classes %}feed-list-page{% endblock body-classes %}
 {% block full-body %}
 
+    {% comment %}
     {% if not request.COOKIES.ar_featured and not request.GET.first %}
     {% include 'apparel/fragments/featured.html' with request=request featured=featured in_feed=True %}
     {% endif %}
+    {% endcomment %}
 
     {% if request.GET.first and request.user.is_authenticated %}
     <div class="container">
@@ -42,24 +44,614 @@
 
     <div class="container">
         <div class="body-header">
-            <div class="body-header-col-left">
-                <h1>{% trans "Your APPRL" %}</h1>
-            </div>
-            <div class="body-header-col-right">
-                <ul class="list-inline">
-                    <li class="dropdown">
+            <h1>{% trans "Your Feed" %}</h1>
+            <ul class="sidebar">
+                <li class="dropdown">
                     <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men’s" %}{% elif gender == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{% url 'index-all' %}">{% trans "Show all" %}</a></li>
                         <li><a href="{% url 'index-men' %}">{% trans "Only men’s" %}</a></li>
                         <li><a href="{% url 'index-women' %}">{% trans "Only women’s" %}</a></li>
                     </ul>
-                    </li>
+                </li>
+            </ul>
+        </div>
+
+        {# include 'activity_feed/fragments/feed_list.html' #}
+
+        <!-- for test purposes only -->
+            <ul class="feed-list list-unstyled row">
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="24334">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/tess/"><img class="img-circle" src="http://s.apprl.com/cache/d8/f4/d8f49ce9f1bfeb9361b5279399e00ce6.jpg"></a>
+                <p><a href="/en/profile/tess/">Tess Montgomery</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3497267" data-id="3497267">
+            <div class="product-image-container">
+                <a href="/en/products/only-onldenni-mix-foil-wings-34-top-box-2/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/8a3395ba213dfee8db9bfa9f425d60e6/18/18a6f2d84984e0b8a3dc3ea7268c7389c27f589e.jpg" alt="Only onlDENNI MIX FOIL WINGS 3/4 TOP BOX Black, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover" style="display: none;">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3497267/like" data-unlike-url="/products/3497267/unlike" data-slug="only-onldenni-mix-foil-wings-34-top-box-2" data-id="3497267" data-vendor="Nelly" data-price="229"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3497267/Feed/24334/" data-slug="only-onldenni-mix-foil-wings-34-top-box-2" data-vendor="Nelly" data-price="229">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/only-onldenni-mix-foil-wings-34-top-box-2/">Only</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="229.00" data-currency="SEK">26 USD</li>
+
+
                 </ul>
+                <p></p>
             </div>
         </div>
 
-        {% include 'activity_feed/fragments/feed_list.html' %}
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="24334">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/tess/"><img class="img-circle" src="http://s.apprl.com/cache/d8/f4/d8f49ce9f1bfeb9361b5279399e00ce6.jpg"></a>
+                <p><a href="/en/profile/tess/">Tess Montgomery</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3497313" data-id="3497313">
+            <div class="product-image-container">
+                <a href="/en/products/hilfiger-denim-meason-cn-sweater-ls/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/0de610b8db604b560dffc4ecdeeeb281/bc/bc3af8185f8061141e7db98da9882725044cf17b.jpg" alt="Hilfiger Denim Meason Cn Sweater L/S White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover" style="display: none;">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3497313/like" data-unlike-url="/products/3497313/unlike" data-slug="hilfiger-denim-meason-cn-sweater-ls" data-id="3497313" data-vendor="Boozt se" data-price="1119"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3497313/Feed/24334/" data-slug="hilfiger-denim-meason-cn-sweater-ls" data-vendor="Boozt se" data-price="1119">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/hilfiger-denim-meason-cn-sweater-ls/">Hilfiger Denim</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="1119.00" data-currency="SEK">128 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item recommended panel feed-verb-like_product" data-user-id="27033">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/philip-conradsson/"><img class="img-circle" src="http://localhost:8081/static/images/brand-avatar.png"></a>
+                <p>Recommended for you</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3397728" data-id="3397728">
+            <div class="product-image-container">
+                <a href="/en/products/oscar-jacobson-oscar-jacobson-einar-flannel-blazer-dark-brown/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/685092bff1ac9edd2efee5c9a2ed359d/a0/a046dc4702259c54ffcc55fac712936e5e771de7.jpg" alt="Oscar Jacobson Oscar Jacobson Einar Flannel Blazer Dark Brown Brown, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover" style="display: none;">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3397728/like" data-unlike-url="/products/3397728/unlike" data-slug="oscar-jacobson-oscar-jacobson-einar-flannel-blazer-dark-brown" data-id="3397728" data-vendor="Care of Carl" data-price="3799"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3397728/Feed/27033/" data-slug="oscar-jacobson-oscar-jacobson-einar-flannel-blazer-dark-brown" data-vendor="Care of Carl" data-price="3799">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/oscar-jacobson-oscar-jacobson-einar-flannel-blazer-dark-brown/">Oscar Jacobson</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="3799.00" data-currency="SEK">436 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="27033">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/philip-conradsson/"><img class="img-circle" src="http://s.apprl.com/cache/6f/1e/6f1e11b005824d8e2545cf7b0005d71d.jpg"></a>
+                <p><a href="/en/profile/philip-conradsson/">Philip Conradsson</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3397729" data-id="3397729">
+            <div class="product-image-container">
+                <a href="/en/products/oscar-jacobson-oscar-jacobson-einar-flannel-blazer-dark-grey/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/0427608374dae52ee6bee7f6f3c1389d/87/87ba03eaab43c380a44bcedde3f330e374bee8a2.jpg" alt="Oscar Jacobson Oscar Jacobson Einar Flannel Blazer Dark Grey Grey, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3397729/like" data-unlike-url="/products/3397729/unlike" data-slug="oscar-jacobson-oscar-jacobson-einar-flannel-blazer-dark-grey" data-id="3397729" data-vendor="Care of Carl" data-price="3799"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3397729/Feed/27033/" data-slug="oscar-jacobson-oscar-jacobson-einar-flannel-blazer-dark-grey" data-vendor="Care of Carl" data-price="3799">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/oscar-jacobson-oscar-jacobson-einar-flannel-blazer-dark-grey/">Oscar Jacobson</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="3799.00" data-currency="SEK">436 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item recommended panel feed-verb-like_product" data-user-id="27033">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/philip-conradsson/"><img class="img-circle" src="http://localhost:8081/static/images/brand-avatar.png"></a>
+                <p>Recommended for you</p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3406963" data-id="3406963">
+            <div class="product-image-container">
+                <a href="/en/products/oscar-jacobson-oscar-jacobson-einar-structured-blazer-sky-blue/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/50b37b79350a94690bd12e02a81ac647/ac/acc8fc365a58ba314ba5733035a7007b0f525a91.jpg" alt="Oscar Jacobson Oscar Jacobson Einar Structured Blazer Sky Blue Blue, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3406963/like" data-unlike-url="/products/3406963/unlike" data-slug="oscar-jacobson-oscar-jacobson-einar-structured-blazer-sky-blue" data-id="3406963" data-vendor="Care of Carl" data-price="3999"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3406963/Feed/27033/" data-slug="oscar-jacobson-oscar-jacobson-einar-structured-blazer-sky-blue" data-vendor="Care of Carl" data-price="3999">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/oscar-jacobson-oscar-jacobson-einar-structured-blazer-sky-blue/">Oscar Jacobson</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="3999.00" data-currency="SEK">458 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="27033">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/philip-conradsson/"><img class="img-circle" src="http://s.apprl.com/cache/6f/1e/6f1e11b005824d8e2545cf7b0005d71d.jpg"></a>
+                <p><a href="/en/profile/philip-conradsson/">Philip Conradsson</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3341938" data-id="3341938">
+            <div class="product-image-container">
+                <a href="/en/products/oscar-jacobson-oscar-jacobson-einar-lambswool-blazer-grey/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/e045494adac94a57cbc039a382597f3f/89/893d3e56b6c45628aabfeb200f8677f14a4399d2.jpg" alt="Oscar Jacobson Oscar Jacobson Einar Lambswool Blazer Grey Grey, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover" style="display: none;">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3341938/like" data-unlike-url="/products/3341938/unlike" data-slug="oscar-jacobson-oscar-jacobson-einar-lambswool-blazer-grey" data-id="3341938" data-vendor="Care of Carl" data-price="2999"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3341938/Feed/27033/" data-slug="oscar-jacobson-oscar-jacobson-einar-lambswool-blazer-grey" data-vendor="Care of Carl" data-price="2999">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/oscar-jacobson-oscar-jacobson-einar-lambswool-blazer-grey/">Oscar Jacobson</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="2999.00" data-currency="SEK">344 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="27033">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/philip-conradsson/"><img class="img-circle" src="http://s.apprl.com/cache/6f/1e/6f1e11b005824d8e2545cf7b0005d71d.jpg"></a>
+                <p><a href="/en/profile/philip-conradsson/">Philip Conradsson</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3341935" data-id="3341935">
+            <div class="product-image-container">
+                <a href="/en/products/oscar-jacobson-oscar-jacobson-einar-lambswool-blazer-dark-brown/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/b74ecbd8c25d819d0f2aab0a914ad866/e2/e272dd4deb8c0f8017c415138f251cf7974eab7b.jpg" alt="Oscar Jacobson Oscar Jacobson Einar Lambswool Blazer Dark Brown Brown, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover" style="display: none;">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3341935/like" data-unlike-url="/products/3341935/unlike" data-slug="oscar-jacobson-oscar-jacobson-einar-lambswool-blazer-dark-brown" data-id="3341935" data-vendor="Care of Carl" data-price="2999"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3341935/Feed/27033/" data-slug="oscar-jacobson-oscar-jacobson-einar-lambswool-blazer-dark-brown" data-vendor="Care of Carl" data-price="2999">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/oscar-jacobson-oscar-jacobson-einar-lambswool-blazer-dark-brown/">Oscar Jacobson</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="2999.00" data-currency="SEK">344 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="27437">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/carolinebergeriksen/"><img class="img-circle" src="http://s.apprl.com/cache/31/6a/316ad5634c716e85770ca99709ea243a.jpg"></a>
+                <p><a href="/en/profile/carolinebergeriksen/">Caroline Berg Eriksen</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3476638" data-id="3476638">
+            <div class="product-image-container">
+                <a href="/en/products/carvela-kurt-geiger-sammy/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/bdf65e9449331e40be2086f36eea6611/63/639eaaf6a6dcccaa8fa049a6182f2e7b6935a488.jpg" alt="Carvela Kurt Geiger Sammy White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover" style="display: none;">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3476638/like" data-unlike-url="/products/3476638/unlike" data-slug="carvela-kurt-geiger-sammy" data-id="3476638" data-vendor="Boozt no" data-price="2507"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3476638/Feed/27437/" data-slug="carvela-kurt-geiger-sammy" data-vendor="Boozt no" data-price="2507">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/carvela-kurt-geiger-sammy/">Carvela Kurt Geiger</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="2499.00" data-currency="NOK">287 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="24334">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/tess/"><img class="img-circle" src="http://s.apprl.com/cache/d8/f4/d8f49ce9f1bfeb9361b5279399e00ce6.jpg"></a>
+                <p><a href="/en/profile/tess/">Tess Montgomery</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3495376" data-id="3495376">
+            <div class="product-image-container">
+                <a href="/en/products/nly-eve-soft-slit-open-back-dress/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/6c51610d0ee43bec6ba7916367776a39/8f/8f7f547e8895e79a79f0cdd6f04588e28e746189.jpg" alt="NLY Eve Soft Slit Open Back Dress Blue, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3495376/like" data-unlike-url="/products/3495376/unlike" data-slug="nly-eve-soft-slit-open-back-dress" data-id="3495376" data-vendor="Nelly" data-price="699"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3495376/Feed/24334/" data-slug="nly-eve-soft-slit-open-back-dress" data-vendor="Nelly" data-price="699">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/nly-eve-soft-slit-open-back-dress/">NLY Eve</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="699.00" data-currency="SEK">80 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="24334">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/tess/"><img class="img-circle" src="http://s.apprl.com/cache/d8/f4/d8f49ce9f1bfeb9361b5279399e00ce6.jpg"></a>
+                <p><a href="/en/profile/tess/">Tess Montgomery</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3495406" data-id="3495406">
+            <div class="product-image-container">
+                <a href="/en/products/new-look-lace-panel-skater-dress/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/80c622524358eec819fa2decf439d48f/86/863d0b63fb705e06f0c9f141d5faaf16848045b2.jpg" alt="New Look Lace Panel Skater Dress Black, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover" style="display: none;">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3495406/like" data-unlike-url="/products/3495406/unlike" data-slug="new-look-lace-panel-skater-dress" data-id="3495406" data-vendor="Nelly" data-price="399"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3495406/Feed/24334/" data-slug="new-look-lace-panel-skater-dress" data-vendor="Nelly" data-price="399">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/new-look-lace-panel-skater-dress/">New Look</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="399.00" data-currency="SEK">46 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="24334">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/tess/"><img class="img-circle" src="http://s.apprl.com/cache/d8/f4/d8f49ce9f1bfeb9361b5279399e00ce6.jpg"></a>
+                <p><a href="/en/profile/tess/">Tess Montgomery</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3496536" data-id="3496536">
+            <div class="product-image-container">
+                <a href="/en/products/gina-tricot-aurora-wool-blend-scarf/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/761bd9204ab05e5ea9c83ab41d64884b/43/43e047168fa2b6c5a3227a6fa32d82d667eddbfa.jpg" alt="Gina Tricot Aurora wool blend scarf Black, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover" style="display: none;">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3496536/like" data-unlike-url="/products/3496536/unlike" data-slug="gina-tricot-aurora-wool-blend-scarf" data-id="3496536" data-vendor="Gina Tricot SE" data-price="179"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3496536/Feed/24334/" data-slug="gina-tricot-aurora-wool-blend-scarf" data-vendor="Gina Tricot SE" data-price="179">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/gina-tricot-aurora-wool-blend-scarf/">Gina Tricot</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="179.00" data-currency="SEK">21 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+            <li class="col-feed-item">
+        <div class="feed-item panel feed-verb-like_product" data-user-id="24334">
+
+
+            <div class="panel-heading">
+                <a href="/en/profile/tess/"><img class="img-circle" src="http://s.apprl.com/cache/d8/f4/d8f49ce9f1bfeb9361b5279399e00ce6.jpg"></a>
+                <p><a href="/en/profile/tess/">Tess Montgomery</a> <span class="likes-text">likes</span></p>
+            </div>
+
+            <div class="panel-body">
+
+
+
+
+        <div class="thumbnail product-medium" id="product-3496540" data-id="3496540">
+            <div class="product-image-container">
+                <a href="/en/products/gina-tricot-penelope-knitted-linne/">
+
+                    <img class="product-image img-responsive" src="http://s.apprl.com/cache/f0976d3b7e05c76674c185c5ea6565e1/a5/a5d1254cce8b797070c89fddd35f84881c405dc6.jpg" alt="Gina Tricot Penelope knitted linne Black, White" width="280" height="320" style="opacity: 1;">
+
+                </a>
+                <div class="hover">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="Liked" data-unlike-text="Unlike" data-like-text="Like" data-like-url="/products/3496540/like" data-unlike-url="/products/3496540/unlike" data-slug="gina-tricot-penelope-knitted-linne" data-id="3496540" data-vendor="Gina Tricot SE" data-price="199"><span>Like</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
+
+                        <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="/en/redirect/3496540/Feed/24334/" data-slug="gina-tricot-penelope-knitted-linne" data-vendor="Gina Tricot SE" data-price="199">Buy</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="caption">
+                <h4><a href="/en/products/gina-tricot-penelope-knitted-linne/">Gina Tricot</a></h4>
+                <ul class="list-inline">
+
+
+                    <li class="price" data-price="199.00" data-currency="SEK">23 USD</li>
+
+
+                </ul>
+                <p></p>
+            </div>
+        </div>
+
+
+
+            </div>
+        </div>
+        </li>
+
+        </ul>
+
     </div>
 
 {% endblock %}

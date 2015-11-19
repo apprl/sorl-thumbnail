@@ -1,23 +1,21 @@
 {% load i18n %}
 <div class="body-header">
-    <div class="body-header-col-full">
-        <h1>{% trans "Publisher" %}</h1>
-        <ul class="list-inline">
-            <li><h2><a{% if 'dashboard' in request.path %} class="selected"{% endif %} href="{% url 'dashboard' %}">{% if request.user.is_authenticated and request.user.is_partner %}{% trans "Your statistics" %}{% else %}{% trans "Become a publisher" %}{% endif %}</a></h2></li>
-            {% if request.user.is_authenticated and request.user.is_partner %}
-            <li><h2><a href="{% url 'publisher-tools' %}">{% trans "Publisher tools" %}</a></h2></li>
-            <li><h2><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-commissions' %}">{% trans "Stores" %}</a></h2></li>
-            {% endif %}
-            <li><h2><a{% if 'info' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-info' %}">{% trans "How it works" %}</a></h2></li>
-            {% if request.user.referral_partner %}
-            <li><h2><a{% if 'referral' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-referral' %}">{% trans "Invite and earn" %}</a></h2></li>
-            {% endif %}
-            {% if request.user.is_authenticated and request.user.is_partner and request.user.has_partner_group_ownership %}
-            <li><h2><a{% if 'group' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-group' request.user.pk %}">{% trans "Network" %}</a></h2></li>
-            {% endif %}
-            {% if request.user.is_authenticated %}
-            <li><h2><a href="{% url 'settings-publisher' %}">{% trans "Settings" %}</a></h2></li>
-            {% endif %}
-        </ul>
-    </div>
+    <h1>{% trans "Publisher" %}</h1>
+    <ul class="sub-menu">
+        <li><a{% if 'dashboard' in request.path %} class="selected"{% endif %} href="{% url 'dashboard' %}">{% if request.user.is_authenticated and request.user.is_partner %}{% trans "Your statistics" %}{% else %}{% trans "Become a publisher" %}{% endif %}</a></li>
+        {% if request.user.is_authenticated and request.user.is_partner %}
+        <li><a href="{% url 'publisher-tools' %}">{% trans "Publisher tools" %}</a></h2></li>
+        <li><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-commissions' %}">{% trans "Stores" %}</a></li>
+        {% endif %}
+        <li><a{% if 'info' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-info' %}">{% trans "How it works" %}</a></li>
+        {% if request.user.referral_partner %}
+        <li><a{% if 'referral' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-referral' %}">{% trans "Invite and earn" %}</a></li>
+        {% endif %}
+        {% if request.user.is_authenticated and request.user.is_partner and request.user.has_partner_group_ownership %}
+        <li><a{% if 'group' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-group' request.user.pk %}">{% trans "Network" %}</a></li>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+        <li><a href="{% url 'settings-publisher' %}">{% trans "Settings" %}</a></li>
+        {% endif %}
+    </ul>
 </div>

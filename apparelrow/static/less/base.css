@@ -7064,7 +7064,7 @@ body {
 @media (min-width: 768px) {
   .btn {
     height: 34px;
-    line-height: 40px;
+    line-height: 38px;
   }
 }
 .dropdown-toggle {
@@ -7176,13 +7176,13 @@ main .btn {
     max-width: 320px;
   }
 }
-/*.btn-reset {
-	margin: auto;
+.btn-unfollow {
+  background-color: #666666 !important;
 }
-.btn-pagination {
-	background-color: black !important;
-	margin: auto;
-}*/
+.btn-unfollow:hover,
+.btn-unfollow:focus {
+  background-color: #e50b0b !important;
+}
 section .btn {
   margin-left: auto;
   margin-right: auto;
@@ -7347,6 +7347,9 @@ section .btn {
 .pagination {
   width: 100%;
 }
+.pagination .btn-pagination {
+  margin: auto;
+}
 .pagination .btn-pagination img {
   display: none;
   padding-left: 10px;
@@ -7366,39 +7369,73 @@ section .btn {
   border-radius: 0;
   -webkit-box-shadow: none;
   box-shadow: none;
-  font-size: 13px;
 }
 .modal {
   z-index: 10040;
 }
-.modal .modal-content {
-  border-radius: 0;
-}
-.modal .modal-content p {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 16px;
-}
-.modal .modal-header {
-  background-color: #000000;
-  color: #ffffff;
-}
-.modal .modal-header .close {
-  width: 28px;
-  height: 28px;
-  opacity: 0.8;
-}
-.modal .modal-header .close:hover {
-  opacity: 1.0;
-}
-.modal .modal-header h4 {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 18px;
-}
 .modal .modal-footer {
-  padding-right: 30px;
+  text-align: center;
+}
+.modal .modal-footer .btn {
+  margin: 0 auto;
+}
+.modal .tool-description {
+  padding: 15px 30px;
+  line-height: 24px;
+}
+.modal h2 {
+  margin: 30px 0 15px 30px;
+}
+.modal h3 {
+  margin: 30px 0 5px 0;
+}
+.modal p,
+.modal li {
+  color: #666666;
+}
+.modal-backdrop {
+  z-index: 0;
 }
 .modal-backdrop.in {
-  opacity: 0.7;
+  opacity: .5;
+}
+.iosSlider {
+  width: 100%;
+  height: 1500px;
+  border-top: 3px solid #000;
+  border-bottom: 3px solid #000;
+}
+.iosSlider .slider {
+  width: 100%;
+  height: 100%;
+}
+.iosSlider .slider .item {
+  float: left;
+  width: 100%;
+  background: #fff;
+}
+.iosSlider .slider .item img {
+  width: 100%;
+  height: auto;
+}
+.tools_prevButton,
+.tools_nextButton {
+  position: absolute;
+  width: 66px;
+  height: 66px;
+  line-height: 74px;
+  font-size: 24px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.25);
+  color: white;
+  top: 50%;
+  margin-top: -33px;
+  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tools_prevButton:hover,
+.tools_nextButton:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 /* Lists ---------- */
 .list-alphabet li {
@@ -7621,6 +7658,10 @@ section .btn {
 .col-product-filter .panel-heading a {
   color: white;
 }
+.panel {
+  box-shadow: none;
+  border-radius: 0;
+}
 .panel-heading .btn {
   margin: 0;
 }
@@ -7792,6 +7833,10 @@ input[type="submit"] {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-family: 'Neuzeit Heavy', sans-serif;
+  /*@media (min-width: @screen-sm) {
+		height: 34px;
+		line-height: 38px;
+	}*/
 }
 input[type="submit"]:hover {
   background-color: #333;
@@ -7938,6 +7983,7 @@ textarea:focus {
 	- Discover (Members, Brands, Users)
 	- Home (Index)
 	- Dashboard
+	- Feed
 	- Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
 */
 /* Search ---------- */
@@ -8139,53 +8185,6 @@ body.index .featured-container .feed-item .panel-heading {
 .apprl-modal-tools-content .slider-container .iosSlider .tools_nextButton {
   right: 30px;
 }
-.publisher-panel {
-  background: #FFFFFF !important;
-  /* redefined because it was overwritten */
-}
-.publisher-panel .image img {
-  width: 100%;
-}
-.publisher-panel .image:hover {
-  cursor: pointer;
-}
-.publisher-panel .text {
-  padding-top: 10px;
-  text-align: center;
-  font-size: 18px;
-}
-.publisher-panel .text .desc {
-  min-height: 60px;
-  padding: 10px;
-}
-.publisher-panel .title span {
-  color: #000000;
-  font-size: 20px;
-  font-weight: bold;
-  text-transform: uppercase;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-.publisher-panel .btn-success {
-  margin: 15px;
-  width: 100%;
-}
-.publisher-panel .btn-default {
-  background-color: #000 !important;
-  background-image: #000 !important;
-  background: #000 !important;
-  border-color: #000 !important;
-  color: #FFFFFF;
-  margin: 15px;
-}
-.publisher-panel .btn-default:hover {
-  background-color: #222222 !important;
-  background-image: #222222 !important;
-  background: #222222 !important;
-  border-color: #222222 !important;
-}
-.publisher-panel h3 {
-  display: inline;
-}
 .apprl-tools h4.apprl-slash::before {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -8231,27 +8230,6 @@ body.index .featured-container .feed-item .panel-heading {
   text-align: right;
   z-index: 999;
 }
-/*
-LOOK UP: not sure if this is used?
-.iosSlider {
-    width: 100%;
-    height: 1500px;
-    border-top: 3px solid #000;
-    border-bottom: 3px solid #000;
-    .slider {
-        width: 100%;
-        height: 100%;
-        .item {
-            float: left;
-            width: 100%;
-            background: #fff;
-            img {
-              width: 100%;
-              height: auto;
-            }
-        }
-    }
-}*/
 .click-detail {
   cursor: pointer;
 }
@@ -8307,6 +8285,13 @@ LOOK UP: not sure if this is used?
 .dashboard-info #content-container img {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+/* Feed ---------- */
+.feed-list .feed-item {
+  font-size: 13px;
+}
+.feed-list .feed-item.recommended {
+  border-color: #67e2b8;
 }
 /* Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies) ---------- */
 .dynamic-content ol {
@@ -10508,6 +10493,21 @@ body.profile-page .sub-menu {
     text-align: left;
   }
 }
+/*
+	Publisher v1.0
+*/
+.publisher-panel {
+  border: 1px solid #cccccc;
+}
+.publisher-panel article {
+  padding: 15px 15px 0 15px;
+}
+.publisher-panel img:hover {
+  cursor: pointer;
+}
+.publisher-panel .btn {
+  max-width: none;
+}
 .publisher-page .subnav-page,
 .store-page .subnav-page {
   margin-bottom: 40px;
@@ -10544,9 +10544,9 @@ body.publisher-index-page .inner-content {
   margin-bottom: 60px;
   padding: 20px;
 }
-body.publisher-index-page .background {
-  background: #000000 url('../images/bg_bw4.jpg') no-repeat center 40px;
-}
+/*body.publisher-index-page .background {
+    background: #000000 url('../images/bg_bw4.jpg') no-repeat center 40px;
+}*/
 body.publisher-referral-page .referral-row {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -10639,7 +10639,7 @@ h1.display {
 h1 {
   font-family: 'Austin Light', serif;
   font-size: 36px;
-  letter-spacing: -1px;
+  letter-spacing: -2px;
 }
 h2 {
   font-family: 'Neuzeit Book', 'Helvetica Neue', sans-serif;
@@ -10647,7 +10647,7 @@ h2 {
 }
 h3 {
   font-family: 'Austin Light', serif;
-  font-size: 24px;
+  font-size: 22px;
 }
 h4 {
   font-family: 'Neuzeit Heavy', 'Helvetica Neue', sans-serif;
@@ -10670,9 +10670,11 @@ small {
 }
 p {
   color: #666666;
-}
-p a {
-  color: black;
+  /*a {
+        //font-family: @secondaryFontBold;
+        //color: @darkGrey;
+        color: black;
+    }*/
 }
 article h2 {
   margin-bottom: 15px;
@@ -10689,10 +10691,10 @@ article p {
     font-size: 48px;
   }
   h2 {
-    font-size: 26px;
+    font-size: 24px;
   }
   h3 {
-    font-size: 26px;
+    font-size: 24px;
   }
 }
 /* Header ---------- */
@@ -10720,6 +10722,8 @@ header nav li a:active {
 header nav li a span {
   padding-bottom: 2px;
   border-bottom: 2px solid transparent;
+  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 header nav li a span:hover {
   border-color: white;
@@ -10796,6 +10800,12 @@ header .secondary-nav li {
     margin-right: 15px;
   }
 }
+header .primary-nav {
+  margin-top: 1px;
+}
+header .primary-nav .btn {
+  margin-top: -2px;
+}
 @media (min-width: 768px) {
   header .primary-nav {
     float: left;
@@ -10820,9 +10830,6 @@ header .logo {
   float: left;
   line-height: 60px;
   margin-right: 30px;
-}
-header .btn-primary {
-  margin-top: -4px;
 }
 header .navbar-toggle {
   border: none;
@@ -11082,6 +11089,10 @@ main {
   text-align: center;
   margin-bottom: 30px;
   position: relative;
+}
+.body-header p {
+  margin-top: 15px;
+  max-width: 720px;
 }
 @media (min-width: 768px) {
   .body-header {
