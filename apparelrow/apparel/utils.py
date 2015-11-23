@@ -485,6 +485,46 @@ def save_location(request, location):
 def has_user_location(request):
     return hasattr(request, 'user') and hasattr(request.user, 'location') and request.user.location
 
+def get_location_text(location):
+    for key, text in settings.LOCATION_MAPPING_SIMPLE_TEXT:
+        if key == location:
+            return text
+    return None
+
+def get_market_text_array(vendor_markets):
+    markets_text = []
+    for item in vendor_markets:
+        location_text = get_location_text(item)
+        if location_text:
+            markets_text.append(location_text)
+    return markets_text
+
+def generate_countries_text(markets_text):
+    if len(markets_text) > 1:
+        return " and ".join([", ".join(markets_text[:-1]),markets_text[-1]])
+    return ", ".join(markets_text)
+
+def generate_text_for_markets_array(markets_text):
+    availability_text = ""
+    if len(markets_text) > 0:
+        availability_text = "Available in "
+        availability_text += generate_countries_text(markets_text)
+    return availability_text
+
+def get_availability_text(vendor_markets):
+    if vendor_markets:
+        markets_text = get_market_text_array(vendor_markets)
+        return generate_text_for_markets_array(markets_text)
+    return "Available Internationally"
+
+def get_location_warning_text(vendor_markets, user_location):
+    warning_text = ""
+    if vendor_markets and user_location not in vendor_markets:
+        markets_text = get_market_text_array(vendor_markets)
+        warning_text = "You will only earn money on visitors from %s that click on this product, not from your current location %s" \
+                       % (generate_countries_text(markets_text), get_location_text(user_location))
+    return warning_text
+
 def get_external_store_commission(stores, product=None):
     store_commission = None
     if len(stores) > 0:

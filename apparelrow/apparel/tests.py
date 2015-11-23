@@ -5,7 +5,6 @@ from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.search import product_save, get_product_document
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
     extract_asos_nelly_product_url
-import unittest
 
 from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
@@ -16,6 +15,7 @@ from apparelrow.apparel.models import Shop, ShopEmbed
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from apparelrow.apparel.models import Product, ProductLike
+from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
@@ -150,7 +150,6 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_link'], None)
         self.assertTrue(json_content['product_short_link'].startswith('http://testserver/pd/4C9'))
         self.assertEqual(json_content['product_liked'], False)
-
 
     def test_product_lookup_by_url(self):
         self._login()
@@ -480,7 +479,6 @@ class TestProductDetails(TestCase):
                                Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)*Decimal(0.08),
                                places=2)
 
-
     def test_product_details_external_user_is_not_publisher(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
         self.assertTrue(is_logged_in)
@@ -776,6 +774,63 @@ class TestShortLinks(TestCase):
         # No ProductStat were created
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
 
+
+class TestUtils(TestCase):
+    def setUp(self):
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.location = 'US'
+        self.user.is_partner = True
+        self.user.save()
+
+    def test_get_availability_text(self):
+        # For all locations available, which is the default option so vendor_markets is None
+        vendor_markets = None
+        availability_text = get_availability_text(vendor_markets)
+        self.assertEqual(availability_text, "Available Internationally")
+
+        # One location
+        vendor_markets = ['SE']
+        availability_text = get_availability_text(vendor_markets)
+        self.assertEqual(availability_text, "Available in Sweden")
+
+        # Two locations
+        vendor_markets = ['SE', 'NO']
+        availability_text = get_availability_text(vendor_markets)
+        self.assertEqual(availability_text, "Available in Sweden and Norway")
+
+        # Three locations
+        vendor_markets = ['SE', 'NO', 'DK']
+        availability_text = get_availability_text(vendor_markets)
+        self.assertEqual(availability_text, "Available in Sweden, Norway and Denmark")
+
+    def test_get_warning_text(self):
+        # For all locations available, which is the default option so vendor_markets is None
+        vendor_markets = None
+        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        self.assertEqual(warning_text, "")
+
+        # One location
+        vendor_markets = ['SE']
+        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden that click on this product, not from your current location USA")
+
+        # Two locations
+        vendor_markets = ['SE', 'NO']
+        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden and Norway that click on this product, not from your current location USA")
+
+        # Three locations
+        vendor_markets = ['SE', 'NO', 'DK']
+        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden, Norway and Denmark that click on this product, not from your current location USA")
+
+        # Three locations but user location belongs to product's market
+        vendor_markets = ['SE', 'NO', 'US']
+        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        self.assertEqual(warning_text, "")
 
 def _send_product_to_solr(product_key):
 

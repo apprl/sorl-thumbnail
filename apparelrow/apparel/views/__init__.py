@@ -46,7 +46,8 @@ from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortSto
 from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
-    select_from_multi_gender, JSONResponse, JSONPResponse, get_external_store_commission
+    select_from_multi_gender, JSONResponse, JSONPResponse, get_external_store_commission, get_availability_text, \
+    get_location_warning_text
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 
 from apparelrow.activity_feed.views import user_feed
@@ -346,7 +347,6 @@ def get_product_from_slug(slug, **kwargs):
         raise Http404("No Product matches the given query.")
     return product
 
-
 def product_detail(request, slug):
     kwargs = {'published': True, 'gender__isnull': False}
     product = get_product_from_slug(slug, **kwargs)
@@ -399,6 +399,31 @@ def product_detail(request, slug):
     # Cost per click
     cost_per_click = get_vendor_cost_per_click(product.default_vendor.vendor)
 
+    # Cost per click
+    default_vendor = product.default_vendor
+    cost_per_click = 0
+    if default_vendor and default_vendor.vendor.is_cpc:
+        user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
+        click_cut = cut * publisher_cut
+        earning_cut = click_cut
+        try:
+            cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
+        except get_model('dashboard', 'ClickCost').DoesNotExist:
+            logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
+                product.default_vendor, product.product_name))
+
+    # Vendor market
+    vendor_markets = None
+    if default_vendor:
+        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
+
+    availability_text = get_availability_text(vendor_markets)
+
+    vendor = product.default_vendor.vendor
+    if vendor:
+        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
+    warning_text = get_location_warning_text(vendor_markets, request.user.location)
+
     return render_to_response(
         'apparel/product_detail.html',
         {
@@ -419,10 +444,23 @@ def product_detail(request, slug):
             'alternative_url': alternative_url,
             'earning_cut': earning_cut,
             'cost_per_click': cost_per_click,
-            'has_share_image': True
+            'has_share_image': True,
+            'availability_text': availability_text,
+            'warning_text': warning_text
         }, context_instance=RequestContext(request),
     )
 
+def get_warnings_for_location(request, slug):
+    #if request.is_ajax():
+    kwargs = {'published': True, 'gender__isnull': False}
+    product = get_product_from_slug(slug, **kwargs)
+    # Vendor market
+    vendor_markets = None
+    if product.default_vendor:
+        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
+
+    warning_text = get_location_warning_text(vendor_markets, request.user.location)
+    return HttpResponse(warning_text)
 
 def product_generate_short_link(request, slug):
     """
@@ -437,8 +475,15 @@ def product_generate_short_link(request, slug):
     product_short_link = reverse('product-short-link', args=[product_short_link.link()])
     product_short_link = request.build_absolute_uri(product_short_link)
 
-    return render(request, 'apparel/fragments/product_short_link.html', {'product_short_link': product_short_link})
+    # Vendor market
+    vendor_markets = None
+    if product.default_vendor:
+        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
 
+    warning_text = get_location_warning_text(vendor_markets, request.user.location)
+
+    return render(request, 'apparel/fragments/product_short_link.html', {'product_short_link': product_short_link,
+                                                                         'warning_text': warning_text})
 
 def product_short_link(request, short_link):
     """
@@ -1064,6 +1109,7 @@ def product_lookup(request):
     product_liked = False
     product_name = None
     product_earning = None
+    vendor = None
     currency = None
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
@@ -1116,6 +1162,9 @@ def product_lookup(request):
                         product_earning = "You will earn approx. %s %.2f per generated click when linking to " \
                                           "this retailer" % \
                                           (cost_per_click.currency, (earning_cut * cost_per_click.amount))
+    if vendor:
+        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
+    warning_text = get_location_warning_text(vendor_markets, request.user.location)
 
     return JSONResponse({
         'product_pk': product_pk,
@@ -1123,7 +1172,8 @@ def product_lookup(request):
         'product_short_link': product_short_link_str,
         'product_liked': product_liked,
         'product_name': product_name,
-        'product_earning': product_earning
+        'product_earning': product_earning,
+        'warning_text': warning_text
     })
 
 @login_required
