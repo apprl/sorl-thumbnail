@@ -46,6 +46,15 @@
         </div>
 
         <div class="row">
+            <div class="col-md-12">
+                {% if warning_text %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    {{ warning_text }}
+                </div>
+                {% endif %}
+             </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <ol class="breadcrumb">
                     <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
@@ -86,9 +95,9 @@
                         {% cache CACHE_TIMEOUT product_detail_fragment object.id LANGUAGE_CODE %}
                         <h3>{% trans "Product info" %}</h3>
                         <p class="bodycopy description" itemprop="description">{{ object.description }}</p>
+                        <strong>{{ availability_text }}</strong>
 
-                        <div class="product-info" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
-
+                        <div class="product-info" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer"
                             <p itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">
                                 {% if object.default_vendor %}
                                     {% if object.default_vendor.availability == 0 %}
@@ -153,7 +162,7 @@
                                             {% multiply cost_per_click.locale_price earning_cut %}
                                             per click to this item
                                      {% else %}
-                                        Settings for CPC is missing.
+                                        Settings for CPC are missing.
                                      {% endif %}
                                 </p>
                             {% endif %}
