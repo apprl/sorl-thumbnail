@@ -43,9 +43,13 @@ function isAuthenticated(callback) {
 /**
  * Fetch product XHR-request
  */
-function fetchProduct(product, domain, callback) {
+function fetchProduct(product, domain, isProduct, callback) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', PRODUCT_URL + '?key=' + encodeURIComponent(product) + '&domain=' + encodeURIComponent(domain), true);
+  var requestURL = PRODUCT_URL + '?key=' + encodeURIComponent(product) + '&domain=' + encodeURIComponent(domain);
+  if (isProduct)
+    requestURL += '&is_product=' + isProduct;
+  console.log(requestURL);
+  xhr.open('GET', requestURL , true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState == 4) {
       var parsed = {};
@@ -53,7 +57,7 @@ function fetchProduct(product, domain, callback) {
         parsed = JSON.parse(xhr.responseText);
       } catch(error) {}
       callback(parsed);
-    } 
+    }
   }
   xhr.send();
 }
@@ -80,10 +84,10 @@ function likeProductRequest(product, action, callback) {
   });
 }
 
-
-
-
-function run(response) {
+/*
+ * Send fetchProduct XHR-request
+ */
+function fetchProductFromServer(currentTabURL, isProduct){
   var profileLink = document.querySelector('.profile-link');
   profileLink.onclick = function() {
     chrome.tabs.create({active: true, url: response.profile});
@@ -100,74 +104,103 @@ function run(response) {
 
   body.className = 'semi-active';
 
-  // Fetch product based on URL
-  chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+  var hostname = '';
+  var url = new URL(currentTabURL)
 
-    var hostname = '';
-    var url = new URL(tabs[0].url)
-    if (url) {
-      hostname = url.hostname + url.pathname;
-    }
+  if (url) {
+    hostname = url.hostname;
+  }
+  fetchProduct(currentTabURL, hostname, isProduct, function(response) {
+    body.className = 'active';
+    if (response.product_short_link) {
 
-    fetchProduct(tabs[0].url, hostname, function(response) {
-      body.className = 'active';
-      if (response.product_short_link) {
+      var likeButtonClass = ' disabled';
+      if (response.product_link) {
+        ga('send', 'event', 'ChromeExtension', 'LoadURL', currentTabURL.url); // Send event to GA on product link load
+        likeButtonClass = '';
+      } else {
+        ga('send', 'event', 'ChromeExtension', 'LoadDomain', hostname); // Send event to GA on domain load
+        noLikeText.className = 'no-like show'; // Show no-like text
+      }
 
-        var likeButtonClass = ' disabled';
-        if (response.product_link) {
-          ga('send', 'event', 'ChromeExtension', 'LoadURL', tabs[0].url); // Send event to GA on product link load
-          likeButtonClass = '';
-        } else {
-          ga('send', 'event', 'ChromeExtension', 'LoadDomain', hostname); // Send event to GA on domain load
-          noLikeText.className = 'no-like show'; // Show no-like text
-        }
+      if (response.product_liked) {
+        likeButton.className = 'like-button liked' + likeButtonClass;
+      } else {
+        likeButton.className = 'like-button' + likeButtonClass;
+      }
+      productButton.className = 'product-button';
 
-        if (response.product_liked) {
-          likeButton.className = 'like-button liked' + likeButtonClass;
-        } else {
-          likeButton.className = 'like-button' + likeButtonClass;
-        }
-        productButton.className = 'product-button';
+      if (response.product_link) {
+        productLink.className = 'product-link bold';
+        productLink.href = response.product_link;
+      }
+      productShortLinkInput.value = response.product_short_link;
 
-        if (response.product_link) {
-          productLink.className = 'product-link bold';
-          productLink.href = response.product_link;
-        }
-        productShortLinkInput.value = response.product_short_link;
-
-        if (response.product_link) {
-          var likeActive = false;
-          likeButton.onclick = function() {
-            ga('send', 'event', 'ChromeExtension', 'ProductLike', tabs[0].url); // Send event to GA on like button click
-            if (likeActive === false) {
-              likeActive = true;
-              if (response.product_liked) {
-                var action = 'unlike';
-                likeButton.className = 'like-button';
-              } else {
-                var action = 'like';
-                likeButton.className = 'like-button liked';
-              }
-              likeProductRequest(response.product_pk, action, function() {
-                likeActive = false;
-                response.product_liked = (action === 'like' ? true : false);
-              });
+      if (response.product_link) {
+        var likeActive = false;
+        likeButton.onclick = function() {
+          ga('send', 'event', 'ChromeExtension', 'ProductLike', currentTabURL.url); // Send event to GA on like button click
+          if (likeActive === false) {
+            likeActive = true;
+            if (response.product_liked) {
+              var action = 'unlike';
+              likeButton.className = 'like-button';
+            } else {
+              var action = 'like';
+              likeButton.className = 'like-button liked';
             }
-          };
-        }
-
-        productButton.onclick = function() {
-          ga('send', 'event', 'ChromeExtension', 'ClickGetLinkButton', tabs[0].url); // Send event to GA on product link button click
-          noLikeText.className = 'no-like'; // Hide no-like text
-          if (productShortLinkInput.value) {
-            productShortLink.style.display = 'block';
+            likeProductRequest(response.product_pk, action, function() {
+              likeActive = false;
+              response.product_liked = (action === 'like' ? true : false);
+            });
           }
         };
-      } else {
-        buttons.style.display = 'none';
-        document.querySelector('.no-hit').className = 'no-hit';
       }
-    });
+
+      productButton.onclick = function() {
+        ga('send', 'event', 'ChromeExtension', 'ClickGetLinkButton', currentTabURL.url); // Send event to GA on product link button click
+        noLikeText.className = 'no-like'; // Hide no-like text
+        if (productShortLinkInput.value) {
+          productShortLink.style.display = 'block';
+        }
+      };
+    } else {
+      buttons.style.display = 'none';
+      document.querySelector('.no-hit').className = 'no-hit';
+    }
+  });
+}
+
+
+/**
+ * Get source code for current tab
+ */
+function getSourceCode(currentTabURL) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', currentTabURL, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+      var parser = new DOMParser();
+      var isProduct = 0;
+      try {
+        html = parser.parseFromString(xhr.responseText, "text/html");
+        if (html.getElementById("productPage"))
+          isProduct = 1;
+      } catch(error) {}
+      fetchProductFromServer(currentTabURL, isProduct);
+    }
+  };
+  xhr.send();
+}
+
+
+/**
+ * Get current chrome tab
+ */
+function run(response) {
+  // Fetch product based on URL
+  chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+    getSourceCode(tabs[0].url);
   });
 }
 

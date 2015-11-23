@@ -14,7 +14,9 @@
     "cookies",
     "tabs",
     "*://apprl.com/",
-    "*://*.apprl.com/"
+    "*://*.apprl.com/",
+    "*://nelly.com/",
+    "*://*.nelly.com/"
   ],
   "browser_action": {
     "default_icon": {
