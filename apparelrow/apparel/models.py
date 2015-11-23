@@ -436,6 +436,11 @@ def product_update_activity_post_save(sender, instance, **kwargs):
     get_model('activity_feed', 'activity').objects.filter(content_type=content_type, object_id=instance.pk).update(is_available=instance.availability)
     #get_model('activity_feed', 'activity').objects.update_activity(instance)
 
+#@receiver(post_save, sender=Product, dispatch_uid='product_save_key_check')
+#def product_save_key_check(sender, instance, created, **kwargs):
+#    if created:
+#        from apparelrow.scheduledjobs.tasks import check_url_endpoint
+#        check_url_endpoint.delay(instance.product_key)
 
 #
 # ProductLike
