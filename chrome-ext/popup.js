@@ -172,6 +172,8 @@ function fetchProductFromServer(currentTabURL, isProduct){
       productButton.onclick = function() {
         ga('send', 'event', 'ChromeExtension', 'ClickGetLinkButton', currentTabURL.url); // Send event to GA on product link button click
         noLikeText.className = 'no-like'; // Hide no-like text
+        productName.className = 'product-name disabled';
+        productEarning.className = 'product-earning disabled';
         if (productShortLinkInput.value) {
           productShortLink.style.display = 'block';
         }
