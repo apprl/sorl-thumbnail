@@ -113,15 +113,19 @@ class PartnerPaymentDetailForm(forms.ModelForm):
     name = forms.CharField(label=_('Name'))
     orgnr = forms.CharField(label=_('Personal / Organization number'))
     clearingnr = forms.CharField(label=_('Bank clearing number'))
+    bank_name = forms.CharField(label=_('Bank name'))
     banknr = forms.CharField(label=_('Bank account number'))
+    clearingnr = forms.CharField(label=_('Bank-/postgiro'))
     address = forms.CharField(label=_('Address'))
+    care_of = forms.CharField(label=_('C/O'))
     postal_code = forms.CharField(label=_('Postal code'))
     city = forms.CharField(label=_('City'))
     notes = forms.CharField(label=_('Other notes'), widget=forms.Textarea(attrs={'rows':4, 'cols': 30}), required=False)
 
     class Meta:
         model = get_model('profile', 'PaymentDetail')
-        fields = ('company', 'name', 'orgnr', 'clearingnr', 'banknr', 'address', 'postal_code', 'city', 'notes')
+        fields = ('company', 'name', 'orgnr', 'bank_name', 'clearingnr', 'banknr', 'address', 'care_of', 'postal_code',
+                  'city', 'notes')
         widgets = {
             'company': forms.RadioSelect
         }

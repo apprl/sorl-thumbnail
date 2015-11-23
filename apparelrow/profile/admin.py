@@ -151,7 +151,7 @@ admin.site.register(Follow, FollowAdmin)
 
 
 class PaymentDetailAdmin(admin.ModelAdmin):
-    list_display = ('custom_user', 'name', 'company', 'orgnr', 'clearingnr', 'banknr')
+    list_display = ('custom_user', 'name', 'company', 'orgnr', 'bank_name', 'banknr', 'clearingnr')
     raw_id_fields = ('user',)
 
     def custom_user(self, obj):
