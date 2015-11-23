@@ -328,14 +328,15 @@
     }
     position: absolute;
     width: 100%;
-/*
-WILL NEED FIX
     @media (max-width: @screen-xs-max) {
       span {
         display: none;
       }
-    }*/
-    background: #f8f8f8;
+    }
+    background: #eee;
+      height: 41px;
+      line-height: 30px;
+      padding: 0 15px;
     overflow: hidden;
     .section {
       float: left;
@@ -363,6 +364,14 @@ WILL NEED FIX
       -ms-transform: scale(-1, 1); // IE9+
           transform: scale(-1, 1);
   }
+}
+
+.component_back, .component_forward {
+    i {
+        -ms-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
 }
 
 .widget-page {
@@ -415,7 +424,7 @@ WILL NEED FIX
         position: relative;
         #collage {
           @media (min-width: @screen-md) {
-            border: 2px solid @lightGrey;
+            border: 2px solid #eee;
           }
           border-top: 0px;
           width: 100%;

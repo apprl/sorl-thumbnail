@@ -5,8 +5,8 @@
     <div id="shop-display-settings">
         <div class="buttons">
             <p>{% trans 'What products do you want to include in your shop?' %}</p>
-            <a id="show_liked" data-value="likes" href="#" class="btn btn-primary btn-block">{% trans 'My liked products' %}</a>
-            <a id="pick_products" data-value="pick" href="#" class="btn btn-primary btn-block">{% trans 'Choose products manually' %}</a>
+            <a id="show_liked" data-value="likes" href="#" class="btn btn-default btn-block">{% trans 'My liked products' %}</a>
+            <a id="pick_products" data-value="pick" href="#" class="btn btn-default btn-block">{% trans 'Choose products' %}</a>
         </div>
     </div>
     <script type="text/javascript">
@@ -26,7 +26,7 @@
         <div>
             <div class="col-product-filter">
                 <h3>{% trans "Filter products" %}</h3>
-                <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
+                <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %} <i class="fa fa-times"></i></a>
                     {% include 'apparel/fragments/product_filter.html' with is_embed_shop=is_embed_shop %}
             </div>
 

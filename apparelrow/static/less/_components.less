@@ -35,6 +35,7 @@
 
 /* Buttons ---------- */
 .btn {
+	display: block;
 	width: 100%;
 	border: 0;
 	padding: 0 15px !important;
@@ -71,13 +72,6 @@
 	@media (min-width: @screen-md) {
 		margin: 0;
 	}
-}
-main .btn {
-	//margin: auto;
-	display: block;
-	/*@media (min-width: @screen-md) {
-		margin: 0;
-	}*/
 }
 .btn-sm {
 	font-size: 11px;
@@ -187,12 +181,12 @@ section .btn {
 		right: 0;
 		top: 0;
 		text-align: right;
-	}
-	> li {
-		display: inline-block;
-		margin-right: 15px;
-		&:last-child {
-			margin: 0;
+		> li {
+			display: inline-block;
+			margin-right: 15px;
+			&:last-child {
+				margin: 0;
+			}
 		}
 	}
 }
@@ -200,7 +194,6 @@ section .btn {
 	border-radius: 0;
 	border: 0;
 	width: 100%;
-	max-width: 260px;
 	font-size: 13px;
 	margin: 0;
 	top: initial;
@@ -219,6 +212,7 @@ section .btn {
 		visibility: hidden;
 		display: block;
 		opacity: 0;
+		max-width: 260px;
 	}
 }
 .open {
@@ -452,7 +446,7 @@ section .btn {
 		}
 	}
 }
-.list-horizontal li {
+.list-horizontal > li {
 	display: inline-block;
 }
 .list-filter {

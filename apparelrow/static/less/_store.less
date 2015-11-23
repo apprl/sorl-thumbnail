@@ -148,7 +148,7 @@ body.store-index-page .background {
         position: relative;
         .product-list-container {
             overflow: auto;
-            border: 2px solid #ccc;
+            border: 2px solid #eee;
             border-top: 0px;
             > div {
                 padding-top: 10px;
@@ -157,7 +157,7 @@ body.store-index-page .background {
 
         &.splash {
             .product-list-container {
-                border-top: 2px solid #ccc;
+                border-top: 2px solid #eee;
             }
             .col-product-list {
                 h3 {
@@ -174,13 +174,12 @@ body.store-index-page .background {
             }
         }
         .preview-header {
-            background: #f8f8f8;
+            background: #eee;
             width: 100%;
             text-align: center;
-            padding: 9px 0px;
-            font-size: 15px;
-            font-weight: bold;
-            color: #555;
+            color: @grey;
+            height: 41px;
+            line-height: 45px;
         }
         @media (min-width: @screen-lg) {
             .product-list .col-product-item {
@@ -194,8 +193,13 @@ body.store-index-page .background {
         overflow: hidden;
         top: 50%;
         left: 50%;
+        text-align: center;
         width: 80%;
         .translate(-50%, -50%);
+        .btn {
+            margin-left: auto;
+            margin-right: auto;
+        }
         @media (min-width: @screen-sm) {
             width: 50%;
         }

@@ -35,12 +35,12 @@
 <script type="text/template" id="dialog_save_template" data-title="{% trans "Save" %}">
     <div class="form-group">
         <label for="look_title">{% trans "Your title" %} *</label>
-        <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
+        <input id="look_title" type="text" value="<%= title %>" name="title">
     </div>
 
     <div class="form-group">
         <label for="look_description">{% trans "Description" %}</label>
-        <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
+        <textarea name="description" id="look_description"><%= description %></textarea>
     </div>
 
     <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
@@ -55,12 +55,12 @@
 <script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish" %}">
     <div class="form-group">
         <label for="look_title">{% trans "Your title" %} *</label>
-        <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
+        <input id="look_title" type="text" value="<%= title %>" name="title">
     </div>
 
     <div class="form-group">
         <label for="look_description">{% trans "Description" %}</label>
-        <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
+        <textarea name="description" id="look_description"><%= description %></textarea>
     </div>
 
     <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
@@ -75,8 +75,8 @@
 
 <script type="text/template" id="popup_slim_template" data-title="{% trans "Product info" %}">
     <div class="header group">
-        <h5 class="title"></h5>
-        <a href="#" class="close"></a>
+        <h2 class="title"></h2>
+        <a href="#" class="close"><i class="fa fa-times"></i></a>
     </div>
     <div class="content-container info-container">
         <div class="content"></div>
@@ -89,7 +89,7 @@
 
 <script type="text/template" id="look_edit_add_popup_template" data-title="{% trans "Add product" %}">
     <div class="add-container group">
-        <img src="{% static "images/big-larrow.png" %}">
+        <i class="fa fa-chevron-left fa-5x"></i>
         <p>{% trans "Click in photo to place item" %}</p>
         <img src="<%= image_small %>">
     </div>
@@ -191,7 +191,7 @@
             <a class="btn btn-block btn-success btn-add" href="#">{% trans "Add" %}</a>
         </div>
         <div class="caption">
-            <h4><%= brand_name %></h4>
+            <h5><%= brand_name %></h5>
             <% if(!availability) { %>
             <span class="sold-out">SOLD OUT</span>
             <% } else { %>
