@@ -98,6 +98,8 @@ function fetchProductFromServer(currentTabURL, isProduct){
   var likeButton = document.querySelector('.like-button');
   var productButton = document.querySelector('.product-button');
   var productLink = document.querySelector('.product-link');
+  var productName = document.querySelector('.product-name');
+  var productEarning = document.querySelector('.product-earning');
   var productShortLink = document.querySelector('.product-short-link');
   var productShortLinkInput = document.querySelector('.product-short-link input');
   var noLikeText = document.querySelector('.no-like');
@@ -155,6 +157,16 @@ function fetchProductFromServer(currentTabURL, isProduct){
             });
           }
         };
+      }
+
+      if (response.product_name) {
+        productName.className = 'product-name bold';
+        productName.textContent = response.product_name;
+      }
+
+      if (response.product_earning) {
+        productEarning.className = 'product-earning';
+        productEarning.textContent = response.product_earning;
       }
 
       productButton.onclick = function() {
