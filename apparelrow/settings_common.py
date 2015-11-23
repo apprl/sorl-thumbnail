@@ -151,9 +151,9 @@ LOCATION_LANGUAGE_MAPPING = (
     ("SE", gettext("Sweden (SEK)"), LANGUAGES_DISPLAY[1]),
     ("DK", gettext("Denmark (DKK)"), LANGUAGES_DISPLAY[2]),
     ("NO", gettext("Norway (NOK)"), LANGUAGES_DISPLAY[3]),
+    ("FI", gettext("Finland (EUR)"), LANGUAGES_DISPLAY[4]),
     ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
     ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
-    ("FI", gettext("Finland (EUR)"), LANGUAGES_DISPLAY[4]),
 )
 
 # Locale url plugin
