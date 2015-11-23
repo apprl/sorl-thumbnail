@@ -46,7 +46,7 @@ from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortSto
 from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
-    select_from_multi_gender, JSONResponse, JSONPResponse
+    select_from_multi_gender, JSONResponse, JSONPResponse, get_external_store_commission
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 
 from apparelrow.activity_feed.views import user_feed
@@ -101,7 +101,6 @@ def product_redirect_by_id(request, pk):
     product = get_object_or_404(Product, pk=pk, published=True)
     return HttpResponsePermanentRedirect(product.get_absolute_url())
 
-
 def brand_redirect(request, pk):
     """
     Redirect from a brand id to brand profile page.
@@ -109,6 +108,52 @@ def brand_redirect(request, pk):
     brand = get_object_or_404(Brand, pk=pk)
     return HttpResponsePermanentRedirect(brand.user.get_absolute_url())
 
+#
+# Earnings
+#
+
+def get_earning_cut(user, vendor, product=None):
+    """
+    Get publisher's earning cut
+    """
+    earning_cut = None
+    if vendor:
+        if vendor.is_cpo:
+            # Get the store commission
+            earning_cut = product.get_product_earning(user)
+        elif vendor.is_cpc:
+            # Cost per click
+            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
+            earning_cut = cut * publisher_cut
+        else:
+            logger.warning("Vendor %s has not being marked as CPC or CPO vendor" % vendor.name)
+    else:
+        logger.warning("No default vendor for product %s %s" % (product.product_name, product.id))
+    return earning_cut
+
+def get_vendor_cost_per_click(vendor):
+    """
+    Get cost per click for CPC vendor
+    """
+    click_cost = None
+    if vendor.is_cpc:
+        try:
+            click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
+        except get_model('dashboard', 'ClickCost').DoesNotExist:
+            logger.warning("ClickCost not defined for vendor %s" % vendor)
+    return click_cost
+
+def get_vendor_commission(vendor):
+    """
+    Get commission for Vendor either if it is an AAN Store or any other affiliate network
+    """
+    if get_model('advertiser', 'Store').objects.filter(vendor=vendor).exists():
+        store = get_model('advertiser', 'Store').objects.filter(vendor=vendor)[0]
+        return store.commission_percentage
+    elif get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor).exists():
+        store_commission = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)[0]
+        return get_external_store_commission(store_commission)
+    return None
 
 #
 # Notifications
@@ -348,21 +393,11 @@ def product_detail(request, slug):
     except (TypeError, ValueError, AttributeError):
         sid = 0
 
-    # Get the store commission
-    earning_cut = product.get_product_earning(request.user)
+    # Get earning cut
+    earning_cut = get_earning_cut(request.user, product.default_vendor.vendor, product)
 
     # Cost per click
-    default_vendor = product.default_vendor
-    cost_per_click = 0
-    if default_vendor and default_vendor.vendor.is_cpc:
-        user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
-        click_cut = cut * publisher_cut
-        earning_cut = click_cut
-        try:
-            cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
-        except get_model('dashboard', 'ClickCost').DoesNotExist:
-            logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
-                product.default_vendor, product.product_name))
+    cost_per_click = get_vendor_cost_per_click(product.default_vendor.vendor)
 
     return render_to_response(
         'apparel/product_detail.html',
@@ -903,34 +938,20 @@ def product_lookup_by_domain(request, domain, key):
     return None, None
 
 
-def product_lookup_by_solr(request, key):
+def product_lookup_by_solr(request, key, fragment=False, vendor_id=None):
     logger.info("Trying to lookup %s from SOLR." % key)
-    kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows': 1, 'django_ct': "apparel.product"}
-    connection = Solr(settings.SOLR_URL)
-    result = connection.search("*", **kwargs)
 
-    dict = result.__dict__
-    logger.info("Query executed in %s milliseconds" % dict['qtime'])
+    # Lookup if it is contained if parameter fragment is True
+    if fragment:
+        try:
+            key = str(SQ(product_key=key))
+        except:
+            key = str(SQ(product_key=key.encode('utf-8')))
+        qs = embed_wildcard_solr_query( key )
+        kwargs = {'fq': [qs], 'rows': 1, 'django_ct': "apparel.product"}
+    else:
+        kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows': 1, 'django_ct': "apparel.product"}
 
-    if dict['hits'] < 1:
-        logger.info("No results found for key %s." % key)
-        return None
-    logger.info("%s results found" % dict['hits'])
-    product_id = dict['docs'][0]['django_id']
-
-    return int(product_id)
-
-
-# TODO: Offending the DRY principle
-def product_lookup_solr_fragment(key, vendor_id=None):
-    logger.info("Trying to lookup %s from SOLR." % key)
-    #qs_string = "%s" %
-    try:
-        key = str(SQ(product_key=key))
-    except:
-        key = str(SQ(product_key=key.encode('utf-8')))
-    qs = embed_wildcard_solr_query( key )
-    kwargs = {'fq': [qs], 'rows': 1, 'django_ct': "apparel.product"}
     if vendor_id:
         kwargs['fq'].append('store_id:\"%s\"' % (vendor_id,))
     connection = Solr(settings.SOLR_URL)
@@ -991,7 +1012,7 @@ def product_lookup_asos_nelly(url, is_nelly_product=False):
     key, vendor_id = extract_asos_nelly_product_url(url, is_nelly_product)
     # key = urllib.quote_plus(key)
     if key:
-        product_pk = product_lookup_solr_fragment(key, vendor_id)
+        product_pk = product_lookup_by_solr(None, key, True, vendor_id)
         if product_pk:
             return product_pk
 
@@ -1036,12 +1057,14 @@ def product_lookup(request):
     # key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
     #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
 
-
     #json_data = json.loads(imported_product.json)
     #product_pk = json_data.get('site_product', None)
     product_short_link = None
     product_link = None
     product_liked = False
+    product_name = None
+    product_earning = None
+    currency = None
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
@@ -1051,6 +1074,22 @@ def product_lookup(request):
         logger.info("Product match found for key, creating short product link [%s]." % product_short_link_str)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product,
                                                                            active=True).exists()
+        product_name = product.product_name
+        vendor = product.default_vendor.vendor
+        earning_cut = get_earning_cut(request.user, vendor, product)
+        if vendor and earning_cut:
+            if vendor.is_cpc:
+                earning_total = get_vendor_cost_per_click(vendor)
+                currency = earning_total.currency
+                earning = earning_total.amount * earning_cut
+            elif vendor.is_cpo:
+                earning = earning_cut * product.default_vendor.locale_price
+                currency = product.default_vendor.locale_currency
+        if currency:
+            if vendor.is_cpo:
+                product_earning = "You will earn approx. %s %.2f per generated sale of this item" % (currency, earning)
+            if vendor.is_cpc:
+                product_earning = "You will earn approx. %s %.2f per generated click of this item" % (currency, earning)
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
         logger.info("No product found for key, falling back to domain deep linking.")
@@ -1062,13 +1101,30 @@ def product_lookup(request):
             product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
             product_short_link_str = request.build_absolute_uri(product_short_link_str)
 
+            _, cut, _, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, vendor)
+            earning_cut = cut * publisher_cut
+            if vendor and earning_cut:
+                if vendor.is_cpo:
+                    store_commission = get_vendor_commission(vendor)
+                    if store_commission:
+                        earning_cut = earning_cut * store_commission
+                        product_earning = "You will earn approx. %.2f %% per generated sale when linking to " \
+                                          "this retailer" % (earning_cut * 100)
+                if vendor.is_cpc:
+                    cost_per_click = get_vendor_cost_per_click(vendor)
+                    if cost_per_click:
+                        product_earning = "You will earn approx. %s %.2f per generated click when linking to " \
+                                          "this retailer" % \
+                                          (cost_per_click.currency, (earning_cut * cost_per_click.amount))
+
     return JSONResponse({
         'product_pk': product_pk,
         'product_link': product_link,
         'product_short_link': product_short_link_str,
-        'product_liked': product_liked
+        'product_liked': product_liked,
+        'product_name': product_name,
+        'product_earning': product_earning
     })
-
 
 @login_required
 @require_POST

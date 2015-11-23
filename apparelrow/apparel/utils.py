@@ -7,6 +7,7 @@ import urllib
 import httplib
 import uuid
 import logging
+import decimal
 
 from django.conf import settings
 from django.core.cache import cache
@@ -483,3 +484,18 @@ def save_location(request, location):
 
 def has_user_location(request):
     return hasattr(request, 'user') and hasattr(request.user, 'location') and request.user.location
+
+def get_external_store_commission(stores, product=None):
+    store_commission = None
+    if len(stores) > 0:
+        commission_array = stores[0].commission.split("/")
+        standard_from = decimal.Decimal(commission_array[0])
+        standard_to = decimal.Decimal(commission_array[1])
+        sale = decimal.Decimal(commission_array[2])
+        if sale != 0 and product and product.default_vendor.locale_discount_price:
+            store_commission = sale / 100
+        else:
+            standard_from = standard_to if not standard_from else standard_from
+            standard_to = standard_from if not standard_to else standard_to
+            store_commission = (standard_from + standard_to)/(2*100)
+    return store_commission
