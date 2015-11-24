@@ -139,6 +139,16 @@ class PartnerSettingsForm(forms.ModelForm):
         fields = ('blog_url',)
 
 
+class PartnerNotificationsForm(forms.ModelForm):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('show_warnings',)
+        widgets = {
+            'show_warnings': forms.RadioSelect
+        }
+
+
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(label=_('First name'), required=True, error_messages={'required': _('At least a first name is required.')})
     last_name = forms.CharField(label=_('Last name'), required=False)

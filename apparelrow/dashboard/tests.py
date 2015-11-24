@@ -1,32 +1,26 @@
 import re
-import datetime
 import urllib
-import decimal
 import os
 import calendar
 import json
 from django.db.models import Sum
 from apparelrow.dashboard.factories import *
 
-
-from django.conf import settings
 from django.core import mail
 from django.core import signing
 from django.core.urlresolvers import reverse as _reverse
 from django.test import TransactionTestCase, TestCase
 from django.test.utils import override_settings
-from django.contrib.auth import get_user_model
-from django.db.models.loading import get_model
 from django.core import management
 
 from localeurl.utils import locale_url
 from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
-from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor, get_total_clicks_per_vendor
+from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import currency_exchange
 from django.core.cache import cache
-
+from apparelrow.statistics.factories import *
 
 
 def reverse(*args, **kwargs):
