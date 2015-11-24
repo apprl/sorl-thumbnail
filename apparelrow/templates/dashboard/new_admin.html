@@ -89,53 +89,49 @@
             <p>
                 <label>{% trans "Show: " %}
                     <select class="month-select">
-                        {% for item_month in months_choices %}
+                        {% for item_month in month_choices %}
                         <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
                         {% endfor %}
                     </select>
                     <select class="year-select">
-                        {% for item_year in years_choices %}
+                        {% for item_year in year_choices %}
                         <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
                         {% endfor %}
                     </select>
                 </label>
             </p>
-            <ul class="list-inline col-md-9 col-md-offset-2">
-                <li class="col-md-3"></li>
-                <li class="col-md-2"><strong>{% blocktrans %}Total{% endblocktrans %}</strong></li>
-                <li class="col-md-2"><strong>{% blocktrans %}Publisher{% endblocktrans %}</strong></li>
-                <li class="col-md-2"><strong>{% blocktrans %}Apprl{% endblocktrans %}</strong></li>
+            <ul class="list-inline col-md-10 col-md-offset-1">
+                <li class="col-md-2"></li>
+                <li class="col-md-3"><strong>{% blocktrans %}Total{% endblocktrans %}</strong></li>
+                <li class="col-md-3"><strong>{% blocktrans %}Publisher{% endblocktrans %}</strong></li>
+                <li class="col-md-3"><strong>{% blocktrans %}Apprl{% endblocktrans %}</strong></li>
             </ul>
             {% for heading, total, publisher, apprl in monthly_array %}
-            <ul class="list-inline col-md-9 col-md-offset-2">
-                <li class="col-md-3 text-right"><strong>{% blocktrans %}{{ heading }} - {% endblocktrans %}</strong></li>
-                <li class="col-md-2">{{ total }}</li>
-                <li class="col-md-2">{{ publisher }}</li>
-                <li class="col-md-2">{{ apprl }}</li>
+            <ul class="list-inline col-md-10 col-md-offset-1">
+                <li class="col-md-2 text-right"><strong>{% blocktrans %}{{ heading }} - {% endblocktrans %}</strong></li>
+                <li class="col-md-3">{{ total }}</li>
+                <li class="col-md-3">{{ publisher }}</li>
+                <li class="col-md-3">{{ apprl }}</li>
             </ul>
             {% endfor %}
 
-            <ul class="list-inline col-md-9 col-md-offset-2">
+            <ul class="list-inline col-md-10 col-md-offset-1">
                 <li role="separator" class="divider"></li>
             </ul>
-            <ul class="list-inline col-md-9 col-md-offset-2">
-                <li class="col-md-3"></li>
-                <li class="col-md-2"><strong>{% blocktrans %}Total{% endblocktrans %}</strong></li>
-                <li class="col-md-2"><strong>{% blocktrans %}PPC{% endblocktrans %}</strong></li>
-                <li class="col-md-2"><strong>{% blocktrans %}PPO{% endblocktrans %}</strong></li>
+            <ul class="list-inline col-md-10 col-md-offset-1">
+                <li class="col-md-2"></li>
+                <li class="col-md-3"><strong>{% blocktrans %}Total{% endblocktrans %}</strong></li>
+                <li class="col-md-3"><strong>{% blocktrans %}PPC{% endblocktrans %}</strong></li>
+                <li class="col-md-3"><strong>{% blocktrans %}PPO{% endblocktrans %}</strong></li>
             </ul>
-            <ul class="list-inline col-md-9 col-md-offset-2">
-                <li class="col-md-3 text-right"><strong>{% blocktrans %}EPC -{% endblocktrans %}</strong></li>
-                <li class="col-md-2">{{ avg_epc_array.0 }}</li>
-                <li class="col-md-2">{{ avg_epc_array.1 }}</li>
-                <li class="col-md-2">{{ avg_epc_array.2 }}</li>
+            {% for heading, total, ppc, ppo in clicks_array %}
+            <ul class="list-inline col-md-10 col-md-offset-1">
+                <li class="col-md-2 text-right"><strong>{% blocktrans %}{{ heading }}{% endblocktrans %}</strong></li>
+                <li class="col-md-3">{{ total }}</li>
+                <li class="col-md-3">{{ ppc }}</li>
+                <li class="col-md-3">{{ ppo }}</li>
             </ul>
-            <ul class="list-inline col-md-9 col-md-offset-2">
-                <li class="col-md-3 text-right"><strong>{% blocktrans %}Clicks -{% endblocktrans %}</strong></li>
-                <li class="col-md-2">{{ clicks_array.0 }}</li>
-                <li class="col-md-2">{{ clicks_array.1 }}</li>
-                <li class="col-md-2">{{ clicks_array.2 }}</li>
-            </ul>
+            {% endfor %}
 
         </div>
     </div>
@@ -287,52 +283,76 @@
         });
     });
 
-    function load_detailed_earnings(data, currency) {
-        htmlString = "";
-        if (data.length > 0){
-            for (i = 0; i < data.length; i++){
-                htmlString += "<tr>";
-                htmlString += "<td data-sort=\""+data[i].date+"\">"+data[i].date_string+"</td>";
-                htmlString += "<td data-sort=\""+data[i].sale_id+"\">"+data[i].sale_id+"</td>";
-                if (data[i].user_earning_type == "publisher_sale_click_commission"){
-                    htmlString += "<td colspan=\"2\">";
-                    htmlString += "Clicks to " + data[i].sale_vendor + "</td>" ;
-                    htmlString += "<a class=\"click-detail\" data-user=\""+data[i].user_id+"\" data-vendor=\""+data[i].vendor+"\"" +
-                           "data-date=\""+data[i].date+"\" data-date_display=\""+data[i].date_string+"\"" +
-                           "data-amount=\""+data[i].amount+"\" data-clicks=\""+data[i].clicks+"\" > Click for details </a>";
-                    htmlString += "</td>";
-                } else if (data[i].user_earning_type == "publisher_network_click_tribute"){
-                    htmlString += "<td colspan=\"2\">";
-                    htmlString += "Clicks by " + data[i].from_user_name + " to " + data[i].sale_vendor + "</td>" ;
-                    htmlString += "<a class=\"click-detail\" data-user=\""+data[i].user_id+"\" data-vendor=\""+data[i].vendor+"\"" +
-                           "data-date=\""+data[i].date+"\" data-date_display=\""+data[i].date_string+"\"" +
-                           "data-amount=\""+data[i].amount+"\" data-clicks=\""+data[i].clicks+"\" > Click for details </a>";
-                    htmlString += "</td>";
-                } else {
-                    htmlString += "<td data-sort=\""+data[i].product_name+"\"> <a href=\""+data[i].product_link+"\"><img src=\""+data[i].product_image+"\"></a></td>";
-                    htmlString += "<td><a href=\""+data[i].product_link+"\">"+data[i].product_name+"</a></td>";
-                }
-                htmlString += "<td data-sort=\""+data[i].from_user_name+"\"><a href=\""+data[i].from_user_link+"\"><img src=\""+data[i].from_user_avatar+"\"></a></td>";
-                htmlString += "<td><a href=\""+data[i].from_user_link+"\">"+data[i].from_user_name+"</td>";
-                htmlString += "<td data-sort=\""+data[i].user_earning_type_display+"\">"+data[i].user_earning_type_display+"</td>";
-                htmlString += "<td data-sort=\""+data[i].amount+"\">"+data[i].amount+" " + currency + "</td>";
-                htmlString += "</tr>";
+    var EARNINGS_URL = "{% url 'detail-earnings' %}";
+
+    function fetchEarnings(month, year, currency, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year), true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+              var parsed = {};
+              try {
+                parsed = JSON.parse(xhr.responseText);
+              } catch(error) {}
+                callback(parsed, currency);
             }
-        } else {
-            htmlString += "<tr><td colspan=\"6\">No sales yet.</td></tr>";
         }
-        $('#body-earnings').html(htmlString);
-        $('#loading-img').hide();
+        xhr.send();
     }
 
-    $.ajax({
-        type: "get",
-        url: "{% url 'detail-earnings' %}",
-        data: { month: {{ month }}, year : {{ year }}},
-        success: function (response) {
-            var json = jQuery.parseJSON(response);
-            load_detailed_earnings(json, "{{ currency }}");
+    fetchEarnings({{ month }}, {{ year }}, "{{ currency }}", function(response, currency) {
+        var table = $('#body-earnings');
+        table.html("");
+        if (response.length > 0) {
+            $.each(response, function() {
+                var row = $('<tr/>');
+                // Date
+                row.append('<td data-sort="' + this.date_timestamp + '">' + this.date_string + '</td>');
+                row.append('<td data-sort="' + this.sale_id + '">' + this.sale_id + '</td>');
+
+                // Description
+                if (this.description_image != '') {
+                    if (this.description_link == '') {
+                        row.append('<td><img src="' + this.description_image + '"></td>');
+                    } else {
+                        row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
+                    }
+                    row.append('<td>' + this.description_text + '</td>');
+                } else {
+                    if (this.description_link == '') {
+                        row.append('<td colspan="2">' + this.description_text + '</td>');
+                    } else {
+                        row.append('<td colspan="2"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
+                    }
+                }
+                // Details
+                row.append('<td>' + this.details + '</td>');
+
+                // Sale value if CPO, Show clicks details button if CPC
+                if (this.user_earning_type == "publisher_sale_click_commission"
+                        || this.user_earning_type == "publisher_sale_click_tribute") {
+                    row.append('<td>' +
+                            '<a class="btn btn-primary click-detail" ' +
+                            'data-user="' + this.user_id + '" ' +
+                            'data-vendor="' + this.sale_vendor + '" ' +
+                            'data-date="' + this.date_timestamp + '" ' +
+                            'data-date_display="' + this.date_string + '" ' +
+                            'data-amount="' + this.amount + '" ' +
+                            'data-clicks="' + this.clicks + '">' +
+                            'See details</a></td>');
+                } else {
+                    row.append('<td data-sort="' + this.sale_amount + '">' + currency +"  " + this.sale_amount + '</td>');
+                }
+                // Earning
+                row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
+                table.append(row);
+            });
+        } else {
+            var row = $('<tr/>');
+            row.append('<td colspan="6">No sales yet</td>');
+            table.append(row);
         }
+        $('#loading-img').hide();
     });
 </script>
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}

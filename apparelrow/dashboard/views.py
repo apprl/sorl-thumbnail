@@ -21,41 +21,15 @@ from django.template.loader import render_to_string
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 
-from apparelrow.dashboard.models import Sale, Payment, Signup
+from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.profile.tasks import mail_managers_task
 from django.views.generic import TemplateView
 
-
 import logging
 log = logging.getLogger(__name__)
-
-def map_placement(placement):
-    link = _('Unknown')
-    if placement == 'Ext-Shop':
-        link = _('Shop on your site')
-    elif placement == 'Ext-Look':
-        link = _('Look on your site')
-    elif placement == 'Ext-Link':
-        link = _('Product link on your site')
-    elif placement == 'Ext-Store':
-        link = _('Store link on your site')
-    elif placement == 'Look':
-        link = _('Look on Apprl.com')
-    elif placement == 'Shop':
-        link = _('Shop on Apprl.com')
-    elif placement == 'Feed':
-        link = _('Feed on Apprl.com')
-    elif placement == 'Profile':
-        link = _('Your profile on Apprl.com')
-    elif placement == 'Product':
-        link = _('Product page')
-    elif placement == 'Ext-Banner':
-        link = _('Banner on your site')
-
-    return link
 
 def get_conversion_rate(sales, clicks):
     """ Return conversion rate on string format given the amount of sale and amount of clicks
@@ -65,6 +39,15 @@ def get_conversion_rate(sales, clicks):
             conversion_rate = decimal.Decimal(sales) / decimal.Decimal(clicks)
             conversion_rate = conversion_rate.quantize(decimal.Decimal('0.0001')) * 100
     return ("%.2f %%" % conversion_rate)
+
+def get_raw_conversion_rate(sales, clicks):
+    """ Return conversion rate on string format given the amount of sale and amount of clicks
+    """
+    conversion_rate = 0
+    if clicks > 0:
+            conversion_rate = decimal.Decimal(sales) / decimal.Decimal(clicks)
+            conversion_rate = conversion_rate.quantize(decimal.Decimal('0.0001')) * 100
+    return conversion_rate
 
 def get_available_stores(current_location):
     """ Return a list of vendors depending on the current location value
@@ -83,9 +66,18 @@ def render_detail_earnings(request):
     """
         Return a list of user earning details given a date range when an AJAX request is made
     """
-    if request.method == 'GET' and request.is_ajax():
+    if request.method == 'GET':
         month = request.GET.get('month', None)
         year = request.GET.get('year', None)
+        user_id = request.GET.get('user_id', None)
+        limit = request.GET.get('limit', None)
+        user = None
+
+        if user_id:
+            try:
+                user = get_user_model().objects.get(id=user_id)
+            except get_user_model().DoesNotExist:
+                log.warning("User %s does not exist." % user_id)
         if month and year:
             if month == '0':
                 start_date = datetime.date(int(year), int(1), 1)
@@ -96,7 +88,7 @@ def render_detail_earnings(request):
 
                 end_date = start_date
                 end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-            earnings = retrieve_user_earnings(start_date, end_date)
+            earnings = retrieve_user_earnings(start_date, end_date, user, limit)
             json_data = json.dumps(earnings)
             return HttpResponse(json_data)
 
@@ -671,20 +663,7 @@ def dashboard_group_admin(request, pk):
 #@cache_page(60 * 15)
 def dashboard_admin(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_superuser:
-        if year is None and month is None:
-            start_date = datetime.date.today().replace(day=1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-        else:
-            start_date = datetime.date(int(year), int(1), 1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
-
-            if month != "0":
-                start_date = datetime.date(int(year), int(month), 1)
-
-                end_date = start_date
-                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+        start_date, end_date = parse_date(month, year)
 
         year = start_date.year
         if month != "0":
@@ -878,20 +857,7 @@ def dashboard(request, year=None, month=None):
     Display publisher data per month for logged in user.
     """
     if request.user.is_authenticated() and request.user.is_partner:
-        if year is None and month is None:
-            start_date = datetime.date.today().replace(day=1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-        else:
-            start_date = datetime.date(int(year), int(1), 1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
-
-            if month != "0":
-                start_date = datetime.date(int(year), int(month), 1)
-
-                end_date = start_date
-                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+        start_date, end_date = parse_date(month, year)
 
         year = start_date.year
         if month != "0":
@@ -1263,20 +1229,7 @@ def publisher_tools(request):
 
 def products(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_partner:
-        if year is None and month is None:
-            start_date = datetime.date.today().replace(day=1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-        else:
-            start_date = datetime.date(int(year), int(1), 1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
-
-            if month != "0":
-                start_date = datetime.date(int(year), int(month), 1)
-
-                end_date = start_date
-                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+        start_date, end_date = parse_date(month, year)
 
         year = start_date.year
         if month != "0":
@@ -1387,21 +1340,7 @@ def products(request, year=None, month=None):
 
 def publishers(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_partner:
-        if year is None and month is None:
-            start_date = datetime.date.today().replace(day=1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-        else:
-            start_date = datetime.date(int(year), int(1), 1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
-
-            if month != "0":
-                start_date = datetime.date(int(year), int(month), 1)
-
-                end_date = start_date
-                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-
+        start_date, end_date = parse_date(month, year)
         year = start_date.year
         if month != "0":
             month = start_date.month
@@ -1452,7 +1391,6 @@ def publishers(request, year=None, month=None):
         if is_owner:
             top_publishers, net_product = get_publishers(start_date_query, end_date_query, user_id=request.user.pk, limit=None)
 
-
         # Sales count
         sales_count = 0
         referral_sales_count = 0
@@ -1462,7 +1400,6 @@ def publishers(request, year=None, month=None):
         data_per_day = {}
         for day in range(1, (end_date - start_date).days + 2):
             data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
-
 
         # Clicks per day
         clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
@@ -1523,31 +1460,17 @@ def clicks_detail(request):
             json_data = json.dumps(data)
             return HttpResponse(json_data)
 
+
 class DashboardView(TemplateView):
     template_name = "dashboard/new_dashboard.html"
 
     def get(self, request, *args, **kwargs):
-        AggregatedData = get_model('dashboard', 'AggregatedData')
         currency = 'EUR'
         month = None if not 'month' in self.kwargs else self.kwargs['month']
         year = None if not 'year' in self.kwargs else self.kwargs['year']
 
         if request.user.is_authenticated() and request.user.is_partner:
-            if year is None and month is None:
-                start_date = datetime.date.today().replace(day=1)
-                end_date = start_date
-                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-            else:
-                start_date = datetime.date(int(year), int(1), 1)
-                end_date = start_date
-                end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
-
-                if month != "0":
-                    start_date = datetime.date(int(year), int(month), 1)
-
-                    end_date = start_date
-                    end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-
+            start_date, end_date = parse_date(month, year)
             year = start_date.year
             if month != "0":
                 month = start_date.month
@@ -1555,17 +1478,7 @@ class DashboardView(TemplateView):
             start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
             end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
-            # Enumerate months
-            dt1 = request.user.date_joined.date()
-            dt2 = datetime.date.today()
-            years_choices = range(dt1.year, dt2.year+1)
-            month_display = ""
-
-            months_choices = [(0, _('All year'))]
-            for i in range(1,13):
-                months_choices.append((i, datetime.date(2008, i, 1).strftime('%B')))
-                if month == i:
-                    month_display = datetime.date(2008, i, 1).strftime('%B')
+            month_display, month_choices, year_choices = enumerate_months(request.user, month)
 
             # Determine if the user is the owner of a publisher network
             is_owner = get_user_model().objects.filter(owner_network=request.user).exists()
@@ -1576,38 +1489,20 @@ class DashboardView(TemplateView):
             pending_earnings, confirmed_earnings, pending_payment, total_earned = get_top_summary(request.user)
 
             # Get aggregated data per day
-            aggregated_per_day = AggregatedData.objects.\
-                filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
-                       data_type='aggregated_from_total').\
-                values('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
-                       'network_sale_earnings')
+            values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
+                      'network_sale_earnings', 'network_click_earnings')
+            query_args = {'user_id': request.user.id, 'created__range': (start_date_query, end_date_query),
+                          'data_type': 'aggregated_from_total'}
 
-            data_per_day = {}
-            for day in range(0, (end_date - start_date).days + 2):
-                data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
-
-            for row in aggregated_per_day:
-                data_per_day[row['created'].date()][0] += row['sale_earnings']
-                data_per_day[row['created'].date()][1] += row['referral_earnings']
-                data_per_day[row['created'].date()][2] += row['click_earnings']
-                data_per_day[row['created'].date()][3] += row['total_clicks']
-                data_per_day[row['created'].date()][4] += row['network_sale_earnings']
+            data_per_day = aggregated_data_per_day(start_date, end_date, 'publisher', values, query_args)
 
             # Summary earning
-            month_earnings = sum([x[0] for x in data_per_day.values()])
-            network_earnings = sum([x[3] for x in data_per_day.values()])
-            referral_earnings = sum([x[1] for x in data_per_day.values()])
-            ppc_earnings = sum([x[2] for x in data_per_day.values()])
+            month_earnings, network_earnings, referral_earnings, ppc_earnings = summarize_earnings(data_per_day.values())
 
             total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings
 
             # Aggregated sum per month
-            sum_data = AggregatedData.objects.\
-                filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
-                       data_type='aggregated_from_total').\
-                aggregate(Sum('sale_earnings'), Sum('click_earnings'), Sum('referral_earnings'),
-                          Sum('network_sale_earnings'), Sum('network_click_earnings'), Sum('sales'),
-                          Sum('network_sales'), Sum('referral_sales'), Sum('paid_clicks'), Sum('total_clicks'))
+            sum_data = aggregated_data_per_month(request.user.id, start_date_query, end_date_query)
 
             non_paid_clicks = 0
             paid_clicks = 0
@@ -1624,23 +1519,10 @@ class DashboardView(TemplateView):
                                             sum_data['network_click_earnings__sum']
 
             # Aggregate publishers per month
-            top_publishers = AggregatedData.objects.\
-                filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
-                       data_type='aggregated_from_total').exclude(user_id=0).\
-                values('user_id', 'user_name', 'user_username', 'user_image', 'user_link').\
-                annotate(total_earnings=Sum('sale_plus_click_earnings'),
-                         total_network_earnings=Sum('total_network_earnings'),
-                         total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings')
+            top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query)
 
             # Aggregate products per month
-            top_products = AggregatedData.objects.\
-                filter(user_id=request.user.id, created__range=(start_date_query, end_date_query),
-                       data_type='aggregated_from_product').\
-                values('aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
-                       'aggregated_from_link').\
-                annotate(total_earnings=Sum('sale_plus_click_earnings'),
-                         total_network_earnings=Sum('total_network_earnings'),
-                         total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings')
+            top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query)
 
             network_earning = 0
             if sum_data['network_sale_earnings__sum'] is not None:
@@ -1670,11 +1552,13 @@ class DashboardView(TemplateView):
                     if earning.from_user.name:
                         earning.from_user_name = earning.from_user.name
 
-            context_data = {'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
+            #user_earnings = get_user_earnings_dashboard(request.user, start_date_query, end_date_query) TODO Check this
+
+            context_data = {'year_choices': year_choices, 'month_choices': month_choices,
+                            'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
                             'pending_payment': pending_payment, 'total_earned': total_earned,
-                            'years_choices': years_choices, 'months_choices': months_choices,
                             'data_per_day': data_per_day, 'currency': currency,
-                            'month_commission': sum_data['sale_earnings__sum'], #'month_clicks': month_clicks,
+                            'month_commission': sum_data['sale_earnings__sum'],
                             'month_sales': sum_data['sales__sum'], 'total_earnings': total_earnings, 'year': year,
                             'month': month, 'month_display': month_display,
                             'total_commission': ('%.2f' % total_aggregated_earnings),
@@ -1691,31 +1575,137 @@ class DashboardView(TemplateView):
             return render(request, 'dashboard/new_dashboard.html', context_data)
         return HttpResponseRedirect(reverse('new-dashboard'))
 
+def get_admin_top_summary_display(summary, is_bottom_summary=False):
+    """
+        Returns matrix ready for display from the given matrix with Summary data
+    """
+    headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
+                    'Commission CR']
+    if is_bottom_summary:
+        headings = ['EPC', 'Clicks', 'Invalid clicks']
+    top_summary_array = []
+    for row in zip(headings, summary):
+        temp_list = []
+        heading = row[0]
+        temp_list.append(heading)
+        if heading in ('PPC clicks', 'Commission clicks', 'Clicks', 'Invalid clicks'):
+            for value, percentage in map(None, row[1][0], row[1][1]):
+                if not percentage:
+                    percentage = "-"
+                temp_list.append("%s (%s)" % (value, percentage))
+        else:
+            for value, percentage in map(None, row[1][0], row[1][1]):
+                if not percentage:
+                    percentage = "-"
+                temp_list.append("EUR %.2f (%s)" % (value, percentage))
+        top_summary_array.append(temp_list)
+    return top_summary_array
+
+def get_admin_top_summary(start_date, end_date):
+    """
+        Returns matrix with Summary for the given period for Admin Dashboard
+    """
+    total_query = AggregatedData.objects.filter(created__range=(start_date, end_date),
+                                                data_type='aggregated_from_total')
+    clicks_total = [0, 0, 0]
+    clicks_ppc = [0, 0, 0]
+    clicks_ppo = [0, 0, 0]
+
+    # Get total summary
+    total_top = [0, 0, 0, 0, 0, 0, 0]
+    apprl_top = [0, 0, 0, 0, 0, 0, 0]
+    publisher_top = [0, 0, 0, 0, 0, 0, 0]
+
+    if total_query.exists():
+        total_data = total_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
+                  sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
+                  total_clicks=Sum('total_clicks'), referral_earnings=Sum('referral_earnings'),
+                  network_sale_earnings=Sum('network_sale_earnings'),
+                  network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
+        total_earnings = total_data['sale_clicks'] + total_data['referral_earnings'] + \
+                     total_data['network_sale_earnings'] + total_data['network_click_earnings']
+        total_commission = total_data['sale_earnings'] + total_data['referral_earnings'] + total_data['network_sale_earnings']
+        total_ppc = total_data['click_earnings'] + total_data['network_click_earnings']
+        total_top[0] = total_earnings
+        total_top[1] = total_commission
+        total_top[2] = total_ppc
+        total_top[3] = total_data['paid_clicks']
+        cpo_clicks = total_data['total_clicks'] - total_data['paid_clicks']
+        total_top[4] = cpo_clicks
+        total_top[5] = total_data['sales']
+        total_top[6] = get_raw_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
+
+        # Calculate average earning per click
+        if total_data['total_clicks'] > 0:
+            clicks_total[0] = total_earnings / decimal.Decimal(total_data['total_clicks'])
+        if total_data['paid_clicks'] > 0:
+            clicks_ppc[0] = total_ppc / decimal.Decimal(total_data['paid_clicks'])
+        if cpo_clicks >0:
+            clicks_ppo[0] = total_commission / decimal.Decimal(cpo_clicks)
+
+        clicks_total[1] = total_data['total_clicks']
+        clicks_ppc[1] = total_data['paid_clicks']
+        clicks_ppo[1] = cpo_clicks
+
+        # Get invalid clicks
+        invalid_clicks = get_invalid_clicks(start_date, end_date)
+        clicks_total[2] = invalid_clicks[0]
+        clicks_ppc[2] = invalid_clicks[1]
+        clicks_ppo[2] = invalid_clicks[2]
+
+    # Get APPRL summary
+    apprl_query = AggregatedData.objects.\
+                filter(created__range=(start_date, end_date), user_id=0, data_type='aggregated_from_total')
+
+    if apprl_query.exists():
+        apprl_data = apprl_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
+                  sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
+                  total_clicks=Sum('total_clicks'), sales=Sum('sales'))
+        apprl_top[0] = apprl_data['sale_clicks']
+        apprl_top[1] = apprl_data['sale_earnings']
+        apprl_top[2] = apprl_data['click_earnings']
+        apprl_top[3] = apprl_data['paid_clicks']
+        apprl_top[4] = apprl_data['total_clicks'] - apprl_data['paid_clicks']
+        apprl_top[5] = apprl_data['sales']
+        apprl_top[6] = get_raw_conversion_rate(apprl_data['sales'], apprl_data['total_clicks'] - apprl_data['paid_clicks'])
+
+    # Get publisher summary
+    publisher_query = AggregatedData.objects.\
+        filter(created__range=(start_date, end_date), user_id__gt=0, data_type='aggregated_from_total')
+    if publisher_query.exists():
+        publisher_data = publisher_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
+                  sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
+                  total_clicks=Sum('total_clicks'), referral_earnings=Sum('referral_earnings'),
+                  network_sale_earnings=Sum('network_sale_earnings'),
+                  network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
+        publisher_total = publisher_data['sale_clicks'] + total_data['referral_earnings']\
+                      + total_data['network_sale_earnings'] + total_data['network_click_earnings']
+        publisher_commission = publisher_data['sale_earnings'] + total_data['referral_earnings']\
+                               + total_data['network_sale_earnings']
+        publisher_ppc = publisher_data['click_earnings'] + publisher_data['network_click_earnings']
+        publisher_top[0] = publisher_total
+        publisher_top[1] = publisher_commission
+        publisher_top[2] = publisher_ppc
+        publisher_top[3] = publisher_data['paid_clicks']
+        publisher_top[4] = publisher_data['total_clicks'] - publisher_data['paid_clicks']
+        publisher_top[5] = publisher_data['sales']
+        publisher_top[6] = get_raw_conversion_rate(publisher_data['sales'],
+                                                   publisher_data['total_clicks'] - publisher_data['paid_clicks'])
+
+    monthly_array = zip(total_top, publisher_top, apprl_top)
+    clicks_array = zip(clicks_total, clicks_ppc, clicks_ppo)
+    return monthly_array, clicks_array
+
 class AdminDashboardView(TemplateView):
     template_name = "dashboard/new_admin.html"
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated() and request.user.is_superuser:
-            AggregatedData = get_model('dashboard', 'AggregatedData')
             currency = 'EUR'
             month = None if not 'month' in self.kwargs else self.kwargs['month']
             year = None if not 'year' in self.kwargs else self.kwargs['year']
 
-            if year is None and month is None:
-                start_date = datetime.date.today().replace(day=1)
-                end_date = start_date
-                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-            else:
-                start_date = datetime.date(int(year), int(1), 1)
-                end_date = start_date
-                end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
-
-                if month != "0":
-                    start_date = datetime.date(int(year), int(month), 1)
-
-                    end_date = start_date
-                    end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-
+            start_date, end_date = parse_date(month, year)
             year = start_date.year
             if month != "0":
                 month = start_date.month
@@ -1723,37 +1713,17 @@ class AdminDashboardView(TemplateView):
             start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
             end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
-            # Enumerate months
-            dt1 = request.user.date_joined.date()
-            dt2 = datetime.date.today()
-            years_choices = range(dt1.year, dt2.year+1)
-            month_display = ""
-
-            months_choices = [(0, _('All year'))]
-            for i in range(1,13):
-                months_choices.append((i, datetime.date(2008, i, 1).strftime('%B')))
-                if month == i:
-                    month_display = datetime.date(2008, i, 1).strftime('%B')
+            month_display, month_choices, year_choices = enumerate_months(request.user, month)
 
             # Get aggregated data per day
-            aggregated_per_day = AggregatedData.objects.\
-                filter(created__range=(start_date_query, end_date_query), data_type='aggregated_from_total').\
-                values('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
+            values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
                        'paid_clicks', 'network_sale_earnings', 'network_click_earnings', 'user_id')
+            query_args = {'created__range': (start_date_query, end_date_query),
+                          'data_type' : 'aggregated_from_total'
+                          }
 
-            data_per_day = {}
-            for day in range(0, (end_date - start_date).days + 2):
-                data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
-
-            for row in aggregated_per_day:
-                # Total commission
-                data_per_day[row['created'].date()][0] += row['sale_earnings'] + row['referral_earnings'] + row['network_sale_earnings']
-                data_per_day[row['created'].date()][2] += row['click_earnings'] + row['network_click_earnings']
-                if not row['user_id'] == 0:
-                    data_per_day[row['created'].date()][1] += row['sale_earnings'] + row['referral_earnings'] + row['network_sale_earnings'] # publisher commission
-                    data_per_day[row['created'].date()][4] += row['total_clicks']  #publisher clicks
-                data_per_day[row['created'].date()][3] += row['total_clicks'] # total clicks
-                data_per_day[row['created'].date()][5] += row['paid_clicks'] #paid clicks
+            #TODO Check if this ok
+            data_per_day = aggregated_data_per_day(start_date, end_date, 'admin', values, query_args)
 
             # Aggregate publishers per month
             top_publishers = AggregatedData.objects.\
@@ -1763,7 +1733,7 @@ class AdminDashboardView(TemplateView):
                 exclude(user_id=0).\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
                          total_network_earnings=Sum('total_network_earnings'),
-                         total_clicks=Sum('total_clicks')).order_by('-total_earnings')
+                         total_clicks=Sum('total_clicks')).order_by('-total_earnings', '-total_clicks')
             # Aggregate products per month
             top_products = AggregatedData.objects.\
                 filter(created__range=(start_date_query, end_date_query), data_type='aggregated_from_product').\
@@ -1771,97 +1741,29 @@ class AdminDashboardView(TemplateView):
                        'aggregated_from_link').\
                 annotate(total_earnings=Sum('sale_plus_click_earnings'),
                          total_network_earnings=Sum('total_network_earnings'),
-                         total_clicks=Sum('total_clicks')).order_by('-total_earnings')
+                         total_clicks=Sum('total_clicks')).order_by('-total_earnings', '-total_clicks')
 
-            apprl_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
-            total_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
-            publisher_top = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0, 0, 0, 0, "%.2f %%" % 0]
-            avg_epc_array = ['%.2f EUR' % 0, '%.2f EUR' % 0, '%.2f EUR' % 0]
-            clicks_array = [0, 0, 0]
+            # Get summary for current period
+            monthly_array, clicks_array = get_admin_top_summary(start_date_query, end_date_query)
+            previous_start_date, previous_end_date = get_previous_period(start_date_query, end_date_query)
 
-            # Aggregated Sum per month
-            apprl_query = AggregatedData.objects.\
-                filter(created__range=(start_date_query, end_date_query), user_id=0, data_type='aggregated_from_total')
+            # Get summary for previous period
+            previous_monthly_array, previous_clicks_array = \
+                get_admin_top_summary(previous_start_date, previous_end_date)
 
-            if apprl_query.exists():
-                apprl_data = apprl_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                          sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
-                          total_clicks=Sum('total_clicks'), sales=Sum('sales'))
-                apprl_top[0] = 'EUR %.2f' % apprl_data['sale_clicks']
-                apprl_top[1] = 'EUR %.2f' % apprl_data['sale_earnings']
-                apprl_top[2] = 'EUR %.2f' % apprl_data['click_earnings']
-                apprl_top[3] = apprl_data['paid_clicks']
-                apprl_top[4] = apprl_data['total_clicks'] - apprl_data['paid_clicks']
-                apprl_top[5] = apprl_data['sales']
-                apprl_top[6] = get_conversion_rate(apprl_data['sales'], apprl_data['total_clicks'] - apprl_data['paid_clicks'])
+            relative_summary = get_relative_change_summary(previous_monthly_array, monthly_array)
+            monthly_array = get_admin_top_summary_display(zip(monthly_array, relative_summary))
 
-            total_query = AggregatedData.objects.\
-                filter(created__range=(start_date_query, end_date_query), data_type='aggregated_from_total')
+            relative_summary_clicks = get_relative_change_summary(previous_clicks_array, clicks_array)
+            clicks_array = get_admin_top_summary_display(zip(clicks_array, relative_summary_clicks), True)
 
-            if total_query.exists():
-                total_data = total_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                          sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
-                          total_clicks=Sum('total_clicks'), referral_earnings=Sum('referral_earnings'),
-                          network_sale_earnings=Sum('network_sale_earnings'),
-                          network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
-                total_earnings = total_data['sale_clicks'] + total_data['referral_earnings'] + \
-                             total_data['network_sale_earnings'] + total_data['network_click_earnings']
-                total_commission = total_data['sale_earnings'] + total_data['referral_earnings'] + total_data['network_sale_earnings']
-                total_ppc = total_data['click_earnings'] + total_data['network_click_earnings']
-                total_top[0] = 'EUR %.2f' % total_earnings
-                total_top[1] = 'EUR %.2f' % total_commission
-                total_top[2] = 'EUR %.2f' % total_ppc
-                total_top[3] = total_data['paid_clicks']
-                cpo_clicks = total_data['total_clicks'] - total_data['paid_clicks']
-                total_top[4] = cpo_clicks
-                total_top[5] = total_data['sales']
-                total_top[6] = get_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
-
-                # Calculate average earning per click
-                if total_data['total_clicks'] > 0:
-                    avg_epc_array[0] = "EUR %.2f" % (total_earnings / decimal.Decimal(total_data['total_clicks']))
-                if total_data['paid_clicks'] > 0:
-                    avg_epc_array[1] = "EUR %.2f" % (total_ppc / decimal.Decimal(total_data['paid_clicks']))
-                if cpo_clicks >0:
-                    avg_epc_array[2] = "EUR %.2f" % (total_commission / decimal.Decimal(cpo_clicks))
-
-                clicks_array[0] = total_data['total_clicks']
-                clicks_array[1] = total_data['paid_clicks']
-                clicks_array[2] = cpo_clicks
-
-            publisher_query = AggregatedData.objects.\
-                filter(created__range=(start_date_query, end_date_query), user_id__gt=0, data_type='aggregated_from_total')
-            if publisher_query.exists():
-                publisher_data = publisher_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                          sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
-                          total_clicks=Sum('total_clicks'), referral_earnings=Sum('referral_earnings'),
-                          network_sale_earnings=Sum('network_sale_earnings'),
-                          network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
-                publisher_total = publisher_data['sale_clicks'] + total_data['referral_earnings']\
-                              + total_data['network_sale_earnings'] + total_data['network_click_earnings']
-                publisher_commission = publisher_data['sale_earnings'] + total_data['referral_earnings']\
-                                       + total_data['network_sale_earnings']
-                publisher_ppc = publisher_data['click_earnings'] + publisher_data['network_click_earnings']
-                publisher_top[0] = 'EUR %.2f' % publisher_total
-                publisher_top[1] = 'EUR %.2f' % publisher_commission
-                publisher_top[2] = 'EUR %.2f' % publisher_ppc
-                publisher_top[3] = publisher_data['paid_clicks']
-                publisher_top[4] = publisher_data['total_clicks'] - publisher_data['paid_clicks']
-                publisher_top[5] = publisher_data['sales']
-                publisher_top[6] = get_conversion_rate(publisher_data['sales'], publisher_data['total_clicks'] - publisher_data['paid_clicks'])
-
-            headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
-                    'Commission CR']
-            monthly_array = zip(headings, total_top, publisher_top, apprl_top)
-
-            context_data = {'years_choices': years_choices, 'months_choices': months_choices,
+            context_data = {'year_choices': year_choices, 'month_choices': month_choices,
                             'data_per_day': data_per_day, 'currency': currency,
                             'year': year,
                             'month': month, 'month_display': month_display,
                             'top_publishers': top_publishers,
                             'top_products': top_products,
                             'monthly_array': monthly_array,
-                            'avg_epc_array': avg_epc_array,
                             'clicks_array': clicks_array,
                             }
             return render(request, 'dashboard/new_admin.html', context_data)

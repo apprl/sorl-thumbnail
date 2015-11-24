@@ -301,6 +301,31 @@ def get_product_from_slug(slug, **kwargs):
         raise Http404("No Product matches the given query.")
     return product
 
+def get_earning_cut(user, default_vendor, product):
+    earning_cut = None
+    if default_vendor:
+        if default_vendor.vendor.is_cpo:
+            # Get the store commission
+            earning_cut = product.get_product_earning(user)
+        elif default_vendor.vendor.is_cpc:
+            # Cost per click
+            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, default_vendor.vendor)
+            earning_cut = cut * publisher_cut
+        else:
+            logger.warning("Vendor %s has not being marked as CPC or CPO vendor" % default_vendor.vendor.name)
+    else:
+        logger.warning("No default vendor for product %s %s" % (product.product_name, product.id))
+    return earning_cut
+
+def get_vendor_cost_per_click(vendor):
+    click_cost = None
+    if vendor.is_cpc:
+        try:
+            click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
+        except get_model('dashboard', 'ClickCost').DoesNotExist:
+            logger.warning("ClickCost not defined for vendor %s" % vendor)
+    return click_cost
+
 
 def product_detail(request, slug):
     kwargs = {'published': True, 'gender__isnull': False}
@@ -348,21 +373,9 @@ def product_detail(request, slug):
     except (TypeError, ValueError, AttributeError):
         sid = 0
 
-    # Get the store commission
-    earning_cut = product.get_product_earning(request.user)
-
-    # Cost per click
     default_vendor = product.default_vendor
-    cost_per_click = 0
-    if default_vendor and default_vendor.vendor.is_cpc:
-        user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
-        click_cut = cut * publisher_cut
-        earning_cut = click_cut
-        try:
-            cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
-        except get_model('dashboard', 'ClickCost').DoesNotExist:
-            logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
-                product.default_vendor, product.product_name))
+    earning_cut = get_earning_cut(request.user, default_vendor, product)
+    cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
 
     return render_to_response(
         'apparel/product_detail.html',
@@ -1016,6 +1029,7 @@ def product_lookup(request):
     original_key = key
     if key and not product_pk:
         product_pk = product_lookup_by_solr(request, key)
+        #product_pk = product_lookup_by_solr(None, "*%s*" % key, vendor_id) #TODO check this out!!!
         if not product_pk:
             logger.info("Failed to extract product from solr, will change the protocol and try again.")
             if key.startswith('https'):
@@ -1042,6 +1056,8 @@ def product_lookup(request):
     product_short_link = None
     product_link = None
     product_liked = False
+    product_name = None
+    product_earning = None
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
@@ -1051,6 +1067,18 @@ def product_lookup(request):
         logger.info("Product match found for key, creating short product link [%s]." % product_short_link_str)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product,
                                                                            active=True).exists()
+        product_name = product.product_name
+        default_vendor = product.default_vendor
+
+        earning_cut = get_earning_cut(request.user, default_vendor, product)
+        earning_total = decimal.Decimal(0)
+        if default_vendor.vendor.is_cpc:
+            earning_total = get_vendor_cost_per_click(default_vendor.vendor)
+        elif default_vendor.vendor.is_cpo:
+            earning_total = default_vendor.locale_price
+
+        product_earning = earning_total.locale_price * earning_cut
+
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
         logger.info("No product found for key, falling back to domain deep linking.")
@@ -1066,7 +1094,9 @@ def product_lookup(request):
         'product_pk': product_pk,
         'product_link': product_link,
         'product_short_link': product_short_link_str,
-        'product_liked': product_liked
+        'product_liked': product_liked,
+        'product_name': product_name,
+        'product_earning': product_earning,
     })
 
 

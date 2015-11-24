@@ -23,9 +23,12 @@ from localeurl.utils import locale_url
 from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
-from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor, get_total_clicks_per_vendor
+from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import currency_exchange
 from django.core.cache import cache
+
+from apparelrow.statistics.factories import *
+
 
 
 
@@ -1785,7 +1788,6 @@ class TestPayments(TransactionTestCase):
         self.assertEqual(payment.amount, total_query['amount__sum'])
 
 
-
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory',
                    APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA='cache_aggregated_test')
 class TestAggregatedData(TransactionTestCase):
@@ -2012,3 +2014,146 @@ class TestPaymentHistory(TestCase):
         management.call_command('dashboard_payment', verbosity=0, interactive=False)
 
         self.assertEqual(get_model('dashboard', 'Payment').objects.all().count(), 1)
+
+
+class TestAdminDashboard(TestCase):
+
+    def test_massive_earnings_admin_dashboard(self):
+        user = UserFactory.create()
+        vendor = VendorFactory.create()
+        product = ProductFactory.create(slug="product")
+        VendorProductFactory.create(vendor=vendor, product=product)
+
+        clicks = 1
+        for i in range(clicks):
+            product_stat = ProductStatFactory.create(ip="1.2.3.4", vendor=vendor.name, product=product.slug)
+            self.assertTrue(product_stat.is_valid)
+
+
+class TestUtils(TransactionTestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.date_joined = datetime.datetime.strptime("2013-05-07", "%Y-%m-%d")
+        self.user.save()
+
+    def test_parse_date_no_date(self):
+        """ Test parse_date() function with month and year parameters as None
+        """
+        year = None
+        month = None
+
+        today = datetime.datetime.today()
+        first_date = today.replace(day = 1).date()
+        last_date = today.replace(day = calendar.monthrange(today.year, today.month)[1]).date()
+
+        start_date, end_date = parse_date(month, year)
+
+        self.assertEqual(start_date, first_date)
+        self.assertEqual(end_date, last_date)
+
+    def test_parse_date_custom_date(self):
+        """ Test parse_date() function with month and year parameters as not None
+        """
+        year = "2013"
+        month = "5"
+
+        start_date, end_date = parse_date(month, year)
+
+        self.assertEqual(start_date.strftime("%Y-%m-%d"), "2013-05-01")
+        self.assertEqual(end_date.strftime("%Y-%m-%d"), "2013-05-31")
+
+    def test_enumerate_months(self):
+        """ Test months choices, year choices and display text for month passed as input are correct.
+        """
+        june = 06
+
+        month_display, month_choices, year_choices = enumerate_months(self.user, june)
+        self.assertEqual(month_display, "June")
+        self.assertEqual(year_choices, [2013, 2014, 2015])
+        self.assertEqual(len(month_choices), 13) # 12 months  All Year option
+
+    def test_get_previous_month(self):
+        year = "2015"
+        month = "05"
+
+        start_date, end_date = parse_date(month, year)
+        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+
+        previous_start_date, previous_end_date = get_previous_period(start_date_query, end_date_query)
+
+        self.assertEqual(previous_start_date, datetime.datetime(2015, 04, 01, 0, 0, 0, 0))
+        self.assertEqual(previous_end_date, datetime.datetime(2015, 04, 30, 23, 59, 59, 999999))
+
+        # Initial variables remain the same
+        self.assertEqual(start_date_query, datetime.datetime(2015, 05, 01, 0, 0, 0, 0))
+        self.assertEqual(end_date_query, datetime.datetime(2015, 05, 31, 23, 59, 59, 999999))
+
+    def test_get_previous_year(self):
+        year = "2015"
+        month = "0"
+
+        start_date, end_date = parse_date(month, year)
+        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+
+        previous_start_date, previous_end_date = get_previous_period(start_date_query, end_date_query)
+
+        self.assertEqual(previous_start_date, datetime.datetime(2014, 01, 01, 0, 0, 0, 0))
+        self.assertEqual(previous_end_date, datetime.datetime(2014, 12, 31, 23, 59, 59, 999999))
+
+        # Initial variables remain the same
+        self.assertEqual(start_date_query, datetime.datetime(2015, 01, 01, 0, 0, 0, 0))
+        self.assertEqual(end_date_query, datetime.datetime(2015, 12, 31, 23, 59, 59, 999999))
+
+    def test_relative_change_increase(self):
+        previous_value = 203.5
+        current_value = 305.25
+
+        percentage_delta = get_relative_change(previous_value, current_value)
+        self.assertEqual(percentage_delta, "+50%")
+
+    def test_relative_change_decrease(self):
+        previous_value = 305.25
+        current_value = 152.625
+
+        percentage_delta = get_relative_change(previous_value, current_value)
+        self.assertEqual(percentage_delta, "-50%")
+
+    def test_relative_change_no_change(self):
+        previous_value = 203.5
+        current_value = 203.5
+
+        percentage_delta = get_relative_change(previous_value, current_value)
+        self.assertEqual(percentage_delta, "+0%")
+
+    def test_relative_change_from_zero(self):
+        previous_value = 0
+        current_value = 203.5
+
+        percentage_delta = get_relative_change(previous_value, current_value)
+        self.assertEqual(percentage_delta, None)
+
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "CPO Vendor":["SE"], "default":["ALL","SE","NO","US"],})
+    def test_invalid_clicks(self):
+        vendor_cpc = VendorFactory.create(name="Vendor CPC", is_cpo=False, is_cpc=True)
+        vendor_cpo = VendorFactory.create(name="Vendor CPO", is_cpo=True, is_cpc=False)
+
+        for index in range(152):
+            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=False, ip= "1.2.3.4")
+
+        for index in range(27):
+            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.2.3.4")
+
+        for index in range(248):
+            ProductStatFactory.create(vendor=vendor_cpo.name, is_valid=False, ip= "1.2.3.4")
+
+        for index in range(35):
+            ProductStatFactory.create(vendor=vendor_cpo.name, is_valid=True, ip= "1.2.3.4")
+
+        start_date, end_date = get_day_range(datetime.datetime.today())
+        invalid_clicks = get_invalid_clicks(start_date, end_date)
+        self.assertEqual(invalid_clicks[0], 400)
+        self.assertEqual(invalid_clicks[1], 152)
+        self.assertEqual(invalid_clicks[2], 258)
