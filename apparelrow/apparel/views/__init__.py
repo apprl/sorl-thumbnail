@@ -399,19 +399,7 @@ def product_detail(request, slug):
     # Cost per click
     cost_per_click = get_vendor_cost_per_click(product.default_vendor.vendor)
 
-    # Cost per click
     default_vendor = product.default_vendor
-    cost_per_click = 0
-    if default_vendor and default_vendor.vendor.is_cpc:
-        user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
-        click_cut = cut * publisher_cut
-        earning_cut = click_cut
-        try:
-            cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
-        except get_model('dashboard', 'ClickCost').DoesNotExist:
-            logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
-                product.default_vendor, product.product_name))
-
     # Vendor market
     vendor_markets = None
     if default_vendor:
@@ -422,7 +410,7 @@ def product_detail(request, slug):
     vendor = product.default_vendor.vendor
     if vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
-    warning_text = get_location_warning_text(vendor_markets, request.user.location)
+    warning_text = get_location_warning_text(vendor_markets, request.user)
 
     return render_to_response(
         'apparel/product_detail.html',
@@ -459,7 +447,7 @@ def get_warnings_for_location(request, slug):
     if product.default_vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
 
-    warning_text = get_location_warning_text(vendor_markets, request.user.location)
+    warning_text = get_location_warning_text(vendor_markets, request.user)
     return HttpResponse(warning_text)
 
 def product_generate_short_link(request, slug):
@@ -480,7 +468,7 @@ def product_generate_short_link(request, slug):
     if product.default_vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
 
-    warning_text = get_location_warning_text(vendor_markets, request.user.location)
+    warning_text = get_location_warning_text(vendor_markets, request.user)
 
     return render(request, 'apparel/fragments/product_short_link.html', {'product_short_link': product_short_link,
                                                                          'warning_text': warning_text})
@@ -1164,7 +1152,7 @@ def product_lookup(request):
                                           (cost_per_click.currency, (earning_cut * cost_per_click.amount))
     if vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
-    warning_text = get_location_warning_text(vendor_markets, request.user.location)
+    warning_text = get_location_warning_text(vendor_markets, request.user)
 
     return JSONResponse({
         'product_pk': product_pk,

@@ -809,27 +809,55 @@ class TestUtils(TestCase):
     def test_get_warning_text(self):
         # For all locations available, which is the default option so vendor_markets is None
         vendor_markets = None
-        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "")
 
         # One location
         vendor_markets = ['SE']
-        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "You will only earn money on visitors from Sweden that click on this product, not from your current location USA")
 
         # Two locations
         vendor_markets = ['SE', 'NO']
-        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "You will only earn money on visitors from Sweden and Norway that click on this product, not from your current location USA")
 
         # Three locations
         vendor_markets = ['SE', 'NO', 'DK']
-        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "You will only earn money on visitors from Sweden, Norway and Denmark that click on this product, not from your current location USA")
 
         # Three locations but user location belongs to product's market
         vendor_markets = ['SE', 'NO', 'US']
-        warning_text = get_location_warning_text(vendor_markets, self.user.location)
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+    def test_deactivated_warning_text(self):
+        # For all locations available, which is the default option so vendor_markets is None
+        self.user.show_warnings = False
+        self.user.save()
+        vendor_markets = None
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # One location
+        vendor_markets = ['SE']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # Two locations
+        vendor_markets = ['SE', 'NO']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # Three locations
+        vendor_markets = ['SE', 'NO', 'DK']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # Three locations but user location belongs to product's market
+        vendor_markets = ['SE', 'NO', 'US']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "")
 
 def _send_product_to_solr(product_key):
