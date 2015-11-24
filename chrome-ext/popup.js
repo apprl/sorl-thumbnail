@@ -102,6 +102,7 @@ function fetchProductFromServer(currentTabURL, isProduct){
   var productEarning = document.querySelector('.product-earning');
   var productShortLink = document.querySelector('.product-short-link');
   var productShortLinkInput = document.querySelector('.product-short-link input');
+  var productWarningText = document.querySelector('.product-warning-text');
   var noLikeText = document.querySelector('.no-like');
 
   body.className = 'semi-active';
@@ -169,11 +170,17 @@ function fetchProductFromServer(currentTabURL, isProduct){
         productEarning.textContent = response.product_earning;
       }
 
+      if (response.warning_text) {
+        productWarningText.className = 'product-warning-text';
+        productWarningText.textContent = '* ' + response.warning_text;
+      }
+
       productButton.onclick = function() {
         ga('send', 'event', 'ChromeExtension', 'ClickGetLinkButton', currentTabURL.url); // Send event to GA on product link button click
         noLikeText.className = 'no-like'; // Hide no-like text
         productName.className = 'product-name disabled';
         productEarning.className = 'product-earning disabled';
+        productWarningText.className = 'product-warning-text disabled';
         if (productShortLinkInput.value) {
           productShortLink.style.display = 'block';
         }

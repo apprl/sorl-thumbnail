@@ -123,6 +123,10 @@ body.active .loading {
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+.product-warning-text {
+    font-size: 12px;
+}
+
 .buttons {
     overflow: hidden;
     width: 100%;
