@@ -2156,4 +2156,4 @@ class TestUtils(TransactionTestCase):
         invalid_clicks = get_invalid_clicks(start_date, end_date)
         self.assertEqual(invalid_clicks[0], 400)
         self.assertEqual(invalid_clicks[1], 152)
-        self.assertEqual(invalid_clicks[2], 258)
+        self.assertEqual(invalid_clicks[2], 248)
