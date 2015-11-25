@@ -91,7 +91,6 @@ def get_referral_user_from_cookie(request):
             user = get_user_model().objects.get(pk=user_id)
         except get_user_model().DoesNotExist:
             pass
-
     return user
 
 def get_cuts_for_user_and_vendor(user_id, vendor):
@@ -248,18 +247,6 @@ def get_total_clicks_per_vendor(vendor):
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
     return get_model('statistics', 'ProductStat').objects.filter(vendor=vendor, is_valid=True).\
         exclude(created__range=(today_min, today_max)).count()
-
-def get_clicks_from_sale(sale):
-    """
-    Return number of clicks generated from the given sale
-    """
-    user_id = sale.user_id
-    start_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(0, 0, 0, 0))
-    end_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(23, 59, 59, 999999))
-    vendor_name = sale.vendor
-    clicks = get_model('statistics', 'ProductStat').objects.filter(vendor=vendor_name, user_id=user_id,
-                                                          created__range=[start_date_query, end_date_query]).count()
-    return clicks
 
 def get_user_attrs(user):
     """
@@ -446,31 +433,46 @@ def enumerate_months(user, month):
 
     return month_display, month_choices, year_choices
 
-def get_aggregated_publishers(user_id, start_date, end_date):
+def get_aggregated_publishers(user_id, start_date, end_date, is_admin=False):
     """
-    Get AggregatedData summary per publisher for the given period
+    Return AggregatedData summary per publisher for the given period
     """
-    top_publishers = get_model('dashboard', 'AggregatedData').objects.\
-                filter(user_id=user_id, created__range=(start_date, end_date), data_type='aggregated_from_publisher').\
-                values('user_id', 'aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug',
-                       'aggregated_from_image', 'aggregated_from_link').\
-                annotate(total_earnings=Sum('sale_plus_click_earnings'),
-                         total_network_earnings=Sum('total_network_earnings'),
-                         total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings')
+    filter_dict = dict()
+    filter_dict['created__range'] = (start_date, end_date)
+
+    # Aggregate from total data if Admin, otherwise aggregate from publisher
+    filter_dict['data_type'] = 'aggregated_from_total' if is_admin else 'aggregated_from_publisher'
+    values_tuple = ('user_id', 'user_name', 'user_username', 'user_link', 'user_image', 'aggregated_from_link') \
+        if is_admin else ('user_id', 'aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug',
+                          'aggregated_from_image', 'aggregated_from_link')
+    order_by_tuple = ('-total_earnings', '-total_clicks') if is_admin else ('-total_network_earnings', '-total_earnings')
+
+    # Filter by User, if given user_id
+    if user_id:
+        filter_dict['user_id'] = user_id
+
+    top_publishers = get_model('dashboard', 'AggregatedData').objects.filter(**filter_dict).exclude(user_id=0).\
+        values(*values_tuple).annotate(total_earnings=Sum('sale_plus_click_earnings'),
+                                       total_network_earnings=Sum('total_network_earnings'),
+                                       total_clicks=Sum('total_clicks')).order_by(*order_by_tuple)
     return top_publishers
 
 def get_aggregated_products(user_id, start_date, end_date):
     """
-    Get AggregatedData summary per product for the given period
+    Return AggregatedData summary per product for the given period
     """
-    top_products = get_model('dashboard', 'AggregatedData').objects.\
-            filter(user_id=user_id, created__range=(start_date, end_date),
-                   data_type='aggregated_from_product').\
-            values('aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
-                   'aggregated_from_link').\
-            annotate(total_earnings=Sum('sale_plus_click_earnings'),
-                     total_network_earnings=Sum('total_network_earnings'),
-                     total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings')
+    filter_dict = dict()
+    filter_dict['created__range'] = (start_date, end_date)
+    filter_dict['data_type'] = 'aggregated_from_product'
+    if user_id:
+        filter_dict['user_id'] = user_id
+
+    top_products = get_model('dashboard', 'AggregatedData').objects.filter(**filter_dict).\
+        values('aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
+               'aggregated_from_link').exclude(user_id=0).\
+        annotate(total_earnings=Sum('sale_plus_click_earnings'),
+                 total_network_earnings=Sum('total_network_earnings'),
+                 total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings')
     return top_products
 
 def get_user_earnings_dashboard(user, start_date, end_date):
@@ -504,7 +506,7 @@ def get_user_earnings_dashboard(user, start_date, end_date):
 
 def summarize_earnings(data_per_day):
     """
-    Return Array with Total Summaries from the given array of data summarized per day
+    Return array with total summaries from the given array of data summarized per day
     """
     month_earnings = sum([x[0] for x in data_per_day])
     network_earnings = sum([x[3] for x in data_per_day])
@@ -575,3 +577,89 @@ def get_invalid_clicks(start_date, end_date):
         except get_model('apparel', 'Vendor').DoesNotExist:
             log.warning("Vendor %s does not exist. No possible identify if vendor is CPC or CPC" % row['vendor'])
     return invalid_clicks
+
+def get_raw_conversion_rate(sales, clicks):
+    """
+    Return conversion rate on string format given the amount of sale and amount of clicks
+    """
+    conversion_rate = 0
+    if clicks > 0:
+            conversion_rate = decimal.Decimal(sales) / decimal.Decimal(clicks)
+            conversion_rate = conversion_rate.quantize(decimal.Decimal('0.0001')) * 100
+    return conversion_rate
+
+def get_conversion_rate(sales, clicks):
+    """
+    Return conversion rate on string format given the amount of sale and amount of clicks
+    """
+    return ("%.2f %%" % get_raw_conversion_rate(sales, clicks))
+
+def get_available_stores(current_location):
+    """
+    Return a list of vendors depending on the current location value
+    """
+    vendors = []
+    for store in get_model('dashboard', 'StoreCommission').objects.all():
+        store_name = store.vendor.name
+        try:
+            if current_location in settings.VENDOR_LOCATION_MAPPING[store_name]:
+                vendors.append(store_name)
+        except KeyError:
+            vendors.append(store_name)
+    return vendors
+
+def render_detail_earnings(request):
+    """
+    Return a list of user earning details given a date range when an AJAX request is made
+    """
+    if request.method == 'GET':
+        month = request.GET.get('month', None)
+        year = request.GET.get('year', None)
+        user_id = request.GET.get('user_id', None)
+        limit = request.GET.get('limit', None)
+        user = None
+
+        if user_id:
+            try:
+                user = get_user_model().objects.get(id=user_id)
+            except get_user_model().DoesNotExist:
+                log.warning("User %s does not exist." % user_id)
+        if month and year:
+            if month == '0':
+                start_date = datetime.date(int(year), int(1), 1)
+                end_date = start_date
+                end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
+            else:
+                start_date = datetime.date(int(year), int(month), 1)
+
+                end_date = start_date
+                end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+            earnings = retrieve_user_earnings(start_date, end_date, user, limit)
+            json_data = json.dumps(earnings)
+            return HttpResponse(json_data)
+
+def get_top_summary(current_user):
+    """
+    Return Top Summary data for Store Dashboard
+    """
+    pending_earnings = get_model('dashboard', 'UserEarning').objects\
+            .filter(user=current_user, status=Sale.PENDING, paid=Sale.PAID_PENDING)\
+            .aggregate(total=Sum('amount'))['total']
+
+    confirmed_earnings = get_model('dashboard', 'UserEarning')\
+            .objects.filter(user=current_user, status=Sale.CONFIRMED, paid=Sale.PAID_PENDING)\
+            .aggregate(total=Sum('amount'))['total']
+
+    pending_payment = 0
+    payments = Payment.objects.filter(cancelled=False, paid=False, user=current_user).order_by('-created')
+    if payments:
+        pending_payment = payments[0].amount
+
+    total_earned = 0
+    payments = Payment.objects.filter(paid=True, user=current_user)
+    default_currency = 'EUR'
+    for pay in payments:
+        rate = 1 if pay.currency == 'EUR' else currency_exchange(default_currency, pay.currency)
+        total_earned += pay.amount * rate
+
+    return pending_earnings, confirmed_earnings, pending_payment, total_earned

@@ -1,22 +1,15 @@
 import re
-import datetime
 import urllib
-import decimal
 import os
-import calendar
 import json
-from django.db.models import Sum
 from apparelrow.dashboard.factories import *
 
-
-from django.conf import settings
 from django.core import mail
 from django.core import signing
 from django.core.urlresolvers import reverse as _reverse
 from django.test import TransactionTestCase, TestCase
+from django.test.client import RequestFactory
 from django.test.utils import override_settings
-from django.contrib.auth import get_user_model
-from django.db.models.loading import get_model
 from django.core import management
 
 from localeurl.utils import locale_url
@@ -24,16 +17,21 @@ from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
 from apparelrow.dashboard.utils import *
+from apparelrow.dashboard.views import publisher_contact
 from apparelrow.apparel.utils import currency_exchange
 from django.core.cache import cache
 
 from apparelrow.statistics.factories import *
 
 
-
-
 def reverse(*args, **kwargs):
     return locale_url(_reverse(*args, **kwargs), 'en')
+
+def get_current_month_range():
+    year = datetime.date.today().year
+    month = datetime.date.today().month
+    start_date, end_date = parse_date(month, year)
+    return start_date, end_date
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -378,8 +376,6 @@ class TestDashboard(TransactionTestCase):
 
     def test_referred_user_get_20_eur(self):
         pass
-
-
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -1405,7 +1401,6 @@ class TestSalesPerClick(TransactionTestCase):
             get_model('statistics', 'ProductStat').objects.create(product=self.product.product_name, page="BuyReferral",
                                                                   user_id=self.user.id, vendor=self.vendor.name,
                                                                   ip=ip, created=yesterday)
-        #query_date = yesterday.strftime('%d-%m-%Y')
         management.call_command('clicks_summary', verbosity=0, interactive=False)
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
         self.assertEqual(get_model('dashboard', 'Sale').objects.get().amount, 100)
@@ -2033,9 +2028,43 @@ class TestAdminDashboard(TestCase):
 class TestUtils(TransactionTestCase):
 
     def setUp(self):
+        self.group = get_model('dashboard', 'Group').objects.create(name='group_name')
+
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.is_partner = True
         self.user.date_joined = datetime.datetime.strptime("2013-05-07", "%Y-%m-%d")
+        self.user.partner_group = self.group
         self.user.save()
+
+        self.vendor_cpc = VendorFactory.create(name="Vendor CPC", is_cpo=False, is_cpc=True)
+        VendorFactory.create(name="Vendor CPO", is_cpo=True, is_cpc=False)
+
+        get_model('dashboard', 'ClickCost').objects.create(vendor=self.vendor_cpc, amount=1.00, currency="EUR")
+        get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
+                                                     vendor=self.vendor_cpc)
+
+    def test_map_placement(self):
+        self.assertEqual(map_placement('Unknown'), 'Unknown')
+        self.assertEqual(map_placement('Ext-Shop'), 'Shop on your site')
+        self.assertEqual(map_placement('Ext-Look'), 'Look on your site')
+        self.assertEqual(map_placement('Ext-Link'), 'Product link on your site')
+        self.assertEqual(map_placement('Ext-Store'), 'Store link on your site')
+        self.assertEqual(map_placement('Look'), 'Look on Apprl.com')
+        self.assertEqual(map_placement('Shop'), 'Shop on Apprl.com')
+        self.assertEqual(map_placement('Feed'), 'Feed on Apprl.com')
+        self.assertEqual(map_placement('Profile'), 'Your profile on Apprl.com')
+        self.assertEqual(map_placement('Product'), 'Product page')
+        self.assertEqual(map_placement('Ext-Banner'), 'Banner on your site')
+
+    def test_get_clicks_from_sale(self):
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+        for index in range(100):
+            ProductStatFactory.create(vendor="Vendor CPC", is_valid=True, ip="1.2.3.4", created=yesterday,
+                                      user_id=self.user.id)
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        sale = get_model('dashboard', 'Sale').objects.all()[0]
+        self.assertEqual(get_clicks_from_sale(sale), 100)
 
     def test_parse_date_no_date(self):
         """ Test parse_date() function with month and year parameters as None
@@ -2137,8 +2166,9 @@ class TestUtils(TransactionTestCase):
 
     @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "CPO Vendor":["SE"], "default":["ALL","SE","NO","US"],})
     def test_invalid_clicks(self):
-        vendor_cpc = VendorFactory.create(name="Vendor CPC", is_cpo=False, is_cpc=True)
-        vendor_cpo = VendorFactory.create(name="Vendor CPO", is_cpo=True, is_cpc=False)
+
+        vendor_cpc = get_model('apparel', 'Vendor').objects.get(name="Vendor CPC")
+        vendor_cpo = get_model('apparel', 'Vendor').objects.get(name="Vendor CPO")
 
         for index in range(152):
             ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=False, ip= "1.2.3.4")
@@ -2157,3 +2187,102 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(invalid_clicks[0], 400)
         self.assertEqual(invalid_clicks[1], 152)
         self.assertEqual(invalid_clicks[2], 248)
+
+class TestAggregatedData(TransactionTestCase):
+    def setUp(self):
+        self.group = get_model('dashboard', 'Group').objects.create(name='group_name')
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.is_partner = True
+        self.user.date_joined = datetime.datetime.strptime("2013-05-07", "%Y-%m-%d")
+        self.user.partner_group = self.group
+        self.user.save()
+
+    def test_get_aggregated_products_and_publishers(self):
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+
+        # Generate Earnings and click data with product information
+        vendor = VendorFactory.create(name="Vendor Aggregated CPO")
+        product = ProductFactory.create(slug="product-number-1", product_name="Product 1")
+        VendorProductFactory.create(vendor=vendor, product=product)
+        get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
+                                                     vendor=vendor)
+
+        vendor_cpc = VendorFactory.create(name="Vendor Aggregated CPC", is_cpo=False, is_cpc=True)
+        product_cpc = ProductFactory.create(slug="product-number-2", product_name="Product 2")
+        VendorProductFactory.create(vendor=vendor_cpc, product=product_cpc)
+        cut_obj = get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
+                                                     vendor=vendor_cpc)
+        click_cost = get_model('dashboard', 'ClickCost').objects.create(vendor=vendor_cpc, amount=1.00, currency="EUR")
+
+        # Generate clicks for CPO
+        for index in range(200):
+            ProductStatFactory.create(vendor=vendor.name, is_valid=True, ip= "1.22.3.4", product=product.slug,
+                                      created=yesterday, user_id=self.user.id)
+
+        # Generate clicks for CPC
+        for index in range(100):
+            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.22.3.4", product=product_cpc.slug,
+                                      created=yesterday, user_id=self.user.id)
+
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(user_id=self.user.id).count(), 300)
+
+        # Generate earnings CPC
+        management.call_command('clicks_summary', verbosity=0)
+
+        # Generate earnings CPO
+        for index in range(1, 11):
+            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=yesterday,
+                               sale_date=yesterday, pk=index+2)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 11)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=self.user).count(), 11)
+
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+
+        start_date, end_date = get_current_month_range()
+        # Check data from get_aggregated_products is correct
+        top_products = get_aggregated_products(None, start_date, end_date)
+        self.assertEqual(len(top_products), 2)
+        cpo_commission = 50 * 10 * decimal.Decimal(cut_obj.cut) # EUR
+        cpc_commission = 100 * 1 * decimal.Decimal(cut_obj.cut) # EUR
+
+        products_checked = 0
+        for row in top_products:
+            if row['aggregated_from_id'] == product.id:
+                products_checked += 1
+                self.assertEqual(row['total_earnings'], cpo_commission)
+                self.assertEqual(row['total_network_earnings'], 0)
+                self.assertEqual(row['total_clicks'], 200)
+            elif row['aggregated_from_id'] == product_cpc.id:
+                products_checked += 1
+                self.assertEqual(row['total_earnings'], cpc_commission)
+                self.assertEqual(row['total_network_earnings'], 0)
+                self.assertEqual(row['total_clicks'], 100)
+
+        self.assertEqual(products_checked, 2)
+
+        # Check data from get_aggregated_publishers is correct
+        top_publishers = get_aggregated_publishers(None, start_date, end_date, True)
+        publisher_commission = (cpo_commission  + cpc_commission)
+        self.assertEqual(len(top_publishers), 1)
+        self.assertEqual(top_publishers[0]['user_id'], self.user.id)
+        self.assertEqual(top_publishers[0]['total_earnings'], publisher_commission)
+        self.assertEqual(top_publishers[0]['total_clicks'], 300)
+        self.assertEqual(top_publishers[0]['total_network_earnings'], 0)
+
+    def test_get_aggregated_products_no_data(self):
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 0)
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+        start_date, end_date = get_current_month_range()
+
+        top_products = get_aggregated_products(None, start_date, end_date)
+        self.assertEqual(len(top_products), 0)
+
+    def test_get_aggregated_publisher_no_data(self):
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 0)
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+        start_date, end_date = get_current_month_range()
+
+        top_publishers = get_aggregated_publishers(None, start_date, end_date)
+        self.assertEqual(len(top_publishers), 0)

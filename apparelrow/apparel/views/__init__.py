@@ -1076,8 +1076,8 @@ def product_lookup(request):
             earning_total = get_vendor_cost_per_click(default_vendor.vendor)
         elif default_vendor.vendor.is_cpo:
             earning_total = default_vendor.locale_price
-
-        product_earning = earning_total * earning_cut
+        if earning_cut:
+            product_earning = earning_total * earning_cut
 
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))

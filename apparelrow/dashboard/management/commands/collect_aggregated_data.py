@@ -145,6 +145,7 @@ class Command(BaseCommand):
         elif row.user_earning_type == 'referral_sale_commission':
             instance.referral_sales += 1
             instance.referral_earnings += earning_amount
+        instance.sale_plus_click_earnings += earning_amount
         instance.aggregated_from_id = row.from_product.id
         instance.aggregated_from_name = row.from_product.product_name \
             if row.from_product.product_name else ''
@@ -288,31 +289,31 @@ class Command(BaseCommand):
                     instance.user_image, instance.user_link = get_user_thumbnail_and_link(user)
                     instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(product)
 
-                if vendor.is_cpc:
-                    instance.paid_clicks += decimal.Decimal(row['clicks'])
-                    try:
-                        sale = Sale.objects.get(user_id=row['user_id'], sale_date__range=(start_date, end_date),
-                                                vendor=vendor, affiliate="cost_per_click")
-                        earning = UserEarning.objects.get(user_id=row['user_id'], date=row['day'], sale=sale,
-                                                          user_earning_type='publisher_sale_click_commission')
-                        clicks_amount = get_clicks_from_sale(earning.sale)
-                        click_cost = 0
-                        if clicks_amount > 0:
-                            click_cost = earning.amount / clicks_amount
-                        clicks = decimal.Decimal(row['clicks'])
-                        instance.click_earnings += click_cost * clicks
-                        instance.sale_plus_click_earnings += click_cost * clicks
-                    except UserEarning.DoesNotExist:
-                        logger.warning("Click earning for user %s date %s does not exist" % (row['user_id'], row['day']))
-                    except Sale.DoesNotExist:
-                        logger.warning("Sale for user %s date %s does not exist" % (row['user_id'], row['day']))
+                    if vendor.is_cpc:
+                        instance.paid_clicks += decimal.Decimal(row['clicks'])
+                        try:
+                            sale = Sale.objects.get(user_id=row['user_id'], sale_date__range=(start_date, end_date),
+                                                    vendor=vendor, affiliate="cost_per_click")
+                            earning = UserEarning.objects.get(user_id=row['user_id'], date=row['day'], sale=sale,
+                                                              user_earning_type='publisher_sale_click_commission')
+                            clicks_amount = get_clicks_from_sale(earning.sale)
+                            click_cost = 0
+                            if clicks_amount > 0:
+                                click_cost = earning.amount / clicks_amount
+                            clicks = decimal.Decimal(row['clicks'])
+                            instance.click_earnings += click_cost * clicks
+                            instance.sale_plus_click_earnings += click_cost * clicks
+                        except UserEarning.DoesNotExist:
+                            logger.warning("Click earning for user %s date %s does not exist" % (row['user_id'], row['day']))
+                        except Sale.DoesNotExist:
+                            logger.warning("Sale for user %s date %s does not exist" % (row['user_id'], row['day']))
 
-                instance.total_clicks += decimal.Decimal(row['clicks'])
-                instance.save()
+                    instance.total_clicks += decimal.Decimal(row['clicks'])
+                    instance.save()
 
-                if user and user.owner_network:
-                    self.generate_aggregated_data_network_owner(user.owner_network, product, vendor, row['day'],
-                                                                row['clicks'], user)
+                    if user and user.owner_network:
+                        self.generate_aggregated_data_network_owner(user.owner_network, product, vendor, row['day'],
+                                                                    row['clicks'], user)
 
     def handle(self, *args, **options):
         start_date, end_date = self.get_date_range(options.get('date'))
