@@ -409,6 +409,8 @@ def settings_publisher(request):
         form = PartnerSettingsForm(request.POST, request.FILES, instance=request.user)
         details_form = PartnerPaymentDetailForm(request.POST, request.FILES, instance=instance)
         notifications_form = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
+        if notifications_form.is_valid():
+            notifications_form.save()
         if form.is_valid():
             form.save()
         else:
