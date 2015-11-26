@@ -13,7 +13,8 @@ import logging
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.fields import ImageField
 from django.contrib.staticfiles.storage import staticfiles_storage
-from django.utils.translation import ugettext_lazy as _, get_language
+from django.utils.translation import ugettext_lazy as _
+from apparelrow.apparel.utils import currency_exchange
 
 log = logging.getLogger(__name__)
 
@@ -642,21 +643,23 @@ def get_top_summary(current_user):
     """
     Return Top Summary data for Store Dashboard
     """
+    sale_model = get_model('dashboard', 'Sale')
+    payment_model = get_model('dashboard', 'Payment')
     pending_earnings = get_model('dashboard', 'UserEarning').objects\
-            .filter(user=current_user, status=Sale.PENDING, paid=Sale.PAID_PENDING)\
+            .filter(user=current_user, status=sale_model.PENDING, paid=sale_model.PAID_PENDING)\
             .aggregate(total=Sum('amount'))['total']
 
     confirmed_earnings = get_model('dashboard', 'UserEarning')\
-            .objects.filter(user=current_user, status=Sale.CONFIRMED, paid=Sale.PAID_PENDING)\
+            .objects.filter(user=current_user, status=sale_model.CONFIRMED, paid=sale_model.PAID_PENDING)\
             .aggregate(total=Sum('amount'))['total']
 
     pending_payment = 0
-    payments = Payment.objects.filter(cancelled=False, paid=False, user=current_user).order_by('-created')
+    payments = payment_model.objects.filter(cancelled=False, paid=False, user=current_user).order_by('-created')
     if payments:
         pending_payment = payments[0].amount
 
     total_earned = 0
-    payments = Payment.objects.filter(paid=True, user=current_user)
+    payments = payment_model.objects.filter(paid=True, user=current_user)
     default_currency = 'EUR'
     for pay in payments:
         rate = 1 if pay.currency == 'EUR' else currency_exchange(default_currency, pay.currency)
