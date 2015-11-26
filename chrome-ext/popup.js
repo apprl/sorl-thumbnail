@@ -172,7 +172,7 @@ function fetchProductFromServer(currentTabURL, isProduct){
 
       if (response.warning_text) {
         productWarningText.className = 'product-warning-text';
-        productWarningText.textContent = '* ' + response.warning_text;
+        productWarningText.textContent = response.warning_text;
       }
 
       productButton.onclick = function() {
