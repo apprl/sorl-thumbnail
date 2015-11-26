@@ -86,7 +86,7 @@ body.active .loading {
 }
 
 .content {
-    min-height: 300px;
+    min-height: 325px;
     padding: 15px;
 }
 
@@ -124,6 +124,10 @@ body.active .loading {
 }
 
 .product-warning-text {
+    border: 1px solid #faedd3;
+    background-color: #fcf9e7;
+    padding: 10px;
+    color: #947847;
     font-size: 12px;
 }
 
