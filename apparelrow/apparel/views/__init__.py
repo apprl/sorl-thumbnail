@@ -1050,7 +1050,6 @@ def product_lookup(request):
     # key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
     #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
 
-
     #json_data = json.loads(imported_product.json)
     #product_pk = json_data.get('site_product', None)
     product_short_link = None
@@ -1071,12 +1070,12 @@ def product_lookup(request):
         default_vendor = product.default_vendor
 
         earning_cut = get_earning_cut(request.user, default_vendor, product)
-        earning_total = decimal.Decimal(0)
-        if default_vendor.vendor.is_cpc:
-            earning_total = get_vendor_cost_per_click(default_vendor.vendor)
-        elif default_vendor.vendor.is_cpo:
-            earning_total = default_vendor.locale_price
         if earning_cut:
+            earning_total = decimal.Decimal(0)
+            if default_vendor.vendor.is_cpc:
+                earning_total = get_vendor_cost_per_click(default_vendor.vendor)
+            elif default_vendor.vendor.is_cpo:
+                earning_total = default_vendor.locale_price
             product_earning = earning_total * earning_cut
 
     else:

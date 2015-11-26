@@ -75,12 +75,6 @@ class TestChromeExtension(TestCase):
 
         self.django_image_file = ContentFile(image_file.read(), 'test.png')
 
-        FXRate = get_model('importer', 'FXRate')
-        FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
-        FXRate.objects.create(currency='USD', base_currency='SEK', rate='0.118160')
-        FXRate.objects.create(currency='SEK', base_currency='USD', rate='8.722600')
-        FXRate.objects.create(currency='USD', base_currency='USD', rate='1.00')
-
     def _login(self):
         normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         is_logged_in = self.client.login(username='normal_user', password='normal')
