@@ -98,9 +98,10 @@
                         {% cache CACHE_TIMEOUT product_detail_fragment object.id LANGUAGE_CODE %}
                         <h3>{% trans "Product info" %}</h3>
                         <p class="bodycopy description" itemprop="description">{{ object.description }}</p>
-                        <strong>{{ availability_text }}</strong>
+                        <p>{{ availability_text }}</p>
+                        <br>
 
-                        <div class="product-info" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer"
+                        <div class="product-info" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
                             <p itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">
                                 {% if object.default_vendor %}
                                     {% if object.default_vendor.availability == 0 %}

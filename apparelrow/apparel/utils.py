@@ -519,10 +519,11 @@ def get_availability_text(vendor_markets):
 
 def get_location_warning_text(vendor_markets, user):
     warning_text = ""
-    if user.show_warnings and vendor_markets and user.location not in vendor_markets:
-        markets_text = get_market_text_array(vendor_markets)
-        warning_text = "You will only earn money on visitors from %s that click on this product, not from your current location %s" \
-                       % (generate_countries_text(markets_text), get_location_text(user.location))
+    if hasattr(user, 'show_warnings') and user.show_warnings and user.is_partner:
+        if vendor_markets and user.location not in vendor_markets:
+            markets_text = get_market_text_array(vendor_markets)
+            warning_text = "You will only earn money on visitors from %s that click on this product, not from your current location %s" \
+                           % (generate_countries_text(markets_text), get_location_text(user.location))
     return warning_text
 
 def get_external_store_commission(stores, product=None):
