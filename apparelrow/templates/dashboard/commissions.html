@@ -29,7 +29,7 @@
                                 {% trans " per sale" %}
                             {% endif %}
                         </td>
-                        <td>{% if store.link %}<a class="btn btn-primary" data-store="{{ store.store_pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
+                        <td>{% if store.link %}<a class="btn btn-default" data-store="{{ store.store_pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
                     </tr>
                     {% empty %}
                     <tr>

@@ -44,7 +44,7 @@
 	line-height: 48px;
 	text-transform: uppercase;
 	letter-spacing: 2px;
-	font-size: 12px;
+	font-size: 13px;
 	max-width: none;
 	color: white;
 	font-family: @secondaryFontBold;
@@ -74,7 +74,7 @@
 	}
 }
 .btn-sm {
-	font-size: 11px;
+	font-size: 12px;
 	//max-width: 120px;
 	letter-spacing: 1px;
 	@media (min-width: 768px) {
@@ -87,7 +87,7 @@
 	@media (min-width: @screen-md) {
 		height: 54px;
 		line-height: 60px;
-		font-size: 14px;
+		font-size: 15px;
 		padding: 0 30px !important;
 	}
 }
@@ -104,9 +104,17 @@
 	}
 }
 .btn-grey {
-	background-color: @lightGrey !important;
+	background-color: @lightGrey;
 	&:hover, &:focus {
-		background-color: darken(@lightGrey, 15%) !important;
+		background-color: darken(@lightGrey, 15%);
+	}
+}
+.btn-white {
+	background-color: white;
+	color: black;
+	&:hover, &:focus {
+		color: black;
+		background-color: @offwhite;
 	}
 }
 .btn-facebook {
@@ -174,9 +182,18 @@ section .btn {
 
 /* Navigation ---------- */
 .sidebar {
-	margin: auto;
+	margin: 15px auto 0 auto;
 	text-align: center;
-	@media (min-width: @screen-sm) {
+	@media (min-width: @screen-xs) {
+		> li {
+			display: inline-block;
+			margin-right: 15px;
+			&:last-child {
+				margin: 0;
+			}
+		}
+	}
+	/*@media (min-width: @screen-sm) {
 		position: absolute;
 		right: 0;
 		top: 0;
@@ -188,15 +205,16 @@ section .btn {
 				margin: 0;
 			}
 		}
-	}
+	}*/
 }
 .dropdown-menu {
 	border-radius: 0;
 	border: 0;
 	width: 100%;
-	font-size: 13px;
+	font-size: 15px;
 	margin: 0;
 	top: initial;
+	left: initial;
 	a {
 		color: @grey;
 	}
@@ -247,7 +265,7 @@ section .btn {
 		display: inline;
 		&:after {
 			content: "/";
-			font-size: 12px;
+			font-size: 13px;
 			margin: 0 5px;
 		}
 		&:last-child {
@@ -276,7 +294,6 @@ section .btn {
 		padding: 5px 15px;
 	}
 	a {
-		font-size: 13px;
 		letter-spacing: 0.02rem;
 		color: @grey;
 		&:hover {
@@ -293,14 +310,8 @@ section .btn {
 }
 .sub-menu {
     margin: 15px 0;
-    //text-align: center;
-	font-size: 16px;
 	font-size: 18px;
-	//text-transform: uppercase;
 	font-family: @secondaryFontBold;
-	font-size: 16px;
-	//font-family: @primaryFont;
-	//font-style: italic;
 	a {
 		color: @grey;
 		letter-spacing: 0;
@@ -314,7 +325,7 @@ section .btn {
 	span {
 		font-family: @secondaryFontBold;
 		font-size: 16px;
-		color: black;
+		color: @grey;
 	}
     li {
         line-height: 25px;
@@ -448,6 +459,10 @@ section .btn {
 }
 .list-horizontal > li {
 	display: inline-block;
+	margin-right: 15px;
+	&:last-child {
+		margin: 0;
+	}
 }
 .list-filter {
 	li {
@@ -576,6 +591,7 @@ section .btn {
 /* Panels & Filters ---------- */
 .col-product-filter {
 	.panel {
+		font-size: 16px;
 		margin: 0 auto 10px auto;
         i {
             font-size: 14px;
@@ -702,8 +718,28 @@ section .btn {
 }
 .plus:before {
 	content: '+';
-	display: block;
+	display: inline-block;
 	font-size: 14px;
-	float: left;
-	margin: -2px 5px 0 0;
+	//float: left;
+	//margin: -2px 5px 0 0;
+}
+.number {
+	display: block;
+    font-size: 24px;
+}
+a.info {
+	font-size: 13px;
+	color: @grey;
+	i {
+		margin-right: 5px;
+	}
+	&:hover {
+		color: black;
+	}
+}
+// Responsive line breaks
+.wbr {
+	@media (min-width: @screen-md) {
+		display: block;
+	}
 }

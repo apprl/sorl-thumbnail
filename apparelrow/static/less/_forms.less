@@ -8,14 +8,16 @@ button, input, select, textarea {
     width: 100%;
     max-width: 320px;
     letter-spacing: 0.01rem;
-    border: 0 !important;
     border-radius: 0;
-    font-size: 14px;
+    font-size: 16px;
     -webkit-transition: all .2s;
     transition: all .2s;
     &:focus, &:active {
         outline: 0;
     }
+}
+button, input, textarea {
+    border: 0 !important;
 }
 textarea {
     resize: none;
@@ -34,12 +36,12 @@ select {
     text-overflow: '';
     height: 34px;
     background-color: white;
-    border: 1px solid #ccc;
+    border: 1px solid @lightGrey;
     padding: 0 15px;
     color: transparent !important;
     text-shadow: 0 0 0 black !important;
     &:focus, &:hover, &:active {
-        border: 1px solid #999;
+        border: 1px solid @grey;
     }
 }
 input[type="submit"] {
@@ -117,9 +119,11 @@ textarea:focus {
 }
 .select {
     position: relative;
-    display: inline-block;
-    width: 100%;
-    max-width: 260px;
+    display: block;
+    //width: 100%;
+    min-width: 260px;
+    max-width: 320px;
+    //max-width: 260px;
     span {
         top: 8px;
         right: 15px;
@@ -145,6 +149,7 @@ textarea:focus {
     100% { background-size: 100% 2px, 100% 1px }
 }
 .form-control {
+    font-size: 16px;
     box-shadow: none;
     &:focus {
         box-shadow: none;

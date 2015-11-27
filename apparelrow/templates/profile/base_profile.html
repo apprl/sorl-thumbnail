@@ -33,7 +33,7 @@ $(document).ready(function() {
     <div class="container">
 
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-6">
                 <div id="profile-image">
                     <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_large }}"></a>
                     {% if request.user.is_authenticated and request.user == profile %}
@@ -43,7 +43,7 @@ $(document).ready(function() {
                     {% endif %}
                 </div>
             </div>
-            <div class="col-sm-10 profile-content">
+            <div class="col-sm-6 profile-content">
                 <h1>{{ profile.display_name }}</h1>
                 {% if request.user.is_authenticated and request.user == profile %}
                 {% else %}
@@ -76,13 +76,11 @@ $(document).ready(function() {
             {% if profile and profile.is_brand %}
                 {% url 'brand-likes-men' profile.slug as likes_url_men %}
                 {% url 'brand-likes-women' profile.slug as likes_url_women %}
-                <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">
-                    <span>{% blocktrans count products as product_count %}{{product_count}}</span> Item{% plural %}{{product_count}}</span> Items{% endblocktrans %}
-                </a>
+                <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">Items</a>
+                <span>({% blocktrans count products as product_count %}{{product_count}})</span>{% plural %}{{product_count}})</span>{% endblocktrans %}
             {% else %}
-                <a{% if request.path == likes_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ likes_url }}">
-                    <span>{% blocktrans count products as product_count %}{{product_count}}</span> Item{% plural %}{{product_count}}</span> Items{% endblocktrans %}
-                </a>
+                <a{% if request.path == likes_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ likes_url }}">Items</a>
+                <span>({% blocktrans count products as product_count %}{{product_count}})</span>{% plural %}{{product_count}})</span>{% endblocktrans %}
             {% endif %}
             </li>
             <li>

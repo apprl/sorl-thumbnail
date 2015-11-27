@@ -1,6 +1,6 @@
 {% load i18n %}
 <div class="body-header">
-    <h1 class="display">{% trans "About" %}</h1>
+    <h1>{% trans "About" %}</h1>
     <ul class="sub-menu">
         <li><a{% if 'about' in request.path %} class="selected"{% endif %} href="{% url 'about' %}">{% trans "APPRL" %}</a></li>
         <li><a{% if 'founders' in request.path %} class="selected"{% endif %} href="{% url 'founders' %}">{% trans "The founders" %}</a></li>

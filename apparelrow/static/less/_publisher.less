@@ -15,19 +15,68 @@
     }
 }
 
-.publisher-page, .store-page {
-    .subnav-page {
-        margin-bottom: 40px;
+.dashboard-info {
+    h2 {
+        margin-bottom: 10px;
     }
-    .subnav-page > div {
+    hr {
+        border-color: #eee;
+        margin: 45px 0;
+    }
+    .display {
+        margin: 15px 0;
+        padding: 15px;
+        box-shadow: 0 0 25px rgba(0,0,0,.25);
+    }
+}
+
+.publisher-page, .store-page {
+    .overview {
+        text-align: center;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 30px;
+    }
+    .figures {
+        //padding: 30px 15px 15px 15px;
+        background-color: #e2f9f1;
+        margin-bottom: 30px;
+        > div {
+            border-left: 1px solid white;
+            border-right: 1px solid white;
+            padding: 30px 15px 15px 15px;
+            /*&:last-of-type {
+                border: 0;
+            }*/
+        }
+        .pending-earnings {
+            background-color: #fffde7;
+        }
+        .confirmed-earnings {
+            background-color: #f1f8e9;
+        }
+        .pending-payment {
+            background-color: #e0f7fA;
+        }
+    }
+    /*.subnav-page {
+        margin-bottom: 40px;
+    }*/
+    /*.subnav-page > div {
         font-size: 16px;
         text-align: center;
-    }
+    }*/
     .monthly-list {
         text-align: center;
     }
     .publisher-admin ul, .publisher-admin p {
         text-align: center;
+    }
+    h2 {
+        text-align: center;
+    }
+    th {
+        font-size: 13px;
+        border-color: #eee;
     }
 }
 

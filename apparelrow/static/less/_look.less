@@ -57,11 +57,6 @@
         }
     }
 
-    /*.share {
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }*/
-
     .tooltip {
         display: none;
     }
@@ -112,20 +107,28 @@
 // -----------------------------------------------------------------------------
 
 .popover {
+    width: 280px;
     border-radius: 0;
+    border: 0;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+    .top>.arrow {
+        border-top-color: rgba(0,0,0,0.1);
+        bottom: -10px;
+    }
     .popover-content {
-        padding: 9px;
+        padding: 0;
     }
     .popover-product {
         min-width: 200px;
         max-width: 280px;
         .media-body {
             text-align: center;
+            display: block;
         }
         h4 {
             font-size: 14px;
             margin-top: 0;
-            margin-bottom: 0;
+            margin-bottom: 3px;
         }
         ul {
             margin-bottom: 0;
@@ -145,6 +148,15 @@
         margin-top: 0px;
         font-size: 14px;
       }
+    }
+    .vendor_button {
+        color: @grey;
+    }
+    .vendor_button {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 160px;
     }
 }
 
