@@ -81,7 +81,7 @@ body.active .loading {
 }
 
 .loading {
-    padding-top: 70px;
+    padding-top: 80px;
     text-align: center;
 }
 
@@ -129,6 +129,12 @@ body.active .loading {
     padding: 10px;
     color: #947847;
     font-size: 12px;
+}
+
+.product-warning-text a {
+    color: #947847;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .buttons {

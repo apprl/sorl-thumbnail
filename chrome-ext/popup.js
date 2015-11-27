@@ -15,6 +15,7 @@ var DOMAIN = 'http://apprl.com';
 var AUTHENTICATED_URL = DOMAIN + '/backend/authenticated/';
 var PRODUCT_URL = DOMAIN + '/backend/product/lookup/';
 var LOGIN_URL = DOMAIN + '/en/accounts/login/';
+var SETTINGS_LINK = DOMAIN + '/profile/settings/email/';
 
 function getCookies(domain, name, callback) {
   chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
@@ -172,7 +173,9 @@ function fetchProductFromServer(currentTabURL, isProduct){
 
       if (response.warning_text) {
         productWarningText.className = 'product-warning-text';
-        productWarningText.textContent = response.warning_text;
+        var str_location = "Change your location &raquo;"
+        productWarningText.textContent = "Warning: " + response.warning_text + " ";
+        productWarningText.innerHTML += str_location.link(SETTINGS_LINK).replace(/^<a/, '$& target="_blank"');
       }
 
       productButton.onclick = function() {
