@@ -1121,9 +1121,9 @@ def product_lookup(request):
                 currency = product.default_vendor.locale_currency
         if currency:
             if vendor.is_cpo:
-                product_earning = "You will earn approx. %s %.2f per generated sale of this item" % (currency, earning)
+                product_earning = "You will earn approx. %s %.2f per generated sale of this item." % (currency, earning)
             if vendor.is_cpc:
-                product_earning = "You will earn approx. %s %.2f per generated click of this item" % (currency, earning)
+                product_earning = "You will earn approx. %s %.2f per generated click of this item." % (currency, earning)
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
         logger.info("No product found for key, falling back to domain deep linking.")
