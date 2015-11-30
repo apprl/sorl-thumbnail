@@ -44,7 +44,7 @@ from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.models import Brand, Product, ProductLike
 from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortStoreLink, ShortDomainLink
 from apparelrow.apparel.models import get_cuts_for_user_and_vendor
-from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
+from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives, get_available_brands
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse, get_external_store_commission, get_availability_text, \
     get_location_warning_text
@@ -55,6 +55,7 @@ from apparelrow.activity_feed.views import user_feed
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 from pysolr import Solr
+
 
 logger = logging.getLogger("apparelrow")
 
@@ -1189,14 +1190,10 @@ def user_list(request, gender=None, brand=False):
                                                is_brand=brand,
                                                is_hidden=False,
                                                advertiser_store__isnull=True)
-
-    if not brand:
-        queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
-    else:
-        # XXX: is this solution good enough?
-        # XXX: nope, too slow
-        # queryset = queryset.filter(brand__products__availability=True, brand__products__published=True, brand__products__gender__in=gender_list.get(gender)).distinct()
-        queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
+    queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
+    if brand:
+        brands_list = get_available_brands(gender, request.session.get('location','ALL'))
+        queryset = queryset.filter(Q(brand__id__in=brands_list))
 
     extra_parameter = None
 

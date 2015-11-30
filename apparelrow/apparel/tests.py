@@ -2,9 +2,9 @@
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.search import product_save, get_product_document
+from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
-    extract_asos_nelly_product_url
+    extract_asos_nelly_product_url, user_list
 
 from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
@@ -13,7 +13,7 @@ from django.conf import settings
 from apparelrow.apparel.models import Shop, ShopEmbed
 
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.profile.models import User
@@ -74,7 +74,6 @@ class TestChromeExtension(TestCase):
         image_file.seek(0)
 
         self.django_image_file = ContentFile(image_file.read(), 'test.png')
-
 
     def _login(self):
         normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
@@ -860,15 +859,76 @@ class TestUtils(TestCase):
         warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "")
 
-def _send_product_to_solr(product_key):
+@override_settings(VENDOR_LOCATION_MAPPING={"Vendor SE":["SE"], "Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+class TestSearch(TransactionTestCase):
 
+    def setUp(self):
+        vendor_se = VendorFactory.create(name="Vendor SE")
+        vendor_dk = VendorFactory.create(name="Vendor DK")
+        manufacturer = BrandFactory.create(name="007")
+        self.product_key = 'http://example.com/example?someproduct=12345'
+        product_id = _send_product_to_solr(product_key=self.product_key, vendor_name=vendor_se,
+                                           product_name="ProductName12345", brand=manufacturer)
+
+        self.product_dk_key = 'http://example.dk/example?someproduct=123453'
+        product_id = _send_product_to_solr(product_key=self.product_dk_key, vendor_name=vendor_dk,
+                                           product_name="ProductName6789", brand=manufacturer)
+
+    def tearDown(self):
+        _cleanout_product(self.product_key)
+        _cleanout_product(self.product_dk_key)
+        get_user_model().objects.all().delete()
+
+    def _login(self):
+        normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+
+    def test_search_view_no_products(self):
+        self._login()
+        session = self.client.session
+        session['location'] = 'NO'
+        session.save()
+        response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
+        json_data = json.loads(response.content)
+        self.assertEqual(len(json_data['object_list']), 0)
+
+    def test_search_view(self):
+        self._login()
+        session = self.client.session
+        session['location'] = 'SE'
+        session.save()
+        response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
+        json_data = json.loads(response.content)
+        self.assertEqual(len(json_data['object_list']), 1)
+
+    def test_brands_list_page(self):
+        manufacturer = get_model('apparel', 'Brand').objects.get(name="007")
+        self._login()
+        brands_list = get_available_brands('A', 'SE')
+        self.assertIn(manufacturer.id, brands_list)
+
+        brands_list = get_available_brands('A', 'DK')
+        self.assertIn(manufacturer.id, brands_list)
+
+        brands_list = get_available_brands('A', 'NO')
+        self.assertNotIn(manufacturer.id, brands_list)
+
+    def test_brand_page(self):
+        pass
+
+def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
     django_image_file = _create_dummy_image()
     _cleanout_product(product_key)
-    vendor = VendorFactory.create()
+    args_vendor = {}
+    if vendor_name:
+        args_vendor['name'] = vendor_name
+    vendor = VendorFactory.create(**args_vendor)
     category = CategoryFactory.create()
-    manufacturer = BrandFactory.create()
+    manufacturer = BrandFactory.create() if not brand else brand
+    product_name = 'Product' if not product_name else product_name
     product = ProductFactory.create(
-        product_name='Product',
+        product_name=product_name,
         category=category,
         manufacturer=manufacturer,
         gender='M',
