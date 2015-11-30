@@ -457,7 +457,6 @@ function unlikeElement($element) {
 }
 
 function showWarning($element) {
-    console.log("Hello, it's me");
     var slug = $element.attr('data-slug');
     jQuery.ajax({
         type: 'POST',

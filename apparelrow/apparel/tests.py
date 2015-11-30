@@ -815,17 +815,17 @@ class TestUtils(TestCase):
         # One location
         vendor_markets = ['SE']
         warning_text = get_location_warning_text(vendor_markets, self.user)
-        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden that click on this product, not from your current location USA")
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden that click on this product, not from your current location USA.")
 
         # Two locations
         vendor_markets = ['SE', 'NO']
         warning_text = get_location_warning_text(vendor_markets, self.user)
-        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden and Norway that click on this product, not from your current location USA")
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden and Norway that click on this product, not from your current location USA.")
 
         # Three locations
         vendor_markets = ['SE', 'NO', 'DK']
         warning_text = get_location_warning_text(vendor_markets, self.user)
-        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden, Norway and Denmark that click on this product, not from your current location USA")
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden, Norway and Denmark that click on this product, not from your current location USA.")
 
         # Three locations but user location belongs to product's market
         vendor_markets = ['SE', 'NO', 'US']

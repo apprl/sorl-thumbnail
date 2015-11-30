@@ -20,6 +20,7 @@ from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from django.utils.translation import ugettext_lazy as _
 
 logger = logging.getLogger("apparel.debug")
 
@@ -522,7 +523,7 @@ def get_location_warning_text(vendor_markets, user):
     if hasattr(user, 'show_warnings') and user.show_warnings and user.is_partner:
         if vendor_markets and user.location not in vendor_markets:
             markets_text = get_market_text_array(vendor_markets)
-            warning_text = "You will only earn money on visitors from %s that click on this product, not from your current location %s." \
+            warning_text = _("You will only earn money on visitors from %s that click on this product, not from your current location %s.") \
                            % (generate_countries_text(markets_text), get_location_text(user.location))
     return warning_text
 

@@ -400,16 +400,13 @@ def product_detail(request, slug):
     cost_per_click = get_vendor_cost_per_click(product.default_vendor.vendor)
 
     default_vendor = product.default_vendor
-    # Vendor market
+
+    # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
     vendor_markets = None
     if default_vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
 
     availability_text = get_availability_text(vendor_markets)
-
-    vendor = product.default_vendor.vendor
-    if vendor:
-        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
     warning_text = get_location_warning_text(vendor_markets, request.user)
 
     return render_to_response(
@@ -1122,7 +1119,7 @@ def product_lookup(request):
         if currency:
             if vendor.is_cpo:
                 product_earning = "You will earn approx. %s %.2f per generated sale of this item." % (currency, earning)
-            if vendor.is_cpc:
+            elif vendor.is_cpc:
                 product_earning = "You will earn approx. %s %.2f per generated click of this item." % (currency, earning)
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
@@ -1144,7 +1141,7 @@ def product_lookup(request):
                         earning_cut = earning_cut * store_commission
                         product_earning = "You will earn approx. %.2f %% per generated sale when linking to " \
                                           "this retailer" % (earning_cut * 100)
-                if vendor.is_cpc:
+                elif vendor.is_cpc:
                     cost_per_click = get_vendor_cost_per_click(vendor)
                     if cost_per_click:
                         product_earning = "You will earn approx. %s %.2f per generated click when linking to " \
