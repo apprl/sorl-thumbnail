@@ -24,9 +24,10 @@ textarea {
 }
 label {
     color: #999;
-    font-size: 14px;
+    font-size: 16px;
     font-family: @secondaryFontBold;
     letter-spacing: 0;
+    font-weight: normal;
 }
 select, input[type="submit"], input[type="radio"]:hover, input[type="checkbox"]:hover {
     cursor: pointer;
@@ -56,10 +57,6 @@ input[type="submit"] {
     &:hover {
         background-color: #333;
     }
-	/*@media (min-width: @screen-sm) {
-		height: 34px;
-		line-height: 38px;
-	}*/
 }
 input[type="checkbox"], input[type="radio"] {
     display:none;
@@ -120,10 +117,8 @@ textarea:focus {
 .select {
     position: relative;
     display: block;
-    //width: 100%;
     min-width: 260px;
     max-width: 320px;
-    //max-width: 260px;
     span {
         top: 8px;
         right: 15px;
@@ -133,6 +128,7 @@ textarea:focus {
     }
 }
 .form-group {
+    .clearfix;
     label {
         display: block;
     }
@@ -181,6 +177,36 @@ textarea:focus {
             background-color: black;
             border-color: black;
             font-size: 12px;
+        }
+    }
+}
+.form-container {
+	max-width: 480px;
+	margin: 30px auto;
+	text-align: center;
+	padding: 0 15px;
+	label {
+		text-align: left;
+	}
+    input {
+        max-width: none;
+    }
+	.btn {
+		margin: auto;
+	}
+    .btn-primary {
+        margin-top: 15px !important;
+    }
+    .row {
+        margin: 0;
+    }
+    @media (min-width: @screen-is) {
+        max-width: 720px;
+    }
+    @media (min-width: @screen-sm) {
+        .row {
+            margin-left: -15px;
+            margin-right: -15px;
         }
     }
 }

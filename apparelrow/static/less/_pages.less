@@ -2,6 +2,7 @@
 	Pages v1.0
 
 	- Home (Index)
+	- Publisher / Retailer (Signup)
 	- Search
 	- Log In & Registration
 	- Settings
@@ -21,11 +22,25 @@
     }
     h1 {
         margin-bottom: 15px;
-        font-size: 48px;
+        @media (min-width: @screen-sm) {
+            font-size: 48px;
+        }
     }
     section {
         margin-bottom: 45px;
     }
+    .usp-intro {
+        background: url('../images/backgrounds/home-bg.jpg') no-repeat center center scroll;
+        background-size: cover;
+    }
+}
+.usp-intro {
+	h1 {
+		margin: 45px auto;
+	}
+	.container {
+		max-width: @screen-sm;
+	}
 }
 .btn-join {
 	border-radius: 50%;
@@ -44,16 +59,6 @@
 }
 .click-detail {
   cursor: pointer;
-}
-.usp-intro {
-	background: url('../images/backgrounds/apprl-home-bg.jpg') no-repeat center center scroll;
-    background-size: cover;
-    h1 {
-        margin: 45px auto;
-    }
-    .container {
-        max-width: @screen-sm;
-    }
 }
 .usp-join {
     > div {
@@ -80,7 +85,7 @@
 }
 .usp-intro, .usp-brands {
     background-color: black;
-    h1, p {
+    h1, h2, p {
         color: white;
     }
 }
@@ -178,6 +183,81 @@
     }
 }
 
+/* Publisher / Retailer (Signup) ---------- */
+.publisher-index-page, .store-index-page {
+    main {
+        padding-top: 60px;
+        text-align: center;
+        h1 {
+            margin: 30px auto 15px auto;
+            @media (min-width: @screen-sm) {
+                font-size: 48px;
+            }
+        }
+        button {
+            margin: 30px auto;
+        }
+        .apply-form {
+            margin: 60px auto 30px auto;
+            form {
+                margin-top: 30px;
+            }
+        }
+        .btn {
+            margin: 0 auto;
+        }
+        .usp-brands {
+            margin: 0;
+        }
+        .scrolltarget {
+            margin: 30px auto 60px auto;
+
+        }
+        figure {
+            position: relative;
+            &:after {
+                content: "";
+                position: absolute;
+                background: rgba(0, 0, 0, 0.3);
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background: -webkit-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1));
+                background: -o-linear-gradient(rgba(255,0,0,0) 25%,rgba(255,0,0,1));
+                background: -moz-linear-gradient(rgba(255,0,0,0),rgba(255,0,0,1));
+                background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,1));
+            }
+            img {
+                vertical-align: baseline;
+            }
+        }
+    }
+}
+.publisher-index-page {
+    .usp-intro {
+        background: url('../images/backgrounds/publisher-bg.jpg') no-repeat center center scroll;
+        background-size: cover;
+    }
+}
+.store-index-page {
+    .usp-intro {
+        background: url('../images/backgrounds/retailer-bg.jpg') no-repeat center center scroll;
+        background-size: cover;
+    }
+}
+.index-page-complete {
+    main {
+        padding-bottom: 30px !important;
+        form {
+            margin: 30px auto 15px auto;
+        }
+        .btn {
+            margin: 0 auto 30px auto;
+        }
+    }
+}
+
 /* Search ---------- */
 .search-result {
     .btn {
@@ -197,32 +277,24 @@
 }
 
 /* Log In & Registration ---------- */
-.account {
-    main {
-        font-size: 14px;
+.login {
+    .form-container {
+        max-width: 480px;
         form {
             margin-bottom: 30px;
-            max-width: @screen-is;
         }
-        .btn, input {
-            margin: 0;
-            max-width: none;
-        }
-        li {
-            display: inline-block;
-            margin-right: 15px;
-            &:last-child {
-                margin: 0;
-            }
-        }
-        @media (min-width: @screen-xs) {
-            .btn {
-                max-width: 260px;
-            }
-            input {
-                max-width: 320px;
-            }
-        }
+    }
+}
+.registration {
+    .btn {
+        margin: 15px auto;
+    }
+}
+.registration-email main li {
+    float: left;
+    margin-right: 30px;
+    &:last-child {
+        margin: 0;
     }
 }
 

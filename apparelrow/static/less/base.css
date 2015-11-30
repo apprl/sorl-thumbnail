@@ -6900,24 +6900,18 @@ button.close {
 .col-is-6 {
   position: relative;
   min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
 }
-@media (min-width: 480px) {
+@media (min-width: 640px) {
   .col-is-6 {
     float: left;
     width: 50%;
+    padding-right: 15px;
+    padding-left: 15px;
   }
 }
-@media (min-width: 768px) {
-  .col-is-6 {
-    width: 50%;
-  }
-}
-@media (min-width: 992px) {
-  .col-is-6 {
-    width: 50%;
-  }
+footer .col-is-6 {
+  padding-left: 15px;
+  padding-right: 15px;
 }
 @media (min-width: 480px) and (max-width: 767px) {
   .hidden-is {
@@ -7776,6 +7770,9 @@ a.info:hover {
     display: block;
   }
 }
+.privacy {
+  margin-top: 15px;
+}
 /*
     Attributes v1.0
 */
@@ -7835,9 +7832,10 @@ textarea {
 }
 label {
   color: #999;
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Neuzeit Bold', 'Helvetica Neue', sans-serif;
   letter-spacing: 0;
+  font-weight: normal;
 }
 select,
 input[type="submit"],
@@ -7869,10 +7867,6 @@ input[type="submit"] {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-family: 'Neuzeit Heavy', sans-serif;
-  /*@media (min-width: @screen-sm) {
-		height: 34px;
-		line-height: 38px;
-	}*/
 }
 input[type="submit"]:hover {
   background-color: #333;
@@ -7956,6 +7950,18 @@ textarea:focus {
   font-size: 16px;
   pointer-events: none;
 }
+.form-group {
+  zoom: 1;
+}
+.form-group:before,
+.form-group:after {
+  display: table;
+  content: '';
+  zoom: 1;
+}
+.form-group:after {
+  clear: both;
+}
 .form-group label {
   display: block;
 }
@@ -8013,10 +8019,43 @@ textarea:focus {
   border-color: black;
   font-size: 12px;
 }
+.form-container {
+  max-width: 480px;
+  margin: 30px auto;
+  text-align: center;
+  padding: 0 15px;
+}
+.form-container label {
+  text-align: left;
+}
+.form-container input {
+  max-width: none;
+}
+.form-container .btn {
+  margin: auto;
+}
+.form-container .btn-primary {
+  margin-top: 15px !important;
+}
+.form-container .row {
+  margin: 0;
+}
+@media (min-width: 640px) {
+  .form-container {
+    max-width: 720px;
+  }
+}
+@media (min-width: 768px) {
+  .form-container .row {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+}
 /*
 	Pages v1.0
 
 	- Home (Index)
+	- Publisher / Retailer (Signup)
 	- Search
 	- Log In & Registration
 	- Settings
@@ -8036,10 +8075,24 @@ textarea:focus {
 }
 .frontpage main h1 {
   margin-bottom: 15px;
-  font-size: 48px;
+}
+@media (min-width: 768px) {
+  .frontpage main h1 {
+    font-size: 48px;
+  }
 }
 .frontpage main section {
   margin-bottom: 45px;
+}
+.frontpage main .usp-intro {
+  background: url('../images/backgrounds/home-bg.jpg') no-repeat center center scroll;
+  background-size: cover;
+}
+.usp-intro h1 {
+  margin: 45px auto;
+}
+.usp-intro .container {
+  max-width: 768px;
 }
 .btn-join {
   text-align: center;
@@ -8057,16 +8110,6 @@ textarea:focus {
 }
 .click-detail {
   cursor: pointer;
-}
-.usp-intro {
-  background: url('../images/backgrounds/apprl-home-bg.jpg') no-repeat center center scroll;
-  background-size: cover;
-}
-.usp-intro h1 {
-  margin: 45px auto;
-}
-.usp-intro .container {
-  max-width: 768px;
 }
 .usp-join > div {
   height: 480px;
@@ -8097,6 +8140,8 @@ textarea:focus {
 }
 .usp-intro h1,
 .usp-brands h1,
+.usp-intro h2,
+.usp-brands h2,
 .usp-intro p,
 .usp-brands p {
   color: white;
@@ -8211,6 +8256,85 @@ textarea:focus {
   bottom: 0;
   width: auto !important;
 }
+/* Publisher / Retailer (Signup) ---------- */
+.publisher-index-page main,
+.store-index-page main {
+  padding-top: 60px;
+  text-align: center;
+}
+.publisher-index-page main h1,
+.store-index-page main h1 {
+  margin: 30px auto 15px auto;
+}
+@media (min-width: 768px) {
+  .publisher-index-page main h1,
+  .store-index-page main h1 {
+    font-size: 48px;
+  }
+}
+.publisher-index-page main button,
+.store-index-page main button {
+  margin: 30px auto;
+}
+.publisher-index-page main .apply-form,
+.store-index-page main .apply-form {
+  margin: 60px auto 30px auto;
+}
+.publisher-index-page main .apply-form form,
+.store-index-page main .apply-form form {
+  margin-top: 30px;
+}
+.publisher-index-page main .btn,
+.store-index-page main .btn {
+  margin: 0 auto;
+}
+.publisher-index-page main .usp-brands,
+.store-index-page main .usp-brands {
+  margin: 0;
+}
+.publisher-index-page main .scrolltarget,
+.store-index-page main .scrolltarget {
+  margin: 30px auto 60px auto;
+}
+.publisher-index-page main figure,
+.store-index-page main figure {
+  position: relative;
+}
+.publisher-index-page main figure:after,
+.store-index-page main figure:after {
+  content: "";
+  position: absolute;
+  background: rgba(0, 0, 0, 0.3);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: -webkit-linear-gradient(rgba(255, 255, 255, 0), #ffffff);
+  background: -o-linear-gradient(rgba(255, 0, 0, 0) 25%, #ff0000);
+  background: -moz-linear-gradient(rgba(255, 0, 0, 0), #ff0000);
+  background: linear-gradient(rgba(255, 255, 255, 0), #ffffff);
+}
+.publisher-index-page main figure img,
+.store-index-page main figure img {
+  vertical-align: baseline;
+}
+.publisher-index-page .usp-intro {
+  background: url('../images/backgrounds/publisher-bg.jpg') no-repeat center center scroll;
+  background-size: cover;
+}
+.store-index-page .usp-intro {
+  background: url('../images/backgrounds/retailer-bg.jpg') no-repeat center center scroll;
+  background-size: cover;
+}
+.index-page-complete main {
+  padding-bottom: 30px !important;
+}
+.index-page-complete main form {
+  margin: 30px auto 15px auto;
+}
+.index-page-complete main .btn {
+  margin: 0 auto 30px auto;
+}
 /* Search ---------- */
 .search-result .btn {
   margin-bottom: 20px;
@@ -8225,32 +8349,21 @@ textarea:focus {
   text-decoration: none;
 }
 /* Log In & Registration ---------- */
-.account main {
-  font-size: 14px;
+.login .form-container {
+  max-width: 480px;
 }
-.account main form {
+.login .form-container form {
   margin-bottom: 30px;
-  max-width: 640px;
 }
-.account main .btn,
-.account main input {
+.registration .btn {
+  margin: 15px auto;
+}
+.registration-email main li {
+  float: left;
+  margin-right: 30px;
+}
+.registration-email main li:last-child {
   margin: 0;
-  max-width: none;
-}
-.account main li {
-  display: inline-block;
-  margin-right: 15px;
-}
-.account main li:last-child {
-  margin: 0;
-}
-@media (min-width: 480px) {
-  .account main .btn {
-    max-width: 260px;
-  }
-  .account main input {
-    max-width: 320px;
-  }
 }
 /* Settings ---------- */
 .settings-page h2 {
@@ -10889,6 +11002,10 @@ img {
   max-width: 100%;
   height: auto;
 }
+figure {
+  padding: 0;
+  margin: 0;
+}
 hr {
   border: 0;
   height: 0;
@@ -10946,7 +11063,8 @@ h1 {
 }
 h2 {
   font-family: 'Neuzeit Regular', 'Helvetica Neue', sans-serif;
-  font-size: 22px;
+  font-size: 24px;
+  margin-bottom: 5px;
 }
 h3 {
   font-family: 'Austin Light', serif;
@@ -10996,7 +11114,7 @@ article p {
     font-size: 56px;
   }
   h2 {
-    font-size: 26px;
+    font-size: 28px;
   }
   h3 {
     font-size: 26px;
@@ -11403,7 +11521,7 @@ main {
 footer {
   overflow: hidden;
   text-align: center;
-  padding: 15px 0;
+  padding: 30px 0;
   font-size: 14px;
 }
 footer li {

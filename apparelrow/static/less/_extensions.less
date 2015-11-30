@@ -2,22 +2,20 @@
     Extensions v1.0
 */
 
-// Additional grid breakpoint - 480px
+// Additional grid breakpoint - 640px
 .col-is-6 {
     position: relative;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
-    @media (min-width: @screen-xs) {
+    @media (min-width: @screen-is) {
         float: left;
         width: 50%;
+        padding-right: 15px;
+        padding-left: 15px;
     }
-    @media (min-width: @screen-sm) {
-        width: 50%;
-    }
-    @media (min-width: @screen-md) {
-        width: 50%;
-    }
+}
+footer .col-is-6 {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 .hidden-is {
     @media (min-width: @screen-xs) and (max-width: 767px) {

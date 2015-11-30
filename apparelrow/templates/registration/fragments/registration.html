@@ -1,20 +1,16 @@
-{% load i18n apparel_extras %}
-{% if not next_url %}
-{% url 'login-flow-redirect' as next_url %}
-{% endif %}
-<div class="row">
-	<div class="col-sm-4">
-	<p>
-		{% facebook_button next=next_url disable_flow=disable_flow extra_class="btn-facebook-signup" %}
-	</p>
-	<p>
-		<a class="btn btn-primary btn-signup-email" href="{% url 'auth_register_email' %}">{% trans "or sign up with e-mail" %}</a>
-	</p>
-	</div>
+    {% load i18n apparel_extras %}
+    {% if not next_url %}
+    {% url 'login-flow-redirect' as next_url %}
+    {% endif %}
+
+    <div class="form-container">
+        {% facebook_button next=next_url disable_flow=disable_flow extra_class="btn-facebook-signup" %}
+        <a class="btn btn-primary btn-signup-email" href="{% url 'auth_register_email' %}">{% trans "or sign up with e-mail" %}</a>
+    </div>
+
+    {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
+    <p class="privacy">{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
+    {% url 'auth_login' as login_url %}
+    <p>{% blocktrans with login_url=login_url %}<a href="{{login_url}}">If you're already a member, login here »</a></p>{% endblocktrans %}</p>
 </div>
-<br>
-{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
-<p class="privacy">{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}
-<br><br>
-{% url 'auth_login' as login_url %}
-<p>{% blocktrans with login_url=login_url %}<a href="{{login_url}}">If you're already a member, login here »</a></p>{% endblocktrans %}</p>
+{# / ends .container #}

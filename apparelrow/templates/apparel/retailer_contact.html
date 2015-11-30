@@ -4,53 +4,31 @@
 {% block body-classes %}store-index-page{% endblock %}
 {% block full-body %}
 
-<div class="background">
-    <div class="container">
-        <div class="body-header">
-            <div class="body-header-col-full">
-                <h1>{% trans "APPLY TO BECOME A PARTNER RETAILER" %}</h1>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="inner-content">
-                    <p>{% trans "Apprl helps you as an online retailer to increase your reach through our network of bloggers, premium media partners, other style influencers as well as our members - Your products at the point of inspiration." %}</p>
-                    <p>{% trans "Apply to become an Apprl partner store here:" %}</p>
-
-                    <form action="" method="post" class="form-horizontal">
-                        {% csrf_token %}
-                        <div class="form-group{% if form.name.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.name.html_name }}" class="col-sm-2 control-label">{{ form.name.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.name.html_name }}" type="text" class="form-control" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}" placeholder="{{ form.name.label }}">
-                                {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.email.html_name }}" class="col-sm-2 control-label">{{ form.email.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}">
-                                {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group{% if form.blog.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.blog.html_name }}" class="col-sm-2 control-label">{{ form.blog.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.blog.html_name }}" type="text" class="form-control" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}" placeholder="{{ form.blog.label }}">
-                                {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-6">
-                                <button class="btn btn-primary btn-block btn-apply">{% trans "APPLY" %}</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="container">
+    <h1>{% trans "Apply to become a partner retailer" %}</h1>
+    <p>{% trans "APPRL helps you as an online retailer to increase your reach through our network of bloggers, premium media partners, other style influencers as well as our members - Your products at the point of inspiration." %}</p>
+    <p>{% trans "Apply to become an Apprl partner store here:" %}</p>
 </div>
 
+<div class="form-container">
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group{% if form.name.errors %} error{% endif %}">
+            <label for="id_{{ form.name.html_name }}">{{ form.name.label }}</label>
+            <input name="{{ form.name.html_name }}" type="text" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+            {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
+        </div>
+        <div class="form-group{% if form.email.errors %} error{% endif %}">
+            <label for="id_{{ form.email.html_name }}">{{ form.email.label }}</label>
+            <input name="{{ form.email.html_name }}" type="text" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+            {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
+        </div>
+        <div class="form-group{% if form.blog.errors %} error{% endif %}">
+            <label for="id_{{ form.blog.html_name }}">{{ form.blog.label }}</label>
+            <input name="{{ form.blog.html_name }}" type="text" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}">
+            {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
+        </div>
+        <button class="btn btn-primary btn-lg btn-apply">{% trans "APPLY" %}</button>
+    </form>
+</div>
 {% endblock %}
