@@ -30,16 +30,16 @@ function updateUsername(){
 
             <div class="row">
                 <div class="col-is-6">
-                    <div class="form-group{% if form.first_name.errors %} has-error{% endif %}">
-                        <label for="id_{{ form.first_name.html_name }}" class="control-label">{% trans "First name" %}</label>
-                        <input name="{{ form.last_name.html_name }}" type="text" class="form-control" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                    <div class="form-group{% if form.first_name.errors %} error{% endif %}">
+                        <label for="id_{{ form.first_name.html_name }}">{% trans "First name" %}</label>
+                        <input name="{{ form.last_name.html_name }}" type="text" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
                         {% if form.first_name.errors %}<span class="help-block">{{ form.first_name.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
                 <div class="col-is-6">
-                    <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-                        <label for="id_{{ form.last_name.html_name }}" class="control-label">{% trans "Last name" %}</label>
-                        <input name="{{ form.last_name.html_name }}" type="text" class="form-control" id="id_{{ form.last_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
+                    <div class="form-group{% if form.email.errors %} error{% endif %}">
+                        <label for="id_{{ form.last_name.html_name }}">{% trans "Last name" %}</label>
+                        <input name="{{ form.last_name.html_name }}" type="text" id="id_{{ form.last_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
                         {% if form.last_name.errors %}<span class="help-block">{{ form.first_name.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
@@ -47,16 +47,16 @@ function updateUsername(){
 
             <div class="row">
                 <div class="col-is-6">
-                    <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-                        <label for="id_{{ form.email.html_name }}" class="control-label">{% trans "Email address" %}</label>
-                        <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" onkeyup="updateUsername();">
+                    <div class="form-group{% if form.email.errors %} error{% endif %}">
+                        <label for="id_{{ form.email.html_name }}">{% trans "Email address" %}</label>
+                        <input name="{{ form.email.html_name }}" type="text" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" onkeyup="updateUsername();">
                         {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
                 <div class="col-is-6">
-                    <div class="form-group{% if form.username.errors %} has-error{% endif %}">
-                        <label for="id_{{ form.username.html_name }}" class="control-label">{% trans "Username" %}</label>
-                        <input name="{{ form.username.html_name }}" type="text" class="form-control" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
+                    <div class="form-group{% if form.username.errors %} error{% endif %}">
+                        <label for="id_{{ form.username.html_name }}">{% trans "Username" %}</label>
+                        <input name="{{ form.username.html_name }}" type="text" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
                         {% if form.username.errors %}<span class="help-block">{{ form.username.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
@@ -64,23 +64,23 @@ function updateUsername(){
 
             <div class="row">
                 <div class="col-is-6">
-                    <div class="form-group{% if form.password1.errors %} has-error{% endif %}">
-                        <label for="id_{{ form.password1.html_name }}" class="control-label">{% trans "Password" %}</label>
-                        <input name="{{ form.password1.html_name }}" type="password" class="form-control" id="id_{{ form.password1.html_name }}">
+                    <div class="form-group{% if form.password1.errors %} error{% endif %}">
+                        <label for="id_{{ form.password1.html_name }}">{% trans "Password" %}</label>
+                        <input name="{{ form.password1.html_name }}" type="password" id="id_{{ form.password1.html_name }}">
                         {% if form.password1.errors %}<span class="help-block">{{ form.password1.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
                 <div class="col-is-6">
-                    <div class="form-group{% if form.password2.errors %} has-error{% endif %}">
-                        <label for="id_{{ form.password2.html_name }}" class="control-label">{% trans "Confirm password" %}</label>
-                        <input name="{{ form.password2.html_name }}" type="password" class="form-control" id="id_{{ form.password2.html_name }}">
+                    <div class="form-group{% if form.password2.errors %} error{% endif %}">
+                        <label for="id_{{ form.password2.html_name }}">{% trans "Confirm password" %}</label>
+                        <input name="{{ form.password2.html_name }}" type="password" id="id_{{ form.password2.html_name }}">
                         {% if form.password2.errors %}<span class="help-block">{{ form.password2.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
             </div>
 
             <div class="form-group {% if form.gender.errors %} has-error{% endif %}">
-                <label class="control-label">{% trans "Gender" %}</label>
+                <label>{% trans "Gender" %}</label>
                 <ul>
                     <li><label><input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M"><span></span>{% trans "Man" %}</label></li>
                     <li><label><input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W" checked><span></span>{% trans "Woman" %}</label></li>

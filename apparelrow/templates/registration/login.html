@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 {% if form.errors %}
-                <p>{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
+                <span class="help-block">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</span>
                 {% endif %}
                 <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
             </div>

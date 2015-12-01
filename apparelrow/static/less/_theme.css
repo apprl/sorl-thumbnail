@@ -27,6 +27,12 @@ hr {
 .helper:hover {
   color: #404040;
 }
+.primary {
+  color: #67e2b8;
+}
+.secondary {
+  color: #f64747;
+}
 /* Fonts ---------- */
 @font-face {
   font-family: 'Austin Light';

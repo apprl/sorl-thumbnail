@@ -234,9 +234,9 @@
         }
     }
     #profile-image {
-        float: right;
+        //float: right;
         overflow: hidden;
-        border-radius: 50%;
+        //border-radius: 50%;
         //text-align: center;
         position: relative;
         margin-bottom: 10px;
@@ -246,6 +246,7 @@
             //margin: 0 auto;
             width: 156px;
             height: 156px;
+            border-radius: 50%;
         }
         form {
             display: none;
@@ -262,11 +263,18 @@
             margin-top: 0;
         }
     }
-    .profile-content { text-align: center; }
-    .profile-content .btn { vertical-align: text-bottom; }
-    @media (min-width: @screen-sm) {
-        .profile-content { text-align: left; }
+    .profile-content {
+        text-align: center;
+        p, .btn-edit {
+            display: inline-block;
+        }
     }
+    .profile-content .btn {
+        vertical-align: text-bottom;
+    }
+    /*@media (min-width: @screen-sm) {
+        .profile-content { text-align: left; }
+    }*/
     /*.profile-navigation > div > ul {
         //.body-header-ul; WHATS THIS?
         margin-top: 10px;

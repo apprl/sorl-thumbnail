@@ -1,6 +1,6 @@
 {% load i18n %}
 <div class="body-header">
-    <h1>{% trans "Publisher" %}</h1>
+    <h1>{% trans "Dashboard" %}</h1>
     <ul class="sub-menu">
         <li><a{% if 'dashboard' in request.path %} class="selected"{% endif %} href="{% url 'dashboard' %}">{% if request.user.is_authenticated and request.user.is_partner %}{% trans "Your statistics" %}{% else %}{% trans "Become a publisher" %}{% endif %}</a></li>
         {% if request.user.is_authenticated and request.user.is_partner %}

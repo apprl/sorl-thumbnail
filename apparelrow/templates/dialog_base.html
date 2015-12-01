@@ -4,14 +4,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">{% block modal_title %}{% endblock %}</h4>
+                <h2 class="modal-title">{% block modal_title %}{% endblock %}</h2>
             </div>
             <div class="modal-body">
                 {% block modal_content %}{% endblock %}
             </div>
             <div class="modal-footer">
                 {% block modal_footer %}
-                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
                 {% endblock %}
             </div>
         </div>

@@ -53,7 +53,7 @@ input[type="submit"] {
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-family: 'Neuzeit Heavy', sans-serif;
+    font-family: @secondaryFontBold;
     &:hover {
         background-color: #333;
     }
@@ -97,7 +97,7 @@ label input[type="checkbox"]:checked + span {
     border-color: black;
     font-size: 14px;
 }
-input[type="text"], input[type="email"], input[type="password"], textarea, main input[type="search"] {
+input[type="text"], input[type="url"], input[type="email"], input[type="password"], textarea, main input[type="search"] {
     padding: 10px;
     background-image: linear-gradient(black,black),linear-gradient(#ccc,#ccc);
     background-size: 0 2px, 100% 1px;
@@ -119,6 +119,7 @@ textarea:focus {
     display: block;
     min-width: 260px;
     max-width: 320px;
+    margin: auto;
     span {
         top: 8px;
         right: 15px;
@@ -149,6 +150,16 @@ textarea:focus {
     box-shadow: none;
     &:focus {
         box-shadow: none;
+    }
+}
+.form-group.error {
+    background-color: transparent;
+    .help-block {
+        color: #f64747;
+    }
+    input {
+        background-color: #feeded;
+        background-image: linear-gradient(#f64747, #f64747), linear-gradient(#f64747, #f64747);
     }
 }
 .filter {

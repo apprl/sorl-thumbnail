@@ -36,3 +36,22 @@ footer .col-is-6 {
         float: right;
     }
 }
+
+// New ruleset for navbar behaviour
+@media (max-width: @screen-sm-max) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse.collapse {
+        display: none !important;
+    }
+    .navbar-collapse.collapse.in {
+        display: block !important;
+    }
+    .collapsing {
+        overflow: hidden !important;
+    }
+}

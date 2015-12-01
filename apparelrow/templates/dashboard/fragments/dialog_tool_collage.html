@@ -9,59 +9,72 @@
 {% endcomment %}
 {% block modal_content %}
 
+<div class="modal-header">
     <h2>{% trans "Create Collage" %}</h2>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+</div>
 
-    <div class="apprl-modal-tools-content">
-        <div class="slider-container">
-            <div class = 'iosSlider'>
-                <div class = 'slider'>
-                    <div class='item'><img src="{% static 'images/tools/ApprlCollageExample-3.jpg' %}" /></div>
-                    <div class='item'><img src="{% static 'images/tools/ApprlCollageExample-1.jpg' %}" /></div>
-                    <div class='item'><img src="{% static 'images/tools/ApprlCollageExample-2.jpg' %}" /></div>
+<div class="modal-content">
+    <div class="modal-body">
+        <div class="apprl-modal-tools-content">
+            <div class="slider-container">
+                <div class = 'iosSlider'>
+                    <div class = 'slider'>
+                        <div class='item'><img src="{% static 'images/tools/ApprlCollageExample-3.jpg' %}" /></div>
+                        <div class='item'><img src="{% static 'images/tools/ApprlCollageExample-1.jpg' %}" /></div>
+                        <div class='item'><img src="{% static 'images/tools/ApprlCollageExample-2.jpg' %}" /></div>
+                    </div>
+                    <div class="hidden-xs tools_prevButton"><i class="fa fa-chevron-left"></i></div>
+                    <div class="hidden-xs tools_nextButton"><i class="fa fa-chevron-right"></i></div>
                 </div>
-                <div class="hidden-xs tools_prevButton"><i class="fa fa-chevron-left"></i></div>
-                <div class="hidden-xs tools_nextButton"><i class="fa fa-chevron-right"></i></div>
             </div>
+        </div>
+
+        <div class="tool-description">
+            <h4>{% trans "Description" %}</h4>
+            <p>
+                {% blocktrans %}
+                    Inspire your readers. Collages are a great way to show your readers how to mix and match your
+                    favourite items.
+                {% endblocktrans %}
+             </p>
+
+            <h4>{% trans "Key Features" %}</h4>
+            <ul>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Easy to use: Our collage editor helps you to create great looking collages in no time,
+                        from your mobile, tablet or laptop.
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Put it on your site: To include the collage on your site you click “Embed on your
+                        blog/site”, copy the embed code and paste it in your CMS/blogging admin. (Note: you
+                        need to insert the code as text in HTML mode)
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Help your readers: Once the collage is on your site your readers can click the products in
+                        your collage and get directly to the products in the online store selling them.
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Earn money: You earn money on all sales or clicks generated from your collages, both on
+                        your site and on Apprl.com.
+                    {% endblocktrans %}
+                </li>
+            </ul>
         </div>
     </div>
 
-    <div class="tool-description">
-        <h3>{% trans "Description" %}</h3>
-        <p>
-            {% blocktrans %}
-                Inspire your readers. Collages are a great way to show your readers how to mix and match your
-                favourite items.
-            {% endblocktrans %}
-         </p>
-
-        <h3>{% trans "Key Features" %}</h3>
-        <ul>
-            <li>
-                {% blocktrans %}
-                    &mdash; Easy to use: Our collage editor helps you to create great looking collages in no time,
-                    from your mobile, tablet or laptop.
-                {% endblocktrans %}
-            </li>
-            <li>
-                {% blocktrans %}
-                    &mdash; Put it on your site: To include the collage on your site you click “Embed on your
-                    blog/site”, copy the embed code and paste it in your CMS/blogging admin. (Note: you
-                    need to insert the code as text in HTML mode)
-                {% endblocktrans %}
-            </li>
-            <li>
-                {% blocktrans %}
-                    &mdash; Help your readers: Once the collage is on your site your readers can click the products in
-                    your collage and get directly to the products in the online store selling them.
-                {% endblocktrans %}
-            </li>
-            <li>
-                {% blocktrans %}
-                    &mdash; Earn money: You earn money on all sales or clicks generated from your collages, both on
-                    your site and on Apprl.com.
-                {% endblocktrans %}
-            </li>
-        </ul>
+    <div class="modal-footer">
+        <a class="btn btn-primary" href="{% url 'look-editor' 'collage' %}">
+            {% trans "Create Collage" %}
+        </a>
     </div>
+</div>
 
 {% endblock %}

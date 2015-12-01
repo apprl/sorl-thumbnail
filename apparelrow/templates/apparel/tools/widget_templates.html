@@ -3,33 +3,33 @@
 
 <script type="text/template" id="dialog_login_template" data-title="{% trans "Login" %}">
     <p>{% trans "Do you want to save before logging in with Facebook?" %}</p>
-    <a href="#" class="btn btn-primary btn-block btn-cancel">{% trans "Cancel" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
+    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-primary btn-yes">{% trans "Yes" %}</a>
 </script>
 
 <script type="text/template" id="dialog_reset_template" data-title="{% trans "Reset look?" %}">
     <p>{% trans "Are you sure you want to discard changes and start over?" %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
 </script>
 
 <script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
     <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
 </script>
 
 <script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
     <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
 </script>
 
 <script type="text/template" id="dialog_unpublish_template" data-title="{% trans "Unpublish?" %}">
     <p>{% trans "Are you sure you want to unpublish this so that no one can see it?" %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
 </script>
 
 <script type="text/template" id="dialog_save_template" data-title="{% trans "Save" %}">
@@ -43,8 +43,8 @@
         <textarea name="description" id="look_description"><%= description %></textarea>
     </div>
 
-    <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
-    <a href="#" class="btn btn-block btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
+    <a href="#" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
+    <a href="#" class="btn btn-primary btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
 </script>
 
 <script type="text/template" id="dialog_no_products" data-title="{% trans "No products" %}">
@@ -89,7 +89,7 @@
 
 <script type="text/template" id="look_edit_add_popup_template" data-title="{% trans "Add product" %}">
     <div class="add-container group">
-        <i class="fa fa-chevron-left fa-5x"></i>
+        <i class="fa fa-chevron-left fa-3x"></i>
         <p>{% trans "Click in photo to place item" %}</p>
         <img src="<%= image_small %>">
     </div>
@@ -97,7 +97,7 @@
 
 <script type="text/template" id="look_edit_add_link_popup_template" data-title="{% trans "Add link" %}">
     <div class="add-container group">
-        <img src="{% static "images/big-larrow.png" %}">
+        <i class="fa fa-chevron-left fa-3x"></i>
         <p>{% trans "Click in photo to place link" %}</p>
     </div>
 </script>

@@ -17,16 +17,15 @@ function keepParam(uri)
     <div class="body-header">
         <h1>{% trans "Looks" %}</h1>
 
-         <ul class="sub-menu">
+         <!--<ul class="sub-menu">
             <li><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></li>
             <li><a href="?view=latest" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></li>
             {% if request.user.is_authenticated %}
             <li><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></li>
             {% endif %}
-        </ul>
+        </ul>-->
 
         <ul class="sidebar">
-            <li>{% include 'apparel/fragments/create_look_button.html' with request=request only %}</li>
             <li class="dropdown">
                 <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men's" %}{% elif gender == 'W' %}{% trans "Only women's" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                 <ul class="dropdown-menu" role="menu">

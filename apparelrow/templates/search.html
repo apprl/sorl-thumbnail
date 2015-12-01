@@ -13,48 +13,49 @@
 {% block body %}
 
     <div class="body-header">
-        <div class="body-header-col-left">
-            <h1>{% trans "Search result for" %} '<span id="search-query">{{ q }}</span>'</h1>
-        </div>
-        <div class="body-header-col-right">
-            <ul class="list-inline">
-                <li>
-                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men’s" %}{% elif gender == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'search' %}?q={{ q }}">{% trans "Show all" %}</a></li>
-                        <li><a href="{% url 'search-men' %}?q={{ q }}">{% trans "Only men’s" %}</a></li>
-                        <li><a href="{% url 'search-women' %}?q={{ q }}">{% trans "Only women’s" %}</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+        <h1>{% trans "Search result for" %} '<span id="search-query">{{ q }}</span>'</h1>
+        <ul class="sub-menu">
+            <li>
+                <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men's" %}{% elif gender == 'W' %}{% trans "Only women's" %}{% else %}{% trans "Show all" %}{% endif %} <b class="caret"></b></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'search' %}?q={{ q }}">{% trans "Show all" %}</a></li>
+                    <li><a href="{% url 'search-men' %}?q={{ q }}">{% trans "Only men's" %}</a></li>
+                    <li><a href="{% url 'search-women' %}?q={{ q }}">{% trans "Only women's" %}</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
 
     <div id="search-result" class="row">
         <div class="wide result-container col-md-4">
-            <h3 class="search-result-products">
-                <span>{% trans "Matching products" %}</span>
+            <h4 class="search-result-products">
+                {% trans "Matching products" %}
                 <a class="pull-right" style="display:none;" href="#">{% trans "See all »" %}</a>
-            </h3>
+            </h4>
+            <hr>
             <div class="product-list"><ul class="list-unstyled" id="search-result-products"></ul></div>
             <div class="search-link"><a class="search-result-products btn btn-primary btn-block" href="#" style="display:none;">{% trans "Show all products" %}</a></div>
         </div>
         <div class="result-container col-md-4">
-            <h3 class="search-result-looks">
-                <span>{% trans "Matching looks" %}</span>
+            <h4 class="search-result-looks">
+                {% trans "Matching looks" %}
                 <a class="pull-right" style="display:none;" href="#">{% trans "See all »" %}</a>
-            </h3>
+            </h4>
+            <hr>
             <ul id="search-result-looks" class="list-unstyled looks"></ul>
             <div class="search-link"><a class="search-result-looks btn btn-primary btn-block" href="#" style="display:none;">{% trans "Show all looks" %}</a></div>
         </div>
         <div class="last result-container col-md-4">
-            <h3 class="search-result-manufacturers"><span>{% trans "Matching brands" %}</span></h3>
+            <h4 class="search-result-manufacturers">{% trans "Matching brands" %}</h4>
+            <hr>
             <ul class="list-unstyled" id="search-result-manufacturers"></ul>
 
-            <h3 class="search-result-stores"><span>{% trans "Matching stores" %}</span></h3>
+            <h4 class="search-result-stores">{% trans "Matching stores" %}</h4>
+            <hr>
             <ul class="list-unstyled" id="search-result-stores"></ul>
 
-            <h3 class="search-result-profiles"><span>{% trans "Matching members" %}</span></h3>
+            <h4 class="search-result-profiles">{% trans "Matching members" %}</h4>
+            <hr>
             <ul class="list-unstyled" id="search-result-profiles"></ul>
         </div>
     </div>

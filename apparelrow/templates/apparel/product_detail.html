@@ -29,7 +29,7 @@
 {% block full-body %}
 
     <div class="container" itemscope itemtype="http://data-vocabulary.org/Product">
-        <div class="body-header center-sm">
+        <div class="body-header center">
             <hgroup>
                 {% if object.manufacturer.user %}
                 <h1><a itemprop="brand" href="{{ object.manufacturer.user.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
@@ -38,6 +38,12 @@
                 {% endif %}
                 {% if object.product_name %}<h3 itemprop="name">{{ object.product_name }}</h3>{% endif %}
             </hgroup>
+
+            {% if request.user.is_authenticated %}
+            <a class="btn btn-lg{% if is_liked %}{% endif %}" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart secondary"></i> <span>{% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
+            {% else %}
+            <a class="btn btn-lg" data-toggle="modal" href="#" data-target="#modal_like_product"><i class="fa fa-heart"></i> <span>{% trans "Save" %}</span></a>
+            {% endif %}
         </div>
 
         <div class="row">
@@ -70,7 +76,7 @@
 
                     <div class="product-image">
                         {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
-                        <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" class="img-responsive" />
+                        <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}">
                         {% endthumbnail %}
                     </div>
                 </section>
@@ -93,7 +99,7 @@
                                         {% if object.default_vendor.availability == 0 %}
                                         <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span></a>
                                         {% else %}
-                                        <a rel="nofollow" target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span></a>
+                                        <a rel="nofollow" target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
                                         {% endif %}
                                     {% endif %}
                                 </p>
@@ -114,12 +120,6 @@
 
                                 {% if object.default_vendor.original_currency != object.default_vendor.locale_currency %}
                                 <small>{% blocktrans with object.default_vendor.original_currency as original_currency %}The item is sold in {{ original_currency }} and the conversion to {{ CURRENCY }} is approximate.{% endblocktrans %}</small>
-                                {% endif %}
-
-                                {% if request.user.is_authenticated %}
-                                <a class="hidden-xs btn btn-lg{% if is_liked %} btn-secondary{% endif %}" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Remove" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i> <span>{% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
-                                {% else %}
-                                <a class="hidden-xs btn btn-lg" data-toggle="modal" href="#" data-target="#modal_like_product"><i class="fa fa-heart"></i> <span>{% trans "Save" %}</span></a>
                                 {% endif %}
 
                                 {% if object.default_vendor.availability == 0 %}
@@ -281,7 +281,7 @@
 
     <ul class="actions visible-xs">
         {% if request.user.is_authenticated %}
-        <a class="btn btn-sm btn-default{% if is_liked %} btn-secondary{% endif %}" href="#" data-liked-text="{% trans "" %}" data-unlike-text="{% trans "" %}" data-like-text="{% trans "" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i></a>
+        <a class="btn btn-sm btn-default{% if is_liked %}{% endif %}" href="#" data-liked-text="{% trans "" %}" data-unlike-text="{% trans "" %}" data-like-text="{% trans "" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart secondary"></i></a>
         {% else %}
         <a class="btn btn-sm btn-primary" data-toggle="modal" href="#" data-target="#modal_like_product"><i class="fa fa-heart"></i></a>
         {% endif %}

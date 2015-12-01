@@ -32,6 +32,9 @@
     .usp-intro {
         background: url('../images/backgrounds/home-bg.jpg') no-repeat center center scroll;
         background-size: cover;
+        .scrolltarget {
+            margin: 30px 0;
+        }
     }
 }
 .usp-intro {
@@ -45,31 +48,45 @@
 .btn-join {
 	border-radius: 50%;
     text-align: center;
-	width: 256px;
 	text-transform: none;
-	height: 256px;
     letter-spacing: 0;
-    line-height: 256px;
 	border-radius: 50%;
-	font-size: 30px;
+    width: 192px;
+    height: 192px;
+    line-height: 192px;
+	font-size: 24px;
 	margin: 0 auto !important;
     -webkit-background-clip: padding-box;
     -moz-background-clip:    padding;
     background-clip:         padding-box;
+	@media (min-width: @screen-sm) {
+	    font-size: 30px;
+	    width: 256px;
+	    height: 256px;
+        line-height: 256px;
+    }
 }
 .click-detail {
   cursor: pointer;
 }
 .usp-join {
-    > div {
-        height: 480px;
+	@media (min-width: @screen-sm) {
+        > div {
+            height: 480px;
+        }
     }
 }
 .usp-story {
     padding: 45px 0;
     background-color: #eee;
+    img {
+        margin: 15px auto;
+    }
     @media (min-width: 1200px) {
         padding-bottom: 0;
+        img {
+            margin: 0 auto;
+        }
     }
     .summary {
         @media (min-width: 1200px) {
@@ -106,19 +123,15 @@
 }
 .usp-partner {
     .clearfix;
-    @media (min-width: @screen-is) {
-        display: table;
-        width: 100%;
-    }
     .publisher, .retailer {
         .animate;
         a {
-            padding: 30px;
+            padding: 15px;
             display: block;
         }
         h2 {
             font-family: @secondaryFontBold;
-            font-size: 30px;
+            font-size: 22px;
             letter-spacing: -1px;
             margin-bottom: 5px;
         }
@@ -127,9 +140,16 @@
             margin: 0;
         }
         @media (min-width: @screen-is) {
-            //float: left;
             display: table-cell;
             width: 50%;
+        }
+        @media (min-width: @screen-sm) {
+            a {
+                padding: 30px;
+            }
+            h2 {
+                font-size: 24px;
+            }
         }
     }
     .publisher {
@@ -146,6 +166,10 @@
         &:hover {
             background-color: #444;
         }
+    }
+    @media (min-width: @screen-is) {
+        display: table;
+        width: 100%;
     }
 }
 #slider-publishers, #slider-looks {
@@ -452,4 +476,7 @@
 /* Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies) ---------- */
 .dynamic-content ol {
     list-style: decimal;
+}
+.about-page main img {
+    margin-bottom: 30px;
 }

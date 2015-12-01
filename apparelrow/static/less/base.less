@@ -103,6 +103,12 @@ section {
 }
 
 /* Typography ---------- */
+hgroup {
+    margin-bottom: 15px;
+    h1 {
+        margin-bottom: 5px;
+    }
+}
 h1, h2, h3, h4, h5 {
     margin: 0;
     line-height: 1;
@@ -119,6 +125,7 @@ h2 {
     font-family: @secondaryFont;
     font-size: 24px;
     margin-bottom: 5px;
+    letter-spacing: 0;
 }
 h3 {
     font-family: @primaryFont;
@@ -149,13 +156,14 @@ p {
 }
 p.preamble {
     color: #999;
-    font-size: 22px;
+    font-size: 20px;
     max-width: 992px;
     margin: auto;
 }
 article {
     h2 {
         margin-bottom: 15px;
+        color: black;
     }
     p {
         max-width: 720px;
@@ -175,6 +183,9 @@ article {
     }
     h3 {
         font-size: 26px;
+    }
+    p.preamble {
+        font-size: 22px;
     }
 }
 
@@ -218,7 +229,7 @@ header {
         img {
             max-height: 40px;
         }
-        @media (min-width: 768px) {
+        @media (min-width: @screen-md) { // was previously screen-sm
             li a {
                 color: white;
                 &:hover, &:focus, &:active {
@@ -257,7 +268,7 @@ header {
         li {
             line-height: 44px;
         }
-        @media (min-width: 768px) {
+        @media (min-width: @screen-md) { // was previously screen-sm
             li {
                 float: left;
                 line-height: 60px;
@@ -276,13 +287,15 @@ header {
     }
     .primary-nav {
         margin-top: 1px;
-        @media (min-width: 768px) {
+        padding-top: 54px;
+        @media (min-width: @screen-md) { // was previously screen-sm
+            padding: 0;
             float: left;
         }
     }
     .secondary-nav {
-        padding-bottom: 44px;
-        @media (min-width: 768px) {
+        padding-bottom: 5px;
+        @media (min-width: @screen-md) { // was previously screen-sm
             padding: 0;
             float: right;
             margin-right: -15px;
@@ -304,7 +317,7 @@ header {
         border: none;
         background: transparent !important;
         border-radius: 0;
-        margin: 8px 0 0 0;
+        margin: 8px -10px 0 0;
         padding: 0;
         width: 44px;
         height: 44px;
@@ -346,6 +359,18 @@ header {
 }
 
 // Search
+.search-box {
+    position: absolute;
+    padding: 0 15px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    @media (min-width: @screen-md) { // was previously screen-sm
+        position: static;
+        padding: 0;
+        width: auto;
+    }
+}
 header .navbar-form {
     padding: 0 0 15px 0;
     margin: 8px 0 0 0;
@@ -359,13 +384,11 @@ header .navbar-form {
         float: right;
         height: 44px;
         line-height: 3em; // Using em units due to Chrome render bug
-        color: white;
+        color: black;
         padding: 0 44px 0 10px;
         background-color: @offwhite;
-        border: 2px solid transparent;
         &:focus, &:active {
-            background-color: white;
-            border-color: @offwhite;
+            background-color: #f8f8f8;
         }
     }
     .btn-search {
@@ -379,13 +402,14 @@ header .navbar-form {
         line-height: 40px;
         color: @grey;
     }
-    @media (min-width: 768px) {
+    @media (min-width: @screen-md) { // was previously screen-sm
         margin: 8px 15px 0 0;
         padding: 0;
         input {
             max-width: 160px;
+            color: white;
             background-color: @darkGrey;
-            border: 0;
+            border: 0 !important;
             &:focus, &:active {
                 color: black;
                 background-color: white;
@@ -404,7 +428,7 @@ header .navbar-form {
     padding: 0 15px;
     background-color: white;
     box-shadow: 0 1px 10px rgba(0, 0, 0, .3);
-    @media (min-width: 768px) {
+    @media (min-width: @screen-md) { // was previously screen-sm
         width: auto;
         background-color: transparent;
         box-shadow: none;
@@ -532,9 +556,9 @@ main {
 }
 .fineprint {
     font-size: 13px;
-    p {
+    /*p {
         color: black;
-    }
+    }*/
     ul {
         list-style: disc inside none;
     }
@@ -557,9 +581,10 @@ main {
         margin: 15px auto 0 auto;
         max-width: 720px;
     }
-    /*@media (min-width: @screen-sm) {
-        text-align: left;
-    }*/
+    .btn {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 /* Footer ---------- */
@@ -580,14 +605,35 @@ footer {
             color: @grey;
         }
     }
+    input, .btn {
+        max-width: 320px;
+        margin: 0 auto;
+    }
     input[type="email"] {
         margin-bottom: 10px;
+    }
+    input[type="submit"] {
+        line-height: 44px;
     }
     h5 {
         color: @grey;
         margin: 15px 0 10px 0;
     }
-    @media (min-width: 992px) {
+    .dropdown {
+        margin-bottom: 10px;
+    }
+    /*.btn {
+        max-width: 320px;
+    }*/
+    @media (min-width: @screen-is) {
+        input, .btn {
+            max-width: 260px;
+        }
+    }
+    @media (min-width: @screen-sm) {
+        //text-align: left;
+    }
+    @media (min-width: @screen-lg) {
         text-align: left;
     }
 }

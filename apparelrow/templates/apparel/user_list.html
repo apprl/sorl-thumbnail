@@ -20,16 +20,16 @@
     <div class="body-header">
         {% if 'users' in request.path %}
         <h1>{% trans "Members" %}</h1>
-        <ul class="sub-menu">
+        <!--<ul class="sub-menu">
             <li><a href="#">{% trans "Popular" %}</a></li>
             <li><a href="#">{% trans "New" %}</a></li>
-        </ul>
+        </ul>-->
         {% elif 'brands' in request.path %}
         <h1>{% trans "Brands" %}</h1>
-        <ul class="sub-menu">
+        <!--<ul class="sub-menu">
             <li><a href="#">{% trans "Popular" %}</a></li>
             <li><a href="#">{% trans "New" %}</a></li>
-        </ul>
+        </ul>-->
         {% endif %}
         {% if not is_brand %}
         <ul class="sidebar">

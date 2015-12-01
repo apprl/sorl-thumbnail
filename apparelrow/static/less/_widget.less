@@ -2,7 +2,23 @@
     Widget v1.0
 */
 
+#popup-slim.adjust-right {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
 .widget-page {
+    .body-header {
+        margin: 0;
+        .clearfix;
+        h2 {
+            float: left;
+        }
+        .sidebar {
+            @media (min-width: @screen-md) {
+                margin: 0;
+                float: right;
+            }
+        }
+    }
     main {
         padding-top: 60px;
         @media (min-width: @screen-md) {
@@ -71,6 +87,10 @@
             }
         }
     }
+}
+.widget-page #product-chooser #custom-link-wrapper {
+    border: 0;
+    padding: 15px 0 0 15px;
 }
 .widget-footer .btn {
     margin: 0;
