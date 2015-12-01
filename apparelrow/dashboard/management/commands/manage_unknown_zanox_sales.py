@@ -37,8 +37,8 @@ class Command(BaseCommand):
             logger.debug("Retrieve User and Vendor objects for user id %s and vendor name %s" % (user_id, vendor_name))
             # Get vendor and user objects
             try:
-                vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_name) #TODO pasar vendor y user como parametros
-                user = get_model('profile', 'User').objects.get(id=user_id) # 29043 user id for MenWith in production
+                vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_name)
+                user = get_model('profile', 'User').objects.get(id=user_id)
             except get_model('apparel', 'Vendor').DoesNotExist:
                 logger.warning("Vendor ASOS does not exist")
             except get_model('profile', 'User').DoesNotExist:

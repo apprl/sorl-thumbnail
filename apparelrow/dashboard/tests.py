@@ -377,6 +377,8 @@ class TestDashboard(TransactionTestCase):
         pass
 
 
+
+
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestDashboardCuts(TransactionTestCase):
 
@@ -1928,6 +1930,47 @@ class TestAggregatedData(TransactionTestCase):
             elif data.user_id == 0:
                 self.assertEqual(data.user_name, 'APPRL')
                 self.assertEqual(data.sale_earnings, decimal.Decimal(0))
+
+    def test_product_name_too_long(self):
+        category = get_model('apparel', 'Category').objects.get(name='Category')
+        manufacturer = get_model('apparel', 'Brand').objects.get(name='Brand')
+        product = get_model('apparel', 'Product').objects.create(
+            product_name='Adidas Originals adidas Originals White Tubular Runner Sneakers Green Blue White Brown Etc Etc Etc Etc Etc',
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            product_image='no real image',
+            published=True,
+            sku='wk-11111111'
+        )
+        self.assertGreater(len(product.product_name), 100)
+        get_model('dashboard', 'AggregatedData').objects.create(aggregated_from_name=product.product_name,
+                                                                aggregated_from_slug=product.slug)
+
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 1)
+        aggregated_data = get_model('dashboard', 'AggregatedData').objects.latest("created")
+        self.assertEqual(len(aggregated_data.aggregated_from_name), 99)
+
+
+    def test_fields_none_or_too_long(self):
+        long_string = ""
+        for i in range(0,205):
+            long_string += "a"
+        self.assertGreater(len(long_string), 200)
+
+        AggregatedDataFactory.create(aggregated_from_name=None,aggregated_from_slug=None,
+                                     aggregated_from_link=None,aggregated_from_image=None)
+
+        AggregatedDataFactory.create(aggregated_from_name=long_string,aggregated_from_slug=long_string,
+                                     aggregated_from_link=long_string,aggregated_from_image=long_string)
+
+        self.assertEqual(get_model('dashboard', 'AggregatedData').objects.count(), 2)
+        aggregated_data = get_model('dashboard', 'AggregatedData').objects.latest("created")
+        self.assertEqual(len(aggregated_data.aggregated_from_name), 99)
+        self.assertEqual(len(aggregated_data.aggregated_from_slug), 99)
+        self.assertEqual(len(aggregated_data.aggregated_from_link), 199)
+        self.assertEqual(len(aggregated_data.aggregated_from_image), 199)
+
 
 class TestPaymentHistory(TestCase):
 

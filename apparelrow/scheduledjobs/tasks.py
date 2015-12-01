@@ -5,9 +5,11 @@ __author__ = 'klaswikblad'
 
 from celery.schedules import crontab
 from celery.task import periodic_task, task
+import requests
 
 import logging
 log = logging.getLogger('celery_scheduled')
+log_urls = logging.getLogger('url_redirect_tests')
 
 # Run importer at midnight
 @periodic_task(name='apparelrow.scheduledjobs.tasks.run_importer', run_every=crontab(minute='0',hour='0'), max_retries=1, ignore_result=True)
@@ -129,3 +131,14 @@ def run_vendor_importer(vendor):
 def check_clicks_limit_per_vendor():
     from django.core import management
     management.call_command('check_clicks_limit_per_vendor')
+
+@task(name='apparelrow.scheduledjobs.tasks.check_urls',max_retries=5, ignore_result=True)
+def check_url_endpoint(url):
+    if not url:
+        return None
+    try:
+        r = requests.get(url, stream=True)
+        if not r.url == url:
+            log_urls.info("%s redirects to %s" % (url,r.url))
+    except:
+        log_urls.info("Timeout for url %s" % url)

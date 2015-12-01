@@ -57,3 +57,14 @@ class SaleFactory(factory.django.DjangoModelFactory):
     converted_commission = 50
     status = get_model('dashboard', 'Sale').CONFIRMED
     paid = get_model('dashboard', 'Sale').PAID_PENDING
+
+
+class AggregatedDataFactory(factory.django.DjangoModelFactory):
+    id = factory.Sequence(lambda n: '%s' % (n + 1))
+    aggregated_from_name = factory.Sequence(lambda n: 'Name %s' % (n + 1))
+    aggregated_from_slug = factory.Sequence(lambda n: 'Slug %s' % (n + 1))
+    aggregated_from_link = factory.Sequence(lambda n: 'Link %s' % (n + 1))
+    aggregated_from_image = factory.Sequence(lambda n: 'Image %s' % (n + 1))
+
+    class Meta:
+        model = get_model('dashboard', 'AggregatedData')
