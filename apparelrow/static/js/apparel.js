@@ -462,17 +462,19 @@ function showWarning($element) {
         type: 'POST',
         url: '/products/check_location/' + slug + '/',
         success: function(response, status, request) {
-            $.notify({
-                message: response
-            }, { // settings
-                type: 'warning',
-                z_index: 10031,
-                offset: 50,
-                placement: {
-                    from: "top",
-                    align: "center"
-                }
-            });
+            if(response){
+                $.notify({
+                    message: response
+                }, { // settings
+                    type: 'warning',
+                    z_index: 10031,
+                    offset: 50,
+                    placement: {
+                        from: "top",
+                        align: "center"
+                    }
+                });
+            }
         }
     });
 }
