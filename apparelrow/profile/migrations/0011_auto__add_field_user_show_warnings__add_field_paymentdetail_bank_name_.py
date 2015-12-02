@@ -8,6 +8,11 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'User.show_warnings'
+        db.add_column('profile_user', 'show_warnings',
+                      self.gf('django.db.models.fields.BooleanField')(default=True),
+                      keep_default=False)
+
         # Adding field 'PaymentDetail.bank_name'
         db.add_column(u'profile_paymentdetail', 'bank_name',
                       self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True),
@@ -23,6 +28,9 @@ class Migration(SchemaMigration):
         db.alter_column(u'profile_paymentdetail', 'banknr', self.gf('django.db.models.fields.CharField')(max_length=34, null=True))
 
     def backwards(self, orm):
+        # Deleting field 'User.show_warnings'
+        db.delete_column('profile_user', 'show_warnings')
+
         # Deleting field 'PaymentDetail.bank_name'
         db.delete_column(u'profile_paymentdetail', 'bank_name')
 
@@ -325,6 +333,7 @@ class Migration(SchemaMigration):
             'referral_partner_code': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
             'referral_partner_parent': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'null': 'True', 'blank': 'True'}),
             'referral_partner_parent_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'show_warnings': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'slug': ('django.db.models.fields.CharField', [], {'max_length': '100', 'unique': 'True', 'null': 'True'}),
             'summary_mails': ('django.db.models.fields.CharField', [], {'default': "'W'", 'max_length': '1'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
