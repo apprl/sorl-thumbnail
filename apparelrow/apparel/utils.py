@@ -279,7 +279,9 @@ def currency_exchange(to_currency, from_currency):
         return 1
 
     rates = cache.get(settings.APPAREL_RATES_CACHE_KEY)
-    if not rates:
+    if not rates or len(rates.keys()) < 20:
+        logger.warn("Not finding enough currency rates from cache [{}], loading from database instead.".
+                    format(",".join(rates.keys())))
         fxrate_model = get_model('importer', 'FXRate')
         rates = {}
         for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY):
@@ -295,6 +297,7 @@ def currency_exchange(to_currency, from_currency):
             rates = {}
         logger.fatal("Unable to convert currency from {} to {}, keys available {}. Drop cache key {} and let it repopulate.".
                      format(from_currency,to_currency,",".join(rates.keys()),settings.APPAREL_RATES_CACHE_KEY))
+
 
     if from_currency == settings.APPAREL_BASE_CURRENCY:
         rate = rates[to_currency]
