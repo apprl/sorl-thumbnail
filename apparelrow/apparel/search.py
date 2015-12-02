@@ -25,9 +25,9 @@ from apparelrow.apparel.utils import select_from_multi_gender
 from apparelrow.apparel.tasks import product_popularity
 from sorl.thumbnail import get_thumbnail
 
-from pysolr import Solr
+from pysolr import Solr, SolrError, Results
 
-logger = logging.getLogger('apparel.search')
+logger = logging.getLogger('apparelrow')
 
 RESULTS_PER_PAGE = 10
 PRODUCT_SEARCH_FIELDS = ['manufacturer_name', 'category_names^40', 'product_name', 'color_names^40', 'description']
@@ -52,7 +52,11 @@ def more_like_this_product(body, gender, location, limit):
 
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
     connection = Solr(settings.SOLR_URL)
-    result = connection.more_like_this('', mlt_fields, **kwargs)
+    try:
+        result = connection.more_like_this('', mlt_fields, **kwargs)
+    except SolrError as ex:
+        logger.error("Failed to get more like this from SOLR, reason [{}] connection [{}]".format(ex.message, settings.SOLR_URL))
+        result = Results({}, 0)
     return result
 
 def more_alternatives(product, location, limit):
