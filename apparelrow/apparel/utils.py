@@ -20,7 +20,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 
-logger = logging.getLogger("apparel.debug")
+logger = logging.getLogger("apparelrow")
 
 
 def get_ga_cookie_cid(request=None):
@@ -287,8 +287,15 @@ def currency_exchange(to_currency, from_currency):
 
         if rates:
             cache.set(settings.APPAREL_RATES_CACHE_KEY, rates, 60*60)
+    rate = None
+    try:
+        rate = rates[to_currency] * (1 / rates[from_currency])
+    except KeyError:
+        if not rates:
+            rates = {}
+        logger.fatal("Unable to convert currency from {} to {}, keys available {}. Drop cache key {} and let it repopulate.".
+                     format(from_currency,to_currency,",".join(rates.keys()),settings.APPAREL_RATES_CACHE_KEY))
 
-    rate = rates[to_currency] * (1 / rates[from_currency])
     if from_currency == settings.APPAREL_BASE_CURRENCY:
         rate = rates[to_currency]
     elif to_currency == settings.APPAREL_BASE_CURRENCY:
