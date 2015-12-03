@@ -120,6 +120,10 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
     return query_arguments
 
 def calculate_price_range(request, language):
+    """
+    Return array with price range, with default values unless user has set minimum and maximum values for prices.
+    Used mainly for product filters.
+    """
     pricerange = {'min': 0, 'max': 10000}
     if language in settings.MAX_MIN_CURRENCY:
         pricerange['max'] = settings.MAX_MIN_CURRENCY.get(language)
@@ -135,6 +139,10 @@ def calculate_price_range(request, language):
     return pricerange
 
 def calculate_stores(stores_list):
+    """
+    Return array of tuples with id and name of the store, given a list of String with the 'name|id' format
+    Used mainly for product filters.
+    """
     stores = []
     for i, value in enumerate(stores_list):
         if i % 2 == 0:
@@ -143,6 +151,9 @@ def calculate_stores(stores_list):
     return stores
 
 def calculate_category(categories_list):
+    """
+    Return list of tuples (id, name) of categories. Used mainly for product filters.
+    """
     category_ids = map(int, categories_list[::2])
     category_values = map(int, categories_list[1::2])
     categories = dict(zip(category_ids, category_values))
