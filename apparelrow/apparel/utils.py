@@ -278,7 +278,7 @@ def currency_exchange(to_currency, from_currency):
     if from_currency == to_currency:
         return 1
 
-    rates = cache.get(settings.APPAREL_RATES_CACHE_KEY)
+    rates = cache.get(settings.APPAREL_RATES_CACHE_KEY) or {}
     if not rates or len(rates.keys()) < 20:
         logger.warn("Not finding enough currency rates from cache [{}], loading from database instead.".
                     format(",".join(rates.keys())))
