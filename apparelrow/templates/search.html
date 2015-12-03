@@ -14,7 +14,8 @@
 
     <div class="body-header">
         <h1>{% trans "Search result for" %} '<span id="search-query">{{ q }}</span>'</h1>
-        <ul class="sub-menu">
+
+        <ul class="sidebar">
             <li>
                 <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men's" %}{% elif gender == 'W' %}{% trans "Only women's" %}{% else %}{% trans "Show all" %}{% endif %} <b class="caret"></b></button>
                 <ul class="dropdown-menu" role="menu">
@@ -46,17 +47,23 @@
             <div class="search-link"><a class="search-result-looks btn btn-primary btn-block" href="#" style="display:none;">{% trans "Show all looks" %}</a></div>
         </div>
         <div class="last result-container col-md-4">
-            <h4 class="search-result-manufacturers">{% trans "Matching brands" %}</h4>
-            <hr>
-            <ul class="list-unstyled" id="search-result-manufacturers"></ul>
+            <section>
+                <h4 class="search-result-manufacturers">{% trans "Matching brands" %}</h4>
+                <hr>
+                <ul class="list-unstyled" id="search-result-manufacturers"></ul>
+            </section>
 
-            <h4 class="search-result-stores">{% trans "Matching stores" %}</h4>
-            <hr>
-            <ul class="list-unstyled" id="search-result-stores"></ul>
+            <section>
+                <h4 class="search-result-stores">{% trans "Matching stores" %}</h4>
+                <hr>
+                <ul class="list-unstyled" id="search-result-stores"></ul>
+            </section>
 
-            <h4 class="search-result-profiles">{% trans "Matching members" %}</h4>
-            <hr>
-            <ul class="list-unstyled" id="search-result-profiles"></ul>
+            <section>
+                <h4 class="search-result-profiles">{% trans "Matching members" %}</h4>
+                <hr>
+                <ul class="list-unstyled" id="search-result-profiles"></ul>
+            </section>
         </div>
     </div>
 

@@ -22,6 +22,8 @@
         {% facebook_button next=next_url extra_class="btn-facebook-login" %}
         {% endif %}
 
+        <div class="separator"><span>{% trans "or" %}</span></div>
+
         <form action="{% url 'auth_login' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
@@ -37,7 +39,7 @@
                 {% if form.errors %}
                 <span class="help-block">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</span>
                 {% endif %}
-                <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
+                <button type="submit" class="btn btn-default">{% trans "Login" %}</button>
             </div>
             <div class="form-group center">
                 <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>

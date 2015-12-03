@@ -106,8 +106,17 @@
         color: white;
     }
 }
-.usp-featured {
-    margin: 0 !important;
+.usp-featured, .usp-supported {
+    img {
+        opacity: .5;
+        .animate;
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+.usp-supported {
+    margin: 15px auto 0 auto !important;
 }
 .scrolltarget {
     font-size: 20px;
@@ -321,20 +330,58 @@
         margin: 0;
     }
 }
+.password-reset {
+    h1 {
+        margin-bottom: 15px;
+    }
+    .form-container {
+        max-width: 320px;
+        margin: 0 auto 15px auto;
+    }
+}
 
 /* Settings ---------- */
 .settings-page {
+    text-align: center;
     h2 {
         margin-bottom: 10px;
     }
     h3, h5 {
         margin: 15px 0 5px 0;
     }
+    .form-group {
+        max-width: 320px;
+        margin: 0 auto 15px auto;
+        text-align: left;
+    }
+    .btn {
+        margin: 0 auto;
+    }
+    .col-sm-10 {
+        padding: 0;
+    }
+    @media (min-width: @screen-sm) {
+    text-align: left;
+        .form-group {
+            max-width: none;
+            margin: 0 auto 15px auto;
+        }
+        .btn {
+            margin: 0;
+        }
+        .col-sm-10 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    }
 }
 
 /* Discover (Members, Brands, Users) ---------- */
 .discover-list-page .panel .panel-body {
     border: none !important;
+}
+.discover-list-page .close:hover {
+    color: @grey !important;
 }
 .discover-list .col-discover-item {
     @media (min-width: @screen-xs) {

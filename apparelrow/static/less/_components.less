@@ -61,7 +61,7 @@
 	}
 	@media (min-width: @screen-sm) {
 		height: 34px;
-		line-height: 38px;
+		line-height: 36px;
 	}
 }
 .dropdown-toggle {
@@ -83,7 +83,7 @@
 }
 .btn-lg {
 	height: 44px;
-	line-height: 48px;
+	line-height: 46px;
 	@media (min-width: @screen-md) {
 		height: 54px;
 		line-height: 60px;
@@ -138,6 +138,7 @@
 	background-color: @lightGrey;
 	width: 44px;
 	margin: auto;
+	display: inline-block;
 	&:hover {
 		background-color: darken(@lightGrey, 15%);
 	}
@@ -171,6 +172,8 @@
 		background-color: darken(@secondaryColor, 15%) !important;
 	}
 }
+/*
+Utvädera om denna behövs?
 section .btn {
 	margin-left: auto;
 	margin-right: auto;
@@ -178,7 +181,7 @@ section .btn {
 		margin-left: initial;
 		margin-right: initial;
 	}
-}
+}*/
 
 /* Navigation ---------- */
 .sidebar {
@@ -193,19 +196,6 @@ section .btn {
 			}
 		}
 	}
-	/*@media (min-width: @screen-sm) {
-		position: absolute;
-		right: 0;
-		top: 0;
-		text-align: right;
-		> li {
-			display: inline-block;
-			margin-right: 15px;
-			&:last-child {
-				margin: 0;
-			}
-		}
-	}*/
 }
 .dropdown-menu {
 	border-radius: 0;
@@ -213,14 +203,12 @@ section .btn {
 	width: 100%;
 	font-size: 15px;
 	margin: 0;
+	padding: 0;
 	top: initial;
 	left: initial;
 	a {
 		color: @grey;
 	}
-	/*li {
-		display: block;
-	}*/
 	> li > a {
 		line-height: 24px;
 		padding: 5px 15px;
@@ -290,13 +278,15 @@ section .btn {
 	background-color: @offwhite;
 	padding: 15px 0;
 	margin-bottom: 30px;
-	li {
+	/*li {
 		padding: 5px 15px;
-	}
+	}*/
 	a {
 		letter-spacing: 0.02rem;
 		color: @grey;
 		font-size: 15px;
+		display: block;
+		padding: 10px 15px;
 		&:hover {
 			color: @darkGrey;
 		}
@@ -328,16 +318,13 @@ section .btn {
 		font-size: 16px;
 		color: @grey;
 	}
-    li {
+    > li {
         line-height: 25px;
         display: inline-block;
         margin-right: 15px;
         &:last-child {
             margin: 0;
         }
-    }
-    @media (min-width: @screen-sm) {
-		//font-size: 28px;
     }
 }
 .pagination {
@@ -351,6 +338,10 @@ section .btn {
         &.hover img {
             display: inline-block;
         }
+		&:focus, &:active, &:visited {
+			background-color: black !important;
+			color: white !important;
+		}
     }
 }
 .helper {
@@ -412,14 +403,24 @@ section .btn {
 			padding: 15px 15px 0;
 		}
 	}
-	.close {
-		position: absolute;
-		top: 20px;
-		right: 10px;
-		margin: 0;
-		height: 44px;
-		width: 44px;
-		font-size: 24px;
+}
+.close {
+	position: absolute;
+    top: 12px !important;
+    right: 6px !important;
+	width: 44px !important;
+	height: 44px !important;
+	display: block;
+	color: @lightGrey;
+	text-align: center;
+	opacity: 1 !important;
+	margin: 0 !important;
+	font-size: 24px;
+	text-shadow: none !important;
+	line-height: 44px;
+	margin: 0;
+	&:hover {
+		color: white !important;
 	}
 }
 .modal-backdrop {
@@ -501,6 +502,10 @@ section .btn {
 		}
 	}
 }
+.list-vertical li {
+	font-size: 14px;
+	line-height: 18px;
+}
 .list-filter {
 	li {
 		line-height: 24px;
@@ -542,10 +547,34 @@ section .btn {
 		max-height: 40px;
 	}
 }
-.list-brands {
+.list-notifications {
 	li {
-		font-size: 14px;
-		line-height: 18px;
+		border-bottom: 1px solid @grey;
+		&:last-child {
+			border: 0;
+		}
+	}
+	.no-results {
+		text-align: center;
+	}
+}
+.list-brands {
+	margin-top: 15px;
+	font-size: 0;
+	letter-spacing: 0;
+	li {
+		display: inline-block;
+		width: 50%;
+		vertical-align: top;
+		@media (min-width: @screen-xs) {
+			width: 33.33%;
+		}
+		@media (min-width: @screen-is) {
+			width: 25%;
+		}
+		@media (min-width: @screen-md) {
+			width: 20%;
+		}
 	}
 }
 .list-tools {
@@ -605,7 +634,7 @@ section .btn {
 		width: 50%;
 		margin-bottom: 15px;
 	}
-	@media (min-width: 992px) {
+	@media (min-width: @screen-md) {
 		li {
 			float: none;
 			width: 100%;
@@ -795,4 +824,29 @@ a.info {
 }
 .table-responsive {
 	border: 0 !important;
+}
+.separator {
+	line-height: 0.5;
+	text-align: center;
+	margin: 30px 0;
+	span {
+	  display: inline-block;
+	  position: relative;
+		&:before, &:after {
+			content: "";
+			position: absolute;
+			height: 5px;
+			border-top: 1px solid rgba(0,0,0,.25);
+			top: 0;
+			width: 150px;
+		}
+		&:before {
+			right: 100%;
+			margin-right: 15px;
+		}
+		&:after {
+			left: 100%;
+			margin-left: 15px;
+		}
+	}
 }

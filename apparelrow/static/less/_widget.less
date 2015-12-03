@@ -5,6 +5,10 @@
 #popup-slim.adjust-right {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
+.widget-page #popup-slim .header .close {
+    top: 0 !important;
+    right: 0 !important;
+}
 .widget-page {
     .body-header {
         margin: 0;
@@ -36,30 +40,11 @@
             margin-bottom: 15px;
         }
         .header {
-            position: relative;
+            height: 44px;
             h2 {
-                position: absolute;
-                top: 9px;
-                left: 15px;
+                line-height: 44px;
+                padding-left: 15px;
                 color: white;
-            }
-            .close {
-                width: 40px;
-                height: 40px;
-                display: block;
-                position: absolute;
-                top: 0;
-                right: 0;
-                color: @lightGrey;
-                text-align: center;
-                opacity: 1;
-                font-size: 20px;
-                text-shadow: none;
-                line-height: 40px;
-                margin: 0;
-                &:hover {
-                    color: white;
-                }
             }
         }
         .body-header {
@@ -127,7 +112,7 @@
             }
             .link-info-container {
                 text-align: center;
-                padding: 0px !important;
+                padding: 0 !important;
                 .url {
                     font-size: 11px;
                 }

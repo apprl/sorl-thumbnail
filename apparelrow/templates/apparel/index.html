@@ -151,44 +151,20 @@
         <h1>{% trans 'Get the latest from your favourite<span class="wbr"></span> brands and retailers' %}</h1>
         <p class="preamble">{% trans "Discover fashion & beauty from the world’s best online retailers in one place, share them with your friends and save them to your profile to get alerts when the price drops." %}</p>
 
-        <div class="row">
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Net-A-Porter-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Asos-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Luisa-Viaroma-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Acne-Studios-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Mr-Porter-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Burberry-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/The-Outnet-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Alexander-Wang-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Nelly-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Saint-Laurent-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/Isabel-Marant-logo-Apprl-home.png' %}">
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4">
-                <img src="{% static 'images/retailers/GinaTricot-logo-Apprl-home.png' %}">
-            </div>
-        </div>
+        <ul class="list-brands">
+            <li><img src="{% static 'images/retailers/Net-A-Porter-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Asos-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Luisa-Viaroma-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Acne-Studios-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Mr-Porter-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Burberry-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/The-Outnet-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Alexander-Wang-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Nelly-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Saint-Laurent-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/Isabel-Marant-logo-Apprl-home.png' %}"></li>
+            <li><img src="{% static 'images/retailers/GinaTricot-logo-Apprl-home.png' %}"></li>
+        </ul>
 
         <a type="button" class="btn btn-white btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">{% trans "Shop brands" %}</a>
     </div>
@@ -245,16 +221,35 @@
     </div>
 </section>
 
-{# Featured In #}
+{# Featured #}
 <section class="usp-featured">
     <div class="container">
-        <h1>{% trans "Featured In" %}</h1>
-        <div class="row">
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3"><img src="{% static 'images/featured_logos/InternetWorld-logo-Apprl-home.png' %}"/></div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3"><img src="{% static 'images/featured_logos/DagensMedia-logo-Apprl-home.png' %}"/></div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3"><img src="{% static 'images/featured_logos/Resume-logo-Apprl-home.png' %}"/></div>
-            <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3"><img src="{% static 'images/featured_logos/ComputerSweden-logo-Apprl-home.png' %}"/></div>
-        </div>
+        <h2>{% trans "Featured In" %}</h2>
+        <ul class="list-brands">
+            <li><img src="{% static 'images/featured_logos/fokus.gif' %}" alt="Fokus"></li>
+            <li><img src="{% static 'images/featured_logos/computer-sweden.gif' %}" alt="Computer Sweden"></li>
+            <li><img src="{% static 'images/featured_logos/breakit.gif' %}" alt="Breakit"></li>
+            <li><img src="{% static 'images/featured_logos/internetworld.gif' %}" alt="Internet World"></li>
+            <li><img src="{% static 'images/featured_logos/dagens-media.gif' %}" alt="Dagens Media"></li>
+            <li><img src="{% static 'images/featured_logos/resume.gif' %}" alt="Resumé"></li>
+            <li><img src="{% static 'images/featured_logos/sss.gif' %}" alt="Startup Space Sweden"></li>
+            <li><img src="{% static 'images/featured_logos/digitalpodden.gif' %}" alt="Digitalpodden"></li>
+            <li><img src="{% static 'images/featured_logos/les-assorties.gif' %}" alt="Les Assorties’"></li>
+            <li><img src="{% static 'images/featured_logos/plaza-kvinna.gif' %}" alt="Plaza Kvinna"></li>
+        </ul>
+    </div>
+</section>
+
+{# Supported #}
+<section class="usp-supported">
+    <div class="container">
+        <h2>{% trans "Supported By" %}</h2>
+        <ul class="list-brands">
+            <li><img src="{% static 'images/supported_logos/sup46.gif' %}" alt="SUP46"></li>
+            <li><img src="{% static 'images/supported_logos/almi.gif' %}" alt="ALMI"></li>
+            <li><img src="{% static 'images/supported_logos/eit-digital.gif' %}" alt="EIT Digital"></li>
+            <li><img src="{% static 'images/supported_logos/sting.gif' %}" alt="STING"></li>
+        </ul>
     </div>
 </section>
 
@@ -306,7 +301,7 @@ $(window).load(function() {
 
     $('.scrolltarget').click(function(){
         $('html, body').animate({
-            scrollTop: $("#scrolltarget").offset().top
+            scrollTop: $("#scrolltarget").offset().top - 90
         }, 1000);
     });
 });
