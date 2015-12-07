@@ -138,11 +138,12 @@ def get_vendor_cost_per_click(vendor):
     Get cost per click for CPC vendor
     """
     click_cost = None
-    if vendor.is_cpc:
-        try:
-            click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
-        except get_model('dashboard', 'ClickCost').DoesNotExist:
-            logger.warning("ClickCost not defined for vendor %s" % vendor)
+    if vendor:
+        if vendor.is_cpc:
+            try:
+                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
+            except get_model('dashboard', 'ClickCost').DoesNotExist:
+                logger.warning("ClickCost not defined for vendor %s" % vendor)
     return click_cost
 
 def get_vendor_commission(vendor):
@@ -153,7 +154,7 @@ def get_vendor_commission(vendor):
         store = get_model('advertiser', 'Store').objects.filter(vendor=vendor)[0]
         return store.commission_percentage
     elif get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor).exists():
-        store_commission = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)[0]
+        store_commission = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
         return get_external_store_commission(store_commission)
     return None
 
@@ -394,18 +395,19 @@ def product_detail(request, slug):
     except (TypeError, ValueError, AttributeError):
         sid = 0
 
-    # Get earning cut
-    earning_cut = get_earning_cut(request.user, product.default_vendor.vendor, product)
-
-    # Cost per click
-    cost_per_click = get_vendor_cost_per_click(product.default_vendor.vendor)
-
     default_vendor = product.default_vendor
+
+    earning_cut = None
+    cost_per_click = None
 
     # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
     vendor_markets = None
     if default_vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
+
+        # Calculate cost per click and earning cut
+        cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
+        earning_cut = get_earning_cut(request.user, default_vendor.vendor, product)
 
     availability_text = get_availability_text(vendor_markets)
     warning_text = get_location_warning_text(vendor_markets, request.user)
@@ -437,16 +439,16 @@ def product_detail(request, slug):
     )
 
 def get_warnings_for_location(request, slug):
-    #if request.is_ajax():
-    kwargs = {'published': True, 'gender__isnull': False}
-    product = get_product_from_slug(slug, **kwargs)
-    # Vendor market
-    vendor_markets = None
-    if product.default_vendor:
-        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
+    if request.method == 'POST':
+        kwargs = {'published': True, 'gender__isnull': False}
+        product = get_product_from_slug(slug, **kwargs)
+        # Vendor market
+        vendor_markets = None
+        if product.default_vendor:
+            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
 
-    warning_text = get_location_warning_text(vendor_markets, request.user)
-    return HttpResponse(warning_text)
+        warning_text = get_location_warning_text(vendor_markets, request.user)
+        return HttpResponse(warning_text)
 
 def product_generate_short_link(request, slug):
     """
@@ -1159,7 +1161,7 @@ def product_lookup(request):
         'product_liked': product_liked,
         'product_name': product_name,
         'product_earning': product_earning,
-        'warning_text': warning_text
+        'warning_text': warning_text.decode()
     })
 
 @login_required
