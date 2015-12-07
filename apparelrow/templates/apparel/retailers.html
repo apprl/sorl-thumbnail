@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="item">
-            <img src="{% static 'images/publishers/ProjectRunway_ApprlFront.png"' %}">
+            <img src="{% static 'images/publishers/ProjectRunway_ApprlFront.png' %}">
             <div class="overlay">
                 <span class="publisher">
                     <h5>Project Runway</h5>
@@ -167,7 +167,7 @@
         <!--<div id="slider-tools" class="owl-carousel">-->
         <div class="row">
             <div class="col-sm-4">
-                <figure><img src="{% static 'images/tools/PublisherToolShop_thumb.jpg' %}"" alt="{% trans "Shop" %}"></figure>
+                <figure><img src="{% static 'images/tools/PublisherToolShop_thumb.jpg' %}" alt="{% trans "Shop" %}"></figure>
                 <h2>{% trans "Shop" %}</h2>
                 <p>{% trans "Create a shop for your site in just a few minutes." %}</p>
                 <!--<a class="btn btn-default" href="{% url 'retailer-form' %}">{% trans "Get Started" %}</a>-->
@@ -243,7 +243,7 @@
 {% include 'apparel/fragments/dialog_retailer.html' with request=request csrf_token=csrf_token form=form only %}
 {% endcomment %}
 
-<script src="/static/js/jquery/owl.carousel.min.js"></script>
+<script src="{% static "js/jquery/owl.carousel.min.js" %}"></script>
 <script type="text/javascript">
 $(window).load(function() {
     $('#slider-publishers').owlCarousel({
