@@ -1,10 +1,10 @@
 import datetime
 import decimal
 import calendar
+from dateutil.relativedelta import *
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
-from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.core import management, mail
 from django.conf import settings
@@ -309,7 +309,7 @@ class TestProductStat(TestCase):
         self.assertTrue(has_reached_limit)
 
         # Test the value is reset
-        next_month_start = start_date.replace(month=start_date.month+1)
+        next_month_start = start_date + relativedelta(months=1)
         next_month_end = next_month_start
         next_month_end = next_month_end.replace(day=calendar.monthrange(next_month_start.year, 12)[1], month=12)
         has_reached_limit = check_vendor_has_reached_limit(vendor, next_month_start, next_month_end)
