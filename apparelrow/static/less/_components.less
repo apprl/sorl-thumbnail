@@ -364,13 +364,10 @@ section .btn {
 	.modal-header {
 		background-color: black;
 		color: white;
-		line-height: 1;
+		height: 54px;
+		padding: 0 0 0 15px;
 	}
 	.close {
-		position: absolute;
-		top: 5px;
-		right: 10px;
-		margin: 0;
 	}
 	.modal-header {
 
@@ -388,6 +385,10 @@ section .btn {
 			margin-top: 15px;
 		}
 	}
+	h2 {
+		margin: 0;
+		line-height: 58px;
+	}
 	h3 {
 		margin: 30px 0 5px 0;
 	}
@@ -395,19 +396,10 @@ section .btn {
 		color: @grey;
 	}
 }
-.modal.tool {
-	.modal-header {
-		background-color: white;
-		h2 {
-			color: black;
-			padding: 15px 15px 0;
-		}
-	}
-}
 .close {
 	position: absolute;
-    top: 12px !important;
-    right: 6px !important;
+	top: 5px !important; // 12px
+    right: 6px !important; // 6px
 	width: 44px !important;
 	height: 44px !important;
 	display: block;
@@ -420,7 +412,33 @@ section .btn {
 	line-height: 44px;
 	margin: 0;
 	&:hover {
-		color: white !important;
+		span:before, span:after {
+			background-color: white;
+		}
+	}
+	span {
+		position: relative;
+		display: block;
+		padding-left: 10px;
+	}
+	span:before, span:after {
+		height: 3px;
+		width: 24px;
+		background-color: @lightGrey;
+		position: absolute;
+		display: block;
+		content: "";
+		.animate;
+	}
+	span:before {
+		-webkit-transform: rotate(45deg);
+		transform: rotate(45deg);
+		top: 0;
+	}
+	span:after {
+		-webkit-transform: translateY(-10px) rotate(-45deg);
+		transform: translateY(-10px) rotate(-45deg);
+		top: 10px;
 	}
 }
 .modal-backdrop {
@@ -453,9 +471,7 @@ section .btn {
 	position: absolute;
 	width: 66px;
 	height: 66px;
-	line-height: 74px;
-	font-size: 24px;
-	text-align: center;
+	line-height: 66px;
 	background-color: rgba(0,0,0,.25);
 	color: white;
 	top: 50%;
@@ -465,7 +481,20 @@ section .btn {
 		background-color: rgba(0,0,0,.5);
 	}
 }
-
+.tools_prevButton {
+	padding-left: 21px;
+}
+.tools_nextButton {
+	padding-left: 26px;
+}
+.header.group {
+	span:before {
+		top: 21px !important;
+	}
+	span:after {
+		top: 31px !important;
+	}
+}
 
 /* Lists ---------- */
 .list-alphabet {

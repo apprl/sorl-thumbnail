@@ -67,12 +67,12 @@ label input[type="radio"] + span, label input[type="checkbox"] + span {
     height: 22px;
     border: 2px solid #ccc;
     cursor: pointer;
-    line-height: 18px;
+    line-height: 16px;
     border: 2px solid #999;
     margin: -3px 10px 0 0;
     vertical-align: middle;
-    -webkit-transition: all .2s;
-    transition: all .2s;
+    text-align: center;
+    .animate;
 }
 label input[type="radio"] + span {
     box-shadow: inset 0 0 0 18px white;
@@ -119,9 +119,8 @@ textarea:focus {
     display: block;
     min-width: 260px;
     max-width: 320px;
-    margin: auto;
     span {
-        top: 8px;
+        top: 6px;
         right: 15px;
         position: absolute;
         font-size: 16px;
@@ -160,6 +159,27 @@ textarea:focus {
     input {
         background-color: #feeded;
         background-image: linear-gradient(#f64747, #f64747), linear-gradient(#f64747, #f64747);
+    }
+}
+.input-group {
+    display: block;
+    > input, div {
+        float: left;
+    }
+    div {
+        margin-left: 15px;
+    }
+}
+.input-helper {
+    .clearfix;
+    input, span {
+        float: left;
+    }
+    span {
+        margin-left: 15px;
+        font-size: 13px;
+        letter-spacing: 0.02rem;
+        line-height: 44px;
     }
 }
 .filter {

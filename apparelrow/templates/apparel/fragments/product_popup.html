@@ -1,9 +1,6 @@
 {% load i18n thumbnail apparel_extras buy_extras cache thumbnail_extras %}
 
 <div class="product-container row">
-    <div class="col-xs-12">
-        <h4>{{ object.manufacturer }} - {{ object.product_name }}</h4>
-    </div>
     <div class="product-image col-sm-4 col-cs-12">
         {% thumbnail object.product_image "224x291" crop=False as im %}
         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" style="margin:{{ im|positive_margin:'224x291' }}" class="img-responsive">
@@ -12,6 +9,7 @@
 
     {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}
     <div class="col-xs-12 col-sm-8">
+        <h2>{{ object.manufacturer }} - {{ object.product_name }}</h2>
         <p class="bodycopy description hidden-xs">{{ object.description }}</p>
         <div class="product-vendors group">
             <div class="product-vendor">

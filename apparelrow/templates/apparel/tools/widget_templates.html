@@ -9,15 +9,19 @@
 </script>
 
 <script type="text/template" id="dialog_reset_template" data-title="{% trans "Reset look?" %}">
-    <p>{% trans "Are you sure you want to discard changes and start over?" %}</p>
-    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
+    <p style="text-align: center; margin: 15px 0 30px 0;">{% trans "Are you sure you want to discard changes and start over?" %}</p>
+    <div class="row">
+        <div class="col-sm-6"><a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a></div>
+        <div class="col-sm-6"><a href="#" class="btn btn-default btn-no">{% trans "No" %}</a></div>
+    </div>
 </script>
 
 <script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
-    <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
-    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
+    <p style="text-align: center; margin: 15px 0 30px 0;">{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
+    <div class="row">
+        <div class="col-sm-6"><a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a></div>
+        <div class="col-sm-6"><a href="#" class="btn btn-default btn-no">{% trans "No" %}</a></div>
+    </div>
 </script>
 
 <script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
@@ -76,7 +80,7 @@
 <script type="text/template" id="popup_slim_template" data-title="{% trans "Product info" %}">
     <div class="header group">
         <h2 class="title"></h2>
-        <a href="#" class="close"><i class="fa fa-times"></i></a>
+        <a href="#" class="close"><span></span></a>
     </div>
     <div class="content-container info-container">
         <div class="content"></div>

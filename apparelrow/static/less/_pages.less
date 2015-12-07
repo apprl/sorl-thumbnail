@@ -99,6 +99,15 @@
 }
 .usp-brands {
     padding: 45px 0;
+    .list-brands {
+        img {
+            opacity: .75;
+            .animate;
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
 }
 .usp-intro, .usp-brands {
     background-color: black;
@@ -377,11 +386,30 @@
 }
 
 /* Discover (Members, Brands, Users) ---------- */
-.discover-list-page .panel .panel-body {
-    border: none !important;
-}
-.discover-list-page .close:hover {
-    color: @grey !important;
+.discover-list-page {
+    .modal {
+        .modal-header {
+            height: 74px;
+		    background-color: white;
+        }
+        h2 {
+            line-height: 78px;
+            padding: 0 !important;
+			color: black;
+        }
+    }
+    .panel .panel-body {
+        border: none !important;
+    }
+    .close {
+        top: 12px !important;
+        right: 12px !important;
+        &:hover {
+            span:before, span:after {
+                background-color: @grey;
+            }
+        }
+    }
 }
 .discover-list .col-discover-item {
     @media (min-width: @screen-xs) {
@@ -391,6 +419,12 @@
 }
 
 /* Dashboard ---------- */
+.publisher-page {
+    .select {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
 .nopadding {
   padding: 0 !important;
   margin: 0 !important;

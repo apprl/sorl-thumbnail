@@ -4,8 +4,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">{% trans "Customize, embed & save your shop" %}</h4>
+                <h2>{% trans "Customize, embed & save your shop" %}</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
             </div>
             <div class="modal-body">
 
@@ -14,15 +14,15 @@
                 <form id="embed_shop_form" class="form">
                     <div class="form-group">
                         <label class="control-label" for="id_name">{% trans "Shop name" %}</label>
-                        <input id="id_name" type="text" required class="form-control" placeholder="Shop name" value="{{ title }}"/>
+                        <input id="id_name" type="text" required placeholder="Shop name" value="{{ title }}"/>
                         <span class="help-block">* {% trans "This field is required" %}</span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="id_width">{% trans "Width" %}</label>
                         <div class="input-group">
-                            <input id="id_width" type="text" name="width" class="form-control" placeholder="100">
-                            <div class="input-group-btn">
-                                <button id="width_type" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="text">%</span> <span class="caret"></span></button>
+                            <input id="id_width" type="text" name="width" placeholder="100">
+                            <div>
+                                <button id="width_type" type="button" class="btn dropdown-toggle" data-toggle="dropdown"><span class="text">%</span> <span class="caret"></span></button>
                                 <ul id="width_dropdown" class="dropdown-menu">
                                     <li><a href="#" data-text="%" data-value="%">%</a></li>
                                     <li><a href="#" data-text="{% trans "pixels" %}" data-value="px">{% trans "pixels" %}</a></li>
@@ -32,22 +32,29 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="id_height">{% trans "Height" %}</label>
-                        <div class="input-group">
-                            <input id="id_height" type="text" name="height" class="form-control" placeholder="600">
-                            <span class="input-group-addon">{% trans "pixels" %}</span>
+                        <div class="input-helper">
+                            <input id="id_height" type="text" name="height" placeholder="600">
+                            <span>{% trans "pixels" %}</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="id_language">{% trans "Language & currency" %}</label>
-                        <select id="id_language" name="language" class="form-control">
-                            {% for language in LANGUAGES %}
-                            <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="select">
+                            <span><i class="fa fa-caret-down"></i></span>
+                            <select id="id_language" name="language">
+                                {% for language in LANGUAGES %}
+                                <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>{% trans "Advanced options" %}</label>
-                        <div class="checkbox">
+                        <h4>{% trans "Advanced options" %}</h4>
+                        <label><input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked><span><i class="fa fa-check"></i></span>{% trans "Show brands & prices" %}</label>
+                        <label><input type="checkbox" name="show_filters" id="id_show_filters" value="1" checked><span><i class="fa fa-check"></i></span>{% trans "Show filters" %}</label>
+                        <label><input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show filters as collapsed" %}</label>
+
+                        <!--<div class="checkbox">
                             <label>
                                 <input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked>
                                 {% trans "Show brands & prices" %}
@@ -59,15 +66,16 @@
                                 {% trans "Show filters" %}
                             </label>
                         </div>
-                        <div class="checkbox filter-collapsed" style="margin-left: 12px">
+                        <div class="checkbox filter-collapsed">
+                            <label><input type="checkbox" /><span><i class="fa fa-check"></i></span>Learn</label>
                             <label>
                                 <input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1">
                                 {% trans "Show filters as collapsed" %}
                             </label>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success btn-block">{% trans "Embed this shop on your site" %}</button>
+                        <button type="submit" class="btn btn-success btn-block">{% trans "Embed shop on your site" %}</button>
                     </div>
                     <div class="form-group" style="display:none;">
                         <label class="control-label" for="id_embed_code">{% trans "Copy and paste this code (in HTML-mode) into your site/blog" %}</label>
@@ -77,9 +85,9 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary pull-left" data-dismiss="modal">{% trans "Continue editing" %}</button>
-                <button type="button" class="btn btn-primary pull-left hidden" data-dismiss="modal">{% trans "Close" %}</button>
-                <button type="button" class="btn btn-primary btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">{% trans "Continue editing" %}</button>
+                <button type="button" class="btn btn-default pull-left hidden" data-dismiss="modal">{% trans "Close" %}</button>
+                <button type="button" class="btn btn-primary pull-right btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
             </div>
         </div>
     </div>
