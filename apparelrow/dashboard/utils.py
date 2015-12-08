@@ -1,12 +1,14 @@
 import decimal
 import datetime
 import calendar
+import json
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.db.models import get_model, Sum, Count
 from django.db import connection
+from django.http import HttpResponse
 from django.template import defaultfilters
 import logging
 
