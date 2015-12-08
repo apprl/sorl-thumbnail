@@ -18,6 +18,14 @@
     is_cpc: True
     is_cpo: False
 
+- model: apparel.vendor
+  pk: 4
+  fields:
+    name: Vendor Limit Test
+    is_cpc: True
+    is_cpo: False
+    clicks_limit: 10
+
 - model: apparel.brand
   pk: 1
   fields:
@@ -83,6 +91,18 @@
     date_added: "2015-03-16 17:41:28"
     slug: brand-cpc-other-product-no-limit
 
+- model: apparel.product
+  pk: 6
+  fields:
+    product_name: Other Product
+    sku: hej6
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-16 17:41:28"
+    slug: brand-cpc-other-product-test-limit-reached
+
 - model: apparel.vendorproduct
   pk: 1
   fields:
@@ -112,6 +132,14 @@
   fields:
     product: 4
     vendor: 2
+    original_currency: SEK
+    _original_price: 42.00
+
+- model: apparel.vendorproduct
+  pk: 6
+  fields:
+    product: 6
+    vendor: 4
     original_currency: SEK
     _original_price: 42.00
 
