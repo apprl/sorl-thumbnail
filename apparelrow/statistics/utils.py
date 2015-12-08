@@ -2,6 +2,9 @@ import requests
 from requests import Timeout
 from django.conf import settings
 import logging
+from django.db.models import get_model
+import calendar
+
 
 log = logging.getLogger("apparelrow")
 
@@ -76,3 +79,17 @@ def extract_short_link_from_url(parsed_url, user_id=None):
             return parsed_url.split("/")[-3]
         else:
             return parsed_url.split("/")[-2]
+
+def check_vendor_has_reached_limit(vendor, start_date, end_date):
+    clicks_limit = vendor.clicks_limit if vendor.clicks_limit else settings.APPAREL_DEFAULT_CLICKS_LIMIT
+    clicks_amount = get_model('statistics', 'ProductStat').objects.\
+        filter(vendor=vendor.name, created__range=(start_date, end_date)).count()
+    if clicks_amount >= clicks_limit:
+        if not vendor.is_limit_reached:
+            vendor.is_limit_reached = True
+            vendor.save()
+            return True
+    elif vendor.is_limit_reached:
+        vendor.is_limit_reached = False
+    vendor.save()
+    return False

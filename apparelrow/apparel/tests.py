@@ -75,7 +75,6 @@ class TestChromeExtension(TestCase):
 
         self.django_image_file = ContentFile(image_file.read(), 'test.png')
 
-
     def _login(self):
         normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         is_logged_in = self.client.login(username='normal_user', password='normal')
@@ -150,7 +149,6 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_link'], None)
         self.assertTrue(json_content['product_short_link'].startswith('http://testserver/pd/4C9'))
         self.assertEqual(json_content['product_liked'], False)
-
 
     def test_product_lookup_by_url(self):
         self._login()

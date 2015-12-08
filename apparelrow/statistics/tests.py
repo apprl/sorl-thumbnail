@@ -1,13 +1,16 @@
 import datetime
 import decimal
+import calendar
+from dateutil.relativedelta import *
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.contrib.auth import get_user_model
-from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.core import management, mail
 from django.conf import settings
 from factories import *
+from apparelrow.statistics.utils import check_vendor_has_reached_limit
+from apparelrow.dashboard.utils import parse_date
 
 
 
@@ -192,7 +195,6 @@ class TestProductStat(TestCase):
         vendor = get_model('apparel', 'Vendor').objects.get(pk=2)  # get updated instance of vendor
         self.assertGreaterEqual(len(mail.outbox), sent_mails + 1)
 
-
     def test_clicks_limit_per_vendor_exceeded_default_value(self):
         """
         Test an email is  sent to the admins when a limit is exceeded and limit
@@ -284,6 +286,36 @@ class TestProductStat(TestCase):
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=product.slug).count(), clicks)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), clicks)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=False).count(), 0)
+
+    def test_check_vendor_has_reached_limit(self):
+        vendor = get_model('apparel', 'Vendor').objects.get(pk=4)
+        start_date, end_date = parse_date(None, None)
+
+        has_reached_limit = check_vendor_has_reached_limit(vendor, start_date, end_date)
+        user = get_user_model().objects.get(username='normal_user')
+        ip = "192.128.2.3"
+
+        self.assertFalse(vendor.is_limit_reached)
+        self.assertFalse(has_reached_limit)
+
+        product = get_model('apparel', 'Product').objects.get(slug='brand-cpc-other-product-test-limit-reached')
+        for i in range(0, vendor.clicks_limit+1):
+            get_model('statistics', 'ProductStat').objects.create(product=product.product_name, page="BuyReferral",
+                                                                  user_id=user.id, vendor=vendor.name,
+                                                                  ip=ip, created=datetime.date.today())
+
+        has_reached_limit = check_vendor_has_reached_limit(vendor, start_date, end_date)
+        self.assertTrue(vendor.is_limit_reached)
+        self.assertTrue(has_reached_limit)
+
+        # Test the value is reset
+        next_month_start = start_date + relativedelta(months=1)
+        next_month_end = next_month_start
+        next_month_end = next_month_end.replace(day=calendar.monthrange(next_month_start.year, 12)[1], month=12)
+        has_reached_limit = check_vendor_has_reached_limit(vendor, next_month_start, next_month_end)
+
+        self.assertFalse(vendor.is_limit_reached)
+        self.assertFalse(has_reached_limit)
 
 
 

@@ -1,8 +1,4 @@
-import re
-import datetime
-import sys
 import urllib2
-import logging
 import subprocess
 from optparse import make_option
 from xml.etree import ElementTree
@@ -177,7 +173,6 @@ class Command(BaseCommand):
             p.wait()
             if p.returncode != 0:
                 raise Exception('Could not find path to file {0} on {1}'.format(settings.SOLR_CURRENCY_FILE, settings.SOLR_SSH_STRING))
-
 
         # This try is required because solr might not be running during a
         # deploy and when we generate currency.xml it is not possible to reload
