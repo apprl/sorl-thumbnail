@@ -36,6 +36,7 @@ ITEM_PIPELINES = [
 EXTENSIONS = {
     'scrapy_sentry.extensions.Errors':10,
     'spidercrawl.pipelines.DatabaseHandler': 500,
+    'spidercrawl.pipelines.StartImporter': 600,
 }
 
 DOWNLOADER_MIDDLEWARES = {
