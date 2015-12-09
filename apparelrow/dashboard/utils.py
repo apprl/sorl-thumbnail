@@ -1,12 +1,14 @@
 import decimal
 import datetime
 import calendar
+import json
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.db.models import get_model, Sum, Count
 from django.db import connection
+from django.http import HttpResponse
 from django.template import defaultfilters
 import logging
 
@@ -301,8 +303,10 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
     """
     Return a list of dictionaries with detailed data of User Earnings
     """
+    start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+    end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
     earnings = get_model('dashboard', 'UserEarning').objects\
-        .filter(date__range=(start_date, end_date), status__gte=get_model('dashboard', 'Sale').PENDING)\
+        .filter(date__range=(start_date_query, end_date_query), status__gte=get_model('dashboard', 'Sale').PENDING)\
         .order_by('-date')
     if user:
         earnings = earnings.filter(user=user)
