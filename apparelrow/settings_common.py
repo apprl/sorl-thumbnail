@@ -131,6 +131,7 @@ VENDOR_LOCATION_MAPPING = {
     "Panos Emporio": ["SE"],
     "Boozt se": ["SE"],
     "Boozt no": ["NO"],
+    "Boozt dk": ["DK"],
     "ASOS no": ["NO"],
     "QVC": ["US"],
     "Room 21 no": ["NO"],
