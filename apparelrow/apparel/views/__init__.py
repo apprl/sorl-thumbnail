@@ -1077,7 +1077,11 @@ def product_lookup(request):
         if earning_cut:
             earning_total = decimal.Decimal(0)
             if default_vendor.vendor.is_cpc:
-                earning_total = get_vendor_cost_per_click(default_vendor.vendor)
+                try:
+                    earning_total = get_vendor_cost_per_click(default_vendor.vendor)
+                except:
+                    logger.warn("Not able to calculate earning for {}".format(product_name))
+                    earning_total = 0
             elif default_vendor.vendor.is_cpo:
                 earning_total = default_vendor.locale_price
             product_earning = earning_total * earning_cut
