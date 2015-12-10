@@ -375,7 +375,11 @@ def product_detail(request, slug):
 
     default_vendor = product.default_vendor
     earning_cut = get_earning_cut(request.user, default_vendor, product)
-    cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
+    try:
+        cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
+    except:
+        logger.warn("No cost per click calculated for {}".format(product))
+        cost_per_click = 0
 
     return render_to_response(
         'apparel/product_detail.html',
