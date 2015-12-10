@@ -3,7 +3,6 @@ from requests import Timeout
 from django.conf import settings
 import logging
 from django.db.models import get_model
-import calendar
 
 
 log = logging.getLogger("apparelrow")
