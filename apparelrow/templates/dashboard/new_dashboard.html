@@ -27,15 +27,6 @@
                 {% endif %}
             {% endfor %}
             ]);
-            {% comment %}data.addRows([
-            {% for sale_date, data in data_per_day.items %}
-                {% if forloop.last %}
-                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.4|unlocalize }}, {{ data.1 }}, {{ data.3|unlocalize }}]
-                {% else %}
-                [new Date({{ sale_date.year }}, {{ sale_date.month }} - 1, {{ sale_date.day }}), {{ data.0|unlocalize }}, {{ data.2|unlocalize }}, {{ data.4|unlocalize }}, {{ data.1 }}, {{ data.3|unlocalize }}],
-                {% endif %}
-            {% endfor %}
-            ]);{% endcomment %}
             data.sort(0);
             var left = data.getColumnRange(1);
             var right = data.getColumnRange(2);
@@ -117,7 +108,7 @@
                 window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
             });
 
-            new Tablesort($('table#earnings').get(0));
+            new Tablesort($('table#all-earnings').get(0));
             new Tablesort($('table#top-products').get(0));
             new Tablesort($('table#top-products-more').get(0));
             new Tablesort($('table#top-publishers').get(0));
@@ -274,7 +265,7 @@
                         <th class="col-md-1 product-image center">{% trans "Product" %}</th>
                         <th class="col-md-5 hidden-xs center"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        <th class="col-md-2 center">{% trans "Earnings" %}</th>
                         {% if is_owner %}<th class="col-md-2 center">{% trans "Network earnings" %}</th>{% endif %}
                     </tr>
                 </thead>
@@ -282,12 +273,12 @@
                     {% for product in top_products|top_five %}
                     <tr>
                         <td data-sort="{{ product.aggregated_from_name }}" class="col-md-1 product-image center">
-                            <a href="{{ product.aggregated_from_link }}">
+                            <a href="{{ product.aggregated_from_link }}" target="_blank">
                                 <img src="{{ product.aggregated_from_image }}">
                             </a>
                         </td>
                         <td class="col-md-5 hidden-xs">
-                            <a href="{{ product.aggregated_from_link }}">
+                            <a href="{{ product.aggregated_from_link }}" target="_blank">
                                 {{ product.aggregated_from_name }}
                             </a>
                         </td>
@@ -313,7 +304,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h2>{% trans "Last earnings" %} {{ month_display }} {{ year }}</h2>
+            <h2>{% trans "Latest earnings" %} {{ month_display }} {{ year }}</h2>
             <table class="sortable table" id="all-earnings">
                 <thead>
                     <tr>
@@ -327,8 +318,8 @@
                 </thead>
                 <tbody id="body-earnings">
                     <tr>
-                        <td colspan="6">
-                            <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
+                        <td colspan="6" style="text-align: center;">
+                            Loading earnings <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
                         </td>
                     </tr>
                 </tbody>
@@ -404,7 +395,7 @@
             });
         } else {
             var row = $('<tr/>');
-            row.append('<td colspan="6">No sales yet</td>');
+            row.append('<td colspan="6">No earnings yet</td>');
             table.append(row);
         }
         $('#loading-img').hide();

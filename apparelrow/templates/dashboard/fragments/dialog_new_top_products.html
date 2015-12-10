@@ -22,16 +22,16 @@
                     {% for product in top_products %}
                     <tr>
                         <td data-sort="{{ product.aggregated_from_name }}" class="col-md-1 product-image center">
-                            <a href="{{ product.aggregated_from_link }}">
+                            <a href="{{ product.aggregated_from_link }}" target="_blank">
                                 <img src="{{ product.aggregated_from_image }}">
                             </a>
                         </td>
-                        <td class="col-md-5 hidden-xs">
-                            <a href="{{ product.aggregated_from_link }}">
+                        <td data-sort="{{ product.aggregated_from_name }}" class="col-md-5 hidden-xs">
+                            <a href="{{ product.aggregated_from_link }}" target="_blank">
                                 {{ product.aggregated_from_name }}
                             </a>
                         </td>
-                        <td class="col-md-2 center" data-sort="{{ product.total_clicks }}" >
+                        <td data-sort="{{ product.total_clicks }}" class="col-md-2 center" >
                             {{ product.total_clicks }}
                         </td>
                         <td class="col-md-2 center" data-sort="{{ product.total_earnings }}" >
