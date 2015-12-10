@@ -477,7 +477,7 @@ def get_aggregated_products(user_id, start_date, end_date):
                'aggregated_from_link').exclude(user_id=0).\
         annotate(total_earnings=Sum('sale_plus_click_earnings'),
                  total_network_earnings=Sum('total_network_earnings'),
-                 total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings')
+                 total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings', '-total_clicks')
     return top_products
 
 def get_user_earnings_dashboard(user, start_date, end_date):

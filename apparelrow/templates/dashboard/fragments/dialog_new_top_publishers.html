@@ -32,7 +32,7 @@
                                 <img src="{{ publisher.user_image }}">
                             </a>
                         </td>
-                        <td class="col-md-5 hidden-xs">
+                        <td data-sort="{{ publisher.user_name }}" class="col-md-5 hidden-xs">
                             <a href="{{ publisher.user_link }}">{{ publisher.user_name }}</a>
                             {% if is_admin %}
                             <a href="{% url 'new-dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">
@@ -46,7 +46,7 @@
                                 <img src="{{ publisher.aggregated_from_image }}">
                             </a>
                         </td>
-                        <td class="col-md-5 hidden-xs">
+                        <td data-sort="{{ publisher.aggregated_from_name }}" class="col-md-5 hidden-xs">
                             <a href="{{ publisher.aggregated_from_link }}">{{ publisher.aggregated_from_name }}</a>
                         </td>
                         {% endif %}
