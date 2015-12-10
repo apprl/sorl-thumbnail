@@ -454,7 +454,7 @@ class PaymentDetail(models.Model):
     notes = models.TextField(_('Notes'), null=True, blank=True)
 
     def __unicode__(self):
-        return '%s - %s' % (self.user, self.name)
+        return u'%s - %s' % (self.user, self.name)
 
 
 class EmailChange(models.Model):
