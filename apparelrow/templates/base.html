@@ -141,15 +141,14 @@
                 <div class="navbar-collapse collapse navbar-responsive-collapse" id="menu">
                     <ul class="primary-nav">
                         {% if not request.user.is_authenticated %}
-                        <li class="visible-xs"><a href="{% url 'auth_register' %}"><span>{% trans "Get started" %}</span></a></li>
-                        <li class="visible-xs"><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
+                        <li class="visible-xs visible-sm"><a href="{% url 'auth_register' %}"><span>{% trans "Get started" %}</span></a></li>
+                        <li class="visible-xs visible-sm"><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
                         {% endif %}
                         {% if request.user.is_authenticated %}
-                        <li class="visible-xs">
+                        <li class="visible-xs visible-sm">
                             <a href="{% url 'publisher-tools' %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %}</a>
                         </li>
                         <li class="{% selected_url request "/" %}"><a href="{% multi_gender_url request 'feed' 'index' %}"><span>{% trans "Feed" %}</span>{# <span class="unread_count badge"></span> #}</a></li>
-                        {% endif %}
                         <li class="{% selected_url request "/shop" "/products" %}"><a data-shop="true" href="{% multi_gender_url request 'shop' 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
                         <li class="dropdown {% selected_url request "/brands" "/users" %}">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="{% multi_gender_url request 'user' 'user-list' %}"><span>{% trans "Discover" %} <b class="caret"></b></span></a>
@@ -159,6 +158,7 @@
                                 <li><a href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></li>
                             </ul>
                         </li>
+                        {% endif %}
                         {% comment %}
                         <li class="hidden-xs hidden-sm">
                             <a class="btn btn-primary"
@@ -171,19 +171,13 @@
                         {% endcomment %}
                     </ul>
 
-                    <a class="btn btn-primary btn-create"
-                    {% if request.user.is_authenticated %}
-                    href="{% url 'publisher-tools' %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %}</a>
-                    {% else %}
-                    data-toggle="modal" href="#get-started" data-target="#modal_become_member">{% trans "Create" %}
-                    {% endif %}
-                    </a>
+                    {% if request.user.is_authenticated %}<a class="btn btn-primary btn-create hidden-xs visible-md visible-lg" href="{% url 'publisher-tools' %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %}</a>{% endif %}
 
                     <ul class="secondary-nav">
                         {% if not request.user.is_authenticated %}
-                        <li class="hidden-xs"><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
+                        <li class="hidden-xs hidden-sm"><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
                         {% else %}
-                        <li class="visible-xs"><a href="{% url 'notifications-page' %}">{% trans "Notifications" %}</span>{% if request.user.unread_count > 0 %}<span class="unread_count badge">{{ request.user.unread_count }}</span>{% endif %}</a></li>
+                        <li class="visible-xs visible-sm"><a href="{% url 'notifications-page' %}">{% trans "Notifications" %}</span>{% if request.user.unread_count > 0 %}<span class="unread_count badge">{{ request.user.unread_count }}</span>{% endif %}</a></li>
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}
                         <li class="dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
                             <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="profile-icon" src="{{ request.user.avatar_small }}"><span>{% trans 'You' %} <b class="caret"></b> </span></a>
@@ -194,15 +188,16 @@
                                 {% endif %}
                                 {% if request.user.is_partner %}
                                 <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+                                {% if not request.user.advertiser_store %}
                                 <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
+                                {% endif %}
                                 {% endif %}
                                 <li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li>
                                 <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
                                 <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                             </ul>
                         </li>
-                        {% endif %}
-                        <li class="visible-xs dropdown">
+                        <li class="visible-xs visible-sm dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                             <ul id="language-dropdown" class="dropdown-menu">
                             {% for location in LOCATION_LANGUAGE_MAPPING %}
@@ -216,6 +211,7 @@
                                 <input type="search" name="q" placeholder="{% trans 'Search anything' %}" />
                             </form>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -336,7 +332,7 @@
     });
     $(function(){
         $(document).on( 'scroll', function(){
-     
+
             if ($(window).scrollTop() > 100) {
                 $('.scroll-top-wrapper').addClass('show');
             } else {
@@ -345,7 +341,7 @@
         });
         $('.scroll-top-wrapper').on('click', scrollToTop);
     });
-     
+
     function scrollToTop() {
         verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
         element = $('body');

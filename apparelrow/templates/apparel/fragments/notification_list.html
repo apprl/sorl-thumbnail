@@ -1,7 +1,7 @@
 {% load thumbnail apparel_extras staticfiles %}
 {% load tz %}
 
-<li class="hidden-xs dropdown">
+<li class="hidden-xs hidden-sm dropdown">
     <a class="dropdown-toggle dropdown-notifications" data-toggle="dropdown" data-user="{{ request.user.id }}" href="#">
         <?xml version="1.0" encoding="utf-8" standalone="no"?>
         <svg width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -21,30 +21,46 @@
                 {% if event.type == "LIKELOOK" %}
                     <a href="{{ event.look.get_absolute_url }}">
                         <figure>
+                            {% if event.actor.avatar_small %}
                             <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32" />
+                            {% else %}
+                            <span class="img-block"></span>
+                            {% endif %}
                         </figure>
                         <p class="message"><strong>{{ event.actor }}</strong> liked your look <strong>{{ event.look.title }}</strong></p>
                     </a>
                 {% elif event.type == "FB" %}
                     <a href="{{ event.actor.url_likes }}">
-                        <figure">
+                        <figure>
+                            {% if event.actor.avatar_small %}
                             <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32" />
+                            {% else %}
+                            <span class="img-block"></span>
+                            {% endif %}
                         </figure>
                         <p class="message">Your Facebook friend <strong>{{ event.actor }}</strong> is now on APPRL!</p>
                      </a>
                 {% elif event.type == "SALE" %}
                     <a href="{% url 'product-detail' slug=event.product.slug %}">
                         <figure>
+                            {% if event.actor.avatar_small %}
                             {% thumbnail event.product.product_image "32" crop="noop" as im %}
                             <img class="img-circle" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32" />
                             {% endthumbnail %}
+                            {% else %}
+                            <span class="img-block"></span>
+                            {% endif %}
                         </figure>
                         <p class="message"><strong>{{ event.product }}</strong>is on sale!</p>
                     </a>
                 {% elif event.type == "FOLLOW" %}
                     <a href="{{ event.actor.url_likes }}">
                         <figure>
+                            {% if event.actor.avatar_small %}
                             <img class="img-circle"  src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32" />
+                            {% else %}
+                            <span class="img-block"></span>
+                            {% endif %}
                         </figure>
                         <p class="message"><strong>{{ event.actor }}</strong> started following you!</p>
                      </a>

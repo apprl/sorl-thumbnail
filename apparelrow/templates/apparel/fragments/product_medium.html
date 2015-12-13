@@ -8,12 +8,10 @@
             {% endthumbnail %}
         </a>
         <div class="hover">
-            <div class="btn-group btn-group-justified">
-                <a class="btn btn-default" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><span><i class="fa fa-heart"></i> {% trans "Save" %}</span></a>
-                {% if object.default_vendor and object.default_vendor.availability != 0 and object.availability %}
-                <a rel="nofollow" class="btn btn-primary" target="_blank" href="{% buy_url object.id object.default_vendor '0' 'Shop' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
-                {% endif %}
-            </div>
+            <a class="pull-left btn btn-default" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i><span class="hidden-xs">&nbsp;{% trans "Save" %}</span></a>
+            {% if object.default_vendor and object.default_vendor.availability != 0 and object.availability %}
+            <a rel="nofollow" class="pull-right btn btn-primary" target="_blank" href="{% buy_url object.id object.default_vendor '0' 'Shop' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+            {% endif %}
         </div>
     </div>
     <div class="caption">

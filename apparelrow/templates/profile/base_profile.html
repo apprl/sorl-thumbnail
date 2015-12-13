@@ -31,10 +31,10 @@ $(document).ready(function() {
 {% block full-body %}
 <div class="profile-header">
     <div class="container">
-        <a class="btn btn-edit" href="#edit"><i class="fa fa-camera"></i></a>
         <div id="profile-image">
             <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_large }}"></a>
             {% if request.user.is_authenticated and request.user == profile %}
+            <a class="btn btn-edit" href="#edit"><i class="fa fa-camera"></i></a>
             <a href="#cancel" class="btn btn-secondary hidden">{% trans "Cancel" %}</a>
             {% include 'profile/fragments/change_image_form.html' with form_enctype='multipart/form-data' %}
             {% endif %}
@@ -51,7 +51,7 @@ $(document).ready(function() {
             {% if profile and profile.is_brand and profile.translated_manual_about %}
             <p class="description">{{ profile.translated_manual_about|urlize_target_blank|linebreaksbr }}</p>
             {% else %}
-            <p class="description">{% if profile.about %}{{ profile.about|urlize_target_blank|linebreaksbr }}{% else %}{% if request.user.is_authenticated and request.user == profile %}{% trans "Add a brief description of yourself here." %}{% endif %}{% endif %}</p>
+            {% if profile.about %}<p class="description">{{ profile.about|urlize_target_blank|linebreaksbr }}{% else %}{% if request.user.is_authenticated and request.user == profile %}{% trans "Add a brief description of yourself here." %}</p>{% endif %}{% endif %}
             {% endif %}
 
             {% if request.user.is_authenticated and request.user == profile %}

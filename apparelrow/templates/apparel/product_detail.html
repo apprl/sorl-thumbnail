@@ -125,14 +125,14 @@
                                 {% if object.default_vendor.availability == 0 %}
                                 <span itemprop="availability" content="out_of_stock" class="btn btn-lg disabled">{% trans "Sold out" %}</span>
                                 {% else %}
-                                <a rel="nofollow" itemprop="availability" content="in_stock" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" target="_blank" class="btn btn-primary btn-lg" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+                                <a rel="nofollow" itemprop="availability" content="in_stock" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" target="_blank" class="btn btn-primary btn-lg auto" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
                                 {% endif %}
                                 {% else %}
                                     <span itemprop="availability" content="out_of_stock" class="btn btn-lg disabled">{% trans "Sold out" %}</span>
                                 {% endif %}
 
                                 {% if request.user.is_authenticated and request.user.is_partner and object.default_vendor %}
-                                <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn">{% trans "Get product link" %}</a>
+                                <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn auto">{% trans "Get product link" %}</a>
                                 {% endif %}
                             </div>
                             {% endcache %}
@@ -211,7 +211,7 @@
                                     <a title="{{ look.title }}" href="{% url 'look-detail' slug=look.slug %}">
                                         <div class="look">
                                             {% thumbnail look.static_image "300x226" is_collage=look.is_collage keep_size=True crop=False format="PNG" as im %}
-                                            <img id="look-{{ look.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-responsive" />
+                                            <img id="look-{{ look.id }}" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
                                             {% endthumbnail %}
                                         </div>
                                     </a>
@@ -220,17 +220,17 @@
                                 {% endfor %}
                             </ul>
                             {% if looks_with_product_count > 2 %}
-                            <a href="{% url 'product-look-list' contains=object.slug %}" class="btn">{% trans "See all looks" %}</a>
+                            <a href="{% url 'product-look-list' contains=object.slug %}" class="btn auto">{% trans "See all looks" %}</a>
                             {% endif %}
-                            <a href="{% url 'look-create-like' slug=object.slug %}" class="btn">{% trans "Add your look" %}</a>
+                            <a href="{% url 'look-create-like' slug=object.slug %}" class="btn auto">{% trans "Add your look" %}</a>
                         </section>
 
                         <section>
                             {% cache CACHE_TIMEOUT product_detail_likes object.id LANGUAGE_CODE %}
                             <h4>{% trans "Likes" %} <span>(1)</span></h4>
                             <hr>
+                            <p class="center{% if likes %} hide{% endif %}">{% trans "Be the first one to like this product!" %}</p>
                             <ul id="likes-box" class="list-likes">
-                                <li{% if likes %} class="hide"{% endif %}><p>{% trans "Be the first one to like this product!" %}</p></li>
                                 {% for like in likes %}
                                 <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}"><img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a></li>
                                 {% endfor %}

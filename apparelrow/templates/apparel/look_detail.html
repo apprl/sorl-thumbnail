@@ -110,7 +110,7 @@
                     <div class="look-large collage">
                         <div id="collage-background" class="look-collage">
                             {% thumbnail object.image resolution crop="center" as im %}
-                            <img src="{{ im.url }}"">
+                            <img src="{{ im.url }}">
                             {% endthumbnail %}
                             <div class="component-wrapper" style="width: {{ wrapper_element.width }}%; height: {{ wrapper_element.height }}%;">
                                 {% for component in object.collage_components.all %}
@@ -187,12 +187,12 @@
                             {% endcomment %}
 
                             {% if request.user.is_authenticated %}
-                            <a class="btn btn-default btn-lg{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span><i class="fa fa-heart"></i> {% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span></a>
+                            <a class="btn btn-default btn-lg auto{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span><i class="fa fa-heart"></i> {% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span></a>
                             {% else %}
-                            <a class="btn btn-default btn-lg" data-toggle="modal" href="#" data-target="#modal_like_look"><span><i class="fa fa-heart"></i> {% trans "Save" %}</span></a>
+                            <a class="btn btn-default btn-lg auto" data-toggle="modal" href="#" data-target="#modal_like_look"><span><i class="fa fa-heart"></i> {% trans "Save" %}</span></a>
                             {% endif %}
 
-                            <a class="btn btn-default" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
+                            <a class="btn btn-default auto" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
 
                             {% include 'apparel/fragments/share.html' %}
                     </section>
@@ -219,7 +219,7 @@
                                 </li>
                                 {% endfor %}
                             </ul>
-                            <a class="btn btn-default" href="{% url 'profile-looks' object.user.slug %}">{% blocktrans with firstname=object.user.first_name %}See all looks by {{firstname}}{% endblocktrans %}</a>
+                            <a class="btn btn-default auto" href="{% url 'profile-looks' object.user.slug %}">{% blocktrans with firstname=object.user.first_name %}See all looks by {{firstname}}{% endblocktrans %}</a>
                             {% endif %}
                         </section>
 
@@ -233,8 +233,8 @@
                                 <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}"><img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a></li>
                                 {% endfor %}
                             </ul>
-                            (% else %}
-                            <p>{% trans "Be the first one to like this look!" %}</p>
+                            {% else %}
+                            <p class="center">{% trans "Be the first one to like this look!" %}</p>
                             {% endif %}
                             {% endcache %}
                         </section>

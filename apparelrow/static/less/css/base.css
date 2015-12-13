@@ -7633,9 +7633,10 @@ section .btn {
   text-align: center;
 }
 .list-brands {
-  margin-top: 15px;
+  margin: 15px auto 0 auto;
   font-size: 0;
   letter-spacing: 0;
+  max-width: 720px;
 }
 .list-brands li {
   display: inline-block;

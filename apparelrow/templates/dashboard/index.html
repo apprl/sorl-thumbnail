@@ -27,7 +27,7 @@
         <!--<div id="slider-tools" class="owl-carousel">-->
         <div class="row">
             <div class="col-sm-4">
-                <figure><img src="{% static 'images/tools/PublisherToolShop_thumb.jpg' %}"" alt="{% trans "Shop" %}"></figure>
+                <figure><img src="{% static 'images/tools/PublisherToolShop_thumb.jpg' %}" alt="{% trans "Shop" %}"></figure>
                 <h2>{% trans "Shop" %}</h2>
                 <p>{% trans "Create a shop for your site in just a few minutes." %}</p>
                 <!--<a class="btn btn-default" href="{% url 'publisher-contact' %}">{% trans "Get Started" %}</a>-->
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="item">
-            <img src="{% static 'images/publishers/ProjectRunway_ApprlFront.png"' %}">
+            <img src="{% static 'images/publishers/ProjectRunway_ApprlFront.png' %}">
             <div class="overlay">
                 <span class="publisher">
                     <h5>Project Runway</h5>
@@ -237,11 +237,9 @@
 <script type="text/javascript">
 $(window).load(function() {
     $('#slider-publishers').owlCarousel({
-        //autoPlay: 3000,
         loop: true,
         slideSpeed: 500,
         paginationSpeed: 500,
-        //items: 5
         responsive: {
             0: {
               items: 1
@@ -258,30 +256,9 @@ $(window).load(function() {
         }
     });
 
-    /*$('#slider-looks').owlCarousel({
-        //autoPlay: 3000,
-        loop: true,
-        slideSpeed : 500,
-        paginationSpeed : 500,
-        responsive: {
-            0: {
-              items: 1
-            },
-            480: {
-              items: 2
-            },
-            768: {
-              items: 4
-            },
-            992: {
-              items: 5
-            }
-        }
-    });*/
-
     $('.scrolltarget').click(function(){
         $('html, body').animate({
-            scrollTop: $("#scrolltarget").offset().top
+            scrollTop: $("#scrolltarget").offset().top - 90
         }, 1000);
     });
 });
