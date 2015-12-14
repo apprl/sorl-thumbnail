@@ -786,6 +786,7 @@ class TestUtils(TestCase):
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         self.user.partner_group = self.group
         self.user.is_partner = True
+        self.user.location = 'SE'
         self.user.save()
 
         self.django_image_file = _create_dummy_image()
