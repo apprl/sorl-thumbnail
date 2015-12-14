@@ -13,6 +13,7 @@ from django.conf import settings
 from apparelrow.apparel.models import Shop, ShopEmbed
 
 from django.core.urlresolvers import reverse
+from django.utils.translation import activate
 from django.test import TestCase
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.profile.models import User
@@ -777,6 +778,7 @@ class TestShortLinks(TestCase):
 class TestUtils(TestCase):
 
     def setUp(self):
+        activate('sv')
         vendor_success = VendorFactory.create(name="Vendor Success", is_cpc=True, is_cpo=False)
         get_model('dashboard', 'ClickCost').objects.create(vendor=vendor_success, amount=1.00, currency="EUR")
 
