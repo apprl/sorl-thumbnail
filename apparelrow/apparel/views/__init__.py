@@ -43,7 +43,6 @@ from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
 from apparelrow.apparel.models import Brand, Product, ProductLike
 from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortStoreLink, ShortDomainLink
-from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse
@@ -54,6 +53,8 @@ from apparelrow.activity_feed.views import user_feed
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 from pysolr import Solr
+
+from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 
 logger = logging.getLogger("apparelrow")
 
@@ -301,6 +302,8 @@ def get_product_from_slug(slug, **kwargs):
         raise Http404("No Product matches the given query.")
     return product
 
+# Product earnings
+
 def get_earning_cut(user, default_vendor, product):
     earning_cut = None
     if default_vendor:
@@ -323,8 +326,27 @@ def get_vendor_cost_per_click(vendor):
         try:
             click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
         except get_model('dashboard', 'ClickCost').DoesNotExist:
-            logger.warning("ClickCost not defined for vendor %s" % vendor)
+            logger.warning("ClickCost not defined for vendor %s" % vendor.name)
+    else:
+        logger.warning("Vendor %s is not set as cpc vendor" % vendor.name)
     return click_cost
+
+def get_product_earning(user, default_vendor, product):
+    product_earning = None
+    earning_cut = get_earning_cut(user, default_vendor, product)
+    if earning_cut:
+        earning_total = decimal.Decimal(0)
+        if default_vendor.vendor.is_cpc:
+            try:
+                cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
+                earning_total = cost_per_click.amount
+            except:
+                logger.warn("Not able to calculate earning for {}".format(product.product_name))
+                earning_total = 0
+        elif default_vendor.vendor.is_cpo:
+            earning_total = default_vendor.locale_price
+        product_earning = earning_total * earning_cut
+    return product_earning
 
 
 def product_detail(request, slug):
@@ -1073,18 +1095,7 @@ def product_lookup(request):
         product_name = product.product_name
         default_vendor = product.default_vendor
 
-        earning_cut = get_earning_cut(request.user, default_vendor, product)
-        if earning_cut:
-            earning_total = decimal.Decimal(0)
-            if default_vendor.vendor.is_cpc:
-                try:
-                    earning_total = get_vendor_cost_per_click(default_vendor.vendor)
-                except:
-                    logger.warn("Not able to calculate earning for {}".format(product_name))
-                    earning_total = 0
-            elif default_vendor.vendor.is_cpo:
-                earning_total = default_vendor.locale_price
-            product_earning = earning_total * earning_cut
+        product_earning = get_product_earning(request.user, default_vendor, product)
 
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
