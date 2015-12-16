@@ -519,17 +519,17 @@ html.look-type-C .collage {
   html.look-type-P .container .tooltip .tooltip-container .product-meta h2 {
     margin-top: 5px;
   }
-  html.look-type-C .container .tooltip .close,
-  html.look-type-P .container .tooltip .close {
-    background-image: url('../images/cross.png');
-    background-size: contain;
-    width: 18px;
-    height: 18px;
-    display: block;
-    position: absolute;
-    top: 5px;
-    right: 5px;
-  }
+}
+html.look-type-C body.is-mobile .close,
+html.look-type-P body.is-mobile .close {
+  background-image: url('../images/cross.png');
+  background-size: contain;
+  width: 18px;
+  height: 18px;
+  display: block;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 .container .tooltip.tooltip-link {
   width: 180px;

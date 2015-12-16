@@ -10153,7 +10153,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 #modal_tool_shop .btn-default,
 #modal_tool_collage .btn-default,
 #modal_tool_tagged_photo .btn-default,
-#modal_tool_text_link .btn-default {
+#modal_tool_text_link .btn-default,
+#modal_tool_chrome_ext .btn-default {
   margin-left: 0px;
   margin-right: 0px;
   width: 100%;
@@ -10161,7 +10162,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
 #modal_tool_shop .modal-content .modal-body,
 #modal_tool_collage .modal-content .modal-body,
 #modal_tool_tagged_photo .modal-content .modal-body,
-#modal_tool_text_link .modal-content .modal-body {
+#modal_tool_text_link .modal-content .modal-body,
+#modal_tool_chrome_ext .modal-content .modal-body {
   padding: 0px;
 }
 .modal-tools-font {
@@ -10200,7 +10202,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   #modal_tool_shop .modal-dialog,
   #modal_tool_collage .modal-dialog,
   #modal_tool_tagged_photo .modal-dialog,
-  #modal_tool_text_link .modal-dialog {
+  #modal_tool_text_link .modal-dialog,
+  #modal_tool_chrome_ext .modal-dialog {
     width: 1117px;
   }
 }
@@ -10208,7 +10211,8 @@ body.profile-likes #product-stores ul > li > a.selected:before {
   #modal_tool_shop .modal-dialog,
   #modal_tool_collage .modal-dialog,
   #modal_tool_tagged_photo .modal-dialog,
-  #modal_tool_text_link .modal-dialog {
+  #modal_tool_text_link .modal-dialog,
+  #modal_tool_chrome_ext .modal-dialog {
     width: 95%;
     padding-left: 2.5%;
     padding-right: 2.5%;
@@ -11616,17 +11620,17 @@ html.look-type-C .collage {
   html.look-type-P .container .tooltip .tooltip-container .product-meta h2 {
     margin-top: 5px;
   }
-  html.look-type-C .container .tooltip .close,
-  html.look-type-P .container .tooltip .close {
-    background-image: url('../images/cross.png');
-    background-size: contain;
-    width: 18px;
-    height: 18px;
-    display: block;
-    position: absolute;
-    top: 5px;
-    right: 5px;
-  }
+}
+html.look-type-C body.is-mobile .close,
+html.look-type-P body.is-mobile .close {
+  background-image: url('../images/cross.png');
+  background-size: contain;
+  width: 18px;
+  height: 18px;
+  display: block;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 .container .tooltip.tooltip-link {
   width: 180px;
