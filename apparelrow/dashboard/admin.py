@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.core import urlresolvers
 
-from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning, ClickCost
+from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning, ClickCost, AggregatedData
 from apparelrow.dashboard.forms import CutAdminForm
 
 class SaleAdmin(admin.ModelAdmin):
@@ -17,7 +17,7 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ('custom_user', 'amount', 'currency', 'paid', 'cancelled', 'modified', 'created')
     list_filter = ('paid', 'cancelled')
     raw_id_fields = ('user',)
-    readonly_fields = ('details', 'user', 'amount', 'currency', 'paid', 'cancelled', 'modified', 'created')
+    readonly_fields = ('details', 'user', 'amount', 'currency', 'paid', 'cancelled', 'modified', 'created', 'earnings')
     actions = ('mark_as_paid',)
 
     #def user_link(self, obj):
@@ -68,7 +68,7 @@ admin.site.register(StoreCommission, StoreCommissionAdmin)
 
 
 class UserEarningAdmin(admin.ModelAdmin):
-    list_display = ('id',   'user', 'user_earning_type', 'from_product', 'from_user', 'amount', 'date', 'status', 'paid')
+    list_display = ('id', 'user', 'user_earning_type', 'from_product', 'from_user', 'amount', 'date', 'status', 'paid')
     search_fields = ('user__name', 'user_earning_type', 'status', 'paid')
 
 admin.site.register(UserEarning, UserEarningAdmin)
@@ -77,3 +77,13 @@ class ClickCostAdmin(admin.ModelAdmin):
     list_display = ('vendor',   'amount', 'currency')
 
 admin.site.register(ClickCost, ClickCostAdmin)
+
+class AggregatedDataAdmin(admin.ModelAdmin):
+    list_display = ('id', 'data_type', 'created', 'user_id', 'user_name', 'user_username', 'sale_earnings', 'click_earnings',
+                    'sale_plus_click_earnings', 'referral_earnings', 'network_sale_earnings', 'network_click_earnings',
+                    'total_network_earnings', 'aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug',
+                    'aggregated_from_image', 'aggregated_from_link',
+                    'sales', 'network_sales', 'referral_sales', 'paid_clicks', 'total_clicks')
+    search_fields = ('id', 'user_id', 'user_name', 'user_username')
+    list_filter = ('data_type', )
+admin.site.register(AggregatedData, AggregatedDataAdmin)

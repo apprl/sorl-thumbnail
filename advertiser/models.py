@@ -1,12 +1,9 @@
-import decimal
-
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.utils.functional import cached_property
 
 from advertiser.utils import calculate_balance, get_transactions
 
@@ -18,6 +15,9 @@ class Store(models.Model):
     commission_percentage = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
     cookie_days = models.PositiveIntegerField(null=False, blank=False, default=30)
     vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, related_name='store')
+
+    class Meta:
+        ordering = ('identifier',)
 
     def __unicode__(self):
         return u'%s' % (self.identifier)
@@ -59,12 +59,15 @@ class StoreInvoice(models.Model):
 
         super(StoreInvoice, self).save(*args, **kwargs)
 
-    def get_total(self, currency=None):
-        total = self.transactions.aggregate(total=models.Sum('commission')).get('total', 0)
+    def get_total(self):
+        total = self.transactions.aggregate(total=models.Sum('original_commission')).get('total', 0)
+        currency = 'EUR'
+        if self.transactions.count() > 0:
+            currency = self.transactions.all()[0].original_currency
         if not total:
-            return 0
+            return 0, currency
 
-        return total
+        return total, currency
 
 @receiver(post_save, sender=StoreInvoice, dispatch_uid='store_invoice_post_save')
 def store_invoice_post_save(sender, instance, created, **kwargs):

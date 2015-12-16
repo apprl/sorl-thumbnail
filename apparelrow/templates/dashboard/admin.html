@@ -58,24 +58,26 @@
         new Tablesort($('table#top-publishers').get(0));
         new Tablesort($('table#top-publishers-more').get(0))
       });
-            /*
-            Load detail click earning details for clicks in a modal
+        /*
+        Load detail click earning details for clicks in a modal
         */
-        function load_detailed_data_clicks(json_detail, date, vendor, currency){
+        function load_detailed_data_clicks(jsonDetail, date, vendor, currency, isStore){
             var html = "<table>";
-            for (i = 0; i < json_detail.length; i++){
+            for (i = 0; i < jsonDetail.length; i++){
                 html += "<tr>" +
-                        "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
-                        "<td class='center'>"  + json_detail[i].clicks + "</td>" +
-                        "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
-                        "<tr>";
+                        "<td><a href=\""+jsonDetail[i].product_url+"\">" + jsonDetail[i].product_name + "</a></td>" +
+                        "<td class='center'>"  + jsonDetail[i].clicks + "</td>"
+                if (!isStore){
+                    html += "<td class='center'>" + currency + " " + jsonDetail[i].product_earning.toFixed(2) + "</td>";
+                }
+                html += "<tr>";
             }
             html += "</table>";
             $("#content-clicks").html(html);
             $("#modal-date").html(date);
             $("#modal-vendor").html(vendor);
             $("#modal_detail_clicks").modal("show");
-};
+        }
     </script>
 {% endblock %}
 
@@ -226,66 +228,6 @@
             </table>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <h2>{% trans "All earnings" %} {{ month_display }} {{ year }}</h2>
-            <table class="sortable table" id="all-earnings">
-                <thead>
-                    <tr>
-                        <th>{% trans "Date" %}</th>
-                        <th>{% trans "Sale id" %}</th>
-                        <th>{% trans "Product" %}</th>
-                        <th></th>
-                        <th>{% trans "User" %}</th>
-                        <th></th>
-                        <th>{% trans "From" %}</th>
-                        <th>{% trans "Earnings" %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for earning in earnings %}
-                    <tr>
-                        <td data-sort="{{ earning.date|date:"U" }}">{{ earning.date.date }}</td>
-                        <td data-sort="{{ earning.sale }}">{{ earning.sale.id }}</td>
-                        {% if earning.user_earning_type == "publisher_sale_click_commission"  %}
-                            <td colspan="2" >
-                                {% trans "Clicks to " %}{{ earning.sale.vendor }}
-                                <a class="click-detail" data-user="{{ earning.sale.user_id }}"
-                                   data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
-                                   data-date_display="{{ earning.date.date }}"
-                                   data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
-                                    ({% trans "Click for details" %})
-                                </a>
-                            </td>
-                        {% elif earning.user_earning_type == "publisher_network_click_tribute"  %}
-                            <td colspan="2">
-                                {% if earning.from_user %}{% trans "Clicks by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %} to {{ earning.sale.vendor }}{% endif %}
-                                <a class="click-detail" data-user="{{ earning.sale.user_id }}"
-                                   data-vendor="{{ earning.sale.vendor }}" data-date="{{ earning.date|date:"U" }}"
-                                   data-date_display="{{ earning.date.date }}"
-                                   data-amount="{{ earning.amount }}" data-clicks="{{ earning.clicks }}">
-                                    ({% trans "Click for details" %})
-                                </a>
-                            </td>
-                        {% else %}
-                        <td data-sort="{{ earning.product_name }}">{% if earning.product_image %}<a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a>{% endif %}</td>
-                        <td><a href="{{ earning.product_link }}">{{ earning.product_name }}</a></td>
-                        {% endif %}
-                        <td data-sort="{{ earning.from_user_name }}">{% if earning.from_user_avatar %}<a href="{{ earning.from_user_link }}"><img src="{{ earning.from_user_avatar }}"></a>{% endif %}</td>
-                        <td><a href="{{ earning.from_user_link }}">{{ earning.from_user_name }}</a></td>
-                        <td data-sort="{{ earning.get_user_earning_type_display }}">{{ earning.get_user_earning_type_display }}</td>
-                        <td data-sort="{{ earning.amount }}">{{ earning.amount }} {{ currency }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6">{% trans "No sales yet." %}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
 <script>
     $(".click-detail").click(function() {
         var user_id = $(this).data("user");
@@ -295,17 +237,17 @@
         var amount = $(this).data("amount");
         var clicks = $(this).data("clicks");
         $.ajax({
-            type: "post",
+            type: "get",
             url: "{% url 'clicks-detail' %}",
             data: { user_id: user_id, vendor : vendor, date : date, amount: amount, clicks: clicks},
             success: function (response) {
                 var json = jQuery.parseJSON(response);
-                load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}");
+                load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}", false);
             }
         });
     });
 </script>
-{% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
+{% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token is_store=False only %}
 {% include 'dashboard/fragments/dialog_top_products.html' with request=request csrf_token=csrf_token next=next most_sold_products=most_sold_products month=month_display year=year is_admin=True currency=currency only %}
 {% include 'dashboard/fragments/dialog_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers month=month_display year=year is_admin=True currency=currency only %}
 {% endblock body %}

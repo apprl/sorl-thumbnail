@@ -12,7 +12,9 @@
     <link rel="canonical" href="{{ product_full_url }}">
     <meta property="og:title" content="{{ object.manufacturer }} - {{ object.product_name }}"/>
     <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:product"/>
-    <meta property="og:image" content="{{ product_full_image }}"/>
+    {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
+    <meta property="og:image" content="{{ im.url }}"/>
+    {% endthumbnail %}
     <meta property="og:url" content="{{ product_full_url }}"/>
     <meta property="og:description" content="{{ object.default_vendor_price|floatformat:0|apprl_intcomma }} {{ object.default_vendor.locale_currency }}"/>
     <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
@@ -144,10 +146,15 @@
                                     per generated sale of this item
                                 </p>
                             {% elif object.default_vendor.vendor.is_cpc %}
-                                 <p class="earning-box">You will earn approx.
-                                     <span class="currency">EUR</span>
-                                     {{ cost_per_click }}
-                                    per click to this item
+                                 <p class="earning-box">
+                                     {% if cost_per_click.locale_price %}
+                                        You will earn approx.
+                                            <span class="currency">{{ cost_per_click.locale_currency }}</span>
+                                            {% multiply cost_per_click.locale_price earning_cut %}
+                                            per click to this item
+                                     {% else %}
+                                        Settings for CPC is missing.
+                                     {% endif %}
                                 </p>
                             {% endif %}
                             <br>

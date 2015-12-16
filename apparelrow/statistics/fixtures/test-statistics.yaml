@@ -1,0 +1,194 @@
+- model: apparel.vendor
+  pk: 1
+  fields:
+    name: Vendor
+
+- model: apparel.vendor
+  pk: 2
+  fields:
+    name: CPC Vendor
+    is_cpc: True
+    is_cpo: False
+    clicks_limit: 10
+
+- model: apparel.vendor
+  pk: 3
+  fields:
+    name: CPC Other Vendor
+    is_cpc: True
+    is_cpo: False
+
+- model: apparel.vendor
+  pk: 4
+  fields:
+    name: Vendor Limit Test
+    is_cpc: True
+    is_cpo: False
+    clicks_limit: 10
+
+- model: apparel.brand
+  pk: 1
+  fields:
+    name: Brand
+
+- model: apparel.product
+  pk: 1
+  fields:
+    product_name: Product
+    sku: hej1
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-16 17:41:28"
+    slug: brand-product
+
+- model: apparel.product
+  pk: 2
+  fields:
+    product_name: Other Product
+    sku: hej2
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-14 17:41:28"
+    slug: brand-other-product
+
+- model: apparel.product
+  pk: 3
+  fields:
+    product_name: Other Product
+    sku: hej3
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-16 17:41:28"
+    slug: brand-cpc-product
+
+- model: apparel.product
+  pk: 4
+  fields:
+    product_name: Other Product
+    sku: hej4
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-16 17:41:28"
+    slug: brand-cpc-other-product
+
+- model: apparel.product
+  pk: 5
+  fields:
+    product_name: Other Product
+    sku: hej5
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-16 17:41:28"
+    slug: brand-cpc-other-product-no-limit
+
+- model: apparel.product
+  pk: 6
+  fields:
+    product_name: Other Product
+    sku: hej6
+    manufacturer: 1
+    gender: M
+    product_image: no_real_image
+    published: True
+    date_added: "2015-03-16 17:41:28"
+    slug: brand-cpc-other-product-test-limit-reached
+
+- model: apparel.vendorproduct
+  pk: 1
+  fields:
+    product: 1
+    vendor: 1
+    original_currency: SEK
+    _original_price: 42.00
+
+- model: apparel.vendorproduct
+  pk: 2
+  fields:
+    product: 2
+    vendor: 1
+    original_currency: SEK
+    _original_price: 12.00
+
+- model: apparel.vendorproduct
+  pk: 3
+  fields:
+    product: 3
+    vendor: 2
+    original_currency: SEK
+    _original_price: 42.00
+
+- model: apparel.vendorproduct
+  pk: 4
+  fields:
+    product: 4
+    vendor: 2
+    original_currency: SEK
+    _original_price: 42.00
+
+- model: apparel.vendorproduct
+  pk: 6
+  fields:
+    product: 6
+    vendor: 4
+    original_currency: SEK
+    _original_price: 42.00
+
+- model: apparel.vendorproduct
+  pk: 5
+  fields:
+    product: 5
+    vendor: 3
+    original_currency: SEK
+    _original_price: 42.00
+
+- model: dashboard.clickcost
+  pk: 1
+  fields:
+    vendor: 2
+    currency: EUR
+    amount: 1.00
+
+- model: importer.fxrate
+  pk: 1
+  fields:
+    base_currency: SEK
+    currency: BRL
+    rate: "0.259600"
+
+- model: importer.fxrate
+  pk: 2
+  fields:
+    base_currency: SEK
+    currency: GBP
+    rate: "0.097250"
+
+- model: importer.fxrate
+  pk: 3
+  fields:
+    base_currency: SEK
+    currency: EUR
+    rate: "0.113160"
+
+- model: importer.fxrate
+  pk: 4
+  fields:
+    base_currency: EUR
+    currency: SEK
+    rate: "9.41412"
+
+- model: importer.fxrate
+  pk: 5
+  fields:
+    base_currency: SEK
+    currency: SEK
+    rate: "1.000"

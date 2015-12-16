@@ -1,0 +1,80 @@
+{% extends 'dialog_base.html' %}
+{% load i18n dashboard_extras %}
+
+{% block modal_id %}modal_top_publishers{% endblock %}
+{% block extra_modal_classes %}full_modal{% endblock %}
+{% block modal_title %}&nbsp;{% endblock %}
+{% block modal_content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{% trans "Top publishers in" %} {{ month }} {{ year }}</h2>
+            <table id="top-publishers-more" class="sortable table">
+                <thead>
+                    <tr>
+                        <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
+                        <th class="col-md-5 hidden-xs center"></th>
+                        <th class="col-md-2 center">{% trans "Clicks" %}</th>
+                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        {% if is_owner %}
+                        <th class="col-md-2 center">{% trans "Network earnings" %}</th>
+                        {% endif %}
+                        {% if is_admin %}
+                        <th class="col-md-2 center">{% trans "Earning per click" %}</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for publisher in top_publishers %}
+                    <tr>
+                        {% if is_admin %}
+                        <td data-sort="{{ publisher.user_name }}" class="col-md-1 product-image center">
+                            <a href="{{ publisher.user_link }}">
+                                <img src="{{ publisher.user_image }}">
+                            </a>
+                        </td>
+                        <td data-sort="{{ publisher.user_name }}" class="col-md-5 hidden-xs">
+                            <a href="{{ publisher.user_link }}">{{ publisher.user_name }}</a>
+                            {% if is_admin %}
+                            <a href="{% url 'new-dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">
+                                ({% trans "See dashboard" %})
+                            </a>
+                            {% endif %}
+                        </td>
+                        {% else %}
+                        <td data-sort="{{ publisher.aggregated_from_name }}" class="col-md-1 product-image center">
+                            <a href="{{ publisher.aggregated_from_link }}">
+                                <img src="{{ publisher.aggregated_from_image }}">
+                            </a>
+                        </td>
+                        <td data-sort="{{ publisher.aggregated_from_name }}" class="col-md-5 hidden-xs">
+                            <a href="{{ publisher.aggregated_from_link }}">{{ publisher.aggregated_from_name }}</a>
+                        </td>
+                        {% endif %}
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
+                            {{ publisher.total_clicks }}
+                        </td>
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
+                            {{ currency }} {{ publisher.total_earnings }}
+                        </td>
+                        {% if is_owner %}
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
+                            {{ currency }} {{ publisher.total_network_earnings }}
+                        </td>
+                        {% endif %}
+                        {% if is_admin %}
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|commission_rate:publisher.total_clicks }}">
+                            {% if publisher.total_clicks %}{{ currency }} {% endif %}
+                            {{ publisher.total_earnings|decimal_div:publisher.total_clicks }}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

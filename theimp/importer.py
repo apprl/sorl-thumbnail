@@ -63,7 +63,7 @@ class Importer(object):
 
             yesterday = timezone.now() - datetime.timedelta(hours=48)
             for product_id in self.site_product_model.objects.filter(vendors=vendor.vendor_id, availability=True, modified__lte=yesterday).values_list('id', flat=True):
-                logger.debug('Setting availability to false for product with id %s due to the item has not been imported since %s or later ' % (yesterday,product_id,))
+                logger.debug('Setting availability to false for product with id %s due to the item has not been imported since %s or later [%s]' % (product_id,yesterday,vendor))
                 if not dry:
                     product = self.site_product_model.objects.get(pk=product_id)
                     product.availability=False
@@ -115,6 +115,7 @@ class Importer(object):
             raise SiteImportError('invalid category mapping')
 
         site_product = self.site_product_model.objects.create(
+            product_key = item.get_scraped('key'),
             product_name = item.get_final('name'),
             description = item.get_final('description'),
             category_id = category.mapped_category_id,
@@ -141,6 +142,7 @@ class Importer(object):
             raise SiteImportError('invalid category mapping')
 
         site_product.product_name = item.get_final('name')
+        site_product.product_key = item.get_scraped('key')
         site_product.description = item.get_final('description')
         site_product.category_id = category.mapped_category_id
         site_product.manufacturer_id = brand.mapped_brand_id

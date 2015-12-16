@@ -22,8 +22,8 @@ def dev_settings():
     env.solr_url = "ip-10-0-1-247.ec2.internal"
     env.s3_url = "s-staging.apprl.com"
     env.gateway = 'deploy@dev-bastion'
-    env.aws_key_id = 'AKIAJWFWCTRXKCOCRPTQ'
-    env.aws_key = 'rCUAw8IwyysB3u3pgDi5nKLsqJyGe2pchBc1on1a'
+    env.aws_key_id = 'AKIAJ2AF5IHPHTQH4QUA'
+    env.aws_key = '0xyH+ANAXckDhEHxOntnlLKAh/ONC4g6KB3hpHKX'
     env.sentry_url = ''
 
 
@@ -86,7 +86,7 @@ def dev_admin():
     common_aws()
     dev_settings()
     env.settings = "dev-admin"
-    env.internal_ip = "10.0.0.244"
+    env.internal_ip = "10.0.0.54"
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
     env.installed_apps = ['supervisor-gunicorn-admin','gunicorn-admin','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
                             # Mostly involves shared servers when for example memacached is already installed.

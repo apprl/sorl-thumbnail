@@ -413,7 +413,7 @@ def process_like_look_created(recipient, sender, look_like, **kwargs):
         if sender.image or sender.facebook_user_id:
             profile_photo_url = sender.avatar_circular_large
         else:
-            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
 
         merge_vars['LIKERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
@@ -446,7 +446,7 @@ def get_avatar_url(user):
     if user.image or user.facebook_user_id:
         profile_photo_url =  retrieve_full_url(user.avatar_circular_large)
     else:
-        profile_photo_url = retrieve_full_url(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
+        profile_photo_url = retrieve_full_url(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR))
     return profile_photo_url
 
 @task(name='profile.notifications.process_follow_user', max_retries=5, ignore_result=True)
@@ -475,7 +475,7 @@ def process_follow_user(recipient, sender, follow, **kwargs):
         if sender.image or sender.facebook_user_id:
             profile_photo_url = sender.avatar_circular_large
         else:
-            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
 
         merge_vars['FOLLOWERNAME'] = sender.display_name
         merge_vars['PROFILEPHOTOURL'] = profile_photo_url
@@ -521,7 +521,7 @@ def process_facebook_friends(sender, graph_token, **kwargs):
             if sender.image or sender.facebook_user_id:
                 profile_photo_url = sender.avatar_circular_large
             else:
-                profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
 
             merge_vars['FRIENDNAME'] = sender.display_name
             merge_vars['PROFILEPHOTOURL'] = profile_photo_url
@@ -586,7 +586,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             if product.product_image:
                 product_photo_url = get_thumbnail(product.product_image, '500').url
             else:
-                product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                product_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
 
             merge_vars['PRODUCTPHOTOURL'] = product_photo_url
             merge_vars['BRANDNAME'] = product.manufacturer.name
@@ -799,7 +799,7 @@ def send_look_like_summaries(period="D"):
                     if liker.image or liker.facebook_user_id:
                         profile_photo_url = liker.avatar_circular_large
                     else:
-                        profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                        profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
                     sender_link = retrieve_url(liker.get_absolute_url())
                     likers.append({"USERNAME" : liker.display_name,
                                    "PROFILEURL" : sender_link,
@@ -866,7 +866,7 @@ def send_product_like_summaries(period="D"):
                     if liker.image or liker.facebook_user_id:
                         profile_photo_url = liker.avatar_circular_large
                     else:
-                        profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+                        profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
                     sender_link = retrieve_url(liker.get_absolute_url())
                     likers.append({"USERNAME" : liker.display_name,
                                    "PROFILEURL" : sender_link,
@@ -906,7 +906,7 @@ def get_vendor_logo(vendor):
     if(vendor.logotype):
         return get_thumbnail(vendor.logotype, '500').url
     else:
-        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
 
 
 def create_earning_summary(period):

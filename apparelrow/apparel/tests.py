@@ -1,27 +1,79 @@
+# -*- coding: utf-8 -*-
 import json
-from apparelrow.apparel.views import product_lookup_asos_nelly
-import unittest
-
+from pysolr import Solr
+from sorl.thumbnail import get_thumbnail
+from apparelrow.apparel.search import product_save, get_product_document
+from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
+from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
+    extract_asos_nelly_product_url
 from django.contrib.auth import get_user_model
-from django.db.models.loading import get_model
 from django.test.utils import override_settings
 from decimal import Decimal
 from django.conf import settings
 from apparelrow.apparel.models import Shop, ShopEmbed
-from apparelrow.dashboard.tests import reverse
 
 from django.core.urlresolvers import reverse
+from django.utils.translation import activate
 from django.test import TestCase
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
-
-
+from factories import *
 
 """ CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestChromeExtension(TestCase):
+    django_image_file = None
+
+    def setUp(self):
+        domaindeeplinks = [("nelly.com","Nelly"),
+        ("www.luisaviaroma.com","Luisaviaroma"),
+        ("www.mrporter.com","Mr Porter"),
+        ("www.theoutnet.com","The Outnet"),
+        ("www.ssense.com","SSENSE"),
+        ("www.oki-ni.com","Oki-Ni"),
+        ("www.asos.com","ASOS"),
+        ("www.net-a-porter.com","Net-a-Porter"),
+        ("www.vrients.com","Vrients"),
+        ("www.minimarket.se","Minimarket"),
+        ("elevenfiftynine.se","Elevenfiftynine"),
+        ("www.carinwester.com","Carin Wester"),
+        ("www.mq.se","MQ"),
+        ("www.jc.se","JC"),
+        ("www.wolfandbadger.com","Wolf & Badger"),
+        ("shirtonomy.se","Shirtonomy"),
+        ("eleven.se","Eleven"),
+        ("www.menlook.com","Menlook"),
+        ("www.philipb.com","Philip B"),
+        ("altewaisaome.com","Altewaisaome"),
+        ("www.laurenbbeauty.com","Lauren B"),
+        ("www.houseofdagmar.se","Dagmar"),
+        ("www.qvc.com","QVC"),
+        ("www.filippa-k.com/se","Filippa K"),
+        ("www.boozt.com/se","Boozt se"),
+        ("www.boozt.com/no","Boozt no"),
+        ("www.monicavinader.com","Monica Vinader"),
+        ("www.aldoshoes.com","ALDO"),
+        ("www.gramshoes.com","Gram Shoes"),
+        ("confidentliving.se","ConfidentLiving"),
+        ("www.room21.no","Room 21 no"),
+        ("www.rum21.se","Rum 21 se"),
+        ("example.com","Example")]
+        for domain,vendor in domaindeeplinks:
+            ddl = DomainDeepLinkingFactory.create(domain=domain,vendor__name=vendor,template='http://example.com/my-template')
+            #print "Creating DomainDeeplinking %s, %s " % (ddl.id,ddl.domain)
+        from PIL import Image
+        from StringIO import StringIO
+
+        from django.core.files.base import ContentFile
+
+        image_file = StringIO()
+        image = Image.new('RGBA', size=(50,50), color=(256,0,0))
+        image.save(image_file, 'png')
+        image_file.seek(0)
+
+        self.django_image_file = ContentFile(image_file.read(), 'test.png')
 
     def _login(self):
         normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
@@ -41,7 +93,7 @@ class TestChromeExtension(TestCase):
         response = self.client.get('/backend/authenticated/')
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['profile'], u'http://testserver/en/profile/normal_user/')
+        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/')
         self.assertEqual(json_content['authenticated'], True)
 
     def test_product_lookup_not_logged_in(self):
@@ -50,9 +102,34 @@ class TestChromeExtension(TestCase):
 
     def test_product_lookup_not_found(self):
         self._login()
-
-        response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=example.com')
+        import urllib
+        response = self.client.get('/backend/product/lookup/?key=not_found_url&domain=weird.com')
         self.assertEqual(response.status_code, 404)
+
+    def test_encode_and_lookup_utf_urls(self):
+        self._login()
+        url = '/backend/product/lookup/?key=http%3A%2F%2Fnelly.com%2Fse%2Fkl%25C3%25A4der-f%25C3%25B6r-kvinnor%2Fkl%25C3%25A4der%2Ffestkl%25C3%25A4nningar%2F%23hits%3D144%26sort%3DLastArrival%26priceTo%3D299&domain=nelly.com%2Fse%2Fkl%25C3%25A4der-f%25C3%25B6r-kvinnor%2Fkl%25C3%25A4der%2Ffestkl%25C3%25A4nningar%2F&is_product=0'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    """def test_product_lookups(self):
+        product0 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/white-twill")
+        product1 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/sky-twill")
+        product2 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/blue-twill")
+        self.assertIsNotNone(product0.product_name)
+        self.assertIsNotNone(product0.id)
+        vendor0 = VendorFactory.create()
+        vendor1 = VendorFactory.create()
+        vendor2 = VendorFactory.create()
+        print vendor1
+        vendor = NellyVendorWithProductFactory()
+        for product in vendor.product_set.all():
+            print product
+        vendor = AsosVendorWithProductFactory()
+        for product in vendor.product_set.all():
+            print product
+        #print product.default_vendor
+    """
 
     def test_product_lookup_by_domain(self):
         self._login()
@@ -64,43 +141,68 @@ class TestChromeExtension(TestCase):
             template='http://example.com/my-template'
         )
 
-        response = self.client.get('/backend/product/lookup/?key=example.com/se/shoes?product=123&domain=example.com/se/shoes')
+        response = self.client.get('/backend/product/lookup/?key=http://example.com/se/shoes?product=123&domain=example.com')
+        self.assertEquals(response.status_code,200)
         json_content = json.loads(response.content)
 
         self.assertEqual(json_content['product_pk'], None)
         self.assertEqual(json_content['product_link'], None)
-        self.assertEqual(json_content['product_short_link'], 'http://testserver/en/pd/4C92/')
+        self.assertTrue(json_content['product_short_link'].startswith('http://testserver/pd/4C9'))
         self.assertEqual(json_content['product_liked'], False)
 
-    @unittest.skip("Review this test")
     def test_product_lookup_by_url(self):
         self._login()
-
+        product_key = 'http://example.com/example?someproduct=12345'
+        product_id = product_lookup_by_solr(None, product_key)
+        if product_id:
+            print "Found already existing product in SOLR database, removing."
+            connection = Solr(settings.SOLR_URL)
+            product_solr_id = "apparel.product.%s" % product_id
+            connection.delete(id=product_solr_id, commit=True, waitFlush=True)
+            print "%s has been removed from index." % product_solr_id
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         category = get_model('apparel', 'Category').objects.create(name='Category')
         manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
-        product = get_model('apparel', 'Product').objects.create(
+        product = ProductFactory.create(
             product_name='Product',
             category=category,
             manufacturer=manufacturer,
             gender='M',
+            published=True,
+            product_key=product_key,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        self.assertIsNotNone(product.product_image)
+        self.assertIsNotNone(get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url)
+        vendorproduct = VendorProductFactory.create(vendor=vendor, product=product, availability=True)
+        del product.default_vendor
+        product_save(product, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(product.id)
+        self.assertIsNotNone(product.default_vendor)
+        """product = ProductFactory.create(
+            product_name='Product',
+            #category=category,
+            manufacturer__name="manufacturer",
+            gender='M',
             product_image='no real image',
-            published=True
-        )
-        theimp_vendor = get_model('theimp', 'Vendor').objects.create(name='Vendor', vendor=vendor)
-        theimp_product = get_model('theimp', 'Product').objects.create(
-            key='http://example.com/example',
-            vendor=theimp_vendor,
-            json='{"site_product": 1}'
-        )
+            published=True,
+            product_key=product_key
+        )"""
 
-        response = self.client.get('/backend/product/lookup/?key=http://example.com/example&domain=example.com')
+        print "Creating product %s,%s" % (product.id,product)
+        print "Product key is %s" % (product.product_key)
+        #print "Creating Domain Deeplinking %s, domain %s" % (ddl,ddl.domain)
+        self.assertIsNotNone( product.id )
+        response = self.client.get('/backend/product/lookup/?key=%s' % product_key)
         self.assertEqual(response.status_code, 200)
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['product_pk'], 1)
+        self.assertIsNotNone(json_content['product_pk'])
+        self.assertEqual(int(json_content['product_pk']), product.id)
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
-        self.assertEqual(json_content['product_short_link'], 'http://testserver/en/p/4C92/')
+        self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
 
 class TestChromeExtensionSpecials(TestCase):
@@ -120,97 +222,204 @@ class TestChromeExtensionSpecials(TestCase):
         self.assertIsNotNone(vendor)
         self.assertIsNotNone(product)
 
+    def test_extract_asos_nelly_product_url(self):
+        asos_url = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
+        key, vendor_id = extract_asos_nelly_product_url(asos_url)
+        self.assertEquals(key, "/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486")
+
+        url_cause_exception = "https://www.asos.com/women/"
+        key, vendor_id = extract_asos_nelly_product_url(url_cause_exception)
+        self.assertIsNone(key)
+        self.assertIsNone(vendor_id)
+
+        asos_url_2 = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
+        key, vendor_id = extract_asos_nelly_product_url(asos_url_2)
+        self.assertEquals(key, "/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266")
+
+        asos_url_3 = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+        key, vendor_id = extract_asos_nelly_product_url(asos_url_3)
+        self.assertEquals(key, "/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546")
+
+        luis_avairoma_url_4 = "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing"
+        key, vendor_id = extract_asos_nelly_product_url(luis_avairoma_url_4)
+        self.assertEquals(key, "60I-CD1014")
+
+        luis_avairoma_url_5 = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"
+        key, vendor_id = extract_asos_nelly_product_url(luis_avairoma_url_5)
+        self.assertEquals(key, luis_avairoma_url_5)
+
+        nelly_url_6 = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        key, vendor_id = extract_asos_nelly_product_url(nelly_url_6, True)
+        self.assertEquals(key, "/scuba-wrap-dress-917910-29/")
+
+        nelly_url_7 = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        key, vendor_id = extract_asos_nelly_product_url(nelly_url_7, True)
+        self.assertEquals(key, "/scuba-wrap-dress-917910-29/")
+
+        nelly_url_8 = "http://nelly.com/se/somecategory/somesubcategory/otherparam/closet-1153/quilt-effect-dress-601764-2350/"
+        key, vendor_id = extract_asos_nelly_product_url(nelly_url_8, True)
+        self.assertEquals(key, "/quilt-effect-dress-601764-2350/")
+
+        nelly_url_9 = "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
+        key, vendor_id = extract_asos_nelly_product_url(nelly_url_9, True)
+        self.assertEquals(key, "/wmns-nike-air-max-thea-118540-54/")
+
+
     def test_product_asos_nelly_luisaviaroma(self):
         #1st ASOS product
-        #original
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883414)
-        #after click
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate&r=2"
-        self.assertEqual(product_lookup_asos_nelly(key), 883414)
-        #manual search
-        key = "http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2108486&clr=Grey&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=101&gridsize=3&gridrow=2&gridcolumn=3"
-        self.assertEqual(product_lookup_asos_nelly(key), 883414)
-        #from "last viewed"
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&CTARef=Recently%20Viewed"
-        self.assertEqual(product_lookup_asos_nelly(key), 883414)
+        # original
+        # after click
+        # manual search
+        # from "last viewed"
+        original_keys = ["http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate",
+                        "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate&r=2",
+                        #"http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2108486&clr=Grey&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=101&gridsize=3&gridrow=2&gridcolumn=3",
+                        "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&CTARef=Recently%20Viewed"]
+        template_key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
 
         #2nd ASOS product
         #original
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883415)
         #after click
-        key = "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883415)
-        #manual search
-        key = "http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2109266&clr=White&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=100&gridsize=3&gridrow=2&gridcolumn=2"
-        self.assertEqual(product_lookup_asos_nelly(key), 883415)
+        # manual search, removed
+        #key = "http://www.asos.com/asos/asos-vest-with-extreme-racer-back/prod/pgeproduct.aspx?iid=2109266&clr=White&SearchQuery=Vest+With+Extreme+Racer+Back&pgesize=36&pge=1&totalstyles=100&gridsize=3&gridrow=2&gridcolumn=2"
+        original_keys = [ "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate",
+                          "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"]
+        template_key =    "http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2109266&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlq&istBid=t&channelref=affiliate"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
+
 
         #3rd ASOS product
         #original
-        key = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883416)
         #after click
-        key = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
-        self.assertEqual(product_lookup_asos_nelly(key), 883416)
         #manual search
-        key = "http://www.asos.com/asos/asos-mix-and-match-halter-leopard-print-bikini-top/prod/pgeproduct.aspx?iid=2125546&clr=Leopardprint&SearchQuery=Mix+and+Match+Halter+Leopard+Print+Bikini+Top&SearchRedirect=true"
-        self.assertEqual(product_lookup_asos_nelly(key), 883416)
+        #key = "http://www.asos.com/asos/asos-mix-and-match-halter-leopard-print-bikini-top/prod/pgeproduct.aspx?iid=2125546&clr=Leopardprint&SearchQuery=Mix+and+Match+Halter+Leopard+Print+Bikini+Top&SearchRedirect=true"
+        #self.assertEqual(product_lookup_asos_nelly(key), product_id)
+        original_keys = ["http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate",
+                         "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+                         ]
+        template_key = "http://www.asos.com/ASOS/ASOS-Mix-and-Match-Halter-Leopard-Print-Bikini-Top/Prod/pgeproduct.aspx?iid=2125546&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=witimippa&istBid=t&channelref=affiliate"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key), 883416)
 
         #1st Luisaviaroma product
         #original
-        key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN"
-        self.assertEqual(product_lookup_asos_nelly(key), 883598)
         #after click
-        key = "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing"
-        self.assertEqual(product_lookup_asos_nelly(key), 883598)
         #manual search
-        key = "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&VendorColorId=TTYzMDU30&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode="
-        self.assertEqual(product_lookup_asos_nelly(key), 883598)
+
+        original_keys = ["http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN",
+                         "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing",
+                         "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=14&VendorColorId=TTYzMDU30&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode=",
+                         ]
+        template_key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/t-shirts/60I-CD1014/lang_EN"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key), 883598)
+
+        #self.assertEqual(product_lookup_asos_nelly(key), 883598)
 
         #2nd Luisaviaroma product
         #original
-        key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"
-        self.assertEqual(product_lookup_asos_nelly(key), 883602)
         #after click
-        key = "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing"
-        self.assertEqual(product_lookup_asos_nelly(key), 883602)
         #manual search
-        key = "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&VendorColorId=TTYzMTAy0&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode="
-        self.assertEqual(product_lookup_asos_nelly(key), 883602)
+        original_keys = ["http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN",
+                         "http://www.luisaviaroma.com/index.aspx#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineId=clothing",
+                         "http://www.luisaviaroma.com/index.aspx?#ItemSrv.ashx|SeasonId=60I&CollectionId=CD1&ItemId=13&VendorColorId=TTYzMTAy0&SeasonMemoCode=actual&GenderMemoCode=women&CategoryId=&SubLineMemoCode=",
+                         ]
+
+        template_key = "http://www.luisaviaroma.com/adidas+originals+by+mary+katrantzou/women/skirts/60I-CD1013/lang_EN"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key), product_id)
+
+        #self.assertEqual(product_lookup_asos_nelly(key), 883602)
 
         #1st Nelly product
         #original
-        key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883607)
         #after click
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883607)
         #manual search
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883607)
+        original_keys = ["http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/",
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+
+                        ]
+        template_key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/nly-trend-917/scuba-wrap-dress-917910-29/"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883607)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883607)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883607)
 
         #2nd Nelly product
         #original
-        key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883603)
         #after click
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883603)
         #manual search
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883603)
         #made up category
-        key = "http://nelly.com/se/somecategory/somesubcategory/otherparam/closet-1153/quilt-effect-dress-601764-2350/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883603)
+        original_keys = ["http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/",
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/",
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/kl%C3%A4der/festkl%C3%A4nningar/closet-1153/quilt-effect-dress-601764-2350/",
+                         "http://nelly.com/se/somecategory/somesubcategory/otherparam/closet-1153/quilt-effect-dress-601764-2350/"
+                        ]
+        template_key = "http://nelly.com/se/kl\u00e4der-f\u00f6r-kvinnor/kl\u00e4der/festkl\u00e4nningar/closet-1153/quilt-effect-dress-601764-2350/"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883603)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883603)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883603)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883603)
 
         #3rd Nelly product from pivotaltracker story
         #original
-        key = "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
-        self.assertEqual(product_lookup_asos_nelly(key), 883604)
         #other
-        key = "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54"
-        self.assertEqual(product_lookup_asos_nelly(key), 883604)
+        original_keys = ["http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/",
+                         "http://nelly.com/se/kl%C3%A4der-f%C3%B6r-kvinnor/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54"
+                         ]
+        template_key = "http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/"
+        _cleanout_products(original_keys)
+        product_id = _send_product_to_solr(product_key=template_key)
+        for original_key in original_keys:
+            self.assertEqual(product_lookup_asos_nelly(original_key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883604)
+        #product_id = _send_product_to_solr(product_key=key)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), product_id)
+        #self.assertEqual(product_lookup_asos_nelly(key, True), 883604)
+
+    def test_embed_wildcard_solr_query(self):
+        test_strings = [
+                    ("product_key:asbasf://asdfkh+asdf","product_key:*asbasf://asdfkh+asdf*"),
+                    ("product_key:/wmns\-nike\-air\-max\-thea\-118540\-54/","product_key:*/wmns\-nike\-air\-max\-thea\-118540\-54/*"),
+                    ("id:apparel.product.883624","id:*apparel.product.883624*"),
+                    ("pro:asb","pro:*asb*"),
+                        ]
+        for i1,i2 in test_strings:
+            self.assertEquals(i2,embed_wildcard_solr_query(i1))
 
 
 class TestProductDetails(TestCase):
@@ -289,6 +498,13 @@ class TestProductDetails(TestCase):
 
         earning_product = self.product.get_product_earning(self.user)
         self.assertIsNone(earning_product)
+
+    def test_extracting_suffix(self):
+        from apparelrow.apparel.views import extract_domain_with_suffix
+        domain = "https://account.manning.com/support/index?someparameter=1"
+        self.assertEquals("manning.com",extract_domain_with_suffix(domain))
+        domain = "https://account.manning.co.uk/support/index?someparameter=1"
+        self.assertEquals("manning.co.uk",extract_domain_with_suffix(domain))
 
 
 class TestProfileLikes(TestCase):
@@ -457,7 +673,6 @@ class TestEmbeddingShops(TestCase):
         #self.product1 = get_model('apparel', 'Product').objects.create()
         #self.product2 = get_model('apparel', 'Product').objects.create()
 
-    @unittest.skip("Review this test")
     def test_create_shop(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
         self.assertTrue(is_logged_in)
@@ -486,8 +701,10 @@ class TestEmbeddingShops(TestCase):
         data.get("components")[1]["product"]["id"] = self.product2.id
         self.assertTrue(data.get("components")[0]["product"]["id"])
         self.assertTrue(data.get("components")[1]["product"]["id"])
-        response = self.client.post(reverse('create_shop')[3:],data=json.dumps(data),content_type='application/json',)
-        self.assertEqual(response.status_code, 201)
+        print "Trying to call url %s " % reverse('create_shop')
+        response = self.client.post(reverse('create_shop'),data=json.dumps(data),content_type='application/json',)
+        print response.status_code
+        self.assertTrue(response.status_code in [201])
         content = json.loads(response.content)
         self.assertEqual(content.get("published"), True)
         self.assertEqual(content.get("user"), "normal_user")
@@ -500,10 +717,231 @@ class TestEmbeddingShops(TestCase):
         self.assertEqual(content.get("user"), "normal_user")
         self.assertEqual(content.get("url"), "/shop/create/api/1")
         self.assertEqual(content.get("id"), 1)
-        response = self.client.post(reverse('shop-widget',args=(content.get("id"),))[3:])
+        print "Calling shop widget %s" % reverse('shop-widget',args=(content.get("id"),))
+        response = self.client.post(reverse('shop-widget',args=(content.get("id"),)))
+        print response.status_code
+        self.assertTrue(response.status_code in [200])
         url = reverse('embed-shop',args=(content.get("id"),))
+        print "Calling %s to be embedded into the cache." % url
         self.client.get(url)
         from django.core.cache import get_cache
         cache = get_cache('nginx')
         nginx_key = reverse('embed-shop', args=[1])
+        print "Checking cache key for: %s" % nginx_key
         self.assertIsNotNone(cache.get(nginx_key,None))
+
+
+class TestShortLinks(TestCase):
+    def setUp(self):
+        self.vendor = get_model('apparel', 'Vendor').objects.create(name='My Store 12')
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.save()
+
+    def test_store_link(self):
+        template = "http://www.anrdoezrs.net/links/4125005/type/dlg/sid/{sid}/http://www.nastygal.com/"
+        store_link = get_model('apparel', 'ShortStoreLink').objects.create(vendor=self.vendor, template=template)
+
+        stats_count = get_model('statistics', 'ProductStat').objects.count()
+        store_link_str = store_link.link()
+        referer = reverse('store-short-link-userid', kwargs={'short_link': store_link_str, 'user_id': self.user.id})
+
+        # Make the call directly to product-track, since the client doesn't follow the redirect made
+        # from template in jQuery
+        url = reverse('product-track', kwargs={'pk': 0, 'page': 'Ext-Store', 'sid': self.user.id})
+        print "requesting url: %s" % url
+        response = self.client.post(url, {'referer': referer}, **{'HTTP_REFERER': referer})
+        self.assertEqual(response.status_code, 200)
+
+        # A ProductStat were created
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count + 1)
+
+        product_stat = get_model('statistics', 'ProductStat').objects.latest("created")
+        self.assertEqual(product_stat.page, 'Ext-Store')
+        self.assertEqual(product_stat.vendor, self.vendor.name)
+        self.assertEqual(product_stat.user_id, self.user.id)
+        self.assertEqual(product_stat.action, 'StoreLinkClick')
+
+    def test_store_link_invalid(self):
+        stats_count = get_model('statistics', 'ProductStat').objects.count()
+        url = reverse('store-short-link-userid', kwargs={'short_link': 'random', 'user_id': self.user.id})
+
+        response = self.client.post(url, follow=False)
+        self.assertEqual(response.status_code, 404)
+
+        # No ProductStat were created
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
+
+@override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
+class TestUtils(TestCase):
+
+    def setUp(self):
+        activate('sv')
+        vendor_success = VendorFactory.create(name="Vendor Success", is_cpc=True, is_cpo=False)
+        get_model('dashboard', 'ClickCost').objects.create(vendor=vendor_success, amount=1.00, currency="EUR")
+
+        VendorFactory.create(name="Vendor Fail", is_cpc=True, is_cpo=False)
+
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.is_partner = True
+        self.user.location = 'SE'
+        self.user.save()
+
+        self.django_image_file = _create_dummy_image()
+        self.category = CategoryFactory.create()
+        self.manufacturer = BrandFactory.create()
+        self.product_cpc = ProductFactory.create(
+            product_name='Product CPC',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        vendorproduct = VendorProductFactory.create(vendor=vendor_success, product=self.product_cpc, availability=True)
+        del self.product_cpc.default_vendor
+        product_save(self.product_cpc, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(self.product_cpc.default_vendor)
+
+        get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_success,
+                                                     cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                     referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+
+    def test_get_vendor_cost_per_click(self):
+        """ Test function that returns cost per click when is a valid Vendor with valid Cost per click
+            object associated
+        """
+        vendor_success = get_model('apparel', 'Vendor').objects.get(name="Vendor Success")
+        cost_per_click = get_vendor_cost_per_click(vendor_success)
+
+        self.assertIsNotNone(cost_per_click)
+        self.assertEqual(cost_per_click.amount, 1)
+        self.assertEqual(cost_per_click.currency, "EUR")
+        self.assertEqual(cost_per_click.vendor, vendor_success)
+
+    def test_get_vendor_cost_per_click_is_none(self):
+        """ Test function that returns cost per click when Vendor has not related Cost per Click object created.
+        """
+        vendor_fail = get_model('apparel', 'Vendor').objects.get(name="Vendor Fail")
+        cost_per_click = get_vendor_cost_per_click(vendor_fail)
+
+        self.assertIsNone(cost_per_click)
+
+    def test_product_earning_is_cpc(self):
+        """ Test functions that returns earning cut and product earning for a CPC vendor with Cost per Click
+        """
+        self.assertIsNotNone(self.product_cpc.default_vendor)
+
+        # Test get earning cut
+        earning_cut = get_earning_cut(self.user, self.product_cpc.default_vendor, self.product_cpc)
+        self.assertEqual(earning_cut, Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+
+        click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.product_cpc.default_vendor.vendor)
+        self.assertIsNotNone(click_cost)
+        # Test product earning
+        product_earning = get_product_earning(self.user, self.product_cpc.default_vendor, self.product_cpc)
+        self.assertEqual("%.2f" % product_earning, "%.2f" % (click_cost.amount * earning_cut))
+
+    def test_product_earning_is_cpo(self):
+        """ Test functions that returns earning cut and product earning for a CPO vendor
+        """
+        vendor_cpo = VendorFactory.create(name="Vendor CPO")
+        store = StoreFactory.create(vendor=vendor_cpo, commission_percentage='0.2')
+        product_cpo = ProductFactory.create(
+            product_name='Product CPO',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        vendorproduct = VendorProductFactory.create(vendor=vendor_cpo, product=product_cpo, availability=True)
+        del product_cpo.default_vendor
+        product_save(product_cpo, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(product_cpo.default_vendor)
+
+        get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_cpo,
+                                                     cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                     referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+        earning_cut = get_earning_cut(self.user, product_cpo.default_vendor, product_cpo)
+        self.assertEqual("%.2f" % earning_cut, "%.2f" %
+                               (Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT) * Decimal(store.commission_percentage)))
+
+        product_earning = get_product_earning(self.user, product_cpo.default_vendor, product_cpo)
+        self.assertEqual("%.2f" % product_earning, "%.2f" % (product_cpo.default_vendor.locale_price * earning_cut))
+
+    def test_product_earning_no_default_vendor(self):
+        """ Test functions that returns earning cut and product earning when Vendor is None
+        """
+        product_no_vendor = ProductFactory.create(
+            product_name='Product No Vendor',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        earning_cut = get_earning_cut(self.user, product_no_vendor.default_vendor, product_no_vendor)
+        self.assertIsNone(earning_cut)
+
+        product_earning = get_product_earning(self.user, product_no_vendor.default_vendor, product_no_vendor)
+        self.assertIsNone(product_earning)
+
+def _send_product_to_solr(product_key):
+
+    django_image_file = _create_dummy_image()
+    _cleanout_product(product_key)
+    vendor = VendorFactory.create()
+    category = CategoryFactory.create()
+    manufacturer = BrandFactory.create()
+    product = ProductFactory.create(
+        product_name='Product',
+        category=category,
+        manufacturer=manufacturer,
+        gender='M',
+        published=True,
+        product_key=product_key,
+        availability=True,
+        product_image=django_image_file
+    )
+    assert(product.product_image)
+    assert(get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url)
+    vendorproduct = VendorProductFactory.create(vendor=vendor, product=product, availability=True)
+    del product.default_vendor
+    product_save(product, commit=True)
+    return product.id
+
+def _cleanout_products(product_keys):
+    for product_key in product_keys:
+        _cleanout_product(product_key)
+
+def _cleanout_product(product_key):
+    product_id = product_lookup_by_solr(None, product_key)
+    if product_id:
+        print "Found already existing product in SOLR database, removing."
+        connection = Solr(settings.SOLR_URL)
+        product_solr_id = "apparel.product.%s" % product_id
+        connection.delete(id=product_solr_id, commit=True, waitFlush=True)
+        print "%s has been removed from index." % product_solr_id
+    else:
+        print "No previous products found"
+
+def _create_dummy_image():
+    from PIL import Image
+    from StringIO import StringIO
+    from django.core.files.base import ContentFile
+    image_file = StringIO()
+    image = Image.new('RGBA', size=(50,50), color=(256,0,0))
+    image.save(image_file, 'png')
+    image_file.seek(0)
+
+    return ContentFile(image_file.read(), 'test.png')

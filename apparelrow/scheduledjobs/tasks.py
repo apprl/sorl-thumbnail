@@ -5,9 +5,11 @@ __author__ = 'klaswikblad'
 
 from celery.schedules import crontab
 from celery.task import periodic_task, task
+import requests
 
 import logging
 log = logging.getLogger('celery_scheduled')
+log_urls = logging.getLogger('url_redirect_tests')
 
 # Run importer at midnight
 @periodic_task(name='apparelrow.scheduledjobs.tasks.run_importer', run_every=crontab(minute='0',hour='0'), max_retries=1, ignore_result=True)
@@ -32,7 +34,7 @@ def run_importer():
     management.call_command('brand_updates')
 
 # Run importer at midnight
-@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute='0',hour='14'), max_retries=1, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.initiate_products_importer', run_every=crontab(minute='0',hour='17'), max_retries=1, ignore_result=True)
 def initiate_product_importer():
     from django.core import management
     from theimp.models import Vendor
@@ -100,7 +102,43 @@ def clearsessions():
     log.info('Running clearsessions job.')
     management.call_command('clearsessions')
 
+# daily just before midnight
+@periodic_task(name='apparelrow.scheduledjobs.tasks.recalculate_earnings', run_every=crontab(minute='59',hour='23'), max_retries=3, ignore_result=True)
+def recalculate_earnings():
+    from django.core import management
+    management.call_command('update_aggregated_data')
+
+# daily just after midnight
+@periodic_task(name='apparelrow.scheduledjobs.tasks.collect_calculate_earnings', run_every=crontab(minute='30',hour='0'), max_retries=3, ignore_result=True)
+def calculate_earnings():
+    from django.core import management
+    management.call_command('collect_aggregated_data')
+
+
+# daily afternoon
+@periodic_task(name='apparelrow.scheduledjobs.tasks.check_chrome_extension', run_every=crontab(minute='30',hour='15'), ignore_result=True)
+def check_chrome_extension():
+    from django.core import management
+    management.call_command('deeplink_live_test')
+
+
 @task(name='apparelrow.scheduledjobs.tasks.run_vendor_product_importer', max_retries=5, ignore_result=True)
 def run_vendor_importer(vendor):
     log.info('Initiating import for vendor %s.' % vendor)
     Importer().run(dry=False, vendor=vendor)
+
+@periodic_task(name='apparelrow.scheduledjobs.tasks.check_clicks_limit_per_vendor', run_every=crontab(minute='5'), max_retries=5, ignore_result=True)
+def check_clicks_limit_per_vendor():
+    from django.core import management
+    management.call_command('check_clicks_limit_per_vendor')
+
+@task(name='apparelrow.scheduledjobs.tasks.check_urls',max_retries=5, ignore_result=True)
+def check_url_endpoint(url):
+    if not url:
+        return None
+    try:
+        r = requests.get(url, stream=True)
+        if not r.url == url:
+            log_urls.info("%s redirects to %s" % (url,r.url))
+    except:
+        log_urls.info("Timeout for url %s" % url)

@@ -3,8 +3,17 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
 
 from apparelrow.apparel.tasks import product_popularity
+from apparelrow.apparel.models import Product
+from apparelrow.statistics.utils import get_country_by_ip_string
+
+
+import logging
+logger = logging.getLogger( "apparelrow" )
 
 
 PERIOD_TYPES = (
@@ -69,9 +78,50 @@ class ProductStat(models.Model):
     referer = models.TextField(null=True, blank=True)
     user_agent = models.TextField(null=True, blank=True)
     ip = models.GenericIPAddressField()
+    is_valid = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-created']
+
+@receiver(post_save, sender=ProductStat, dispatch_uid='productstat_post_save')
+def productstat_post_save(sender, instance, created, **kwargs):
+    """
+    Checks if a valid click should be revoked due to the click does not belong to a market that the vendor is shipping to.
+    :param sender:
+    :param instance:
+    :param created:
+    :param kwargs:
+    :return:
+    """
+
+    # Only do this check if the instance is created and the instance is valid. If not valid there is not really any point.
+    if created and instance.is_valid:
+        try:
+            product = Product.objects.get(slug=instance.product)
+            if product.default_vendor and product.default_vendor.vendor.is_cpc:
+                country = get_country_by_ip_string(instance.ip)
+
+                vendor_name = product.default_vendor.vendor.name
+                vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor_name, [])
+
+                logger.info("Click verification: %s belongs to market for vendor %s" % (country, vendor_name))
+                if not vendor_markets or len(vendor_markets) == 0:
+                    vendor_markets = settings.VENDOR_LOCATION_MAPPING.get("default")
+                    logger.info("Click verification: No vendor market entry for vendor %s, falling back on default." % (vendor_name))
+                if country not in vendor_markets:
+                    logger.info("%s does not belong to market for vendor %s, %s" % (country, vendor_name,vendor_markets))
+                    instance.is_valid = False
+                    instance.vendor = vendor_name
+                    instance.save()
+                else:
+                    logger.info("Click from %s for vendor %s is verified for markets %s." % (instance.ip,vendor_name,vendor_markets))
+            else:
+                logger.info("Not running lookup due to default vendor %s not being CPC." % product.default_vendor)
+
+        except Product.DoesNotExist:
+            logger.warning("Product %s does not exist" % instance.product)
+    else:
+        logger.info("Product click is not valid or is not created, no ip check")
 
 
 class NotificationEmailStats(models.Model):

@@ -3,6 +3,7 @@ import json
 import decimal
 
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models, transaction
 from django.db.models import get_model
 from django.db.models.signals import pre_save, post_save
@@ -59,7 +60,7 @@ class Sale(models.Model):
     )
 
     original_sale_id = models.CharField(max_length=100)
-    affiliate = models.CharField(max_length=100, null=False, blank=False)
+    affiliate = models.CharField(max_length=100)
     vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(null=True, blank=True, default=None)
 
@@ -67,29 +68,29 @@ class Sale(models.Model):
     product_id = models.PositiveIntegerField(null=True, blank=True)
     placement = models.CharField(max_length=32, null=True, blank=True)
 
-    status = models.CharField(max_length=1, default=INCOMPLETE, choices=STATUS_CHOICES, null=False, blank=False, db_index=True)
-    paid = models.CharField(max_length=1, default=PAID_PENDING, choices=PAID_STATUS_CHOICES, null=False, blank=False)
-    type = models.CharField(max_length=1, default=COST_PER_ORDER, choices=SALE_TYPES_CHOICES, null=False, blank=False)
+    status = models.CharField(max_length=1, default=INCOMPLETE, choices=STATUS_CHOICES, db_index=True)
+    paid = models.CharField(max_length=1, default=PAID_PENDING, choices=PAID_STATUS_CHOICES)
+    type = models.CharField(max_length=1, default=COST_PER_ORDER, choices=SALE_TYPES_CHOICES)
 
-    adjusted = models.BooleanField(null=False, blank=False, default=False)
+    adjusted = models.BooleanField(default=False)
     adjusted_date = models.DateTimeField(default=None, null=True, blank=True)
 
-    cut = models.DecimalField(null=False, blank=False, default='1.0', max_digits=10, decimal_places=3)
-    exchange_rate = models.DecimalField(null=False, blank=False, default='1', max_digits=10, decimal_places=6)
-    converted_amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Converted sale amount'))
-    converted_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Converted sale commission'))
-    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
-    commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale commission'))
-    currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
-    original_amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale amount'))
-    original_commission = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale commission'))
-    original_currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Original currency as three-letter ISO code'))
+    cut = models.DecimalField(default='1.0', max_digits=10, decimal_places=3)
+    exchange_rate = models.DecimalField(default='1', max_digits=10, decimal_places=6)
+    converted_amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Converted sale amount'))
+    converted_commission = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Converted sale commission'))
+    amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
+    commission = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale commission'))
+    currency = models.CharField(default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
+    original_amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale amount'))
+    original_commission = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Original sale commission'))
+    original_currency = models.CharField(default='EUR', max_length=3, help_text=_('Original currency as three-letter ISO code'))
 
     # referral sale
-    is_referral_sale = models.BooleanField(default=False, null=False, blank=False)
+    is_referral_sale = models.BooleanField(default=False)
     referral_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
 
-    is_promo = models.BooleanField(default=False, null=False, blank=False)
+    is_promo = models.BooleanField(default=False)
 
     sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
@@ -113,14 +114,15 @@ class Sale(models.Model):
 
 
 class Payment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=False, blank=False, on_delete=models.CASCADE)
-    details = models.ForeignKey('profile.PaymentDetail', null=False, blank=False, on_delete=models.CASCADE)
-    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
-    currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
-    paid = models.BooleanField(default=False, null=False, blank=False)
-    cancelled = models.BooleanField(default=False, null=False, blank=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    details = models.ForeignKey('profile.PaymentDetail', on_delete=models.CASCADE)
+    amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
+    currency = models.CharField(default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
+    paid = models.BooleanField(default=False)
+    cancelled = models.BooleanField(default=False)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
+    earnings = models.CharField(max_length=1000, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
@@ -138,7 +140,7 @@ class Group(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='owner_group', help_text='Assign a group owner if publishers of this group will belong to an owner, for example a blog network.')
     owner_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
                                     help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
-    is_subscriber = models.BooleanField(default=False, null=False, blank=False)
+    is_subscriber = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Commission Group'
@@ -148,11 +150,11 @@ class Group(models.Model):
 
 
 class Cut(models.Model):
-    group = models.ForeignKey('dashboard.Group', null=False, blank=False, on_delete=models.PROTECT, related_name='cuts')
-    vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, on_delete=models.CASCADE)
-    cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_CUT_DEFAULT), max_digits=10, decimal_places=3,
+    group = models.ForeignKey('dashboard.Group', on_delete=models.PROTECT, related_name='cuts')
+    vendor = models.ForeignKey('apparel.Vendor', on_delete=models.CASCADE)
+    cut = models.DecimalField(default=str(settings.APPAREL_DASHBOARD_CUT_DEFAULT), max_digits=10, decimal_places=3,
                               help_text='Between 1 and 0, default %s. Determines the percentage that goes to the Publisher (and possible Publisher Network owner, if applies)' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
-    referral_cut = models.DecimalField(null=False, blank=False, default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
+    referral_cut = models.DecimalField(default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
                                        help_text='Between 1 and 0, default %s. Determines the percentage that goes to the referral partner parent.' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
     rules_exceptions = JSONField(null=True, blank=True,
                                  help_text='Creates exceptions for Cuts using the following format: [{"sid": 1, "cut": '
@@ -169,9 +171,9 @@ class Cut(models.Model):
 
 
 class ClickCost(models.Model):
-    vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, on_delete=models.CASCADE)
-    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2, help_text=_('Click cost'))
-    currency = models.CharField(null=False, blank=False, default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
+    vendor = models.ForeignKey('apparel.Vendor', on_delete=models.CASCADE)
+    amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Click cost'))
+    currency = models.CharField(default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
 
     def _calculate_exchange_price(self):
         """
@@ -213,7 +215,7 @@ class Signup(models.Model):
 
 
 class StoreCommission(models.Model):
-    vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False)
+    vendor = models.ForeignKey('apparel.Vendor')
     commission = models.CharField(max_length=255,
                                   help_text=_('Written like X/Y/Z which translates into X-Y%% (Sale Z%%). '
                                               'If the number is 0 then it will not be used. '
@@ -292,6 +294,44 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
 
         sale, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
 
+AGGREGATED_DATA_TYPES = (
+    ('aggregated_from_total', 'Total Aggregation'),
+    ('aggregated_from_product', 'Aggregated From Product'),
+    ('aggregated_from_publisher', 'Aggregated From Publisher'),
+    ('simple_earning', 'Simple User Earning'),
+)
+
+
+class AggregatedData(models.Model):
+    created = models.DateTimeField(default=timezone.now)
+    user_id = models.PositiveIntegerField(default=0, db_index=True)
+    user_name = models.CharField(max_length=100)
+    user_username = models.CharField(max_length=100)
+    user_link = models.CharField(max_length=200)
+    user_image = models.CharField(max_length=200)
+
+    sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    referral_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    network_sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    network_click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    sale_plus_click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    total_network_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+
+    sales = models.PositiveIntegerField(default=0)
+    network_sales = models.PositiveIntegerField(default=0)
+    referral_sales = models.PositiveIntegerField(default=0)
+    paid_clicks = models.PositiveIntegerField(default=0)
+    total_clicks = models.PositiveIntegerField(default=0)
+
+    data_type = models.CharField(max_length=100, choices=AGGREGATED_DATA_TYPES)
+
+    aggregated_from_id = models.PositiveIntegerField(default=0)
+    aggregated_from_name = models.CharField(max_length=100)
+    aggregated_from_slug = models.CharField(max_length=100)
+    aggregated_from_link = models.CharField(max_length=200)
+    aggregated_from_image = models.CharField(max_length=200)
+
 USER_EARNING_TYPES = (
     ('apprl_commission', 'APPRL Earnings'),
     ('referral_sale_commission', 'Referral Sale Earnings'),
@@ -303,17 +343,47 @@ USER_EARNING_TYPES = (
     ('publisher_sale_click_commission', 'Earnings per Clicks'),
 )
 
+@receiver(pre_save, sender=AggregatedData, dispatch_uid='aggregated_data_pre_save')
+def aggregated_data_pre_save(sender, instance, *args, **kwargs):
+    """
+    Trim the string if its larger than 100 chars.
+    :param sender:
+    :param instance:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    #if instance.aggregated_from_name:
+    if instance.aggregated_from_name:
+        instance.aggregated_from_name = instance.aggregated_from_name[:99]
+    else:
+        instance.aggregated_from_name = ""
+
+    if instance.aggregated_from_slug:
+        instance.aggregated_from_slug = instance.aggregated_from_slug[:99]
+    else:
+        instance.aggregated_from_slug = ""
+
+    if instance.aggregated_from_link:
+        instance.aggregated_from_link = instance.aggregated_from_link[:199]
+    else:
+        instance.aggregated_from_link = ""
+
+    if instance.aggregated_from_image:
+        instance.aggregated_from_image = instance.aggregated_from_image[:199]
+    else:
+        instance.aggregated_from_image = ""
 
 class UserEarning(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, blank=False, on_delete=models.PROTECT)
-    user_earning_type = models.CharField(max_length=100, null=False, blank=False, choices=USER_EARNING_TYPES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, on_delete=models.PROTECT)
+    user_earning_type = models.CharField(max_length=100, choices=USER_EARNING_TYPES)
     sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
-    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=False, on_delete=models.PROTECT)
-    amount = models.DecimalField(null=False, blank=False, default='0.0', max_digits=10, decimal_places=2)
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT)
+    amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2)
     date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True)
-    status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, null=False, blank=False, db_index=True)
-    paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES, null=False, blank=False)
+    status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, db_index=True)
+    paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES)
 
 @receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
 def sale_post_save(sender, instance, created, **kwargs):
@@ -331,6 +401,14 @@ def sale_post_save(sender, instance, created, **kwargs):
                 else:
                     get_model('dashboard', 'UserEarning').objects.filter(sale=instance).delete()
                     create_earnings(instance)
+                str_date = instance.sale_date.strftime('%Y-%m-%d')
+                update_list = cache.get(settings.APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA)
+                if update_list:
+                    if not str_date in update_list:
+                        update_list = "%s,%s" % (update_list, str_date)
+                        cache.set(settings.APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA, update_list)
+                else:
+                    cache.set(settings.APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA, str_date)
             else:
                 create_earnings(instance)
 

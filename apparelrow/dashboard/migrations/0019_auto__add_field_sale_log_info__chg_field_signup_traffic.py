@@ -159,6 +159,13 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        u'dashboard.clickcost': {
+            'Meta': {'object_name': 'ClickCost'},
+            'amount': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '10', 'decimal_places': '2'}),
+            'currency': ('django.db.models.fields.CharField', [], {'default': "'EUR'", 'max_length': '3'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']"})
+        },
         u'dashboard.cut': {
             'Meta': {'object_name': 'Cut'},
             'cut': ('django.db.models.fields.DecimalField', [], {'default': "'0.67'", 'max_digits': '10', 'decimal_places': '3'}),
@@ -217,6 +224,7 @@ class Migration(SchemaMigration):
             'referral_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'null': 'True', 'blank': 'True'}),
             'sale_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '1', 'db_index': 'True'}),
+            'type': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '1'}),
             'user_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'vendor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Vendor']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'})
         },

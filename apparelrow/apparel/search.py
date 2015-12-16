@@ -45,15 +45,17 @@ class ResultContainer:
     def __init__(self, **entries):
         self.__dict__.update(entries)
 
-def more_like_this_product(body, gender, limit):
+def more_like_this_product(body, gender, location, limit):
     kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
+    kwargs['fq'].append('market_ss:%s' % location)
+
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
     connection = Solr(settings.SOLR_URL)
     result = connection.more_like_this('', mlt_fields, **kwargs)
     return result
 
-def more_alternatives(product, limit):
+def more_alternatives(product, location, limit):
     colors_pk = list(map(str, product.colors_pk))
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(translation.get_language(), settings.APPAREL_BASE_CURRENCY)
     query_arguments = {'rows': limit, 'start': 0,
@@ -62,6 +64,7 @@ def more_alternatives(product, limit):
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
     query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
     query_arguments['fq'].append('category:%s' % (product.category_id))
+    query_arguments['fq'].append('market_ss:%s' % location)
     if colors_pk:
         query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
     search = ApparelSearch('*:*', **query_arguments)
@@ -271,7 +274,7 @@ def get_product_document(instance, rebuild=False):
     boost = {}
 
     if instance.published == True and instance.category and instance.manufacturer and instance.gender:
-        availability = instance.availability and instance.default_vendor and instance.default_vendor.availability != 0
+        availability = bool(instance.availability and instance.default_vendor and instance.default_vendor.availability != 0)
         discount = False
         price = stored_price = stored_discount = decimal.Decimal('0.0')
         currency = 'EUR'
@@ -310,6 +313,7 @@ def get_product_document(instance, rebuild=False):
         document['name'] = instance.product_name
 
         # Search fields
+        document['product_key'] = instance.product_key
         document['product_name'] = instance.product_name
         document['description'] = instance.description
         document['manufacturer_name'] = instance.manufacturer.name

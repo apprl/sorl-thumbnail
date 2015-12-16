@@ -7,7 +7,7 @@ from fabric.api import *
 from fabric.colors import green, red
 
 vm_bridge = True
-env.solr_download_url = 'http://apache.cs.uu.nl/dist/lucene/solr/4.8.1/solr-4.8.1.tgz'
+env.solr_download_url = 'http://archive.apache.org/dist/lucene/solr/4.8.1/solr-4.8.1.tgz'
 env.project_name = 'apparelrow' # no spaces!
 env.app_name = 'apparelrow' # no spaces!
 # environments

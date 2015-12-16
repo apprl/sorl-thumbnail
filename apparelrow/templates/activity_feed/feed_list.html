@@ -50,7 +50,7 @@
                     <li class="dropdown">
                     <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men’s" %}{% elif gender == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'index' %}">{% trans "Show all" %}</a></li>
+                        <li><a href="{% url 'index-all' %}">{% trans "Show all" %}</a></li>
                         <li><a href="{% url 'index-men' %}">{% trans "Only men’s" %}</a></li>
                         <li><a href="{% url 'index-women' %}">{% trans "Only women’s" %}</a></li>
                     </ul>

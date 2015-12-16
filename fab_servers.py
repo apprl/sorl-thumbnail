@@ -179,7 +179,7 @@ def prod_scrapy():
     #env.celery_processes_background = '1'
     env.installed_apps = ['']
     env.run_user = env.user
-    env.restart = ['scrapyd']
+    env.restart = ['celery_standard','celery_background']
     env.reload_scrapy = True
     env.hostname="scrapy"
 
@@ -219,5 +219,5 @@ def prod_sentry():
     #env.celery_processes_background = '1'
     env.installed_apps = ['']
     env.run_user = env.user
-    env.restart = ['celery','celery_beat']
+    #env.restart = ['celery','celery_beat']
     env.hostname="sentry"

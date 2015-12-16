@@ -66,7 +66,8 @@ class StoreInvoiceAdmin(admin.ModelAdmin):
     count.short_description = 'Transaction Count'
 
     def total(self, store_invoice):
-        return '%s EUR' % (store_invoice.get_total('EUR'),)
+        total, currency = store_invoice.get_total()
+        return '%s %s' % (total, currency)
     total.short_description = 'Transaction Total'
 
 
@@ -110,7 +111,7 @@ class ValidListFilter(SimpleListFilter):
 
 
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'store_id', 'order_value', 'commission', 'cookie_date', 'created', 'modified', 'status', 'automatic_accept', 'is_paid')
+    list_display = ('pk', 'store_id', 'order_value', 'original_commission', 'original_currency', 'cookie_date', 'created', 'modified', 'status', 'automatic_accept', 'is_paid')
     list_filter = ('status', 'store_id', ValidListFilter)
     inlines = (ProductInline,)
     readonly_fields = ('invoice', 'automatic_accept', 'created', 'modified', 'cookie_date', 'ip_address',

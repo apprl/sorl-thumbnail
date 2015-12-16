@@ -13,7 +13,9 @@
                     <tr>
                         <th>{% trans "Product" %}</th>
                         <th class="col2 center">{% trans "Clicks" %}</th>
+                        {% if not is_store %}
                         <th class="col3 center">{% trans "Earnings" %}</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody id="content-clicks">

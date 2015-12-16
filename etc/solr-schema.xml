@@ -161,6 +161,7 @@
     <field name="store_auto" type="ngram" indexed="true" stored="true" multiValued="false"/>
 
     <!-- Used in product search (category_names and color_names is used in the product API) -->
+    <field name="product_key" type="string" indexed="true" stored="true" multiValued="false" termVectors="true"/>
     <field name="product_name" type="text_general_syn" indexed="true" stored="false" multiValued="false" termVectors="true"/>
     <field name="manufacturer_name" type="text_general_syn" indexed="true" stored="true" multiValued="false" termVectors="true"/>
     <field name="description" type="text_general_syn" indexed="true" stored="false" multiValued="false" termVectors="true"/>

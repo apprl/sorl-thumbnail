@@ -1,6 +1,7 @@
 import optparse
 import datetime
 import logging
+from advertiser.models import Transaction
 from django.db.models.loading import get_model
 
 from django.core.management.base import BaseCommand
@@ -22,6 +23,26 @@ class Command(BaseCommand):
 
     def update(self, row):
         instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
+        try:
+            store = get_model('advertiser', 'Store').objects.get(vendor=row['vendor'])
+            store_id = store.identifier
+        except get_model('advertiser', 'Store').DoesNotExist:
+            store_id = None
+        if store_id:
+            defaults = {
+                'ip_address': '127.0.0.1',
+                'status': Transaction.ACCEPTED,
+                'cookie_date': instance.sale_date,
+                'currency': instance.currency,
+                'original_currency': instance.original_currency,
+                'exchange_rate': instance.exchange_rate,
+                'order_value': instance.converted_amount,
+                'commission': instance.converted_commission,
+                'original_order_value': instance.original_amount,
+                'original_commission': instance.original_commission,
+            }
+            transaction, _ = Transaction.objects.get_or_create(store_id=store_id,
+                                                               order_id=row['original_sale_id'], defaults=defaults)
 
         if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
             for field in row.keys():
@@ -29,7 +50,6 @@ class Command(BaseCommand):
             instance.save()
         logger.info("Earning per click with sale id %s for user %s updated " % (instance.id, instance.user_id))
         return instance
-
 
     def handle(self, *args, **options):
         date = options.get('date')

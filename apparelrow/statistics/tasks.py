@@ -3,26 +3,34 @@ import datetime
 from django.conf import settings
 from django.db.models import get_model
 from django.template.defaultfilters import floatformat
+from apparelrow.apparel.models import ShortStoreLink, ShortDomainLink
+
 
 from celery.task import task, periodic_task
 from celery.schedules import crontab
 
+from django.core.urlresolvers import resolve
+from urlparse import urlparse
 import redis
+from apparelrow.statistics.utils import extract_short_link_from_url
+import logging
 
+log = logging.getLogger( __name__ )
 
 @task(name='statistics.tasks.product_buy_click', max_retries=5, ignore_result=True)
-def product_buy_click(product_id, referer, ip, user_agent, user_id, page):
+def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie_already_exists):
     """
     Buy click stats for products
     """
+
     product = None
     try:
         product = get_model('apparel', 'Product').objects.get(pk=product_id)
     except get_model('apparel', 'Product').DoesNotExist:
-        if page != 'Ext-Store':
+        if page != 'Ext-Store' and page != 'Ext-Link':
             return
 
-    if product_id:
+    if product_id and not product_id == '0':
         get_model('statistics', 'ProductClick').objects.increment_clicks(product_id)
 
     if product and product.default_vendor:
@@ -36,7 +44,23 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page):
 
     action = 'BuyReferral'
     if page == 'Ext-Store':
+        parsed_url = urlparse(referer.split("\n")[1])
+        log.info("External store click found, trying to fetch vendor for link: %s and user_id: %s" % (parsed_url.path, user_id))
+        short_link = extract_short_link_from_url(parsed_url.path, int(user_id))
+        log.info("Extracting short link: %s from url. Trying to fetch ShortStoreLink object." % short_link)
+        #short_link = match.kwargs['short_link']
+        try:
+            _, vendor = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
+            log.info("Found vendor %s." % vendor)
+        except Exception, msg:
+            log.info("Failed to extract vendor and ShortStoreLink [%s] Error:[%s]." % (parsed_url.path,msg))
         action = 'StoreLinkClick'
+    elif page == 'Ext-Link' and not product:
+        parsed_url = urlparse(referer.split("\n")[1])
+        log.info("External domain click found, trying to fetch vendor for link: %s " % parsed_url.path)
+        short_link = extract_short_link_from_url(parsed_url.path)
+        log.info("Extracting short link: %s from url. Trying to fetch ShortDomainLink object." % short_link)
+        _, vendor, _ = ShortDomainLink.objects.get_short_domain_for_link(short_link)
 
     get_model('statistics', 'ProductStat').objects.create(
         action=action,
@@ -47,7 +71,8 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page):
         page=page,
         referer=referer,
         ip=ip,
-        user_agent=user_agent)
+        user_agent=user_agent,
+        is_valid=bool(not cookie_already_exists))
 
 
 @periodic_task(name='statistics.tasks.active_users', run_every=crontab(hour='04', minute='55'), max_retries=2, ignore_result=True)

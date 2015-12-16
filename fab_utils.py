@@ -244,6 +244,14 @@ def importer(vendor):
         sudo ("python manage.py run_importer --vendor=%(vendor)s" % {"vendor":vendor}, user="%(run_user)s" % env)
 
 @task
+def calculated_stats(date=None):
+    with project():
+        if not date:
+            sudo ("python manage.py calculate_monthly_summary", user="%(run_user)s" % env)
+        else:
+            sudo ("python manage.py calculate_monthly_summary --date=%(date)s" % {"date":date}, user="%(run_user)s" % env)
+
+@task
 def fetchall():
     with project():
         run("git fetch --all")

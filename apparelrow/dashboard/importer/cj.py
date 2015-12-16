@@ -32,40 +32,39 @@ class Importer(BaseImporter):
                     else:
                         row_data = data['cj-api']['commissions']['commission']
                     for row in row_data:
-                        data_row = {}
-                        data_row['original_sale_id'] = row['original-action-id']
-                        data_row['affiliate'] = self.name
-                        _, data_row['vendor'] = self.map_vendor(row['advertiser-name'])
-                        data_row['original_commission'] = row['commission-amount']
-                        data_row['original_currency'] = 'EUR'
-                        data_row['original_amount'] = row['sale-amount']
-                        data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['sid'])
                         if row['action-status'] == 'locked' or row['action-status'] == 'closed':
+                            data_row = {}
+                            data_row['original_sale_id'] = row['original-action-id']
+                            data_row['affiliate'] = self.name
+                            _, data_row['vendor'] = self.map_vendor(row['advertiser-name'])
+                            data_row['original_commission'] = row['commission-amount']
+                            data_row['original_currency'] = 'EUR'
+                            data_row['original_amount'] = row['sale-amount']
+                            data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['sid'])
+
                             data_row['status'] = Sale.CONFIRMED
-                        else:
-                            data_row['status'] = Sale.PENDING
-                        data_row['sale_date'] = dateutil.parser.parse(row['event-date'])
+                            data_row['sale_date'] = dateutil.parser.parse(row['event-date'])
 
-                        # If original is not true it must be a correction of some sort
-                        data_row['original_commission'] = decimal.Decimal(data_row['original_commission'])
-                        data_row['original_amount'] = decimal.Decimal(data_row['original_amount'])
-                        data_row['adjusted_date'] = self.parse_to_utc(row['posting-date']).replace(tzinfo=None)
-                        if row['original'] != 'true':
-                            try:
-                                sale = Sale.objects.get(original_sale_id=data_row['original_sale_id'])
-                                if sale:
-                                    if not sale.adjusted_date or (sale.adjusted_date and sale.adjusted_date < data_row['adjusted_date']):
-                                        data_row['original_commission'] = sale.original_commission + data_row['original_commission']
-                                        data_row['original_amount'] = sale.original_amount + data_row['original_amount']
-                                    else:
-                                        continue
+                            # If original is not true it must be a correction of some sort
+                            data_row['original_commission'] = decimal.Decimal(data_row['original_commission'])
+                            data_row['original_amount'] = decimal.Decimal(data_row['original_amount'])
+                            data_row['adjusted_date'] = self.parse_to_utc(row['posting-date']).replace(tzinfo=None)
+                            if row['original'] != 'true':
+                                try:
+                                    sale = Sale.objects.get(original_sale_id=data_row['original_sale_id'])
+                                    if sale:
+                                        if not sale.adjusted_date or (sale.adjusted_date and sale.adjusted_date < data_row['adjusted_date']):
+                                            data_row['original_commission'] = sale.original_commission + data_row['original_commission']
+                                            data_row['original_amount'] = sale.original_amount + data_row['original_amount']
+                                        else:
+                                            continue
 
-                                    data_row['adjusted'] = True
-                                    if data_row['original_commission'] <= decimal.Decimal('0.0'):
-                                        data_row['status'] = Sale.DECLINED
-                            except Sale.DoesNotExist:
-                                logger.error('CJ - Correction but no sale in database, should not happen')
-                                continue
+                                        data_row['adjusted'] = True
+                                        if data_row['original_commission'] <= decimal.Decimal('0.0'):
+                                            data_row['status'] = Sale.DECLINED
+                                except Sale.DoesNotExist:
+                                    logger.error('CJ - Correction but no sale in database, should not happen')
+                                    continue
 
                         data_row = self.validate(data_row)
                         if not data_row:

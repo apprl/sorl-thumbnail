@@ -168,6 +168,12 @@ class Vendor(models.Model):
     is_cpc = models.BooleanField(default=False, help_text=_('Cost per click'), db_index=True)
     is_cpo = models.BooleanField(default=True, help_text=_('Cost per order'), db_index=True)
 
+    clicks_limit = models.IntegerField(_('Limit of clicks per month'), null=True, blank=True,
+                        help_text=_('Only used for PPC vendors. An email notification is sent when this number of '
+                                    'clicks has been reached during a month'))
+    is_limit_reached = models.BooleanField(default=False, help_text=_('Limit has been exceeded for the current month '
+                                                      'and email has been sent to the admin group'), db_index=True)
+
     class Meta:
         ordering = ['name']
         verbose_name = 'Vendor'
@@ -234,6 +240,7 @@ class Product(models.Model):
         help_text=_("Ued for URLs, auto-generated from name if blank"), max_length=80)
     sku = models.CharField(_("Stock Keeping Unit"), max_length=255, blank=False, null=False,
         help_text=_("Has to be unique with the static_brand"))
+    product_key = models.CharField(max_length=512, null=True, blank=True)
     product_name  = models.CharField(max_length=200, null=True, blank=True)
     date_added    = models.DateTimeField(_("Time added"), null=True, blank=True, db_index=True)
     date_published= models.DateTimeField(_("Time published"), null=True, blank=True)
@@ -241,6 +248,7 @@ class Product(models.Model):
     description   = models.TextField(_('Product description'), null=True, blank=True)
     product_image = ImageField(upload_to=settings.APPAREL_PRODUCT_IMAGE_ROOT, max_length=255, help_text=_('Product image'))
     vendors       = models.ManyToManyField(Vendor, through='VendorProduct')
+
     # FIXME: Could we have ForeignKey to VendorProduct instead?
     gender        = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
     feed_gender   = models.CharField(_('Feed gender'), max_length=1, choices=PRODUCT_GENDERS, null=True, blank=True, db_index=True)
@@ -428,6 +436,11 @@ def product_update_activity_post_save(sender, instance, **kwargs):
     get_model('activity_feed', 'activity').objects.filter(content_type=content_type, object_id=instance.pk).update(is_available=instance.availability)
     #get_model('activity_feed', 'activity').objects.update_activity(instance)
 
+#@receiver(post_save, sender=Product, dispatch_uid='product_save_key_check')
+#def product_save_key_check(sender, instance, created, **kwargs):
+#    if created:
+#        from apparelrow.scheduledjobs.tasks import check_url_endpoint
+#        check_url_endpoint.delay(instance.product_key)
 
 #
 # ProductLike
@@ -469,8 +482,8 @@ def product_like_post_save(sender, instance, **kwargs):
     for shop_embed in get_model('apparel','ShopEmbed').objects.filter(id__in=like_shop_ids):
         key = settings.NGINX_SHOP_RESET_KEY % shop_embed.id
         if not get_cache("nginx").get(key,None):
-            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every five minutes
-            empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=300)
+            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every ten minutes
+            empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=300) # Schedules the job 5 minutes into the future
 
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
@@ -489,8 +502,14 @@ SHORT_CONSTANT = 999999
 
 class ShortStoreLinkManager(models.Manager):
     def get_for_short_link(self, short_link, user_id=None):
-        instance = ShortStoreLink.objects.get(pk=(saturate(short_link) - SHORT_CONSTANT))
-
+        calculated_id = None
+        instance = None
+        try:
+            calculated_id = saturate(short_link) - SHORT_CONSTANT
+            instance = ShortStoreLink.objects.get(pk=calculated_id)
+        except:
+            logger.error("Short store link can not be found, Short link: %s and desaturated id: %s" % (short_link, calculated_id))
+            raise ShortStoreLink.DoesNotExist("Unable to find ShirtStoreLink for id:%s" % calculated_id)
         if user_id is None:
             user_id = 0
 
