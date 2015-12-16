@@ -206,8 +206,8 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
 
             controlpos = Math.max(5, (this.$container.width() - this.$productlist.width())/2 - this.$controls[0].width());
         }
-        this.$controls[0].css('left', controlpos);
-        this.$controls[1].css('right', controlpos);
+        this.$controls[0].css('left', controlpos-10);
+        this.$controls[1].css('right', controlpos-10);
         this.toggle_navigation();
     },
     highlight_last: function() {
@@ -266,17 +266,6 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.running = true;
         var newleft = $ul.position().left + direction*childwidth;
         var i = this.indexes.indexOf(this.current_index) - direction;
-        /*if (newleft > 0) {
-            $ul.children('li.col-product-item').last().detach().prependTo($ul);
-            $ul.css('left', ($ul.position().left - childwidth) + 'px');
-            this.indexes.unshift(this.indexes.pop());
-            i = 0;
-        } else if(newleft <= -1*$ul.width() ) {
-            $ul.children('li.col-product-item').first().detach().appendTo($ul);
-            $ul.css('left', ($ul.position().left + childwidth) + 'px');
-            this.indexes.push(this.indexes.shift());
-            i = this.indexes.length-1;
-        }*/
 
         this.current_index = this.indexes[i];
 

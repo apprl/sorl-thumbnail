@@ -28,24 +28,38 @@ jQuery(document).ready(function() {
     var $slidenext = $('.next');
     var $slideprevious = $('.previous');
     var itemwidth = 0;
+    var slidefactor = 1;
 
     function slide(direction) {
         if (running) return;
         running = true;
-        index -= direction;
-        if (index < 0) {
-            $items.last().detach().prependTo($ul);
-            $ul.css('left', ($ul.position().left - itemwidth) + 'px');
-            index = 0;
-            $items = $ul.children('li');
-        } else if (index + visiblechildren > $items.length || ($ul.width() + direction*itemwidth + $ul.position().left < $container.width())) {
-            $items.first().detach().appendTo($ul);
-            $ul.css('left', ($ul.position().left + itemwidth) + 'px');
-            index -= 1;
-            $items = $ul.children('li');
+        if (embed_type == 'single') {
+            index -= direction;
+        } else {
+            slidefactor = visiblechildren*2 <= $items.length ? visiblechildren : 1;
+            index -= slidefactor*direction;
         }
 
-        $ul.animate({'left': '+=' + direction*itemwidth}, {'complete': function() { running = false; }});
+        if (index < 0) {
+            for (var i=0;i<-1*index;i++) {
+                $ul.children('li').last().detach().prependTo($ul);
+            }
+            $ul.css('left', -1*slidefactor*itemwidth + 'px');
+            // adjust index
+            index = 0;
+            $items = $ul.children('li');
+        } else if (index + visiblechildren > $items.length || ($ul.width() + direction*itemwidth*slidefactor + $ul.position().left < $container.width())) {
+            var diff = index+visiblechildren-$items.length;
+            for (var i=0;i<diff;i++) {
+                $ul.children('li').first().detach().appendTo($ul);
+            }
+            $ul.css('left', $ul.position().left + diff*itemwidth + 'px');
+            // adjust index
+            index = $items.length - visiblechildren;
+            $items = $ul.children('li');
+        }
+        console.log(index);
+        $ul.animate({'left': '+=' + slidefactor*direction*itemwidth}, {'complete': function() { running = false; }});
     }
 
     var mc = new Hammer($('.slidecontainer')[0]);
@@ -114,8 +128,6 @@ jQuery(document).ready(function() {
             } else {
                 disableslide();
             }
-            visiblechildren = 1;
-            $ul.css('left', -1*index*itemwidth);
         } else {
             visiblechildren = Math.floor(($window.width() - margin)/(itemwidth));
             $container.width(visiblechildren*(itemwidth));
@@ -124,9 +136,9 @@ jQuery(document).ready(function() {
             } else {
                 disableslide()
             }
-            $ul.css('left', -1*index*(itemwidth));
         }
-
+        index = 0;
+        $ul.css('left', 0);
         var containermargin = parseInt($container.css('marginLeft').substr(0, $container.css('marginLeft').length -2));
         // Set width of list
         $ul.width($items.length * itemwidth);

@@ -611,6 +611,7 @@ html.look-type-C .collage {
   top: 50%;
   left: 50%;
   width: 80%;
+  z-index: 10;
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
 }
@@ -675,12 +676,24 @@ ul li img {
   border-right: 7px solid black;
   border-top: 7px solid black;
 }
+.navigation-el:hover {
+  background: #000;
+}
+.navigation-el:hover i {
+  border-color: #FFF;
+}
 .previous i {
-  left: 50%;
+  left: 60%;
+  -webkit-transform: translate(-50%, -50%) rotate(-135deg);
+  -ms-transform: translate(-50%, -50%) rotate(-135deg);
+  -o-transform: translate(-50%, -50%) rotate(-135deg);
   transform: translate(-50%, -50%) rotate(-135deg);
 }
 .next i {
-  left: 50%;
+  left: 40%;
+  -webkit-transform: translate(-50%, -50%) rotate(45deg);
+  -ms-transform: translate(-50%, -50%) rotate(45deg);
+  -o-transform: translate(-50%, -50%) rotate(45deg);
   transform: translate(-50%, -50%) rotate(45deg);
 }
 .caption {

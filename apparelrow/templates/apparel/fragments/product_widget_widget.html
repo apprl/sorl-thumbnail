@@ -2,6 +2,6 @@
 {% if object.product_widget.type == 'single' %}
 <div style="width: {{ object.width }}{{ object.width_type }};"><iframe src="//{{ request.get_host }}/embed/productwidget/{{ object.pk }}" width="100%" scrolling="no" height="{{ object.height }}" frameborder="0"></iframe></div>
 {% else %}
-<div style="width: {{ object.width }}{{ object.width_type }};"><iframe src="//{{ request.get_host }}/embed/productwidget/{{ object.pk }}" width="{{ object.width }}{{ object.width_type }}" scrolling="no" height="{{ object.height }}" frameborder="0"></iframe></div>
+<div style="width: {{ object.width }}{{ object.width_type }};"><iframe src="//{{ request.get_host }}/embed/productwidget/{{ object.pk }}" width="100%" scrolling="no" height="{{ object.height }}" frameborder="0"></iframe></div>
 {% endif %}
 {% endspaceless %}
