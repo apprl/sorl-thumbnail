@@ -5,11 +5,20 @@ App.Views.CustomLinkView = Backbone.View.extend({
     template: _.template($('#custom_link_template').html()),
 
     events: {
-        'submit form': 'add_link'
+        'submit form': 'add_link',
+        'blur #id_custom_link_url': 'check_input'
     },
 
     initialize: function(options) {
         App.Events.on('look_edit:linked_placed', this.clear_form, this);
+    },
+
+    check_input: function(e) {
+        var re = new RegExp("^(http|https)://", "i");
+        var str = "My String";
+        if (!re.test($(e.currentTarget).val())) {
+            $(e.currentTarget).val('http://'+$(e.currentTarget).val());
+        }
     },
 
     add_link: function(e) {
