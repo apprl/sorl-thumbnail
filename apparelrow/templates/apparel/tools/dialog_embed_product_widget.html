@@ -65,7 +65,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary pull-left" data-dismiss="modal">{% trans "Continue editing" %}</button>
+                <button type="button" class="btn btn-primary pull-left btn-continue" data-dismiss="modal">{% trans "Continue editing" %}</button>
                 <button type="button" class="btn btn-primary pull-left hidden" data-dismiss="modal">{% trans "Close and preview" %}</button>
                 <button type="button" class="btn btn-primary btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
             </div>
@@ -111,6 +111,13 @@
             }
             App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val()});
         });
+
+        $('.btn-continue').on('click', function(e) {
+            if (external_product_widget_id && !widget_id) {
+                window.location.replace('/productwidget/edit/' + external_product_widget_id);
+            }
+        });
+
         $('#embed_product_widget_form #id_name').on('change', function() {
             if($(this).parent().hasClass('has-error') && $(this).val()) {
                 $(this).parent().removeClass('has-error');

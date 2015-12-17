@@ -320,6 +320,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
 
     save_success: function(callback) {
         this.model._dirty = false;
+        external_product_widget_id = this.model.get('id');
         if (callback) {
             callback(this.model.get('id'));
         } else {

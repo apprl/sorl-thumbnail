@@ -18,7 +18,7 @@
     <div id="content">
         <div class="row content-row">
             <div class="col-md-6 col-widget">
-                {% include "apparel/tools/widget_product_edit.html" with external_product_widget_id=external_product_widget_id type=type %}
+                {% include "apparel/tools/widget_product_edit.html" with title=title external_product_widget_id=external_product_widget_id type=type %}
             </div>
 
             <div class="col-md-6 visible-md visible-lg">
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    {% include "apparel/tools/widget_templates.html" %}
+    {% include "apparel/tools/widget_templates.html" with typename='product widget'%}
 
     {% include "apparel/tools/widget_footer.html" %}
     <script type="text/javascript">

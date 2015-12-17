@@ -39,7 +39,6 @@ jQuery(document).ready(function() {
             slidefactor = visiblechildren*2 <= $items.length ? visiblechildren : 1;
             index -= slidefactor*direction;
         }
-
         if (index < 0) {
             for (var i=0;i<-1*index;i++) {
                 $ul.children('li').last().detach().prependTo($ul);
@@ -58,7 +57,6 @@ jQuery(document).ready(function() {
             index = $items.length - visiblechildren;
             $items = $ul.children('li');
         }
-        console.log(index);
         $ul.animate({'left': '+=' + slidefactor*direction*itemwidth}, {'complete': function() { running = false; }});
     }
 
@@ -128,6 +126,7 @@ jQuery(document).ready(function() {
             } else {
                 disableslide();
             }
+            visiblechildren = 1;
         } else {
             visiblechildren = Math.floor(($window.width() - margin)/(itemwidth));
             $container.width(visiblechildren*(itemwidth));
