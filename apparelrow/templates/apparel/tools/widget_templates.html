@@ -15,13 +15,7 @@
 </script>
 
 <script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
-    <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
-</script>
-
-<script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
-    <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
+    <p><blocktrans>Are you sure you permanently want to delete this {{ typename }}? If you have embedded the {{ typename }} on a site, the {{ typename }} will disappear from there, too."</blocktrans></p>
     <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
     <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
 </script>

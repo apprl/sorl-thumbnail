@@ -209,9 +209,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         } else if(this.pending_link) {
             var new_component = this._create_photo_component(this._get_hotspot(e));
             new_component.set('link', this.pending_link.toJSON());
-
             this.model.components.add(new_component);
-
             this.pending_product = false;
             this.pending_event = false;
             App.Events.trigger('look_edit:linked_placed');
@@ -245,6 +243,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
     delete_look: function() {
         this.model._dirty = false;
         this.model.destroy({success: function() {
+            window.look_model._dirty = false;
             window.location.replace('/looks/');
         }});
     },
