@@ -48,12 +48,14 @@
   }
   .widget-page #popup-slim .product-image img {
     margin: 0 0;
+    max-width: 100%;
   }
   .widget-page .popup-slim-widget-popup {
     display: none;
   }
 }
 #popup-slim .product-image img {
+  max-width: 50%;
   margin: 0 auto !important;
 }
 #popup-slim .info-container {
