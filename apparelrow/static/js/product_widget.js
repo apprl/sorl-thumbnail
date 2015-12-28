@@ -36,7 +36,7 @@ jQuery(document).ready(function() {
         if (embed_type == 'single') {
             index -= direction;
         } else {
-            slidefactor = visiblechildren*2 <= $items.length ? visiblechildren : 1;
+            slidefactor = visiblechildren*2 <= $items.length ? visiblechildren : $items.length - visiblechildren;
             index -= slidefactor*direction;
         }
         if (index < 0) {
