@@ -5,40 +5,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>{% trans "Customize, embed & save your shop" %}</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span></span></button>
             </div>
             <div class="modal-body">
 
-                <p>{% trans "Customize your shop below to get it the style you want, then get the embed code to put it on your blog/site." %}</p>
+                <p>{% trans "Customize your shop below to get it the style you want, then get the embed code to put it on your blog / site." %}</p>
 
                 <form id="embed_shop_form" class="form">
                     <div class="form-group">
                         <label class="control-label" for="id_name">{% trans "Shop name" %}</label>
-                        <input id="id_name" type="text" required placeholder="Shop name" value="{{ title }}"/>
-                        <span class="help-block">* {% trans "This field is required" %}</span>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_width">{% trans "Width" %}</label>
-                        <div class="input-group">
-                            <input id="id_width" type="text" name="width" placeholder="100">
-                            <div>
-                                <button id="width_type" type="button" class="btn dropdown-toggle" data-toggle="dropdown"><span class="text">%</span> <span class="caret"></span></button>
-                                <ul id="width_dropdown" class="dropdown-menu">
-                                    <li><a href="#" data-text="%" data-value="%">%</a></li>
-                                    <li><a href="#" data-text="{% trans "pixels" %}" data-value="px">{% trans "pixels" %}</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_height">{% trans "Height" %}</label>
-                        <div class="input-helper">
-                            <input id="id_height" type="text" name="height" placeholder="600">
-                            <span>{% trans "pixels" %}</span>
-                        </div>
+                        <input id="id_name" type="text" required value="{{ title }}"/>
+                        <span class="help-block">{% trans "This field is required." %}</span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="id_language">{% trans "Language & currency" %}</label>
+                        <a href="#" class="info-toggler" data-target="info-language"><i class="fa fa-question-circle"></i></a>
+                        <span class="info-box" id="info-language">{% trans "Select the language for your shop and the currency the product prices should be showed in." %}</span>
                         <div class="select">
                             <span><i class="fa fa-caret-down"></i></span>
                             <select id="id_language" name="language">
@@ -49,33 +31,44 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <h4>{% trans "Advanced options" %}</h4>
-                        <label><input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked><span><i class="fa fa-check"></i></span>{% trans "Show brands & prices" %}</label>
-                        <label><input type="checkbox" name="show_filters" id="id_show_filters" value="1" checked><span><i class="fa fa-check"></i></span>{% trans "Show filters" %}</label>
-                        <label><input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show filters as collapsed" %}</label>
-
-                        <!--<div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked>
-                                {% trans "Show brands & prices" %}
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="show_filters" id="id_show_filters" value="1" checked>
-                                {% trans "Show filters" %}
-                            </label>
-                        </div>
-                        <div class="checkbox filter-collapsed">
-                            <label><input type="checkbox" /><span><i class="fa fa-check"></i></span>Learn</label>
-                            <label>
-                                <input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1">
-                                {% trans "Show filters as collapsed" %}
-                            </label>
-                        </div>-->
+                        <label class="control-label" for="id_height">{% trans "Height" %}</label>
+                        <a href="#" class="info-toggler" data-target="info-height"><i class="fa fa-question-circle"></i></a>
+                        <span class="info-box" id="info-height">{% trans "Depends on for example your site's layout and how many products you have in your shop, but 800-1200 pixels is usually good. You can always edit your shop height later." %}</span>
+                        <input id="id_height" type="text" name="height" placeholder="600">
+                        <span class="help-block">{% trans "( pixels )" %}</span>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success btn-block">{% trans "Embed shop on your site" %}</button>
+                        <h4>{% trans "Advanced options" %}</h4>
+                        <ul>
+                            <li>
+                                <label><input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked><span><i class="fa fa-check"></i></span>{% trans "Show brands & prices" %}</label>
+                                <a href="#" class="info-toggler" data-target="info-brand-price"><i class="fa fa-question-circle"></i></a>
+                                <span class="info-box" id="info-brand-price">{% trans "Keep this box checked if you want to show brand & price under each product in your shop." %}</span>
+                            </li>
+                            <li>
+                                <label><input type="checkbox" name="show_filters" id="id_show_filters" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show filters" %}</label>
+                                <a href="#" class="info-toggler" data-target="info-filters"><i class="fa fa-question-circle"></i></a>
+                                <span class="info-box" id="info-filters">{% trans "Check this box to have all filters collapsed by default." %}</span>
+                            </li>
+                            <li>
+                                <div id="filter-collapsed" style="display:none;"><label><input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show filters as collapsed" %}</label></div>
+                            </li>
+                            <li>
+                                <label><input type="checkbox" name="show_width" id="id_show_width" value="1"><span><i class="fa fa-check"></i></span>{% trans "Manually choose width" %}</label>
+                            </li>
+                            <li>
+                                <div id="width-collapsed" class="form-group" style="display:none;">
+                                    <label class="control-label" for="id_width">{% trans "Width" %}</label>
+                                    <a href="#" class="info-toggler" data-target="info-width"><i class="fa fa-question-circle"></i></a>
+                                    <span class="info-box" id="info-width">{% trans "By default, the shop automatically adapts to the width of the device/browser it is viewed with, but if you want you can manually specify an exact number of pixels for your shop." %}</span>
+                                    <input id="id_width" type="text" name="width" placeholder="800">
+                                    <span class="help-block">{% trans "( pixels )" %}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">{% trans "Embed shop on your site" %}</button>
                     </div>
                     <div class="form-group" style="display:none;">
                         <label class="control-label" for="id_embed_code">{% trans "Copy and paste this code (in HTML-mode) into your site/blog" %}</label>
@@ -87,7 +80,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">{% trans "Continue editing" %}</button>
                 <button type="button" class="btn btn-default pull-left hidden" data-dismiss="modal">{% trans "Close" %}</button>
-                <button type="button" class="btn btn-primary pull-right btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
+                <button type="button" class="btn btn-default pull-right btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
             </div>
         </div>
     </div>
@@ -104,6 +97,12 @@
     }
     var shop_id = {{external_shop_id}};
     $(document).ready(function() {
+        // Added on December 29
+        $('.info-toggler').click(function() {
+            $('#' + $(this).data('target')).toggleClass('active');
+            return false;
+        });
+
         $('#modal_embed_shop').on('show.bs.modal', function () {
             $('#id_embed_code').parent().hide();
         });
@@ -115,10 +114,20 @@
 
         $('#id_show_filters').on('click', function() {
             if($(this).prop('checked')) {
-                $('.filter-collapsed').show();
+                $('#filter-collapsed').show();
             } else {
-                $('.filter-collapsed').hide();
+                $('#filter-collapsed').hide();
                 $('#id_show_filters_collapsed').prop('checked', '');
+            }
+        });
+
+        // Added on December 29
+        $('#id_show_width').on('click', function() {
+            if($(this).prop('checked')) {
+                $('#width-collapsed').show();
+            } else {
+                $('#width-collapsed').hide();
+                $('#id_width').val('');
             }
         });
 
@@ -193,7 +202,7 @@
             $('#id_embed_code').hide().parent().show().append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
 
             $.post("{% url 'shop-widget' external_shop_id %}".replace('/0/', '/'+external_shop_id+'/'), data, function(response) {
-                $('#id_embed_code').val(response).show();
+                $('#id_embed_code').val(response).show().select();
                 $('#loading_image').remove();
                 $('#modal_embed_shop').animate({scrollTop: 800});
             });

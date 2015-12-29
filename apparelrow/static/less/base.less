@@ -237,6 +237,9 @@ header {
             }
         }
     }
+    .dropdown-backdrop{
+        position: static;
+    }
     .dropdown-menu {
         margin: 0;
         position: static;
@@ -364,6 +367,15 @@ header {
             transform: rotate(0);
         }
     }
+    .navbar-collapse {
+        max-height: 400px;
+        @media (min-height: @screen-is) {
+            max-height: 480px;
+        }
+    }
+    /*.navbar-collapse.in {
+        overflow-y: auto;
+    }*/
     .container {
         @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
             width: auto;
@@ -1198,6 +1210,7 @@ body.shop, body.profile-likes {
         float: none !important;
     }
     i {
+        line-height: 32px;
         vertical-align: middle;
     }
 }

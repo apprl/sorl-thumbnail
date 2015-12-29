@@ -334,12 +334,12 @@
         $(document).on( 'scroll', function(){
 
             if ($(window).scrollTop() > 100) {
-                $('.scroll-top-wrapper').addClass('show');
+                $('.scroll-top').fadeIn(200);
             } else {
-                $('.scroll-top-wrapper').removeClass('show');
+                $('.scroll-top').fadeOut(200);
             }
         });
-        $('.scroll-top-wrapper').on('click', scrollToTop);
+        $('.scroll-top').on('click', scrollToTop);
     });
 
     function scrollToTop() {
@@ -401,7 +401,6 @@
       $.removeCookie('location');
       $.cookie('location', location, { expires: 60, path: '/' });
   } );
-
 </script>
 
 {% include 'mouseflow.html' only %}

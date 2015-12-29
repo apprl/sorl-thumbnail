@@ -34,7 +34,7 @@
                 <div id="edit-look"></div>
 
             </div>
-            <div id="startsplash">{% if object and not object.id %}{% trans "Start by adding the items here" %}{% endif %}</div>
+            <div id="startsplash">{% trans "Start by adding products." %}</div>
             <div class="col-md-6 visible-md visible-lg">
                 {% include "apparel/tools/product_picker.html" %}
             </div>
@@ -45,6 +45,13 @@
 
     {% include "apparel/tools/widget_footer.html" %}
     <script type="text/javascript">
+        // Added on Dec 28 2015
+        $(document).ready(function() {
+            $('.btn-add').click(function() {
+                $('#startsplash').hide();
+            });
+        });
+
         var external_look_type = '{{ component }}';
         var external_look_id = {% if object %}{{ object.id }}{% else %}-1{% endif %};
         var external_has_liked = '{{ has_liked }}';

@@ -8,7 +8,7 @@
     <a href="#" class="btn btn-primary btn-yes">{% trans "Yes" %}</a>
 </script>
 
-<script type="text/template" id="dialog_reset_template" data-title="{% trans "Reset look?" %}">
+<script type="text/template" id="dialog_reset_template" data-title="{% trans "Reset?" %}">
     <p style="text-align: center; margin: 15px 0 30px 0;">{% trans "Are you sure you want to discard changes and start over?" %}</p>
     <div class="row">
         <div class="col-sm-6"><a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a></div>
@@ -67,6 +67,9 @@
         <textarea name="description" id="look_description"><%= description %></textarea>
     </div>
 
+    <!-- Hur kan jag få denna till att endast visas på Look? -->
+    <p>{% trans "After you have published your look, you can embed it on your site." %}</p>
+
     <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
     <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
 </script>
@@ -122,11 +125,11 @@
 
             <div class="hover" style="display: none;">
                 <!--<div class="btn-group btn-group-justified">-->
-                    <a href="#" class="btn btn-primary btn-block btn-danger delete">
+                    <a href="#" class="btn btn-secondary btn-block delete">
                         <i class="fa fa-times"></i>&nbsp;<span>{% trans 'Remove' %}</span>
                     </a>
 
-                    <a href="#" class="btn btn-primary btn-block btn-product-info" rel="nofollow">
+                    <a href="#" class="btn btn-default btn-block btn-product-info" rel="nofollow">
                         {% trans 'Info' %}
                     </a>
                 <!--</div>-->
@@ -191,8 +194,8 @@
     <div class="product-small product-container">
         <a class="image-small" href="#"><img src="<%= image_small %>"></a>
         <div class="hover">
-            <a class="btn btn-default btn-product-info" href="#">{% trans "Info" %}</a>
-            <a class="btn btn-primary btn-add" href="#">{% trans "Add" %}</a>
+            <a class="btn btn-primary btn-product-info" href="#">{% trans "Info" %}</a>
+            <a class="btn btn-default btn-add" href="#">{% trans "Add" %}</a>
         </div>
         <div class="caption">
             <h5><%= brand_name %></h5>

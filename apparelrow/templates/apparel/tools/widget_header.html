@@ -8,7 +8,7 @@
         <h2>{{ title }}</h2>
     {% endif %}
 
-    <ul class="sidebar">
+    <ul class="sidebar"{% if type == 'create_shop' %} style="display: none;"{% endif %}>
     {% if type == 'look_editor' %}
         {% if object and object.slug %}
         <li><button class="btn btn-secondary btn-delete" name="look_delete">{% trans "Delete" %}</button></li>
