@@ -7,11 +7,40 @@
             <p>{% trans 'What products do you want to include in your shop?' %}</p>
             <a id="show_liked" data-value="likes" href="#" class="btn btn-default btn-block">{% trans 'My liked products' %}</a>
             <a id="pick_products" data-value="pick" href="#" class="btn btn-default btn-block">{% trans 'Choose products' %}</a>
+            <a href="#" class="shop-helper-toggler">Help</a>
+            <div class="shop-display-helper" style="display:none;">
+                <p><strong>All my liked products</strong><br>All current and future products that you like on APPRL are automatically included in your shop.</p>
+                <p><strong>Choose products manually</strong><br>The products you decide to add to this shop are featured. This is a good option if you want to create a shop with a specific collection of items, for example "My favourite jackets".</p>
+            </div>
         </div>
     </div>
+
+    {# Editor guide (steps) #}
+    <div class="editor-guide shop-step-1">
+        <img src="{% static 'images/shop-guide-thumbnail.png' %}" width="128" height="128" alt="">
+        <p>{% trans "Start by adding products here." %}</p>
+        <span></span>
+    </div>
+
+    <div class="editor-guide shop-step-2">
+        <p>{% trans "When you're done and want to save or publish, click here." %}</p>
+        <span></span>
+    </div>
+
     <script type="text/javascript">
         $(document).ready(function() {
+            // Added Dec 30
+            $('.shop-helper-toggler').click(function(e) {
+                $('.shop-display-helper').fadeToggle();
+                e.preventDefault();
+            });
+
+            $('.widget-footer button').click(function() {
+                $('.editor-guide').hide();
+            });
+
             $('#show_liked, #pick_products').click(function(e) {
+                $('.editor-guide').show();
                 e.preventDefault();
                 var show_liked = ($(this).attr('data-value') == 'likes');
                 App.Events.trigger('widget:product_display', show_liked);

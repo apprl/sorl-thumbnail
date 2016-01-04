@@ -2,6 +2,73 @@
     Widget v1.0
 */
 
+// Editor guide (steps)
+.editor-guide {
+    display: none;
+    position: absolute;
+    p {
+        font-size: 14px;
+    }
+    span {
+        display: block;
+        background: url('../images/guide-arrow.svg') center center no-repeat;
+        width: 96px;
+        height: 96px;
+        opacity: .25;
+    }
+    @media (min-width: @screen-is) {
+        p {
+            font-size: 16px;
+        }
+    }
+    @media (min-width: @screen-md) {
+        display: none !important;
+    }
+}
+.shop-step-1 {
+    top: 100px;
+    left: 20px;
+    img {
+        display: block;
+        margin: 0 auto 10px auto;
+    }
+    span {
+        margin-left: -15px;
+        -ms-transform: rotate(130deg);
+        -webkit-transform: rotate(130deg);
+        transform: rotate(130deg);
+    }
+    @media (min-width: @screen-xs) {
+        left: 30px;
+        span {
+            margin: 0;
+        }
+    }
+    @media (min-width: @screen-is) {
+        top: initial;
+        bottom: 40px;
+    }
+}
+.shop-step-2 {
+    bottom: 5px;
+    right: 20px;
+    text-align: right;
+    max-width: 200px;
+    span {
+        margin-top: -20px;
+        float: right;
+        background-size: 75%;
+        -ms-transform: rotate(195deg) scaleX(-1);
+        -webkit-transform: rotate(195deg) scaleX(-1);
+        transform: rotate(195deg) scaleX(-1);
+        background-position: right;
+    }
+    @media (min-width: @screen-xs) {
+        bottom: 15px;
+        right: 30px;
+    }
+}
+
 .look-editor-collage-page #startsplash {
     opacity: .5;
 }
@@ -13,6 +80,26 @@
         max-width: none;
     }
 }
+
+.create-store-page #shop-display-settings {
+    width: 90% !important;
+}
+@media (min-width: @screen-sm) {
+    .create-store-page #shop-display-settings {
+        width: 100% !important;
+    }
+}
+
+.shop-display-helper {
+    background: white;
+    /* box-shadow: 0 0 50px rgba(0,0,0,.15); */
+    background-color: #f8f8f8;
+    padding: 20px 15px 10px 15px;
+    font-size: 13px;
+    max-width: 320px;
+    margin: 5px auto 0 auto;
+}
+
 .widget-page {
     .body-header {
         margin: 0;
