@@ -34,7 +34,7 @@
                 <div id="edit-look"></div>
 
             </div>
-            <div id="startsplash">{% trans "Start by adding products." %}</div>
+            <!--<div id="startsplash">{% trans "Start by adding products." %}</div>-->
             <div class="col-md-6 visible-md visible-lg">
                 {% include "apparel/tools/product_picker.html" %}
             </div>
@@ -42,12 +42,13 @@
     </div>
 
     {# Editor guide (steps) #}
-    <div class="editor-guide look-step-1">
+    <div class="editor-guide collage-step-1">
+        <img src="{% static 'images/guide-thumbnail.png' %}" width="128" height="128" alt="">
         <p>{% trans "Start by adding products here." %}</p>
         <span></span>
     </div>
 
-    <div class="editor-guide look-step-2">
+    <div class="editor-guide collage-step-2">
         <p>{% trans "When you're done and want to save or publish, click here." %}</p>
         <span></span>
     </div>

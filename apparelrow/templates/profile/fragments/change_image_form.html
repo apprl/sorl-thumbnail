@@ -1,9 +1,8 @@
 {% load i18n %}
 <form action="{{ request.path }}" method="post"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
-    {% csrf_token %}
-    <input type="hidden" name="change_image_form" value="yes">
-    <div class="form-group">
-        <input type="file" class="form-control" name="image" id="id_image">
-    </div>
-    <button type="submit" class="btn btn-success btn-sm btn-block">{% trans "Save picture" %}</button>
+	{% csrf_token %}
+	<input type="hidden" name="change_image_form" value="yes">
+	<input type="file" name="image" id="id_image">
+	<button type="submit" class="btn btn-success btn-sm btn-block">{% trans "Save picture" %}</button>
+	<a href="#cancel" class="btn btn-secondary">{% trans "Cancel" %}</a>
 </form>

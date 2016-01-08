@@ -23,7 +23,7 @@ textarea {
     resize: none;
 }
 label {
-    color: #999;
+    color: @grey;
     font-size: 16px;
     font-family: @secondaryFontBold;
     letter-spacing: 0;
@@ -242,7 +242,10 @@ textarea:focus {
         }
     }
 }
-#embed_look_form input, select, .select {
+#filter-collapsed {
+    margin-left: 22px;
+}
+#embed_look_form input, select, textarea, .select {
     max-width: none;
 }
 #modal_embed_shop label, #embed_look_form label {

@@ -1,5 +1,6 @@
 /*
     Base v1.0
+
     - Imports
     - Document
     - Header
@@ -45,6 +46,9 @@ a {
         outline: none;
         color: black;
     }
+}
+u {
+    text-decoration: none;
 }
 ul, ol {
     list-style: none;
@@ -96,11 +100,6 @@ blockquote {
 section {
     margin-bottom: 30px;
 }
-/*@media (min-width: @screen-sm) {
-    body {
-        font-size: 16px;
-    }
-}*/
 
 /* Typography ---------- */
 hgroup {
@@ -199,6 +198,10 @@ header {
         box-shadow: 0 1px 10px rgba(0, 0, 0, .3);
         height: 60px;
         width: 100%;
+        hr {
+            border-bottom: 1px solid @lightGrey;
+            margin: 10px 0;
+        }
         li {
             a {
                 color: @grey;
@@ -208,7 +211,7 @@ header {
                 &:hover, &:focus, &:active {
                     color: @darkGrey;
                 }
-                span {
+                u {
                     padding-bottom: 2px;
                     border-bottom: 2px solid transparent;
                     .animate;
@@ -217,7 +220,7 @@ header {
                     }
                 }
             }
-            &.active a span {
+            &.active a u {
                 border-bottom: 2px solid white;
                 padding-bottom: 2px;
             }
@@ -228,7 +231,7 @@ header {
         img {
             max-height: 40px;
         }
-        @media (min-width: @screen-md) { // was previously screen-sm
+        @media (min-width: @screen-md) {
             li a {
                 color: white;
                 &:hover, &:focus, &:active {
@@ -237,7 +240,7 @@ header {
             }
         }
     }
-    .dropdown-backdrop{
+    .dropdown-backdrop {
         position: static;
     }
     .dropdown-menu {
@@ -260,7 +263,7 @@ header {
                 color: black;
             }
         }
-        @media (min-width: 768px) {
+        @media (min-width: @screen-md) {
             position: absolute;
             box-shadow: 0 1px 10px rgba(0, 0, 0, .3);
             float: left;
@@ -270,7 +273,7 @@ header {
         li {
             line-height: 44px;
         }
-        @media (min-width: @screen-md) { // was previously screen-sm
+        @media (min-width: @screen-md) {
             li {
                 float: left;
                 line-height: 60px;
@@ -289,15 +292,15 @@ header {
     }
     .primary-nav {
         margin-top: 1px;
-        padding-top: 54px;
-        @media (min-width: @screen-md) { // was previously screen-sm
+        padding-top: 10px;
+        @media (min-width: @screen-md) {
             padding: 0;
             float: left;
         }
     }
     .secondary-nav {
         padding-bottom: 5px;
-        @media (min-width: @screen-md) { // was previously screen-sm
+        @media (min-width: @screen-md) {
             padding: 0;
             float: right;
             margin-right: -15px;
@@ -314,6 +317,18 @@ header {
         float: left;
         line-height: 60px;
         margin-right: 30px;
+    }
+    .link-create {
+        margin-top: 55px;
+        color: @primaryColor;
+        display: inline-block;
+        &:hover, &:focus {
+            color: darken(@primaryColor, 15%) !important;
+        }
+        i {
+            padding-bottom: 2px;
+            vertical-align: middle;
+        }
     }
     .btn-create {
         position: absolute;
@@ -373,9 +388,6 @@ header {
             max-height: 480px;
         }
     }
-    /*.navbar-collapse.in {
-        overflow-y: auto;
-    }*/
     .container {
         @media (min-width: @screen-sm) and (max-width: @screen-sm-max) {
             width: auto;
@@ -388,9 +400,9 @@ header {
     position: absolute;
     padding: 0 15px;
     width: 100%;
-    top: 0;
+    top: 5px;
     left: 0;
-    @media (min-width: @screen-md) { // was previously screen-sm
+    @media (min-width: @screen-md) {
         position: static;
         padding: 0;
         width: auto;
@@ -427,17 +439,16 @@ header .navbar-form {
         line-height: 40px;
         color: @grey;
     }
-    @media (min-width: @screen-md) { // was previously screen-sm
-        //margin: 8px 15px 0 0;
-        margin: 13px 15px 0 0; // Changed on Dec 4
+    @media (min-width: @screen-md) {
+        margin: 13px 15px 0 0;
         padding: 0;
         input {
-            height: 34px; // Added on Dec 4
-            line-height: 3.5rem; // Added on Dec 4
-            padding: 0 34px 0 10px; // Added on Dec 4
+            height: 34px;
+            line-height: 3.5rem;
+            padding: 0 34px 0 10px;
             max-width: 160px;
             color: white;
-            background-color: #444; // @darkGrey
+            background-color: #444;
             border: 0 !important;
             &:focus, &:active {
                 color: black;
@@ -445,10 +456,10 @@ header .navbar-form {
             }
         }
         .btn-search {
-            height: 34px; // Added on Dec 4
-            line-height: 0; // Added on Dec 4
+            height: 34px;
+            line-height: 0;
             i {
-                margin-top: -1px; // Added on Dec 4
+                margin-top: -1px;
             }
         }
     }
@@ -464,7 +475,7 @@ header .navbar-form {
     padding: 0 15px;
     background-color: white;
     box-shadow: 0 1px 10px rgba(0, 0, 0, .3);
-    @media (min-width: @screen-md) { // was previously screen-sm
+    @media (min-width: @screen-md) {
         width: auto;
         background-color: transparent;
         box-shadow: none;
@@ -475,39 +486,64 @@ header .navbar-form {
 }
 
 // Notifications
-.dropdown-notifications {
-    padding: 0 !important;
-    position: relative;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    background-color: #444; // @darkGrey
-    display: inline-block;
-    text-align: center;
-    padding-left: 1px;
+header .notifications {
     margin-top: 10px;
-    .animate();
+    display: inline-block;
+    .icon {
+        position: relative;
+        padding: 0 !important;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        background-color: #444;
+        display: inline-block;
+        text-align: center;
+        padding-left: 1px;
+        float: left;
+        .animate();
+    }
     img {
         vertical-align: middle;
     }
     svg {
         height: 100%;
-        margin: 1px 0 0 2px;
+        margin: 2px 0 0 2px;
     }
     path {
         .animate();
     }
     .badge {
+        position: absolute;
+        letter-spacing: 0;
+        color: white;
+        min-width: 18px;
+        background-color: @offwhite;
+        color: black;
+        padding: 4px 3px 2px 3px;
+        line-height: 1;
         top: -3px;
-    }
-    &:focus {
-        background-color: @darkGrey;
+        //right: 12px;
     }
     &:hover, &:active {
-        background-color: white;
+        .icon {
+            background-color: @lightGrey;
+        }
     }
-    &.active path, &:hover path {
-        fill: black;
+    @media (min-width: @screen-md) {
+        .icon {
+            float: none;
+        }
+        .badge {
+            background-color: white;
+        }
+        &:hover, &:active, &:focus {
+            .icon {
+                background-color: white;
+            }
+        }
+        &.active path, &:hover path {
+            fill: black;
+        }
     }
 }
 
@@ -566,19 +602,9 @@ header .navbar-form {
 main {
     padding: 90px 0 20px 0;
     background-color: white;
-    //text-align: center;
-    /*h4 {
-        text-align: left;
-    }*/
-    /*@media (min-width: @screen-md) {
-        text-align: left;
-    }*/
 }
 .fineprint {
     font-size: 13px;
-    /*p {
-        color: black;
-    }*/
     ul {
         list-style: disc inside none;
     }
@@ -911,18 +937,6 @@ body.shop, body.profile-likes {
 
     .accordion-toggle, .btn-filter {
         position: relative;
-        /*.glyphicon-chevron-up {
-            position: absolute;
-            top: 12px;
-            right: 10px;
-        }
-        &.collapsed .glyphicon-chevron-up {
-            right: 11px;
-            top: 13px;
-            &:before {
-                content: "\e114";
-            }
-        }*/
     }
 
     .panel-group {

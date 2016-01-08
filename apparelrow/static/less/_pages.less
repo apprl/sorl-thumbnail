@@ -6,11 +6,83 @@
 	- Search
 	- Log In & Registration
 	- Settings
+    - Notifications
 	- Discover (Members, Brands, Users)
 	- Dashboard
 	- Feed
 	- Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
 */
+
+/* NEW HOME (v2) ---------- */
+.home {
+    background-color: black;
+    header {
+        position: fixed;
+        z-index: 99;
+        width: 100%;
+        height: 60px;
+        li {
+            float: left;
+            margin-right: 30px;
+            &:last-child {
+                margin: 0;
+                float: right;
+            }
+        }
+        a {
+            color: white;
+            opacity: .8;
+            &:hover {
+                opacity: 1;
+                color: white;
+            }
+        }
+        .dropdown-menu {
+            background-color: rgba(255,255,255,.2);
+            box-shadow: none;
+            li {
+                float: none;
+                margin: 0;
+                &:last-child {
+                    float: none;
+                }
+            }
+            a {
+                color: white;
+            }
+        }
+        &.expanded {
+            background-color: black;
+        }
+    }
+    nav {
+        max-width: 1140px;
+        margin: 0 auto;
+        position: static;
+        line-height: 60px;
+        padding: 0 30px;
+        box-shadow: none;
+        background-color: transparent;
+    }
+    footer {
+        background-color: #222;
+        a:hover {
+            color: white;
+        }
+    }
+    .usp-community {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-color: @primaryColor;
+        color: white;
+    }
+    .home-intro {
+
+    }
+}
 
 /* Home (Index) ---------- */
 .frontpage main {
@@ -391,6 +463,11 @@
     }
 }
 
+/* Notifications ---------- */
+.notifications-page {
+
+}
+
 /* Discover (Members, Brands, Users) ---------- */
 .discover-list-page {
     .modal {
@@ -415,6 +492,9 @@
                 background-color: @grey;
             }
         }
+    }
+    .user-medium .pull-left {
+        margin-top: 3px;
     }
 }
 .discover-list .col-discover-item {

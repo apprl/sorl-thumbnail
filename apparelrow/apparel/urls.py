@@ -69,6 +69,9 @@ urlpatterns = patterns('',
     url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
     url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
 
+    # Temporary url for new home page (work in progress)
+    url(r'^home/$', 'apparelrow.apparel.views.home', name='home'),
+
     # Facebook friends widget
     (r'^home/friends/$', 'apparelrow.apparel.views.facebook_friends_widget'),
 

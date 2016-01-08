@@ -1,0 +1,252 @@
+{% load i18n l10n apparel_extras compressed login_bar cache localeurl_tags %}
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head{% block head-data %}{% endblock head-data %}>
+    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    {% for language in LANGUAGES_DISPLAY %}
+    <link rel="alternate" hreflang="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">
+    {% endfor %}
+    <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static "images/apple-touch-icon-120x120.png" %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static "images/apple-touch-icon-152x152.png" %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <meta property="og:image" content="{% static "images/share-image.jpg" %}">
+    <link rel="image_src" href="{% static "images/share-image.jpg" %}">
+
+    {% compressed_css 'bootstrap' %}
+    {% block extra-styles %}
+    {% endblock extra-styles %}
+    <script type="text/javascript">var addToHomeConfig = {returningVisitor: true, touchIcon: true, expire: 20160};</script>
+    <script src="//cdn.optimizely.com/js/180383028.js"></script>
+    {% block pre-extra-scripts %}{% endblock %}
+    {% compressed_js 'main' %}
+    {% block 'extra-scripts' %}
+    {% endblock 'extra-scripts' %}
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', '{{ GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT }}', {'cookieDomain': '{{ GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN }}'});
+        ga('send', 'pageview');
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
+        _gaq.push(['_setDomainName', '{{ GOOGLE_ANALYTICS_DOMAIN }}']);
+        _gaq.push(['_setSiteSpeedSampleRate', 10]);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+<body class="home">
+    {# Header #}
+    <header role="banner">
+        <nav role="navigation">
+            <ul>
+                <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
+                <li><a href="http://apprl.com/community"><span>APPRL Community</span></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>English&nbsp;<b class="caret"></b></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Swedish</a></li>
+                        <li><a href="#">Danish</a></li>
+                        <li><a href="#">Norwegian</a></li>
+                        <li><a href="#">Finnish</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {# Intro #}
+    <section class="home-intro">
+        {# Create mobile detection script and use it to either output video or background image #}
+        <div class="background-image"><img src="{% static 'images/poster.jpg' %}" alt="APPRL"></div>
+        <!--<div class="background-video">
+            <video autoplay="autoplay" preload="auto" poster="{% static 'images/poster.jpg' %}" loop="loop" muted="true">
+                <source src="test.webm" type="video/webm">
+                <source src="{% static 'video/sample.mp4' %}" type="video/mp4">
+            </video>
+        </div>-->
+        <div class="usp-community">
+            <p>{% trans 'Join <a href="http://apprl.com/community">APPRL Community</a> to shop the styles of bloggers, createurs and other style makers.' %}</p>
+        </div>
+    </section>
+
+    {# Users #}
+    <section class="home-users">
+        <div class="container">
+            <h2>{% trans "APPRL is used by" %}</h2>
+        </div>
+    </section>
+
+    {# Brands #}
+    <section class="home-brands">
+        <div class="container">
+            <h2>{% trans "Get access to top retailers & brands" %}</h2>
+        </div>
+    </section>
+
+    {# Tools #}
+    <section class="home-tools">
+        <div class="container">
+            <h2>{% trans "Create great shoppable content that your fans will love" %}</h2>
+            <p>Lorem ipsum dolor sit amet, minim molestie argumentum est at, pri legere torquatos instructior ex. Vis id odio atomorum oportere, quem modo fabellas sit at, dicat semper est ne. Apeirian detraxit pri eu.</p>
+        </div>
+    </section>
+
+    {# Apply #}
+    <section class="home-apply">
+        <div class="container">
+            <h2>{% trans "Apply to become a member" %}</h2>
+            <p>Lorem ipsum dolor sit amet, minim molestie argumentum est at, pri legere torquatos instructior ex. Vis id odio atomorum oportere, quem modo fabellas sit at, dicat semper est ne. Apeirian detraxit pri eu.</p>
+            <form>
+                <input type="text" name="name" required>
+                <input type="email" name="email" required>
+                <input type="submit" value="{% trans 'Submit Application' %}">
+            </form>
+        </div>
+    </section>
+
+    {# Featured #}
+    <section class="home-featured">
+        <div class="container">
+            <h2>{% trans "Featured In" %}</h2>
+            <ul class="list-brands">
+                <li><img src="{% static 'images/featured_logos/fokus.gif' %}" alt="Fokus"></li>
+                <li><img src="{% static 'images/featured_logos/computer-sweden.gif' %}" alt="Computer Sweden"></li>
+                <li><img src="{% static 'images/featured_logos/breakit.gif' %}" alt="Breakit"></li>
+                <li><img src="{% static 'images/featured_logos/internetworld.gif' %}" alt="Internet World"></li>
+                <li><img src="{% static 'images/featured_logos/dagens-media.gif' %}" alt="Dagens Media"></li>
+                <li><img src="{% static 'images/featured_logos/resume.gif' %}" alt="Resumé"></li>
+                <li><img src="{% static 'images/featured_logos/sss.gif' %}" alt="Startup Space Sweden"></li>
+                <li><img src="{% static 'images/featured_logos/digitalpodden.gif' %}" alt="Digitalpodden"></li>
+                <li><img src="{% static 'images/featured_logos/les-assorties.gif' %}" alt="Les Assorties’"></li>
+                <li><img src="{% static 'images/featured_logos/plaza-kvinna.gif' %}" alt="Plaza Kvinna"></li>
+                <li><img src="{% static 'images/featured_logos/webrazzi.gif' %}" alt="Webrazzi’"></li>
+                <li><img src="{% static 'images/featured_logos/cofounder.gif' %}" alt="CoFounder"></li>
+            </ul>
+        </div>
+    </section>
+
+    {# Footer #}
+    <footer role="contentinfo">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h5>{% trans "Follow Us" %}</h5>
+                    <ul>
+                        <li><a target="_blank" href="http://blog.apprl.com">{% trans "Blog" %}</a></li>
+                        <li><a target="_blank" href="http://www.facebook.com/apprl">Facebook</a></li>
+                        <li><a target="_blank" href="http://instagram.com/get_apprl">Instagram</a></li>
+                        <li><a target="_blank" href="https://twitter.com/get_apprl">Twitter</a></li>
+                        <li><a target="_blank" href="http://pinterest.com/apprl/">Pinterest</a></li>
+                        <li><a target="_blank" href="https://www.linkedin.com/company/apprl">LinkedIn</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <h5>APPRL</h5>
+                    <ul>
+                        <li><a href="{% url 'about' %}">{% trans "About Us" %}</a></li>
+                        <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
+                        <li><a href="{% url 'jobs' %}">{% trans "Jobs" %}</a></li>
+                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Terms & Conditions" %}</a></li>
+                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <h5>APPRL Fashion AB</h5>
+                    <address>
+                        Kammakargatan 41<br>
+                        111 24 Stockholm<br>
+                        Sweden
+                    </address>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a class="scroll-top" href="#"><i class="fa fa-angle-up"></i>
+
+    <script>
+        $(document).ready(function() {
+            var anchor = $('.home-intro').offset().top + $('.home-intro').outerHeight();
+            console.log(anchor);
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() > anchor)
+                    console.log('scroll past intro');
+                    $('header').addClass('expand');
+                if ($(window).scrollTop() < anchor)
+                    console.log('scroll back to intro');
+                    $('header').removeClass('expand');
+            });
+        });
+
+        $(function(){
+            $(document).on( 'scroll', function(){
+                if ($(window).scrollTop() > 100) {
+                    $('.scroll-top').fadeIn(200);
+                } else {
+                    $('.scroll-top').fadeOut(200);
+                }
+            });
+            $('.scroll-top').on('click', scrollToTop);
+        });
+        function scrollToTop() {
+            verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
+            element = $('body');
+            offset = element.offset();
+            offsetTop = offset.top;
+            $('html, body').animate({scrollTop: offsetTop}, 500, 'linear');
+        }
+    </script>
+
+    <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>
+    <script type="text/javascript">
+        fx.base = 'SEK';
+        fx.rates = {
+            {% for currency, rate in currency_rates.items %}
+            '{{ currency }}': {{ rate|unlocalize }},
+            {% endfor %}
+            'SEK': 1
+        };
+        var current_currency = '{{ CURRENCY }}';
+        function formatNumber(num) {
+            var array = parseInt(num, 10).toFixed().split('');
+            var index = -3;
+            while (array.length + index > 0) {
+                array.splice(index, 0, ' ');
+                index -= 4;
+            }
+            return array.join('');
+        };
+        function currencyConversion(elements) {
+            elements.each(function(index, element) {
+                var $element = jQuery(element);
+                var data = $element.data();
+                var converted_price = Math.round(fx.convert(data.price, {from: data.currency, to: current_currency}));
+                $element.text(formatNumber(converted_price) + ' ' + current_currency);
+            });
+        }
+
+        $('#language-dropdown > li > a').click(function(event){
+            var $this = $(this);
+            var location = $this.data("location");
+            $.removeCookie('location');
+            $.cookie('location', location, { expires: 60, path: '/' });
+        } );
+    </script>
+</body>
+</html>

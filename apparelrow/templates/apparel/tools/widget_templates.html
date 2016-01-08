@@ -91,7 +91,7 @@
 </script>
 
 <script type="text/template" id="look_edit_popup_loading">
-    <img class="loading" src="{% static "images/loading_white.gif" %}">
+    <img class="loading" src="{% static 'images/loading_white.gif' %}">
 </script>
 
 <script type="text/template" id="look_edit_add_popup_template" data-title="{% trans "Add product" %}">
@@ -134,7 +134,7 @@
                     </a>
                 <!--</div>-->
             </div>
-            <img class="product-image product-image-actual" src="<%= product.image_look %>"/>
+            <img class="product-image product-image-actual" src="<%= product.image_look %>">
         </div>
 
 
@@ -181,7 +181,7 @@
     <form enctype="multipart/form-data" action="{% url 'temporary-image' %}" method="POST" id="temporaryimage">
         {% csrf_token %}
         <div class="form-group">
-            <p>{% trans 'Start by adding your photo here' %}</p>
+            <p>{% trans 'Start by adding your photo here.' %}</p>
             <div class="form-group upload-field">
                 <span><input class="form-control" type="file" accept="image/*;capture=camera" capture="camera" name="image_file"></span>
             </div>
@@ -194,8 +194,8 @@
     <div class="product-small product-container">
         <a class="image-small" href="#"><img src="<%= image_small %>"></a>
         <div class="hover">
-            <a class="btn btn-primary btn-product-info" href="#">{% trans "Info" %}</a>
-            <a class="btn btn-default btn-add" href="#">{% trans "Add" %}</a>
+            <a class="btn btn-primary btn-add" href="#">{% trans "Add" %}</a>
+            <a class="btn btn-default btn-product-info" href="#">{% trans "Info" %}</a>
         </div>
         <div class="caption">
             <h5><%= brand_name %></h5>

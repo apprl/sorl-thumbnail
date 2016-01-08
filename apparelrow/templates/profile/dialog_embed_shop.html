@@ -34,11 +34,11 @@
                         <label class="control-label" for="id_height">{% trans "Height" %}</label>
                         <a href="#" class="info-toggler" data-target="info-height"><i class="fa fa-question-circle"></i></a>
                         <span class="info-box" id="info-height">{% trans "Depends on for example your site's layout and how many products you have in your shop, but 800-1200 pixels is usually good. You can always edit your shop height later." %}</span>
-                        <input id="id_height" type="text" name="height" placeholder="600">
+                        <input id="id_height" type="text" name="height" placeholder="800">
                         <span class="help-block">{% trans "( pixels )" %}</span>
                     </div>
                     <div class="form-group">
-                        <h4>{% trans "Advanced options" %}</h4>
+                        <!--<h4>{% trans "Advanced options" %}</h4>-->
                         <ul>
                             <li>
                                 <label><input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked><span><i class="fa fa-check"></i></span>{% trans "Show brands & prices" %}</label>
@@ -48,31 +48,35 @@
                             <li>
                                 <label><input type="checkbox" name="show_filters" id="id_show_filters" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show filters" %}</label>
                                 <a href="#" class="info-toggler" data-target="info-filters"><i class="fa fa-question-circle"></i></a>
-                                <span class="info-box" id="info-filters">{% trans "Check this box to have all filters collapsed by default." %}</span>
+                                <span class="info-box" id="info-filters">{% trans "Keep this box if you want your shop to include filters for category, colour and price. This is suitable if you have many products in your shop, otherwise it might be an idea to skip filters." %}</span>
                             </li>
                             <li>
-                                <div id="filter-collapsed" style="display:none;"><label><input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show filters as collapsed" %}</label></div>
+                                <div id="filter-collapsed" style="display:none;">
+                                    <label><input type="checkbox" name="show_filters_collapsed" id="id_show_filters_collapsed" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show filters as collapsed" %}</label>
+                                    <a href="#" class="info-toggler" data-target="info-filters-collapsed"><i class="fa fa-question-circle"></i></a>
+                                    <span class="info-box" id="info-filters-collapsed">{% trans "Check this box to have all filters collapsed by default." %}</span>
+                                </div>
                             </li>
                             <li>
                                 <label><input type="checkbox" name="show_width" id="id_show_width" value="1"><span><i class="fa fa-check"></i></span>{% trans "Manually choose width" %}</label>
+                                <a href="#" class="info-toggler" data-target="info-width"><i class="fa fa-question-circle"></i></a>
+                                <span class="info-box" id="info-width">{% trans "By default, the shop automatically adapts to the width of the device/browser it is viewed with, but if you want you can manually specify an exact number of pixels for your shop." %}</span>
                             </li>
                             <li>
                                 <div id="width-collapsed" class="form-group" style="display:none;">
-                                    <label class="control-label" for="id_width">{% trans "Width" %}</label>
-                                    <a href="#" class="info-toggler" data-target="info-width"><i class="fa fa-question-circle"></i></a>
-                                    <span class="info-box" id="info-width">{% trans "By default, the shop automatically adapts to the width of the device/browser it is viewed with, but if you want you can manually specify an exact number of pixels for your shop." %}</span>
-                                    <input id="id_width" type="text" name="width" placeholder="800">
+                                    <!--<label class="control-label" for="id_width">{% trans "Width" %}</label>-->
+                                    <input id="id_width" type="text" name="width" placeholder="1000">
                                     <span class="help-block">{% trans "( pixels )" %}</span>
                                 </div>
                             </li>
                         </ul>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">{% trans "Embed shop on your site" %}</button>
+                        <button type="submit" class="btn btn-primary btn-block center">{% trans "Embed shop on your site" %}</button>
                     </div>
                     <div class="form-group" style="display:none;">
                         <label class="control-label" for="id_embed_code">{% trans "Copy and paste this code (in HTML-mode) into your site/blog" %}</label>
-                        <textarea id="id_embed_code" name="embed_code" rows="8" class="form-control"></textarea>
+                        <textarea id="id_embed_code" name="embed_code" rows="8"></textarea>
                     </div>
                 </form>
 

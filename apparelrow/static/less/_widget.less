@@ -3,8 +3,10 @@
 */
 
 // Editor guide (steps)
+.look-editor-photo-page .editor-guide {
+    display: none !important;
+}
 .editor-guide {
-    display: none;
     position: absolute;
     p {
         font-size: 14px;
@@ -25,8 +27,7 @@
         display: none !important;
     }
 }
-.shop-step-1 {
-    top: 100px;
+.shop-step-1, .collage-step-1 {
     left: 20px;
     img {
         display: block;
@@ -45,12 +46,19 @@
         }
     }
     @media (min-width: @screen-is) {
-        top: initial;
-        bottom: 40px;
+        //bottom: 40px;
     }
 }
-.shop-step-2 {
-    bottom: 5px;
+.shop-step-1 {
+    bottom: 40px;
+    @media (max-height: 480px) {
+        bottom: 25px;
+    }
+}
+.collage-step-1 {
+    bottom: 90px;
+}
+.shop-step-2, .collage-step-2 {
     right: 20px;
     text-align: right;
     max-width: 200px;
@@ -64,8 +72,22 @@
         background-position: right;
     }
     @media (min-width: @screen-xs) {
-        bottom: 15px;
         right: 30px;
+    }
+}
+.shop-step-2 {
+    bottom: 5px;
+    @media (max-height: 480px) {
+        bottom: 0;
+    }
+    @media (min-width: @screen-xs) {
+        bottom: 15px;
+    }
+}
+.collage-step-2 {
+    bottom: 49px;
+    @media (min-width: @screen-xs) {
+        bottom: 59px;
     }
 }
 
@@ -76,7 +98,7 @@
     box-shadow: 0 0 50px rgba(0,0,0,.25);
 }
 #modal_embed_shop {
-    .select, select, input {
+    .select, select, input, textarea {
         max-width: none;
     }
 }
@@ -242,8 +264,15 @@
 
 .search-wrapper {
     overflow: hidden;
+    position: relative;
     input {
         max-width: none;
+    }
+    i {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        opacity: .2;
     }
 }
 
@@ -327,7 +356,7 @@ html.look-type-C {
                 padding-right: 0px;
             }
         }
-        @media (max-width: @screen-is) {
+        /*@media (max-width: @screen-is) {
             span {
                 display: none;
             }
@@ -335,7 +364,7 @@ html.look-type-C {
             &.active span {
                 display: inline;
             }
-        }
+        }*/
     }
 
     a.close-product-chooser {
