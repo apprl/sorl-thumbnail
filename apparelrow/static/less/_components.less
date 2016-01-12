@@ -32,6 +32,10 @@
 	font-size: 24px;
 	font-family: @secondaryFont;
 }
+.crosslink {
+	color: @primaryColor;
+	letter-spacing: 1px;
+}
 
 /* Buttons ---------- */
 .btn {
@@ -179,6 +183,18 @@
 		background-color: darken(@secondaryColor, 15%) !important;
 	}
 }
+.btn-outline {
+	line-height: 44px;
+	background-color: transparent;
+	border: 2px solid white;
+	&:hover {
+		background-color: white;
+		color: black !important;
+	}
+	@media (min-width: @screen-sm) {
+		line-height: 34px;
+	}
+}
 /*
 Utvädera om denna behövs?
 section .btn {
@@ -240,22 +256,21 @@ section .btn {
 		visibility: visible;
 	}
 }
-.scroll-top {
-  display: none;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  background-color: rgba(0,0,0,.25);
-  text-align: center;
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  color: white;
-  line-height: 44px;
-  font-size: 24px;
-  &:hover, &:focus, &:active {
-    color: white;
-  }
+.btn-scroll {
+	border-radius: 50%;
+	width: 44px;
+	height: 44px;
+	text-align: center;
+	z-index: 99;
+	color: white;
+	line-height: 44px;
+	font-size: 24px;
+	&:hover, &:focus, &:active {
+		color: white;
+	}
+	i {
+		vertical-align: middle;
+	}
 }
 .breadcrumbs {
 	line-height: 1;
@@ -798,14 +813,14 @@ section .btn {
     width: 100%;
   }
 }
-.placeholder {
-	@media (min-width: @screen-sm) {
-		position: relative;
-		top: 50%;
-		-ms-transform: translateY(-50%);
-		-webkit-transform: translateY(-50%);
-		transform: translateY(-50%);
-	}
+.overlay {
+	position: absolute;
+	top: 50%;
+	width: 100%;
+	text-align: center;
+	-ms-transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
 }
 .share {
 	margin-top: 15px;
@@ -941,4 +956,11 @@ a.info {
 		height: auto;
 		z-index: -100;
 	}
+}
+.background-image {
+	background-position: 50% 50%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	width: 100%;
+	height: 100vh;
 }

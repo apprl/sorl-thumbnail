@@ -57,7 +57,7 @@
                 <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
                 <li><a href="http://apprl.com/community"><span>APPRL Community</span></a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>English&nbsp;<b class="caret"></b></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>International&nbsp;<b class="caret"></b></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Swedish</a></li>
                         <li><a href="#">Danish</a></li>
@@ -70,76 +70,86 @@
         </nav>
     </header>
 
-    {# Intro #}
-    <section class="home-intro">
-        {# Create mobile detection script and use it to either output video or background image #}
-        <div class="background-image"><img src="{% static 'images/poster.jpg' %}" alt="APPRL"></div>
-        <!--<div class="background-video">
-            <video autoplay="autoplay" preload="auto" poster="{% static 'images/poster.jpg' %}" loop="loop" muted="true">
-                <source src="test.webm" type="video/webm">
-                <source src="{% static 'video/sample.mp4' %}" type="video/mp4">
-            </video>
-        </div>-->
-        <div class="usp-community">
-            <p>{% trans 'Join <a href="http://apprl.com/community">APPRL Community</a> to shop the styles of bloggers, createurs and other style makers.' %}</p>
-        </div>
-    </section>
+    <main role="main">
+        {# Intro #}
+        <section class="home-intro">
+            <div class="background-image" style="background-image: url({% static 'images/poster.jpg' %});"></div>
+            <div class="splash">
+                <a class="logo" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
+                <h1 class="display">{% trans 'The leading monetization tool for style influencers<span class="wbr"></span> and premium lifestyle media.' %}</h1>
+                <p class="preamble">{% trans "With APPRL's smart & simple toolbox, you can create great shoppable content that your fans will love – for your blog, app and social media." %}</p>
+                <a class="btn btn-outline" href="#">{% trans "Apply for invitation" %}</a>
+                </div>
+            </div>
+            <!--<div class="background-video">
+                <video autoplay="autoplay" preload="auto" poster="{% static 'images/poster.jpg' %}" loop="loop" muted="true">
+                    <source src="test.webm" type="video/webm">
+                    <source src="{% static 'video/sample.mp4' %}" type="video/mp4">
+                </video>
+            </div>-->
+            <a class="btn-scroll" href="#" data-scroll="home-users"><i class="fa fa-angle-down"></i></a>
+            <p class="crosslink">{% trans 'Looking for <a href="http://apprl.com/community">APPRL Community</a>?' %}</p>
+        </section>
 
-    {# Users #}
-    <section class="home-users">
-        <div class="container">
-            <h2>{% trans "APPRL is used by" %}</h2>
-        </div>
-    </section>
+        {# Users #}
+        <section class="home-users">
+            <div class="container">
+                <h1>{% trans "Used by top influencers & media" %}</h1>
+                <p>{% trans "Style bloggers, magazines and other influencers choose to use APPRL to earn money on product recommendations in their content. APPRL’s simple & flexible toolbox enables them to easily share the products they love with their fans and get rewarded for the clicks they generate." %}</p>
+            </div>
+        </section>
 
-    {# Brands #}
-    <section class="home-brands">
-        <div class="container">
-            <h2>{% trans "Get access to top retailers & brands" %}</h2>
-        </div>
-    </section>
+        {# Brands #}
+        <section class="home-brands">
+            <div class="container">
+                <h1>{% trans "Get access to top retailers & brands" %}</h1>
+                <p>{% trans "Get rewarded by featuring products and driving traffic to the world’s leading online retailers. APPRL can offer high rewards since we’re exclusively working with premium media & influencers." %}</p>
+            </div>
+        </section>
 
-    {# Tools #}
-    <section class="home-tools">
-        <div class="container">
-            <h2>{% trans "Create great shoppable content that your fans will love" %}</h2>
-            <p>Lorem ipsum dolor sit amet, minim molestie argumentum est at, pri legere torquatos instructior ex. Vis id odio atomorum oportere, quem modo fabellas sit at, dicat semper est ne. Apeirian detraxit pri eu.</p>
-        </div>
-    </section>
+        {# Tools #}
+        <section class="home-tools">
+            <div class="container">
+                <h1>{% trans "Create great shoppable content that your fans will love" %}</h1>
+                <p>Lorem ipsum dolor sit amet, minim molestie argumentum est at, pri legere torquatos instructior ex. Vis id odio atomorum oportere, quem modo fabellas sit at, dicat semper est ne. Apeirian detraxit pri eu.</p>
+            </div>
+        </section>
 
-    {# Apply #}
-    <section class="home-apply">
-        <div class="container">
-            <h2>{% trans "Apply to become a member" %}</h2>
-            <p>Lorem ipsum dolor sit amet, minim molestie argumentum est at, pri legere torquatos instructior ex. Vis id odio atomorum oportere, quem modo fabellas sit at, dicat semper est ne. Apeirian detraxit pri eu.</p>
-            <form>
-                <input type="text" name="name" required>
-                <input type="email" name="email" required>
-                <input type="submit" value="{% trans 'Submit Application' %}">
-            </form>
-        </div>
-    </section>
+        {# Apply #}
+        <section class="home-apply">
+            <div class="container">
+                <a class="logo">
+                <h1>{% trans "Apply for an invitation" %}</h1>
+                <p>{% trans "As a member of the APPRL network, you'll get access to our range of tools, access to the best retailers, high rewards and support from our team to help you grow, maximise your earnings and learn more about your audience. To ensure a high quality of the APPRL network of style influencers & media, we kindly ask you to apply for an invitation." %}</p>
+                <form>
+                    <input type="text" name="name" required>
+                    <input type="email" name="email" required>
+                    <input type="submit" value="{% trans 'Submit Application' %}">
+                </form>
+            </div>
+        </section>
 
-    {# Featured #}
-    <section class="home-featured">
-        <div class="container">
-            <h2>{% trans "Featured In" %}</h2>
-            <ul class="list-brands">
-                <li><img src="{% static 'images/featured_logos/fokus.gif' %}" alt="Fokus"></li>
-                <li><img src="{% static 'images/featured_logos/computer-sweden.gif' %}" alt="Computer Sweden"></li>
-                <li><img src="{% static 'images/featured_logos/breakit.gif' %}" alt="Breakit"></li>
-                <li><img src="{% static 'images/featured_logos/internetworld.gif' %}" alt="Internet World"></li>
-                <li><img src="{% static 'images/featured_logos/dagens-media.gif' %}" alt="Dagens Media"></li>
-                <li><img src="{% static 'images/featured_logos/resume.gif' %}" alt="Resumé"></li>
-                <li><img src="{% static 'images/featured_logos/sss.gif' %}" alt="Startup Space Sweden"></li>
-                <li><img src="{% static 'images/featured_logos/digitalpodden.gif' %}" alt="Digitalpodden"></li>
-                <li><img src="{% static 'images/featured_logos/les-assorties.gif' %}" alt="Les Assorties’"></li>
-                <li><img src="{% static 'images/featured_logos/plaza-kvinna.gif' %}" alt="Plaza Kvinna"></li>
-                <li><img src="{% static 'images/featured_logos/webrazzi.gif' %}" alt="Webrazzi’"></li>
-                <li><img src="{% static 'images/featured_logos/cofounder.gif' %}" alt="CoFounder"></li>
-            </ul>
-        </div>
-    </section>
+        {# Featured #}
+        <section class="home-featured">
+            <div class="container">
+                <h1>{% trans "Featured In" %}</h1>
+                <ul class="list-brands">
+                    <li><img src="{% static 'images/featured_logos/fokus.gif' %}" alt="Fokus"></li>
+                    <li><img src="{% static 'images/featured_logos/computer-sweden.gif' %}" alt="Computer Sweden"></li>
+                    <li><img src="{% static 'images/featured_logos/breakit.gif' %}" alt="Breakit"></li>
+                    <li><img src="{% static 'images/featured_logos/internetworld.gif' %}" alt="Internet World"></li>
+                    <li><img src="{% static 'images/featured_logos/dagens-media.gif' %}" alt="Dagens Media"></li>
+                    <li><img src="{% static 'images/featured_logos/resume.gif' %}" alt="Resumé"></li>
+                    <li><img src="{% static 'images/featured_logos/sss.gif' %}" alt="Startup Space Sweden"></li>
+                    <li><img src="{% static 'images/featured_logos/digitalpodden.gif' %}" alt="Digitalpodden"></li>
+                    <li><img src="{% static 'images/featured_logos/les-assorties.gif' %}" alt="Les Assorties’"></li>
+                    <li><img src="{% static 'images/featured_logos/plaza-kvinna.gif' %}" alt="Plaza Kvinna"></li>
+                    <li><img src="{% static 'images/featured_logos/webrazzi.gif' %}" alt="Webrazzi’"></li>
+                    <li><img src="{% static 'images/featured_logos/cofounder.gif' %}" alt="CoFounder"></li>
+                </ul>
+            </div>
+        </section>
+    </main>
 
     {# Footer #}
     <footer role="contentinfo">
@@ -178,7 +188,7 @@
         </div>
     </footer>
 
-    <a class="scroll-top" href="#"><i class="fa fa-angle-up"></i>
+    <a class="btn-scroll scroll-top" href="#"><i class="fa fa-angle-up"></i>
 
     <script>
         $(document).ready(function() {

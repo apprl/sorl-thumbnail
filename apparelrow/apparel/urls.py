@@ -72,6 +72,9 @@ urlpatterns = patterns('',
     # Temporary url for new home page (work in progress)
     url(r'^home/$', 'apparelrow.apparel.views.home', name='home'),
 
+    # Temporary url for onboarding page (work in progress)
+    url(r'^onboarding/$', 'apparelrow.apparel.views.onboarding', name='onboarding'),
+
     # Facebook friends widget
     (r'^home/friends/$', 'apparelrow.apparel.views.facebook_friends_widget'),
 

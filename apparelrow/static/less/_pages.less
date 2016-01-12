@@ -10,12 +10,21 @@
 	- Discover (Members, Brands, Users)
 	- Dashboard
 	- Feed
+    - Onboarding
 	- Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
 */
 
 /* NEW HOME (v2) ---------- */
 .home {
     background-color: black;
+    main {
+        text-align: center;
+        padding: 0;
+        background-color: black;
+        h1, p {
+            color: white;
+        }
+    }
     header {
         position: fixed;
         z-index: 99;
@@ -24,9 +33,11 @@
         li {
             float: left;
             margin-right: 30px;
-            &:last-child {
-                margin: 0;
+            &:last-child, &:nth-last-child(2) {
                 float: right;
+            }
+            &:nth-last-child(2) {
+                margin: 0;
             }
         }
         a {
@@ -77,11 +88,64 @@
         width: 100%;
         height: 60px;
         background-color: @primaryColor;
-        color: white;
     }
     .home-intro {
-
+        height: 100vh;
+        a, .btn {
+            color: white;
+        }
+        h1 {
+            margin-bottom: 15px
+        }
+        .logo {
+            margin-bottom: 30px;
+            display: inline-block;
+            max-width: 240px;
+        }
+        .preamble {
+            max-width: @screen-sm;
+        }
+        .btn-outline {
+            margin-top: 30px;
+        }
+        .btn-scroll {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            margin-left: -22px;
+            background-color: rgba(255,255,255,.15);
+        }
+        .crosslink {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            left: 0;
+            text-align: center;
+        }
     }
+    .btn {
+        margin: auto;
+    }
+    .splash {
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    /*.home-intro .splash {
+        color: white;
+        max-width: @screen-sm;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }*/
 }
 
 /* Home (Index) ---------- */
@@ -637,6 +701,24 @@
     font-size: 15px;
     &.recommended {
         border-color: @primaryColor;
+    }
+}
+
+/* Feed ---------- */
+.onboarding-page {
+    p {
+        margin-top: 15px;
+    }
+    h2 {
+        margin-bottom: 15px;
+    }
+    section:first-child {
+        text-align: center;
+    }
+    hr {
+        max-width: @screen-is;
+        margin: 30px auto;
+        border-bottom: 1px solid @lightGrey;
     }
 }
 

@@ -1167,6 +1167,14 @@ def jobs(request):
 def founders(request):
     return render(request, 'apparel/founders.html')
 
+# Temporary url for new home page (work in progress)
+def home(request):
+    return render(request, 'apparel/home.html')
+
+# Temporary url for onboarding page (work in progress)
+def onboarding(request):
+    return render(request, 'apparel/onboarding.html')
+
 
 #
 # Contest Stylesearch

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load i18n apparel_extras %}
+{% load static from staticfiles %}
+
+{% block extra-title %}{% trans "Welcome to APPRL!" %} | {% endblock %}
+
+{% block body-classes %}onboarding-page{% endblock %}
+{% block full-body %}
+
+    <section>
+        <div class="container">
+            <h1>{% trans "Welcome to APPRL," %} {{ profile.display_name }}!</h1>
+            <p>{% trans "Lorem ipsum dolor sit amet, minim molestie argumentum est at, pri legere torquatos instructior ex. Vis id odio atomorum oportere, quem modo fabellas sit at, dicat semper est ne. Apeirian detraxit pri eu. No solum accusam has. Ius ne harum mundi clita, eu pro tation audiam." %}</p>
+
+            <hr>
+
+            <h2>{% trans "Recommendations for you." %}</h2>
+            <a class="btn btn-primary btn-lg center">{% trans "Follow and continue" %}</a>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+        <ul class="discover-list list-unstyled row">
+
+            <li class="col-discover-item">
+                <div class="user-medium panel" id="user-medium-43">
+                    <div class="panel-heading">
+                        <div class="media">
+                            <a class="pull-left" href="/en/profile/elin-kling/">
+                                <img class="img-circle" src="/static/images/brand-avatar.png" alt="Elin Kling"/>
+                            </a>
+                            <div class="media-body">
+                                <h5 class="media-heading"><a href="/en/profile/elin-kling/">Elin Kling</a></h5>
+                                <a class="btn btn-success btn-sm btn-follow-placeholder" data-toggle="modal" href="#" data-target="#modal_follow_user">Follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-unstyled row">
+                            <li class="col-xs-6"><a href="/en/profile/elin-kling/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/elin-kling/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/elin-kling/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/elin-kling/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <li class="col-discover-item">
+                <div class="user-medium panel" id="user-medium-24334">
+                    <div class="panel-heading">
+                        <div class="media">
+                            <a class="pull-left" href="/en/profile/tess/">
+                                <img class="img-circle" src="/static/images/brand-avatar.png" alt="Tess Montgomery"/>
+                            </a>
+                            <div class="media-body">
+                                <h5 class="media-heading"><a href="/en/profile/tess/">Tess Montgomery</a></h5>
+                                <a class="btn btn-success btn-sm btn-follow-placeholder" data-toggle="modal" href="#" data-target="#modal_follow_user">Follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-unstyled row">
+                            <li class="col-xs-6"><a href="/en/profile/tess/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/tess/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/tess/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/tess/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <li class="col-discover-item">
+                <div class="user-medium panel" id="user-medium-24657">
+                    <div class="panel-heading">
+                        <div class="media">
+                            <a class="pull-left" href="/en/profile/felicia-frithiof/">
+                                <img class="img-circle" src="http://graph.facebook.com/737642097/picture?type=square" alt="Felicia Frithiof"/>
+                            </a>
+                            <div class="media-body">
+                                <h5 class="media-heading"><a href="/en/profile/felicia-frithiof/">Felicia Frithiof</a></h5>
+                                <a class="btn btn-success btn-sm btn-follow-placeholder" data-toggle="modal" href="#" data-target="#modal_follow_user">Follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-unstyled row">
+                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <li class="col-discover-item">
+                <div class="user-medium panel" id="user-medium-24657">
+                    <div class="panel-heading">
+                        <div class="media">
+                            <a class="pull-left" href="/en/profile/felicia-frithiof/">
+                                <img class="img-circle" src="http://graph.facebook.com/737642097/picture?type=square" alt="Felicia Frithiof"/>
+                            </a>
+                            <div class="media-body">
+                                <h5 class="media-heading"><a href="/en/profile/felicia-frithiof/">Felicia Frithiof</a></h5>
+                                <a class="btn btn-success btn-sm btn-follow-placeholder" data-toggle="modal" href="#" data-target="#modal_follow_user">Follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-unstyled row">
+                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+        </div>
+    </section>
+
+{% endblock %}

@@ -46,4 +46,9 @@ urlpatterns = patterns('',
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^(?P<url>about/.*)$', 'flatpage', name='about'),
 
+    # Temporary url for new home page (work in progress)
+    url(r'^home/$', 'flatpage', name='home'),
+
+    # Temporary url for onboarding page (work in progress)
+    url(r'^onboarding/$', 'flatpage', name='onboarding'),
 )
