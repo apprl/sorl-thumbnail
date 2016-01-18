@@ -197,7 +197,7 @@ class TestDashboard(TransactionTestCase):
         self.assertIsNone(registered_user.referral_partner_parent_date)
 
         # Admin goes in and mark the user as partner which in turn sets the
-        # parent date and adds 20 EUR to the account
+        # parent date and adds 50 EUR to the account
         registered_user.is_partner = True
         registered_user.save()
         self.assertIsNotNone(registered_user.referral_partner_parent_date)
@@ -206,7 +206,7 @@ class TestDashboard(TransactionTestCase):
         self.assertFalse(sale.is_referral_sale)
         self.assertIsNone(sale.referral_user)
         self.assertTrue(sale.is_promo)
-        self.assertEqual(sale.commission, decimal.Decimal(20))
+        self.assertEqual(sale.commission, decimal.Decimal(50))
         self.assertEqual(sale.currency, 'EUR')
 
     #@unittest.skip("Review this test")
@@ -256,7 +256,7 @@ class TestDashboard(TransactionTestCase):
         self.assertIsNone(registered_user.referral_partner_parent)
         self.assertIsNone(registered_user.referral_partner_parent_date)
 
-        # Invalid referral link should not result in a promo sale of 20 EUR
+        # Invalid referral link should not result in a promo sale of 50 EUR
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 0)
 
     #@unittest.skip("Review this test")
@@ -1642,7 +1642,7 @@ class TestPayments(TransactionTestCase):
         self.assertEqual(get_model('dashboard', 'Payment').objects.count(), 2)
 
         publisher_payment = get_model('dashboard', 'Payment').objects.get(user=temp_user)
-        self.assertEqual(publisher_payment.amount, 620)
+        self.assertEqual(publisher_payment.amount, 600 + 50)
 
         referral_payment = get_model('dashboard', 'Payment').objects.get(user=referral_user)
         self.assertEqual(referral_payment.amount, 150)
