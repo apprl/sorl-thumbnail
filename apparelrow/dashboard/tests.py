@@ -1553,7 +1553,7 @@ class TestPayments(TransactionTestCase):
         custom = '%s-Shop' % (temp_user.pk,)
         response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='50000', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -1576,15 +1576,64 @@ class TestPayments(TransactionTestCase):
         self.assertEqual(get_model('dashboard', 'Payment').objects.count(), 2)
 
         publisher_payment = get_model('dashboard', 'Payment').objects.get(user=temp_user)
-        self.assertEqual(publisher_payment.amount, 540)
+        self.assertEqual(publisher_payment.amount, 5400)
 
         owner_payment = get_model('dashboard', 'Payment').objects.get(user=owner_user)
-        self.assertEqual(owner_payment.amount, 60)
+        self.assertEqual(owner_payment.amount, 600)
 
         for earning in get_model('dashboard', 'UserEarning').objects.exclude(user_earning_type='apprl_commission'):
             self.assertEqual(earning.paid, get_model('dashboard', 'Sale').PAID_READY)
 
         owner_set = get_model('dashboard', 'Payment').objects.filter(user=owner_user)
+
+    def test_payments_below_threshold(self):
+        group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+
+        temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        temp_user.partner_group = group
+        temp_user.save()
+
+        payment_detail = get_model('profile', 'PaymentDetail').objects.create(name='a', company='b', orgnr='c', user=temp_user)
+
+        # Create a sale transactions
+        store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
+        vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
+        store = get_model('advertiser', 'Store').objects.create(identifier='mystore',
+                                                                user=store_user,
+                                                                commission_percentage='0.2',
+                                                                vendor=vendor)
+
+        cut = get_model('dashboard', 'Cut').objects.create(group=group, vendor=vendor, cut=0.7, referral_cut=0.2)
+
+        store_id = 'mystore'
+        url = 'http://www.mystore.com/myproduct/'
+        custom = '%s-Shop' % (temp_user.pk,)
+        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        self.assertEqual(response.status_code, 200)
+
+        # Import the sale transaction
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 2)
+
+        sale = get_model('dashboard', 'Sale').objects.get(user_id=temp_user.id, vendor=vendor)
+
+        #Update a sales transaction
+        self.assertEqual(sale.status, get_model('dashboard', 'Sale').PENDING)
+        sale.status = get_model('dashboard', 'Sale').CONFIRMED
+        sale.save()
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 2)
+
+        user_earning = get_model('dashboard', 'UserEarning').objects.exclude(user_earning_type='apprl_commission')[0]
+        self.assertEqual(user_earning.amount, 70)
+
+        # Ready payments
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+        self.assertEqual(get_model('dashboard', 'Payment').objects.count(), 0)
 
     def test_payments_referral_sale(self):
         referral_group = get_model('dashboard', 'Group').objects.create(name='mygroup')
