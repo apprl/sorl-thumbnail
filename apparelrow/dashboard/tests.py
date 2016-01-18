@@ -2096,10 +2096,11 @@ class TestUtils(TransactionTestCase):
         """ Test months choices, year choices and display text for month passed as input are correct.
         """
         june = 06
+        year_list = [row for row in range(2013, datetime.date.today().year+1)]
 
         month_display, month_choices, year_choices = enumerate_months(self.user, june)
         self.assertEqual(month_display, "June")
-        self.assertEqual(year_choices, [2013, 2014, 2015])
+        self.assertEqual(year_choices, year_list)
         self.assertEqual(len(month_choices), 13) # 12 months  All Year option
 
     def test_get_previous_month(self):
@@ -2118,6 +2119,23 @@ class TestUtils(TransactionTestCase):
         # Initial variables remain the same
         self.assertEqual(start_date_query, datetime.datetime(2015, 05, 01, 0, 0, 0, 0))
         self.assertEqual(end_date_query, datetime.datetime(2015, 05, 31, 23, 59, 59, 999999))
+
+    def test_get_previous_month_if_january(self):
+        year = "2016"
+        month = "01"
+
+        start_date, end_date = parse_date(month, year)
+        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+
+        previous_start_date, previous_end_date = get_previous_period(start_date_query, end_date_query)
+
+        self.assertEqual(previous_start_date, datetime.datetime(2015, 12, 01, 0, 0, 0, 0))
+        self.assertEqual(previous_end_date, datetime.datetime(2015, 12, 31, 23, 59, 59, 999999))
+
+        # Initial variables remain the same
+        self.assertEqual(start_date_query, datetime.datetime(2016, 01, 01, 0, 0, 0, 0))
+        self.assertEqual(end_date_query, datetime.datetime(2016, 01, 31, 23, 59, 59, 999999))
 
     def test_get_previous_year(self):
         year = "2015"
