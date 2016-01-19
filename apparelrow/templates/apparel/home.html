@@ -52,6 +52,7 @@
 <body class="home">
     {# Header #}
     <header role="banner">
+        <a class="menu-toggler" href="#"><span></span></a>
         <nav role="navigation">
             <ul>
                 <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
@@ -71,23 +72,15 @@
     </header>
 
     <main role="main">
-        {# Intro #}
-        <section class="home-intro">
-            <div class="background-image" style="background-image: url({% static 'images/poster.jpg' %});"></div>
+        {# Welcome #}
+        <section class="home-welcome">
             <div class="splash">
                 <a class="logo" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
-                <h1 class="display">{% trans 'The leading monetization tool for style influencers<span class="wbr"></span> and premium lifestyle media.' %}</h1>
+                <h1 class="display">{% trans 'The leading monetisation tool for style influencers<span class="wbr"></span> and premium lifestyle media.' %}</h1>
                 <p class="preamble">{% trans "With APPRL's smart & simple toolbox, you can create great shoppable content that your fans will love – for your blog, app and social media." %}</p>
-                <a class="btn btn-outline" href="#">{% trans "Apply for invitation" %}</a>
-                </div>
+                <a class="btn btn-scroll btn-outline" href="#" data-scroll="home-apply">{% trans "Apply for invitation" %}</a>
             </div>
-            <!--<div class="background-video">
-                <video autoplay="autoplay" preload="auto" poster="{% static 'images/poster.jpg' %}" loop="loop" muted="true">
-                    <source src="test.webm" type="video/webm">
-                    <source src="{% static 'video/sample.mp4' %}" type="video/mp4">
-                </video>
-            </div>-->
-            <a class="btn-scroll" href="#" data-scroll="home-users"><i class="fa fa-angle-down"></i></a>
+            <a class="btn-guide btn-scroll" href="#" data-scroll="home-users"><i class="fa fa-angle-down"></i></a>
             <p class="crosslink">{% trans 'Looking for <a href="http://apprl.com/community">APPRL Community</a>?' %}</p>
         </section>
 
@@ -96,24 +89,81 @@
             <div class="container">
                 <h1>{% trans "Used by top influencers & media" %}</h1>
                 <p>{% trans "Style bloggers, magazines and other influencers choose to use APPRL to earn money on product recommendations in their content. APPRL’s simple & flexible toolbox enables them to easily share the products they love with their fans and get rewarded for the clicks they generate." %}</p>
+                <ul class="list-brands">
+                    <li><img src="{% static 'images/influencer_logos/men-with.gif' %}" alt="Men With"></li>
+                    <li><img src="{% static 'images/influencer_logos/elle.gif' %}" alt="ELLE"></li>
+                    <li><img src="{% static 'images/influencer_logos/carolines-mode.gif' %}" alt="Carolines Mode"></li>
+                    <li><img src="{% static 'images/influencer_logos/metro-mode.gif' %}" alt="Metro Mode"></li>
+                    <li><img src="{% static 'images/influencer_logos/project-runway.gif' %}" alt="Project Runway"></li>
+                    <li><img src="{% static 'images/influencer_logos/nettavisen.gif' %}" alt="Nettavisen"></li>
+                    <li><img src="{% static 'images/influencer_logos/caroline-berg-eriksen.gif' %}" alt="Caroline Berg Eriksen"></li>
+                    <li><img src="{% static 'images/influencer_logos/andrea-brodin.gif' %}" alt="Andrea Brodin"></li>
+                    <li><img src="{% static 'images/influencer_logos/berlingske.gif' %}" alt="Berlingske"></li>
+                    <li><img src="{% static 'images/influencer_logos/sania-claus-demina.gif' %}" alt="Sania Claus Demina"></li>
+                    <li><img src="{% static 'images/influencer_logos/nojesguiden.gif' %}" alt="Nöjesguiden"></li>
+                    <li><img src="{% static 'images/influencer_logos/petra-tungarden.gif' %}" alt="Petra Tungården"></li>
+                </ul>
             </div>
         </section>
+
+        <hr>
+
+        {# Tools #}
+        <section class="home-tools">
+            <div class="container">
+                <h1>{% trans "Create great shoppable content that your fans will love" %}</h1>
+            </div>
+
+            <div class="tools-preview">
+                <div class="feature first">
+                    <div class="tools-display">
+                        <div id="tools-demo">
+                            <img src="{% static 'images/tools-demo-1.jpg' %}" class="active" alt="">
+                            <img src="{% static 'images/tools-demo-2.jpg' %}" alt="">
+                            <img src="{% static 'images/tools-demo-3.jpg' %}" alt="">
+                        </div>
+                    </div>
+                    <div class="tools-description">
+                        <h2>{% trans "Create shoppable content for all platforms" %}</h2>
+                        <p>{% trans "With APPRL, you can make your content shoppable through a range of formats, create interactive collage, link your text & photos and create your own shop in minutes." %}</p>
+                    </div>
+                </div>
+
+                <div class="feature second">
+                    <div class="tools-description">
+                        <h2>{% trans "The APPRL editor" %}</h2>
+                        <p>{% trans "Create shops, looks and other content from any device with the APPRL editor and publish to your blog, site or social media." %}</p>
+                    </div>
+                    <div class="tools-display"><img src="{% static 'images/tools-platforms.jpg' %}" alt=""></div>
+                </div>
+            </div>
+        </section>
+
+        <hr>
 
         {# Brands #}
         <section class="home-brands">
             <div class="container">
                 <h1>{% trans "Get access to top retailers & brands" %}</h1>
                 <p>{% trans "Get rewarded by featuring products and driving traffic to the world’s leading online retailers. APPRL can offer high rewards since we’re exclusively working with premium media & influencers." %}</p>
+                <ul class="list-brands">
+                    <li><img src="{% static 'images/retailers/Net-A-Porter-logo-Apprl-home.gif' %}" alt="Net-A-Porter"></li>
+                    <li><img src="{% static 'images/retailers/Asos-logo-Apprl-home.gif' %}" alt="ASOS"></li>
+                    <li><img src="{% static 'images/retailers/Luisa-Viaroma-logo-Apprl-home.gif' %}" alt="Luisa Viaroma"></li>
+                    <li><img src="{% static 'images/retailers/Acne-Studios-logo-Apprl-home.gif' %}" alt="Acne Studios"></li>
+                    <li><img src="{% static 'images/retailers/Mr-Porter-logo-Apprl-home.gif' %}" alt="Mr Porter"></li>
+                    <li><img src="{% static 'images/retailers/Burberry-logo-Apprl-home.gif' %}" alt="Burberry"></li>
+                    <li><img src="{% static 'images/retailers/The-Outnet-logo-Apprl-home.gif' %}" alt="The Outnet"></li>
+                    <li><img src="{% static 'images/retailers/Alexander-Wang-logo-Apprl-home.gif' %}" alt="Alexander Wang"></li>
+                    <li><img src="{% static 'images/retailers/Nelly-logo-Apprl-home.gif' %}" alt="Nelly"></li>
+                    <li><img src="{% static 'images/retailers/Saint-Laurent-logo-Apprl-home.gif' %}" alt="Saint Laurent"></li>
+                    <li><img src="{% static 'images/retailers/Isabel-Marant-logo-Apprl-home.gif' %}" alt="Isabel Marant"></li>
+                    <li><img src="{% static 'images/retailers/GinaTricot-logo-Apprl-home.gif' %}" alt="Gina Tricot"></li>
+                </ul>
             </div>
         </section>
 
-        {# Tools #}
-        <section class="home-tools">
-            <div class="container">
-                <h1>{% trans "Create great shoppable content that your fans will love" %}</h1>
-                <p>Lorem ipsum dolor sit amet, minim molestie argumentum est at, pri legere torquatos instructior ex. Vis id odio atomorum oportere, quem modo fabellas sit at, dicat semper est ne. Apeirian detraxit pri eu.</p>
-            </div>
-        </section>
+        <hr>
 
         {# Apply #}
         <section class="home-apply">
@@ -121,31 +171,66 @@
                 <a class="logo">
                 <h1>{% trans "Apply for an invitation" %}</h1>
                 <p>{% trans "As a member of the APPRL network, you'll get access to our range of tools, access to the best retailers, high rewards and support from our team to help you grow, maximise your earnings and learn more about your audience. To ensure a high quality of the APPRL network of style influencers & media, we kindly ask you to apply for an invitation." %}</p>
-                <form>
-                    <input type="text" name="name" required>
-                    <input type="email" name="email" required>
-                    <input type="submit" value="{% trans 'Submit Application' %}">
-                </form>
+                <div class="form-container">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-is-6">
+                                <div class="form-group{% if form.name.errors %} has-error{% endif %}">
+                                    <label for="id_{{ form.name.html_name }}">{% trans "Name" %}</label>
+                                    <input name="{{ form.name.html_name }}" type="text" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+                                    {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-is-6">
+                                <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+                                    <label for="id_{{ form.email.html_name }}">{% trans "Email" %}</label>
+                                    <input name="{{ form.email.html_name }}" type="text" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                                    {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-is-6">
+                                <div class="form-group{% if form.blog.errors %} has-error{% endif %}">
+                                    <label for="id_{{ form.blog.html_name }}">Url</label>
+                                    <input name="{{ form.blog.html_name }}" type="text" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}">
+                                    {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-is-6">
+                                <div class="form-group{% if form.traffic.errors %} has-error{% endif %}">
+                                    <label for="id_{{ form.traffic.html_name }}">{% trans "Unique visitors / month or no. of followers" %}</label>
+                                    <input name="{{ form.traffic.html_name }}" type="text" id="id_{{ form.traffic.html_name }}">
+                                    {% if form.traffic.errors %}<span class="help-block">{{ form.traffic.errors.as_text }}</span>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-white">{% trans "Submit Application" %}</button>
+                    </form>
+                </div>
             </div>
         </section>
+
+        <hr>
 
         {# Featured #}
         <section class="home-featured">
             <div class="container">
                 <h1>{% trans "Featured In" %}</h1>
                 <ul class="list-brands">
-                    <li><img src="{% static 'images/featured_logos/fokus.gif' %}" alt="Fokus"></li>
-                    <li><img src="{% static 'images/featured_logos/computer-sweden.gif' %}" alt="Computer Sweden"></li>
-                    <li><img src="{% static 'images/featured_logos/breakit.gif' %}" alt="Breakit"></li>
-                    <li><img src="{% static 'images/featured_logos/internetworld.gif' %}" alt="Internet World"></li>
-                    <li><img src="{% static 'images/featured_logos/dagens-media.gif' %}" alt="Dagens Media"></li>
-                    <li><img src="{% static 'images/featured_logos/resume.gif' %}" alt="Resumé"></li>
-                    <li><img src="{% static 'images/featured_logos/sss.gif' %}" alt="Startup Space Sweden"></li>
-                    <li><img src="{% static 'images/featured_logos/digitalpodden.gif' %}" alt="Digitalpodden"></li>
-                    <li><img src="{% static 'images/featured_logos/les-assorties.gif' %}" alt="Les Assorties’"></li>
-                    <li><img src="{% static 'images/featured_logos/plaza-kvinna.gif' %}" alt="Plaza Kvinna"></li>
-                    <li><img src="{% static 'images/featured_logos/webrazzi.gif' %}" alt="Webrazzi’"></li>
-                    <li><img src="{% static 'images/featured_logos/cofounder.gif' %}" alt="CoFounder"></li>
+                    <li><img src="{% static 'images/featured_logos/fokus_inverted.gif' %}" alt="Fokus"></li>
+                    <li><img src="{% static 'images/featured_logos/computer-sweden_inverted.gif' %}" alt="Computer Sweden"></li>
+                    <li><img src="{% static 'images/featured_logos/breakit_inverted.gif' %}" alt="Breakit"></li>
+                    <li><img src="{% static 'images/featured_logos/internetworld_inverted.gif' %}" alt="Internet World"></li>
+                    <li><img src="{% static 'images/featured_logos/dagens-media_inverted.gif' %}" alt="Dagens Media"></li>
+                    <li><img src="{% static 'images/featured_logos/resume_inverted.gif' %}" alt="Resumé"></li>
+                    <li><img src="{% static 'images/featured_logos/sss_inverted.gif' %}" alt="Startup Space Sweden"></li>
+                    <li><img src="{% static 'images/featured_logos/digitalpodden_inverted.gif' %}" alt="Digitalpodden"></li>
+                    <li><img src="{% static 'images/featured_logos/les-assorties_inverted.gif' %}" alt="Les Assorties’"></li>
+                    <li><img src="{% static 'images/featured_logos/plaza-kvinna_inverted.gif' %}" alt="Plaza Kvinna"></li>
+                    <li><img src="{% static 'images/featured_logos/webrazzi_inverted.gif' %}" alt="Webrazzi’"></li>
+                    <li><img src="{% static 'images/featured_logos/cofounder_inverted.gif' %}" alt="CoFounder"></li>
                 </ul>
             </div>
         </section>
@@ -188,42 +273,78 @@
         </div>
     </footer>
 
-    <a class="btn-scroll scroll-top" href="#"><i class="fa fa-angle-up"></i>
-
     <script>
-        $(document).ready(function() {
-            var anchor = $('.home-intro').offset().top + $('.home-intro').outerHeight();
-            console.log(anchor);
-            $(window).on('scroll', function() {
-                if ($(window).scrollTop() > anchor)
-                    console.log('scroll past intro');
-                    $('header').addClass('expand');
-                if ($(window).scrollTop() < anchor)
-                    console.log('scroll back to intro');
-                    $('header').removeClass('expand');
-            });
-        });
+        var mobile = false;
+        if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            mobile = true;
+        }
 
-        $(function(){
-            $(document).on( 'scroll', function(){
-                if ($(window).scrollTop() > 100) {
-                    $('.scroll-top').fadeIn(200);
-                } else {
-                    $('.scroll-top').fadeOut(200);
+        $(document).ready(function() {
+            if ( mobile == true ) {
+                $('.home-welcome').append('<div class="background-image" style="background-image: url({% static 'video/poster.jpg' %});"></div>');
+            }
+            else {
+                $('.home-welcome').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static 'video/poster.jpg' %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');
+            }
+
+            var anchor = $('.home-welcome').offset().top + $('.home-welcome').outerHeight(),
+                scroll = false;
+
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() >= anchor) {
+                    $('header').addClass('expand');
+                    scroll = true;
+                }
+                if ($(window).scrollTop() < anchor && scroll == true) {
+                    $('header').removeClass('expand');
                 }
             });
-            $('.scroll-top').on('click', scrollToTop);
+
+            $('.btn-scroll').click(function(e) {
+                $('html, body').animate({scrollTop: $('.' + $(this).data('scroll')).offset().top - 30}, 1000);
+                e.preventDefault();
+            });
+
+            $('.menu-toggler').click(function(e) {
+                $(this).toggleClass('active');
+                $('nav').toggleClass('active');
+                e.preventDefault();
+            });
         });
-        function scrollToTop() {
-            verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
-            element = $('body');
-            offset = element.offset();
-            offsetTop = offset.top;
-            $('html, body').animate({scrollTop: offsetTop}, 500, 'linear');
-        }
+
+        // Image slideshow
+        (function(window) {
+            SlideCrossFade = {
+                container: 'tools-demo',
+                displayTime: 5000,
+                fadeTime: 1500,
+
+                start: function() {
+                    var self = this;
+                    $('#' + this.container + ' img').show();
+                    setInterval(function() { self.next(); }, this.displayTime);
+                },
+
+                next: function() {
+                    var $active = $('#' + this.container + ' .active');
+                    var $next = ($active.next().length > 0) ? $active.next() : $('#' + this.container + ' img:first');
+                    $next.css('z-index', 2);
+
+                    $active.fadeOut(this.fadeTime, function() {
+                        $active.css('z-index', 1).show().removeClass('active');
+                        $next.css('z-index', 3).addClass('active');
+                    });
+                }
+            };
+            window.SlideCrossFade = SlideCrossFade;
+        })(this);
+
+        $(window).load(function() {
+            SlideCrossFade.start();
+        });
     </script>
 
-    <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>
+    <script type="text/javascript" src="{% static 'js/money.min.js' %}"></script>
     <script type="text/javascript">
         fx.base = 'SEK';
         fx.rates = {

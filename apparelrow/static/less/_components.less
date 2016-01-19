@@ -187,24 +187,22 @@
 	line-height: 44px;
 	background-color: transparent;
 	border: 2px solid white;
-	&:hover {
-		background-color: white;
+	&:hover, &:focus, &:active {
+		background-color: white !important;
 		color: black !important;
 	}
 	@media (min-width: @screen-sm) {
 		line-height: 34px;
 	}
 }
-/*
-Utvädera om denna behövs?
-section .btn {
-	margin-left: auto;
-	margin-right: auto;
-	@media (min-width: @screen-md) {
-		margin-left: initial;
-		margin-right: initial;
+.btn-outline.inverted {
+	border-color: black;
+	color: black !important;
+	&:hover, &:focus, &:active {
+		background-color: black !important;
+		color: white !important;
 	}
-}*/
+}
 
 /* Navigation ---------- */
 .sidebar {
@@ -256,7 +254,7 @@ section .btn {
 		visibility: visible;
 	}
 }
-.btn-scroll {
+.btn-guide {
 	border-radius: 50%;
 	width: 44px;
 	height: 44px;
@@ -265,9 +263,6 @@ section .btn {
 	color: white;
 	line-height: 44px;
 	font-size: 24px;
-	&:hover, &:focus, &:active {
-		color: white;
-	}
 	i {
 		vertical-align: middle;
 	}
@@ -631,6 +626,13 @@ section .btn {
 	font-size: 0;
 	letter-spacing: 0;
 	max-width: 720px;
+	img {
+		opacity: .6;
+		.animate;
+		&:hover {
+			opacity: 1;
+		}
+	}
 	li {
 		display: inline-block;
 		width: 50%;
@@ -814,13 +816,12 @@ section .btn {
   }
 }
 .overlay {
-	position: absolute;
-	top: 50%;
-	width: 100%;
-	text-align: center;
-	-ms-transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-	transform: translateY(-50%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.25);
 }
 .share {
 	margin-top: 15px;
@@ -963,4 +964,21 @@ a.info {
 	background-repeat: no-repeat;
 	width: 100%;
 	height: 100vh;
+}
+.splash {
+    padding: 0 15px;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    h1, p {
+    	color: white !important;
+    }
+    .btn {
+    	margin: auto;
+    }
 }

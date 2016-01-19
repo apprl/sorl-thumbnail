@@ -36,7 +36,7 @@ def facebook_button(context, text=None, next=None, connect=False, disable_flow=F
         next = context['next']
 
     if text is None:
-        text = _('Login with Facebook')
+        text = _('Continue with Facebook')
     else:
         text = _(text)
 
