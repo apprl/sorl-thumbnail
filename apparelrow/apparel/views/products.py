@@ -113,9 +113,12 @@ FACET_PRICE_TRANSLATION = {
 def product_detail_popup(request, pk):
     product = get_object_or_404(get_model('apparel', 'Product'), pk=pk)
 
+    is_liked = False
+    if request.user.is_authenticated():
+        is_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product, active=True).exists()
     type = request.GET.get('type', 'look')
 
-    return render(request, 'apparel/fragments/product_popup.html', {'object': product, 'type': type})
+    return render(request, 'apparel/fragments/product_popup.html', {'object': product, 'type': type, 'is_liked': is_liked})
 
 
 class ProductList(View):
