@@ -46,7 +46,7 @@ $(document).ready(function() {
             {% include 'apparel/fragments/follow.html' %}
             {% endif %}
             {% if request.user.is_authenticated and request.user == profile %}
-            <a class="btn btn-edit" href="#"><i class="fa fa-pencil"></i></a>
+            <a class="btn btn-edit btn-change-description" href="#"><i class="fa fa-pencil"></i></a>
             {% endif %}
             {% if profile and profile.is_brand and profile.translated_manual_about %}
             <p class="description">{{ profile.translated_manual_about|urlize_target_blank|linebreaksbr }}</p>
@@ -55,11 +55,11 @@ $(document).ready(function() {
             {% endif %}
 
             {% if request.user.is_authenticated and request.user == profile %}
-            <form id="description-form" class="hidden" method="post" action="{% url 'settings-save-description' %}">
+            <form id="description-form" method="post" action="{% url 'settings-save-description' %}" style="display: none;">
                 {% csrf_token %}
                 <textarea class="form-control" rows="5" name="description">{{ profile.about }}</textarea>
-                <button class="btn btn-primary">{% trans "Save description" %}</button>
-                <button class="btn btn-secondary">{% trans "Cancel" %}</button>
+                <button class="btn btn-primary btn-save-description">{% trans "Save description" %}</button>
+                <button class="btn btn-secondary btn-cancel-description">{% trans "Cancel" %}</button>
             </form>
             {% endif %}
         </div>
