@@ -32,7 +32,7 @@ $(document).ready(function() {
 <div class="profile-header">
     <div class="container">
         <div id="profile-image">
-            <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_large }}"></a>
+            <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_circular_large }}"></a>
             {% if request.user.is_authenticated and request.user == profile %}
             <a class="btn btn-edit" href="#edit"><i class="fa fa-camera"></i></a>
             {% comment %}<a href="#cancel" class="btn btn-secondary hidden">{% trans "Cancel" %}</a>{% endcomment %}
