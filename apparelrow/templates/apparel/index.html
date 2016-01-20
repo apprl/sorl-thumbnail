@@ -12,7 +12,7 @@
     {% for language in LANGUAGES_DISPLAY %}
     <link rel="alternate" hreflang="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">
     {% endfor %}
-    <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
+    <link rel="icon" href="{% static "images/favicon.png" %}">
     <link rel="apple-touch-icon" sizes="120x120" href="{% static "images/apple-touch-icon-120x120.png" %}">
     <link rel="apple-touch-icon" sizes="152x152" href="{% static "images/apple-touch-icon-152x152.png" %}">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
@@ -49,8 +49,30 @@
         })();
     </script>
 </head>
-<body class="community">
+<body class="front community">
+    {# Header #}
+    <header role="banner">
+        <a class="menu-toggler" href="#"><span></span></a>
+        <nav role="navigation">
+            <ul>
+                <li><a href="{% url 'index' %}"><span>{% trans "For Publishers" %}</span></a></li>
+                <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>International&nbsp;<b class="caret"></b></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Swedish</a></li>
+                        <li><a href="#">Danish</a></li>
+                        <li><a href="#">Norwegian</a></li>
+                        <li><a href="#">Finnish</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
     <main role="main">
+
         {# Welcome #}
         <section class="community-welcome">
             <div class="background-image" style="background-image: url({% static 'images/community.jpg' %});"></div>
@@ -63,17 +85,17 @@
                         <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
                         <input name="username" type="email" id="inputEmail" placeholder="{% trans 'Email' %}">
                         <input name="password" type="password" id="inputPassword" placeholder="{% trans 'Password' %}">
-                        <div class="login-options">
+                        <!--<div class="login-options">
                             <label><input type="checkbox"><span><i class="fa fa-check"></i></span>{% trans "Remember me" %}</label>
                             <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
-                        </div>
+                        </div>-->
                         <!--<div class="form-group{% if form.errors %} error{% endif %}">
                             <label for="inputEmail" class="control-label">{% trans "Username / E-mail address" %}</label>
                         </div>
                         <div class="form-group{% if form.errors %} error{% endif %}">
                             <label for="inputPassword" class="control-label">{{ form.password.label }}</label>
                         </div>-->
-                        <button type="submit" class="btn btn-primary">{% trans "Sign Up / Login" %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
                         {% url 'login-flow-redirect' as next_url %}
                         {% if request.GET.next %}
                         {% with next_url|add:"?next="|add:request.GET.next as next_url_extra %}{% facebook_button next=next_url_extra extra_class="btn-facebook-login" %}{% endwith %}
@@ -91,7 +113,7 @@
                             <p>{% blocktrans %}Don't have an account yet? {% endblocktrans %} <a href="{% url 'auth_register' %}">{% trans "Sign up here" %}</a></p>
                         </div>-->
                     </form>
-                    <span>{% trans "Creating an account means you agree to APPRL's" %} <a href="{% url 'auth_register' %}">{% trans "Terms of Service" %}</a></span>
+                    <span>{% trans "Creating an account means you agree to APPRL's" %} <a href="{% url 'auth_register' %}">{% trans "Terms of Service" %}</a>.</span>
                 </div>
             </div>
         </section>
@@ -329,6 +351,25 @@
     <script src="/static/js/jquery/owl.carousel.min.js"></script>
     <script type="text/javascript">
         $(window).load(function() {
+            var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
+                scroll = false;
+
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() >= anchor) {
+                    $('header').addClass('expand');
+                    scroll = true;
+                }
+                if ($(window).scrollTop() < anchor && scroll == true) {
+                    $('header').removeClass('expand');
+                }
+            });
+
+            $('.menu-toggler').click(function(e) {
+                $(this).toggleClass('active');
+                $('nav').toggleClass('active');
+                e.preventDefault();
+            });
+
             $('#slider-publishers').owlCarousel({
                 //autoPlay: 3000,
                 loop: true,

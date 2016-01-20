@@ -12,7 +12,7 @@
     {% for language in LANGUAGES_DISPLAY %}
     <link rel="alternate" hreflang="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">
     {% endfor %}
-    <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
+    <link rel="icon" href="{% static "images/favicon.png" %}">
     <link rel="apple-touch-icon" sizes="120x120" href="{% static "images/apple-touch-icon-120x120.png" %}">
     <link rel="apple-touch-icon" sizes="152x152" href="{% static "images/apple-touch-icon-152x152.png" %}">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
@@ -49,7 +49,28 @@
         })();
     </script>
 </head>
-<body class="home">
+<body class="front home">
+    {# Header #}
+    <header role="banner">
+        <a class="menu-toggler" href="#"><span></span></a>
+        <nav role="navigation">
+            <ul>
+                <li><a href="#"><span>{% trans "For Retailers" %}</span></a></li>
+                <li><a href="#"><span>APPRL Community</span></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>International&nbsp;<b class="caret"></b></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Swedish</a></li>
+                        <li><a href="#">Danish</a></li>
+                        <li><a href="#">Norwegian</a></li>
+                        <li><a href="#">Finnish</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
     <main role="main">
         {# Welcome #}
         <section class="home-welcome">
@@ -211,20 +232,8 @@
     </footer>
 
     <script>
-        /*var mobile = false;
-        if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-            mobile = true;
-        }*/
-
         $(document).ready(function() {
-            /*if ( mobile == true ) {
-                $('.home-intro').append('<div class="background-image" style="background-image: url({% static 'video/poster.jpg' %});"></div>');
-            }
-            else {
-                $('.home-intro').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static 'video/poster.jpg' %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');
-            }
-
-            var anchor = $('.home-intro').offset().top + $('.home-intro').outerHeight(),
+            var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
                 scroll = false;
 
             $(window).on('scroll', function() {
@@ -235,18 +244,18 @@
                 if ($(window).scrollTop() < anchor && scroll == true) {
                     $('header').removeClass('expand');
                 }
-            });*/
+            });
 
             $('.btn-scroll').click(function(e) {
                 $('html, body').animate({scrollTop: $('.' + $(this).data('scroll')).offset().top - 30}, 1000);
                 e.preventDefault();
             });
 
-            /*$('.menu-toggler').click(function(e) {
+            $('.menu-toggler').click(function(e) {
                 $(this).toggleClass('active');
                 $('nav').toggleClass('active');
                 e.preventDefault();
-            });*/
+            });
         });
 
         /*// Image slideshow

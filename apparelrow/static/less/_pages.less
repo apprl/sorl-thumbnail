@@ -1,9 +1,8 @@
 /*
 	Pages v1.0
 
-	- Home (Index)
+	- Home & Retailer (Index)
     - Community (Index)
-	- Retailer (Sign Up)
 	- Search
 	- Log In & Registration
 	- Settings
@@ -15,7 +14,7 @@
 	- Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
 */
 
-/* Home (Index) ---------- */
+/* Home & Retailer (Index) ---------- */
 .home {
     background-color: black;
     main {
@@ -43,97 +42,11 @@
             }
         }
     }
-    header {
-        position: fixed;
-        z-index: 99;
-        width: 100%;
-        height: 60px;
-        background-color: transparent;
-        -webkit-transition: background-color .4s;
-        transition: background-color .4s;
-        &.expand {
-            background-color: #222;
-            background: -moz-linear-gradient(top, #111 0%, #222 100%);
-            background: -webkit-linear-gradient(top, #111 0%, #222 100%);
-            background: linear-gradient(to bottom, #111 0%, #222 100%);
-        }
-    }
-    nav {
-        opacity: 0;
-        padding: 0 30px;
-        box-shadow: none;
-        background-color: rgba(0,0,0,.8);
-        position: fixed;
-        top: 0;
-        left: -100%;
-        z-index: 90;
-        height: 100%;
-        -webkit-transition: opacity .4s ease-in-out;
-        transition: opacity .4s ease-in-out;
-        > ul {
-            margin-top: 54px;
-        }
-        a {
-            color: white;
-            opacity: .8;
-            line-height: 44px;
-            &:hover {
-                opacity: 1;
-                color: white;
-            }
-        }
-        .dropdown-toggle {
-            color: white !important;
-        }
-        .dropdown-menu {
-            background-color: transparent;
-            box-shadow: none;
-            li {
-                float: none;
-                margin: 0;
-                &:last-child, &:nth-last-child(2) {
-                    float: none;
-                }
-            }
-            a {
-                color: white;
-            }
-        }
-        @media (min-width: @screen-sm) {
-            margin: 0 auto;
-            max-width: 1140px;
-            line-height: 60px;
-            position: static;
-            display: block;
-            background-color: transparent;
-            opacity: 1;
-            > ul {
-                margin: 0;
-            }
-            li {
-                float: left;
-                margin-right: 30px;
-                &:last-child, &:nth-last-child(2) {
-                    float: right;
-                }
-                &:nth-last-child(2) {
-                    margin: 0;
-                }
-            }
-            .dropdown-menu {
-                background-color: rgba(255,255,255,.2);
-            }
-        }
-        &.active {
-            left: 0;
-            opacity: 1;
-        }
-    }
     footer {
         background-color: #222;
-        background: -moz-linear-gradient(top, #111 0%, #222 100%);
-        background: -webkit-linear-gradient(top, #111 0%, #222 100%);
-        background: linear-gradient(to bottom, #111 0%, #222 100%);
+        background: -moz-linear-gradient(top, #111 0%, #333 100%);
+        background: -webkit-linear-gradient(top, #111 0%, #333 100%);
+        background: linear-gradient(to bottom, #111 0%, #333 100%);
         a:hover {
             color: white;
         }
@@ -221,60 +134,6 @@
             margin-bottom: 15px;
         }
     }
-    .menu-toggler {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 44px;
-        height: 44px;
-        z-index: 100;
-        display: inline-block;
-        span {
-            background-color: white;
-            position: absolute;
-            width: 24px;
-            height: 4px;
-            top: 20px;
-            left: 10px;
-            .animate;
-            &:before, &:after {
-                position: absolute;
-                height: 4px;
-                content: "";
-                display: block;
-                background-color: white;
-                width: 24px;
-                .animate;
-            }
-            &:before {
-                top: -8px;
-            }
-            &:after {
-                bottom: -8px;
-            }
-        }
-        &.active span {
-            background-color: transparent;
-            &:before, &:after {
-                background: white;
-                top: 0;
-            }
-            &:before {
-                -ms-transform: rotate(45deg);
-                -webkit-transform: rotate(45deg);
-                transform: rotate(45deg);
-            }
-            &:after {
-                -ms-transform: translateY(-8px) rotate(-45deg);
-                -webkit-transform: translateY(-8px) rotate(-45deg);
-                transform: translateY(-8px) rotate(-45deg);
-                top: 8px;
-            }
-        }
-        @media (min-width: @screen-sm) {
-            display: none;
-        }
-    }
     .tools-preview {
         max-width: @screen-lg;
         margin: auto;
@@ -343,6 +202,11 @@
 
 /* Community (Index) ---------- */
 .community {
+    @media (min-width: @screen-sm) {
+        header .dropdown-menu {
+            background-color: rgba(0,0,0,.4) !important;
+        }
+    }
     main {
         text-align: center;
         padding: 0;
@@ -406,12 +270,12 @@
             font-size: 13px;
             color: white !important;
         }
-        .btn-facebook {
+        /*.btn-facebook {
             margin-bottom: 15px;
             max-width: 320px !important;
             height: 34px !important;
             line-height: 36px !important;
-        }
+        }*/
         .login-options {
             .clearfix;
             max-width: 320px;
