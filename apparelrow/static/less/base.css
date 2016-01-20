@@ -7019,6 +7019,7 @@ body {
 /*
 	Components v1.0
 
+	- Landing page elements
 	- Avatars
 	- Links
 	- Buttons
@@ -7027,8 +7028,184 @@ body {
 	- Lists
 	- Notifications
 	- Panels & Filters
-	- Misc
+	- Miscellaneous
 */
+/* Landing page elements ---------- */
+.front header {
+  position: fixed;
+  z-index: 99;
+  width: 100%;
+  height: 60px;
+  background-color: transparent;
+  -webkit-transition: background-color 0.4s;
+  transition: background-color 0.4s;
+}
+.front header.expand {
+  background-color: #222;
+  background: -moz-linear-gradient(top, #111111 0%, #222222 100%);
+  background: -webkit-linear-gradient(top, #111111 0%, #222222 100%);
+  background: linear-gradient(to bottom, #111111 0%, #222222 100%);
+}
+.front nav {
+  opacity: 0;
+  padding: 0 30px;
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  top: 0;
+  left: -100%;
+  z-index: 90;
+  height: 100%;
+  -webkit-transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
+}
+.front nav > ul {
+  margin-top: 54px;
+}
+.front nav a {
+  color: white;
+  line-height: 44px;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
+}
+.front nav a:hover {
+  color: white;
+  border-color: white;
+}
+.front nav .dropdown-toggle {
+  color: white !important;
+}
+.front nav .dropdown-menu {
+  background-color: transparent;
+  box-shadow: none;
+}
+.front nav .dropdown-menu li {
+  float: none;
+  margin: 0;
+}
+.front nav .dropdown-menu li:last-child,
+.front nav .dropdown-menu li:nth-last-child(2) {
+  float: none;
+}
+.front nav .dropdown-menu a {
+  color: white;
+  border: 0;
+  padding-bottom: 0;
+}
+@media (min-width: 768px) {
+  .front nav {
+    margin: 0 auto;
+    max-width: 1140px;
+    line-height: 60px;
+    position: static;
+    display: block;
+    background-color: transparent;
+    opacity: 1;
+  }
+  .front nav > ul {
+    margin: 0;
+  }
+  .front nav li {
+    float: left;
+    margin-right: 30px;
+  }
+  .front nav li:last-child,
+  .front nav li:nth-last-child(2) {
+    float: right;
+  }
+  .front nav li:nth-last-child(2) {
+    margin: 0;
+  }
+  .front nav .dropdown-menu {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+.front nav.active {
+  left: 0;
+  opacity: 1;
+}
+.front .btn {
+  max-width: 240px;
+  margin: auto;
+}
+.front .splash {
+  padding: 0 15px;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.front .splash h1,
+.front .splash p {
+  color: white !important;
+}
+.front .menu-toggler {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  z-index: 100;
+  display: inline-block;
+}
+.front .menu-toggler span {
+  background-color: white;
+  position: absolute;
+  width: 24px;
+  height: 4px;
+  top: 20px;
+  left: 10px;
+  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.front .menu-toggler span:before,
+.front .menu-toggler span:after {
+  position: absolute;
+  height: 4px;
+  content: "";
+  display: block;
+  background-color: white;
+  width: 24px;
+  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.front .menu-toggler span:before {
+  top: -8px;
+}
+.front .menu-toggler span:after {
+  bottom: -8px;
+}
+.front .menu-toggler.active span {
+  background-color: transparent;
+}
+.front .menu-toggler.active span:before,
+.front .menu-toggler.active span:after {
+  background: white;
+  top: 0;
+}
+.front .menu-toggler.active span:before {
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.front .menu-toggler.active span:after {
+  -ms-transform: translateY(-8px) rotate(-45deg);
+  -webkit-transform: translateY(-8px) rotate(-45deg);
+  transform: translateY(-8px) rotate(-45deg);
+  top: 8px;
+}
+@media (min-width: 768px) {
+  .front .btn {
+    max-width: 320px;
+  }
+  .front .menu-toggler {
+    display: none;
+  }
+}
 /* Avatars ---------- */
 .profile-icon {
   border-radius: 50%;
@@ -7152,6 +7329,7 @@ body {
   background-color: #eeeeee;
 }
 .btn-facebook {
+  font-size: 13px;
   background-color: #3b5999 !important;
 }
 .btn-facebook:hover,
@@ -7856,7 +8034,7 @@ body {
 .panel-heading .btn {
   margin: 0;
 }
-/* Misc ---------- */
+/* Miscellaneous ---------- */
 .img-block {
   display: block;
   width: 32px;
@@ -8036,24 +8214,6 @@ a.info:hover {
   background-repeat: no-repeat;
   width: 100%;
   height: 100vh;
-}
-.splash {
-  padding: 0 15px;
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  z-index: 10;
-  -ms-transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-.splash h1,
-.splash p {
-  color: white !important;
-}
-.splash .btn {
-  margin: auto;
 }
 /*
     Attributes v1.0
@@ -8424,9 +8584,8 @@ textarea:focus {
 /*
 	Pages v1.0
 
-	- Home (Index)
+	- Home & Retailer (Index)
     - Community (Index)
-	- Retailer (Sign Up)
 	- Search
 	- Log In & Registration
 	- Settings
@@ -8437,7 +8596,7 @@ textarea:focus {
     - Onboarding
 	- Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
 */
-/* Home (Index) ---------- */
+/* Home & Retailer (Index) ---------- */
 .home {
   background-color: black;
 }
@@ -8470,101 +8629,11 @@ textarea:focus {
     margin-bottom: 30px;
   }
 }
-.home header {
-  position: fixed;
-  z-index: 99;
-  width: 100%;
-  height: 60px;
-  background-color: transparent;
-  -webkit-transition: background-color 0.4s;
-  transition: background-color 0.4s;
-}
-.home header.expand {
-  background-color: #222;
-  background: -moz-linear-gradient(top, #111111 0%, #222222 100%);
-  background: -webkit-linear-gradient(top, #111111 0%, #222222 100%);
-  background: linear-gradient(to bottom, #111111 0%, #222222 100%);
-}
-.home nav {
-  opacity: 0;
-  padding: 0 30px;
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.8);
-  position: fixed;
-  top: 0;
-  left: -100%;
-  z-index: 90;
-  height: 100%;
-  -webkit-transition: opacity 0.4s ease-in-out;
-  transition: opacity 0.4s ease-in-out;
-}
-.home nav > ul {
-  margin-top: 54px;
-}
-.home nav a {
-  color: white;
-  opacity: .8;
-  line-height: 44px;
-}
-.home nav a:hover {
-  opacity: 1;
-  color: white;
-}
-.home nav .dropdown-toggle {
-  color: white !important;
-}
-.home nav .dropdown-menu {
-  background-color: transparent;
-  box-shadow: none;
-}
-.home nav .dropdown-menu li {
-  float: none;
-  margin: 0;
-}
-.home nav .dropdown-menu li:last-child,
-.home nav .dropdown-menu li:nth-last-child(2) {
-  float: none;
-}
-.home nav .dropdown-menu a {
-  color: white;
-}
-@media (min-width: 768px) {
-  .home nav {
-    margin: 0 auto;
-    max-width: 1140px;
-    line-height: 60px;
-    position: static;
-    display: block;
-    background-color: transparent;
-    opacity: 1;
-  }
-  .home nav > ul {
-    margin: 0;
-  }
-  .home nav li {
-    float: left;
-    margin-right: 30px;
-  }
-  .home nav li:last-child,
-  .home nav li:nth-last-child(2) {
-    float: right;
-  }
-  .home nav li:nth-last-child(2) {
-    margin: 0;
-  }
-  .home nav .dropdown-menu {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-}
-.home nav.active {
-  left: 0;
-  opacity: 1;
-}
 .home footer {
   background-color: #222;
-  background: -moz-linear-gradient(top, #111111 0%, #222222 100%);
-  background: -webkit-linear-gradient(top, #111111 0%, #222222 100%);
-  background: linear-gradient(to bottom, #111111 0%, #222222 100%);
+  background: -moz-linear-gradient(top, #111111 0%, #333333 100%);
+  background: -webkit-linear-gradient(top, #111111 0%, #333333 100%);
+  background: linear-gradient(to bottom, #111111 0%, #333333 100%);
 }
 .home footer a:hover {
   color: white;
@@ -8656,66 +8725,6 @@ textarea:focus {
     margin-bottom: 15px;
   }
 }
-.home .menu-toggler {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 44px;
-  height: 44px;
-  z-index: 100;
-  display: inline-block;
-}
-.home .menu-toggler span {
-  background-color: white;
-  position: absolute;
-  width: 24px;
-  height: 4px;
-  top: 20px;
-  left: 10px;
-  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.home .menu-toggler span:before,
-.home .menu-toggler span:after {
-  position: absolute;
-  height: 4px;
-  content: "";
-  display: block;
-  background-color: white;
-  width: 24px;
-  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.home .menu-toggler span:before {
-  top: -8px;
-}
-.home .menu-toggler span:after {
-  bottom: -8px;
-}
-.home .menu-toggler.active span {
-  background-color: transparent;
-}
-.home .menu-toggler.active span:before,
-.home .menu-toggler.active span:after {
-  background: white;
-  top: 0;
-}
-.home .menu-toggler.active span:before {
-  -ms-transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-.home .menu-toggler.active span:after {
-  -ms-transform: translateY(-8px) rotate(-45deg);
-  -webkit-transform: translateY(-8px) rotate(-45deg);
-  transform: translateY(-8px) rotate(-45deg);
-  top: 8px;
-}
-@media (min-width: 768px) {
-  .home .menu-toggler {
-    display: none;
-  }
-}
 .home .tools-preview {
   max-width: 1200px;
   margin: auto;
@@ -8783,6 +8792,11 @@ textarea:focus {
   }
 }
 /* Community (Index) ---------- */
+@media (min-width: 768px) {
+  .community header .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+  }
+}
 .community main {
   text-align: center;
   padding: 0;
@@ -8818,6 +8832,12 @@ textarea:focus {
   height: 100vh;
   margin: 0;
   background-color: black;
+  /*.btn-facebook {
+            margin-bottom: 15px;
+            max-width: 320px !important;
+            height: 34px !important;
+            line-height: 36px !important;
+        }*/
 }
 .community .community-welcome label input[type="checkbox"] + span {
   border-color: #333333;
@@ -8850,12 +8870,6 @@ textarea:focus {
   margin-top: 15px;
   font-size: 13px;
   color: white !important;
-}
-.community .community-welcome .btn-facebook {
-  margin-bottom: 15px;
-  max-width: 320px !important;
-  height: 34px !important;
-  line-height: 36px !important;
 }
 .community .community-welcome .login-options {
   zoom: 1;

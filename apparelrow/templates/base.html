@@ -13,7 +13,7 @@
     {% for language in LANGUAGES_DISPLAY %}
     <link rel="alternate" hreflang="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">
     {% endfor %}
-    <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
+    <link rel="icon" href="{% static "images/favicon.png" %}">
     <link rel="apple-touch-icon" sizes="120x120" href="{% static "images/apple-touch-icon-120x120.png" %}">
     <link rel="apple-touch-icon" sizes="152x152" href="{% static "images/apple-touch-icon-152x152.png" %}">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
