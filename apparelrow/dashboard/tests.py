@@ -17,9 +17,13 @@ from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
 from apparelrow.dashboard.utils import *
+from apparelrow.dashboard.admin import SaleAdmin
 from apparelrow.dashboard.views import publisher_contact
 from apparelrow.apparel.utils import currency_exchange
+from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
+from django.contrib.admin.sites import AdminSite
+
 
 from apparelrow.statistics.factories import *
 
@@ -2255,6 +2259,7 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(invalid_clicks[1], 152)
         self.assertEqual(invalid_clicks[2], 248)
 
+
 class TestAggregatedData(TransactionTestCase):
     def setUp(self):
         self.group = get_model('dashboard', 'Group').objects.create(name='group_name')
@@ -2353,3 +2358,83 @@ class TestAggregatedData(TransactionTestCase):
 
         top_publishers = get_aggregated_publishers(None, start_date, end_date)
         self.assertEqual(len(top_publishers), 0)
+
+class MockRequest(object):
+    pass
+
+class TestReferralBonus(TransactionTestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('test_user', 'testuser@xvid.se', 'Test User')
+        self.user.is_partner = True
+        self.user.save()
+
+        self.site = AdminSite()
+        self.request_obj = MockRequest()
+
+        self.referral_bonus_dict = {'is_promo': True, 'user_id': self.user.pk, 'affiliate': 'referral_promo',
+                                'cut': '1.0', 'status': Sale.CONFIRMED, 'exchange_rate': '1.0',
+                                'original_sale_id': 'referral_promo_%s' % self.user.pk, 'original_amount': '0.0',
+                                'original_commission': '0.0', 'original_currency': 'EUR', 'amount': '0.0',
+                                'type': Sale.COST_PER_ORDER, 'commission': '0.0',  'currency': 'EUR',
+                                'paid': Sale.PAID_PENDING, 'converted_amount': '0.0', 'converted_commission': '0.0'}
+
+    def test_referral_bonus_from_admin(self):
+        """ Test a referral bonus can be created for a user from Django admin and only one time
+        """
+
+        sale_admin_form = SaleAdminFormCustom(data=self.referral_bonus_dict)
+        self.assertTrue(sale_admin_form.is_valid())
+
+        sale_obj = Sale.objects.create(**self.referral_bonus_dict)
+
+        sa = SaleAdmin(Sale, self.site)
+
+        sa.save_model(request=self.request_obj, obj=sale_obj, form=sale_admin_form, change=False)
+
+        self.assertEqual(Sale.objects.filter(is_promo=True, user_id=self.user.pk).count(), 1)
+
+        referral_bonus = Sale.objects.filter(is_promo=True, user_id=self.user.pk)[0]
+
+        self.assertEqual(referral_bonus.amount, 50)
+        self.assertEqual(referral_bonus.currency, "EUR")
+        self.assertEqual(referral_bonus.original_amount, 50)
+        self.assertEqual(referral_bonus.original_commission, 50)
+        self.assertEqual(referral_bonus.original_currency, "EUR")
+        self.assertEqual(referral_bonus.converted_amount, 50)
+        self.assertEqual(referral_bonus.converted_commission, 50)
+
+        # Test when referral bonus already exists
+        sale_admin_form = SaleAdminFormCustom(data=self.referral_bonus_dict)
+        self.assertFalse(sale_admin_form.is_valid())
+
+    def test_referral_bonus_from_admin_user_does_not_exist(self):
+        """ Test form for create a referral bonus from Django admin is not valid if User with user_id does not exist
+        """
+        no_user_dict =  self.referral_bonus_dict
+        no_user_dict['user_id'] = 9999
+
+        sale_admin_form = SaleAdminFormCustom(data=no_user_dict)
+        self.assertFalse(sale_admin_form.is_valid())
+
+    def test_save_not_referral_bonus_from_admin(self):
+        """ Test more than one sale with exactly the same parameters and with is_promo=False can be created
+        """
+        no_referral_bonus =  self.referral_bonus_dict
+        no_referral_bonus['is_promo'] = False
+
+        sale_admin_form = SaleAdminFormCustom(data=no_referral_bonus)
+        self.assertTrue(sale_admin_form.is_valid())
+
+        sale_obj = Sale.objects.create(**no_referral_bonus)
+
+        sa = SaleAdmin(Sale, self.site)
+        sa.save_model(request=self.request_obj, obj=sale_obj, form=sale_admin_form, change=False)
+        self.assertEqual(Sale.objects.filter(is_promo=False, user_id=self.user.pk).count(), 1)
+
+        # Test when sale with exactly same values already exists
+        sale_admin_form = SaleAdminFormCustom(data=self.referral_bonus_dict)
+        self.assertTrue(sale_admin_form.is_valid())
+        self.assertEqual(Sale.objects.filter(is_promo=False, user_id=self.user.pk).count(), 1)
+
+
