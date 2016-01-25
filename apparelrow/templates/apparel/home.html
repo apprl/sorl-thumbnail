@@ -49,7 +49,7 @@
         })();
     </script>
 </head>
-<body class="front home">
+<body class="front publisher">
     {# Header #}
     <header role="banner">
         <a class="menu-toggler" href="#"><span></span></a>
@@ -73,19 +73,19 @@
 
     <main role="main">
         {# Welcome #}
-        <section class="home-welcome">
+        <section class="publisher-welcome">
             <div class="splash">
                 <a class="logo" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
                 <h1 class="display">{% trans 'The leading monetisation tool for style influencers<span class="wbr"></span> and premium lifestyle media.' %}</h1>
                 <p class="preamble">{% trans "With APPRL's smart & simple toolbox, you can create great shoppable content that your fans will love – for your blog, app and social media." %}</p>
-                <a class="btn btn-scroll btn-outline" href="#" data-scroll="home-apply">{% trans "Apply for invitation" %}</a>
+                <a class="btn btn-scroll btn-outline" href="#" data-scroll="publisher-apply">{% trans "Apply for invitation" %}</a>
             </div>
-            <a class="btn-guide btn-scroll" href="#" data-scroll="home-users"><i class="fa fa-angle-down"></i></a>
+            <a class="btn-scroll btn-arrow" href="#" data-scroll="publisher-users"><i class="fa fa-angle-down"></i></a>
             <p class="crosslink">{% trans 'Looking for <a href="http://apprl.com/community">APPRL Community</a>?' %}</p>
         </section>
 
         {# Users #}
-        <section class="home-users">
+        <section class="publisher-users">
             <div class="container">
                 <h1>{% trans "Used by top influencers & media" %}</h1>
                 <p>{% trans "Style bloggers, magazines and other influencers choose to use APPRL to earn money on product recommendations in their content. APPRL’s simple & flexible toolbox enables them to easily share the products they love with their fans and get rewarded for the clicks they generate." %}</p>
@@ -109,7 +109,7 @@
         <hr>
 
         {# Tools #}
-        <section class="home-tools">
+        <section class="publisher-tools">
             <div class="container">
                 <h1>{% trans "Create great shoppable content that your fans will love" %}</h1>
             </div>
@@ -142,7 +142,7 @@
         <hr>
 
         {# Brands #}
-        <section class="home-brands">
+        <section class="publisher-brands">
             <div class="container">
                 <h1>{% trans "Get access to top retailers & brands" %}</h1>
                 <p>{% trans "Get rewarded by featuring products and driving traffic to the world’s leading online retailers. APPRL can offer high rewards since we’re exclusively working with premium media & influencers." %}</p>
@@ -166,7 +166,7 @@
         <hr>
 
         {# Apply #}
-        <section class="home-apply">
+        <section class="publisher-apply">
             <div class="container">
                 <a class="logo">
                 <h1>{% trans "Apply for an invitation" %}</h1>
@@ -215,7 +215,7 @@
         <hr>
 
         {# Featured #}
-        <section class="home-featured">
+        <section class="publisher-featured">
             <div class="container">
                 <h1>{% trans "Featured In" %}</h1>
                 <ul class="list-brands">
@@ -281,10 +281,10 @@
 
         $(document).ready(function() {
             if ( mobile == true ) {
-                $('.home-welcome').append('<div class="background-image" style="background-image: url({% static 'video/poster.jpg' %});"></div>');
+                $('section:first').append('<div class="background-image" style="background-image: url({% static 'video/poster.jpg' %});"></div>');
             }
             else {
-                $('.home-welcome').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static 'video/poster.jpg' %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');
+                $('section:first').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static 'video/poster.jpg' %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');
             }
 
             var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
