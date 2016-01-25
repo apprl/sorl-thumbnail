@@ -292,7 +292,7 @@ $(document).ready(function() {
     });
     $('#profile-image .btn-cancel').click(function() {
         $('#profile-image .btn-edit').show();
-        $(this).hide().siblings('form').hide();
+        $(this).parent().hide();
         hover_edit_button = true;
         return false;
     });

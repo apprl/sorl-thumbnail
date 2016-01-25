@@ -42,12 +42,13 @@ $(document).ready(function() {
 
 
             <h4>{% trans "Your payment settings" %}</h4>
+
             <div class="form-group{% if details_form.company.errors %} has-error{% endif %}">
                 <label for="id_{{ details_form.company.html_name }}" class="col-sm-2 control-label">{{ details_form.company.label }}</label>
                 <div class="col-sm-10">
                     <ul class="list-unstyled">
                     {% for choice in details_form.company %}
-                        <li>{{ choice.tag }}{{ choice.choice_label }}</li>
+                        <li><label>{{ choice.tag }} <span></span> {{ choice.choice_label }}</label></li>
                     {% endfor %}
                     </ul>
                     {% if details_form.company.errors %}<span class="help-block">{{ details_form.company.errors.as_text }}</span>{% endif %}

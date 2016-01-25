@@ -1150,7 +1150,7 @@ def index(request, gender=None):
             gender = None
         return user_feed(request, gender=gender)
 
-    return render(request, 'apparel/index.html', {'featured': get_featured_activity_today()})
+    return render(request, 'apparel/home.html', {'featured': get_featured_activity_today()})
 
 
 def about(request):
@@ -1167,9 +1167,8 @@ def jobs(request):
 def founders(request):
     return render(request, 'apparel/founders.html')
 
-# Temporary url for new home page (work in progress)
-def home(request):
-    return render(request, 'apparel/home.html')
+def community(request):
+    return render(request, 'apparel/index.html')
 
 # Temporary url for onboarding page (work in progress)
 def onboarding(request):

@@ -708,7 +708,7 @@ def facebook_connect(request):
             request.user.save()
 
             if request.is_ajax():
-                return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
+                return JSONResponse({'uid': request.user.pk, 'next': _get_next(request)})
 
             return HttpResponseRedirect(_get_next(request))
 

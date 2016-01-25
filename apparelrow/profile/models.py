@@ -262,7 +262,7 @@ class User(AbstractUser):
     @cached_property
     def avatar_small(self):
         if self.image:
-            return get_thumbnail(self.image, '32x32', crop='center').url
+            return get_thumbnail(self.image, '40x40', crop='center').url
         elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
 

@@ -64,13 +64,14 @@ urlpatterns = patterns('',
     url(r'^embed/productwidget/(?P<embed_product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.embed_product_widget', name='embed-product-widget'),
 
     # About pages
+
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),
     url(r'^contact/$', 'apparelrow.apparel.views.contact', name='contact'),
     url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
     url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
 
     # Temporary url for new home page (work in progress)
-    url(r'^home/$', 'apparelrow.apparel.views.home', name='home'),
+    url(r'^community/$', 'apparelrow.apparel.views.community', name='index-community'),
 
     # Temporary url for onboarding page (work in progress)
     url(r'^onboarding/$', 'apparelrow.apparel.views.onboarding', name='onboarding'),
