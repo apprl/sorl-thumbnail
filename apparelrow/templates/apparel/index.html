@@ -52,10 +52,11 @@
 <body class="front community">
     {# Header #}
     <header role="banner">
+        <a class="logo" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
         <a class="menu-toggler" href="#"><span></span></a>
         <nav role="navigation">
             <ul>
-                <li><a href="{% url 'index' %}"><span>{% trans "For Publishers" %}</span></a></li>
+                <li><a href="{% url 'index' %}"><span>{% trans "For Influencers" %}</span></a></li>
                 <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>International&nbsp;<b class="caret"></b></span></a>
@@ -79,41 +80,26 @@
             <div class="splash">
                 <h1 class="display">{% trans 'Shop the style of your favourite bloggers,<span class="wbr"></span> shows, magazines and brands.' %}</h1>
                 <div class="login-box">
-                    <a class="logo" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
                     <form action="{% url 'auth_login' %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
-                        <input name="username" type="email" id="inputEmail" placeholder="{% trans 'Email' %}">
-                        <input name="password" type="password" id="inputPassword" placeholder="{% trans 'Password' %}">
-                        <!--<div class="login-options">
-                            <label><input type="checkbox"><span><i class="fa fa-check"></i></span>{% trans "Remember me" %}</label>
-                            <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
-                        </div>-->
-                        <!--<div class="form-group{% if form.errors %} error{% endif %}">
-                            <label for="inputEmail" class="control-label">{% trans "Username / E-mail address" %}</label>
-                        </div>
-                        <div class="form-group{% if form.errors %} error{% endif %}">
-                            <label for="inputPassword" class="control-label">{{ form.password.label }}</label>
-                        </div>-->
-                        <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
                         {% url 'login-flow-redirect' as next_url %}
                         {% if request.GET.next %}
                         {% with next_url|add:"?next="|add:request.GET.next as next_url_extra %}{% facebook_button next=next_url_extra extra_class="btn-facebook-login" %}{% endwith %}
                         {% else %}
                         {% facebook_button next=next_url extra_class="btn-facebook-login" %}
                         {% endif %}
-                        <!--<div class="form-group">
-                            {% if form.errors %}
-                            <span class="help-block">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</span>
-                            {% endif %}
-                            <button type="submit" class="btn btn-default">{% trans "Login" %}</button>
+                        <div class="separator visible-xs"><span>{% trans "or" %}</span></div>
+                        <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+                        <input name="username" type="text" id="inputEmail" placeholder="{% trans 'Email' %}">
+                        <input name="password" type="password" id="inputPassword" placeholder="{% trans 'Password' %}">
+                        <div class="login-options">
+                            <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
                         </div>
-                        <div class="form-group center">
-                            <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
-                            <p>{% blocktrans %}Don't have an account yet? {% endblocktrans %} <a href="{% url 'auth_register' %}">{% trans "Sign up here" %}</a></p>
-                        </div>-->
                     </form>
-                    <span>{% trans "Creating an account means you agree to APPRL's" %} <a href="{% url 'auth_register' %}">{% trans "Terms of Service" %}</a>.</span>
+                    <div class="login-details">
+                        <span>{% trans "Creating an account means you agree to APPRL's" %} <a href="{% url 'auth_register' %}">{% trans "Terms of Service" %}</a>.</span>
+                        <span class="visible-xs">{% trans "Already a member?" %} <a href="{% url 'auth_login' %}">{% trans "Log In" %}</a></span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -183,7 +169,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/TessMontgomery_ApprlFront.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Tess Montgomery</h5>
                             <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}">
                         </span>
@@ -192,7 +178,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/ProjectRunway_ApprlFront.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Project Runway</h5>
                            <img src="{% static 'images/badges/ProjectRunway_badge_apprl_home.png' %}" />
                         </span>
@@ -201,7 +187,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/LouisNicolasDarbon_ApprlHome.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Louis-Nicolas Darbon</h5>
                         </span>
                     </div>
@@ -209,7 +195,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/TopModel_Apprl_Front.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Top Model Sweden</h5>
                              <img src="{% static 'images/badges/TV3_badge_apprl_home.png' %}" />
                         </span>
@@ -218,7 +204,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/CarolineSandstrom_Apprl_Front.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Caroline Sandström</h5>
                             <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
                         </span>
@@ -227,7 +213,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/ElinKling_ApprlFront.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Elin Kling</h5>
                         </span>
                     </div>
@@ -235,7 +221,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/MartinHansson_ApprlFront.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Martin Hansson</h5>
                             <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
                         </span>
@@ -244,7 +230,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/Celine_Aaagard_Apprl_Front.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Celine Aagaard</h5>
                             <img src="{% static 'images/badges/StyleMagBadge.png' %}" />
                         </span>
@@ -253,7 +239,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/EmmaElwin_ApprlFront.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Emma Elwin</h5>
                         </span>
                     </div>
@@ -261,7 +247,7 @@
                 <div class="item">
                     <img src="{% static 'images/publishers/ElzanaKadric_ApprlFront.jpg' %}">
                     <div class="overlay">
-                        <span class="publisher">
+                        <span>
                             <h5>Elzana Kadric</h5>
                            <img src="{% static 'images/badges/TopModel_badge_apprl_home.png' %}" />
                         </span>
@@ -350,9 +336,14 @@
 
     <script src="/static/js/jquery/owl.carousel.min.js"></script>
     <script type="text/javascript">
-        $(window).load(function() {
+        $(document).ready(function() {
             var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
                 scroll = false;
+
+            if ($(window).width() >= 768) {
+                $('.logo').prependTo('.login-box');
+                $('.btn-facebook').prependTo('.login-options');
+            }
 
             $(window).on('scroll', function() {
                 if ($(window).scrollTop() >= anchor) {
@@ -414,78 +405,6 @@
             });
         });
     </script>
-
-    <script>
-        /*var mobile = false;
-        if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-            mobile = true;
-        }
-
-        $(document).ready(function() {
-            if ( mobile == true ) {
-                $('.home-intro').append('<div class="background-image" style="background-image: url({% static 'video/poster.jpg' %});"></div>');
-            }
-            else {
-                $('.home-intro').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static 'video/poster.jpg' %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');
-            }
-
-            var anchor = $('.home-intro').offset().top + $('.home-intro').outerHeight(),
-                scroll = false;
-
-            $(window).on('scroll', function() {
-                if ($(window).scrollTop() >= anchor) {
-                    $('header').addClass('expand');
-                    scroll = true;
-                }
-                if ($(window).scrollTop() < anchor && scroll == true) {
-                    $('header').removeClass('expand');
-                }
-            });
-
-            $('.btn-scroll').click(function(e) {
-                $('html, body').animate({scrollTop: $('.' + $(this).data('scroll')).offset().top - 30}, 1000);
-                e.preventDefault();
-            });
-
-            $('.menu-toggler').click(function(e) {
-                $(this).toggleClass('active');
-                $('nav').toggleClass('active');
-                e.preventDefault();
-            });
-        });
-
-        // Image slideshow
-        (function(window) {
-            SlideCrossFade = {
-                container: 'tools-demo',
-                displayTime: 5000,
-                fadeTime: 1500,
-
-                start: function() {
-                    var self = this;
-                    $('#' + this.container + ' img').show();
-                    setInterval(function() { self.next(); }, this.displayTime);
-                },
-
-                next: function() {
-                    var $active = $('#' + this.container + ' .active');
-                    var $next = ($active.next().length > 0) ? $active.next() : $('#' + this.container + ' img:first');
-                    $next.css('z-index', 2);
-
-                    $active.fadeOut(this.fadeTime, function() {
-                        $active.css('z-index', 1).show().removeClass('active');
-                        $next.css('z-index', 3).addClass('active');
-                    });
-                }
-            };
-            window.SlideCrossFade = SlideCrossFade;
-        })(this);
-
-        $(window).load(function() {
-            SlideCrossFade.start();
-        });*/
-    </script>
-
     <script type="text/javascript" src="{% static 'js/money.min.js' %}"></script>
     <script type="text/javascript">
         fx.base = 'SEK';

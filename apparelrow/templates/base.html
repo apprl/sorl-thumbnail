@@ -341,7 +341,7 @@
         </div>
     </footer>
 
-    <a class="btn-scroll scroll-top" href="#"><i class="fa fa-angle-up"></i>
+    <a class="btn-scroll btn-arrow scroll-top" href="#"><i class="fa fa-angle-up"></i>
 
     <script>
     $(document).ready(function(){
@@ -357,26 +357,20 @@
             });
 
         });
-    });
-    $(function(){
-        $(document).on( 'scroll', function(){
 
+        $(document).on( 'scroll', function(){
             if ($(window).scrollTop() > 100) {
-                $('.scroll-top').fadeIn(200);
+                $('.btn-scroll').fadeIn(200);
             } else {
-                $('.scroll-top').fadeOut(200);
+                $('.btn-scroll').fadeOut(200);
             }
         });
-        $('.scroll-top').on('click', scrollToTop);
-    });
 
-    function scrollToTop() {
-        verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
-        element = $('body');
-        offset = element.offset();
-        offsetTop = offset.top;
-        $('html, body').animate({scrollTop: offsetTop}, 500, 'linear');
-    }
+        $('.btn-scroll').on('click', function(e) {
+            $('html, body').animate({scrollTop: 0}, 500);
+            e.preventDefault();
+        });
+    });
     </script>
 
     {% include 'apparel/fragments/dialog_like_product.html' with request=request csrf_token=csrf_token next=next only %}

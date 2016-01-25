@@ -146,10 +146,10 @@
     </script>
 {% endblock %}
 
-{% block body-classes %}publisher-page{% endblock body-classes %}
+{% block body-classes %}dashboard{% endblock body-classes %}
 {% block body %}
 
-    {% include 'dashboard/body_header.html' %}
+    <h1>{% trans "Dashboard" %}</h1>
 
     <section class="container overview">
         <div class="row figures">
@@ -289,27 +289,23 @@
                     <tbody>
                         {% for earning in user_earnings %}
                         <tr>
-                            <!-- Date -->
                             <td class="hidden-xs" data-sort="{{ earning.date|date:"U" }}">{{ earning.date.date }}</td>
 
                             {% if earning.user_earning_type == "referral_sale_commission" %}
-                                <!-- If referral, show user -->
                                 <td class="hidden-xs" class="center hidden-xs"></td>
                                 <td class="hidden-xs" data-sort="{{ earning.from_user }}">{% trans "Referral sale by" %} <a href="{{ earning.from_user }}">{{ earning.from_user }}</a></td>
                                 <td class="hidden-xs">{% trans "Referral" %}</td>
                             {% elif earning.extra_sale.is_promo %}
-                                <!-- Referral Signup -->
                                 <td class="hidden-xs"></td>
                                 <td class="hidden-xs"></td>
                                 <td>{% trans "Welcome to APPRL" %}</td>
                             {% elif earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute" %}
-                                <!-- Clicks -->
+
                                 <td class="hidden-xs" colspan="2">
                                     {% if earning.from_user %}{% trans "Clicks by " %} {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}{% endif %}
                                 </td>
                                 <td >{% trans "Clicks to " %}{{ earning.sale.vendor }}</td>
                             {% else %}
-                                <!-- Product Information -->
                                 {% if earning.extra_sale.placement and earning.extra_sale.placement == 'Ext-Store' %}
                                     <td class="hidden-xs"></td>
                                     <td class="hidden-xs">Sale on {{ earning.extra_sale.vendor }}</td>
@@ -317,7 +313,6 @@
                                     <td class="hidden-xs" data-sort="{{ earning.product_name }}"><a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a></td>
                                     <td class="hidden-xs" >{% if earning.product_link %}<a href="{{ earning.product_link }}">{{ earning.product_name }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.product_name }}{% endif %}{% endif %}</td>
                                 {% endif %}
-                                <!-- FROM -->
                                 <td>
                                     {% if earning.extra_sale.link %}
                                         {{ earning.extra_sale.link }}

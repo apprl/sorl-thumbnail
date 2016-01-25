@@ -1,7 +1,62 @@
 /*
 	Publisher v1.0
+
+    - Dashboard
+    - Referral
 */
 
+/* Dashboard ---------- */
+.dashboard {
+    h1 {
+        text-align: center;
+    }
+    .btn-expand {
+        width: 44px;
+        height: 44px;
+        float: right;
+        display: inline-block;
+        border-radius: 50%;
+        background-color: @offwhite;
+        text-align: center;
+        line-height: 44px;
+        i {
+            color: @grey;
+        }
+    }
+    .panel {
+        border: 1px solid #cccccc;
+        padding: 15px;
+    }
+    .panel-header {
+        height: 44px;
+        .clearfix;
+        h4 {
+            float: left;
+            line-height: 44px;
+        }
+    }
+    .figures {
+        background-color: #e2f9f1;
+        margin: 30px 0;
+        > div {
+            text-align: center;
+            //border-left: 1px solid white;
+            //border-right: 1px solid white;
+            padding: 30px 15px 15px 15px;
+        }
+        .pending-earnings {
+            background-color: #fffde7;
+        }
+        .confirmed-earnings {
+            background-color: #f1f8e9;
+        }
+        .pending-payment {
+            background-color: #e0f7fA;
+        }
+    }
+}
+
+/* ? ---------- */
 .discover-list-page {
     .modal h2 {
         padding: 30px 15px 15px;
@@ -118,10 +173,24 @@ body.publisher-index-page {
         padding: 20px;
     }
 }
+
+/* Referral ---------- */
+.publisher-referral-page {
+    text-align: center;
+    textarea {
+        max-width: none;
+    }
+    h1 {
+        margin-bottom: 30px;
+    }
+}
 body.publisher-referral-page {
+    padding-bottom: 15px;
+    h4 {
+        margin-bottom: 15px;
+    }
     .referral-row {
         margin-top: 20px;
-        margin-bottom: 20px;
         > div {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -130,9 +199,9 @@ body.publisher-referral-page {
     .referral-link-container {
         text-align: center;
         &.box {
-            background-color: #eee;
+            background-color: @offwhite;
         }
-        padding: 20px 30px;
+        padding: 20px 30px 10px 30px;
         p {
             margin-top: 10px;
         }

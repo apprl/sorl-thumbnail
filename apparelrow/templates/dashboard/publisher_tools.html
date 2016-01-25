@@ -104,6 +104,20 @@
                     </div>
                 </li>
 
+                <!-- Invite & Earn -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <img src="{% static 'images/tools/referral.jpg' %}" />
+                        <article>
+                            <h2>{% trans "Invite & Earn" %}</h2>
+                            <p>{% trans "Earn money by inviting publishers and bloggers." %}</p>
+                            <a class="btn btn-primary" href="#">
+                                {% trans "Get Started" %}
+                            </a>
+                        </article>
+                    </div>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -116,9 +130,9 @@
 {% include 'dashboard/fragments/dialog_tool_chrome_ext.html' with request=request csrf_token=csrf_token next=next only %}
 
 <script type="text/javascript">
-    $('.modal').on('shown.bs.modal', function (e) {
+    /*$('.modal').on('shown.bs.modal', function (e) {
         resizeSliderContainer(this);
-    });
+    });*/
     $('.modal').on('shown.bs.modal', function () {
         var modalSlider = $(this).find('.iosSlider')
         modalSlider.iosSlider('destroy');
@@ -141,7 +155,7 @@
 </script>
 
 <script type="text/javascript">
-    $(window).load(function() {
+    /*$(window).load(function() {
         //Function below
         resizeapprlheader();
         placeScreens();
@@ -210,10 +224,10 @@
         $(modal).find('.slider-container').css({
             height: setHeight
         });
-    }
+    }*/
 
     /* Locate screens in the header */
-    function placeScreens() {
+    /*function placeScreens() {
         //Set vars
         var windowWidth = $(window).width();
         var screensWidth = $('.apprl-header-measurement').css('width');
@@ -243,6 +257,6 @@
     $(window).bind('orientationchange',function(e) {
         placeScreens();
         resizeSliderContainer($('.in'));
-    });
+    });*/
 </script>
 {% endblock %}

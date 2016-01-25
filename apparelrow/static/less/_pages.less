@@ -1,8 +1,8 @@
 /*
 	Pages v1.0
 
-	- Home & Retailer (Index)
-    - Community (Index)
+	- Home (Default)
+    - Community
 	- Search
 	- Log In & Registration
 	- Settings
@@ -14,8 +14,8 @@
 	- Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
 */
 
-/* Home & Retailer (Index) ---------- */
-.home {
+/* Home (Default) ---------- */
+.publisher, .retailer {
     background-color: black;
     main {
         text-align: center;
@@ -73,7 +73,7 @@
             }
         }
     }
-    section:not(.home-welcome) {
+    section:not(.publisher-welcome, .retailer-welcome) {
         padding: 30px 0;
         p {
             max-width: @screen-sm;
@@ -84,16 +84,64 @@
         @media (min-width: @screen-sm) {
             padding: 45px 0;
             h1 {
-                font-size: 48px;
+                font-size: 47px;
             }
         }
     }
-    .home-welcome {
-        height: 100vh;
+    .publisher-welcome {
+        h1 {
+            font-size: 26px;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .splash {
+            margin-top: -20px;
+            .btn {
+                margin-top: 10px;
+            }
+        }
+        .crosslink {
+            position: absolute;
+            bottom: 65px;
+            width: 100%;
+            left: 0;
+            text-align: center;
+            z-index: 20;
+        }
+        @media (min-width: @screen-xs) {
+            h1 {
+                font-size: 30px;
+            }
+        }
+        @media (min-width: @screen-sm) {
+            h1 {
+                font-size: 47px;
+            }
+            .splash {
+                margin-top: 0;
+                .btn {
+                    margin-top: 30px;
+                }
+            }
+            .crosslink {
+                bottom: 90px;
+            }
+        }
+    }
+    .retailer-welcome {
         .logo {
             margin-bottom: 30px;
+        }
+    }
+    .publisher-welcome, .retailer-welcome {
+        height: 100vh;
+        .logo {
             display: inline-block;
-            max-width: 240px;
+            max-width: 160px;
+            @media (min-width: @screen-sm) {
+                max-width: 240px;
+            }
         }
         .preamble {
             max-width: @screen-sm;
@@ -101,28 +149,17 @@
         .btn-outline {
             margin-top: 30px;
         }
-        .btn-guide {
-            position: absolute;
-            bottom: 75px;
-            left: 50%;
-            margin-left: -22px;
-            background-color: rgba(255,255,255,.15);
-        }
-        .crosslink {
+        .btn-arrow {
             position: absolute;
             bottom: 15px;
-            width: 100%;
-            left: 0;
-            text-align: center;
-            z-index: 20;
-        }
-        .usp-community {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: @primaryColor;
+            left: 50%;
+            margin-left: -22px;
+            @media (min-width: @screen-sm) {
+                bottom: 30px;
+            }
+            i {
+                vertical-align: middle;
+            }
         }
     }
     .list-brands {
@@ -207,12 +244,26 @@
             background-color: rgba(0,0,0,.4) !important;
         }
     }
+    header.expand {
+        background-color: #222;
+        .menu-toggler {
+            background-color: transparent;
+        }
+    }
     main {
         text-align: center;
         padding: 0;
         h1 {
             margin-bottom: 15px;
+            font-size: 21px;
+            @media (min-width: @screen-xs) {
+                font-size: 26px;
+            }
+            @media (min-width: @screen-is) {
+                font-size: 30px;
+            }
             @media (min-width: @screen-sm) {
+                font-size: 47px;
                 margin-bottom: 30px;
             }
         }
@@ -234,6 +285,24 @@
             margin: 30px auto 0 auto;
         }
     }
+    .splash {
+        margin-top: 15px;
+        @media (min-width: @screen-sm) {
+            margin: 0;
+        }
+    }
+    .logo {
+        position: absolute;
+        top: 2px;
+        left: 15px;
+        z-index: 100;
+        max-width: 120px;
+        @media (min-width: @screen-sm) {
+            position: static;
+            margin: 0 0 20px 0;
+            max-width: 140px;
+        }
+    }
     .community-welcome {
         height: 100vh;
         margin: 0;
@@ -244,67 +313,78 @@
         label input[type="checkbox"]:checked + span {
             border-color: @grey;
         }
-        .logo {
-            margin-bottom: 20px;
-            display: inline-block;
-            max-width: 140px;
+        .background-image {
+            opacity: .75;
+            @media (min-width: @screen-sm) {
+                opacity: 1;
+            }
         }
         .login-box {
-            color: @grey;
-            background-color: black;
             max-width: @screen-is;
-            margin: 0 auto;
-            padding: 45px 15px 25px 15px;
-            a {
+            margin: auto;
+            .login-details span {
                 color: @lightGrey;
-                &:hover {
+                font-size: 13px;
+                display: block;
+                margin-top: 10px;
+                a {
                     color: white;
+                    &:hover {
+                        color: white;
+                    }
                 }
             }
-            span {
-                font-size: 13px;
+            @media (min-width: @screen-sm) {
+                background-color: black;
+                padding: 45px 15px 25px 15px;
+                .login-details span {
+                    color: @grey;
+                    a {
+                        color: @lightGrey;
+                    }
+                }
             }
         }
         .btn {
-            margin-top: 15px;
+            //margin-top: 15px;
             font-size: 13px;
-            color: white !important;
         }
-        /*.btn-facebook {
-            margin-bottom: 15px;
-            max-width: 320px !important;
-            height: 34px !important;
-            line-height: 36px !important;
-        }*/
-        .login-options {
-            .clearfix;
-            max-width: 320px;
-            margin: auto;
-            label {
-                float: left;
-                font-family: @secondaryFont;
+        .btn-facebook {
+            @media (min-width: @screen-sm) {
+                margin: 10px auto;
             }
-            a {
-                float: right;
+        }
+        .separator {
+            color: @lightGrey;
+            margin: 15px 0;
+            span {
+                &:before, &:after {
+                    border-color: @lightGrey;
+                    width: 75px;
+                }
             }
         }
         button[type="submit"] {
             max-width: 320px;
         }
-        input[type="email"], input[type="password"] {
-            margin-bottom: 15px;
-            background-image: linear-gradient(black,black),linear-gradient(#666,#666);
-            background-size: 0 2px, 100% 1px;
-            background-repeat: no-repeat;
-            background-position: center bottom, center calc(100% - 1px);
-            background-color: #222;
-            color: white;
-            &:focus {
-                background-image: linear-gradient(white,white),linear-gradient(black,black);
-                -webkit-animation: highlight 0.25s forwards;
-                animation: highlight 0.25s forwards;
+        input[type="text"], input[type="password"] {
+            background-size: 0;
+            margin-bottom: 10px;
+            @media (min-width: @screen-sm) {
+                margin-bottom: 15px;
+                background-image: linear-gradient(black,black),linear-gradient(#666,#666);
                 background-size: 0 2px, 100% 1px;
-                background-color: #333;
+                background-repeat: no-repeat;
+                background-position: center bottom, center calc(100% - 1px);
+                background-color: #222;
+                color: white;
+                &:focus {
+                    background-image: linear-gradient(white,white),linear-gradient(black,black);
+                    -webkit-animation: highlight 0.25s forwards;
+                    animation: highlight 0.25s forwards;
+                    background-size: 0 2px, 100% 1px;
+                    background-color: #333;
+                }
             }
         }
     }
@@ -351,7 +431,7 @@
         margin-top: 45px;
     }
     #slider-publishers {
-        .publisher {
+        span {
             position: absolute;
             text-align: center;
             width: 100%;

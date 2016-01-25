@@ -5,13 +5,13 @@
 {% block extra-title %}{% trans "Publisher" %} | {% endblock %}
 
 {% block 'extra-scripts' %}
-    <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/vendor/panellesort.min.js" %}"></script>
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
     <script type='text/javascript'>
         google.load('visualization', '1', {packages: ['corechart']});
         google.setOnLoadCallback(drawChart);
         function drawChart () {
-            var data = new google.visualization.DataTable();
+            var data = new google.visualization.Datapanelle();
             data.addColumn('date', 'X');
             data.addColumn('number', '{% trans "Commission Earnings" %} ({{ currency }})');
             data.addColumn('number', '{% trans "Referral earnings" %} ({{ currency }})')
@@ -81,7 +81,7 @@
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
                 containerId: 'graph',
-                dataTable: view,
+                datapanelle: view,
                 options: {
                     vAxes: {
                         0: {
@@ -117,18 +117,18 @@
                 window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
             });
 
-            new Tablesort($('table#earnings').get(0));
-            new Tablesort($('table#top-products').get(0));
-            new Tablesort($('table#top-products-more').get(0));
-            new Tablesort($('table#top-publishers').get(0));
-            new Tablesort($('table#top-publishers-more').get(0));
+            new panellesort($('panelle#earnings').get(0));
+            new panellesort($('panelle#top-products').get(0));
+            new panellesort($('panelle#top-products-more').get(0));
+            new panellesort($('panelle#top-publishers').get(0));
+            new panellesort($('panelle#top-publishers-more').get(0));
 
         });
         /*
             Load detail click earning details for clicks in a modal
         */
         function load_detailed_data_clicks(json_detail, date, vendor, currency){
-            var html = "<table>";
+            var html = "<panelle>";
             for (i = 0; i < json_detail.length; i++){
                 html += "<tr>" +
                         "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
@@ -136,7 +136,7 @@
                         "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
                         "<tr>";
             }
-            html += "</table>";
+            html += "</panelle>";
             $("#content-clicks").html(html);
             $("#modal-date").html(date);
             $("#modal-vendor").html(vendor);
@@ -145,12 +145,78 @@
     </script>
 {% endblock %}
 
-{% block body-classes %}publisher-page{% endblock body-classes %}
+{% block body-classes %}dashboard{% endblock body-classes %}
 {% block body %}
 
-    {% include 'dashboard/body_header.html' %}
+    <h1>{% trans "Dashboard" %}</h1>
 
-    <div class="row subnav-page">
+    <section class="dashboard-earnings">
+        <div class="row figures">
+            <div class="col-sm-4 pending-earnings">{% trans "Pending earnings" %}<span class="number">{{ currency }} {% if pending_earnings %}{{ pending_earnings|floatdot }}{% else %}0.00{% endif %}</span></div>
+            <div class="col-sm-4 confirmed-earnings">{% trans "Confirmed earnings" %}<span class="number">{{ currency }} {% if confirmed_earnings %}{{ confirmed_earnings|floatdot }}{% else %}0.00{% endif %}</span></div>
+            <div class="col-sm-4 pending-payment">{% trans "Pending payment" %}<span class="number">{{ currency }} {% if pending_payment %}{{ pending_payment|floatdot }}{% else %}0.00{% endif %}</span></div>
+        </div>
+    </section>
+
+    <section class="dashboard-statistics">
+        <!-- -->
+    </section>
+
+    <section class="dashboard-map">
+        <!-- -->
+    </section>
+
+    <section class="panel top-products">
+        <div class="panel-header">
+            <h4>{% trans "Top Products" %}</h4>
+            <button class="btn-expand"><i class="fa fa-expand"></i></button>
+        </div>
+        <div class="panel-content">
+
+        </div>
+    </section>
+
+    <section class="panel top-brands">
+        <div class="panel-header">
+            <h4>{% trans "Top Brands" %}</h4>
+            <button class="btn-expand"><i class="fa fa-expand"></i></button>
+        </div>
+        <div class="panel-content">
+
+        </div>
+    </section>
+
+    <section class="panel top-retailers">
+        <div class="panel-header">
+            <h4>{% trans "Top Retailers" %}</h4>
+            <button class="btn-expand"><i class="fa fa-expand"></i></button>
+        </div>
+        <div class="panel-content">
+
+        </div>
+    </section>
+
+    <section class="panel latest-posts">
+        <div class="panel-header">
+            <h4>{% trans "Your latest posts" %}</h4>
+            <button class="btn-expand"><i class="fa fa-expand"></i></button>
+        </div>
+        <div class="panel-content">
+
+        </div>
+    </section>
+
+    <section class="panel top-publishers">
+        <div class="panel-header">
+            <h4>{% trans "Top Publishers" %}</h4>
+            <button class="btn-expand"><i class="fa fa-expand"></i></button>
+        </div>
+        <div class="panel-content">
+
+        </div>
+    </section>
+
+    <!--<div class="row subnav-page">
         <div class="col-sm-3">{% trans "Pending earnings: " %}<strong>{{ currency }} {% if pending_earnings %}{{ pending_earnings|floatdot }}{% else %}0.00{% endif %}</strong></div>
         <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Confirmed earnings: " %}<strong>{{ currency }} {% if confirmed_earnings %}{{ confirmed_earnings|floatdot }}{% else %}0.00{% endif %}</strong></div>
         <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Pending payment: " %}<strong>{{ currency }} {% if pending_payment %}{{ pending_payment|floatdot }}{% else %}0.00{% endif %}</strong></div>
@@ -203,7 +269,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div id="graph" style="width: 100%; height: 300px;"></div>
+            <div id="graph" style="width: 50%; height: 300px;"></div>
         </div>
     </div>
 
@@ -219,10 +285,10 @@
 
     {% if is_owner %}
         <div class="row">
-            <div class="col-lg-12 table-responsive">
+            <div class="col-lg-12 panelle-responsive">
                 <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2></div>
                 <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a></small></h2></div>
-                <table id="top-publishers" class="sortable table">
+                <panelle id="top-publishers" class="sorpanelle panelle">
                     <thead>
                         <tr>
                             <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
@@ -259,16 +325,16 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                </table>
+                </panelle>
             </div>
         </div>
     {% endif %}
 
     <div class="row">
-        <div class="col-lg-12 table-responsive">
+        <div class="col-lg-12 panelle-responsive">
             <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2></div>
             <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a></small></h2></div>
-            <table id="top-products" class="sortable table">
+            <panelle id="top-products" class="sorpanelle panelle">
                 <thead>
                     <tr>
                         <th class="col-md-1 product-image center">{% trans "Product" %}</th>
@@ -307,14 +373,14 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-            </table>
+            </panelle>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-12 table-responsive">
+        <div class="col-lg-12 panelle-responsive">
             <h2 class="sales-header">{% trans "Your earnings" %} {{ month_display }} {{ year }}</h2>
-                <table id="earnings" class="sortable table">
+                <panelle id="earnings" class="sorpanelle panelle">
                     <thead>
                         <tr>
                             <th class="hidden-xs">{% trans "Date" %}</th>
@@ -328,27 +394,23 @@
                     <tbody>
                         {% for earning in user_earnings %}
                         <tr>
-                            <!-- Date -->
                             <td class="hidden-xs" data-sort="{{ earning.date|date:"U" }}">{{ earning.date.date }}</td>
 
                             {% if earning.user_earning_type == "referral_sale_commission" %}
-                                <!-- If referral, show user -->
                                 <td class="hidden-xs" class="center hidden-xs"></td>
                                 <td class="hidden-xs" data-sort="{{ earning.from_user }}">{% trans "Referral sale by" %} <a href="{{ earning.from_user.get_absolute_url }}">{{ earning.from_user }}</a></td>
                                 <td class="hidden-xs">{% trans "Referral" %}</td>
                             {% elif earning.extra_sale.is_promo %}
-                                <!-- Referral Signup -->
                                 <td class="hidden-xs"></td>
                                 <td class="hidden-xs"></td>
                                 <td>{% trans "Welcome to APPRL" %}</td>
                             {% elif earning.user_earning_type == "publisher_sale_click_commission" or earning.user_earning_type == "publisher_network_click_tribute" %}
-                                <!-- Clicks -->
+
                                 <td class="hidden-xs" colspan="2">
                                     {% if earning.from_user %}{% trans "Clicks by " %} <a href="{{ earning.from_user.get_absolute_url }}"> {% if earning.from_user.name %}{{ earning.from_user.name }}{% else %}{{ earning.from_user.slug }}{% endif %}{% endif %}</a>
                                 </td>
                                 <td >{% trans "Clicks to " %}{{ earning.sale.vendor }}</td>
                             {% else %}
-                                <!-- Product Information -->
                                 {% if earning.extra_sale.placement and earning.extra_sale.placement == 'Ext-Store' %}
                                     <td class="hidden-xs"></td>
                                     <td class="hidden-xs">Sale on {{ earning.extra_sale.vendor }}</td>
@@ -356,7 +418,6 @@
                                     <td class="hidden-xs" data-sort="{{ earning.product_name }}"><a href="{{ earning.product_link }}"><img src="{{ earning.product_image }}"></a></td>
                                     <td class="hidden-xs" >{% if earning.product_link %}<a href="{{ earning.product_link }}">{{ earning.product_name }}</a>{% else %}{% if earning.extra_sale.link_raw != 'Ext-Store' %}{{ earning.product_name }}{% endif %}{% endif %}</td>
                                 {% endif %}
-                                <!-- FROM -->
                                 <td>
                                     {% if earning.extra_sale.link %}
                                         {{ earning.extra_sale.link }}
@@ -391,9 +452,9 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                </table>
+                </panelle>
         </div>
-    </div>
+    </div>-->
     {% endif %}
 
 <script>
