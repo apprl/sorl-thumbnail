@@ -1,15 +1,35 @@
 from django.http import HttpResponseRedirect
 from django.contrib import admin
-from django.core import urlresolvers
+from django.conf import settings
 
 from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning, ClickCost, AggregatedData
-from apparelrow.dashboard.forms import CutAdminForm
+from apparelrow.dashboard.forms import CutAdminForm, SaleAdminFormCustom
+
 
 class SaleAdmin(admin.ModelAdmin):
+    form = SaleAdminFormCustom
     list_display = ('id', 'original_sale_id', 'affiliate', 'vendor', 'status', 'user_id', 'product_id', 'placement', 'cut', 'commission', 'currency', 'sale_date', 'adjusted', 'paid')
     list_filter = ('affiliate', 'vendor', 'status', 'placement', 'sale_date')
     readonly_fields = ('original_sale_id', 'affiliate', 'paid', 'modified', 'created')
     raw_id_fields = ('referral_user',)
+
+    def save_model(self, request, obj, form, change):
+        if obj.is_promo and not change:
+            obj.affiliate = 'referral_promo'
+            obj.original_sale_id = 'referral_promo_%s' % (obj.user_id,)
+            obj.is_referral_sale = False
+            obj.exchange_rate = '1'
+            obj.converted_amount = settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION
+            obj.converted_commission = settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION
+            obj.amount = settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION
+            obj.commission = settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION
+            obj.original_amount = settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION
+            obj.original_commission = settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION
+            obj.currency = 'EUR'
+            obj.original_currency = 'EUR'
+            obj.status = Sale.CONFIRMED
+
+        super(SaleAdmin, self).save_model(request, obj, form, change)
 
 admin.site.register(Sale, SaleAdmin)
 

@@ -15,6 +15,7 @@ from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import currency_exchange
+from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
 from django.views.generic import TemplateView
 
