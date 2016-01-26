@@ -526,8 +526,9 @@ def get_previous_period(start_date, end_date):
     """
     # Check if it is a month period or a year period
     if start_date.date().month == end_date.date().month:
-        prev_month = start_date.date().month - 1
-        prev_start_date = start_date.replace(month=prev_month)
+        last_month_date = start_date.replace(day=1) - datetime.timedelta(days=1)
+        prev_month = last_month_date.month
+        prev_start_date = start_date.replace(month=prev_month, year=last_month_date.year)
         prev_end_date = prev_start_date
         prev_end_date = prev_start_date.replace(day=calendar.monthrange(prev_end_date.year, prev_end_date.month)[1])
         prev_end_date = datetime.datetime.combine(prev_end_date, datetime.time(23, 59, 59, 999999))
