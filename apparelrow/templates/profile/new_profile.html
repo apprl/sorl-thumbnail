@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load i18n apparel_extras %}
+
+{% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
+
+{% block extra-styles %}
+    <meta property="og:title" content="{{ profile.display_name }}"/>
+    <meta property="og:type" content="profile"/>
+    <meta property="og:image" content="{{ avatar_absolute_uri }}"/>
+    <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
+    <meta property="og:description" content="{% if profile.about %}{{ profile.about }}{% else %}{% endif %}"/>
+    <meta property="og:site_name" content="{{ CURRENT_NAME }}"/>
+    <meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}"/>
+    {% if profile.facebook_user_id %}
+    <meta property="fb:profile_id" content="{{ profile.facebook_user_id }}"/>
+    {% endif %}
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+{% endblock extra-styles %}
+
+{% block 'extra-scripts' %}
+{% if request.user.is_authenticated and request.user == profile %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.profile-header .btn-change-description').enableEditable();
+});
+</script>
+{% endif %}
+{% endblock 'extra-scripts' %}
+
+{% block body-classes %}profile-page{% endblock body-classes %}
+{% block full-body %}
+<div class="profile-header">
+    <div class="container">
+        <div id="profile-image">
+            <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_circular_large }}"></a>
+            {% if request.user.is_authenticated and request.user == profile %}
+            <a class="btn btn-edit" href="#edit"><i class="fa fa-camera"></i></a>
+            {% comment %}<a href="#cancel" class="btn btn-secondary hidden">{% trans "Cancel" %}</a>{% endcomment %}
+            {% include 'profile/fragments/change_image_form.html' with form_enctype='multipart/form-data' %}
+            {% endif %}
+        </div>
+        <div class="profile-content">
+            <h1>{{ profile.display_name }}</h1>
+            {% if request.user.is_authenticated and request.user == profile %}
+            {% else %}
+            {% include 'apparel/fragments/follow.html' %}
+            {% endif %}
+            {% if request.user.is_authenticated and request.user == profile %}
+            <a class="btn btn-edit btn-change-description" href="#"><i class="fa fa-pencil"></i></a>
+            {% endif %}
+            {% if profile and profile.is_brand and profile.translated_manual_about %}
+            <p class="description">{{ profile.translated_manual_about|urlize_target_blank|linebreaksbr }}</p>
+            {% else %}
+            {% if profile.about %}<p class="description">{{ profile.about|urlize_target_blank|linebreaksbr }}{% else %}{% if request.user.is_authenticated and request.user == profile %}{% trans "Add a brief description of yourself here." %}</p>{% endif %}{% endif %}
+            {% endif %}
+
+            {% if request.user.is_authenticated and request.user == profile %}
+            <form id="description-form" method="post" action="{% url 'settings-save-description' %}" style="display: none;">
+                {% csrf_token %}
+                <textarea class="form-control" rows="5" name="description">{{ profile.about }}</textarea>
+                <button class="btn btn-primary btn-save-description">{% trans "Save description" %}</button>
+                <button class="btn btn-secondary btn-cancel-description">{% trans "Cancel" %}</button>
+            </form>
+            {% endif %}
+        </div>
+
+        {% with likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
+        <ul class="sub-menu">
+            <li>
+            {% if profile and profile.is_brand %}
+                {% url 'brand-likes-men' profile.slug as likes_url_men %}
+                {% url 'brand-likes-women' profile.slug as likes_url_women %}
+                <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">{% trans "Items" %}</a>
+                <span>({{ products.count }})</span>
+            {% else %}
+                <a{% if request.path == likes_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ likes_url }}">{% trans "Items" %}</a>
+                <span>({{ products }})</span>
+            {% endif %}
+            </li>
+            <li>
+                <a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">{% trans "Looks" %}</a>
+                <span>({{ profile.total_look_count }})</span>
+            </li>
+            {% if profile.shops and request.user.is_authenticated and request.user == profile%}
+            <li>
+                <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">{% trans "Shops" %}</a>
+                <span>({{ profile.shops }})</span>
+            </li>
+            {% endif %}
+            <li>
+                <a{% if request.path == followers_url %} class="selected"{% endif %} href="{{ followers_url }}">{% trans "Followers" %}</a>
+                <span>({{ profile.followers_count }})</span>
+            </li>
+            <li>
+                <a{% if request.path == following_url %} class="selected"{% endif %} href="{{ following_url }}">{% trans "Following" %}</a>
+                <span>({{ following }})</span>
+            </li>
+        </ul>
+        {% endwith %}
+
+    </div>
+</div>
+
+<div class="container">
+    {% block content %}{% endblock content %}
+</div>
+{% endblock %}

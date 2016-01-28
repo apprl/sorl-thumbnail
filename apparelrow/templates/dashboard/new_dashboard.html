@@ -150,7 +150,7 @@
 
     <h1>{% trans "Dashboard" %}</h1>
 
-    <section class="dashboard-earnings">
+    <!--<section class="dashboard-earnings">
         <div class="row figures">
             <div class="col-sm-4 pending-earnings">{% trans "Pending earnings" %}<span class="number">{{ currency }} {% if pending_earnings %}{{ pending_earnings|floatdot }}{% else %}0.00{% endif %}</span></div>
             <div class="col-sm-4 confirmed-earnings">{% trans "Confirmed earnings" %}<span class="number">{{ currency }} {% if confirmed_earnings %}{{ confirmed_earnings|floatdot }}{% else %}0.00{% endif %}</span></div>
@@ -159,11 +159,11 @@
     </section>
 
     <section class="dashboard-statistics">
-        <!-- -->
+
     </section>
 
     <section class="dashboard-map">
-        <!-- -->
+
     </section>
 
     <section class="panel top-products">
@@ -214,9 +214,9 @@
         <div class="panel-content">
 
         </div>
-    </section>
+    </section>-->
 
-    <!--<div class="row subnav-page">
+    <div class="row subnav-page">
         <div class="col-sm-3">{% trans "Pending earnings: " %}<strong>{{ currency }} {% if pending_earnings %}{{ pending_earnings|floatdot }}{% else %}0.00{% endif %}</strong></div>
         <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Confirmed earnings: " %}<strong>{{ currency }} {% if confirmed_earnings %}{{ confirmed_earnings|floatdot }}{% else %}0.00{% endif %}</strong></div>
         <div class="col-sm-3"><span class="glyphicon glyphicon-arrow-right"></span> {% trans "Pending payment: " %}<strong>{{ currency }} {% if pending_payment %}{{ pending_payment|floatdot }}{% else %}0.00{% endif %}</strong></div>
@@ -454,7 +454,7 @@
                     </tbody>
                 </panelle>
         </div>
-    </div>-->
+    </div>
     {% endif %}
 
 <script>

@@ -49,7 +49,7 @@
         })();
     </script>
 </head>
-<body class="front publisher">
+<body class="front publisher-page">
     {# Header #}
     <header role="banner">
         <a class="menu-toggler" href="#"><span></span></a>
@@ -81,7 +81,7 @@
                 <a class="btn btn-scroll btn-outline" href="#" data-scroll="publisher-apply">{% trans "Apply for invitation" %}</a>
             </div>
             <a class="btn-scroll btn-arrow" href="#" data-scroll="publisher-users"><i class="fa fa-angle-down"></i></a>
-            <p class="crosslink">{% trans 'Looking for <a href="http://apprl.com/community">APPRL Community</a>?' %}</p>
+            <p class="crosslink">{% trans 'Looking for ' %}<a href="{% url 'index-community' %}">APPRL Community</a>?</p>
         </section>
 
         {# Users #}
