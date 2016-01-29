@@ -1148,7 +1148,11 @@ def index(request, gender=None):
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
         if gender == 'none':
             gender = None
-        return user_feed(request, gender=gender)
+
+        if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
+            return onboarding(request)
+        else:
+            return user_feed(request, gender=gender)
 
     return render(request, 'apparel/home.html', {'featured': get_featured_activity_today()})
 
@@ -1172,7 +1176,9 @@ def community(request):
 
 # Temporary url for onboarding page (work in progress)
 def onboarding(request):
-    return render(request, 'apparel/onboarding.html')
+    response = render(request, 'apparel/onboarding.html')
+    response.delete_cookie(settings.APPAREL_WELCOME_COOKIE)
+    return response
 
 
 #

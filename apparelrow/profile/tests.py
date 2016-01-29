@@ -1,6 +1,7 @@
 from django.contrib.sites.models import Site
 import re
 
+from django.conf import settings
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
@@ -99,4 +100,46 @@ class TestUtilities(TestCase):
         url = 'http://%s%s' % (domain, look.get_absolute_url())
         self.assertEqual("http://example.com/looks/yekshamesh/",url)
         print "Test retrieve static url look suceeded"
+
+class TestOnBoardingUsers(TransactionTestCase):
+
+    def setUp(self):
+        self.c = Client()
+
+    def test_on_boarding_new_user_cookie(self):
+        self.assertNotIn(settings.APPAREL_WELCOME_COOKIE, self.c.cookies)
+
+        response = self.c.post(reverse('auth_register_email'), {'first_name': 'test',
+                                                                'last_name': 'svensson',
+                                                                'username': 'test',
+                                                                'email': 'test@xvid.se',
+                                                                'password1': 'test',
+                                                                'password2': 'test',
+                                                                'gender': 'M'})
+
+        user = get_user_model().objects.get(username='test')
+        self.assertFalse(user.is_active)
+        user.is_active = True
+        user.save()
+        self.assertTrue(user.is_active)
+
+        # Welcome cookie has been set
+        self.assertEqual(self.c.cookies[settings.APPAREL_WELCOME_COOKIE].value, 'True')
+
+        response = self.c.post(reverse('auth_login'), data={'username': 'test', 'password': 'test',
+                                                            'next': reverse('login-flow-redirect')}, follow=True)
+        self.assertContains(response, "Welcome to APPRL!")
+
+        # Welcome cookie has been removed (delete_cookie method only clears cookie value but it does work)
+        self.assertEqual(self.c.cookies[settings.APPAREL_WELCOME_COOKIE].value, '')
+
+    def test_not_on_boarding_for_existent_user_cookie(self):
+        self.assertNotIn(settings.APPAREL_WELCOME_COOKIE, self.c.cookies)
+
+        user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+
+        response = self.c.post(reverse('auth_login'), data={'username': user.username, 'password': user.password,
+                                                            'next': reverse('login-flow-redirect')}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(settings.APPAREL_WELCOME_COOKIE, self.c.cookies)
 
