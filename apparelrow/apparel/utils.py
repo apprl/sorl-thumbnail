@@ -7,6 +7,7 @@ import urllib
 import httplib
 import uuid
 import logging
+import random
 
 from django.conf import settings
 from django.core.cache import cache
@@ -493,3 +494,6 @@ def save_location(request, location):
 
 def has_user_location(request):
     return hasattr(request, 'user') and hasattr(request.user, 'location') and request.user.location
+
+def shuffle_user_list(user_list):
+    return sorted(user_list, key=lambda k: random.random())

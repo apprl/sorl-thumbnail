@@ -2,6 +2,7 @@
 import logging
 import json
 import datetime
+import itertools
 from apparelrow.profile.models import NotificationEvent
 from django.http.response import HttpResponseNotAllowed
 import os.path
@@ -46,7 +47,7 @@ from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortSto
 from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
-    select_from_multi_gender, JSONResponse, JSONPResponse
+    select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 
 from apparelrow.activity_feed.views import user_feed
@@ -1148,7 +1149,11 @@ def index(request, gender=None):
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
         if gender == 'none':
             gender = None
-        return user_feed(request, gender=gender)
+
+        if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
+            return onboarding(request)
+        else:
+            return user_feed(request, gender=gender)
 
     return render(request, 'apparel/home.html', {'featured': get_featured_activity_today()})
 
@@ -1170,9 +1175,48 @@ def founders(request):
 def community(request):
     return render(request, 'apparel/index.html')
 
-# Temporary url for onboarding page (work in progress)
+
+def on_boarding_follow_users(user, to_follow_list):
+    for row in to_follow_list:
+        follow_object, created = Follow.objects.get_or_create(user=user, user_follow=row)
+        follow_object.active = True
+        follow_object.save()
+
+def get_most_popular_user_list(users_amount=20, gender=None):
+    user_model = get_user_model()
+
+     # Get proportions for Brands, Users same gender and Users opposite gender to pick
+    brands_amount = users_amount * decimal.Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_BRANDS_PROPORTION)
+    other_gender_amount = users_amount * decimal.Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_OPPOSITE_GENDER_PROPORTION)
+    same_gender_amount = users_amount * decimal.Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_SAME_GENDER_PROPORTION)
+
+    # Pick brands
+    brand_list = user_model.objects.filter(is_brand=True).order_by('-popularity')[:brands_amount]
+
+    if gender:
+        opposite_gender = 'M' if gender == 'W' else 'W'
+        opposite_gender_list = user_model.objects.filter(gender=opposite_gender, is_brand=False).order_by('-popularity')[:other_gender_amount]
+        same_gender_list = user_model.objects.filter(gender=gender, is_brand=False).order_by('-popularity')[:same_gender_amount]
+        user_list = list(itertools.chain(brand_list, opposite_gender_list, same_gender_list))
+    else:
+        no_brands_list = user_model.objects.filter(is_brand=False).order_by('-popularity')[:other_gender_amount+same_gender_amount]
+        user_list = list(itertools.chain(brand_list, no_brands_list))
+
+    return user_list
+
 def onboarding(request):
-    return render(request, 'apparel/onboarding.html')
+    gender = request.user.gender
+    users_amount = settings.APPAREL_WELCOME_AMOUNT_FOLLOWING_USERS
+    user_list = get_most_popular_user_list(users_amount, gender)
+    on_boarding_follow_users(request.user, user_list)
+    random_user_list = shuffle_user_list(user_list)
+    context = {'is_welcome_page': True,
+               'user_list': random_user_list
+               }
+    response = render(request, 'apparel/onboarding.html', context)
+    response.delete_cookie(settings.APPAREL_WELCOME_COOKIE)
+
+    return response
 
 
 #

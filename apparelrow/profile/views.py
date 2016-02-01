@@ -556,6 +556,7 @@ def register_email(request):
 
             response = HttpResponseRedirect(reverse('auth_register_complete'))
             response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=instance.gender, max_age=365 * 24 * 60 * 60)
+            response.set_cookie(settings.APPAREL_WELCOME_COOKIE, value=True, max_age=365 * 24 * 60 * 60)
 
             return response
 

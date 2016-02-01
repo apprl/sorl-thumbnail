@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n apparel_extras %}
+{% load i18n apparel_extras thumbnail %}
 {% load static from staticfiles %}
 
 {% block extra-title %}{% trans "Welcome to APPRL!" %} | {% endblock %}
@@ -22,102 +22,39 @@
     <section>
         <div class="container">
         <ul class="discover-list list-unstyled row">
-
+            {% for profile in user_list %}
             <li class="col-discover-item">
-                <div class="user-medium panel" id="user-medium-43">
+                <div class="user-medium panel" id="user-medium-{{ profile.pk }}">
                     <div class="panel-heading">
                         <div class="media">
-                            <a class="pull-left" href="/en/profile/elin-kling/">
-                                <img class="img-circle" src="/static/images/brand-avatar.png" alt="Elin Kling"/>
+                            <a class="pull-left" href="{{ profile.get_absolute_url }}">
+                                <img class="img-circle" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>
                             </a>
                             <div class="media-body">
-                                <h5 class="media-heading"><a href="/en/profile/elin-kling/">Elin Kling</a></h5>
-                                <a class="btn btn-success btn-sm btn-follow-placeholder" data-toggle="modal" href="#" data-target="#modal_follow_user">Follow</a>
+                                <h5 class="media-heading"><a href="{{ profile.get_absolute_url }}">{% if profile.display_name|length >= 25 %}{{ profile.display_name|slice:":20" }} ...{% else %}{{ profile.display_name|slice:":20" }}{% endif %}</a></h5>
+                                {% if cached %}
+                                {% include 'apparel/fragments/follow_cache.html' %}
+                                {% else %}
+                                {% include 'apparel/fragments/follow.html' %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
                         <ul class="list-unstyled row">
-                            <li class="col-xs-6"><a href="/en/profile/elin-kling/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/elin-kling/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/elin-kling/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/elin-kling/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
+                            {% for x in profile.profile_content %}
+                                {% thumbnail x.1 "192x192" crop="center" format="PNG" as im %}
+                                    <li class="col-xs-6"><a href="{{ x.0 }}"><img class="img-responsive" src="{{ im.url}}"></a></li>
+                                {% empty %}
+                                    <li class="col-xs-6"><a href="{{ profile.get_absolute_url }}"><img class="img-responsive" src="{% static 'images/brand-avatar-large.png' %}"></a></li>
+                                {% endthumbnail %}
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
             </li>
 
-            <li class="col-discover-item">
-                <div class="user-medium panel" id="user-medium-24334">
-                    <div class="panel-heading">
-                        <div class="media">
-                            <a class="pull-left" href="/en/profile/tess/">
-                                <img class="img-circle" src="/static/images/brand-avatar.png" alt="Tess Montgomery"/>
-                            </a>
-                            <div class="media-body">
-                                <h5 class="media-heading"><a href="/en/profile/tess/">Tess Montgomery</a></h5>
-                                <a class="btn btn-success btn-sm btn-follow-placeholder" data-toggle="modal" href="#" data-target="#modal_follow_user">Follow</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-unstyled row">
-                            <li class="col-xs-6"><a href="/en/profile/tess/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/tess/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/tess/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/tess/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </li>
-
-            <li class="col-discover-item">
-                <div class="user-medium panel" id="user-medium-24657">
-                    <div class="panel-heading">
-                        <div class="media">
-                            <a class="pull-left" href="/en/profile/felicia-frithiof/">
-                                <img class="img-circle" src="http://graph.facebook.com/737642097/picture?type=square" alt="Felicia Frithiof"/>
-                            </a>
-                            <div class="media-body">
-                                <h5 class="media-heading"><a href="/en/profile/felicia-frithiof/">Felicia Frithiof</a></h5>
-                                <a class="btn btn-success btn-sm btn-follow-placeholder" data-toggle="modal" href="#" data-target="#modal_follow_user">Follow</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-unstyled row">
-                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </li>
-
-            <li class="col-discover-item">
-                <div class="user-medium panel" id="user-medium-24657">
-                    <div class="panel-heading">
-                        <div class="media">
-                            <a class="pull-left" href="/en/profile/felicia-frithiof/">
-                                <img class="img-circle" src="http://graph.facebook.com/737642097/picture?type=square" alt="Felicia Frithiof"/>
-                            </a>
-                            <div class="media-body">
-                                <h5 class="media-heading"><a href="/en/profile/felicia-frithiof/">Felicia Frithiof</a></h5>
-                                <a class="btn btn-success btn-sm btn-follow-placeholder" data-toggle="modal" href="#" data-target="#modal_follow_user">Follow</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-unstyled row">
-                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                            <li class="col-xs-6"><a href="/en/profile/felicia-frithiof/"><img class="img-responsive" src="/static/images/brand-avatar-large.png"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </li>
+            {% endfor %}
 
         </ul>
         </div>

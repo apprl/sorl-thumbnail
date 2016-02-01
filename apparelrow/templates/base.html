@@ -127,7 +127,7 @@
     </script>
 
     {# Header #}
-    <header role="banner" {% if request.path == "/onboarding/" %}style="display:none;"{% endif %}>
+    <header role="banner" {% if is_welcome_page %}style="display:none;"{% endif %}>
         <nav role="navigation">
             <div class="container">
                 <a class="logo" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
