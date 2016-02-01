@@ -1098,20 +1098,13 @@ def referral_mail(request):
     emails = request.POST.get('emails')
     emails = re.split(r'[\s,]+', emails)
 
-    referral_code = request.user.get_referral_domain_url()
-    referral_name = request.user.display_name
-    referral_email = request.user.email
-    referral_language = get_language()
-
-    template = 'dashboard/referral_mail_en.html'
-    # TODO: fix when we have swedish email
-    #if referral_language == 'sv':
-        #template = 'dashboard/referral_mail_sv.html'
-
-    body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
+    user = request.user
+    referral_name = user.display_name
+    profile_url = reverse('profile-likes', args=[user.slug])
+    profile_photo_url = user.avatar_circular_large
 
     for email in emails:
-        send_email_task.delay('Invitation from %s' % (referral_name,), body, email, '%s <%s>' % (referral_name, referral_email))
+        send_email_task.delay(email, referral_name, profile_url, profile_photo_url)
 
     messages.add_message(request, messages.SUCCESS, 'Sent mail to %s' % (', '.join(emails),))
 
