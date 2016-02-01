@@ -3,19 +3,19 @@
 
 	- Home (Default)
     - Community
+    - Feed
 	- Search
 	- Log In & Registration
 	- Settings
     - Notifications
 	- Discover (Members, Brands, Users)
 	- Dashboard
-	- Feed
     - Onboarding
-	- Static Pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
+	- Static pages (About Us, Contact, Jobs, Terms & Conditions, Cookies)
 */
 
 /* Home (Default) ---------- */
-.publisher, .retailer {
+.publisher-page, .retailer-page {
     background-color: black;
     main {
         text-align: center;
@@ -230,15 +230,15 @@
             }
         }
         @media (min-width: @screen-sm) {
-            //height: 454px;
+            //height: 454px; This might need tweaking
             width: 320px;
             float: right;
         }
     }
 }
 
-/* Community (Index) ---------- */
-.community {
+/* Community ---------- */
+.community-page {
     @media (min-width: @screen-sm) {
         header .dropdown-menu {
             background-color: rgba(0,0,0,.4) !important;
@@ -346,7 +346,6 @@
             }
         }
         .btn {
-            //margin-top: 15px;
             font-size: 13px;
         }
         .btn-facebook {
@@ -449,6 +448,71 @@
     }
 }
 
+/* Feed ---------- */
+.feed-list-page {
+    .feed-list .col-feed-item {
+        .make-sm-column(12);
+        @media (min-width: @screen-sm) {
+            .make-sm-column(6);
+        }
+        @media (min-width: @screen-md) {
+            .make-sm-column(4);
+        }
+        @media (min-width: @screen-lg) {
+            .make-sm-column(4);
+        }
+    }
+}
+
+.feed-item {
+    border: 0;
+    border-radius: 0;
+    border-bottom: 3px solid #000000;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    margin-bottom: 30px;
+    &.feed-verb-agg_product .panel-body .hover .btn {
+        white-space: normal;
+    }
+    &.feed-verb-agg_product .panel-heading > p {
+        white-space: normal;
+    }
+    .panel-heading {
+        background-color: #ffffff;
+        border: 0;
+        text-align: center;
+        > p {
+            margin-bottom: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 260px;
+            min-height: 40px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        img {
+            margin-bottom: 10px;
+        }
+    }
+    .panel-body {
+        min-height: 414px;
+        padding-top: 0;
+        padding-bottom: 0;
+        img {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+.feed-list .feed-item {
+    font-size: 15px;
+    &.recommended {
+        border-color: @primaryColor;
+    }
+}
+
 /* Search ---------- */
 #search-result {
     .btn {
@@ -498,6 +562,16 @@
         margin: 0 auto 15px auto;
     }
 }
+.registration-complete {
+    form {
+        text-align: center;
+        margin: auto;
+        max-width: 320px;
+    }
+    input, button {
+        margin: auto;
+    }
+}
 
 /* Settings ---------- */
 .settings-page {
@@ -537,7 +611,7 @@
 
 /* Notifications ---------- */
 .notifications-page {
-
+    //
 }
 
 /* Discover (Members, Brands, Users) ---------- */
@@ -704,15 +778,7 @@
     z-index: 999;
 }
 
-/* Feed ---------- */
-.feed-list .feed-item {
-    font-size: 15px;
-    &.recommended {
-        border-color: @primaryColor;
-    }
-}
-
-/* Feed ---------- */
+/* Onboarding ---------- */
 .onboarding-page {
     p {
         margin-top: 15px;

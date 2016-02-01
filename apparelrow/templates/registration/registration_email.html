@@ -9,15 +9,15 @@ function emailUsername(emailAddress)
     return emailAddress.substring(0, emailAddress.indexOf("@"));
 }
 
-function updateUsername(){        
+function updateUsername(){
     email = document.getElementById("id_email").value;
     if (email.indexOf("@") > -1) {
         username = emailUsername(email);
-    }     
+    }
     else {
         username = email;
     }
-    document.getElementById("id_username").value = username;    
+    document.getElementById("id_username").value = username;
 }
 </script>
     <div class="container center">
@@ -39,8 +39,8 @@ function updateUsername(){
                 <div class="col-is-6">
                     <div class="form-group{% if form.email.errors %} error{% endif %}">
                         <label for="id_{{ form.last_name.html_name }}">{% trans "Last name" %}</label>
-                        <input name="{{ form.last_name.html_name }}" type="text" id="id_{{ form.last_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
-                        {% if form.last_name.errors %}<span class="help-block">{{ form.first_name.errors.as_text }}</span>{% endif %}
+                        <input name="{{ form.last_name.html_name }}" type="text" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                        {% if form.last_name.errors %}<span class="help-block">{{ form.last_name.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n apparel_extras %}
+{% load i18n apparel_extras staticfiles %}
 
 {% block head-data %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ FACEBOOK_OG_TYPE }}: http://ogp.me/ns/fb/{{ FACEBOOK_OG_TYPE }}#"{% endblock head-data %}
 
@@ -19,10 +19,11 @@
 
 {% block 'extra-scripts' %}
 {% if request.user.is_authenticated and request.user == profile %}
+<script src="{% static 'js/jquery/masonry.min.js' %}"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-    $('.profile-header .btn-change-description').enableEditable();
-});
+    $(document).ready(function() {
+        $('.profile-header .btn-change-description').enableEditable();
+    });
 </script>
 {% endif %}
 {% endblock 'extra-scripts' %}
@@ -31,7 +32,7 @@ $(document).ready(function() {
 {% block full-body %}
 <div class="profile-header">
     <div class="container">
-        <div id="profile-image">
+        <!--<div id="profile-image">
             <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_circular_large }}"></a>
             {% if request.user.is_authenticated and request.user == profile %}
             <a class="btn btn-edit" href="#edit"><i class="fa fa-camera"></i></a>
@@ -62,10 +63,16 @@ $(document).ready(function() {
                 <button class="btn btn-secondary btn-cancel-description">{% trans "Cancel" %}</button>
             </form>
             {% endif %}
-        </div>
+        </div>-->
 
-        {% with likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
+        <div class="cover-image" style="image"></div>
+
+        {% with default_url=profile.url_default likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
         <ul class="sub-menu">
+            <li>
+                <a{% if request.path == default_url %} class="selected"{% endif %} href="{{ default_url }}">{% trans "All" %}</a>
+                <span>({{ profile.total_look_count }})</span>
+            </li>
             <li>
             {% if profile and profile.is_brand %}
                 {% url 'brand-likes-men' profile.slug as likes_url_men %}
@@ -104,4 +111,5 @@ $(document).ready(function() {
 <div class="container">
     {% block content %}{% endblock content %}
 </div>
+
 {% endblock %}

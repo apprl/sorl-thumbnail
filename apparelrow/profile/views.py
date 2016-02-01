@@ -80,6 +80,35 @@ def save_description(request):
 
 @get_current_user
 @avatar_change
+def default(request, profile, form, page=0):
+    """
+    Displays the default page (all).
+    """
+    content = {
+        'next': request.get_full_path(),
+        'profile': profile,
+        'avatar_absolute_uri': profile.avatar_large_absolute_uri(request),
+    }
+    content.update(form)
+    content.update(get_profile_sidebar_info(request, profile))
+
+    is_brand = False
+    if profile.is_brand:
+        is_brand = profile.brand_id
+
+    return browse_products(request,
+                           template='profile/default.html',
+                           gender=request.GET.get('gender', 'A'),
+                           user_gender='A',
+                           language=None,
+                           user_id=profile.pk,
+                           disable_availability=not is_brand,
+                           is_brand=is_brand,
+                           **content)
+
+
+@get_current_user
+@avatar_change
 def likes(request, profile, form, page=0):
     """
     Displays the profile likes page.
