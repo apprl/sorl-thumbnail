@@ -3,87 +3,89 @@
 {% spaceless %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
-    <head>
-        <title>Shop | Apprl - Social Shopping</title>
-        <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
-        {% compressed_css 'bootstrap' %}
-        <style>body { background-color: #fff; }</style>
-        <script type="text/javascript">
-            var language_code = '{{ LANGUAGE_CODE }}';
-            var embed_shop_user_id = {{ user_id }};
-        </script>
-        {% compressed_js 'shop' %}
-        <script type="text/javascript">
-            $(function () {
-                $(document).on('click', '.product-image, .product-footer a.looks', function() {
-                    var slug = $(this).data('slug');
-                    var vendor = $(this).data('vendor');
-                    var label = vendor + ' - ' + slug;
-                    slug = undefined;
-                    if(typeof slug === 'undefined') {
-                        var href_split = $(this).attr('href').split('/');
-                        if(href_split.length > 2) {
-                            label = href_split[2];
-                        } else {
-                            label = '';
-                        }
+<head>
+    <title>Shop | Apprl - Social Shopping</title>
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles/external-shop.css' %}">
+    {# compressed_css 'bootstrap' #}
+    <style>body { background-color: #fff; }</style>
+    <script type="text/javascript">
+        var language_code = '{{ LANGUAGE_CODE }}';
+        var embed_shop_user_id = {{ user_id }};
+    </script>
+    {% compressed_js 'shop' %}
+    <script type="text/javascript">
+        $(function () {
+            $(document).on('click', '.product-image, .product-footer a.looks', function() {
+                var slug = $(this).data('slug');
+                var vendor = $(this).data('vendor');
+                var label = vendor + ' - ' + slug;
+                slug = undefined;
+                if(typeof slug === 'undefined') {
+                    var href_split = $(this).attr('href').split('/');
+                    if(href_split.length > 2) {
+                        label = href_split[2];
+                    } else {
+                        label = '';
                     }
-                    _gaq.push(['_trackEvent', 'Ext-Shop', 'SeeLooks', label]);
-                });
+                }
+                _gaq.push(['_trackEvent', 'Ext-Shop', 'SeeLooks', label]);
             });
-        </script>
-        <script type="text/javascript">
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        });
+    </script>
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-            ga('create', '{{ GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT }}', {'cookieDomain': '{{ GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN }}'});
-            ga('send', 'pageview');
+        ga('create', '{{ GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT }}', {'cookieDomain': '{{ GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN }}'});
+        ga('send', 'pageview');
 
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
-            _gaq.push(['_setDomainName', '{{ GOOGLE_ANALYTICS_DOMAIN }}']);
-            _gaq.push(['_trackPageview']);
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
-        <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>
-        <script type="text/javascript">
-          fx.base = 'SEK';
-          fx.rates = {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
+        _gaq.push(['_setDomainName', '{{ GOOGLE_ANALYTICS_DOMAIN }}']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <script type="text/javascript" src="{% static "js/money.min.js" %}"></script>
+    <script type="text/javascript">
+        fx.base = 'SEK';
+        fx.rates = {
             {% for currency, rate in currency_rates.items %}
             '{{ currency }}': {{ rate|unlocalize }},
             {% endfor %}
             'SEK': 1
-          };
-          var current_currency = '{{ CURRENCY }}';
-          function formatNumber(num) {
+        };
+        var current_currency = '{{ CURRENCY }}';
+        function formatNumber(num) {
             var array = parseInt(num, 10).toFixed().split('');
             var index = -3;
             while (array.length + index > 0) {
-              array.splice(index, 0, ' ');
-              index -= 4;
+                array.splice(index, 0, ' ');
+                index -= 4;
             }
             return array.join('');
-          };
-          function currencyConversion(elements) {
+        };
+        function currencyConversion(elements) {
             elements.each(function(index, element) {
-              var $element = jQuery(element);
-              var data = $element.data();
-              var converted_price = Math.round(fx.convert(data.price, {from: data.currency, to: current_currency}));
-              $element.text(formatNumber(converted_price) + ' ' + current_currency);
-          });
+                var $element = jQuery(element);
+                var data = $element.data();
+                var converted_price = Math.round(fx.convert(data.price, {from: data.currency, to: current_currency}));
+                $element.text(formatNumber(converted_price) + ' ' + current_currency);
+            });
         }
-        </script>
-    </head>
-    <body class="shop shop-embed {% if not show_filters %}no-filters{% endif %}">
-        <div class="container-fluid">
-            {% include 'apparel/product_list.html' with is_embed_shop=True show_filters=show_filters %}
-        </div>
-    </body>
+    </script>
+</head>
+<body class="apprl-shop {% if not show_filters %}no-filters{% endif %}">
+    <div class="container">
+        {% include 'apparel/product_list.html' with is_embed_shop=True show_filters=show_filters %}
+    </div>
+</body>
 </html>
 {% endspaceless %}

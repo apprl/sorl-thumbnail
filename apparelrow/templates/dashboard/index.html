@@ -233,7 +233,7 @@
     <a type="button" class="btn btn-white btn-lg" href="{% url 'publisher-contact' %}">{% trans "Get access" %}</a>
 </section>
 
-<script src="/static/js/jquery/owl.carousel.min.js"></script>
+<script src="{% static 'js/jquery/owl.carousel.min.js' %}"></script>
 <script type="text/javascript">
 $(window).load(function() {
     $('#slider-publishers').owlCarousel({

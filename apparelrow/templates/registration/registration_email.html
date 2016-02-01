@@ -9,15 +9,15 @@ function emailUsername(emailAddress)
     return emailAddress.substring(0, emailAddress.indexOf("@"));
 }
 
-function updateUsername(){        
+function updateUsername(){
     email = document.getElementById("id_email").value;
     if (email.indexOf("@") > -1) {
         username = emailUsername(email);
-    }     
+    }
     else {
         username = email;
     }
-    document.getElementById("id_username").value = username;    
+    document.getElementById("id_username").value = username;
 }
 </script>
     <div class="container center">
