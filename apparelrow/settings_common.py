@@ -338,7 +338,7 @@ PIPELINE_CSS = {
     'bootstrap': {
         'source_filenames': (
             'less/base.less',
-            'js/vendor/add2home.css',
+            #'js/vendor/add2home.css',
         ),
         'output_filename': 'css/ender.css',
         'extra_context': {
