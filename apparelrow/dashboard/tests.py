@@ -19,6 +19,7 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
 from apparelrow.dashboard.views import publisher_contact
+from apparelrow.apparel.utils import generate_sid, parse_sid
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
@@ -2095,6 +2096,59 @@ class TestUtils(TransactionTestCase):
         get_model('dashboard', 'ClickCost').objects.create(vendor=self.vendor_cpc, amount=1.00, currency="EUR")
         get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
                                                      vendor=self.vendor_cpc)
+        self.short_link = ShortLinkFactory(user=self.user)
+
+    def test_generate_sid_no_data(self):
+        product_id = None
+        sid = generate_sid(product_id)
+        self.assertEqual(sid, "0-0-Default")
+
+    def test_generate_sid_no_product(self):
+        product_id = None
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        source_link = self.short_link.link()
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=source_link)
+        self.assertEqual(sid, "%s-0-%s/%s" % (target_user_id, page, source_link))
+
+    def test_generate_sid(self):
+        product_id = 20
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page)
+        self.assertEqual(sid, "%s-%s-%s" % (target_user_id, product_id, page))
+
+    def test_generate_sid_with_source_link(self):
+        product_id = 20
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        source_link = self.short_link.link()
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=source_link)
+        self.assertEqual(sid, "%s-%s-%s/%s" % (target_user_id, product_id, page, source_link))
+
+    def test_parse_sid(self):
+        sid = "12-21-Ext-Store/http://apprl.com/p/AJSJ"
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 12)
+        self.assertEqual(product_id, 21)
+        self.assertEqual(placement, "Ext-Store")
+        self.assertEqual(source_link, "http://apprl.com/p/AJSJ")
+
+    def test_parse_sid_no_data(self):
+        sid = ""
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 0)
+        self.assertEqual(product_id, 0)
+        self.assertEqual(placement, "Unknown")
+        self.assertEqual(source_link, "")
+
+    def test_parse_sid_no_source_link(self):
+        sid = "12-21-Ext-Store"
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 12)
+        self.assertEqual(product_id, 21)
+        self.assertEqual(placement, "Ext-Store")
+        self.assertEqual(source_link, "")
 
     def test_map_placement(self):
         self.assertEqual(map_placement('Unknown'), 'Unknown')
@@ -2270,7 +2324,7 @@ class TestAggregatedData(TransactionTestCase):
         self.user.save()
 
     def test_get_aggregated_products_and_publishers(self):
-        yesterday = (datetime.date.today() - datetime.timedelta(1))
+        today = datetime.date.today()
 
         # Generate Earnings and click data with product information
         vendor = VendorFactory.create(name="Vendor Aggregated CPO")
@@ -2289,28 +2343,28 @@ class TestAggregatedData(TransactionTestCase):
         # Generate clicks for CPO
         for index in range(200):
             ProductStatFactory.create(vendor=vendor.name, is_valid=True, ip= "1.22.3.4", product=product.slug,
-                                      created=yesterday, user_id=self.user.id)
+                                      created=today, user_id=self.user.id)
 
         # Generate clicks for CPC
         for index in range(100):
             ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.22.3.4", product=product_cpc.slug,
-                                      created=yesterday, user_id=self.user.id)
+                                      created=today, user_id=self.user.id)
 
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(user_id=self.user.id).count(), 300)
 
         # Generate earnings CPC
-        management.call_command('clicks_summary', verbosity=0)
+        management.call_command('clicks_summary', date=today.strftime("%Y-%m-%d"), verbosity=0)
 
         # Generate earnings CPO
         for index in range(1, 11):
-            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=yesterday,
-                               sale_date=yesterday, pk=index+2)
+            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=today,
+                               sale_date=today, pk=index+2)
 
         self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 11)
         self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
         self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=self.user).count(), 11)
 
-        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+        management.call_command('collect_aggregated_data', date=today.strftime("%Y-%m-%d"), verbosity=0, interactive=False)
 
         start_date, end_date = get_current_month_range()
         # Check data from get_aggregated_products is correct

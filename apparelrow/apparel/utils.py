@@ -192,7 +192,10 @@ def remove_query_parameter(url, param_name):
     return urlunsplit((scheme, netloc, path, new_query_string, fragment))
 
 
-def generate_sid(product_id, target_user_id=0, page='Default'):
+def generate_sid(product_id, target_user_id=0, page='Default', source_link=None):
+    """
+    Return string with the structure [user_id]-[product_id]-[page]/[source_link] from the given parameters
+    """
     try:
         target_user_id = int(target_user_id)
     except (TypeError, ValueError, AttributeError):
@@ -203,38 +206,49 @@ def generate_sid(product_id, target_user_id=0, page='Default'):
     except (TypeError, ValueError, AttributeError):
         product_id = 0
 
-    return smart_str('%s-%s-%s' % (target_user_id, product_id, page))
+    sid = smart_str('%s-%s-%s' % (target_user_id, product_id, page))
+    if source_link:
+        sid += "/%s" % source_link
+    return sid
 
 
 def parse_sid(sid):
+    """
+    Return tuple (user_id, product_id, placement, source_link) from a given id with the
+    structure user_id-product_id-placement/source_link
+    """
+    target_user_id = 0
+    product_id = 0
+    page = 'Unknown'
+    source_link = ''
     if sid:
-        try:
-            target_user_id, rest = sid.split('-', 1)
-            try:
-                product_id, page = rest.split('-', 1)
-                return (int(target_user_id), int(product_id), page)
-            except ValueError:
+        sid_array = sid.split('-', 1)
+        if len(sid_array) > 1:
+            target_user_id = int(sid_array[0])
+            rest = sid_array[1]
+            sid_array = rest.split('-', 1)
+            if len(sid_array) > 1:
+                product_id = int(sid_array[0])
+                page = sid_array[1]
+                if len(page.split('/', 1)) > 1:
+                    page, source_link = page.split('/', 1)
+            else:
                 try:
-                    return (int(target_user_id), int(rest), 'Unknown')
+                    product_id = int(rest)
                 except ValueError:
-                    pass
-                return (int(target_user_id), 0, rest)
-        except ValueError:
-            pass
+                    page = rest
+        else:
+            try:
+                product_id = int(sid)
+            except ValueError:
+                pass
+    return target_user_id, product_id, page, source_link
 
-        try:
-            return (int(sid), 0, 'Unknown')
-        except ValueError:
-            pass
-
-    return (0, 0, 'Unknown')
-
-
-def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
+def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default', source_link=''):
     """
     Append custom SID to every vendor buy URL.
     """
-    sid = generate_sid(product_id, target_user_id, page)
+    sid = generate_sid(product_id, target_user_id, page, source_link)
 
     if not vendor or not vendor.buy_url:
         return ''
