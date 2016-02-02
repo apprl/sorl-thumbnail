@@ -5,8 +5,12 @@
 <html lang="{{ request.LANGUAGE_CODE }}" class="look-type-{{ object.display_with_component }}">
 <head>
     <title>{{ object.title }} by {{ object.user.display_name }} | Apprl - Social Shopping</title>
-    <!--<link rel="stylesheet" href="{% static 'styles/widget.css' %}">
-    <link rel="stylesheet" href="{% static 'less/widget.css' %}">-->
+    {% comment %}
+        <!-- This is the old system with styling for external widgets -->
+        <link rel="stylesheet" href="{% static 'styles/widget.css' %}">
+        <link rel="stylesheet" href="{% static 'less/widget.css' %}">
+    {% endcomment %}
+
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'styles/external-look.css' %}">
     <link rel="canonical" href="{% url 'look-detail' object.slug %}">
