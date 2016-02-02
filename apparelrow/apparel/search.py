@@ -231,6 +231,7 @@ def rebuild_product_index(url=None, vendor_id=None):
     connection = Solr(url or settings.SOLR_URL)
     product_count = 0
     product_buffer = collections.deque()
+    boost = {}
 
     products = get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified')
 
