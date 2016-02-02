@@ -434,7 +434,7 @@ def rebuild_look_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
     look_count = 0
     look_buffer = collections.deque()
-
+    boost = {}
     for look in get_model('apparel', 'Look').objects.filter(user__is_hidden=False).iterator():
         document, boost = get_look_document(look)
         look_buffer.append(document)
@@ -476,6 +476,7 @@ def get_look_document(instance):
 
 @receiver(post_save, sender=get_user_model(), dispatch_uid='search_index_user_save')
 def search_index_user_save(instance, **kwargs):
+    boost = {}
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
@@ -494,6 +495,7 @@ def rebuild_user_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
     user_count = 0
     user_buffer = collections.deque()
+    boost = {}
 
     for user in get_user_model().objects.filter(is_hidden=False, is_brand=False).iterator():
         document, boost = get_profile_document(user)
