@@ -353,8 +353,10 @@ def get_product_document(instance, rebuild=False):
 
         # Shops and their products
         shops = list(get_model('apparel', 'ShopProduct').objects.filter(product=instance, shop_embed__published=True).values_list('shop_embed__id', 'shop_embed__modified'))
+        # Adding array with the different shops that the product has been added to.
         document['shop_products'] = [x[0] for x in shops]
         for x in shops:
+            # Adding the shop products with a date for use as sorting parameter when fetching shop products.
             document['%s_spd' % (x[0],)] = x[1]
 
         # Templates
