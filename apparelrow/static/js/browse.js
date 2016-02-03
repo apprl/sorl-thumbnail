@@ -698,7 +698,7 @@ function updateEmbeddedProducts($list) {
 
 function renderProducts(products) {
     $('#product-list > .product-list').empty();
-    $('#product-list > h3').text(products.browse_text);
+    $('#product-list > h4').text(products.browse_text);
 
     renderPage(products);
 
