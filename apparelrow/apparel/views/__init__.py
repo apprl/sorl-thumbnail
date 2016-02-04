@@ -8,7 +8,6 @@ import os.path
 import string
 import urllib
 import urlparse
-from apparelrow.apparel.utils import currency_exchange
 import decimal
 import re
 import tldextract
@@ -45,7 +44,7 @@ from apparelrow.apparel.models import Brand, Product, ProductLike
 from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortStoreLink, ShortDomainLink
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
-    select_from_multi_gender, JSONResponse, JSONPResponse
+    select_from_multi_gender, JSONResponse, JSONPResponse, generate_sid
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 
 from apparelrow.activity_feed.views import user_feed
@@ -938,7 +937,9 @@ def product_lookup_by_domain(request, domain, key):
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
-        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
+
+        sid = generate_sid(0, user_id, 'Ext-Link', url)
+        return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
     return None, None
 
 

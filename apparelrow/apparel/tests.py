@@ -5,7 +5,7 @@ from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.search import product_save, get_product_document
 from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
-    extract_asos_nelly_product_url
+    extract_asos_nelly_product_url, product_lookup_by_domain
 from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
 from decimal import Decimal
@@ -14,7 +14,7 @@ from apparelrow.apparel.models import Shop, ShopEmbed
 
 from django.core.urlresolvers import reverse
 from django.utils.translation import activate
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
@@ -740,6 +740,8 @@ class TestShortLinks(TestCase):
         self.user.partner_group = self.group
         self.user.save()
 
+        self.factory = RequestFactory()
+
     def test_store_link(self):
         template = "http://www.anrdoezrs.net/links/4125005/type/dlg/sid/{sid}/http://www.nastygal.com/"
         store_link = get_model('apparel', 'ShortStoreLink').objects.create(vendor=self.vendor, template=template)
@@ -773,6 +775,71 @@ class TestShortLinks(TestCase):
 
         # No ProductStat were created
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
+
+    def test_short_domain_link_aan(self):
+        vendor = VendorFactory.create(name="Henry Kole", provider="aan")
+        template = "http://apprl.com/a/link/?store_id=henrykole&custom={sid}&url={url}"
+        key = "http://www.henrykole.se/shoes.html"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.henrykole.se/")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.henrykole.se/", key)
+        sid = "%s-0-Ext-Link/http://www.henrykole.se/shoes.html" % self.user.id
+        self.assertEqual(link, "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_affiliate_window(self):
+        vendor = VendorFactory.create(name="Oki-Ni", provider="affiliatewindow")
+        template = "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref={sid}&p={url}"
+        key = "http://www.oki-ni.com/en/outerwear/coats"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.oki-ni.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.oki-ni.com", key)
+        sid = "%s-0-Ext-Link/http://www.oki-ni.com/en/outerwear/coats" % self.user.id
+        self.assertEqual(link, "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref=%s&p=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_linkshare(self):
+        vendor = VendorFactory.create(name="ALDO", provider="linkshare")
+        template = "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1" \
+                   "&type=10&tmpid=12919&u1={sid}&RD_PARM1={url}"
+        key = "http://www.aldoshoes.com/ca/en/women/c/100"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.aldoshoes.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.aldoshoes.com", key)
+        sid = "%s-0-Ext-Link/http://www.aldoshoes.com/ca/en/women/c/100" % self.user.id
+        self.assertEqual(link, "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1&"
+                               "type=10&tmpid=12919&u1=%s&RD_PARM1=%s" % (sid,key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_tradedoubler(self):
+        vendor = VendorFactory.create(name="Nelly", provider="tradedoubler")
+        template = "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi={sid}&url={url}"
+        key = "http://nelly.com/se/skor-kvinna/"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="http://nelly.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "nelly.com", key)
+        sid = "%s-0-Ext-Link/http://nelly.com/se/skor-kvinna/" % self.user.id
+
+        self.assertEqual(link, "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi=%s&url=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_zanox(self):
+        vendor = VendorFactory.create(name="Dagmar", provider="zanox")
+        template = "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[{ulp}]]&zpar0=[[{sid}]]"
+        key = "http://www.houseofdagmar.se/product-category/sweaters/"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.houseofdagmar.se")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.houseofdagmar.se", key)
+        ulp = "/product-category/sweaters/"
+        sid = "%s-0-Ext-Link/http://www.houseofdagmar.se/product-category/sweaters/" % self.user.id
+        self.assertEqual(link, "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[%s]]&zpar0=[[%s]]" % (ulp, sid))
+        self.assertEqual(vendor, link_vendor)
+
 
 @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
 class TestUtils(TestCase):

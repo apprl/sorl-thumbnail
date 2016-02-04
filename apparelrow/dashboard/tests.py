@@ -1341,6 +1341,20 @@ class TestAffiliateNetworks(TransactionTestCase):
         boozt_no_sales = sale_model.objects.filter(vendor=self.boozt_no_vendor).count()
         self.assertEqual(boozt_no_sales, 5)
 
+    def test_dashboard_links(self):
+        text = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_test.csv')).read()
+        data = text.splitlines()
+        management.call_command('dashboard_import', 'linkshare', data=data, verbosity=0, interactive=False)
+
+        sale_model = get_model('dashboard', 'Sale')
+
+        self.assertEqual(sale_model.objects.count(), 13)
+        self.assertEqual(sale_model.objects.exclude(source_link__exact='').count(), 3)
+
+        links_sales = sale_model.objects.exclude(source_link__exact='')
+        for item in links_sales:
+            self.assertEqual(item.source_link, 'http://www.mystore.com/shop/woman/shoes')
+
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestSalesPerClick(TransactionTestCase):
@@ -2086,7 +2100,7 @@ class TestUtils(TransactionTestCase):
 
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         self.user.is_partner = True
-        self.user.date_joined = datetime.datetime.strptime("2013-05-07", "%Y-%m-%d")
+        self.user.date_joined = datetime.datetime.strptime("2014-05-07", "%Y-%m-%d")
         self.user.partner_group = self.group
         self.user.save()
 
@@ -2203,9 +2217,21 @@ class TestUtils(TransactionTestCase):
         """ Test months choices, year choices and display text for month passed as input are correct.
         """
         june = 06
-        year_list = [row for row in range(2013, datetime.date.today().year+1)]
+        year_list = [row for row in range(self.user.date_joined.year, datetime.date.today().year+1)]
 
         month_display, month_choices, year_choices = enumerate_months(self.user, june)
+        self.assertEqual(month_display, "June")
+        self.assertEqual(year_choices, year_list)
+        self.assertEqual(len(month_choices), 13) # 12 months  All Year option
+
+    def test_enumerate_months_is_admin(self):
+        """ Test months choices, year choices and display text for month passed as input are correct when
+        logged as an admin. It should return a list of years since 2011 until the current year.
+        """
+        june = 06
+        year_list = [row for row in range(2011, datetime.date.today().year+1)]
+
+        month_display, month_choices, year_choices = enumerate_months(self.user, june, is_admin=True)
         self.assertEqual(month_display, "June")
         self.assertEqual(year_choices, year_list)
         self.assertEqual(len(month_choices), 13) # 12 months  All Year option
@@ -2413,8 +2439,10 @@ class TestAggregatedData(TransactionTestCase):
         top_publishers = get_aggregated_publishers(None, start_date, end_date)
         self.assertEqual(len(top_publishers), 0)
 
+
 class MockRequest(object):
     pass
+
 
 class TestReferralBonus(TransactionTestCase):
 
