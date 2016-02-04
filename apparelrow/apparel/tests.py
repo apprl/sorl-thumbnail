@@ -2,7 +2,6 @@
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.search import product_save, get_product_document
 from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
 from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
@@ -207,6 +206,7 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
+
 
 class TestChromeExtensionSpecials(TestCase):
     fixtures = ['extensiontest_vendor.json', 'extensiontest_product.json']
@@ -838,10 +838,10 @@ class TestUtils(TestCase):
     def test_product_earning_is_cpc(self):
         """ Test functions that returns earning cut and product earning for a CPC vendor with Cost per Click
         """
-        self.assertIsNotNone(self.product_cpc.default_vendor)
+        self.assertIsNotNone(self.product_cpc.default_vendor.vendor)
 
         # Test get earning cut
-        earning_cut = get_earning_cut(self.user, self.product_cpc.default_vendor, self.product_cpc)
+        earning_cut = get_earning_cut(self.user, self.product_cpc.default_vendor.vendor, self.product_cpc)
         self.assertEqual(earning_cut, Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
         click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.product_cpc.default_vendor.vendor)
@@ -873,7 +873,7 @@ class TestUtils(TestCase):
         get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_cpo,
                                                      cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
                                                      referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
-        earning_cut = get_earning_cut(self.user, product_cpo.default_vendor, product_cpo)
+        earning_cut = get_earning_cut(self.user, product_cpo.default_vendor.vendor, product_cpo)
         self.assertEqual("%.2f" % earning_cut, "%.2f" %
                                (Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT) * Decimal(store.commission_percentage)))
 
@@ -898,7 +898,7 @@ class TestUtils(TestCase):
         product_earning = get_product_earning(self.user, product_no_vendor.default_vendor, product_no_vendor)
         self.assertIsNone(product_earning)
 
-class TestUtils(TestCase):
+class TestUtilsLocationWarning(TestCase):
     def setUp(self):
         self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
 
@@ -1041,6 +1041,7 @@ class TestSearch(TransactionTestCase):
     def test_brand_page(self):
         pass
 
+
 def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
     django_image_file = _create_dummy_image()
     _cleanout_product(product_key)
@@ -1068,9 +1069,11 @@ def _send_product_to_solr(product_key, vendor_name=None, product_name=None, bran
     product_save(product, commit=True)
     return product.id
 
+
 def _cleanout_products(product_keys):
     for product_key in product_keys:
         _cleanout_product(product_key)
+
 
 def _cleanout_product(product_key):
     product_id = product_lookup_by_solr(None, product_key)
@@ -1082,6 +1085,7 @@ def _cleanout_product(product_key):
         print "%s has been removed from index." % product_solr_id
     else:
         print "No previous products found"
+
 
 def _create_dummy_image():
     from PIL import Image

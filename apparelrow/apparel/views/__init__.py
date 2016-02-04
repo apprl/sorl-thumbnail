@@ -145,6 +145,26 @@ def get_vendor_cost_per_click(vendor):
                 logger.warning("ClickCost not defined for vendor %s" % vendor)
     return click_cost
 
+def get_product_earning(user, default_vendor, product):
+    product_earning = None
+    if not default_vendor or not default_vendor.vendor:
+        return None
+
+    earning_cut = get_earning_cut(user, default_vendor.vendor, product)
+    if earning_cut:
+        earning_total = decimal.Decimal(0)
+        if default_vendor.vendor.is_cpc:
+            try:
+                cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
+                earning_total = cost_per_click.amount
+            except:
+                logger.warn("Not able to calculate earning for {}".format(product.product_name))
+                earning_total = 0
+        elif default_vendor.vendor.is_cpo:
+            earning_total = default_vendor.locale_price
+        product_earning = earning_total * earning_cut
+    return product_earning
+
 def get_vendor_commission(vendor):
     """
     Get commission for Vendor either if it is an AAN Store or any other affiliate network

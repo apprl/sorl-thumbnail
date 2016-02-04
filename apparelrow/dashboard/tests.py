@@ -1,7 +1,7 @@
 import re
 import urllib
 import os
-import json
+from django.contrib.admin import AdminSite
 from apparelrow.dashboard.factories import *
 
 from django.core import mail
