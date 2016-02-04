@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 import datetime
 import calendar
+from apparelrow.statistics.utils import check_vendor_has_reached_limit
 
 class Command(BaseCommand):
     args = ''
@@ -17,14 +18,8 @@ class Command(BaseCommand):
         vendor_list = get_model('apparel', 'Vendor').objects.filter(is_cpc=True)
         for vendor in vendor_list:
             if vendor.is_cpc:
-                clicks_limit = vendor.clicks_limit if vendor.clicks_limit else settings.APPAREL_DEFAULT_CLICKS_LIMIT
-                clicks_amount = get_model('statistics', 'ProductStat').objects.\
-                    filter(vendor=vendor.name, created__range=(start_date, end_date)).count()
-                if clicks_amount >= clicks_limit:
-                    if not vendor.is_limit_reached:
-                        mail_admins('Clicks limit reached', 'Limit for clicks for vendor %s has been reached' % vendor.name)
-                        vendor.is_limit_reached = True
-                        vendor.save()
-                elif vendor.is_limit_reached:
-                    vendor.is_limit_reached = False
-                    vendor.save()
+                has_reached_limit = check_vendor_has_reached_limit(vendor, start_date, end_date)
+
+                # Mail admins if limit has been reached
+                if has_reached_limit:
+                    mail_admins('Clicks limit reached', 'Limit for clicks for vendor %s has been reached' % vendor.name)

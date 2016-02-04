@@ -56,7 +56,6 @@ from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 from pysolr import Solr
 
-
 logger = logging.getLogger("apparelrow")
 
 FAVORITES_PAGE_SIZE = 30

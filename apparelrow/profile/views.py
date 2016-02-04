@@ -351,7 +351,6 @@ def settings_email(request):
     password_form = FormClass(request.user)
     facebook_form = FacebookSettingsForm(instance=request.user)
 
-
     return render(request, 'profile/settings_email.html', {
             'email_form': form,
             'email_change': email_change,

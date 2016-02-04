@@ -29,12 +29,6 @@
     <script src="//cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
-    <!-- TradeDoubler site verification 2463884 -->
-    <!-- TradeDoubler site verification 2463889 -->
-    <!-- TradeDoubler site verification 2463894 -->
-    <!-- TradeDoubler site verification 2463896 -->
-    <!-- TradeDoubler site verification 1897050 -->
-    <!-- TradeDoubler site verification 1897442 -->
     <script type="text/javascript">
         var language_code = '{{ LANGUAGE_CODE }}';
         var product_popup_url = '{% url "product-popup" %}';
@@ -200,12 +194,13 @@
                     </li>
                     {% endif %}
                 </ul>
+                {% comment %}
                 {% if request.user.is_authenticated %}
                 <ul class="nav navbar-nav navbar-right hidden-xs">
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}
                 </ul>
                 {% endif %}
-
+                {% endcomment %}
                 <ul class="nav navbar-nav navbar-nav-main">
                     {% if request.user.is_authenticated %}
                     <li class="visible-xs"><a href="{% multi_gender_url request 'feed' 'index' %}"><span>{% trans "Your APPRL" %}</span></a></li>
@@ -324,9 +319,8 @@
                             <li><h4>Apprl Fashion AB</h4></li>
                             <li>
                                 <address>
-                                    c/o SUP46<br>
-                                    Regeringsgatan 29<br>
-                                    111 53 Stockholm<br>
+                                    Kammakargatan 41<br>
+                                    111 24 Stockholm<br>
                                     {% trans "Sweden" %}
                                 </address>
                             </li>

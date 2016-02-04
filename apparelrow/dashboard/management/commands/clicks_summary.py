@@ -51,7 +51,6 @@ class Command(BaseCommand):
         logger.info("Earning per click with sale id %s for user %s updated " % (instance.id, instance.user_id))
         return instance
 
-
     def handle(self, *args, **options):
         date = options.get('date')
         if not date:

@@ -2,9 +2,11 @@
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
+from apparelrow.apparel.search import product_save, get_product_document
+from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
 from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
-    extract_asos_nelly_product_url, user_list
+    extract_asos_nelly_product_url
 
 from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
@@ -14,6 +16,7 @@ from apparelrow.apparel.models import Shop, ShopEmbed
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
+from django.utils.translation import activate
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.profile.models import User
@@ -773,6 +776,127 @@ class TestShortLinks(TestCase):
         # No ProductStat were created
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
 
+@override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
+class TestUtils(TestCase):
+
+    def setUp(self):
+        activate('sv')
+        vendor_success = VendorFactory.create(name="Vendor Success", is_cpc=True, is_cpo=False)
+        get_model('dashboard', 'ClickCost').objects.create(vendor=vendor_success, amount=1.00, currency="EUR")
+
+        VendorFactory.create(name="Vendor Fail", is_cpc=True, is_cpo=False)
+
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.is_partner = True
+        self.user.location = 'SE'
+        self.user.save()
+
+        self.django_image_file = _create_dummy_image()
+        self.category = CategoryFactory.create()
+        self.manufacturer = BrandFactory.create()
+        self.product_cpc = ProductFactory.create(
+            product_name='Product CPC',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        vendorproduct = VendorProductFactory.create(vendor=vendor_success, product=self.product_cpc, availability=True)
+        del self.product_cpc.default_vendor
+        product_save(self.product_cpc, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(self.product_cpc.default_vendor)
+
+        get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_success,
+                                                     cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                     referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+
+    def test_get_vendor_cost_per_click(self):
+        """ Test function that returns cost per click when is a valid Vendor with valid Cost per click
+            object associated
+        """
+        vendor_success = get_model('apparel', 'Vendor').objects.get(name="Vendor Success")
+        cost_per_click = get_vendor_cost_per_click(vendor_success)
+
+        self.assertIsNotNone(cost_per_click)
+        self.assertEqual(cost_per_click.amount, 1)
+        self.assertEqual(cost_per_click.currency, "EUR")
+        self.assertEqual(cost_per_click.vendor, vendor_success)
+
+    def test_get_vendor_cost_per_click_is_none(self):
+        """ Test function that returns cost per click when Vendor has not related Cost per Click object created.
+        """
+        vendor_fail = get_model('apparel', 'Vendor').objects.get(name="Vendor Fail")
+        cost_per_click = get_vendor_cost_per_click(vendor_fail)
+
+        self.assertIsNone(cost_per_click)
+
+    def test_product_earning_is_cpc(self):
+        """ Test functions that returns earning cut and product earning for a CPC vendor with Cost per Click
+        """
+        self.assertIsNotNone(self.product_cpc.default_vendor)
+
+        # Test get earning cut
+        earning_cut = get_earning_cut(self.user, self.product_cpc.default_vendor, self.product_cpc)
+        self.assertEqual(earning_cut, Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+
+        click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.product_cpc.default_vendor.vendor)
+        self.assertIsNotNone(click_cost)
+        # Test product earning
+        product_earning = get_product_earning(self.user, self.product_cpc.default_vendor, self.product_cpc)
+        self.assertEqual("%.2f" % product_earning, "%.2f" % (click_cost.amount * earning_cut))
+
+    def test_product_earning_is_cpo(self):
+        """ Test functions that returns earning cut and product earning for a CPO vendor
+        """
+        vendor_cpo = VendorFactory.create(name="Vendor CPO")
+        store = StoreFactory.create(vendor=vendor_cpo, commission_percentage='0.2')
+        product_cpo = ProductFactory.create(
+            product_name='Product CPO',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        vendorproduct = VendorProductFactory.create(vendor=vendor_cpo, product=product_cpo, availability=True)
+        del product_cpo.default_vendor
+        product_save(product_cpo, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(product_cpo.default_vendor)
+
+        get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_cpo,
+                                                     cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                     referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+        earning_cut = get_earning_cut(self.user, product_cpo.default_vendor, product_cpo)
+        self.assertEqual("%.2f" % earning_cut, "%.2f" %
+                               (Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT) * Decimal(store.commission_percentage)))
+
+        product_earning = get_product_earning(self.user, product_cpo.default_vendor, product_cpo)
+        self.assertEqual("%.2f" % product_earning, "%.2f" % (product_cpo.default_vendor.locale_price * earning_cut))
+
+    def test_product_earning_no_default_vendor(self):
+        """ Test functions that returns earning cut and product earning when Vendor is None
+        """
+        product_no_vendor = ProductFactory.create(
+            product_name='Product No Vendor',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        earning_cut = get_earning_cut(self.user, product_no_vendor.default_vendor, product_no_vendor)
+        self.assertIsNone(earning_cut)
+
+        product_earning = get_product_earning(self.user, product_no_vendor.default_vendor, product_no_vendor)
+        self.assertIsNone(product_earning)
 
 class TestUtils(TestCase):
     def setUp(self):
