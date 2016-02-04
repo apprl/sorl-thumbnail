@@ -1,7 +1,7 @@
 import re
 import urllib
 import os
-import json
+from django.contrib.admin import AdminSite
 from apparelrow.dashboard.factories import *
 
 from django.core import mail
@@ -22,9 +22,6 @@ from apparelrow.dashboard.views import publisher_contact
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
-from django.contrib.admin.sites import AdminSite
-
-
 from apparelrow.statistics.factories import *
 
 

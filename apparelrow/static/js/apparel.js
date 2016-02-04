@@ -456,6 +456,29 @@ function unlikeElement($element) {
     $element.removeClass('liked').find('span:first').text($element.data('like-text'));
 }
 
+function showWarning($element) {
+    var slug = $element.attr('data-slug');
+    jQuery.ajax({
+        type: 'POST',
+        url: '/products/check_location/' + slug + '/',
+        success: function(response, status, request) {
+            if(response){
+                $.notify({
+                    message: response
+                }, { // settings
+                    type: 'warning',
+                    z_index: 10031,
+                    offset: 50,
+                    placement: {
+                        from: "top",
+                        align: "center"
+                    }
+                });
+            }
+        }
+    });
+}
+
 /**
  * Activity functionality
  */
@@ -505,6 +528,7 @@ ApparelActivity = {
                 });
             } else {
                 likeElement(element);
+                showWarning(element);
                 $.post(element.data('like-url'), function(data) {
                     if(data['success'] == true) {
                         $(document).trigger('like', [element, event.data.type, element.data('id')]);

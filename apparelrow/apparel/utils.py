@@ -7,6 +7,7 @@ import urllib
 import httplib
 import uuid
 import logging
+import decimal
 
 from django.conf import settings
 from django.core.cache import cache
@@ -19,6 +20,7 @@ from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from django.utils.translation import ugettext_lazy as _
 
 logger = logging.getLogger("apparel.debug")
 
@@ -483,3 +485,61 @@ def save_location(request, location):
 
 def has_user_location(request):
     return hasattr(request, 'user') and hasattr(request.user, 'location') and request.user.location
+
+def get_location_text(location):
+    for key, text in settings.LOCATION_MAPPING_SIMPLE_TEXT:
+        if key == location:
+            return text
+    return None
+
+def get_market_text_array(vendor_markets):
+    markets_text = []
+    for item in vendor_markets:
+        location_text = get_location_text(item)
+        if location_text:
+            markets_text.append(location_text)
+    return markets_text
+
+def generate_countries_text(markets_text):
+    if len(markets_text) > 1:
+        return " and ".join([", ".join(markets_text[:-1]), markets_text[-1]])
+    return ", ".join(markets_text)
+
+def generate_text_for_markets_array(markets_text):
+    availability_text = ""
+    if len(markets_text) > 0:
+        availability_text = "Available in "
+        availability_text += generate_countries_text(markets_text)
+    return availability_text
+
+def get_availability_text(vendor_markets):
+    if vendor_markets:
+        markets_text = get_market_text_array(vendor_markets)
+        return generate_text_for_markets_array(markets_text)
+    return "Available Internationally"
+
+def get_location_warning_text(vendor_markets, user):
+    warning_text = ""
+    if hasattr(user, 'show_warnings') and user.show_warnings and user.is_partner:
+        if vendor_markets and user.location not in vendor_markets:
+            markets_text = get_market_text_array(vendor_markets)
+            countries_text = generate_countries_text(markets_text)
+            location_data = {'country': countries_text, 'location': get_location_text(user.location)}
+            warning_text = _("You will only earn money on visitors from {country} that click on this product, "
+                             "not from your current location {location}.".format(**location_data))
+    return warning_text
+
+def get_external_store_commission(stores, product=None):
+    store_commission = None
+    if len(stores) > 0:
+        commission_array = stores[0].commission.split("/")
+        standard_from = decimal.Decimal(commission_array[0])
+        standard_to = decimal.Decimal(commission_array[1])
+        sale = decimal.Decimal(commission_array[2])
+        if sale != 0 and product and product.default_vendor.locale_discount_price:
+            store_commission = sale / 100
+        else:
+            standard_from = standard_to if not standard_from else standard_from
+            standard_to = standard_from if not standard_to else standard_to
+            store_commission = (standard_from + standard_to)/(2*100)
+    return store_commission

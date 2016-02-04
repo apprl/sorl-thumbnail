@@ -105,6 +105,7 @@ urlpatterns = patterns('',
     url(r'^products/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.product_detail', name='product-detail'),
     url(r'^products/(?P<slug>[\w-]+)/short/$', 'apparelrow.apparel.views.product_generate_short_link', name='product-generate-short-link'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparelrow.apparel.views.look_list', name='product-look-list'),
+    url(r'^products/check_location/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.get_warnings_for_location', name='check-product-location'),
 
     # Track product
     url(r'^redirect/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.product_redirect', name='product-redirect'),
