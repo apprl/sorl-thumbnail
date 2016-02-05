@@ -173,7 +173,7 @@ class Cookie(models.Model):
     old_cookie_id = models.CharField(max_length=32, null=True, blank=True)
 
     # User data
-    custom = models.CharField(max_length=32, null=True, blank=True)
+    custom = models.CharField(max_length=128, null=True, blank=True)
 
     # Date
     created = models.DateTimeField(default=timezone.now, null=False, blank=False)
