@@ -306,6 +306,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'localeurl',
     'jsonfield',
+    'parse',
 
     # Internal
     'theimp',
