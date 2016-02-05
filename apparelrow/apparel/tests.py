@@ -2,7 +2,7 @@
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.search import product_save, get_product_document
+from apparelrow.apparel.search import product_save
 from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
     extract_asos_nelly_product_url, product_lookup_by_domain
@@ -10,12 +10,12 @@ from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
 from decimal import Decimal
 from django.conf import settings
-from apparelrow.apparel.models import Shop, ShopEmbed
 
 from django.core.urlresolvers import reverse
 from django.utils.translation import activate
 from django.test import TestCase, RequestFactory
-from apparelrow.apparel.models import Product, ProductLike
+from apparelrow.apparel.models import Product, ProductLike, Shop, ShopEmbed
+from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
@@ -839,6 +839,36 @@ class TestShortLinks(TestCase):
         sid = "%s-0-Ext-Link/http://www.houseofdagmar.se/product-category/sweaters/" % self.user.id
         self.assertEqual(link, "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[%s]]&zpar0=[[%s]]" % (ulp, sid))
         self.assertEqual(vendor, link_vendor)
+
+    def test_get_store_link_from_short_link(self):
+        store_link = ShortStoreLinkFactory.create()
+        short_link = store_link.link()
+
+        instance = get_store_link_from_short_link(short_link)
+        self.assertEqual(instance, store_link)
+
+    def test_get_store_link_from_short_link_store_link_does_not_exist(self):
+        store_link = ShortStoreLinkFactory.create()
+        short_link = store_link.link()
+        store_link.delete()
+
+        with self.assertRaises(get_model('apparel', 'ShortStoreLink').DoesNotExist):
+            get_store_link_from_short_link(short_link)
+
+    def test_short_store_link_get_original_link(self):
+        vendor = VendorFactory.create(name="My Vendor", homepage="http://mystore.com")
+        store_link = ShortStoreLinkFactory.create(vendor=vendor)
+        original_link = get_model('apparel', 'ShortStoreLink').objects.get_original_url_for_link(store_link.link())
+        self.assertEqual(original_link, "http://mystore.com")
+
+    def test_short_domain_link_get_original_link(self):
+        vendor = VendorFactory.create(name="Vendor test")
+        key = "http://www.google.com"
+        sid = "24-test_short_domain_link_get_original_link0-Ext-Link/%s" % key
+        url = "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, key)
+        short_link = ShortDomainLinkFactory.create(url=url, user=self.user, vendor=vendor)
+        original_link = get_model('apparel', 'ShortDomainLink').objects.get_original_url_for_link(short_link.link())
+        self.assertEqual(original_link, key)
 
 
 @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
