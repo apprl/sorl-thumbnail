@@ -863,9 +863,11 @@ class TestShortLinks(TestCase):
 
     def test_short_domain_link_get_original_link(self):
         vendor = VendorFactory.create(name="Vendor test")
+        template = "http://apprl.com/a/link/?store_id=vendortest&custom={sid}&url={url}"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.vendorstoretest.se/")
         key = "http://www.google.com"
-        sid = "24-test_short_domain_link_get_original_link0-Ext-Link/%s" % key
-        url = "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, key)
+        sid = "24-0-Ext-Link/%s" % key
+        url = "http://apprl.com/a/link/?store_id=vendortest&custom=%s&url=%s" % (sid, key)
         short_link = ShortDomainLinkFactory.create(url=url, user=self.user, vendor=vendor)
         original_link = get_model('apparel', 'ShortDomainLink').objects.get_original_url_for_link(short_link.link())
         self.assertEqual(original_link, key)
