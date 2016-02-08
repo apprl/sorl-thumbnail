@@ -177,6 +177,10 @@ html.look-type-C .collage {
   -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
 }
+.apprl-look .tooltip-arrow-top {
+  top: initial;
+  bottom: 130px;
+}
 .apprl-look .collage-image img {
   width: 100% !important;
   height: auto !important;

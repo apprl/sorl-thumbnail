@@ -64,7 +64,6 @@ urlpatterns = patterns('',
     url(r'^embed/productwidget/(?P<embed_product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.embed_product_widget', name='embed-product-widget'),
 
     # About pages
-
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),
     url(r'^contact/$', 'apparelrow.apparel.views.contact', name='contact'),
     url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),

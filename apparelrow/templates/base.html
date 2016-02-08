@@ -4,7 +4,7 @@
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
 
-    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
+    <title>{% block full-title %}{% block extra-title %}{% endblock %}APPRL - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
@@ -151,7 +151,7 @@
                         <li class="visible-xs visible-sm dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
                             <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="profile-icon" src="{{ request.user.avatar_small }}"><u>{% trans 'You' %} <b class="caret"></b> </u></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ request.user.url_likes }}">{% trans "Profile" %}</a></li>
+                                <li><a href="{{ request.user.url_default }}">{% trans "Profile" %}</a></li>
                                 {% if request.user.advertiser_store %}
                                 <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
                                 {% endif %}

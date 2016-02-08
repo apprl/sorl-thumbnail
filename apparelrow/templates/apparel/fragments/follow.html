@@ -1,20 +1,20 @@
 {% load i18n follow_tags %}
 
 {% if request.user.is_authenticated %}
-	
+
 	{% if request.user == profile %}
 	<a class="{% if classes %}{{ classes }}{% else %}btn btn-sm{% endif %}" href="{{ request.user.get_absolute_url }}">{% trans "That's you" %}</a>
 
     {% elif request.user|is_following_profile:profile %}
-    <a class="{% if classes %}{{ classes }}{% else %}btn btn-grey btn-sm{% endif %} btn-unfollow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Following" %}</a>
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-primary btn-sm{% endif %} btn-unfollow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Following" %}</a>
     {% else %}
-    <a class="{% if classes %}{{ classes }}{% else %}btn btn-grey btn-sm{% endif %} btn-follow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Follow" %}</a>
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-primary btn-sm{% endif %} btn-follow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans 'Follow' %}">{% trans "Follow" %}</a>
     {% endif %}
 
 {% else %}
 
     {% if request.user != profile %}
-    <a class="{% if classes %}{{ classes }}{% else %}btn btn-grey btn-sm{% endif %}" data-toggle="modal" href="#" data-target="#modal_follow_user">{% trans "Follow" %}</a>
+    <a class="{% if classes %}{{ classes }}{% else %}btn btn-primary btn-sm{% endif %}" data-toggle="modal" href="#" data-target="#modal_follow_user">{% trans "Follow" %}</a>
     {% endif %}
 
 {% endif %}

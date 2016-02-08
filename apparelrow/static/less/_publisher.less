@@ -60,13 +60,28 @@
 .discover-list-page {
     .modal h2 {
         padding: 30px 15px 15px;
+        float: left;
     }
     .modal-dialog {
-        width: 90% !important;
-        padding: 0 !important;
+        width: 100% !important;
+        padding: 0 15px !important;
+        max-width: 960px;
     }
     .close {
-        right: 6px !important;
+        top: 14px !important;
+        right: 22px !important;
+    }
+    .modal-header {
+        overflow: hidden;
+        .btn {
+            margin: 22px auto 0 auto;
+        }
+    }
+    .empty {
+        @media (min-width: @screen-sm) {
+            display: block;
+            height: 49px;
+        }
     }
     i {
         vertical-align: middle;

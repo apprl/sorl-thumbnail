@@ -6,47 +6,41 @@
 
 <div class="body-header">
     <h1>{% trans "Store Commissions" %}</h1>
-
-    <div class="row">
-        <div class="col-sm-12">
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>{% trans "Store" %}</th>
-                        <th>{% trans "Your earning" %}</th>
-                        <th>{% trans "Link to store" %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for store in stores %}
-                    <tr>
-                        <td><a href="{% url 'shop' %}?store={{ store.vendor_pk }}">{{ store.vendor_name }}</a></td>
-                        <td>
-                            {{ store.currency }} {{ store.amount }}
-                            {% if store.type == "is_cpc" %}
-                                {% trans " per click" %}
-                            {% elif store.type == "is_cpo" %}
-                                {% trans " per sale" %}
-                            {% endif %}
-                        </td>
-                        <td>{% if store.link %}<a class="btn btn-default" data-store="{{ store.store_pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td>{% trans "Empty" %}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
-
-        </div>
-    </div>
 </div>
+
+<table class="table table-striped">
+    <thead class="hidden-xs">
+        <tr>
+            <th>{% trans "Store" %}</th>
+            <th>{% trans "Your earning" %}</th>
+            <th>{% trans "Link to store" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for store in stores %}
+        <tr>
+            <td><a href="{% url 'shop' %}?store={{ store.vendor_pk }}">{{ store.vendor_name }}</a></td>
+            <td>
+                {{ store.currency }} {{ store.amount }}
+                {% if store.type == "is_cpc" %}
+                    {% trans " per click" %}
+                {% elif store.type == "is_cpo" %}
+                    {% trans " per sale" %}
+                {% endif %}
+            </td>
+            <td>{% if store.link %}<a class="btn btn-outline inverted" data-store="{{ store.store_pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td>{% trans "Empty" %}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
 
 <div class="modal fade" id="modal_store_link" tabindex="-1"></div>
 <script type="text/javascript">

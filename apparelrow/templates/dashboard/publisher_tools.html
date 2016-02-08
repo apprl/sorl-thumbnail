@@ -12,7 +12,7 @@
 <div class="container">
     <div class="body-header">
         <h1>{% trans "Create & Earn" %}</h1>
-        <p>{% trans "Apprl offers a range of tools and formats for bloggers and other digital fashion beauty and media. Through our tools and the support from our team we help you grow, earn money on your content and learn more about your audience." %}</p>
+        <p>{% trans "Apprl offers a range of tools and formats for you to earn money by creating different types of shoppable content. We also have smart tools to save time for you, for example you can install APPRL for Chrome to add products directly from retailers' sites." %}</p>
     </div>
 
     <div class="row">
@@ -22,7 +22,7 @@
                 <!-- Shop -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_shop"><img src="{% static 'images/tools/PublisherToolShop_thumb.jpg' %}" /></a>
+                        <a href="{% url 'create-shop' %}"><img src="{% static 'images/tools/PublisherToolShop_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Shop" %}</h2>
                             <p>{% trans "Create a shop for your site in just a few minutes." %}</p>
@@ -39,7 +39,7 @@
                 <!-- Collage -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_collage"><img src="{% static 'images/tools/ApprlCollage_icon.jpg' %}" /></a>
+                        <a href="{% url 'look-editor' 'collage' %}"><img src="{% static 'images/tools/ApprlCollage_icon.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Collage" %}</h2>
                             <p>{% trans "Share interactive mood boards with your audience." %}</p>
@@ -56,7 +56,7 @@
                 <!-- Tagged Photos -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_tagged_photo"><img src="{% static 'images/tools/ApprlTaggedPhoto_icon.jpg' %}" /></a>
+                        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static 'images/tools/ApprlTaggedPhoto_icon.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Tagged Photos" %}</h2>
                             <p>{% trans "Let your audience shop your curated photos." %}</p>
@@ -73,7 +73,7 @@
                 <!-- Product Links -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_text_link"><img src="{% static 'images/tools/ApprlProductlink_Icon2.jpg' %}" /></a>
+                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/ApprlProductlink_Icon2.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Product Links" %}</h2>
                             <p>{% trans "Get short links for products with just a click." %}</p>
@@ -90,7 +90,7 @@
                 <!-- APPRL for Chrome -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_chrome_ext"><img src="{% static 'images/tools/ApprlChromeExtension_Icon.jpg' %}" /></a>
+                        <a target="_blank" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm"><img src="{% static 'images/tools/ApprlChromeExtension_Icon.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "APPRL for Chrome" %}</h2>
                             <p>{% trans "Get links and like products directly from retailers' sites." %}</p>
@@ -107,13 +107,15 @@
                 <!-- Invite & Earn -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <img src="{% static 'images/tools/referral.jpg' %}" />
+                        {# need url function for referral page here #}
+                        <a href="#"><img src="{% static 'images/tools/referral.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Invite & Earn" %}</h2>
                             <p>{% trans "Earn money by inviting publishers and bloggers." %}</p>
                             <a class="btn btn-primary" href="#">
                                 {% trans "Get Started" %}
                             </a>
+                            <span class="empty"></span>
                         </article>
                     </div>
                 </li>

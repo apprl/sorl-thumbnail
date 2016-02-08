@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
-    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
+    <title>{% block full-title %}{% block extra-title %}{% endblock %}APPRL - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
@@ -54,9 +54,10 @@
     <header role="banner">
         <a class="menu-toggler" href="#"><span></span></a>
         <nav role="navigation">
+            <a class="logo visible-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
             <ul>
-                <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
                 <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
+                <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>International&nbsp;<b class="caret"></b></span></a>
                     <ul class="dropdown-menu">
@@ -125,7 +126,7 @@
                     </div>
                     <div class="tools-description">
                         <h2>{% trans "Create shoppable content for all platforms" %}</h2>
-                        <p>{% trans "With APPRL, you can make your content shoppable through a range of formats, create interactive collage, link your text & photos and create your own shop in minutes." %}</p>
+                        <p>{% trans "With APPRL, you can make your content shoppable through a range of formats, create interactive collages, link your text & photos to products and create a shop for your site in just minutes." %}</p>
                     </div>
                 </div>
 
@@ -168,7 +169,6 @@
         {# Apply #}
         <section class="publisher-apply">
             <div class="container">
-                <a class="logo">
                 <h1>{% trans "Apply for an invitation" %}</h1>
                 <p>{% trans "As a member of the APPRL network, you'll get access to our range of tools, access to the best retailers, high rewards and support from our team to help you grow, maximise your earnings and learn more about your audience. To ensure a high quality of the APPRL network of style influencers & media, we kindly ask you to apply for an invitation." %}</p>
                 <div class="form-container">

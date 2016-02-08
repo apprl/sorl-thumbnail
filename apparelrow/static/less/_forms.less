@@ -62,6 +62,14 @@ input[type="submit"] {
 input[type="checkbox"], input[type="radio"] {
     display:none;
 }
+input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
 label input[type="radio"] + span, label input[type="checkbox"] + span {
     display: inline-block;
     width: 22px;

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
-    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
+    <title>{% block full-title %}{% block extra-title %}{% endblock %}APPRL - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
@@ -54,9 +54,10 @@
     <header role="banner">
         <a class="menu-toggler" href="#"><span></span></a>
         <nav role="navigation">
+            <a class="logo visible-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
             <ul>
-                <li><a href="{% url 'index' %}"><span>{% trans "For Publishers" %}</span></a></li>
                 <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
+                <li><a href="{% url 'index' %}"><span>{% trans "For Publishers" %}</span></a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>International&nbsp;<b class="caret"></b></span></a>
                     <ul class="dropdown-menu">
@@ -81,7 +82,7 @@
                 <p class="preamble">{% trans "Get your products featured in the content of style influencers & premium media." %}</p>
                 <a class="btn btn-scroll btn-outline" href="#" data-scroll="retailer-apply">{% trans "Apply to join" %}</a>
             </div>
-            <a class="btn-guide btn-scroll" href="#" data-scroll="retailer-users"><i class="fa fa-angle-down"></i></a>
+            <a class="btn-arrow btn-scroll" href="#" data-scroll="retailer-users"><i class="fa fa-angle-down"></i></a>
         </section>
 
         {# Features #}
@@ -160,7 +161,7 @@
                             {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                         </div>
                         <div class="form-group{% if form.blog.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.blog.html_name }}">Store Url</label>
+                            <label for="id_{{ form.blog.html_name }}">Store URL</label>
                             <input name="{{ form.blog.html_name }}" type="text" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}">
                             {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
                         </div>

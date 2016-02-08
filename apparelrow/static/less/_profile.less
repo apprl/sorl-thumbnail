@@ -1,10 +1,40 @@
 /*
     Profile v1.0
+
+    - Default page
 */
 
-#profile-image {
-    max-width: 156px;
-    margin: 0 auto;
+.profile-default {
+    main {
+        padding-top: 60px;
+    }
+    .cover {
+        background-color: black;
+        width: 100%;
+        max-height: 480px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    #cover-source {
+        display: none;
+    }
+    #cover-image {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        .translate(0,-50%);
+        /*background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        -webkit-filter: blur(20px); // Chrome, Safari, Firefox
+        filter: blur(20px);
+        filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='20'); // IE9*/
+        //overflow: hidden;
+        /*-webkit-filter: blur(5px);
+        -moz-filter: blur(5px);
+        -o-filter: blur(5px);
+        -ms-filter: blur(5px);*/
+    }
 }
 
 .edit-image {
@@ -24,11 +54,13 @@
 }
 
 #description-form {
-    button {
-        margin-bottom: 10px;
+    margin: 10px auto 0 auto;
+    max-width: @screen-xs;
+    button, textarea {
+        margin: 0 auto 10px auto;
     }
     textarea {
-        background-color: @offwhite;
+        max-width: none;
     }
 }
 
@@ -175,6 +207,9 @@
 // ----------------------------------------------------------------------------
 
 .profile-page .profile-header {
+    h1 {
+        margin-bottom: 5px;
+    }
     margin-bottom: 15px;
     text-align: center;
     .btn-follow, .btn-unfollow, .btn-create-shop {
@@ -186,10 +221,36 @@
             text-align: center;
         }
     }
+    .image-options {
+        max-width: @screen-xs;
+        margin: auto;
+        position: relative;
+        label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            /*span {
+                width: 44px;
+                height: 44px;
+                display: block;
+                line-height: 46px;
+                color: white;
+                background-color: @lightGrey;
+                .animate;
+            }
+            &:hover {
+                cursor: pointer;
+                span {
+                    background-color: @grey;
+                }
+            }*/
+        }
+    }
     #profile-image {
         overflow: hidden;
         position: relative;
-        margin-bottom: 10px;
+        margin: 15px auto;
+        max-width: 156px;
         -webkit-mask-image: -webkit-radial-gradient(white,black);
         img {
             z-index: 1;
@@ -197,25 +258,14 @@
             height: 156px;
             border-radius: 50%;
         }
-        form {
-            display: none;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            z-index: 2;
-        }
-        .btn-edit {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 2;
-            margin-top: 0;
-        }
     }
     .profile-content {
         text-align: center;
-        p, .btn-edit {
+        p {
             display: inline-block;
+        }
+        .btn-edit {
+            margin-right: 10px;
         }
         .btn-follow {
             margin-bottom: 0;

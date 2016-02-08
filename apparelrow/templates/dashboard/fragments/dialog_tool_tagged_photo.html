@@ -11,6 +11,7 @@
 
 <div class="modal-header">
     <h2>{% trans "Tagged Photos" %}</h2>
+    <a class="hidden-xs btn btn-primary" href="{% url 'look-editor' 'photo' %}">{% trans "Create Tagged Photo" %}</a>
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span></span></button>
 </div>
 
@@ -31,6 +32,8 @@
         </div>
 
         <div class="tool-description">
+            <a class="center hidden-sm hidden-md hidden-lg btn btn-primary" href="{% url 'look-editor' 'photo' %}">{% trans "Create Tagged Photo" %}</a>
+
             <h4>{% trans "Description" %}</h4>
             <p>
             {% blocktrans %}

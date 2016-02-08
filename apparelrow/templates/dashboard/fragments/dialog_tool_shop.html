@@ -11,6 +11,7 @@
 
 <div class="modal-header">
     <h2>{% trans "Shop" %}</h2>
+    <a class="hidden-xs btn btn-primary" href="{% url 'create-shop' %}">{% trans "Create Shop" %}</a>
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span></span></button>
 </div>
 
@@ -32,6 +33,8 @@
         </div>
 
         <div class="tool-description">
+            <a class="center hidden-sm hidden-md hidden-lg btn btn-primary" href="{% url 'create-shop' %}">{% trans "Create Shop" %}</a>
+
             <h4>{% trans "Description" %}</h4>
             <p>
             {% blocktrans %}
@@ -98,9 +101,7 @@
     </div>
 
     <div class="modal-footer">
-        <a class="btn btn-primary" href="{% url 'create-shop' %}">
-            {% trans "Create Shop" %}
-        </a>
+        <a class="btn btn-primary" href="{% url 'create-shop' %}">{% trans "Create Shop" %}</a>
     </div>
 </div>
 

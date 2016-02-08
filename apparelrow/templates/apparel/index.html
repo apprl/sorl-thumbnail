@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
-    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
+    <title>{% block full-title %}{% block extra-title %}{% endblock %}APPRL - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
@@ -76,9 +76,9 @@
 
         {# Welcome #}
         <section class="community-welcome">
-            <div class="background-image" style="background-image: url({% static 'images/community.jpg' %});"></div>
+            <div class="background-image"></div>
             <div class="splash">
-                <h1 class="display">{% trans 'Shop the style of your favourite bloggers,<span class="wbr"></span> shows, magazines and brands.' %}</h1>
+                <h1 class="display">{% trans 'Join to create, share and shop the style of<span class="wbr"></span> bloggers, magazines and other style makers.' %}</h1>
                 <div class="login-box">
                     <form action="{% url 'auth_login' %}" method="post">
                         {% csrf_token %}
@@ -108,30 +108,29 @@
         <section class="community-features">
             <div class="container">
                 <h1>{% trans "Create & Share" %}</h1>
-                <p>{% trans "Easily create interactive mood boards, tag your photos with products and share looks with your blog readers, your friends and the APPRL community." %}</p>
+                <p>{% trans "Easily create interactive mood boards, tag your photos with products and share looks with your blog readers, your friends and APPRL Community." %}</p>
             </div>
 
             <div id="slider-looks" class="owl-carousel">
-                <img src="{% static 'images/looks/01-look-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/02-look-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/Celine-Aagard-look-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/look-apprl-home-IW.jpg' %}">
-                <img src="{% static 'images/looks/look-home-apprl-SW.jpg' %}">
-                <img src="{% static 'images/looks/look-home-kenzo.jpg' %}">
-                <img src="{% static 'images/looks/FilippaK-Emma-Elwin-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/Look-white-homepage-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/LQ25-Marina-Ballerina-look-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/03-look-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/LQ30-Marina-Ballerina-look-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/04-look-Apprl.jpg' %}">
-                <img src="{% static 'images/looks/Okra-Livia-Inkeri-Dimle-Look-Apprl-Home.jpg' %}">
+                <img src="{% static 'images/looks/1.jpg' %}">
+                <img src="{% static 'images/looks/2.jpg' %}">
+                <img src="{% static 'images/looks/3.jpg' %}">
+                <img src="{% static 'images/looks/4.jpg' %}">
+                <img src="{% static 'images/looks/5.jpg' %}">
+                <img src="{% static 'images/looks/6.jpg' %}">
+                <img src="{% static 'images/looks/7.jpg' %}">
+                <img src="{% static 'images/looks/8.jpg' %}">
+                <img src="{% static 'images/looks/9.jpg' %}">
+                <img src="{% static 'images/looks/10.jpg' %}">
             </div>
 
-            <a class="btn btn-outline inverted" href="#">{% trans "Create your look" %}</a>
+            <div class="container">
+                <a class="btn btn-outline inverted" href="#">{% trans "Create your look" %}</a>
 
-            <div class="usp-publisher">
-                <h2>{% trans "APPRL for influencers" %}</h2>
-                <p>{% trans "Have lots of fans on your blog or social media? Apply to" %} <a href="{% url 'index-publisher' %}">{% trans "APPRL for influencers" %}</a> {% trans "to monetize your content." %}<br><a href="{% url 'index-retailers' %}">{% trans "Are you a brand / retailer?" %}</a></p>
+                <div class="usp-publisher">
+                    <h2>{% trans "APPRL for influencers" %}</h2>
+                    <p>{% trans "Have lots of fans on your blog or social media? Apply to" %} <a href="{% url 'index-publisher' %}">{% trans "APPRL for influencers" %}</a> {% trans "to monetise your content." %}</p>
+                </div>
             </div>
         </section>
 
@@ -162,7 +161,7 @@
         <section class="community-members">
             <div class="container">
                 <h1>{% trans "Get inspired" %}</h1>
-                <p>{% trans "Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model, as well as top bloggers - they all share the products they love using APPRL." %}</p>
+                <p>{% trans "Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model, as well as top bloggers - they all share the products they love using APPRL Community." %}</p>
             </div>
 
             <div id="slider-publishers" class="owl-carousel">
@@ -255,10 +254,21 @@
                 </div>
             </div>
 
-            <a class="btn btn-outline inverted" href="#">{% trans "Shop their styles" %}</a>
+            <div class="container">
+                <a class="btn btn-outline inverted" href="#">{% trans "Shop their styles" %}</a>
+            </div>
         </section>
 
-        {# About #}
+        {# Join #}
+        <section class="community-join">
+            <div class="container">
+                <h1>{% trans "Join now" %}</h1>
+                <p>{% trans "Join APPRL Community to create looks and get access the styles of top bloggers & other style makers." %}</p>
+                <a class="btn btn-scroll btn-outline" href="#" data-scroll="community-welcome">{% trans "Sign up now" %}</a>
+            </div>
+        </section>
+
+        {% comment %}
         <section class="community-about">
             <div class="container">
                 <h1>{% trans "About APPRL" %}</h1>
@@ -274,8 +284,9 @@
                 </div>
             </div>
         </section>
+        {% endcomment %}
 
-        {# Featured #}
+        {% comment %}
         <section class="community-featured">
             <div class="container">
                 <h1>{% trans "Featured In" %}</h1>
@@ -295,6 +306,7 @@
                 </ul>
             </div>
         </section>
+        {% endcomment %}
     </main>
 
     {# Footer #}
@@ -337,22 +349,40 @@
     <script src="/static/js/jquery/owl.carousel.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
-                scroll = false;
+            //var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
+            var scroll = false,
+                resizeTimer;
 
-            if ($(window).width() >= 768) {
-                $('.logo').prependTo('.login-box');
-                $('.btn-facebook').prependTo('.login-options');
-            }
+            $(window).on('resize', function(e) {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(moveElements, 250);
+            });
+
+            function moveElements() {
+                if ($(window).width() >= 768) {
+                    $('.logo').prependTo('.login-box');
+                    $('.btn-facebook').prependTo('.login-options');
+                }
+                else {
+                    $('.logo').prependTo('header');
+                    $('.btn-facebook').prependTo('.login-box form');
+                }
+            };
+            moveElements();
 
             $(window).on('scroll', function() {
-                if ($(window).scrollTop() >= anchor) {
+                if ($(window).scrollTop() >= 1) {
                     $('header').addClass('expand');
                     scroll = true;
                 }
-                if ($(window).scrollTop() < anchor && scroll == true) {
+                if ($(window).scrollTop() < 1 && scroll == true) {
                     $('header').removeClass('expand');
                 }
+            });
+
+            $('.btn-scroll').click(function(e) {
+                $('html, body').animate({scrollTop: $('.' + $(this).data('scroll')).offset().top - 30}, 1000);
+                e.preventDefault();
             });
 
             $('.menu-toggler').click(function(e) {

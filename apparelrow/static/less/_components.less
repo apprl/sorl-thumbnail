@@ -7,6 +7,7 @@
 	- Navigation
 	- Modals
 	- Comments
+	- Grids (non-framework)
 	- Lists
 	- Notifications
 	- Panels & filters
@@ -171,6 +172,17 @@ a.info {
 		background-color: darken(@lightGrey, 15%);
 	}
 }
+.btn-group {
+	.clearfix;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	.btn {
+		margin: 0 0 15px 0 !important;
+		float: left;
+		width: 50%;
+	}
+}
 .btn-white {
 	background-color: white;
 	color: black;
@@ -200,6 +212,7 @@ a.info {
 	padding: 0 !important;
 	background-color: @lightGrey;
 	width: 44px;
+	height: 44px;
 	margin: auto;
 	display: inline-block;
 	i {
@@ -207,11 +220,6 @@ a.info {
 	}
 	&:hover {
 		background-color: darken(@lightGrey, 15%);
-	}
-	@media (min-width: @screen-sm) {
-		line-height: 34px;
-		width: 32px;
-		margin: 0;
 	}
 }
 .btn-filter {
@@ -305,11 +313,11 @@ a.info {
 		z-index: 999;
 	}
 	> li > a {
-		line-height: 44px;
-		padding: 0 15px;
+		line-height: 42px;
+		padding: 2px 15px 0 15px;
 	}
 	.animate();
-	@media (min-width: @screen-md) { // was screen-sm
+	@media (min-width: @screen-md) {
 		visibility: hidden;
 		display: block;
 		opacity: 0;
@@ -356,9 +364,6 @@ a.info {
 	background-color: @offwhite;
 	padding: 15px 0;
 	margin-bottom: 30px;
-	/*li {
-		padding: 5px 15px;
-	}*/
 	a {
 		letter-spacing: 0.02rem;
 		color: @grey;
@@ -492,15 +497,18 @@ a.info {
 		}
     }
 	.tool-description {
-		padding: 30px;
-		line-height: 24px;
+		padding: 30px 15px;
 		h4 {
 			margin-top: 15px;
+		}
+		@media (min-width: @screen-sm) {
+			padding: 30px;
+			line-height: 24px;
 		}
 	}
 	h2 {
 		margin: 0;
-		line-height: 58px;
+		line-height: 60px;
 	}
 	h3 {
 		margin: 30px 0 5px 0;
@@ -511,8 +519,8 @@ a.info {
 }
 .close {
 	position: absolute;
-	top: 5px !important; // 12px
-    right: 6px !important; // 6px
+	top: 5px !important;
+    right: 6px !important;
 	width: 44px !important;
 	height: 44px !important;
 	display: block;
@@ -770,6 +778,56 @@ a.info {
     font-size: 13px;
 }
 
+/* Grids (non-framework) ---------- */
+.grid-container {
+	max-width: @screen-lg;
+	margin: auto;
+}
+.grid {
+	.grid-item {
+		img {
+			.animate;
+		}
+		width: 100%;
+		&:hover {
+			img {
+				opacity: .8;
+			}
+			.item-options {
+				opacity: 1;
+			}
+		}
+    	@media (min-width: @screen-xs) {
+			width: 50%;
+    	}
+    	@media (min-width: @screen-sm) {
+			width: 33.33%;
+    	}
+    	@media (min-width: @screen-md) {
+			width: 25%;
+    	}
+	}
+	.item-container {
+		position: relative;
+		margin-bottom: 15px;
+	}
+	.item-options {
+		width: 100%;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		z-index: 10;
+		opacity: 0;
+		.animate;
+	}
+	.btn {
+		margin: 0;
+	}
+	.btn-primary {
+		max-width: none;
+	}
+}
+
 /* Lists ---------- */
 .list-alphabet {
 	li {
@@ -971,7 +1029,7 @@ a.info {
 	.panel {
 		font-size: 15px;
 		margin: 0 auto 10px auto;
-        i {
+        .panel-heading i {
             font-size: 14px;
             float: right;
             margin-top: 12px;
@@ -1027,6 +1085,9 @@ a.info {
 }
 
 /* Miscellaneous ---------- */
+.caption {
+	text-align: center;
+}
 .body-header {
     text-align: center;
     margin-bottom: 30px;
@@ -1042,9 +1103,6 @@ a.info {
 }
 .product-medium {
 	position: relative;
-	.caption {
-		text-align: center;
-	}
 	.hover {
 		position: absolute;
 	    right: 0;

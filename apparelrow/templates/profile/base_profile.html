@@ -21,6 +21,16 @@
 {% if request.user.is_authenticated and request.user == profile %}
 <script type="text/javascript">
 $(document).ready(function() {
+    $('#id_image').change(function() {
+        $('form .btn-group').toggleClass('hidden');
+    });
+
+    $('a[href="#cancel"]').click(function(e) {
+        $('form .btn-group').toggleClass('hidden');
+        $('#id_image').val('');
+        e.preventDefault();
+    });
+
     $('.profile-header .btn-change-description').enableEditable();
 });
 </script>
@@ -31,12 +41,20 @@ $(document).ready(function() {
 {% block full-body %}
 <div class="profile-header">
     <div class="container">
-        <div id="profile-image">
-            <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_circular_large }}"></a>
+        <div class="image-options">
+            <div id="profile-image">
+                <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_circular_large }}"></a>
+            </div>
             {% if request.user.is_authenticated and request.user == profile %}
-            <a class="btn btn-edit" href="#edit"><i class="fa fa-camera"></i></a>
-            {% comment %}<a href="#cancel" class="btn btn-secondary hidden">{% trans "Cancel" %}</a>{% endcomment %}
-            {% include 'profile/fragments/change_image_form.html' with form_enctype='multipart/form-data' %}
+            <form action="{{ request.path }}" method="post"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
+                {% csrf_token %}
+                <input type="hidden" name="change_image_form" value="yes">
+                <label><input type="file" name="file" id="id_image"><span class="btn btn-edit"><i class="fa fa-camera"></i></span></label>
+                <div class="btn-group hidden">
+                    <button type="submit" class="btn btn-primary btn-sm">{% trans "Save" %}</button>
+                    <a href="#cancel" class="btn btn-secondary btn-sm">{% trans "Cancel" %}</a>
+                </div>
+            </form>
             {% endif %}
         </div>
         <div class="profile-content">
@@ -57,9 +75,11 @@ $(document).ready(function() {
             {% if request.user.is_authenticated and request.user == profile %}
             <form id="description-form" method="post" action="{% url 'settings-save-description' %}" style="display: none;">
                 {% csrf_token %}
-                <textarea class="form-control" rows="5" name="description">{{ profile.about }}</textarea>
-                <button class="btn btn-primary btn-save-description">{% trans "Save description" %}</button>
-                <button class="btn btn-secondary btn-cancel-description">{% trans "Cancel" %}</button>
+                <textarea rows="4" name="description">{{ profile.about }}</textarea>
+                <div class="btn-group">
+                    <button class="btn btn-primary btn-sm btn-save-description">{% trans "Save" %}</button>
+                    <button class="btn btn-secondary btn-sm btn-cancel-description">{% trans "Cancel" %}</button>
+                </div>
             </form>
             {% endif %}
         </div>
