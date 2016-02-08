@@ -628,7 +628,7 @@ ApparelSearch = {
         jQuery('#search > input').val('');
     },
     search: function(callback, query, gender) {
-        // Preforms a search
+        // Performs a search
         var s = '';
         if(query) {
             $('#search > input').val(query);

@@ -29,12 +29,7 @@
     <script src="//cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
-    <!-- TradeDoubler site verification 2463884 -->
-    <!-- TradeDoubler site verification 2463889 -->
-    <!-- TradeDoubler site verification 2463894 -->
-    <!-- TradeDoubler site verification 2463896 -->
-    <!-- TradeDoubler site verification 1897050 -->
-    <!-- TradeDoubler site verification 1897442 -->
+
     <script type="text/javascript">
         var language_code = '{{ LANGUAGE_CODE }}';
         var product_popup_url = '{% url "product-popup" %}';
@@ -398,6 +393,7 @@
     {% endfor %}
     'SEK': 1
   };
+
   var current_currency = '{{ CURRENCY }}';
   function formatNumber(num) {
     var array = parseInt(num, 10).toFixed().split('');

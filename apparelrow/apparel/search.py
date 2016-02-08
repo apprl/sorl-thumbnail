@@ -231,6 +231,7 @@ def rebuild_product_index(url=None, vendor_id=None):
     connection = Solr(url or settings.SOLR_URL)
     product_count = 0
     product_buffer = collections.deque()
+    boost = {}
 
     products = get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified')
 
@@ -352,8 +353,10 @@ def get_product_document(instance, rebuild=False):
 
         # Shops and their products
         shops = list(get_model('apparel', 'ShopProduct').objects.filter(product=instance, shop_embed__published=True).values_list('shop_embed__id', 'shop_embed__modified'))
+        # Adding array with the different shops that the product has been added to.
         document['shop_products'] = [x[0] for x in shops]
         for x in shops:
+            # Adding the shop products with a date for use as sorting parameter when fetching shop products.
             document['%s_spd' % (x[0],)] = x[1]
 
         # Templates
@@ -433,7 +436,7 @@ def rebuild_look_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
     look_count = 0
     look_buffer = collections.deque()
-
+    boost = {}
     for look in get_model('apparel', 'Look').objects.filter(user__is_hidden=False).iterator():
         document, boost = get_look_document(look)
         look_buffer.append(document)
@@ -475,6 +478,7 @@ def get_look_document(instance):
 
 @receiver(post_save, sender=get_user_model(), dispatch_uid='search_index_user_save')
 def search_index_user_save(instance, **kwargs):
+    boost = {}
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
@@ -493,6 +497,7 @@ def rebuild_user_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
     user_count = 0
     user_buffer = collections.deque()
+    boost = {}
 
     for user in get_user_model().objects.filter(is_hidden=False, is_brand=False).iterator():
         document, boost = get_profile_document(user)

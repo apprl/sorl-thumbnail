@@ -284,7 +284,7 @@
                 $('section:first').append('<div class="background-image" style="background-image: url({% static 'video/poster.jpg' %});"></div>');
             }
             else {
-                $('section:first').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static 'video/poster.jpg' %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');
+                $('section:first').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static "video/poster.jpg" %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');
             }
 
             var anchor = $('section:first').offset().top + $('section:first').outerHeight(),

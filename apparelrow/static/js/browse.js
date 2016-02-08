@@ -129,8 +129,8 @@ $(document).ready(function() {
 
     if (!!(window.history && history.pushState)) {
         $(document).on('click', '#product-gender a', function(e) {
-            var x = $('.navbar-nav-main > li > a[data-shop^="true"]');
-            var y = $('.navbar .navbar-form[data-search^="true"]');
+            var x = $('#menu').find('> ul > li > a[data-shop^="true"]');
+            var y = $('#search[data-search^="true"]');
             var gender = $(this).data('gender');
             if (gender == 'M') {
                 x.attr('href', x.attr('href').replace('women', 'men'));
@@ -698,7 +698,7 @@ function updateEmbeddedProducts($list) {
 
 function renderProducts(products) {
     $('#product-list > .product-list').empty();
-    $('#product-list > h3').text(products.browse_text);
+    $('#product-list > h4').text(products.browse_text);
 
     renderPage(products);
 
