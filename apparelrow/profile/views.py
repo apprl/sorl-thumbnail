@@ -284,17 +284,12 @@ def settings_notification(request):
         if newsletter_form.is_valid():
             newsletter_form.save()
 
-        notification_location_form = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
-        if notification_location_form.is_valid():
-            notification_location_form.save()
-
         return HttpResponseRedirect(reverse('settings-notification'))
 
-    notification_location_form = PartnerNotificationsForm(instance=request.user)
     form = NotificationForm(instance=request.user, is_publisher=request.user.is_partner)
     newsletter_form = NewsletterForm(instance=request.user)
 
-    return render(request, 'profile/settings_notification.html', {'notification_form': form, 'newsletter_form': newsletter_form, 'notification_location_form': notification_location_form})
+    return render(request, 'profile/settings_notification.html', {'notification_form': form, 'newsletter_form': newsletter_form})
 
 @login_required
 def confirm_email(request):
@@ -331,6 +326,10 @@ def settings_email(request):
         if facebook_form.is_valid():
             facebook_form.save()
 
+        location_warning_form = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
+        if location_warning_form.is_valid():
+            location_warning_form.save()
+
         form = EmailForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             # Remove old email change confirmations
@@ -353,6 +352,7 @@ def settings_email(request):
         return HttpResponseRedirect(reverse('settings-email'))
 
     form = EmailForm()
+    location_warning_form = PartnerNotificationsForm(instance=request.user)
     password_form = FormClass(request.user)
     facebook_form = FacebookSettingsForm(instance=request.user)
 
@@ -360,7 +360,8 @@ def settings_email(request):
             'email_form': form,
             'email_change': email_change,
             'form': password_form,
-            'facebook_settings_form': facebook_form
+            'facebook_settings_form': facebook_form,
+            'location_warning_form': location_warning_form
         })
 
 
