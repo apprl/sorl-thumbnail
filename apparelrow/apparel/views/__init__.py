@@ -3,13 +3,10 @@ import logging
 import json
 import datetime
 import itertools
-from apparelrow.profile.models import NotificationEvent
-from django.http.response import HttpResponseNotAllowed
 import os.path
 import string
 import urllib
 import urlparse
-from apparelrow.apparel.utils import currency_exchange
 import decimal
 import re
 import tldextract
@@ -18,6 +15,7 @@ from solrq import Q as SQ
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
+from django.http.response import HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Count, get_model
 from django.template import RequestContext, loader
@@ -28,17 +26,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from django.utils import translation, timezone
 from django.utils.encoding import smart_unicode, smart_str
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
 
 from localeurl.views import change_locale
-
-from apparelrow.profile.models import Follow
-from apparelrow.profile.utils import get_facebook_user
-from apparelrow.profile.notifications import process_like_look_created
 
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
@@ -49,13 +43,16 @@ from apparelrow.apparel.search import ApparelSearch, more_like_this_product, mor
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
-
 from apparelrow.activity_feed.views import user_feed
-
+from apparelrow.dashboard.views import SignupForm
+from apparelrow.profile.models import Follow
+from apparelrow.profile.utils import get_facebook_user
+from apparelrow.profile.notifications import process_like_look_created
+from apparelrow.profile.models import NotificationEvent
+from apparelrow.profile.tasks import mail_managers_task
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 from pysolr import Solr
-
 logger = logging.getLogger("apparelrow")
 
 FAVORITES_PAGE_SIZE = 30
@@ -1144,6 +1141,51 @@ def user_list(request, gender=None, brand=False):
 # Index page for unauthenticated users
 #
 
+class HomeView(TemplateView):
+    """
+    Class based view for index page
+    """
+    template_name = "apparel/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        context['featured'] = get_featured_activity_today()
+        context['form'] = SignupForm(is_store_form=True)
+        return context
+
+    def get(self, request, gender=None, *args, **kwargs):
+        if request.user.is_authenticated():
+            # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
+            if gender == 'none':
+                gender = None
+
+            if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
+                return onboarding(request)
+                # Todo: Pretty sure this is intended to be a redirect?
+                #return HttpResponseRedirect(reverse("onboarding"))
+            else:
+                return user_feed(request, gender=gender)
+        return render(request, self.template_name, self.get_context_data())
+
+    def post(self, request, gender=None, *args, **kwargs):
+        form = SignupForm(request.POST, is_store_form=True)
+        if form.is_valid():
+            # Save name and blog URL on session, for Google Analytics
+            request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
+            instance = form.save(commit=False)
+            instance.store = True
+            instance.save()
+
+            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
+                    u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
+
+            return HttpResponseRedirect(reverse('index-store-complete'))
+        else:
+            context = self.get_context_data()
+            context.update({"form":form})
+        return render(request, self.template_name, context)
+
+# Deprecated
 def index(request, gender=None):
     if request.user.is_authenticated():
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
