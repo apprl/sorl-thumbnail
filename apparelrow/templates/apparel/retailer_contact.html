@@ -14,21 +14,28 @@
     <form action="" method="post">
         {% csrf_token %}
         <div class="form-group{% if form.name.errors %} error{% endif %}">
-            <label for="id_{{ form.name.html_name }}">{{ form.name.label }}</label>
-            <input name="{{ form.name.html_name }}" type="text" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            <input name="{{ form.name.html_name }}" type="text" id="{{ form.name.id_for_label }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
             {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
         </div>
         <div class="form-group{% if form.email.errors %} error{% endif %}">
-            <label for="id_{{ form.email.html_name }}">{{ form.email.label }}</label>
-            <input name="{{ form.email.html_name }}" type="text" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            <input name="{{ form.email.html_name }}" type="text" id="{{ form.email.id_for_label }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
             {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
         </div>
         <div class="form-group{% if form.blog.errors %} error{% endif %}">
-            <label for="id_{{ form.blog.html_name }}">{{ form.blog.label }}</label>
-            <input name="{{ form.blog.html_name }}" type="text" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}">
+            <label for="{{ form.blog.id_for_label }}">{{ form.blog.label }}</label>
+            <input name="{{ form.blog.html_name }}" type="text" id="{{ form.blog.id_for_label }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}">
             {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
         </div>
-        <button class="btn btn-primary btn-lg btn-apply">{% trans "APPLY" %}</button>
+        <div class="form-group{% if form.traffic.errors %} error{% endif %}">
+            <label for="{{ form.traffic.id_for_label }}">{{ form.traffic.label }}</label>
+            <input name="{{ form.traffic.html_name }}" type="text" id="{{ form.traffic.id_for_label }}" value="{% if form.traffic.value %}{{ form.traffic.value }}{% endif %}">
+            {% if form.traffic.errors %}<span class="help-block">{{ form.traffic.errors.as_text }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary btn-lg btn-apply">{% trans "APPLY" %}</button>
+        </div>
     </form>
 </div>
 {% endblock %}
