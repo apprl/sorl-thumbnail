@@ -20,8 +20,31 @@
                 <h4>{% trans "Newsletter" %}</h4>
                 <p>{{ newsletter_form.newsletter }} {{ newsletter_form.newsletter.help_text }}</p>
             </div>
+            {% if request.user.is_partner %}
+            <div>
+                <br>
+                <h4 id="location-notifications">{% trans "Location warnings" %}</h4>
+                <p style="width: 60%;">
+                {% blocktrans %}
+                    Show warnings when I like or get links to products that are not available in my location.
+                    This is good to make sure that you only link to products that you earn money on, since retailers
+                    only pay for clicks/sales in the locations they ship to.
+                {% endblocktrans %}
+                </p>
+                <label for="id_{{ notification_location_form.show_warnings.html_name }}" class="col-sm-2 control-label">{{ notification_location_form.show_warnings.label }}</label>
+                <ul class="list-unstyled">
+                {% for choice in notification_location_form.show_warnings %}
+                    <li>{{ choice.tag }}{{ choice.choice_label }}</li>
+                {% endfor %}
+                </ul>
+                {% if notification_location_form.show_warnings.errors %}<span class="help-block">{{ notification_location_form.show_warnings.errors.as_text }}</span>{% endif %}
+            </div>
+            {% endif %}
+            <br>
+            <br>
             <div>
                 <input class="btn btn-primary" type="submit" value="{% trans "Save changes" %}" />
             </div>
         </form>
+
 {% endblock content %}
