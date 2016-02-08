@@ -259,6 +259,10 @@ class Product(models.Model):
     published_objects = ProductManager(availability=False)
 
     @cached_property
+    def get_product_name_to_display(self):
+        return "%s - %s" % (self.manufacturer.name, self.product_name)
+
+    @cached_property
     def score(self):
         return self.likes.filter(active=True).count()
 

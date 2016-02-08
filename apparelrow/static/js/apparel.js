@@ -458,17 +458,18 @@ function unlikeElement($element) {
 
 function showWarning($element) {
     var slug = $element.attr('data-slug');
+    var SETTINGS_LINK = '/profile/settings/email/#location-notifications'
     jQuery.ajax({
-        type: 'POST',
+        type: 'GET',
         url: '/products/check_location/' + slug + '/',
         success: function(response, status, request) {
             if(response){
                 $.notify({
-                    message: response
+                    message: response + " <a class='alert-warning' style='text-decoration: underline;' href='"+SETTINGS_LINK+"'>Change your location</a>."
                 }, { // settings
                     type: 'warning',
                     z_index: 10031,
-                    offset: 50,
+                    offset: 80,
                     placement: {
                         from: "top",
                         align: "center"

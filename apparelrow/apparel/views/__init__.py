@@ -429,7 +429,7 @@ def product_detail(request, slug):
         earning_cut = get_earning_cut(request.user, default_vendor.vendor, product)
 
     availability_text = get_availability_text(vendor_markets)
-    warning_text = get_location_warning_text(vendor_markets, request.user)
+    warning_text = get_location_warning_text(vendor_markets, request.user, "product")
 
     return render_to_response(
         'apparel/product_detail.html',
@@ -458,7 +458,7 @@ def product_detail(request, slug):
     )
 
 def get_warnings_for_location(request, slug):
-    if request.method == 'POST':
+    if request.is_ajax():
         kwargs = {'published': True, 'gender__isnull': False}
         product = get_product_from_slug(slug, **kwargs)
         # Vendor market
@@ -466,7 +466,7 @@ def get_warnings_for_location(request, slug):
         if product.default_vendor:
             vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
 
-        warning_text = get_location_warning_text(vendor_markets, request.user)
+        warning_text = get_location_warning_text(vendor_markets, request.user, "product")
         return HttpResponse(warning_text)
 
 def product_generate_short_link(request, slug):
@@ -487,7 +487,7 @@ def product_generate_short_link(request, slug):
     if product.default_vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
 
-    warning_text = get_location_warning_text(vendor_markets, request.user)
+    warning_text = get_location_warning_text(vendor_markets, request.user, "product")
 
     return render(request, 'apparel/fragments/product_short_link.html', {'product_short_link': product_short_link,
                                                                          'warning_text': warning_text})
@@ -683,8 +683,16 @@ def _product_like(request, product, action):
                                       request.build_absolute_uri(product.get_absolute_url()))
 
     default_active = True if action == 'like' else False
-    product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product,
+    try:
+        product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product,
+                                                                  defaults={'active': default_active})
+    except ProductLike.MultipleObjectsReturned:
+        product_like_query = ProductLike.objects.filter(user=request.user, product=product,
                                                               defaults={'active': default_active})
+        created = False
+        product_like = product_like_query[0]
+        logger.warning("Multiple ProductLike objects for user id %s and product %s" % (request.user.id, product.slug))
+
     if not created:
         product_like.active = default_active
         product_like.save()
@@ -1127,7 +1135,7 @@ def product_lookup(request):
         logger.info("Product match found for key, creating short product link [%s]." % product_short_link_str)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product,
                                                                            active=True).exists()
-        product_name = product.product_name
+        product_name = product.get_product_name_to_display
         vendor = product.default_vendor.vendor
         earning_cut = get_earning_cut(request.user, vendor, product)
         if vendor and earning_cut:
@@ -1140,7 +1148,7 @@ def product_lookup(request):
                 currency = product.default_vendor.locale_currency
         if currency:
             if vendor.is_cpo:
-                product_earning = "You will earn approx. %s %.2f per generated sale of this item." % (currency, earning)
+                product_earning = "You will earn approx. %s %.2f per generated sale to %s." % (currency, earning, vendor.name)
             elif vendor.is_cpc:
                 product_earning = "You will earn approx. %s %.2f per generated click of this item." % (currency, earning)
     else:
@@ -1161,8 +1169,7 @@ def product_lookup(request):
                     store_commission = get_vendor_commission(vendor)
                     if store_commission:
                         earning_cut = earning_cut * store_commission
-                        product_earning = "You will earn approx. %.2f %% per generated sale when linking to " \
-                                          "this retailer" % (earning_cut * 100)
+                        product_earning = "You will earn approx. %.2f %% per generated sale of this item." % (earning_cut * 100)
                 elif vendor.is_cpc:
                     cost_per_click = get_vendor_cost_per_click(vendor)
                     if cost_per_click:
@@ -1171,7 +1178,7 @@ def product_lookup(request):
                                           (cost_per_click.currency, (earning_cut * cost_per_click.amount))
     if vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
-    warning_text = get_location_warning_text(vendor_markets, request.user)
+    warning_text = get_location_warning_text(vendor_markets, request.user, "chrome-ext")
 
     return JSONResponse({
         'product_pk': product_pk,
