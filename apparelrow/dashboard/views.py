@@ -1193,26 +1193,28 @@ def index_complete(request, view):
 def retailer(request):
     return render(request, 'apparel/retailers.html')
 
-def retailer_form(request):
-    if request.method == 'POST':
+
+class RetailerFormView(TemplateView):
+    template_name = "apparel/retailer_contact.html"
+
+    def get(self, request, *args, **kwargs):
+        form = SignupForm(is_store_form=True)
+        return render(request, {'form': form})
+
+    def post(self, request, *args, **kwargs):
         form = SignupForm(request.POST, is_store_form=True)
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
-            request.session['index_complete_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
+            request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
             instance = form.save(commit=False)
             instance.store = True
             instance.save()
 
-            mail_managers_task.delay('New store signup: %s' % (form.cleaned_data['name'],),
-                    'Name: %s\nEmail: %s\nURL: %s' % (form.cleaned_data['name'],
-                                                      form.cleaned_data['email'],
-                                                      form.cleaned_data['blog']))
+            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
+                    u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
 
             return HttpResponseRedirect(reverse('index-store-complete'))
-    else:
-        form = SignupForm(is_store_form=True)
-
-    return render(request, 'apparel/retailer_contact.html', {'form': form})
+        return render(request, {'form': form})
 
 def index(request):
     return render(request, 'dashboard/index.html')
