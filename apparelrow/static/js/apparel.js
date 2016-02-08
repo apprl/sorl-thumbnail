@@ -470,6 +470,7 @@ function showWarning($element) {
                     type: 'warning',
                     z_index: 10031,
                     offset: 80,
+                    delay: 0,
                     placement: {
                         from: "top",
                         align: "center"
@@ -529,7 +530,10 @@ ApparelActivity = {
                 });
             } else {
                 likeElement(element);
-                showWarning(element);
+                // Only show warning if current page is not a product page
+                if (typeof element.attr('data-product-page') === 'undefined') {
+                    showWarning(element);
+                }
                 $.post(element.data('like-url'), function(data) {
                     if(data['success'] == true) {
                         $(document).trigger('like', [element, event.data.type, element.data('id')]);

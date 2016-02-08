@@ -687,8 +687,7 @@ def _product_like(request, product, action):
         product_like, created = ProductLike.objects.get_or_create(user=request.user, product=product,
                                                                   defaults={'active': default_active})
     except ProductLike.MultipleObjectsReturned:
-        product_like_query = ProductLike.objects.filter(user=request.user, product=product,
-                                                              defaults={'active': default_active})
+        product_like_query = ProductLike.objects.filter(user=request.user, product=product)
         created = False
         product_like = product_like_query[0]
         logger.warning("Multiple ProductLike objects for user id %s and product %s" % (request.user.id, product.slug))
