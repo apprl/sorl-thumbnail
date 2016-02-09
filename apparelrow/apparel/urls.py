@@ -7,16 +7,17 @@ from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
 from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
-from apparelrow.apparel.views import BrandRedirectView
+from apparelrow.apparel.views import BrandRedirectView, HomeView
+from apparelrow.dashboard.views import RetailerFormView
 
 urlpatterns = patterns('',
     # Index
-    url(r'^$', 'apparelrow.apparel.views.index', {'gender': 'none'}, name='index'),
-    url(r'^all/$', 'apparelrow.apparel.views.index', {'gender': 'A'}, name='index-all'),
-    url(r'^men/$', 'apparelrow.apparel.views.index', {'gender': 'M'}, name='index-men'),
-    url(r'^women/$', 'apparelrow.apparel.views.index', {'gender': 'W'}, name='index-women'),
+    url(r'^$', HomeView.as_view(), {'gender': 'none'}, name='index'),
+    url(r'^all/$', HomeView.as_view(), {'gender': 'A'}, name='index-all'),
+    url(r'^men/$', HomeView.as_view(), {'gender': 'M'}, name='index-men'),
+    url(r'^women/$', HomeView.as_view(), {'gender': 'W'}, name='index-women'),
     url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),
-    url(r'^retailer/apply/$', 'apparelrow.dashboard.views.retailer_form', name='retailer-form'),
+    url(r'^retailer/apply/$', RetailerFormView.as_view(), name='retailer-form'),
     url(r'^store/complete/$', 'apparelrow.dashboard.views.index_complete', {'view': 'store'}, name='index-store-complete'),
 
     # Contests

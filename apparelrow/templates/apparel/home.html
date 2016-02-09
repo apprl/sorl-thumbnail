@@ -168,6 +168,7 @@
 
         {# Apply #}
         <section class="publisher-apply">
+            <a name="publisher-apply">
             <div class="container">
                 <h1>{% trans "Apply for an invitation" %}</h1>
                 <p>{% trans "As a member of the APPRL network, you'll get access to our range of tools, access to the best retailers, high rewards and support from our team to help you grow, maximise your earnings and learn more about your audience. To ensure a high quality of the APPRL network of style influencers & media, we kindly ask you to apply for an invitation." %}</p>
@@ -177,15 +178,15 @@
                         <div class="row">
                             <div class="col-is-6">
                                 <div class="form-group{% if form.name.errors %} has-error{% endif %}">
-                                    <label for="id_{{ form.name.html_name }}">{% trans "Name" %}</label>
-                                    <input name="{{ form.name.html_name }}" type="text" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+                                    <label for="{{ form.name.id_for_label }}">{% trans "Name" %}</label>
+                                    <input name="{{ form.name.html_name }}" type="text" id="{{ form.name.id_for_label }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
                                     {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
                                 </div>
                             </div>
                             <div class="col-is-6">
                                 <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-                                    <label for="id_{{ form.email.html_name }}">{% trans "Email" %}</label>
-                                    <input name="{{ form.email.html_name }}" type="text" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                                    <label for="{{ form.email.id_for_label }}">{% trans "Email" %}</label>
+                                    <input name="{{ form.email.html_name }}" type="text" id="{{ form.email.id_for_label }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
                                     {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                                 </div>
                             </div>
@@ -193,20 +194,24 @@
                         <div class="row">
                             <div class="col-is-6">
                                 <div class="form-group{% if form.blog.errors %} has-error{% endif %}">
-                                    <label for="id_{{ form.blog.html_name }}">Url</label>
-                                    <input name="{{ form.blog.html_name }}" type="text" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}">
+                                    <label for="{{ form.blog.id_for_label }}">Url</label>
+                                    <input name="{{ form.blog.html_name }}" type="text" id="{{ form.blog.id_for_label }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}">
                                     {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
                                 </div>
                             </div>
                             <div class="col-is-6">
                                 <div class="form-group{% if form.traffic.errors %} has-error{% endif %}">
-                                    <label for="id_{{ form.traffic.html_name }}">{% trans "Unique visitors / month or no. of followers" %}</label>
-                                    <input name="{{ form.traffic.html_name }}" type="text" id="id_{{ form.traffic.html_name }}">
+                                    <label for="{{ form.traffic.id_for_label }}">{% trans "Unique visitors / month or no. of followers" %}</label>
+                                    <input name="{{ form.traffic.html_name }}" type="text" id="{{ form.traffic.id_for_label }}">
                                     {% if form.traffic.errors %}<span class="help-block">{{ form.traffic.errors.as_text }}</span>{% endif %}
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-white">{% trans "Submit Application" %}</button>
+                        <div class="row">
+                            <div class="col-is-12 form-group">
+                                <button type="submit" class="btn btn-white">{% trans "Submit Application" %}</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
