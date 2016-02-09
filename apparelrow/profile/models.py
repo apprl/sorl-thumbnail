@@ -392,6 +392,7 @@ class User(AbstractUser):
             return reverse('brand-followers', args=[self.slug])
 
         return reverse('profile-followers', args=[self.slug])
+
     @cached_property
     def url_following(self):
         if self.is_brand:
@@ -401,7 +402,6 @@ class User(AbstractUser):
 
     def has_partner_group_ownership(self):
         return get_model('dashboard', 'Group').objects.filter(owner=self).exists()
-
 
     def is_referral_parent_valid(self):
         if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():
