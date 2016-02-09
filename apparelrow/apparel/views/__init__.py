@@ -1185,7 +1185,7 @@ class HomeView(TemplateView):
             context.update({"form":form})
         return render(request, self.template_name, context)
 
-# Deprecated
+# Deprecated, use HomeView instead.
 def index(request, gender=None):
     if request.user.is_authenticated():
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
