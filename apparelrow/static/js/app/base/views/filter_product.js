@@ -48,7 +48,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
 
         this.$el.find('li#product-filter-gender-2').on('click', 'a', function(e) {
              $(this).next().toggle();
-             $(this).find('.glyphicon').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-up');
+             //$(this).find('.glyphicon').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-up');
         });
 
         this.render();

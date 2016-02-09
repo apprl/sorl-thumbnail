@@ -1,4 +1,4 @@
-{% extends "profile/new_profile.html" %}
+{% extends "profile/base_profile.html" %}
 {% load i18n %}
 
 {% block extra-title %}{{ profile.display_name }} - {% trans "Shops" %} | {% endblock %}
@@ -12,7 +12,7 @@
         {% if profile == request.user %}
             <div class="message warning">
                 <p>{% trans "All shops that you create end up here." %}</p>
-                <a class="btn btn-block btn-positive btn-upper" href="{% url 'create_shop' %}">{% trans "+ Create shop!" %}</a>
+                <a class="btn btn-primary" href="{% url 'create_shop' %}">{% trans "Create shop" %}</a>
             </div>
         {% else %}
             <div class="message warning">{% blocktrans with profile.display_name as display_name %}{{ display_name }} has not created any shops yet.{% endblocktrans %}</div>

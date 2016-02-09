@@ -92,8 +92,6 @@ html.look-type-C .collage {
 .apprl-look .tooltip {
   background-color: white;
   display: none;
-  -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
-  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
   z-index: 1100;
   position: absolute;
@@ -137,7 +135,6 @@ html.look-type-C .collage {
   background-color: black;
   color: white;
   font-size: 13px;
-  font-weight: bold;
   letter-spacing: 1.5px;
   text-align: center;
   text-transform: uppercase;
@@ -157,7 +154,8 @@ html.look-type-C .collage {
 .apprl-look .vendor_button {
   position: absolute;
   bottom: 10px;
-  width: 160px;
+  right: 10px;
+  width: 150px;
   text-align: center;
   z-index: 10;
 }
@@ -165,16 +163,14 @@ html.look-type-C .collage {
   position: absolute;
   top: 130px;
   z-index: 1000;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background-color: white;
   -moz-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   -o-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-  -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
-  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
 }
 .apprl-look .tooltip-arrow-top {

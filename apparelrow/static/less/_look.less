@@ -1,18 +1,25 @@
 /*
     Look v1.0
+
+    - Looks List
+    - Look Detail
+    - Popovers
 */
 
 .look-image-container img {
     .animate;
 }
 
-.popover.top > .arrow {
-    bottom: -10px;
+/* Look List ---------- */
+.look-list-page {
+    main .btn {
+
+    }
 }
 
+/* Look Detail ---------- */
 .look-detail-page {
     #collage-background {
-
       .img-responsive {
         width: 100%;
       }
@@ -98,21 +105,61 @@
    }
 }
 
-//
-// Look product popovers
-// -----------------------------------------------------------------------------
-
+/* Popovers ---------- */
 .popover {
     width: 280px;
     border-radius: 0;
     border: 0;
-    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
-    .top>.arrow {
-        border-top-color: rgba(0,0,0,0.1);
-        bottom: -10px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.17);
+    h2 {
+        font-size: 18px;
+        margin: 0 0 5px 0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-family: @secondaryFontBold;
     }
     .popover-content {
-        padding: 0;
+        /*position: absolute;
+        width: 280px;
+        height: 140px;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        background-color: white;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.17);*/
+    }
+    &.top {
+        bottom: -10px;
+        margin: 0 !important;
+    }
+    &.bottom > .arrow {
+        top: -6px !important;
+    }
+    .arrow {
+        top: -6px;
+    }
+    &.bottom > .arrow, .arrow {
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        z-index: 0;
+        border: 0 !important;
+        background-color: white;
+        -moz-transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+        &:after {
+            border: 0 !important;
+        }
+    }
+    .currency {
+        color: #666;
+    }
+    .popover-content {
+        padding: 10px 10px 9px 10px;
     }
     .popover-product {
         min-width: 200px;
@@ -120,11 +167,7 @@
         .media-body {
             text-align: center;
             display: block;
-        }
-        h4 {
-            font-size: 14px;
-            margin-top: 0;
-            margin-bottom: 3px;
+            width: auto;
         }
         ul {
             margin-bottom: 0;
@@ -137,14 +180,17 @@
             }
         }
     }
-    .popover-link {
-      min-width: 200px;
-      max-width: 200px;
-      h4 {
-        margin-top: 0px;
-        font-size: 14px;
-      }
+    .btn {
+        margin: 0 0 1px 0;
+        font-size: 13px;
+        letter-spacing: 1.5px;
+        line-height: 40px;
+        height: 38px;
     }
+    /*.popover-link {
+        min-width: 200px;
+        max-width: 200px;
+    }*/
     .vendor_button {
         color: @grey;
     }
@@ -152,7 +198,13 @@
         position: absolute;
         bottom: 10px;
         right: 10px;
-        width: 160px;
+        width: 150px;
+    }
+    .popover-link {
+        text-align: center;
+        h2 {
+            margin: 15px auto;
+        }
     }
 }
 
@@ -292,6 +344,10 @@
         right: 0;
         height: 60px;
         left: 0;
+        bottom: 34px;
+        .btn {
+            max-width: none;
+        }
     }
 }
 
@@ -340,9 +396,9 @@
       }
     }
     background: #eee;
-      height: 41px;
-      line-height: 30px;
-      padding: 0 15px;
+    height: 41px;
+    line-height: 30px;
+    padding: 0 15px;
     overflow: hidden;
     .section {
       float: left;

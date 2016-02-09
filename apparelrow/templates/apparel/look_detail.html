@@ -95,9 +95,9 @@
             </hgroup>
 
             {% if request.user.is_authenticated %}
-            <a class="btn btn-default btn-lg btn-look-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><i class="fa fa-heart"></i><span> {% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span></a>
+            <a class="btn btn-default btn-lg btn-look-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><i class="fa fa-heart"></i>&nbsp;<span>{% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span></a>
             {% else %}
-            <a class="btn btn-default btn-lg btn-look-like" data-toggle="modal" href="#" data-target="#modal_like_look"><i class="fa fa-heart"></i><span> {% trans "Save" %}</span></a>
+            <a class="btn btn-default btn-lg btn-look-like" data-toggle="modal" href="#" data-target="#modal_like_look"><i class="fa fa-heart"></i>&nbsp;<span>{% trans "Save" %}</span></a>
             {% endif %}
         </div>
 
@@ -107,9 +107,9 @@
                 <div class="look-main-content">
                     {% if request.user.is_authenticated and request.user == object.user %}
                     <ul class="list-tools">
-                        <li><a class="btn btn-primary" href="{% url 'look-editor' object.slug %}"><i class="fa fa-pencil"></i>&nbsp;{% trans "Edit" %}</a></li>
-                        <li><a class="btn btn-unpublish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_unpublish_{{ object.id }}">{% trans "Unpublish" %}</a></li>
-                        <li><a class="btn btn-delete btn-secondary" data-toggle="modal" href="#" data-target="#modal_look_delete_{{ object.id }}">{% trans "Delete" %}</a></li>
+                        <li><a class="btn btn-primary" href="{% url 'look-editor' object.slug %}"><i class="fa fa-pencil"></i><span class="hidden-xs">&nbsp;{% trans "Edit" %}</span></a></li>
+                        <li><a class="btn btn-unpublish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_unpublish_{{ object.id }}"><i class="fa fa-lock"></i><span class="hidden-xs">&nbsp;{% trans "Unpublish" %}</span></a></li>
+                        <li><a class="btn btn-delete btn-secondary" data-toggle="modal" href="#" data-target="#modal_look_delete_{{ object.id }}"><i class="fa fa-times"></i><span class="hidden-xs">&nbsp;{% trans "Delete" %}</span></a></li>
                         <li><a class="btn btn-publish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_publish_{{ object.id }}">{% trans "Publish" %}</a></li>
                     </ul>
                     {% endif %}
@@ -203,8 +203,8 @@
                         </div>
 
                     <div class="col-lg-6">
+                        {% if looks_by_user %}
                         <section class="center-sm">
-                            {% if looks_by_user %}
                             <h4>{% trans "More looks by" %} {{ object.user.display_name }}</h4>
                             <hr>
                             <ul class="list-unstyled list-looks">
@@ -223,8 +223,8 @@
                                 {% endfor %}
                             </ul>
                             <a class="btn btn-default auto" href="{% url 'profile-looks' object.user.slug %}">{% blocktrans with firstname=object.user.first_name %}See all looks by {{firstname}}{% endblocktrans %}</a>
-                            {% endif %}
                         </section>
+                        {% endif %}
 
                         <section class="center-sm">
                             {% cache CACHE_TIMEOUT look_detail_likes object.id LANGUAGE_CODE %}
