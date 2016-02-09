@@ -24,7 +24,7 @@
 
     {% compressed_css 'bootstrap' %}
     {% block extra-styles %}
-    {% endblock extra-styles %}
+    {% endblock %}
     <script type="text/javascript">var addToHomeConfig = {returningVisitor: true, touchIcon: true, expire: 20160};</script>
     <script src="//cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
@@ -76,8 +76,8 @@
             }, {scope: facebook_scope});
         };
     </script>
-    {% block 'extra-scripts' %}
-    {% endblock 'extra-scripts' %}
+    {% block extra-scripts %}
+    {% endblock %}
     <script type="text/javascript">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -423,7 +423,7 @@
 
 {% include 'mouseflow.html' only %}
 
-{% block body-scripts %}{% endblock body-scripts %}
+{% block body-scripts %}{% endblock %}
 
 {% comment %}
 {% block pinterest-scripts %}
