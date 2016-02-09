@@ -14,20 +14,23 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.core.urlresolvers import reverse
+from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _, ugettext
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models.loading import get_model
+from django.views.generic import TemplateView, ListView, View
 
 import requests
+from apparelrow.apparel.models import Look
 
 from apparelrow.apparel.utils import get_paged_result, JSONResponse, get_ga_cookie_cid
 from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
 
-from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail, reset_facebook_user
+from apparelrow.profile.utils import get_facebook_user, send_welcome_mail, reset_facebook_user
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task, mail_managers_task
-from apparelrow.profile.decorators import avatar_change
+from apparelrow.profile.decorators import avatar_change, get_current_user
 
 from apparelrow.apparel.browse import browse_products
 
@@ -78,11 +81,129 @@ def save_description(request):
     return HttpResponse(description_html, mimetype='text/html')
 
 
+class ProfileView(TemplateView):
+    template_name = 'profile/default.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context.update(get_profile_sidebar_info(context["request"], context["profile"]))
+        return context
+
+    @method_decorator(get_current_user)
+    @method_decorator(avatar_change)
+    def get(self, request, *args, **kwargs):
+        """
+        Displays the default page (all).
+        """
+        profile = args[0]
+        form = args[1]
+        context = self.get_context_data(request=request,
+                                        profile=profile,
+                                        form=form,
+                                        next=request.get_full_path(),
+                                        avatar_absolute_uri=profile.avatar_large_absolute_uri(request))
+        is_brand = False
+        if profile.is_brand:
+            is_brand = profile.brand_id
+
+        return browse_products(context.pop("request"),
+                               template=self.template_name,
+                               gender=request.GET.get('gender', 'A'),
+                               user_gender='A',
+                               language=None,
+                               user_id=profile.pk,
+                               disable_availability=not is_brand,
+                               is_brand=is_brand,
+                               **context)
+
+
+class ProfileListLookView(ListView):
+    template_name = 'profile/looks.html'
+    template_name_ajax = 'apparel/fragments/look_list.html'
+    profile = None
+    user = None
+    paginate_by = 12
+
+    def get_queryset(self):
+        if self.profile == self.user:
+            return self.profile.look.order_by('-created')
+        else:
+            return self.profile.look.filter(published=True).order_by('-created')
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileListLookView, self).get_context_data(**kwargs)
+        context.update(get_profile_sidebar_info(context["request"], context["profile"]))
+        context.update({"current_page":context.pop("page_obj")})
+        return context
+
+    @method_decorator(get_current_user)
+    @method_decorator(avatar_change)
+    def get(self, request, *args, **kwargs):
+        self.profile = args[0]
+        self.user = request.user
+        self.object_list = self.get_queryset()
+        context = self.get_context_data(request=request,
+                                        profile=self.profile,
+                                        form=None,
+                                        next=request.get_full_path(),
+                                        avatar_absolute_uri=self.profile.avatar_large_absolute_uri(request))
+
+        #paged_result = get_paged_result(self.object_list, 12, request.GET.get('page', '1'))
+        if request.is_ajax():
+            return render(request, self.template_name_ajax, {
+                'current_page': context["current_page"]
+            })
+        else:
+            return render(context.pop("request"), self.template_name, context)
+
+
+class ProfileListLikedLookView(ProfileListLookView):
+    def get_queryset(self):
+        return get_model('apparel', 'Look').published_objects.filter(likes__user=self.profile, likes__active=True).order_by('-created')
+
+
+class ProfileListBrandLookView(ProfileListLookView):
+    def get_queryset(self):
+        return get_model('apparel', 'Look').published_objects.filter(components__product__static_brand = self.profile.name)
+
+
+class ProfileListShopView(ProfileListLookView):
+    template_name = 'profile/shops.html'
+    template_name_ajax = 'apparel/fragments/shop_list.html'
+
+    def get_queryset(self):
+        if self.profile == self.user:
+            return self.profile.shop.order_by('-modified')
+        else:
+            raise PermissionDenied("Unauthorized")
+
+
+class ProfileListFollowersView(ProfileListLookView):
+    template_name = 'profile/followers.html'
+    template_name_ajax = 'apparel/fragments/user_list.html'
+    paginate_by = PROFILE_PAGE_SIZE
+
+    def get_queryset(self):
+        return get_user_model().objects.filter(is_hidden=False, following__user_follow=self.profile, following__active=True) \
+                                       .order_by('name', 'first_name', 'username')
+
+
+class ProfileListFollowingView(ProfileListLookView):
+    template_name = 'profile/following.html'
+    template_name_ajax = 'apparel/fragments/user_list.html'
+    paginate_by = PROFILE_PAGE_SIZE
+
+    def get_queryset(self):
+        return get_user_model().objects.filter(is_hidden=False, followers__user=self.profile, followers__active=True) \
+                                       .order_by('name', 'first_name', 'username')
+
+
 @get_current_user
 @avatar_change
 def default(request, profile, form, page=0):
     """
-    Displays the default page (all).
+    !!! Replaced with ProfileView !!!
+    Displays the default page (all). Id
     """
     content = {
         'next': request.get_full_path(),
@@ -106,11 +227,11 @@ def default(request, profile, form, page=0):
                            is_brand=is_brand,
                            **content)
 
-
 @get_current_user
 @avatar_change
 def likes(request, profile, form, page=0):
     """
+    !!! Replaced with ProfileView !!!
     Displays the profile likes page.
     """
     content = {
@@ -135,10 +256,10 @@ def likes(request, profile, form, page=0):
                            is_brand=is_brand,
                            **content)
 
-
 @get_current_user
 @avatar_change
 def looks(request, profile, form, page=0):
+    # Deprecated
 
     if profile == request.user:
         queryset = profile.look.order_by('-created')
@@ -166,6 +287,7 @@ def looks(request, profile, form, page=0):
 @get_current_user
 @avatar_change
 def likedlooks(request, profile, form, page=0):
+    # Deprecated
     #logger.info("looks called")
 
     #retrieve looks for which a like for the current user exists and is active
@@ -188,7 +310,6 @@ def likedlooks(request, profile, form, page=0):
     content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/looks.html', content)
-
 
 @get_current_user
 @avatar_change
@@ -216,7 +337,6 @@ def brandlooks(request, profile, form, page=0):
 
     return render(request, 'profile/looks.html', content)
 
-
 @get_current_user
 @avatar_change
 def shops(request, profile, form, page=0):
@@ -243,8 +363,6 @@ def shops(request, profile, form, page=0):
     content.update(get_profile_sidebar_info(request, profile))
 
     return render(request, 'profile/shops.html', content)
-
-
 
 @get_current_user
 @avatar_change
