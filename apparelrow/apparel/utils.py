@@ -360,12 +360,7 @@ def get_paged_result(queryset, per_page, page_num):
     except EmptyPage:
         paged_result = paginator.page(paginator.num_pages)
 
-    #JAS: this field has been used to determine whether or not to display pagination but it was never set
-   # logger.info("per pages: %s and page number: %s result: %s" % (len(paged_result.object_list), page_num, per_page * int(page_num)))
-   # logger.info("entire queryset is: %s" % len(queryset))
-    #FIXME: When this is set to False, the pagination loads for a fraction of a second and seems to fire off two more tequests (next two pages)
-    #WTF?!?
-    if(len(queryset) > (per_page * int(page_num))):
+    if len(queryset) > (per_page * int(page_num)):
         paged_result.has_next = True
     else:
         paged_result.has_next = False
