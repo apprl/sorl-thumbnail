@@ -17,7 +17,7 @@
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
 {% endblock extra-styles %}
 
-{% block 'extra-scripts' %}
+{% block extra-scripts %}
 {% if request.user.is_authenticated and request.user == profile %}
 <script type="text/javascript">
 $(document).ready(function() {
@@ -35,7 +35,7 @@ $(document).ready(function() {
 });
 </script>
 {% endif %}
-{% endblock 'extra-scripts' %}
+{% endblock %}
 
 {% block body-classes %}profile-page{% endblock body-classes %}
 {% block full-body %}
@@ -90,30 +90,42 @@ $(document).ready(function() {
             {% if profile and profile.is_brand %}
                 {% url 'brand-likes-men' profile.slug as likes_url_men %}
                 {% url 'brand-likes-women' profile.slug as likes_url_women %}
-                <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">{% trans "Items" %}</a>
-                <span>({{ products.count }})</span>
+                <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">
+                    {% blocktrans count products as product_count %}Item ({{product_count}}){% plural %}Items ({{product_count}}){% endblocktrans %}
+                </a>
+                <!-- span>({{ products.count }})</span -->
             {% else %}
-                <a{% if request.path == likes_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ likes_url }}">{% trans "Items" %}</a>
-                <span>({{ products }})</span>
+                <a{% if request.path == likes_url %} class="selected"{% endif %} href="{{ likes_url }}">
+                    {% blocktrans count products as product_count %}Item ({{product_count}}){% plural %}Items ({{product_count}}){% endblocktrans %}
+                </a>
+                <!--span>({{ products }})</span-->
             {% endif %}
             </li>
             <li>
-                <a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">{% trans "Looks" %}</a>
-                <span>({{ profile.total_look_count }})</span>
+                <a{% if request.path == looks_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ looks_url }}">
+                    {% blocktrans count profile.total_look_count as look_count %}Look ({{look_count}}){% plural %}Looks ({{look_count}}){% endblocktrans %}
+                </a>
+                <!-- span>({{ profile.total_look_count }})</span-->
             </li>
             {% if profile.shops and request.user.is_authenticated and request.user == profile%}
             <li>
-                <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">{% trans "Shops" %}</a>
-                <span>({{ profile.shops }})</span>
+                <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">
+                    {% blocktrans count profile.shops as shop_count %}Shop ({{shop_count}}){% plural %}Shops ({{shop_count}}){% endblocktrans %}
+                </a>
+                <!-- span>({{ profile.shops }})</span -->
             </li>
             {% endif %}
             <li>
-                <a{% if request.path == followers_url %} class="selected"{% endif %} href="{{ followers_url }}">{% trans "Followers" %}</a>
-                <span>({{ profile.followers_count }})</span>
+                <a{% if request.path == followers_url %} class="selected"{% endif %} href="{{ followers_url }}">
+                    {% blocktrans count profile.followers_count as followers_count %}Follower ({{followers_count}}){% plural %}Followers ({{followers_count}}){% endblocktrans %}
+                </a>
+                <!-- span>({{ profile.followers_count }})</span -->
             </li>
             <li>
-                <a{% if request.path == following_url %} class="selected"{% endif %} href="{{ following_url }}">{% trans "Following" %}</a>
-                <span>({{ following }})</span>
+                <a{% if request.path == following_url %} class="selected"{% endif %} href="{{ following_url }}">
+                    {% blocktrans count following as following_count %}Following ({{following_count}}){% plural %}Following ({{following_count}}){% endblocktrans %}
+                </a>
+                <!--span>({{ following }})</span-->
             </li>
         </ul>
         {% endwith %}
@@ -122,6 +134,6 @@ $(document).ready(function() {
 </div>
 
 <div class="container">
-    {% block content %}{% endblock content %}
+    {% block content %}{% endblock %}
 </div>
 {% endblock %}
