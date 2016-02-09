@@ -86,7 +86,7 @@
         <div id="collapseThree" class="panel-collapse collapse">
             <div class="panel-body" id="product-color">
                 <a class="reset" href="">{% trans "Reset this filter" %} <i class="fa fa-times"></i></a>
-                <ul class="list-horizontal">
+                <ul>
                     {% for color in default_colors %}
                     <li>
                     <a href="?color={{ color.pk }}" class="color {{ color.value }}{% if color.pk not in colors %} filtered{% endif %}{% if selected_colors and color.pk in selected_colors %} selected{% endif %}" id="option-{{ color.pk }}" title="{{ color.value }}"></a>

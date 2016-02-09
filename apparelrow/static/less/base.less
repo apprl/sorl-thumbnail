@@ -59,6 +59,7 @@ li, td {
     color: @grey;
 }
 img {
+    -webkit-backface-visibility: hidden;
     max-width: 100%;
     height: auto;
 }
@@ -148,6 +149,9 @@ small {
     font-size: 13px;
     display: block;
     opacity: .5;
+    opacity: .5;
+    line-height: 1.2;
+    margin-bottom: 15px;
 }
 p {
     line-height: 1.25;
@@ -727,7 +731,8 @@ footer {
             li {
                 float: none;
                 margin: 0;
-                &:last-child, &:nth-last-child(2) {
+                //&:last-child, &:nth-last-child(2) {
+                &:last-child {
                     float: none;
                 }
             }
@@ -752,12 +757,14 @@ footer {
             li {
                 float: left;
                 margin-right: 30px;
-                &:last-child, &:nth-last-child(2) {
+                //&:last-child, &:nth-last-child(2) {
+                &:last-child {
                     float: right;
-                }
-                &:nth-last-child(2) {
                     margin: 0;
                 }
+                /*&:nth-last-child(2) {
+                    margin: 0;
+                }*/
             }
             .dropdown-menu {
                 background-color: rgba(255,255,255,.2);

@@ -100,10 +100,11 @@
     float: left;
     position: relative;
     min-height: 1px;
+    padding-right: 30px;
   }
   .apprl-shop .col-product-filter {
     width: 33.33333333%;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
   }
   .apprl-shop .col-product-list {
     width: 66.66666667%;
@@ -142,16 +143,18 @@
 .apprl-shop .btn:focus {
   outline: 0;
 }
+.apprl-shop .hover {
+  display: none !important;
+}
 .apprl-shop .btn-filter {
   background-color: #666;
-  max-width: 320px;
   position: relative;
 }
 .apprl-shop .btn-filter:hover {
   background-color: #333;
 }
 @media screen and (min-width: 768px) {
-  .apprl-shop .btn-filter .btn-filter {
+  .apprl-shop .btn-filter {
     display: none;
   }
 }
@@ -215,7 +218,6 @@
 .apprl-shop .panel {
   margin: 0 auto 10px auto;
   font-size: 15px;
-  max-width: 320px;
   letter-spacing: 0.5px;
 }
 .apprl-shop .panel-heading {
@@ -444,6 +446,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 .apprl-shop #product-color li a:after {
   font-family: 'FontAwesome';
@@ -460,7 +463,7 @@
   display: block;
 }
 .apprl-shop #product-color li a.filtered {
-  opacity: .25;
+  opacity: .15;
   pointer-events: none;
 }
 .apprl-shop #product-color li a.black {
@@ -738,18 +741,6 @@
   max-width: 112px;
   vertical-align: middle;
 }
-.apprl-shop #product-chooser .product-list-container #product-list > li .product-small .hover {
-  position: absolute;
-  width: 112px;
-  height: 82;
-  top: 32px;
-  left: 0px;
-  right: 0px;
-  display: none;
-}
-.apprl-shop #product-chooser .product-list-container #product-list > li .product-small .hover a {
-  margin-bottom: 10px;
-}
 .apprl-shop #product-chooser .product-list-container #product-list > li .product-small .caption {
   padding-top: 10px;
   height: 50px;
@@ -865,18 +856,6 @@
   right: -11px;
   top: -11px;
 }
-.apprl-shop #shop-product-list .product-small .hover {
-  position: absolute;
-  width: 92px;
-  height: 82;
-  top: 32px;
-  left: 10px;
-  right: 10px;
-  display: none;
-}
-.apprl-shop #shop-product-list .product-small .hover a {
-  margin-bottom: 10px;
-}
 .apprl-shop #shop-product-list .product-small .caption {
   padding-top: 10px;
   height: 50px;
@@ -931,9 +910,9 @@
   color: #f64747;
 }
 .apprl-shop .product-medium {
+  position: relative;
   margin: auto;
   max-width: 280px;
-  position: relative;
 }
 .apprl-shop .product-medium ul {
   line-height: 1.1;

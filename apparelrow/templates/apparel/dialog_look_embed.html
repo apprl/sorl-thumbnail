@@ -25,7 +25,9 @@
                     </div>
                 </div>-->
                 <div class="form-group">
-                    <label class="control-label" for="id_look_language">{% trans "Language" %}</label>
+                    <label class="control-label" for="id_look_language">{% trans "Language & Currency" %}</label>
+                    <a href="#" class="info-toggler" data-target="info-language"><i class="fa fa-question-circle"></i></a>
+                    <span class="info-box" id="info-language">Select the language for your shop and the currency the product prices should be showed in.</span>
                     <div class="select">
                         <span><i class="fa fa-caret-down"></i></span>
                         <select id="id_look_language" name="language">
@@ -51,7 +53,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="id_look_embed_code">{% trans "Copy and paste this code (in HTML-mode) into your site/blog" %}</label>
-                    <textarea class="form-control" id="id_look_embed_code" rows="8" name="embed_code"></textarea>
+                    <textarea id="id_look_embed_code" rows="8" name="embed_code"></textarea>
                 </div>
             </form>
 

@@ -3,15 +3,11 @@
 
 {% block content %}
 
-        {# Username #}
+        {# E-mail & Username #}
         <section>
+            <h2 id="email-address">{% trans "E-mail & Username" %}</h2>
             <p>{% trans "Your username is "%}<strong>{{ request.user.username }}</strong>.</p>
-        </section>
-
-        {# E-mail #}
-        <section>
-            <h2 id="email-address">{% trans "E-mail Address" %}</h2>
-            <p>{% trans "Here you can set which e-mail address you want to receive messages and updates to from Apprl." %}</p>
+            <p>{% trans "You can change the e-mail address associated with your APPRL account." %}</p>
             {% if email_change %}
                 <p><i>{% blocktrans with email_change.email as new_email %}Pending e-mail address change to {{ new_email }}, check your inbox for confirmation mail.{% endblocktrans %}</i></p>
             {% endif %}
@@ -32,7 +28,7 @@
         <section>
             <h2 id="events">{% trans "Facebook" %}</h2>
             {% if not request.user.facebook_user_id %}
-                <p>{% trans "Connect your Facebook account to find your friends and make it easier to share things you like." %}</p>
+                <p>{% trans "Connect your Facebook account to find your friends, make it easier to share things you like or just have one less password to remember." %}</p>
                 {% facebook_button connect='yes' %}<br>
                 {% if request.GET.error %}
                 <p class="error">{% trans "It is not possible to connect this account with Facebook." %}</p>
@@ -62,7 +58,7 @@
             {% endif %}
             {% if messages %}
                 {% for message in messages %}
-                <p class="success">{{ message }}</p>
+                <p><strong>{{ message }}</strong></p>
                 {% endfor %}
             {% endif %}
             <form action="{% url 'settings-password' %}" method="post">{% csrf_token %}

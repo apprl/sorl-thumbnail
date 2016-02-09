@@ -266,15 +266,13 @@
                                 {% else %}
                                     <a class="btn btn-sm btn-grey dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                                     <ul id="language-dropdown" class="dropdown-menu">
-
                                         {% for location in LOCATION_LANGUAGE_MAPPING %}
                                             <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
                                         {% endfor %}
                                     </ul>
                                 {% endif %}
                                 </li>
-                                <li><a href="{% url 'index-retailers' %}"><i>{% trans "Do you have a store?" %}</i></a></li>
-                                <li><a href="{% url 'index-publisher' %}"><i>{% trans "Are you a blogger?" %}</i></a></li>
+                                <li><a href="{% url 'index-retailers' %}"><i>{% trans "Are you a retailer?" %}</i></a></li>
                             </ul>
                         </div>
                         <div class="col-is-6">

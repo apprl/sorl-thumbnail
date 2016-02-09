@@ -279,6 +279,7 @@
         </div>
     </div>
 
+    {% comment %}
     <ul class="actions visible-xs">
         {% if request.user.is_authenticated %}
         <a class="btn btn-sm btn-default btn-product-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "" %}" data-unlike-text="{% trans "" %}" data-like-text="{% trans "" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart secondary"></i></a>
@@ -290,6 +291,7 @@
         <a rel="nofollow" itemprop="availability" content="in_stock" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" target="_blank" class="btn btn-sm btn-primary" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
         {% endif %}
     </ul>
+    {% endcomment %}
 
     {% block body-scripts %}
         <script>
