@@ -3,6 +3,7 @@ import logging
 import json
 import datetime
 import itertools
+from django.views.generic import DetailView
 import os.path
 import string
 import urllib
@@ -300,7 +301,94 @@ def get_product_from_slug(slug, **kwargs):
     return product
 
 
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'apparel/product_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        product = self.object
+        is_liked = False
+        request = self.request
+        if request.user.is_authenticated():
+            is_liked = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
+
+        looks_with_product = Look.published_objects.filter(user__is_hidden=False,
+                                                           components__product=product).distinct().order_by('-modified')[:2]
+        looks_with_product_count = Look.published_objects.filter(user__is_hidden=False,
+                                                                 components__product=product).distinct().count()
+        # Likes
+        likes = product.likes.filter(active=True, user__is_hidden=False).order_by('modified').select_related('user')
+        regular_likes = likes.filter(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
+        partner_likes = likes.exclude(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
+        # Full image url
+        try:
+            product_full_image = request.build_absolute_uri(
+                get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
+        except IOError:
+            logging.error('Product id %s does not have a valid image on disk' % (product.pk,))
+            raise Http404
+        # Full brand url
+        product_brand_full_url = ''
+        if product.manufacturer and product.manufacturer.user:
+            product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
+
+        mlt_body = '{product_name} {manufacturer_name} {colors} {categories}'.format(product_name=product.product_name,
+                                                                                     manufacturer_name=product.manufacturer.name,
+                                                                                     colors=', '.join(product.colors),
+                                                                                     categories=', '.join([x.name for x in product.categories]))
+        alternative, alternative_url = more_alternatives(product, request.session.get('location', 'ALL'), 9)
+
+        referral_sid = request.GET.get('sid', 0)
+        try:
+            sid = int(referral_sid)
+        except (TypeError, ValueError, AttributeError):
+            sid = 0
+
+        # Get the store commission
+        earning_cut = product.get_product_earning(request.user)
+        # Cost per click
+        default_vendor = product.default_vendor
+        cost_per_click = 0
+        if default_vendor and default_vendor.vendor.is_cpc:
+            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
+            click_cut = cut * publisher_cut
+            earning_cut = click_cut
+            try:
+                cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
+            except get_model('dashboard', 'ClickCost').DoesNotExist:
+                logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
+                    product.default_vendor, product.product_name))
+
+        context.update({
+            'object': product,
+            'is_liked': is_liked,
+            'looks_with_product': looks_with_product,
+            'looks_with_product_count': looks_with_product_count,
+            'object_url': request.build_absolute_uri(),
+            'more_like_this': more_like_this_product(mlt_body, product.gender, request.session.get('location', 'ALL'), 9),
+            'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
+            'product_full_image': product_full_image,
+            'product_brand_full_url': product_brand_full_url,
+            'likes': regular_likes,
+            'partner_likes': partner_likes,
+            'referral_sid': referral_sid,
+            'alternative': alternative,
+            'alternative_url': alternative_url,
+            'earning_cut': earning_cut,
+            'cost_per_click': cost_per_click,
+            'has_share_image': True
+        })
+        return context
+
+    def get_object(self, **kwargs):
+        local_kwargs = {'published': True, 'gender__isnull': False}
+        slug = self.kwargs.get("slug")
+        return get_product_from_slug(slug, **local_kwargs)
+
+
 def product_detail(request, slug):
+    # DEPRECATED, use class based view instead
     kwargs = {'published': True, 'gender__isnull': False}
     product = get_product_from_slug(slug, **kwargs)
 
@@ -1217,6 +1305,27 @@ def founders(request):
 def community(request):
     return render(request, 'apparel/index.html')
 
+class CommunityFormView(TemplateView):
+    template_name = 'apparel/index.html'
+
+    def get(self, request, *args, **kwargs):
+        form = SignupForm(is_store_form=True)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = SignupForm(request.POST, is_store_form=True)
+        if form.is_valid():
+            # Save name and blog URL on session, for Google Analytics
+            request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
+            instance = form.save(commit=False)
+            instance.store = True
+            instance.save()
+
+            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
+                    u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
+
+            return HttpResponseRedirect(reverse('index-store-complete'))
+        return render(request, self.template_name, {'form': form})
 
 def on_boarding_follow_users(user, to_follow_list):
     for row in to_follow_list:
