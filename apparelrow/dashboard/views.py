@@ -1199,7 +1199,7 @@ class RetailerFormView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         form = SignupForm(is_store_form=True)
-        return render(request, {'form': form})
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         form = SignupForm(request.POST, is_store_form=True)
@@ -1214,7 +1214,7 @@ class RetailerFormView(TemplateView):
                     u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
 
             return HttpResponseRedirect(reverse('index-store-complete'))
-        return render(request, {'form': form})
+        return render(request, self.template_name, {'form': form})
 
 def index(request):
     return render(request, 'dashboard/index.html')
