@@ -414,18 +414,64 @@ a.info {
     width: 100%;
     .btn-pagination {
 		margin: auto;
-        img {
-            display: none;
-            padding-left: 10px;
-        }
-        &.hover img {
-            display: inline-block;
-        }
+		overflow: hidden;
 		&:focus, &:active, &:visited {
 			background-color: black !important;
 			color: white !important;
 		}
+		&.hover {
+			.loader {
+				display: block;
+			}
+		}
     }
+	.loader {
+		width: 48px;
+		height: 48px;
+	  	position: relative;
+		display: none;
+		float: right;
+		margin-top: -6px;
+		float: right;
+		> span {
+			width: 100%;
+			height: 100%;
+			display: inline-block;
+		    border-radius: 50%;
+	    	opacity: 0.6;
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    background-color: white;
+		    -webkit-animation: bounce 2s infinite ease-in-out both;
+		    animation: bounce 2s infinite ease-in-out both;
+		}
+		.two {
+			-webkit-animation-delay: -1s;
+			animation-delay: -1s;
+		}
+	}
+	@-webkit-keyframes bounce {
+		0%, 100% {
+			-webkit-transform: scale(0);
+			transform: scale(0);
+		}
+		50% {
+			-webkit-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@keyframes bounce {
+		0%, 100% {
+			-webkit-transform: scale(0);
+			transform: scale(0);
+		}
+		50% {
+			-webkit-transform: scale(1);
+			transform: scale(1);
+		}
+	}
 }
 .helper {
 	float: right;

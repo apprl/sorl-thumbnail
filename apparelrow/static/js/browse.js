@@ -265,7 +265,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.pagination a', function(e) {
         var $this = $(this);
-        $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
+        $this.addClass('disabled hover').find('.text').text($this.data('loading-text'));
         var page = parsePage($this);
         if (page) {
             fetchPage(page);
