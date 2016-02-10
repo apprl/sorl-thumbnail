@@ -240,8 +240,10 @@ a.info {
 		max-width: 320px;
 	}
 }
-.btn-unfollow {
+.btn-primary.btn-unfollow {
 	background-color: @lightGrey !important;
+}
+.btn-unfollow.btn-danger {
 	&:hover, &:focus {
 		background-color: darken(@secondaryColor, 15%) !important;
 	}
@@ -307,6 +309,7 @@ a.info {
 	padding: 0;
 	top: initial;
 	left: initial;
+	padding-top: 8px;
 	a {
 		color: @grey;
 		display: block;
@@ -414,18 +417,68 @@ a.info {
     width: 100%;
     .btn-pagination {
 		margin: auto;
-        img {
-            display: none;
-            padding-left: 10px;
-        }
-        &.hover img {
-            display: inline-block;
-        }
+		overflow: hidden;
 		&:focus, &:active, &:visited {
 			background-color: black !important;
 			color: white !important;
 		}
+		&.hover {
+			.loader {
+				display: block;
+			}
+		}
     }
+    span {
+    	background-color: black !important;
+    	color: white !important;
+    }
+	.loader {
+		width: 48px;
+		height: 48px;
+	  	position: relative;
+		display: none;
+		float: right;
+		margin-top: -6px;
+		float: right;
+		> span {
+			width: 100%;
+			height: 100%;
+			display: inline-block;
+		    border-radius: 50%;
+	    	opacity: 0.6;
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    background-color: white;
+		    -webkit-animation: bounce 2s infinite ease-in-out both;
+		    animation: bounce 2s infinite ease-in-out both;
+		}
+		.two {
+			-webkit-animation-delay: -1s;
+			animation-delay: -1s;
+		}
+	}
+	@-webkit-keyframes bounce {
+		0%, 100% {
+			-webkit-transform: scale(0);
+			transform: scale(0);
+		}
+		50% {
+			-webkit-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@keyframes bounce {
+		0%, 100% {
+			-webkit-transform: scale(0);
+			transform: scale(0);
+		}
+		50% {
+			-webkit-transform: scale(1);
+			transform: scale(1);
+		}
+	}
 }
 .helper {
 	float: right;
@@ -863,10 +916,10 @@ a.info {
 		}
 	}
 }
-.list-vertical li {
+/*.list-vertical li {
 	font-size: 14px;
 	line-height: 18px;
-}
+}*/
 .list-filter {
 	li {
 		line-height: 24px;
@@ -1022,9 +1075,19 @@ a.info {
 		}
 	}
 }
+.table {
+	margin: 0;
+	@media (min-width: @screen-is) {
+		display: table;
+		.cell {
+			display: table-cell;
+			vertical-align: middle;
+		}
+	}
+}
 
 /* Notifications & Messages ---------- */
-.message {
+main div.message {
 	max-width: @screen-sm;
 	margin: auto;
 	text-align: center;
@@ -1230,11 +1293,4 @@ a.info {
 }
 .user-medium .pull-left {
     margin-top: 3px;
-}
-.message {
-	text-align: center;
-	margin: auto;
-	.btn {
-		margin: auto;
-	}
 }

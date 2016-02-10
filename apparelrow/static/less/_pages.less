@@ -648,7 +648,9 @@
 
 /* Settings ---------- */
 .settings-page {
-    text-align: center;
+    main {
+        text-align: center;
+    }
     h2 {
         margin-bottom: 10px;
     }
@@ -684,7 +686,57 @@
 
 /* Notifications ---------- */
 .notifications-page {
-    //
+    main {
+        text-align: center;
+        figure {
+            margin: 15px auto;
+        }
+        .message {
+            margin: 0;
+        }
+        .btn {
+            margin: 15px auto;
+        }
+    }
+    @media (min-width: @screen-is) {
+        main {
+            text-align: left;
+            .btn {
+                float: right;
+            }
+        }
+        .cell:nth-child(1) {
+            width: 10%;
+            //background-color: blue;
+        }
+        .cell:nth-child(2) {
+            width: 40%;
+            //background-color: red;
+        }
+        .cell:nth-child(3) {
+            width: 20%;
+            //background-color: yellow;
+        }
+        .cell:nth-child(4) {
+            width: 30%;
+            //background-color: green;
+        }
+    }
+    /*@media (max-width: @screen-is) {
+
+        .list-notifications {
+            text-align: left;
+            li {
+                .clearfix;
+            }
+        }
+        figure, .message {
+            float: left;
+        }
+        .btn, span {
+            float: right;
+        }
+    }*/
 }
 
 /* Store Commissions ---------- */

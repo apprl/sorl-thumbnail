@@ -5,7 +5,7 @@
 
 {% block extra-title %}{% trans "Notifications" %} | {% endblock %}
 
-{% block body-classes %}settings-page{% endblock %}
+{% block body-classes %}notifications-page{% endblock %}
 {% block body %}
 
     <div class="body-header">
@@ -17,50 +17,51 @@
     <ul class="list-notifications">
         {% localtime on %}
             {% for event in request.user.notifications %}
-            <li>
+            <li class="table">
                 {% if event.type == "LIKELOOK" %}
 
-                <figure>
+                <figure class="cell">
                     <a href="{{ event.actor.url_likes }}">
                         <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32">
                     </a>
                 </figure>
-                <p class="message">
+                <p class="cell message">
                     <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong></a> liked your look
-                    <a href="{{ event.look.get_absolute_url }}">
-                        <strong>{{ event.look.title }}</strong>
-                    </a>
+                    <a href="{{ event.look.get_absolute_url }}"><strong>{{ event.look.title }}</strong></a>
                 </p>
 
                 {% elif event.type == "FB" %}
 
-                <figure>
+                <figure class="cell">
                     <a href="{{ event.actor.url_likes }}">
                         <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32">
                     </a>
                 </figure>
-                <p class="message">Your Facebook friend <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> is now on APPRL!</span></a></p>
+                <p class="cell message">Your Facebook friend <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> is now on APPRL!</span></a></p>
 
                 {% elif event.type == "SALE" %}
 
-                <figure>
+                <figure class="cell">
                     <a href="{{ event.product.get_absolute_url }}">
                         {% thumbnail event.product.product_image "32" crop="noop" as im %}
                         <img class="img-circle" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32">
                         {% endthumbnail %}
                     </a>
                 </figure>
-                <p class="message"><a href="{{ event.product.get_absolute_url }}"><strong>{{ event.product }}</strong></a> is on sale!</p>
+                </span>
+                <p class="cell message"><a href="{{ event.product.get_absolute_url }}"><strong>{{ event.product }}</strong></a> is on sale!</p>
 
                 {% elif event.type == "FOLLOW" %}
 
-                <figure><a href="{{ event.actor.url_likes }}"><img class="img-circle"  src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a></figure>
-                <p class="npa-message"><a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> started following you!</a></p>
+                <figure class="cell">
+                    <a href="{{ event.actor.url_likes }}"><img class="img-circle"  src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a>
+                </figure>
+                <p class="cell message"><a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> started following you!</a></p>
 
                 {% endif %}
 
-                <span>{{ event.created|since }}</span>
-                {% if not event.type == "SALE" %}{% include 'apparel/fragments/follow.html' with profile=event.actor%}{% endif %}
+                <span class="cell time">{{ event.created|since }}</span>
+                {% if not event.type == "SALE" %}<span class="cell">{% include 'apparel/fragments/follow.html' with profile=event.actor%}</span>{% endif %}
             </li>
             {% empty %}
             <li class="no-results">

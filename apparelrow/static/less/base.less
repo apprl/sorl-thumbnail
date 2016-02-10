@@ -341,11 +341,14 @@ header {
         margin-right: 30px;
     }
     .link-create {
-        margin-top: 55px;
-        color: @primaryColor;
-        display: inline-block;
+        margin: 55px 0 15px 0;
+        padding: 0 15px;
+        color: white;
+        background-color: @primaryColor;
+        display: block;
         &:hover, &:focus {
-            color: darken(@primaryColor, 15%) !important;
+            color: white !important;
+            background-color: darken(@primaryColor, 15%) !important;
         }
         i {
             padding-bottom: 2px;
@@ -572,7 +575,9 @@ header .notifications {
     top: 60px;
     width: 320px;
     max-width: none;
+    padding: 0;
     a {
+        padding: 5px 15px !important;
         .clearfix();
         &:hover {
             background-color: transparent;

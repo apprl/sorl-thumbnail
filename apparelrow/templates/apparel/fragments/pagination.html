@@ -2,7 +2,11 @@
 {% load static from staticfiles %}
 {% if current_page.has_next %}<!-- and is_shop or current_page.object_list%} -->
 <a class="btn btn-block btn-pagination center" data-loading-text="{% trans "More on the way" %}" href="{{ request.path }}{% if request.GET.view == 'friends' %}?view=friends&{% elif request.GET.view == 'latest' %}?view=latest&{% else %}?{% endif %}page={{ current_page.next_page_number }}{% if extra_parameter %}&{{ extra_parameter }}{% endif %}">
-    <span>{% trans "Show more" %}</span>
-    <img src="{% static "images/loading.gif" %}">
+    <span class="text">{% trans "Show more" %}</span>
+    <span class="loader">
+    	<span class="one"></span>
+    	<span class="two"></span>
+    	<span class="three"></span>
+    </span>
 </a>
 {% endif %}
