@@ -1308,9 +1308,15 @@ def community(request):
 class CommunityFormView(TemplateView):
     template_name = 'apparel/index.html'
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
+        context = super(CommunityFormView, self).get_context_data(**kwargs)
         form = SignupForm(is_store_form=True)
-        return render(request, self.template_name, {'form': form})
+        context.update({"form": form})
+        return context
+
+    #def get(self, request, *args, **kwargs):
+    #    form = SignupForm(is_store_form=True)
+    #    return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         form = SignupForm(request.POST, is_store_form=True)
