@@ -32,9 +32,9 @@ $(document).ready(function() {
         <p>{% blocktrans with userid=request.user.pk %}Your publisher ID is <strong>{{userid}}</strong>.{% endblocktrans %}</p>
         <form class="form-horizontal" id="publisher-form" action="{% url 'settings-publisher' %}" method="post">{% csrf_token %}
             <div class="form-group{% if form.blog_url.errors %} has-error{% endif %}">
-                <label for="id_{{ form.blog_url.html_name }}" class="col-sm-2 control-label">{{ form.blog_url.label }}</label>
+                <label for="id_{{ form.blog_url.html_name }}" class="col-sm-2 control-label">{% trans "Your site" %}</label>
                 <div class="col-sm-10">
-                    <input name="{{ form.blog_url.html_name }}" type="text" class="form-control" id="id_{{ form.blog_url.html_name }}" value="{% if form.blog_url.value %}{{ form.blog_url.value }}{% endif %}" placeholder="{{ form.blog_url.help_text }}">
+                    <input name="{{ form.blog_url.html_name }}" type="text" class="form-control" placeholder="http://" id="id_{{ form.blog_url.html_name }}" value="{% if form.blog_url.value %}{{ form.blog_url.value }}{% endif %}" placeholder="{{ form.blog_url.help_text }}">
                     {% if form.blog_url.errors %}<span class="help-block">{{ form.blog_url.errors.as_text }}</span>{% endif %}
                 </div>
             </div>
