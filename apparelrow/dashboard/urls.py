@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, url
 from apparelrow.dashboard.views import DashboardView, AdminDashboardView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 urlpatterns = patterns('',
-    url(r'^$', 'apparelrow.dashboard.views.index', name='index-publisher'),
+    #url(r'^$', 'apparelrow.dashboard.views.index', name='index-publisher'),
+    url(r'^$', RedirectView.as_view(url='/')),
     url(r'^apply/$', 'apparelrow.dashboard.views.publisher_contact', name='publisher-contact'),
     url(r'^new_dashboard/(?P<year>\d{4})/(?P<month>\d{1,2})/$', DashboardView.as_view(), name='new-dashboard'),
     url(r'^new_dashboard/$', DashboardView.as_view(), name='new-dashboard'),
