@@ -69,7 +69,8 @@ class CustomCheckboxInput(forms.widgets.CheckboxInput):
             label_for = " for='%s_%s'" % (self.attrs['id'], self.index)
         else:
             label_for = ''
-        output = '<label%s>%s <span><i class="fa fa-check"></i></span></label>' % (label_for,output)
+        #output = '<label%s>%s <span><i class="fa fa-check"></i></span></label>' % (label_for,output)
+        output = '<label{label}><input type="checkbox"><span><i class="fa fa-check"></i></span>{output}</label>'.format(label=label_for, output=output)
         return mark_safe(output)
 
 #

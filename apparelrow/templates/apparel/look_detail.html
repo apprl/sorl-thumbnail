@@ -20,7 +20,7 @@
     {% endcache %}
 {% endblock extra-styles %}
 
-{% block 'extra-scripts' %}
+{% block extra-scripts %}
 <script type="text/javascript">
     $(document).ready(function() {
         var popover_elements = $('[data-toggle=popover]');
@@ -74,7 +74,7 @@
     });
 
 </script>
-{% endblock 'extra-scripts' %}
+{% endblock extra-scripts %}
 
 {% block meta_description %}
     {% cache CACHE_TIMEOUT look_detail_metadesc object.id LANGUAGE_CODE %}

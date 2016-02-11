@@ -18,7 +18,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models.loading import get_model
-from django.views.generic import TemplateView, ListView, View
+from django.views.generic import TemplateView, ListView, View, DetailView
 
 import requests
 from apparelrow.apparel.models import Look
@@ -453,6 +453,56 @@ def confirm_email(request):
         email_change.delete()
 
     return HttpResponseRedirect(reverse('settings-email'))
+
+
+class UserSettingsEmailView(DetailView):
+    template_name = 'profile/settings_email.html'
+    context_object_name = 'email_change'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserSettingsEmailView, self).get_context_data(**kwargs)
+        FormClass = PasswordChangeForm if self.request.user.password else SetPasswordForm
+
+        form = EmailForm()
+        password_form = FormClass(self.request.user)
+        facebook_form = FacebookSettingsForm(instance=self.request.user)
+        context.update({
+            'email_form': form,
+            'form': password_form,
+            'facebook_settings_form': facebook_form
+        })
+        return context
+
+    def get_queryset(self):
+         return EmailChange.objects.get(user=self.request.user)
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        password_form = context.get("form")
+        facebook_form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user)
+
+        if facebook_form.is_valid():
+            facebook_form.save()
+
+        form = EmailForm(request.POST, request.FILES, instance=request.user)
+        context.update({'email_form': form, 'form':password_form, 'facebook_settings_form':facebook_form})
+        if form.is_valid():
+            # Remove old email change confirmations
+            EmailChange.objects.filter(user=request.user).delete()
+
+            token = uuid.uuid4().hex
+            email = form.cleaned_data['email']
+            subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
+            body = render_to_string('profile/confirm_email.html', {
+                    'username': request.user.display_name,
+                    'link': 'http://{host}{path}'.format(host=Site.objects.get_current().domain, path=reverse('user-confirm-email')),
+                    'token': token,
+                })
+            send_email_confirm_task.delay(subject, body, request.user.email)
+            return HttpResponseRedirect(reverse('settings-email'))
+        else:
+            return render_to_response(self.template_name, context)
+
 
 @login_required
 def settings_email(request):

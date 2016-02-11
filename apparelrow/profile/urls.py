@@ -2,11 +2,13 @@ from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from apparelrow.profile.views import ProfileView, ProfileListLookView, ProfileListLikedLookView, \
-    ProfileListBrandLookView, ProfileListShopView, ProfileListFollowersView, ProfileListFollowingView
+    ProfileListBrandLookView, ProfileListShopView, ProfileListFollowersView, ProfileListFollowingView, \
+    UserSettingsEmailView
 
 urlpatterns = patterns('',
     url(r'^flow/$', 'apparelrow.profile.views.flow', name='login-flow-redirect'),
-    url(r'^settings/$', 'apparelrow.profile.views.settings_email', name='settings'),
+    #url(r'^settings/$', 'apparelrow.profile.views.settings_email', name='settings'),
+    url(r'^settings/$', UserSettingsEmailView.as_view(), name='settings'),
     url(r'^notifications/$', 'apparelrow.profile.views.notifications', name='notifications-page'),
     url(r'^settings/notification/$', 'apparelrow.profile.views.settings_notification', name='settings-notification'),
     url(r'^settings/email/$', 'apparelrow.profile.views.settings_email', name='settings-email'),
