@@ -1,6 +1,7 @@
 import json
 import decimal
 import logging
+from django.views.generic import TemplateView
 import re
 import collections
 import HTMLParser
@@ -541,9 +542,24 @@ def decode_store_facet(data):
 # Generic search
 #
 
+class SearchBaseTemplate(TemplateView):
+    template_name = 'search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchBaseTemplate,self).get_context_data(**kwargs)
+        gender = kwargs.get("gender")
+        gender = select_from_multi_gender(self.request, 'shop', gender)
+        query = self.request.GET.get('q', '')
+
+        h = HTMLParser.HTMLParser()
+        query = h.unescape(query)
+        context.update({'q': query, 'gender': gender})
+        return context
+
+
 def search(request, gender=None):
     """
-    Search page
+    Search page, DEPRECATED
     """
     gender = select_from_multi_gender(request, 'shop', gender)
     query = request.GET.get('q', '')
@@ -556,7 +572,10 @@ def search(request, gender=None):
 
 def search_view(request, model_name):
     """
-    Generic search view
+    Generic search view for different models.
+    :param request:
+    :param model_name:
+    :return: Json
     """
     try:
         limit = int(request.REQUEST.get('limit', RESULTS_PER_PAGE))

@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block 'extra-scripts' %}
+{% block extra-scripts %}
 <script type="text/javascript">
     $(document).ready(function() {
             ApparelSearch.search(null, '{{ q }}', '{{ gender }}');
     });
 </script>
-{% endblock 'extra-scripts' %}
+{% endblock %}
 
 {% block body-classes %}search-page{% endblock %}
 {% block body %}
@@ -30,7 +30,7 @@
     <div id="search-result" class="row">
         <div class="wide result-container col-md-4">
             <h4 class="search-result-products">
-                {% trans "Matching products" %}
+                <span>{% trans "Matching products" %}</span>
                 <a class="pull-right" style="display:none;" href="#">{% trans "See all »" %}</a>
             </h4>
             <hr>
@@ -39,7 +39,7 @@
         </div>
         <div class="result-container col-md-4">
             <h4 class="search-result-looks">
-                {% trans "Matching looks" %}
+                <span>{% trans "Matching looks" %}</span>
                 <a class="pull-right" style="display:none;" href="#">{% trans "See all »" %}</a>
             </h4>
             <hr>
@@ -48,19 +48,25 @@
         </div>
         <div class="last result-container col-md-4">
             <section>
-                <h4 class="search-result-manufacturers">{% trans "Matching brands" %}</h4>
+                <h4 class="search-result-manufacturers">
+                    <span>{% trans "Matching brands" %}</span>
+                </h4>
                 <hr>
                 <ul class="list-unstyled" id="search-result-manufacturers"></ul>
             </section>
 
             <section>
-                <h4 class="search-result-stores">{% trans "Matching stores" %}</h4>
+                <h4 class="search-result-stores">
+                    <span>{% trans "Matching stores" %}</span>
+                </h4>
                 <hr>
                 <ul class="list-unstyled" id="search-result-stores"></ul>
             </section>
 
             <section>
-                <h4 class="search-result-profiles">{% trans "Matching members" %}</h4>
+                <h4 class="search-result-profiles">
+                    <span>{% trans "Matching members" %}</span>
+                </h4>
                 <hr>
                 <ul class="list-unstyled" id="search-result-profiles"></ul>
             </section>

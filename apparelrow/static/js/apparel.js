@@ -734,23 +734,23 @@ ApparelSearch = {
                 });
 
                 var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
-                ga('send', 'event', 'Search', name, opts.query['q'], response.paginator.count)
+                ga('send', 'event', 'Search', name, opts.query['q'], response.paginator.count);
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
-                var h3 = $('h3.' + opts.selector.substring(1));
-                    h3.find('> span').text(response.header_text);
-                var h3_a = h3.find('> a');
+                var h4 = $('h4.' + opts.selector.substring(1));
+                    h4.find('> span').text(response.header_text);
+                var h4_a = h4.find('> a');
 
                 var href_attr = '#';
                 switch(opts.selector) {
-                    case '#search-result-products':
+                    case '.search-result-products':
                         href_attr = browse_url + '?' + ApparelSearch.format_query(opts.query);
-                        h3_a.attr('href', href_attr);
+                        h4_a.attr('href', href_attr);
                         break;
 
-                    case '#search-result-looks':
+                    case '.search-result-looks':
                         href_attr = looks_search_url + '?' + ApparelSearch.format_query(opts.query);
-                        h3_a.attr('href', href_attr);
+                        h4_a.attr('href', href_attr);
                         break;
                 }
 
@@ -758,7 +758,7 @@ ApparelSearch = {
 
                 if(response.paginator.count > opts.query['limit']) {
                     abutton.show();
-                    h3_a.show();
+                    h4_a.show();
                 }
 
                 list.data('last-query', opts.query);

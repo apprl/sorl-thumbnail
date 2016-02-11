@@ -1,13 +1,14 @@
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import TemplateView, RedirectView
+from apparelrow.apparel.search import SearchBaseTemplate
 
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
 from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
-from apparelrow.apparel.views import BrandRedirectView, HomeView
+from apparelrow.apparel.views import BrandRedirectView, HomeView, ProductDetailView, CommunityFormView
 from apparelrow.dashboard.views import RetailerFormView
 
 urlpatterns = patterns('',
@@ -71,7 +72,8 @@ urlpatterns = patterns('',
     url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
 
     # Temporary url for new home page (work in progress)
-    url(r'^community/$', 'apparelrow.apparel.views.community', name='index-community'),
+    #url(r'^community/$', 'apparelrow.apparel.views.community', name='index-community'),
+    url(r'^community/$', CommunityFormView.as_view(), name='index-community'),
 
     # Temporary url for onboarding page (work in progress)
     url(r'^onboarding/$', 'apparelrow.apparel.views.onboarding', name='onboarding'),
@@ -80,7 +82,8 @@ urlpatterns = patterns('',
     (r'^home/friends/$', 'apparelrow.apparel.views.facebook_friends_widget'),
 
     # Search
-    url(r'^search/$', 'apparelrow.apparel.search.search', {'gender': 'A'}, name='search'),
+    url(r'^search/$', SearchBaseTemplate.as_view(), {'gender': 'A'}, name='search'),
+    #url(r'^search/$', 'apparelrow.apparel.search.search', {'gender': 'A'}, name='search'),
     url(r'^search/men/$', 'apparelrow.apparel.search.search', {'gender': 'M'}, name='search-men'),
     url(r'^search/women/$', 'apparelrow.apparel.search.search', {'gender': 'W'}, name='search-women'),
     url(r'^backend/search/(?P<model_name>\w+)/', 'apparelrow.apparel.search.search_view'),
@@ -110,7 +113,10 @@ urlpatterns = patterns('',
     url(r'^products/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.product_redirect_by_id', name='product-redirect-by-id'),
     url(r'^products/(?P<pk>[\wd]+)/popup/$', 'apparelrow.apparel.views.products.product_detail_popup', name='product-detail-popup'),
     url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.product_action', name='product-action'),
-    url(r'^products/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.product_detail', name='product-detail'),
+
+    url(r'^products/(?P<slug>[\w-]+)/$', ProductDetailView.as_view(), name='product-detail'),
+    #url(r'^products/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.product_detail', name='product-detail'),
+
     url(r'^products/(?P<slug>[\w-]+)/short/$', 'apparelrow.apparel.views.product_generate_short_link', name='product-generate-short-link'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparelrow.apparel.views.look_list', name='product-look-list'),
 
