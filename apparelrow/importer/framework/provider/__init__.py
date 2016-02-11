@@ -118,7 +118,7 @@ class Provider(object):
             product.vendorproduct.update(availability=0)
             product.save()
 
-            logger.info('Setting availability for product %s to sold out' % (product.product_name,))
+            logger.debug('Setting availability for product %s to sold out' % (product.product_name,))
 
     def fetch(self, from_warehouse=False, for_date=None):
         """
@@ -187,7 +187,7 @@ class Provider(object):
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()
-                logger.info('Setting availability for product %s to sold out' % (product.product_name,))
+                logger.debug('Setting availability for product %s to sold out' % (product.product_name,))
             except (ObjectDoesNotExist, MultipleObjectsReturned):
                 pass
 
@@ -205,7 +205,7 @@ class Provider(object):
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()
-                logger.info('Setting availability for product %s to sold out' % (product.product_name,))
+                logger.debug('Setting availability for product %s to sold out' % (product.product_name,))
             except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
                 pass
 
@@ -225,7 +225,7 @@ class Provider(object):
                 product.availability=False
                 product.vendorproduct.update(availability=0)
                 product.save()
-                logger.info('Setting availability for product %s to sold out' % (product.product_name,))
+                logger.debug('Setting availability for product %s to sold out' % (product.product_name,))
             except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
                 logger.warning(u'Failed to cleanup product during during unknown exception: %s' % (e))
 

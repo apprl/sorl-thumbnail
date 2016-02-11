@@ -24,7 +24,8 @@ from apparelrow.apparel.utils import get_paged_result, JSONResponse, get_ga_cook
 from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
 
 from apparelrow.profile.utils import get_facebook_user, get_current_user, send_welcome_mail, reset_facebook_user
-from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
+from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, \
+    PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm, PartnerNotificationsForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task, mail_managers_task
 from apparelrow.profile.decorators import avatar_change
@@ -406,11 +407,13 @@ def settings_publisher(request):
     if request.method == 'POST':
         form = PartnerSettingsForm(request.POST, request.FILES, instance=request.user)
         details_form = PartnerPaymentDetailForm(request.POST, request.FILES, instance=instance)
+        notifications_form = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
+        if notifications_form.is_valid():
+            notifications_form.save()
         if form.is_valid():
             form.save()
         else:
-            return render_to_response('profile/settings_publisher.html', {'form': form, 'form': form, 'details_form': details_form }, context_instance=RequestContext(request))
-
+            return render_to_response('profile/settings_publisher.html', {'form': form, 'form': form, 'details_form': details_form, 'notifications_form': notifications_form }, context_instance=RequestContext(request))
 
         if details_form.is_valid():
             instance = details_form.save(commit=False)
@@ -418,14 +421,15 @@ def settings_publisher(request):
             instance.save()
         else:
             form_errors = details_form.errors
-            return render_to_response('profile/settings_publisher.html', {'form': form, 'details_form': details_form, 'form_errors': form_errors}, context_instance=RequestContext(request))
+            return render_to_response('profile/settings_publisher.html', {'form': form, 'details_form': details_form, 'form_errors': form_errors, 'notifications_form': notifications_form}, context_instance=RequestContext(request))
 
         return HttpResponseRedirect(reverse('settings-publisher'))
 
     form = PartnerSettingsForm(instance=request.user)
     details_form = PartnerPaymentDetailForm(instance=instance)
+    notifications_form = PartnerNotificationsForm(instance=request.user)
 
-    return render(request, 'profile/settings_publisher.html', {'form': form, 'details_form': details_form})
+    return render(request, 'profile/settings_publisher.html', {'form': form, 'details_form': details_form, 'notifications_form': notifications_form})
 
 #
 # Welcome login flow

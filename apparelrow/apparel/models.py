@@ -3,9 +3,11 @@ import uuid
 import urlparse
 from django.core.cache import get_cache
 import os.path
+import decimal
 import datetime
 
 from django.db import models
+from django.db.models import Sum, Min
 from django.db.models.loading import get_model
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
@@ -13,7 +15,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
-from django.db.models.signals import post_save, pre_delete, pre_save
+from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -22,7 +24,7 @@ from django.utils.functional import cached_property
 from apparelrow.apparel.signals import look_saved
 from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
-from apparelrow.apparel.utils import currency_exchange, get_brand_and_category, generate_sid, parse_sid
+from apparelrow.apparel.utils import currency_exchange, get_brand_and_category, get_external_store_commission, generate_sid, parse_sid
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
 from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache
 
@@ -36,7 +38,6 @@ from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 from parse import *
-
 
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
 from decimal import Decimal, ROUND_HALF_UP
@@ -373,17 +374,7 @@ class Product(models.Model):
                     store_commission = stores[0].commission_percentage
                 else:
                     stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
-                    if len(stores) > 0:
-                        commission_array = stores[0].commission.split("/")
-                        standard_from = Decimal(commission_array[0])
-                        standard_to = Decimal(commission_array[1])
-                        sale = Decimal(commission_array[2])
-                        if sale != 0 and self.default_vendor.locale_discount_price:
-                            store_commission = sale / 100
-                        else:
-                            standard_from = standard_to if not standard_from else standard_from
-                            standard_to = standard_from if not standard_to else standard_to
-                            store_commission = (standard_from + standard_to)/(2*100)
+                    store_commission = get_external_store_commission(stores, self)
                 if store_commission > 0:
                     user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
                     earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
@@ -567,7 +558,6 @@ class ShortDomainLinkManager(models.Manager):
         else:
             logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
         return source_link
-
 
 
 class ShortDomainLink(models.Model):

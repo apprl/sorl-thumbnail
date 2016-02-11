@@ -614,6 +614,9 @@ def search_view(request, model_name):
         arguments['facet.mincount'] = 1
         arguments['facet.field'] = ['manufacturer']
 
+    # Filter query parameters based on location
+    arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
+
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)
     if ids:
@@ -683,3 +686,32 @@ def search_view(request, model_name):
         }),
         mimetype='application/json'
     )
+
+def get_available_brands(gender, location):
+    """
+    Return list of brand ids which products are published, available and able to being shown in the given location
+    """
+    if not gender or gender == 'A':
+        gender_field = 'gender:(U OR M OR W)'
+    else:
+        gender_field = 'gender:(U OR %s)' % (gender,)
+    arguments = {'fq': ['django_ct:apparel.product', 'availability:true', gender_field, 'published:true',
+                        'market_ss:%s' % location],
+                 'qf': ['manufacturer_auto'],
+                 'defType': ['edismax'],
+                 'start': 0,
+                 'rows': 12,
+                 'facet': 'on',
+                 'facet.limit': -1,
+                 'facet.mincount': 1,
+                 'facet.': 1,
+                 'facet.field': ['manufacturer']}
+
+    results = ApparelSearch("*:*", **arguments)
+    facet = results.get_facet()['facet_fields']
+    results = []
+    for i, value in enumerate(facet['manufacturer']):
+        if i % 2 == 0:
+            id, name, _ = decode_manufacturer_facet(value)
+            results.append(id)
+    return results

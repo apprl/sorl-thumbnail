@@ -29,6 +29,19 @@
 {% block full-body %}
 
     <div class="container" itemscope itemtype="http://data-vocabulary.org/Product">
+        {% if warning_text %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-warning alert-dismissible top-alert" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ warning_text }}
+                </div>
+
+             </div>
+        </div>
+        {% endif %}
         <div class="body-header">
             <div class="body-header-col-full">
                 {% if object.manufacturer.user %}
@@ -44,7 +57,6 @@
                 {% endif %}
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-6">
                 <ol class="breadcrumb">
@@ -86,9 +98,10 @@
                         {% cache CACHE_TIMEOUT product_detail_fragment object.id LANGUAGE_CODE %}
                         <h3>{% trans "Product info" %}</h3>
                         <p class="bodycopy description" itemprop="description">{{ object.description }}</p>
+                        {% if availability_text %}<p>{{ availability_text }}</p>{% endif %}
+                        <br>
 
                         <div class="product-info" itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer">
-
                             <p itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">
                                 {% if object.default_vendor %}
                                     {% if object.default_vendor.availability == 0 %}
@@ -153,7 +166,7 @@
                                             {% multiply cost_per_click.locale_price earning_cut %}
                                             per click to this item
                                      {% else %}
-                                        Settings for CPC is missing.
+                                        Settings for CPC are missing.
                                      {% endif %}
                                 </p>
                             {% endif %}
