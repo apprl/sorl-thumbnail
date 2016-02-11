@@ -14,7 +14,7 @@
             {% endif %}
         </a>
         <div class="hover">
-            <a class="btn btn-default btn-block btn-look-like" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><i class="fa fa-heart"></i> <span>{% trans "Save" %}</span></a>
+            <a class="btn btn-default btn-block btn-look-like" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><i class="fa fa-heart"></i>&nbsp;<span>{% trans "Like" %}</span></a>
         </div>
     </div>
     <div class="caption">

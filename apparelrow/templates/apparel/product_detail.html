@@ -40,9 +40,9 @@
             </hgroup>
 
             {% if request.user.is_authenticated %}
-            <a class="btn btn-lg btn-product-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart secondary"></i> <span>{% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
+            <a class="btn btn-lg btn-product-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart secondary"></i>&nbsp;<span>{% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
             {% else %}
-            <a class="btn btn-lg" data-toggle="modal" href="#" data-target="#modal_like_product"><i class="fa fa-heart"></i> <span>{% trans "Save" %}</span></a>
+            <a class="btn btn-lg" data-toggle="modal" href="#" data-target="#modal_like_product"><i class="fa fa-heart"></i>&nbsp;<span>{% trans "Save" %}</span></a>
             {% endif %}
         </div>
 

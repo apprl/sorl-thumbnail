@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="col-xs-12">
-        <a href="#" class="pull-left btn btn-default btn-product-like{% if is_liked %} liked{% endif %}" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i> <span>{% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
+        <a href="#" class="pull-left btn btn-default btn-product-like{% if is_liked %} liked{% endif %}" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i>&nbsp;<span>{% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
         <a href="#" class="pull-right btn btn-primary btn-add">{% trans "Add product" %}</a>
     </div>
     {% endcache %}

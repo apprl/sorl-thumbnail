@@ -7,6 +7,7 @@
         <section>
             <h2 id="email-address">{% trans "E-mail & Username" %}</h2>
             <p>{% trans "Your username is "%}<strong>{{ request.user.username }}</strong>.</p>
+            <br>
             <p>{% trans "You can change the e-mail address associated with your APPRL account." %}</p>
             {% if email_change %}
                 <p><i>{% blocktrans with email_change.email as new_email %}Pending e-mail address change to {{ new_email }}, check your inbox for confirmation mail.{% endblocktrans %}</i></p>
@@ -58,7 +59,7 @@
             {% endif %}
             {% if messages %}
                 {% for message in messages %}
-                <p><strong>{{ message }}</strong></p>
+                <p><strong style="color: #67e2b8;">{{ message }}</strong></p>
                 {% endfor %}
             {% endif %}
             <form action="{% url 'settings-password' %}" method="post">{% csrf_token %}

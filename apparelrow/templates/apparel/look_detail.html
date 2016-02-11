@@ -97,7 +97,7 @@
             {% if request.user.is_authenticated %}
             <a class="btn btn-default btn-lg btn-look-like{% if is_liked %} liked{% endif %}" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><i class="fa fa-heart"></i>&nbsp;<span>{% if is_liked %}{% trans "Liked" %}{% else %}{% trans "Like" %}{% endif %}</span></a>
             {% else %}
-            <a class="btn btn-default btn-lg btn-look-like" data-toggle="modal" href="#" data-target="#modal_like_look"><i class="fa fa-heart"></i>&nbsp;<span>{% trans "Save" %}</span></a>
+            <a class="btn btn-default btn-lg btn-look-like" data-toggle="modal" href="#" data-target="#modal_like_look"><i class="fa fa-heart"></i>&nbsp;<span>{% trans "Like" %}</span></a>
             {% endif %}
         </div>
 
@@ -107,10 +107,10 @@
                 <div class="look-main-content">
                     {% if request.user.is_authenticated and request.user == object.user %}
                     <ul class="list-tools">
-                        <li><a class="btn btn-primary" href="{% url 'look-editor' object.slug %}"><i class="fa fa-pencil"></i><span class="hidden-xs">&nbsp;{% trans "Edit" %}</span></a></li>
-                        <li><a class="btn btn-unpublish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_unpublish_{{ object.id }}"><i class="fa fa-lock"></i><span class="hidden-xs">&nbsp;{% trans "Unpublish" %}</span></a></li>
-                        <li><a class="btn btn-delete btn-secondary" data-toggle="modal" href="#" data-target="#modal_look_delete_{{ object.id }}"><i class="fa fa-times"></i><span class="hidden-xs">&nbsp;{% trans "Delete" %}</span></a></li>
-                        <li><a class="btn btn-publish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_publish_{{ object.id }}">{% trans "Publish" %}</a></li>
+                        <li><a class="btn btn-primary" href="{% url 'look-editor' object.slug %}"><span class="hidden-xs"><i class="fa fa-pencil"></i>&nbsp;</span>{% trans "Edit" %}</a></li>
+                        <li><a class="btn btn-unpublish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_unpublish_{{ object.id }}"><span class="hidden-xs"><i class="fa fa-lock"></i>&nbsp;</span>{% trans "Unpublish" %}</a></li>
+                        <li><a class="btn btn-delete btn-secondary" data-toggle="modal" href="#" data-target="#modal_look_delete_{{ object.id }}"><span class="hidden-xs"><i class="fa fa-times"></i>&nbsp;</span>{% trans "Delete" %}</a></li>
+                        <li><a class="btn btn-publish{% if object.published %} published{% endif %}" data-toggle="modal" href="#" data-target="#modal_look_publish_{{ object.id }}"><span class="hidden-xs"><i class="fa fa-times"></i>&nbsp;</span>{% trans "Publish" %}</a></li>
                     </ul>
                     {% endif %}
 

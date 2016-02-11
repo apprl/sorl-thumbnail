@@ -1002,9 +1002,9 @@ a.info {
 	text-align: center;
 	li {
 		display: inline-block;
-		margin-right: 15px;
+		margin-right: 4px;
 		vertical-align: top;
-		&:last-child {
+		&:nth-child(3) {
 			margin: 0;
 		}
 	}
@@ -1015,9 +1015,21 @@ a.info {
 	i {
 		font-size: 16px;
 	}
+	@media (min-width: 375px) {
+		li {
+			margin: 0 5px;
+			&:nth-child(3) {
+				margin: 0 5px;
+			}
+		}
+	}
 	@media (min-width: @screen-md) {
 		li {
+			margin: 0 15px 0 0;
 			float: left;
+			&:nth-child(3) {
+				margin: 0;
+			}
 		}
 	}
 }
