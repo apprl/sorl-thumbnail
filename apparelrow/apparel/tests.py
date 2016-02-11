@@ -2,7 +2,6 @@
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.search import product_save
 from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
 from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
@@ -14,12 +13,11 @@ from decimal import Decimal
 from django.conf import settings
 
 from django.core.urlresolvers import reverse
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 from django.utils.translation import activate
 from django.test import TestCase, RequestFactory
-from apparelrow.apparel.models import Product, ProductLike, Shop, ShopEmbed
+from apparelrow.apparel.models import Shop, ShopEmbed
 from apparelrow.apparel.models import get_store_link_from_short_link
-from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.profile.models import User
