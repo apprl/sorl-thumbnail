@@ -234,7 +234,10 @@
             .tools-description {
                 vertical-align: middle;
             }
-            .first {
+            .first, .third {
+                h2 {
+                    text-align: left;
+                }
                 .tools-display {
                     text-align: right;
                 }
@@ -242,10 +245,15 @@
                     padding-left: 30px;
                 }
             }
-            .second .tools-description {
-                text-align: right;
-                padding-right: 30px;
-                display: table-cell;
+            .second {
+                h2 {
+                    text-align: right;
+                }
+                .tools-description {
+                    text-align: right;
+                    padding-right: 30px;
+                    display: table-cell;
+                }
             }
         }
     }
@@ -802,6 +810,35 @@
             }
         }
     }
+    .panel-heading {
+        padding: 20px 10px 0 10px !important;
+        img {
+            height: 64px;
+        }
+    }
+    /*
+        Note: We need a better solution for this
+    */
+    @media (min-width: @screen-xs) {
+        .user-medium .pull-left {
+            margin-top: 19px;
+        }
+        .user-medium .panel-heading {
+            img {
+                height: 44px;
+            }
+        }
+    }
+    @media (min-width: @screen-sm) {
+        .user-medium .pull-left {
+            margin-top: 0;
+        }
+        .user-medium .panel-heading {
+            img {
+                height: 53px;
+            }
+        }
+    }
 }
 .discover-list .col-discover-item {
     @media (min-width: @screen-xs) {
@@ -811,6 +848,11 @@
 }
 
 /* Dashboard ---------- */
+.dashboard {
+    main {
+        text-align: center;
+    }
+}
 .publisher-page, .store-page {
     .select {
         margin-left: auto;

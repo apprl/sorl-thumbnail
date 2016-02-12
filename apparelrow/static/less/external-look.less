@@ -72,7 +72,7 @@ html.look-type-C {
     }
 
     /* Components ---------- */
-    @media (max-width: 480px) {
+    @media (max-width: 640px) {
         .close {
             width: 44px;
             height: 44px;
@@ -81,13 +81,13 @@ html.look-type-C {
             top: -16px;
             right: -16px;
             border-radius: 100%;
-            background-color: #f8f8f8;
+            background-color: @lightGrey;
             &:before {
                 font-family: 'FontAwesome';
                 content: '\f00d';
                 position: absolute;
-                top: 14px;
-                right: 14px;
+                top: 13px;
+                right: 15px;
                 font-size: 18px;
             }
         }
@@ -164,10 +164,11 @@ html.look-type-C {
     }
     .tooltip-arrow {
         position: absolute;
-        top: 130px;
         z-index: 1000;
         width: 12px;
         height: 12px;
+        left: 50%;
+        margin-left: -6px;
         background-color: white;
         -moz-transform: rotate(45deg);
         -webkit-transform: rotate(45deg);
@@ -175,6 +176,10 @@ html.look-type-C {
         -ms-transform: rotate(45deg);
         transform: rotate(45deg);
         box-shadow: 2px 2px 6px rgba(0,0,0,0.17);
+    }
+    .tooltip-arrow-top {
+        top: -6px;
+        bottom: initial;
     }
     .tooltip-arrow-top {
         top: initial;
