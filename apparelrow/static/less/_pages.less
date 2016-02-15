@@ -16,6 +16,8 @@
 */
 
 /* Home (Default) ---------- */
+.publisher-page {
+}
 .publisher-page, .retailer-page {
     background-color: black;
     header.expand .menu-toggler {
@@ -105,6 +107,14 @@
                 font-size: 47px;
             }
         }
+    }
+    .brand-line {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: @primaryColor;
     }
     .publisher-welcome {
         h1 {
@@ -511,20 +521,17 @@
         margin-top: 45px;
     }
     #slider-publishers {
-        span {
+        .overlay {
+            background: -webkit-linear-gradient(top, rgba(0,0,0,0) 75%, rgba(0,0,0,.5));
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,.5));
+        }
+        h5 {
             position: absolute;
             text-align: center;
             width: 100%;
             color: white;
             left: 0;
             bottom: 15px;
-            h5 {
-                margin-bottom: 5px;
-            }
-            img {
-                margin: auto;
-                width: auto;
-            }
         }
     }
 }
@@ -656,9 +663,9 @@
 
 /* Settings ---------- */
 .settings-page {
-    main {
+    /*main {
         text-align: center;
-    }
+    }*/
     h2 {
         margin-bottom: 10px;
     }
@@ -1003,6 +1010,29 @@
     list-style: decimal;
     list-style-position: inside;
 }
-.about-page main img {
-    margin-bottom: 30px;
+.about-page {
+    article ul {
+        margin-bottom: 15px;
+    }
+    main img {
+        margin-bottom: 30px;
+    }
+    .partners {
+        text-align: center;
+        margin-top: 30px;
+        li {
+            display: inline-block;
+        }
+        img {
+            max-width: 128px;
+        }
+    }
+    .job-position {
+        margin-top: 30px;
+        padding: 30px 15px 15px 15px;
+        background-color: @offwhite;
+        h5 {
+            margin-bottom: 5px;
+        }
+    }
 }
