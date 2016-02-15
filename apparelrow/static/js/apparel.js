@@ -458,14 +458,14 @@ function unlikeElement($element) {
 
 function showWarning($element) {
     var slug = $element.attr('data-slug');
-    var SETTINGS_LINK = '/profile/settings/email/#location-notifications'
+    var settings_link = '/profile/settings/email/#location-notifications';
     jQuery.ajax({
         type: 'GET',
         url: '/products/check_location/' + slug + '/',
         success: function(response, status, request) {
             if(response){
                 $.notify({
-                    message: response + " <a class='alert-warning' style='text-decoration: underline;' href='"+SETTINGS_LINK+"'>Change your location</a>"
+                    message: response + " <a class='alert-warning' style='text-decoration: underline;' href='" + settings_link + "'>Change your location</a>"
                 }, { // settings
                     type: 'warning',
                     z_index: 10031,
