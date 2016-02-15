@@ -124,19 +124,6 @@ $(document).ready(function() {
                     {% if details_form.notes.errors %}<span class="help-block">{{ details_form.notes.errors.as_text }}</span>{% endif %}
                 </div>
             </div>
-
-            <h4>{% trans "Notifications" %}</h4>
-            <div class="form-group{% if notifications_form.show_warnings.errors %} has-error{% endif %}">
-                <label for="id_{{ notifications_form.show_warnings.html_name }}" class="col-sm-2 control-label">{{ notifications_form.show_warnings.label }}</label>
-                <div class="col-sm-6">
-                    <ul class="list-unstyled">
-                    {% for choice in notifications_form.show_warnings %}
-                        <li>{{ choice.tag }}{{ choice.choice_label }}</li>
-                    {% endfor %}
-                    </ul>
-                    {% if notifications_form.show_warnings.errors %}<span class="help-block">{{ notifications_form.show_warnings.errors.as_text }}</span>{% endif %}
-                </div>
-            </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <input class="btn btn-primary" type="submit" value="{% trans "Save changes" %}" />

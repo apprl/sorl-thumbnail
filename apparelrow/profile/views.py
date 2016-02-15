@@ -326,6 +326,10 @@ def settings_email(request):
         if facebook_form.is_valid():
             facebook_form.save()
 
+        location_warning_form = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
+        if location_warning_form.is_valid():
+            location_warning_form.save()
+
         form = EmailForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             # Remove old email change confirmations
@@ -348,6 +352,7 @@ def settings_email(request):
         return HttpResponseRedirect(reverse('settings-email'))
 
     form = EmailForm()
+    location_warning_form = PartnerNotificationsForm(instance=request.user)
     password_form = FormClass(request.user)
     facebook_form = FacebookSettingsForm(instance=request.user)
 
@@ -355,7 +360,8 @@ def settings_email(request):
             'email_form': form,
             'email_change': email_change,
             'form': password_form,
-            'facebook_settings_form': facebook_form
+            'facebook_settings_form': facebook_form,
+            'location_warning_form': location_warning_form
         })
 
 
@@ -407,13 +413,10 @@ def settings_publisher(request):
     if request.method == 'POST':
         form = PartnerSettingsForm(request.POST, request.FILES, instance=request.user)
         details_form = PartnerPaymentDetailForm(request.POST, request.FILES, instance=instance)
-        notifications_form = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
-        if notifications_form.is_valid():
-            notifications_form.save()
         if form.is_valid():
             form.save()
         else:
-            return render_to_response('profile/settings_publisher.html', {'form': form, 'form': form, 'details_form': details_form, 'notifications_form': notifications_form }, context_instance=RequestContext(request))
+            return render_to_response('profile/settings_publisher.html', {'form': form, 'form': form, 'details_form': details_form}, context_instance=RequestContext(request))
 
         if details_form.is_valid():
             instance = details_form.save(commit=False)
@@ -421,15 +424,14 @@ def settings_publisher(request):
             instance.save()
         else:
             form_errors = details_form.errors
-            return render_to_response('profile/settings_publisher.html', {'form': form, 'details_form': details_form, 'form_errors': form_errors, 'notifications_form': notifications_form}, context_instance=RequestContext(request))
+            return render_to_response('profile/settings_publisher.html', {'form': form, 'details_form': details_form, 'form_errors': form_errors}, context_instance=RequestContext(request))
 
         return HttpResponseRedirect(reverse('settings-publisher'))
 
     form = PartnerSettingsForm(instance=request.user)
     details_form = PartnerPaymentDetailForm(instance=instance)
-    notifications_form = PartnerNotificationsForm(instance=request.user)
 
-    return render(request, 'profile/settings_publisher.html', {'form': form, 'details_form': details_form, 'notifications_form': notifications_form})
+    return render(request, 'profile/settings_publisher.html', {'form': form, 'details_form': details_form})
 
 #
 # Welcome login flow

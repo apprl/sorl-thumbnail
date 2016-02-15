@@ -898,6 +898,20 @@ class TestUtils(TestCase):
         product_earning = get_product_earning(self.user, product_no_vendor.default_vendor, product_no_vendor)
         self.assertIsNone(product_earning)
 
+    def test_get_product_name(self):
+        manufacturer = BrandFactory.create()
+        product = ProductFactory.create(
+            product_name='Product Test',
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+
+        product_name = product.get_product_name_to_display
+        self.assertEqual(product_name, "%s - %s" % (manufacturer.name, product.product_name))
+
 class TestUtilsLocationWarning(TestCase):
     def setUp(self):
         self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
@@ -906,6 +920,7 @@ class TestUtilsLocationWarning(TestCase):
         self.user.partner_group = self.group
         self.user.location = 'US'
         self.user.is_partner = True
+        self.user.show_warnings = True
         self.user.save()
 
     def test_get_availability_text(self):
@@ -982,6 +997,7 @@ class TestUtilsLocationWarning(TestCase):
         vendor_markets = ['SE', 'NO', 'US']
         warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "")
+
 
 @override_settings(VENDOR_LOCATION_MAPPING={"Vendor SE":["SE"], "Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
 class TestSearch(TransactionTestCase):

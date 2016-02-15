@@ -518,15 +518,24 @@ def get_availability_text(vendor_markets):
         return generate_text_for_markets_array(markets_text)
     return "Available Internationally"
 
-def get_location_warning_text(vendor_markets, user):
+def get_location_warning_text(vendor_markets, user, page=""):
     warning_text = ""
     if hasattr(user, 'show_warnings') and user.show_warnings and user.is_partner:
         if vendor_markets and user.location not in vendor_markets:
             markets_text = get_market_text_array(vendor_markets)
             countries_text = generate_countries_text(markets_text)
             location_data = {'country': countries_text, 'location': get_location_text(user.location)}
-            warning_text = _("You will only earn money on visitors from {country} that click on this product, "
-                             "not from your current location {location}.".format(**location_data))
+            if page == "product":
+                warning_text = _("Warning: You currently have {location} set as your location, this product is only "
+                                 "available in {country}. You will not earn money on clicks from {location} on this "
+                                 "product.".format(**location_data))
+            elif page == "chrome-ext":
+                warning_text = _("Warning: You currently have {location} set as your location, this store is only "
+                                 "available in {country}. You will not earn money on clicks from {location} to this "
+                                 "store.".format(**location_data))
+            else:
+                warning_text = _("You will only earn money on visitors from {country} that click on this product, not "
+                                 "from your current location {location}.".format(**location_data))
     return warning_text
 
 def get_external_store_commission(stores, product=None):
