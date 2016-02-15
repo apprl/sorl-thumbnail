@@ -206,6 +206,7 @@
 
                     <ul class="secondary-nav">
                         {% if not request.user.is_authenticated %}
+                        <li class="hidden-xs hidden-sm"><a href="{% url 'index-community' %}"><u>{% trans "Sign Up" %}</u></a></li>
                         <li class="hidden-xs hidden-sm"><a href="{% url 'auth_login' %}"><u>{% trans "Log in" %}</u></a></li>
                         {% else %}
                         {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}
@@ -324,10 +325,13 @@
                     <div class="row">
                         <div class="col-is-6">
                             <h5>Get our newsletter</h5>
+                            <a class="btn btn-default" href="{% url 'newsletter-redirect' %}">{% trans "Sign Up" %}</a>
+                            {% comment %}
                             <form action="http://apprl.us4.list-manage.com/subscribe/post" method="POST">
                                 <input type="email" autocapitalize="off" autocorrect="off" id="MERGE0" placeholder="Your email" required="required" />
                                 <input type="submit" value="Sign Up" />
                             </form>
+                            {% endcomment %}
                         </div>
                         <div class="col-is-6">
                             <h5>APPRL Fashion AB</h5>
