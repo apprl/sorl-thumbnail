@@ -271,7 +271,7 @@
                             <ul>
                                 <li class="dropdown">
                                 {% if request.user.is_authenticated %}
-                                    <a class="btn btn-sm btn-grey" href="{% url 'settings-email' %}#location">{% get_location_text request.location %}</a>
+                                    <a class="btn btn-sm btn-grey" href="{% url 'settings-email' %}#location">{% get_location_text request.user.location %}</a>
                                 {% else %}
                                     <a class="btn btn-sm btn-grey dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                                     <ul id="language-dropdown" class="dropdown-menu">
