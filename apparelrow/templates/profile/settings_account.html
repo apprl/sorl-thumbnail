@@ -12,7 +12,7 @@
             {% if email_change %}
                 <p><i>{% blocktrans with email_change.email as new_email %}Pending e-mail address change to {{ new_email }}, check your inbox for confirmation mail.{% endblocktrans %}</i></p>
             {% endif %}
-            <form action="{% url 'settings-email' %}" method="post">{% csrf_token %}
+            <form action="{% url 'settings-account' %}" method="post">{% csrf_token %}
                 <p>{% trans "Current e-mail address:" %} <strong>{{ request.user.email }}</strong></p>
                 <div class="form-group{% if email_form.email.errors %} has-error{% endif %}">
                     <label for="id_{{ email_form.email.html_name }}" class="control-label">{{ email_form.email.label }}</label>
@@ -36,7 +36,7 @@
                 {% endif %}
             {% else %}
                 <p>{% trans "Here you can set which actions you want to be automatically shared to your Facebook timeline:" %}</p>
-                <form action="{% url 'settings-email' %}" method="post">{% csrf_token %}
+                <form action="{% url 'settings-account' %}" method="post">{% csrf_token %}
                     <div>
                         {% for field in facebook_settings_form %}
                             <p>{{ field }} {{ field.help_text }}</p>
@@ -62,7 +62,7 @@
                 <p><strong style="color: #67e2b8;">{{ message }}</strong></p>
                 {% endfor %}
             {% endif %}
-            <form action="{% url 'settings-password' %}" method="post">{% csrf_token %}
+            <form action="{% url 'settings-account' %}" method="post">{% csrf_token %}
                 <div class="form-group{% if form.old_password.errors %} has-error{% endif %}">
                     <label for="id_{{ form.old_password.html_name }}" class="control-label">{% trans "Current password" %}</label>
                     <input name="{{ form.old_password.html_name }}" type="password" class="form-control" id="id_{{ form.old_password.html_name }}" value="{% if form.old_password.value %}{{ form.old_password.value }}{% endif %}" placeholder="{{ form.old_password.help_text }}">
@@ -89,10 +89,12 @@
             <h2 id="location" name="location">{% trans "Your Location" %}</h2>
             <p>{% trans "Your location affects what retailers and products are shown on the site as well as the displayed currency." %}</p>
             <div class="form-group">
-                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
+                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.user.location %} <b class="caret"></b></span></a>
                 <ul id="language-dropdown" class="dropdown-menu">
                     {% for location in LOCATION_LANGUAGE_MAPPING %}
-                    <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
+                        <li>
+                            <a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

@@ -18,7 +18,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models.loading import get_model
-from django.views.generic import TemplateView, ListView, View, DetailView
+from django.views.generic import TemplateView, ListView, View, DetailView, FormView
 
 import requests
 from apparelrow.apparel.models import Look
@@ -198,11 +198,11 @@ class ProfileListFollowingView(ProfileListLookView):
                                        .order_by('name', 'first_name', 'username')
 
 
+@DeprecationWarning
 @get_current_user
 @avatar_change
 def default(request, profile, form, page=0):
     """
-    !!! Replaced with ProfileView !!!
     Displays the default page (all). Id
     """
     content = {
@@ -227,6 +227,7 @@ def default(request, profile, form, page=0):
                            is_brand=is_brand,
                            **content)
 
+@DeprecationWarning
 @get_current_user
 @avatar_change
 def likes(request, profile, form, page=0):
@@ -256,10 +257,10 @@ def likes(request, profile, form, page=0):
                            is_brand=is_brand,
                            **content)
 
+@DeprecationWarning
 @get_current_user
 @avatar_change
 def looks(request, profile, form, page=0):
-    # Deprecated
 
     if profile == request.user:
         queryset = profile.look.order_by('-created')
@@ -284,10 +285,10 @@ def looks(request, profile, form, page=0):
 
     return render(request, 'profile/looks.html', content)
 
+@DeprecationWarning
 @get_current_user
 @avatar_change
 def likedlooks(request, profile, form, page=0):
-    # Deprecated
     #logger.info("looks called")
 
     #retrieve looks for which a like for the current user exists and is active
@@ -311,6 +312,7 @@ def likedlooks(request, profile, form, page=0):
 
     return render(request, 'profile/looks.html', content)
 
+@DeprecationWarning
 @get_current_user
 @avatar_change
 def brandlooks(request, profile, form, page=0):
@@ -337,6 +339,7 @@ def brandlooks(request, profile, form, page=0):
 
     return render(request, 'profile/looks.html', content)
 
+@DeprecationWarning
 @get_current_user
 @avatar_change
 def shops(request, profile, form, page=0):
@@ -364,6 +367,7 @@ def shops(request, profile, form, page=0):
 
     return render(request, 'profile/shops.html', content)
 
+@DeprecationWarning
 @get_current_user
 @avatar_change
 def followers(request, profile, form, page=0):
@@ -388,6 +392,7 @@ def followers(request, profile, form, page=0):
 
     return render(request, 'profile/followers.html', content)
 
+@DeprecationWarning
 @get_current_user
 @avatar_change
 def following(request, profile, form, page=0):
@@ -412,10 +417,10 @@ def following(request, profile, form, page=0):
 
     return render(request, 'profile/following.html', content)
 
-
 #
 # Settings
 #
+@DeprecationWarning
 @login_required
 def settings_notification(request):
     """
@@ -430,12 +435,38 @@ def settings_notification(request):
         if newsletter_form.is_valid():
             newsletter_form.save()
 
-        return HttpResponseRedirect(reverse('settings-notification'))
+        return HttpResponseRedirect(reverse('settings-notifications'))
 
     form = NotificationForm(instance=request.user, is_publisher=request.user.is_partner)
     newsletter_form = NewsletterForm(instance=request.user)
 
     return render(request, 'profile/settings_notification.html', {'notification_form': form, 'newsletter_form': newsletter_form})
+
+class UserSettingsNotificationView(TemplateView):
+    template_name = 'profile/settings_notification.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserSettingsNotificationView, self).get_context_data(**kwargs)
+
+        context.update({
+            'newsletter_form': NewsletterForm(instance=self.request.user),
+            'notification_form': NotificationForm(instance=self.request.user, is_publisher=self.request.user.is_partner),
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        notification_form = NotificationForm(request.POST, request.FILES, instance=request.user)
+        if notification_form.is_valid():
+            notification_form.save()
+
+        newsletter_form = NewsletterForm(request.POST, request.FILES, instance=request.user)
+        if newsletter_form.is_valid():
+            newsletter_form.save()
+
+        context.update({'newsletter_form': newsletter_form,
+                        'notification_form': notification_form})
+        return render(request, self.template_name, context)
 
 @login_required
 def confirm_email(request):
@@ -452,58 +483,88 @@ def confirm_email(request):
         request.user.save()
         email_change.delete()
 
-    return HttpResponseRedirect(reverse('settings-email'))
+    return HttpResponseRedirect(reverse('settings'))
 
 
-class UserSettingsEmailView(DetailView):
-    template_name = 'profile/settings_email.html'
-    context_object_name = 'email_change'
+class UserSettingsEmailView(FormView):
+    """
+    View method for account settings in the profile/settings.
+    """
+    template_name = 'profile/settings_account.html'
+    context_object_name = 'email_form'
+    form_class = EmailForm
+
+    def get_form_class(self):
+        return EmailForm
 
     def get_context_data(self, **kwargs):
         context = super(UserSettingsEmailView, self).get_context_data(**kwargs)
         FormClass = PasswordChangeForm if self.request.user.password else SetPasswordForm
+        try:
+            email_change = EmailChange.objects.get(user=self.request.user)
+        except EmailChange.DoesNotExist:
+            email_change = None
 
-        form = EmailForm()
-        password_form = FormClass(self.request.user)
+        email_form = EmailForm()
         facebook_form = FacebookSettingsForm(instance=self.request.user)
         context.update({
-            'email_form': form,
-            'form': password_form,
+            'email_form': email_form,
+            'email_change': email_change,
+            'form': FormClass(self.request.user),
             'facebook_settings_form': facebook_form
         })
         return context
 
-    def get_queryset(self):
-         return EmailChange.objects.get(user=self.request.user)
-
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        password_form = context.get("form")
         facebook_form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user)
+        FormClass = PasswordChangeForm if self.request.user.password else SetPasswordForm
 
+        # Always save the facebook form
         if facebook_form.is_valid():
             facebook_form.save()
-
-        form = EmailForm(request.POST, request.FILES, instance=request.user)
-        context.update({'email_form': form, 'form':password_form, 'facebook_settings_form':facebook_form})
-        if form.is_valid():
-            # Remove old email change confirmations
-            EmailChange.objects.filter(user=request.user).delete()
-
-            token = uuid.uuid4().hex
-            email = form.cleaned_data['email']
-            subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
-            body = render_to_string('profile/confirm_email.html', {
-                    'username': request.user.display_name,
-                    'link': 'http://{host}{path}'.format(host=Site.objects.get_current().domain, path=reverse('user-confirm-email')),
-                    'token': token,
-                })
-            send_email_confirm_task.delay(subject, body, request.user.email)
-            return HttpResponseRedirect(reverse('settings-email'))
         else:
-            return render_to_response(self.template_name, context)
+            context.update({'facebook_settings_form':facebook_form})
+
+        email_form = EmailForm(request.POST, request.FILES, instance=request.user)
+        if "email" in request.POST:
+            # If the change email form has been sent
+            if email_form.is_valid():
+                # Remove old email change confirmations
+                EmailChange.objects.filter(user=self.request.user).delete()
+
+                token = uuid.uuid4().hex
+                email = email_form.cleaned_data['email']
+                # Create a new email change entry
+                EmailChange.objects.create(email=email, token=token, user=request.user)
+                subject = ''.join(render_to_string('profile/confirm_email_subject.html').splitlines())
+                body = render_to_string('profile/confirm_email.html', {
+                        'username': self.request.user.display_name,
+                        'link': 'http://{host}{path}'.format(host=Site.objects.get_current().domain, path=reverse('user-confirm-email')),
+                        'token': token,
+                    })
+                send_email_confirm_task.delay(subject, body, self.request.user.email)
+                #return HttpResponseRedirect(reverse('settings-account'))
+            else:
+                context.update({"email_form": email_form})
+
+        elif "old_password" in request.POST:
+            # If the change password form has been sent
+            password_form = FormClass(request.user, request.POST)
+            if password_form.is_valid():
+                password_form.save()
+
+                if request.user.password:
+                    messages.success(request, _('Password was updated'))
+                else:
+                    messages.success(request, _('Password was added'))
+            else:
+                context.update({'form': password_form})
+
+        return render(request, self.template_name, context)
 
 
+@DeprecationWarning
 @login_required
 def settings_email(request):
     """
@@ -537,7 +598,7 @@ def settings_email(request):
                 })
             send_email_confirm_task.delay(subject, body, request.user.email)
         else:
-            return render_to_response('profile/settings_email.html',
+            return render_to_response('profile/settings_account.html',
                                   {'email_form': form, 'email_change': email_change,
                                    'form': password_form, 'facebook_settings_form': facebook_form },
                                   context_instance=RequestContext(request))
@@ -548,16 +609,17 @@ def settings_email(request):
     facebook_form = FacebookSettingsForm(instance=request.user)
 
 
-    return render(request, 'profile/settings_email.html', {
+    return render(request, 'profile/settings_account.html', {
             'email_form': form,
             'email_change': email_change,
             'form': password_form,
             'facebook_settings_form': facebook_form
         })
 
-
+@DeprecationWarning
 @login_required
 def settings_password(request):
+    # Deprecated
     """
     Handles the password form on settings
     """
@@ -578,19 +640,20 @@ def settings_password(request):
             else:
                 messages.success(request, _('Password was added'))
         else:
-            return render_to_response('profile/settings_email.html',
+            return render_to_response('profile/settings_account.html',
                                   {'email_form': form, 'email_change': email_change,
                                    'form': password_form, 'facebook_settings_form': facebook_form},
                                   context_instance=RequestContext(request))
     password_form = FormClass(request.user)
 
-    return render(request, 'profile/settings_email.html', {
+    return render(request, 'profile/settings_account.html', {
         'email_form': form,
         'email_change': email_change,
         'form': password_form,
         'facebook_settings_form': facebook_form
     })
 
+@DeprecationWarning
 @login_required
 def settings_publisher(request):
     """
@@ -607,7 +670,7 @@ def settings_publisher(request):
         if form.is_valid():
             form.save()
         else:
-            return render_to_response('profile/settings_publisher.html', {'form': form, 'form': form, 'details_form': details_form }, context_instance=RequestContext(request))
+            return render_to_response('profile/settings_publisher.html', {'form': form, 'details_form': details_form }, context_instance=RequestContext(request))
 
 
         if details_form.is_valid():
@@ -624,6 +687,40 @@ def settings_publisher(request):
     details_form = PartnerPaymentDetailForm(instance=instance)
 
     return render(request, 'profile/settings_publisher.html', {'form': form, 'details_form': details_form})
+
+class PublisherSettingsNotificationView(TemplateView):
+    template_name = 'profile/settings_publisher.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PublisherSettingsNotificationView, self).get_context_data(**kwargs)
+        try:
+            instance = PaymentDetail.objects.get(user=self.request.user)
+        except PaymentDetail.DoesNotExist:
+            instance = None
+
+        context.update({
+            'instance': instance,
+            'form': PartnerSettingsForm(instance=self.request.user),
+            'details_form': PartnerPaymentDetailForm(instance=instance)
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context["form"] = PartnerSettingsForm(request.POST, request.FILES, instance=request.user)
+        context["details_form"] = PartnerPaymentDetailForm(request.POST, request.FILES, instance=context['instance'])
+        if context["form"].is_valid():
+            context["form"].save()
+        else:
+            return render(request, self.template_name, context)
+
+        if context["details_form"].is_valid():
+            instance = context["details_form"].save(commit=False)
+            instance.user = request.user
+            instance.save()
+        else:
+            context.update({"form_errors": context["details_form"].errors})
+        return render(request, self.template_name, context)
 
 #
 # Welcome login flow

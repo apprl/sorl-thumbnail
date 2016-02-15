@@ -10,6 +10,8 @@ from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
 from apparelrow.apparel.views import BrandRedirectView, HomeView, ProductDetailView, CommunityFormView
 from apparelrow.dashboard.views import RetailerFormView
+from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersView, ProfileListFollowingView, \
+    ProfileView
 
 urlpatterns = patterns('',
     # Index
@@ -142,13 +144,18 @@ urlpatterns = patterns('',
     url(r'^brands/women/$', 'apparelrow.apparel.views.user_list', {'gender': 'W', 'brand': True}, name='brand-list-women'),
 
     # Brand profile
-    url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.profile.views.likes', name='brand-likes'),
+    url(r'^brand/(?:([^\/]+?)/)?$', ProfileView.as_view(template_name='profile/likes.html'), name='brand-likes'),
+    #url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.profile.views.likes', name='brand-likes'),
     url(r'^brand/(?P<slug>[\w-]+)/men/$', BrandRedirectView.as_view(), {'gender': 'M'}, name='brand-likes-men'),
     url(r'^brand/(?P<slug>[\w-]+)/women/$', BrandRedirectView.as_view(), {'gender': 'W'}, name='brand-likes-women'),
     url(r'^brand/(?P<slug>[\w-]+)/updates/$', BrandRedirectView.as_view(), name='redirect-brand-updates'),
-    url(r'^brand/(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='brand-looks'),
-    url(r'^brand/(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='brand-followers'),
-    url(r'^brand/(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='brand-following'),
+
+    url(r'^brand/(?:([^\/]+?)/)?looks/$', ProfileListLookView.as_view(), name='brand-looks'),
+    url(r'^brand/(?:([^\/]+?)/)?followers/$', ProfileListFollowersView.as_view(), name='brand-followers'),
+    url(r'^brand/(?:([^\/]+?)/)?following/$', ProfileListFollowingView.as_view(), name='brand-following'),
+    #url(r'^brand/(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='brand-looks'),
+    #url(r'^brand/(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='brand-followers'),
+    #url(r'^brand/(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='brand-following'),
 
     # Look / Product popup
     url(r'^popup/product/$', 'apparelrow.apparel.views.product_popup', name='product-popup'),

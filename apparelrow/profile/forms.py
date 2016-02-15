@@ -70,7 +70,7 @@ class CustomCheckboxInput(forms.widgets.CheckboxInput):
         else:
             label_for = ''
         #output = '<label%s>%s <span><i class="fa fa-check"></i></span></label>' % (label_for,output)
-        output = '<label{label}><input type="checkbox"><span><i class="fa fa-check"></i></span>{output}</label>'.format(label=label_for, output=output)
+        output = '<label{label}>{output}<span><i class="fa fa-check"></i></span></label>'.format(label=label_for, output=output)
         return mark_safe(output)
 
 #
@@ -160,8 +160,8 @@ class NotificationForm(forms.ModelForm):
 
 
 class NewsletterForm(forms.ModelForm):
-    newsletter = forms.BooleanField(required=False, help_text=_(u'I\'d like to receive e-mails with trending products, looks and other inspiration.'))
-    discount_notification = forms.BooleanField(required=False, help_text=_(u'I want to receive sale alerts on items that I ♥.'))
+    newsletter = forms.BooleanField(required=False, help_text=_(u'I\'d like to receive e-mails with trending products, looks and other inspiration.'), widget=CustomCheckboxInput)
+    discount_notification = forms.BooleanField(required=False, help_text=_(u'I want to receive sale alerts on items that I ♥.'), widget=CustomCheckboxInput)
 
     class Meta:
         model = get_user_model()
