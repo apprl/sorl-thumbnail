@@ -125,12 +125,14 @@
         </p>
         <form action="{% url 'settings-email' %}" method="post">{% csrf_token %}
             <div class="form-content{% if email_form.email.errors %} has-error{% endif %}">
-                <ul class="list-unstyled">
-                {% for choice in location_warning_form.show_warnings %}
-                    <li>{{ choice.tag }} {{ choice.choice_label }}</li>
-                {% endfor %}
-                </ul>
-                {% if location_warning_form.show_warnings.errors %}<span class="help-block">{{ location_warning_form.show_warnings.errors.as_text }}</span>{% endif %}
+                <div class="form-group">
+                    <ul class="list-unstyled">
+                    {% for choice in location_warning_form.show_warnings %}
+                        <li>{{ choice.tag }} {{ choice.choice_label }}</li>
+                    {% endfor %}
+                    </ul>
+                    {% if location_warning_form.show_warnings.errors %}<span class="help-block">{{ location_warning_form.show_warnings.errors.as_text }}</span>{% endif %}
+                </div>
             </div>
             <div>
                 <div>
