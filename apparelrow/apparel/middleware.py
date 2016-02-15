@@ -81,7 +81,7 @@ class LocationMiddleware(object):
 
     def process_response(self, request, response):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
-        is_auth = request.user.is_authenticated()
+        is_auth = request.user.is_authenticated() if hasattr(request, 'user') else False
         if is_auth:
             try:
                 if has_user_location(request):
