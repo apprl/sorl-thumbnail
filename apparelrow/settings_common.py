@@ -106,6 +106,7 @@ MAX_MIN_CURRENCY = {
 }
 
 VENDOR_LOCATION_MAPPING = {
+    "Axel Arigato": ["SE", "DK", "NO", "FI"],
     "Shirtonomy": ["DK", "SE"],
     "Ted & Teresa": ["SE"],
     "ConfidentLiving": ["SE"],
@@ -116,14 +117,17 @@ VENDOR_LOCATION_MAPPING = {
     "Eleven": ["SE"],
     "Happy Socks": ["SE"],
     "Elevenfiftynine": ["SE"],
-    "Frontmen": ["ALL", "SE", "NO", "DK", "FI"],
-    "Flattered": ["SE", "DK", "NO", "FI", "ALL"],
+    "Ellos SE": ["SE"],
+    "Ellos NO": ["NO"],
+    "Flattered": ["SE", "DK", "NO", "FI"],
+    "Frontmen": ["SE", "NO", "DK", "FI"],
     "Filippa K": ["SE"],
     "Filippa K DK": ["DK"],
     "Filippa K NO": ["NO"],
     "JC": ["SE"],
+    "Nividas": ["SE", "DK", "NO", "FI"],
     "Nelly": ["SE"],
-    "Nelly No": ["NO"],
+    "Nelly NO": ["NO"],
     "Gina Tricot NO": ["NO"],
     "Gina Tricot SE": ["SE"],
     "Gina Tricot DK": ["DK"],
