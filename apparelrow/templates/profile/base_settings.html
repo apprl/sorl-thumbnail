@@ -6,10 +6,13 @@
 {% block extra-scripts %}
 <script type="text/javascript">
 $(document).ready(function() {
-    console.log('test');
     // Set active submenu link
     var url = window.location.href.split('/');
     $('a[href*="' + url[6] + '"]', '.page-menu').parent().addClass('active');
+
+    $('#id_location').on('change', function() {
+     document.forms['location-form'].submit();
+  });
 });
 </script>
 {% endblock %}

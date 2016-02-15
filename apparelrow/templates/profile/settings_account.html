@@ -86,18 +86,31 @@
 
         {# Location #}
         <section>
-            <h2 id="location" name="location">{% trans "Your Location" %}</h2>
+            <h2 id="location">{% trans "Your Location" %}</h2>
             <p>{% trans "Your location affects what retailers and products are shown on the site as well as the displayed currency." %}</p>
             <div class="form-group">
-                <a class="dropdown-toggle btn btn-default" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.user.location %} <b class="caret"></b></span></a>
-                <ul id="language-dropdown" class="dropdown-menu">
+                <form name="location-form" method="post">
+                    {% csrf_token %}
+                <!-- a class="dropdown-toggle btn btn-default" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.user.location %} <b class="caret"></b></span></a -->
+                <!-- ul id="language-dropdown" class="dropdown-menu" -->
+                <select id="id_location" name="location" class="form-control dropdown-toggle">
                     {% for location in LOCATION_LANGUAGE_MAPPING %}
-                        <li>
-                            <a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a>
-                        </li>
+                        <option {% if request.user.location == location.0 %} selected="selected"{% endif %} value="{{ location.0 }}">{{ location.1 }}
+                            {% comment %}<a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a>{% endcomment %}
+                        </option>
                     {% endfor %}
-                </ul>
+                </select>
             </div>
         </section>
+                 {% comment %}
+                        <div class="form-group">
+                        <label class="control-label" for="id_language">{% trans "Language & currency" %}</label>
+                        <select id="id_language" name="language" class="form-control">
+                            {% for language in LANGUAGES %}
+                            <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endcomment %}
 
 {% endblock content %}

@@ -27,7 +27,8 @@ from apparelrow.apparel.utils import get_paged_result, JSONResponse, get_ga_cook
 from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
 
 from apparelrow.profile.utils import get_facebook_user, send_welcome_mail, reset_facebook_user
-from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm
+from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm, \
+    LocationForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task, mail_managers_task
 from apparelrow.profile.decorators import avatar_change, get_current_user
@@ -507,7 +508,9 @@ class UserSettingsEmailView(FormView):
 
         email_form = EmailForm()
         facebook_form = FacebookSettingsForm(instance=self.request.user)
+        location_form = LocationForm(instance=self.request.user)
         context.update({
+            'location_form': location_form,
             'email_form': email_form,
             'email_change': email_change,
             'form': FormClass(self.request.user),
@@ -518,6 +521,7 @@ class UserSettingsEmailView(FormView):
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         facebook_form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user)
+        location_form = LocationForm(request.POST, instance=request.user)
         FormClass = PasswordChangeForm if self.request.user.password else SetPasswordForm
 
         # Always save the facebook form
@@ -560,6 +564,10 @@ class UserSettingsEmailView(FormView):
                     messages.success(request, _('Password was added'))
             else:
                 context.update({'form': password_form})
+
+        elif "location" in request.POST:
+            if location_form.is_valid():
+                location_form.save()
 
         return render(request, self.template_name, context)
 

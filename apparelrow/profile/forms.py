@@ -167,6 +167,12 @@ class NewsletterForm(forms.ModelForm):
         model = get_user_model()
         fields = ('discount_notification', 'newsletter')
 
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('location',)
+
+
 
 class FacebookSettingsForm(forms.ModelForm):
     fb_share_like_product = forms.BooleanField(required=False, help_text=_(u'When you ♥ a product'), widget=CustomCheckboxInput)

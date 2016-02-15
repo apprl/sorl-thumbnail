@@ -420,12 +420,14 @@
   });
 }
 
-  $('#language-dropdown > li > a').click(function(event){
-      var $this = $(this);
-      var location = $this.data("location");
-      $.removeCookie('location');
-      $.cookie('location', location, { expires: 60, path: '/' });
-  } );
+  {% if not request.user.is_authenticated %}
+      $('#language-dropdown > li > a').click(function(event){
+          var $this = $(this);
+          var location = $this.data("location");
+          $.removeCookie('location');
+          $.cookie('location', location, { expires: 60, path: '/' });
+      } );
+  {% endif %}
 </script>
 
 {% include 'mouseflow.html' only %}
