@@ -91,7 +91,7 @@
             <hgroup>
                 <h1>{{ object.title }} <span class="draft-text{% if object.published %} published{% endif %}">({% trans "Not published" %})</span></h1>
                 <h3>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></h3>
-                <img style="padding-top:15px;" width="40" height="40" src="{{ object.user.avatar_circular }}"/>
+                <img style="padding-top:5px;" width="40" height="40" src="{{ object.user.avatar_circular }}"/>
             </hgroup>
 
             {% if request.user.is_authenticated %}
@@ -195,7 +195,7 @@
                             {% endif %}
                             {% endcomment %}
 
-                            <a class="btn btn-default auto" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your blog / site" %}</a>
+                            <a class="btn btn-default auto" data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_embed_look">{% trans "Embed on your site" %}</a>
 
                             {% include 'apparel/fragments/share.html' %}
                     </section>

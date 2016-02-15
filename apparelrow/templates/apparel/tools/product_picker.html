@@ -7,7 +7,7 @@
 
     <ul id="product-tabs" class="nav nav-tabs nav-justified">
         <li><a{% if request.user.is_authenticated %} data-user="{{ request.user.id }}"{% endif %} class="tab-likes" href="#"><i class="fa fa-heart"></i>&nbsp;<span>{% trans "Saved" %}</span></a></li>
-        <li class="active"><a class="tab-all" href="#"><i class="fa fa-list"></i> <span>{% trans "All products" %}</span></a></li>
+        <li class="active"><a class="tab-all" href="#"><i class="fa fa-list"></i>&nbsp;{% trans "All" %}<span class="hidden-xs">{% trans " products" %}</span></a></li>
     </ul>
 
     <a href="#" class="close-product-chooser"><i class="fa fa-times"></i></a>

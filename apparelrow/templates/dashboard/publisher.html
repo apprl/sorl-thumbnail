@@ -214,11 +214,11 @@
 
     <section>
         <div id="graph" style="width: 100%; height: 300px;"></div>
-    </section>
 
-    {% if request.user.referral_partner %}
-    <a class="btn btn-primary btn-uppercase" href="{% url 'dashboard-referral' %}">{% trans "Earn money by inviting other publishers/bloggers" %}</a>
-    {% endif %}
+        {% if request.user.referral_partner %}
+        <a class="btn btn-primary center" href="{% url 'dashboard-referral' %}">{% trans "Earn money by invites" %}</a>
+        {% endif %}
+    </section>
 
     {% if is_after_june %}
 

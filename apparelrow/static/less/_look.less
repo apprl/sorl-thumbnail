@@ -3,7 +3,8 @@
 
     - Looks List
     - Look Detail
-    - Popovers
+    - Tooltips / Popovers
+    - Hotspots
 */
 
 .look-image-container img {
@@ -89,23 +90,19 @@
         }
     }
 }
-
-
 .look-create-page {
-   .look-choice {
-       margin-bottom: 20px;
-       > div {
-           text-align: center;
-       }
-       img {
-           margin-bottom: 10px;
-           margin-left: auto;
-           margin-right: auto;
-       }
-       .btn {
-           margin-bottom: 30px;
-       }
-   }
+    .look-choice {
+        margin: auto;
+        max-width: @screen-sm;
+        text-align: center;
+        img {
+            width: 100%;
+        }
+        .btn {
+            margin-bottom: 30px;
+            max-width: none;
+        }
+    }
 }
 
 /* Popovers ---------- */
@@ -122,25 +119,31 @@
         overflow: hidden;
         font-family: @secondaryFontBold;
     }
-    .popover-content {
-        /*position: absolute;
+    /*.popover-content {
+        position: absolute;
         width: 280px;
         height: 140px;
         top: 0;
         left: 0;
         z-index: 1;
         background-color: white;
-        box-shadow: 2px 2px 6px rgba(0,0,0,0.17);*/
-    }
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.17);
+    }*/
     &.top {
-        bottom: -10px;
-        margin: 0 !important;
-    }
-    &.bottom > .arrow {
-        top: -6px !important;
+        margin: 10px 0 0 0;
+        > .arrow {
+            top: initial;
+            bottom: -6px;
+        }
     }
     .arrow {
-        top: -6px;
+        margin: 0 0 0 -6px !important;
+    }
+    &.bottom {
+        margin-bottom: -10px;
+        > .arrow {
+            top: -6px !important;
+        }
     }
     &.bottom > .arrow, .arrow {
         width: 12px;
@@ -211,10 +214,7 @@
     }
 }
 
-//
-// Collage and photo
-// -----------------------------------------------------------------------------
-
+/* Hotspots ---------- */
 .look-hotspot {
     position: relative;
     margin: 0 auto;
@@ -675,7 +675,6 @@
           text-align:center;
         }
     }
-
 
     footer {
         display: none;
