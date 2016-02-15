@@ -465,7 +465,7 @@ function showWarning($element) {
         success: function(response, status, request) {
             if(response){
                 $.notify({
-                    message: response + " <a class='alert-warning' style='text-decoration: underline;' href='"+SETTINGS_LINK+"'>Change your location</a>."
+                    message: response + " <a class='alert-warning' style='text-decoration: underline;' href='"+SETTINGS_LINK+"'>Change your location</a>"
                 }, { // settings
                     type: 'warning',
                     z_index: 10031,
