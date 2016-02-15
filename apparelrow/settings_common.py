@@ -116,6 +116,7 @@ VENDOR_LOCATION_MAPPING = {
     "ASOS": ["FI", "SE", "NO", "DK", "ALL"],
     "Eleven": ["SE"],
     "Happy Socks": ["SE"],
+    "Henry Kole": ["SE", "DK", "NO", "FI"],
     "Elevenfiftynine": ["SE"],
     "Ellos SE": ["SE"],
     "Ellos NO": ["NO"],
