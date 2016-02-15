@@ -214,15 +214,35 @@ body.publisher-referral-page {
     .referral-link-container {
         text-align: center;
         &.box {
-            background-color: @offwhite;
+            color: white;
+            background-color: black;
         }
         padding: 20px 30px 10px 30px;
         p {
+            color: #999;
             margin-top: 10px;
         }
-        textarea {
+        textarea  {
+            background-size: 0;
+            margin-bottom: 10px;
             width: 100%;
             margin-bottom: 10px;
+            @media (min-width: @screen-sm) {
+                margin-bottom: 15px;
+                background-image: linear-gradient(black,black),linear-gradient(#666,#666);
+                background-size: 0 2px, 100% 1px;
+                background-repeat: no-repeat;
+                background-position: center bottom, center calc(100% - 1px);
+                background-color: #222;
+                color: white;
+                &:focus {
+                    background-image: linear-gradient(white,white),linear-gradient(black,black);
+                    -webkit-animation: highlight 0.25s forwards;
+                    animation: highlight 0.25s forwards;
+                    background-size: 0 2px, 100% 1px;
+                    background-color: #333;
+                }
+            }
         }
     }
 }

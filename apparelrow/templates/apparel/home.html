@@ -84,8 +84,10 @@
                 <a class="btn btn-scroll btn-outline" href="#" data-scroll="publisher-apply">{% trans "Apply for invitation" %}</a>
             </div>
             <a class="btn-scroll btn-arrow" href="#" data-scroll="publisher-users"><i class="fa fa-angle-down"></i></a>
-            <p class="crosslink">{% trans 'Looking for ' %}<a href="{% url 'index-community' %}">APPRL Community</a>?</p>
+            <a class="crosslink" href="{% url 'index-community' %}">{% trans 'Looking for APPRL Community?' %}</a>
         </section>
+
+        <span class="brand-line"></span>
 
         {# Users #}
         <section class="publisher-users">
@@ -249,6 +251,9 @@
                 </ul>
             </div>
         </section>
+
+        {# Promo #}
+        <a class="promo" href="{% url 'jobs' %}">{% trans "We're hiring!" %}</a>
     </main>
 
     {# Footer #}

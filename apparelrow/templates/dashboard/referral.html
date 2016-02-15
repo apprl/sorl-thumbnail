@@ -25,7 +25,7 @@
     <div class="row referral-row">
         <div class="col-md-8 col-md-offset-2">
             <div class="referral-link-container box">
-                <h4>{% trans "Invite by e-mail:" %}</h4>
+                <h4>{% trans "Invite by e-mail" %}</h4>
                 {% if messages %}
                     {% for message in messages %}
                         <p>{{ message }}</p>
@@ -44,7 +44,7 @@
     <div class="row referral-row">
         <div class="col-md-8 col-md-offset-2">
             <div class="referral-link-container">
-                <h4>{% trans "Or invite by sharing your invitation link:" %}</h4>
+                <h4>{% trans "Or invite by sharing your invitation link" %}</h4>
                 <input onFocus="this.select()" onMouseUp="return false" type="text" class="center" value="{{ request.user.get_referral_domain_url }}">
                 <p>{% trans "You also can copy and share this link in a direct message, in an e-mail, text message or any other way if you want to make it more personal." %}</p>
             </div>
