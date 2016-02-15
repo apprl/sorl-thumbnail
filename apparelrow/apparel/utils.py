@@ -492,3 +492,9 @@ def has_user_location(request):
 
 def shuffle_user_list(user_list):
     return sorted(user_list, key=lambda k: random.random())
+
+def get_location(request):
+    if hasattr(request, "user") and hasattr(request.user, 'location') and request.user.location:
+        return request.user.location
+    else:
+        return request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, "ALL")

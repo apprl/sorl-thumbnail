@@ -24,7 +24,7 @@ from sorl.thumbnail.fields import ImageField
 from apparelrow.dashboard.models import Sale, Payment, Signup
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
-from apparelrow.apparel.utils import currency_exchange
+from apparelrow.apparel.utils import currency_exchange, get_location
 from apparelrow.profile.tasks import mail_managers_task
 from django.views.generic import TemplateView
 
@@ -1138,7 +1138,7 @@ def commissions(request):
                   % request.user)
         raise Http404
 
-    cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) or request.session.get('location','ALL')
+    cookie_value = get_location(request)
     vendors = get_available_stores(cookie_value)
     user_id = request.user.id
     stores = {}

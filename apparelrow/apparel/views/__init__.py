@@ -337,7 +337,7 @@ class ProductDetailView(DetailView):
                                                                                      manufacturer_name=product.manufacturer.name,
                                                                                      colors=', '.join(product.colors),
                                                                                      categories=', '.join([x.name for x in product.categories]))
-        alternative, alternative_url = more_alternatives(product, request.session.get('location', 'ALL'), 9)
+        alternative, alternative_url = more_alternatives(product, get_location(request), 9)
 
         referral_sid = request.GET.get('sid', 0)
         try:
@@ -366,7 +366,7 @@ class ProductDetailView(DetailView):
             'looks_with_product': looks_with_product,
             'looks_with_product_count': looks_with_product_count,
             'object_url': request.build_absolute_uri(),
-            'more_like_this': more_like_this_product(mlt_body, product.gender, request.session.get('location', 'ALL'), 9),
+            'more_like_this': more_like_this_product(mlt_body, product.gender, get_location(request), 9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
             'product_full_image': product_full_image,
             'product_brand_full_url': product_brand_full_url,
@@ -425,7 +425,7 @@ def product_detail(request, slug):
 
     # More alternatives
     # alternative = get_product_alternative(product)
-    alternative, alternative_url = more_alternatives(product, request.session.get('location', 'ALL'), 9)
+    alternative, alternative_url = more_alternatives(product, get_location(request), 9)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)
@@ -458,7 +458,7 @@ def product_detail(request, slug):
             'looks_with_product': looks_with_product,
             'looks_with_product_count': looks_with_product_count,
             'object_url': request.build_absolute_uri(),
-            'more_like_this': more_like_this_product(mlt_body, product.gender, request.session.get('location', 'ALL'),
+            'more_like_this': more_like_this_product(mlt_body, product.gender, get_location(request),
                                                      9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
             'product_full_image': product_full_image,

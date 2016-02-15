@@ -15,7 +15,8 @@ from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
-from apparelrow.apparel.utils import JSONResponse, JSONPResponse, remove_query_parameter, set_query_parameter, select_from_multi_gender, currency_exchange
+from apparelrow.apparel.utils import JSONResponse, JSONPResponse, remove_query_parameter, set_query_parameter, select_from_multi_gender, currency_exchange, \
+    get_location
 from apparelrow.apparel.utils import vendor_buy_url
 
 
@@ -213,7 +214,7 @@ class ProductList(View):
             query_arguments['fq'].append('availability:true')
 
             # Todo! This should be moved to all places where "user likes" are not included
-            query_arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
+            query_arguments['fq'].append('market_ss:%s' % get_location(request))
 
 
 
