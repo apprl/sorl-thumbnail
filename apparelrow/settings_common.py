@@ -161,6 +161,14 @@ LOCATION_LANGUAGE_MAPPING = (
     ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
 )
 
+LOCATION_MAPPING_SIMPLE_TEXT = (
+    ('SE', gettext('Sweden')),
+    ('DK', gettext('Denmark')),
+    ('NO', gettext('Norway')),
+    ('US', gettext('USA')),
+    ('ALL', gettext('International')),
+)
+
 # Locale url plugin
 LOCALEURL_USE_ACCEPT_LANGUAGE = True
 LOCALEURL_USE_SESSION = True
@@ -406,6 +414,7 @@ PIPELINE_JS = {
                              'js/jquery/jquery.ui.touch-punch.min.js',
                              'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
+                             'js/bootstrap_notify/bootstrap-notify.min.js',
                              'bootstrap/js/transition.js',
                              'bootstrap/js/alert.js',
                              'bootstrap/js/modal.js',

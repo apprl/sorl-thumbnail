@@ -98,7 +98,6 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
             else:
                 query_arguments['fq'].append('{{!tag={0}}}{0}:[{1} TO {2}]'.format('price', str(min_price), str(max_price)))
 
-
     # Only discount
     if 'discount' in request.GET:
         query_arguments['fq'].append('{!tag=%s}discount:true' % ('price',))
@@ -119,6 +118,46 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
        query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join(color_pattern_list)))
 
     return query_arguments
+
+def calculate_price_range(request, language):
+    """
+    Return array with price range, with default values unless user has set minimum and maximum values for prices.
+    Used mainly for product filters.
+    """
+    pricerange = {'min': 0, 'max': 10000}
+    if language in settings.MAX_MIN_CURRENCY:
+        pricerange['max'] = settings.MAX_MIN_CURRENCY.get(language)
+    pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
+
+    price = request.GET.get('price', '').split(',')
+    if len(price) == 2:
+        pricerange['selected_min'] = price[0]
+        pricerange['selected_max'] = price[1]
+    else:
+        pricerange['selected_min'] = pricerange['min']
+        pricerange['selected_max'] = pricerange['max']
+    return pricerange
+
+def calculate_stores(stores_list):
+    """
+    Return array of tuples with id and name of the store, given a list of String with the 'name|id' format
+    Used mainly for product filters.
+    """
+    stores = []
+    for i, value in enumerate(stores_list):
+        if i % 2 == 0:
+            split = value.split('|')
+            stores.append((int(split[1]), split[0]))
+    return stores
+
+def calculate_category(categories_list):
+    """
+    Return list of tuples (id, name) of categories. Used mainly for product filters.
+    """
+    category_ids = map(int, categories_list[::2])
+    category_values = map(int, categories_list[1::2])
+    categories = dict(zip(category_ids, category_values))
+    return categories
 
 def update_query_view(request, view, is_authenticated, query_arguments, gender, result, user_id, user_gender, is_brand):
     if view == 'friends' or 'f' in request.GET:
@@ -155,7 +194,6 @@ def update_query_view(request, view, is_authenticated, query_arguments, gender, 
             if view == "latest":
                 query_arguments['sort'] = 'availability desc, created desc, popularity desc'
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
-            # Todo! This should be moved to all places where "likes" are not included
             query_arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
     return query_arguments, result
 
@@ -195,6 +233,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     is_brand = None
     if 'is_brand' in kwargs and kwargs['is_brand']:
         is_brand = kwargs['is_brand']
+        query_arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
     query_arguments, result = update_query_view(request, view, is_authenticated, query_arguments, gender, result, user_id, user_gender, is_brand)
 
     # Query string
@@ -237,33 +276,16 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         return HttpResponse(json.dumps({'manufacturers': manufacturers}), mimetype='application/json')
 
     # Calculate price range
-    pricerange = {'min': 0, 'max': 10000}
-    if language in settings.MAX_MIN_CURRENCY:
-        pricerange['max'] = settings.MAX_MIN_CURRENCY.get(language)
-    pricerange['selected'] = request.GET['price'] if 'price' in request.GET else '%s,%s' % (pricerange['min'], pricerange['max'])
-
-    price = request.GET.get('price', '').split(',')
-    if len(price) == 2:
-        pricerange['selected_min'] = price[0]
-        pricerange['selected_max'] = price[1]
-    else:
-        pricerange['selected_min'] = pricerange['min']
-        pricerange['selected_max'] = pricerange['max']
+    pricerange = calculate_price_range(request, language)
 
     # Calculate store
-    stores = []
-    for i, value in enumerate(facet['store']):
-        if i % 2 == 0:
-            split = value.split('|')
-            stores.append((int(split[1]), split[0]))
+    stores = calculate_stores(facet['store'])
 
     # Calculate colors
     colors = [int(value) for i, value in enumerate(facet['color']) if i % 2 == 0]
 
     # Calculate category
-    category_ids = map(int, facet['category'][::2])
-    category_values = map(int, facet['category'][1::2])
-    categories = dict(zip(category_ids, category_values))
+    categories = calculate_category(facet['category'])
 
     # Calculate paginator
     paged_result, pagination = get_pagination_page(search, BROWSE_PAGE_SIZE,

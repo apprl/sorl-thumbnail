@@ -456,6 +456,31 @@ function unlikeElement($element) {
     $element.removeClass('liked').find('span:first').text($element.data('like-text'));
 }
 
+function showWarning($element) {
+    var slug = $element.attr('data-slug');
+    var SETTINGS_LINK = '/profile/settings/email/#location-notifications'
+    jQuery.ajax({
+        type: 'GET',
+        url: '/products/check_location/' + slug + '/',
+        success: function(response, status, request) {
+            if(response){
+                $.notify({
+                    message: response + " <a class='alert-warning' style='text-decoration: underline;' href='"+SETTINGS_LINK+"'>Change your location</a>."
+                }, { // settings
+                    type: 'warning',
+                    z_index: 10031,
+                    offset: 80,
+                    delay: 0,
+                    placement: {
+                        from: "top",
+                        align: "center"
+                    }
+                });
+            }
+        }
+    });
+}
+
 /**
  * Activity functionality
  */
@@ -505,6 +530,10 @@ ApparelActivity = {
                 });
             } else {
                 likeElement(element);
+                // Only show warning if current page is not a product page
+                if (typeof element.attr('data-product-page') === 'undefined') {
+                    showWarning(element);
+                }
                 $.post(element.data('like-url'), function(data) {
                     if(data['success'] == true) {
                         $(document).trigger('like', [element, event.data.type, element.data('id')]);
