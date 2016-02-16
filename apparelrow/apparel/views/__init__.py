@@ -333,9 +333,9 @@ class ProductDetailView(DetailView):
         if product.manufacturer and product.manufacturer.user:
             product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
 
-        mlt_body = '{product_name} {manufacturer_name} {colors} {categories}'.format(product_name=product.product_name,
+        mlt_body = u'{product_name} {manufacturer_name} {colors} {categories}'.format(product_name=product.product_name,
                                                                                      manufacturer_name=product.manufacturer.name,
-                                                                                     colors=', '.join(product.colors),
+                                                                                     colors=u", ".join(product.colors),
                                                                                      categories=u", ".join([x.name for x in product.categories]))
         alternative, alternative_url = more_alternatives(product, get_location(request), 9)
 
@@ -420,8 +420,10 @@ def product_detail(request, slug):
         product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
 
     # More like this body
-    mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors),
-                                ', '.join([x.name for x in product.categories]))
+    mlt_body = u'{product_name} {manufacturer_name} {colors} {categories}'.format(product_name=product.product_name,
+                                                                                     manufacturer_name=product.manufacturer.name,
+                                                                                     colors=u", ".join(product.colors),
+                                                                                     categories=u", ".join([x.name for x in product.categories]))
 
     # More alternatives
     # alternative = get_product_alternative(product)
