@@ -23,11 +23,24 @@
 $(document).ready(function() {
     $('#id_image').change(function() {
         $('form .btn-group').toggleClass('hidden');
+        readURL(this);
     });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#replace-image').show().find('img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     $('a[href="#cancel"]').click(function(e) {
         $('form .btn-group').toggleClass('hidden');
         $('#id_image').val('');
+        $('#replace-image').hide().find('img').attr('src', '');
         e.preventDefault();
     });
 
@@ -43,13 +56,14 @@ $(document).ready(function() {
     <div class="container">
         <div class="image-options">
             <div id="profile-image">
-                <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_circular_large }}"></a>
+                <span id="replace-image"><img src="{{ profile.avatar_circular_large }}"></span>
+                <img src="{{ profile.avatar_circular_large }}">
             </div>
             {% if request.user.is_authenticated and request.user == profile %}
             <form action="{{ request.path }}" method="post"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
                 {% csrf_token %}
                 <input type="hidden" name="change_image_form" value="yes">
-                <label><input type="file" name="file" id="id_image"><span class="btn btn-edit"><i class="fa fa-camera"></i></span></label>
+                <label><input type="file" name="image" id="id_image"><span class="btn btn-edit"><i class="fa fa-camera"></i></span></label>
                 <div class="btn-group hidden">
                     <button type="submit" class="btn btn-primary btn-sm">{% trans "Save" %}</button>
                     <a href="#cancel" class="btn btn-secondary btn-sm">{% trans "Cancel" %}</a>
