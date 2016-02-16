@@ -336,7 +336,7 @@ class ProductDetailView(DetailView):
         mlt_body = '{product_name} {manufacturer_name} {colors} {categories}'.format(product_name=product.product_name,
                                                                                      manufacturer_name=product.manufacturer.name,
                                                                                      colors=', '.join(product.colors),
-                                                                                     categories=', '.join([x.name for x in product.categories]))
+                                                                                     categories=u", ".join([x.name for x in product.categories]))
         alternative, alternative_url = more_alternatives(product, get_location(request), 9)
 
         referral_sid = request.GET.get('sid', 0)
@@ -386,7 +386,7 @@ class ProductDetailView(DetailView):
         slug = self.kwargs.get("slug")
         return get_product_from_slug(slug, **local_kwargs)
 
-
+@DeprecationWarning
 def product_detail(request, slug):
     # DEPRECATED, use class based view instead
     kwargs = {'published': True, 'gender__isnull': False}
@@ -816,6 +816,90 @@ def look_list(request, search=None, contains=None, gender=None):
     })
 
 
+class LookDetailView(DetailView):
+    model = Product
+    template_name = 'apparel/look_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LookDetailView, self).get_context_data(**kwargs)
+        look = self.object
+        request = self.request
+
+        if not look.published and look.user != self.request.user:
+            raise Http404()
+
+        is_liked = False
+        if request.user.is_authenticated():
+            is_liked = LookLike.objects.filter(user=request.user, look=look, active=True).exists()
+
+        looks_by_user = Look.published_objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:4]
+
+        look_created = False
+        if 'look_created' in request.session:
+            look_created = request.session['look_created']
+            del request.session['look_created']
+
+        look_saved = False
+        if 'look_saved' in request.session:
+            if request.user.fb_share_create_look:
+                if look.display_components.count() > 0:
+                    facebook_user = get_facebook_user(request)
+                    if facebook_user:
+                        facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look',
+                                                  request.build_absolute_uri(look.get_absolute_url()))
+            else:
+                look_saved = request.session['look_saved']
+
+            del request.session['look_saved']
+
+        # Likes
+        likes = look.likes.filter(active=True, user__is_hidden=False).order_by('-modified').select_related('user')
+
+        # Base url
+        base_url = request.build_absolute_uri('/')[:-1]
+
+        wrapper_element = {'width': '100', 'height': '100'}
+
+        # Components
+        components = []
+        if look.display_with_component == 'C':
+            components = look.collage_components.select_related('product')
+            # look image is responsible for scaling the look view. Since the look width and height might not be different we need to rescale
+            wrapper_element = {'width': '96', 'height': '96'}
+        elif look.display_with_component == 'P':
+            components = look.photo_components.select_related('product')
+
+        for component in components:
+            component.style_embed = component._style(min(694, look.image_width) / float(look.width))
+        # Build static image if it is missing
+        if not look.static_image:
+            build_static_look_image(look.pk)
+            look = get_model('apparel', 'Look').objects.get(pk=look.pk)
+
+        context.update({
+                'object': look,
+                'components': components,
+                'looks_by_user': looks_by_user,
+                'tooltips': True,
+                'object_url': request.build_absolute_uri(look.get_absolute_url()),
+                'look_full_image': request.build_absolute_uri(look.static_image.url),
+                'look_saved': look_saved,
+                'look_created': look_created,
+                'likes': likes,
+                'base_url': base_url,
+                'is_liked': is_liked,
+                'wrapper_element': wrapper_element,
+                'resolution': '{width}x{height}'.format(width=look.width, height=look.height,),
+                'has_share_image': True
+            })
+        return context
+
+
+    def get_object(self, **kwargs):
+        slug = self.kwargs.get("slug")
+        return get_object_or_404(get_model('apparel', 'Look'), slug=slug)
+
+@DeprecationWarning
 def look_detail(request, slug):
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
     # Only show unpublished looks to creator
