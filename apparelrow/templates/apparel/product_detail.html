@@ -44,6 +44,10 @@
             {% else %}
             <a class="btn btn-lg" data-toggle="modal" href="#" data-target="#modal_like_product"><i class="fa fa-heart"></i>&nbsp;<span>{% trans "Save" %}</span></a>
             {% endif %}
+
+            {% if request.user.is_authenticated and request.user.is_partner and object.default_vendor %}
+            <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn auto">{% trans "Get product link" %}</a>
+            {% endif %}
         </div>
 
         <div class="row">
@@ -129,10 +133,6 @@
                                 {% endif %}
                                 {% else %}
                                     <span itemprop="availability" content="out_of_stock" class="btn btn-lg disabled">{% trans "Sold out" %}</span>
-                                {% endif %}
-
-                                {% if request.user.is_authenticated and request.user.is_partner and object.default_vendor %}
-                                <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn auto">{% trans "Get product link" %}</a>
                                 {% endif %}
                             </div>
                             {% endcache %}
