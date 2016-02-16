@@ -481,7 +481,10 @@ class JSONPResponse(HttpResponse):
 
 
 def user_is_bot(request):
-    return request.user_agent.is_bot or "ELB" in request.user_agent.ua_string
+    if hasattr(request, "user_agent"):
+        return request.user_agent.is_bot or "ELB" in request.user_agent.ua_string
+    else:
+        return False
 
 def save_location(request, location):
     request.user.location = location

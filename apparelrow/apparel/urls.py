@@ -8,7 +8,8 @@ from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
 from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
-from apparelrow.apparel.views import BrandRedirectView, HomeView, ProductDetailView, CommunityFormView
+from apparelrow.apparel.views import BrandRedirectView, HomeView, ProductDetailView, CommunityFormView, LookDetailView, \
+    OnBoardingView
 from apparelrow.dashboard.views import RetailerFormView
 from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersView, ProfileListFollowingView, \
     ProfileView
@@ -78,7 +79,8 @@ urlpatterns = patterns('',
     url(r'^community/$', CommunityFormView.as_view(), name='index-community'),
 
     # Temporary url for onboarding page (work in progress)
-    url(r'^onboarding/$', 'apparelrow.apparel.views.onboarding', name='onboarding'),
+    url(r'^onboarding/$', OnBoardingView.as_view(), name='onboarding'),
+    #url(r'^onboarding/$', 'apparelrow.apparel.views.onboarding', name='onboarding'),
 
     # Facebook friends widget
     (r'^home/friends/$', 'apparelrow.apparel.views.facebook_friends_widget'),
@@ -188,7 +190,8 @@ urlpatterns = patterns('',
     url(r'^looks/popular/$', RedirectView.as_view(url=reverse_lazy('look-list'))),
     url(r'^looks/(?P<slug>[\w-]+)/publish/$', 'apparelrow.apparel.views.looks.publish', name='look-publish'),
     url(r'^looks/(?P<slug>[\w-]+)/unpublish/$', 'apparelrow.apparel.views.looks.unpublish', name='look-unpublish'),
-    url(r'^looks/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_detail', name='look-detail'),
+    url(r'^looks/(?P<slug>[\w-]+)/$', LookDetailView.as_view(), name='look-detail'),
+    #url(r'^looks/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_detail', name='look-detail'),
     url(r'^looks/(?P<slug>[\w-]+?)/delete/$', 'apparelrow.apparel.views.look_delete', name='look-delete'),
     url(r'^looks/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.look_like', name='look-like'),
 
