@@ -1087,12 +1087,29 @@ def dashboard_info(request):
 #
 # Referral
 #
+@DeprecationWarning
 def referral(request):
     if request.user.is_authenticated() and request.user.is_partner and request.user.referral_partner:
         referrals = get_user_model().objects.filter(referral_partner_parent=request.user, is_partner=True)
         return render(request, 'dashboard/referral.html', {'referrals': referrals})
 
     return HttpResponseRedirect(reverse('index-publisher'))
+
+class ReferralView(TemplateView):
+    template_name = 'dashboard/referral.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReferralView, self).get_context_data(**kwargs)
+        context["referrals"] = get_user_model().objects.filter(referral_partner_parent=self.request.user, is_partner=True)
+        return context
+
+    def get(self,request, *args, **kwargs):
+        if all([request.user.is_authenticated(), request.user.is_partner, request.user.referral_partner]):
+            context = self.get_context_data()
+            return render(self.template_name, context)
+        else:
+            return HttpResponseRedirect(reverse('index-publisher'))
+
 
 def referral_mail(request):
     emails = request.POST.get('emails')
@@ -1253,8 +1270,13 @@ def publisher_contact(request):
 
     return render(request, 'dashboard/publisher_contact.html', {'form': form, 'referral_user': referral_user})
 
+@DeprecationWarning
 def publisher_tools(request):
     return render(request, 'dashboard/publisher_tools.html')
+
+
+class PublisherToolsView(TemplateView):
+    template_name='dashboard/publisher_tools.html'
 
 def products(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_partner:

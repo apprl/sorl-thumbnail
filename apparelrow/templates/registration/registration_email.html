@@ -54,15 +54,22 @@ function updateUsername(){
                     </div>
                 </div>
                 <div class="col-is-6">
-                    <div class="form-group{% if form.email.errors %} error{% endif %}">
-                        <label for="id_{{ form.last_name.html_name }}">{% trans "Last name" %}</label>
-                        <input name="{{ form.last_name.html_name }}" type="text" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
-                        {% if form.last_name.errors %}<span class="help-block">{{ form.last_name.errors.as_text }}</span>{% endif %}
+                    <div class="form-group{% if form.password2.errors %} error{% endif %}">
+                        <label for="id_{{ form.password2.html_name }}">{% trans "Confirm Password" %}</label>
+                        <input name="{{ form.password2.html_name }}" type="password" id="id_{{ form.password2.html_name }}">
+                        {% if form.password2.errors %}<span class="help-block">{{ form.password2.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
             </div>
 
             <div class="row">
+                <div class="col-is-6">
+                    <div class="form-group{% if form.last_name.errors %} error{% endif %}">
+                        <label for="id_{{ form.last_name.html_name }}">{% trans "Last name" %}</label>
+                        <input name="{{ form.last_name.html_name }}" type="text" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                        {% if form.last_name.errors %}<span class="help-block">{{ form.last_name.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
                 <div class="col-is-6">
                     <div class="form-group{% if form.username.errors %} error{% endif %}">
                         <label for="id_{{ form.username.html_name }}">{% trans "Username" %}</label>
@@ -70,6 +77,8 @@ function updateUsername(){
                         {% if form.username.errors %}<span class="help-block">{{ form.username.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-is-6">
                     <div class="form-group {% if form.gender.errors %} has-error{% endif %}">
                         <label>{% trans "Gender" %}</label>
@@ -80,6 +89,7 @@ function updateUsername(){
                         {% if form.gender.errors %}<span class="help-block">{{ form.gender.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
+
             </div>
 
             {% comment %}
@@ -106,3 +116,5 @@ function updateUsername(){
     </div>
 
 {% endblock %}
+{% block footer %}
+{% endblock footer %}

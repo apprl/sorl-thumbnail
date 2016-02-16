@@ -108,11 +108,11 @@
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
                         {# need url function for referral page here #}
-                        <a href="#"><img src="{% static 'images/tools/referral.jpg' %}" /></a>
+                        <a href="{% url 'dashboard-referral' %}"><img src="{% static 'images/tools/referral.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Invite & Earn" %}</h2>
                             <p>{% trans "Earn money by inviting publishers and bloggers." %}</p>
-                            <a class="btn btn-primary" href="#">
+                            <a class="btn btn-primary" href="{% url 'dashboard-referral' %}">
                                 {% trans "Get Started" %}
                             </a>
                             <span class="empty"></span>

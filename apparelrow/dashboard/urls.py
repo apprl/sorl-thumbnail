@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from apparelrow.dashboard.views import DashboardView, AdminDashboardView
+from apparelrow.dashboard.views import DashboardView, AdminDashboardView, PublisherToolsView, ReferralView
 from django.views.generic import TemplateView, RedirectView
 
 urlpatterns = patterns('',
@@ -11,7 +11,8 @@ urlpatterns = patterns('',
    url(r'^new_admin/(?P<year>\d{4})/(?P<month>\d{1,2})/$', AdminDashboardView.as_view(), name='new-admin'),
     url(r'^new_admin/$', AdminDashboardView.as_view(), name='new-admin'),
     url(r'^dashboard/$', 'apparelrow.dashboard.views.dashboard', name='dashboard'),
-    url(r'^referral/$', 'apparelrow.dashboard.views.referral', name='dashboard-referral'),
+    url(r'^referral/$', ReferralView.as_view(), name='dashboard-referral'),
+    #url(r'^referral/$', 'apparelrow.dashboard.views.referral', name='dashboard-referral'),
     url(r'^product/$', 'apparelrow.dashboard.views.products', name='dashboard-products'),
     url(r'^product/(?P<year>\d{4})/(?P<month>\d{1,2})/$', 'apparelrow.dashboard.views.products', name='dashboard-products'),
     url(r'^network/$', 'apparelrow.dashboard.views.publishers', name='dashboard-publishers'),
@@ -21,7 +22,8 @@ urlpatterns = patterns('',
     url(r'^dashboard/(?P<year>\d{4})/(?P<month>\d{1,2})/', 'apparelrow.dashboard.views.dashboard', name='dashboard-date'),
     url(r'^stores/$', 'apparelrow.dashboard.views.commissions', name='dashboard-commissions'),
     url(r'^stores/(?P<pk>[\d]+)/$', 'apparelrow.dashboard.views.commissions_popup', name='dashboard-commissions-popup'),
-    url(r'^tools/$', 'apparelrow.dashboard.views.publisher_tools', name='publisher-tools'),
+    url(r'^tools/$', PublisherToolsView.as_view(), name='publisher-tools'),
+    #url(r'^tools/$', 'apparelrow.dashboard.views.publisher_tools', name='publisher-tools'),
 
 
     url(r'^referral/mail/$', 'apparelrow.dashboard.views.referral_mail', name='dashboard-referral-mail'),

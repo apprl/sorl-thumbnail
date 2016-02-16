@@ -1334,7 +1334,8 @@ class HomeView(TemplateView):
                 gender = None
 
             if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
-                return onboarding(request)
+                #return onboarding(request)
+                return OnBoardingView.as_view()(self.request)
                 # Todo: Pretty sure this is intended to be a redirect?
                 #return HttpResponseRedirect(reverse("onboarding"))
             else:
@@ -1360,6 +1361,7 @@ class HomeView(TemplateView):
         return render(request, self.template_name, context)
 
 # Deprecated, use HomeView instead.
+@DeprecationWarning
 def index(request, gender=None):
     if request.user.is_authenticated():
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
@@ -1388,6 +1390,7 @@ def jobs(request):
 def founders(request):
     return render(request, 'apparel/founders.html')
 
+@DeprecationWarning
 def community(request):
     return render(request, 'apparel/index.html')
 
@@ -1447,6 +1450,29 @@ def get_most_popular_user_list(users_amount=20, gender=None):
 
     return user_list
 
+
+class OnBoardingView(TemplateView):
+    template_name = 'apparel/onboarding.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OnBoardingView, self).get_context_data(**kwargs)
+        gender = self.request.user.gender
+        users_amount = settings.APPAREL_WELCOME_AMOUNT_FOLLOWING_USERS
+        user_list = get_most_popular_user_list(users_amount, gender)
+        on_boarding_follow_users(self.request.user, user_list)
+        context.update({
+                        'is_welcome_page': True,
+                        'user_list': shuffle_user_list(user_list)
+                   })
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        response = render(request, self.template_name, context)
+        response.delete_cookie(settings.APPAREL_WELCOME_COOKIE)
+        return response
+
+@DeprecationWarning
 def onboarding(request):
     gender = request.user.gender
     users_amount = settings.APPAREL_WELCOME_AMOUNT_FOLLOWING_USERS

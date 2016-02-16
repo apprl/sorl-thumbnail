@@ -13,7 +13,7 @@ from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -811,9 +811,36 @@ def send_confirmation_email(request, instance):
     send_email_confirm_task.delay(subject, body, instance.email)
 
 
+class RegisterView(TemplateView):
+    template_name = 'registration/registration.html'
+
+@DeprecationWarning
 def register(request):
     return render(request, 'registration/registration.html')
 
+
+class RegisterEmailFormView(FormView):
+    template_name = 'registration/registration_email.html'
+    form_class = RegisterForm
+
+    def get_success_url(self):
+        return reverse('auth_register_complete')
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.is_active = False
+        instance.name = ('%s %s' % (instance.first_name, instance.last_name)).strip()
+        instance.confirmation_key = uuid.uuid4().hex
+        instance.save()
+
+        # Send confirmation email
+        send_confirmation_email(self.request, instance)
+        response = HttpResponseRedirect(self.get_success_url())
+        response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=instance.gender, max_age=365 * 24 * 60 * 60)
+        response.set_cookie(settings.APPAREL_WELCOME_COOKIE, value=True, max_age=5 * 365 * 24 * 60 * 60)
+        return response
+
+@DeprecationWarning
 def register_email(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
@@ -837,6 +864,27 @@ def register_email(request):
     return render(request, 'registration/registration_email.html', {'form': form})
 
 
+class RegisterEmailCompleteFormView(FormView):
+    template_name = 'registration/registration_complete.html'
+    form_class = RegisterCompleteForm
+    success_url = reverse_lazy('auth_register_complete')
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        try:
+            instance = get_user_model()._default_manager.get(email=email, is_active=False)
+            instance.confirmation_key = uuid.uuid4().hex
+            instance.save()
+
+            # Send confirmation email
+            send_confirmation_email(self.request, instance)
+            return HttpResponseRedirect(self.get_success_url())
+
+        except get_user_model().DoesNotExist:
+            return render(self.request, self.template_name, {"form": form})
+
+
+@DeprecationWarning
 def register_complete(request):
     if request.method == 'POST':
         form = RegisterCompleteForm(request.POST)
@@ -861,6 +909,39 @@ def register_complete(request):
     return render(request, 'registration/registration_complete.html', {'form': form})
 
 
+class RegisterActivateView(View):
+
+    def get(self, request, *args, **kwargs):
+        try:
+            key = kwargs.get("key")
+            user = get_user_model().objects.get(confirmation_key=key)
+            user.is_active = True
+            user.confirmation_key = None
+            user.save()
+
+            # Send google analytics event
+            google_analytics_event.delay(get_ga_cookie_cid(request), 'Member', 'Signup', user.slug)
+
+            # Send welcome email
+            send_welcome_mail(user)
+
+            # XXX: Bypass authenticate step by settings backend on user
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            auth.login(request, user)
+            reset_facebook_user(request)
+
+            mail_subject = 'New email user activation: %s' % (user.display_name_live,)
+            mail_managers_task.delay(mail_subject, 'URL: %s' % (request.build_absolute_uri(user.get_absolute_url()),))
+
+            response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
+            response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
+            return response
+
+        except get_user_model().DoesNotExist:
+            return render(request, 'registration/registration_invalid_activation.html')
+
+
+@DeprecationWarning
 def register_activate(request, key):
     try:
         user = get_user_model().objects.get(confirmation_key=key)

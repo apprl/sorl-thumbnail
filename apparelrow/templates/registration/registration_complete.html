@@ -15,9 +15,10 @@
             <p>{% trans "If you can't find the confirmation e-mail,<br>check your spam folder or send the e-mail again:" %}</p>
             <form action="{% url 'auth_register_complete' %}" method="post">
                 {% csrf_token %}
-                <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+                <div class="form-group{% if form.email.errors %} error{% endif %}">
                     <label for="id_{{ form.email.html_name }}">{{ form.email.label }}</label>
                     <input type="email" name="{{ form.email.html_name }}" class="form-control" id="id_{{ form.email.html_name }}">
+                    {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                 </div>
                 <button class="btn btn-primary" type="submit">{% trans "Send e-mail again" %}</button>
                 {% if request.GET.sent %}
@@ -28,3 +29,5 @@
     </div>
 
 {% endblock %}
+{% block footer %}
+{% endblock footer %}
