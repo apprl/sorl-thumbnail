@@ -161,6 +161,18 @@ def update_query_view(request, view, is_authenticated, query_arguments, gender, 
     return query_arguments, result
 
 def browse_products(request, template='apparel/browse.html', gender=None, user_gender=None, user_id=None, language=None, **kwargs):
+    """
+    TODO: This function needs to be broken down and separated
+    :param request:
+    :param template:
+    :param gender:
+    :param user_gender:
+    :param user_id:
+    :param language:
+    :param kwargs:
+    :return:
+    """
+
     if gender is None and user_gender is None:
         gender = select_from_multi_gender(request, 'shop', None)
         if gender == 'M':
