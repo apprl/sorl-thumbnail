@@ -14,7 +14,7 @@
         <div class="product-vendors group">
             <div class="product-vendor">
                 <!-- example, replace with real object value -->
-                <span class="vendor-name">by ASOS</span>
+                <span class="vendor-name">{% trans "by" %} {{ object.default_vendor.name }}</span>
                 <!-- /example -->
                 <div class="computed-price">
                     {% if object.default_vendor.locale_discount_price %}

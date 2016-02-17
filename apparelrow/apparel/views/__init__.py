@@ -46,6 +46,7 @@ from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featu
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 from apparelrow.activity_feed.views import user_feed
 from apparelrow.dashboard.views import SignupForm
+from apparelrow.profile.forms import RegisterFormSimple
 from apparelrow.profile.models import Follow
 from apparelrow.profile.utils import get_facebook_user
 from apparelrow.profile.notifications import process_like_look_created
@@ -1315,14 +1316,14 @@ def user_list(request, gender=None, brand=False):
 # Index page for unauthenticated users
 #
 
-class HomeView(TemplateView):
+class PublisherView(TemplateView):
     """
     Class based view for index page
     """
-    template_name = "apparel/home.html"
+    template_name = "apparel/publisher.html"
 
     def get_context_data(self, **kwargs):
-        context = super(HomeView, self).get_context_data(**kwargs)
+        context = super(PublisherView, self).get_context_data(**kwargs)
         context['featured'] = get_featured_activity_today()
         context['form'] = SignupForm(is_store_form=True)
         return context
@@ -1360,7 +1361,7 @@ class HomeView(TemplateView):
             context.update({"form":form})
         return render(request, self.template_name, context)
 
-# Deprecated, use HomeView instead.
+# Deprecated, use PublisherView instead.
 @DeprecationWarning
 def index(request, gender=None):
     if request.user.is_authenticated():
@@ -1373,7 +1374,7 @@ def index(request, gender=None):
         else:
             return user_feed(request, gender=gender)
 
-    return render(request, 'apparel/home.html', {'featured': get_featured_activity_today()})
+    return render(request, 'apparel/publisher.html', {'featured': get_featured_activity_today()})
 
 
 def about(request):
@@ -1392,15 +1393,14 @@ def founders(request):
 
 @DeprecationWarning
 def community(request):
-    return render(request, 'apparel/index.html')
+    return render(request, 'apparel/community.html')
 
 class CommunityFormView(TemplateView):
-    template_name = 'apparel/index.html'
+    template_name = 'apparel/community.html'
 
     def get_context_data(self, **kwargs):
         context = super(CommunityFormView, self).get_context_data(**kwargs)
-        form = SignupForm(is_store_form=True)
-        context.update({"form": form})
+        context.update({"form": RegisterFormSimple()})
         return context
 
     #def get(self, request, *args, **kwargs):
@@ -1408,18 +1408,11 @@ class CommunityFormView(TemplateView):
     #    return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = SignupForm(request.POST, is_store_form=True)
+        form = RegisterFormSimple(request.POST)
         if form.is_valid():
-            # Save name and blog URL on session, for Google Analytics
-            request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
-            instance = form.save(commit=False)
-            instance.store = True
-            instance.save()
-
-            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
-                    u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
-
-            return HttpResponseRedirect(reverse('index-store-complete'))
+            request.session['register_email'] = form.cleaned_data["email"]
+            request.session['register_password'] = form.cleaned_data["password"]
+            return HttpResponseRedirect(reverse('auth_register_email'))
         return render(request, self.template_name, {'form': form})
 
 def on_boarding_follow_users(user, to_follow_list):
@@ -1461,7 +1454,6 @@ class OnBoardingView(TemplateView):
         user_list = get_most_popular_user_list(users_amount, gender)
         on_boarding_follow_users(self.request.user, user_list)
         context.update({
-                        'is_welcome_page': True,
                         'user_list': shuffle_user_list(user_list)
                    })
         return context

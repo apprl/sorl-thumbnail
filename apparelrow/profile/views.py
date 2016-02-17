@@ -826,6 +826,13 @@ class RegisterEmailFormView(FormView):
     def get_success_url(self):
         return reverse('auth_register_complete')
 
+    def get_initial(self):
+        if "register_email" in self.request.session:
+            self.initial.update({"email": self.request.session.pop("register_email"),
+                    "password1": self.request.session.get("register_password"),
+                    "password2": self.request.session.pop("register_password")})
+        return self.initial.copy()
+
     def form_valid(self, form):
         instance = form.save(commit=False)
         instance.is_active = False

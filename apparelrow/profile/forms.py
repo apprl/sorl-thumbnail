@@ -132,7 +132,7 @@ class EmailForm(forms.ModelForm):
 class NotificationForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('like_look_created', 'follow_user', 'facebook_friends', 'summary_mails', 'product_like_summaries', 'look_like_summaries', 'earning_summaries')
+        fields = ('like_look_created', 'follow_user', 'facebook_friends', 'summary_mails', 'product_like_summaries', 'look_like_summaries')
         #fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
         widgets = {
             'comment_product_wardrobe': CustomRadioSelect,
@@ -145,7 +145,7 @@ class NotificationForm(forms.ModelForm):
             'summary_mails': CustomRadioSelect,
             'product_like_summaries': CustomRadioSelect,
             'look_like_summaries': CustomRadioSelect,
-            'earning_summaries': CustomRadioSelect,
+            #'earning_summaries': CustomRadioSelect,
             'friend_summaries': CustomRadioSelect,
             'brand_summaries': CustomRadioSelect,
             'follow_recommendations': CustomRadioSelect,
@@ -155,8 +155,8 @@ class NotificationForm(forms.ModelForm):
         from django.forms.widgets import HiddenInput
         is_publisher = kwargs.pop('is_publisher',None)
         super(NotificationForm, self).__init__(*args, **kwargs)
-        if not is_publisher:
-            self.fields['earning_summaries'].widget = HiddenInput()
+        #if not is_publisher:
+        #    self.fields['earning_summaries'].widget = HiddenInput()
 
 
 class NewsletterForm(forms.ModelForm):
@@ -167,11 +167,11 @@ class NewsletterForm(forms.ModelForm):
         model = get_user_model()
         fields = ('discount_notification', 'newsletter')
 
+
 class LocationForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('location',)
-
 
 
 class FacebookSettingsForm(forms.ModelForm):
@@ -209,6 +209,11 @@ class PartnerSettingsForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('blog_url',)
+
+
+class RegisterFormSimple(forms.Form):
+    email = forms.EmailField(label=_('E-mail address'), required=True, error_messages={'invalid': _('Please enter a valid email address.')})
+    password = forms.CharField(label=_('Password'), required=True, widget=forms.PasswordInput)
 
 
 class RegisterForm(UserCreationForm):

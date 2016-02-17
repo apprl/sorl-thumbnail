@@ -8,7 +8,7 @@ from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
 from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
-from apparelrow.apparel.views import BrandRedirectView, HomeView, ProductDetailView, CommunityFormView, LookDetailView, \
+from apparelrow.apparel.views import BrandRedirectView, PublisherView, ProductDetailView, CommunityFormView, LookDetailView, \
     OnBoardingView
 from apparelrow.dashboard.views import RetailerFormView, RetailerView
 from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersView, ProfileListFollowingView, \
@@ -16,10 +16,10 @@ from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersVi
 
 urlpatterns = patterns('',
     # Index
-    url(r'^$', HomeView.as_view(), {'gender': 'none'}, name='index'),
-    url(r'^all/$', HomeView.as_view(), {'gender': 'A'}, name='index-all'),
-    url(r'^men/$', HomeView.as_view(), {'gender': 'M'}, name='index-men'),
-    url(r'^women/$', HomeView.as_view(), {'gender': 'W'}, name='index-women'),
+    url(r'^$', PublisherView.as_view(), {'gender': 'none'}, name='index'),
+    url(r'^all/$', PublisherView.as_view(), {'gender': 'A'}, name='index-all'),
+    url(r'^men/$', PublisherView.as_view(), {'gender': 'M'}, name='index-men'),
+    url(r'^women/$', PublisherView.as_view(), {'gender': 'W'}, name='index-women'),
     url(r'^retailer/$', RetailerView.as_view(), name='index-retailers'),
     #url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),
     url(r'^retailer/apply/$', RetailerFormView.as_view(), name='retailer-form'),
