@@ -57,14 +57,17 @@
 
     {% include "apparel/tools/widget_footer.html" %}
     <script type="text/javascript">
-        // Added on Dec 30
         $(document).ready(function() {
             $('.add-item-col button').click(function() {
                 $('.editor-guide').hide();
             });
 
-            $('.btn-add').click(function() {
+            $('.btn-add').on('click', function() {
                 $('#startsplash').hide();
+            });
+
+            $('body').on('click', '#image-form .btn', function() {
+                $('.sidebar').show();
             });
         });
 
