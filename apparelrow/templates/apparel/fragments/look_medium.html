@@ -19,7 +19,7 @@
     </div>
     <div class="caption">
         <h4><a href="{{ object.get_absolute_url }}">{{ object.title }}{% if is_profile and not object.published %} ({% trans "Not published" %}){% endif %}</a></h4>
+        <a href="{{ object.user.get_absolute_url }}" title="{{ object.user.display_name }}"><img class="img-circle" alt="{{ object.user.display_name }}" title="{{ object.user.display_name }}" src="{{ object.user.avatar }}"></a>
         <p>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
-        <p class="list-inline list-likes"><a href="{{ object.user.get_absolute_url }}" title="{{ object.user.display_name }}"><img class="img-circle" alt="{{ object.user.display_name }}" title="{{ object.user.display_name }}" src="{{ object.user.avatar }}"></a></p>
     </div>
 </div>

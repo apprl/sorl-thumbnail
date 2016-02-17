@@ -212,7 +212,7 @@
 
         $(document).ready(function() {
             if ( mobile == true ) {
-                $('section:first').append('<div class="background-image" style="background-image: url({% static 'video/poster.jpg' %});"></div>');
+                $('section:first').append('<div class="background-image" style="background-image: url({% static 'images/splash.jpg' %});"></div>');
             }
             else {
                 $('section:first').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static "video/poster.jpg" %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');
