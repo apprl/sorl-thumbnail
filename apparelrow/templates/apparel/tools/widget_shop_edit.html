@@ -44,9 +44,6 @@
                 e.preventDefault();
                 var show_liked = ($(this).attr('data-value') == 'likes');
                 App.Events.trigger('widget:product_display', show_liked);
-                //if ($(this).attr('data-value') == 'pick') {
-                    $('.sidebar').show();
-                //}
             });
         });
         var liked_title = "{% trans 'Your liked products' %}";
