@@ -26,19 +26,20 @@
             <div class="splash">
                 <h1 class="display">{% trans 'Join to create, share and shop the style of<span class="wbr"></span> bloggers, magazines and other style makers.' %}</h1>
                 <div class="login-box">
-                    <form action="{% url 'auth_login' %}" method="post">
+                    {% facebook_button next=next_url extra_class="btn-facebook-login" %}
+                    <form method="post">
                         {% csrf_token %}
-                        {% url 'login-flow-redirect' as next_url %}
-                        {% if request.GET.next %}
-                            {% with next_url|add:"?next="|add:request.GET.next as next_url_extra %}{% facebook_button next=next_url_extra extra_class="btn-facebook-login" %}{% endwith %}
-                        {% else %}
-                            {% facebook_button next=next_url extra_class="btn-facebook-login" %}
-                        {% endif %}
-
-                        <div class="separator visible-xs"><span>{% trans "or" %}</span></div>
-                        <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
-                        <input name="username" type="text" id="inputEmail" placeholder="{% trans 'Email' %}">
-                        <input name="password" type="password" id="inputPassword" placeholder="{% trans 'Password' %}">
+                        <div class="separator visible-xs">
+                            <span>{% trans "or" %}</span>
+                        </div>
+                        <div class="form_group{% if form.email.errors %} has-error{% endif %}">
+                            <input name="{{ form.email.html_name }}" type="text" id="{{ form.email.id_for_label }}" placeholder="{% trans 'Email' %}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                            {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
+                        </div>
+                        <div class="form_group{% if form.password.errors %} has-error{% endif %}">
+                            <input name="{{ form.password.html_name }}" type="password" id="{{ form.password.id_for_label }}" placeholder="{% trans 'Password' %}">
+                            {% if form.password.errors %}<span class="help-block">{{ form.password.errors.as_text }}</span>{% endif %}
+                        </div>
                         <div class="login-options">
                             <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
                         </div>
@@ -195,7 +196,7 @@
             var scroll = false,
                 resizeTimer;
 
-            $(window).on('resize', function(e) {
+            /*$(window).on('resize', function(e) {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(moveElements, 250);
             });
@@ -211,7 +212,6 @@
                 }
             }
             moveElements();
-
             $(window).on('scroll', function() {
                 if ($(window).scrollTop() >= 1) {
                     $('header').addClass('expand');
@@ -233,6 +233,7 @@
                 e.preventDefault();
             });
 
+            */
             $('#slider-publishers').owlCarousel({
                 //autoPlay: 3000,
                 loop: true,

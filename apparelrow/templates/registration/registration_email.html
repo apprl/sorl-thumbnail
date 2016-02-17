@@ -39,7 +39,7 @@ function updateUsername(){
                 <div class="col-is-6">
                     <div class="form-group{% if form.password1.errors %} error{% endif %}">
                         <label for="id_{{ form.password1.html_name }}">{% trans "Password" %}</label>
-                        <input name="{{ form.password1.html_name }}" type="password" id="id_{{ form.password1.html_name }}">
+                        <input name="{{ form.password1.html_name }}" type="password" id="id_{{ form.password1.html_name }}" value="{% if form.password1.value %}{{ form.password1.value }}{% endif %}">
                         {% if form.password1.errors %}<span class="help-block">{{ form.password1.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
@@ -56,7 +56,7 @@ function updateUsername(){
                 <div class="col-is-6">
                     <div class="form-group{% if form.password2.errors %} error{% endif %}">
                         <label for="id_{{ form.password2.html_name }}">{% trans "Confirm Password" %}</label>
-                        <input name="{{ form.password2.html_name }}" type="password" id="id_{{ form.password2.html_name }}">
+                        <input name="{{ form.password2.html_name }}" type="password" id="id_{{ form.password2.html_name }}" value="{% if form.password2.value %}{{ form.password2.value }}{% endif %}">
                         {% if form.password2.errors %}<span class="help-block">{{ form.password2.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
