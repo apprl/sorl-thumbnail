@@ -1207,6 +1207,12 @@ def index_complete(request, view):
 
     return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
+
+class RetailerView(TemplateView):
+    template_name = 'apparel/retailers.html'
+
+
+@DeprecationWarning
 def retailer(request):
     return render(request, 'apparel/retailers.html')
 

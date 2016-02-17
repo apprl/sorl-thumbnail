@@ -10,7 +10,7 @@ from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
 from apparelrow.apparel.views import BrandRedirectView, HomeView, ProductDetailView, CommunityFormView, LookDetailView, \
     OnBoardingView
-from apparelrow.dashboard.views import RetailerFormView
+from apparelrow.dashboard.views import RetailerFormView, RetailerView
 from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersView, ProfileListFollowingView, \
     ProfileView
 
@@ -20,7 +20,8 @@ urlpatterns = patterns('',
     url(r'^all/$', HomeView.as_view(), {'gender': 'A'}, name='index-all'),
     url(r'^men/$', HomeView.as_view(), {'gender': 'M'}, name='index-men'),
     url(r'^women/$', HomeView.as_view(), {'gender': 'W'}, name='index-women'),
-    url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),
+    url(r'^retailer/$', RetailerView.as_view(), name='index-retailers'),
+    #url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),
     url(r'^retailer/apply/$', RetailerFormView.as_view(), name='retailer-form'),
     url(r'^store/complete/$', 'apparelrow.dashboard.views.index_complete', {'view': 'store'}, name='index-store-complete'),
 
