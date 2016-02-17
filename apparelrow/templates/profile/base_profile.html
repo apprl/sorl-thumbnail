@@ -32,7 +32,7 @@ $(document).ready(function() {
 
             reader.onload = function (e) {
                 $('#replace-image').show().find('img').attr('src', e.target.result);
-            }
+            };
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -56,14 +56,21 @@ $(document).ready(function() {
     <div class="container">
         <div class="image-options">
             <div id="profile-image">
-                <span id="replace-image"><img src="{{ profile.avatar_circular_large }}"></span>
+                <span id="replace-image">
+                    <img src="{{ profile.avatar_circular_large }}">
+                </span>
                 <img src="{{ profile.avatar_circular_large }}">
             </div>
             {% if request.user.is_authenticated and request.user == profile %}
-            <form action="{{ request.path }}" method="post"{% if form_enctype %} enctype="{{ form_enctype }}"{% endif %}>
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="change_image_form" value="yes">
-                <label><input type="file" name="image" id="id_image"><span class="btn btn-edit"><i class="fa fa-camera"></i></span></label>
+                <label>
+                    <input type="file" name="image" id="id_image">
+                    <span class="btn btn-edit">
+                        <i class="fa fa-camera"></i>
+                    </span>
+                </label>
                 <div class="btn-group hidden">
                     <button type="submit" class="btn btn-primary btn-sm">{% trans "Save" %}</button>
                     <a href="#cancel" class="btn btn-secondary btn-sm">{% trans "Cancel" %}</a>
@@ -151,3 +158,16 @@ $(document).ready(function() {
     {% block content %}{% endblock %}
 </div>
 {% endblock %}
+{% block body-scripts %}
+<script>
+
+        $("btn-save-description").click(function() {
+            var description = $('#description-form textarea');
+            $.ajax({
+                type: "post",
+                url: "{% url 'settings-save-description' %}",
+                data: { description: description }
+            });
+        });
+</script>
+{% endblock body-scripts %}
