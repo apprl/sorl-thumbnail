@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
 from django.template import Context, Template, RequestContext
 from django.shortcuts import render, render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseForbidden
 from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth import get_user_model
@@ -28,7 +28,7 @@ from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
 
 from apparelrow.profile.utils import get_facebook_user, send_welcome_mail, reset_facebook_user
 from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm, \
-    LocationForm
+    LocationForm, ProfileImageForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task, mail_managers_task
 from apparelrow.profile.decorators import avatar_change, get_current_user
@@ -87,35 +87,42 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
-        context.update(get_profile_sidebar_info(context["request"], context["profile"]))
+        image_form = ProfileImageForm(instance=context["profile"])
+        forms = [('change_image_form', image_form)]
+        context.update(get_profile_sidebar_info(self.request, context["profile"]))
+        context.update({"is_brand": context["profile"].brand_id if context["profile"].is_brand else False,
+                        "form": forms[0],
+                        "avatar_absolute_uri":context["profile"].avatar_large_absolute_uri(self.request)})
         return context
 
     @method_decorator(get_current_user)
-    @method_decorator(avatar_change)
     def get(self, request, *args, **kwargs):
         """
         Displays the default page (all).
         """
         profile = args[0]
-        form = args[1]
-        context = self.get_context_data(request=request,
-                                        profile=profile,
-                                        form=form,
-                                        next=request.get_full_path(),
-                                        avatar_absolute_uri=profile.avatar_large_absolute_uri(request))
-        is_brand = False
-        if profile.is_brand:
-            is_brand = profile.brand_id
-
-        return browse_products(context.pop("request"),
+        context = self.get_context_data(profile=profile)
+        return browse_products(request,
                                template=self.template_name,
                                gender=request.GET.get('gender', 'A'),
                                user_gender='A',
                                language=None,
                                user_id=profile.pk,
-                               disable_availability=not is_brand,
-                               is_brand=is_brand,
+                               disable_availability=not context["is_brand"],
                                **context)
+
+    @method_decorator(get_current_user)
+    def post(self, request, *args, **kwargs):
+        profile = args[0]
+        if profile != request.user:
+            return HttpResponseForbidden()
+
+        if 'change_image_form' in request.POST:
+            image_form = ProfileImageForm(request.POST, request.FILES, instance=profile)
+            if image_form.is_valid():
+                image_form.save()
+
+        return HttpResponseRedirect(request.get_full_path())
 
 
 class ProfileListLookView(ListView):
@@ -133,29 +140,39 @@ class ProfileListLookView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileListLookView, self).get_context_data(**kwargs)
-        context.update(get_profile_sidebar_info(context["request"], context["profile"]))
-        context.update({"current_page":context.pop("page_obj")})
+        context.update(get_profile_sidebar_info(self.request, context["profile"]))
+        context.update({"avatar_absolute_uri": context["profile"].avatar_large_absolute_uri(self.request),
+                        "next":self.request.get_full_path(),
+                        "form":None,
+                        "current_page":context.pop("page_obj")})
         return context
 
     @method_decorator(get_current_user)
-    @method_decorator(avatar_change)
     def get(self, request, *args, **kwargs):
-        self.profile = args[0]
+        profile = args[0]
         self.user = request.user
         self.object_list = self.get_queryset()
-        context = self.get_context_data(request=request,
-                                        profile=self.profile,
-                                        form=None,
-                                        next=request.get_full_path(),
-                                        avatar_absolute_uri=self.profile.avatar_large_absolute_uri(request))
-
+        context = self.get_context_data(profile=profile)
         #paged_result = get_paged_result(self.object_list, 12, request.GET.get('page', '1'))
         if request.is_ajax():
             return render(request, self.template_name_ajax, {
                 'current_page': context["current_page"]
             })
         else:
-            return render(context.pop("request"), self.template_name, context)
+            return render(request, self.template_name, context)
+
+    @method_decorator(get_current_user)
+    def post(self, request, *args, **kwargs):
+        profile = args[0]
+        if profile != request.user:
+            return HttpResponseForbidden()
+
+        if 'change_image_form' in request.POST:
+            image_form = ProfileImageForm(request.POST, request.FILES, instance=profile)
+            if image_form.is_valid():
+                image_form.save()
+
+        return HttpResponseRedirect(request.get_full_path())
 
 
 class ProfileListLikedLookView(ProfileListLookView):
