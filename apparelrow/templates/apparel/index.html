@@ -1,55 +1,9 @@
+{% extends "base.html" %}
 {% load i18n l10n apparel_extras compressed login_bar cache localeurl_tags %}
 {% load static from staticfiles %}
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE }}">
-<head{% block head-data %}{% endblock head-data %}>
-    <title>{% block full-title %}{% block extra-title %}{% endblock %}APPRL - The Social Commerce Platform{% endblock %}</title>
-    <meta charset="utf-8" />
-    <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    {% for language in LANGUAGES_DISPLAY %}
-    <link rel="alternate" hreflang="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">
-    {% endfor %}
-    <link rel="icon" href="{% static "images/favicon.png" %}">
-    <link rel="apple-touch-icon" sizes="120x120" href="{% static "images/apple-touch-icon-120x120.png" %}">
-    <link rel="apple-touch-icon" sizes="152x152" href="{% static "images/apple-touch-icon-152x152.png" %}">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-    <meta property="og:image" content="{% static "images/share-image.jpg" %}">
-    <link rel="image_src" href="{% static "images/share-image.jpg" %}">
 
-    {% compressed_css 'bootstrap' %}
-    {% block extra-styles %}
-    {% endblock extra-styles %}
-    <script type="text/javascript">var addToHomeConfig = {returningVisitor: true, touchIcon: true, expire: 20160};</script>
-    <script src="//cdn.optimizely.com/js/180383028.js"></script>
-    {% block pre-extra-scripts %}{% endblock %}
-    {% compressed_js 'main' %}
-    {% block extra-scripts %}
-    {% endblock %}
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', '{{ GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT }}', {'cookieDomain': '{{ GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN }}'});
-        ga('send', 'pageview');
-
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
-        _gaq.push(['_setDomainName', '{{ GOOGLE_ANALYTICS_DOMAIN }}']);
-        _gaq.push(['_setSiteSpeedSampleRate', 10]);
-        _gaq.push(['_trackPageview']);
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
-</head>
-<body class="front community-page">
+{% block body-classes %}front community-page{% endblock body-classes %}
+{% block header-navigation %}
     {# Header #}
     <header role="banner">
         <a class="logo" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
@@ -58,24 +12,14 @@
             <ul>
                 <li><a href="{% url 'index' %}"><span>{% trans "For Influencers" %}</span></a></li>
                 <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
-                {% comment %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>International&nbsp;<b class="caret"></b></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Swedish</a></li>
-                        <li><a href="#">Danish</a></li>
-                        <li><a href="#">Norwegian</a></li>
-                        <li><a href="#">Finnish</a></li>
-                    </ul>
-                </li>
-                {% endcomment %}
                 <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
             </ul>
         </nav>
     </header>
+{% endblock header-navigation %}
+{% block full-body %}
 
     <main role="main">
-
         {# Welcome #}
         <section class="community-welcome">
             <div class="background-image"></div>
@@ -86,10 +30,11 @@
                         {% csrf_token %}
                         {% url 'login-flow-redirect' as next_url %}
                         {% if request.GET.next %}
-                        {% with next_url|add:"?next="|add:request.GET.next as next_url_extra %}{% facebook_button next=next_url_extra extra_class="btn-facebook-login" %}{% endwith %}
+                            {% with next_url|add:"?next="|add:request.GET.next as next_url_extra %}{% facebook_button next=next_url_extra extra_class="btn-facebook-login" %}{% endwith %}
                         {% else %}
-                        {% facebook_button next=next_url extra_class="btn-facebook-login" %}
+                            {% facebook_button next=next_url extra_class="btn-facebook-login" %}
                         {% endif %}
+
                         <div class="separator visible-xs"><span>{% trans "or" %}</span></div>
                         <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
                         <input name="username" type="text" id="inputEmail" placeholder="{% trans 'Email' %}">
@@ -237,84 +182,10 @@
             </div>
         </section>
 
-        {% comment %}
-        <section class="community-about">
-            <div class="container">
-                <h1>{% trans "About APPRL" %}</h1>
-                <p>{% trans "APPRL was founded by Gustav Gisseldahl and Martin Landén who had the simple insight that shopping online is so much more boring, time-consuming and difficult than it should be." %}</p>
-                <p>{% trans "Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that." %}</p>
 
-                <div class="portrait" style="position: relative;">
-                    <blockquote>
-                        <p>{% trans "Our idea is to connect the best online retailers, bloggers, style makers and online magazines into a connected experience through smart and simple tools." %}</p>
-                    </blockquote>
-                    <img src="{% static 'images/story.jpg' %}" alt="Gustav Gisseldahl &amp; Martin Landén">
-                    <a class="btn btn-outline" href="{% url 'about' %}">{% trans "Read more" %}</a>
-                </div>
-            </div>
-        </section>
-        {% endcomment %}
-
-        {% comment %}
-        <section class="community-featured">
-            <div class="container">
-                <h1>{% trans "Featured In" %}</h1>
-                <ul class="list-brands">
-                    <li><img src="{% static 'images/featured_logos/fokus.gif' %}" alt="Fokus"></li>
-                    <li><img src="{% static 'images/featured_logos/computer-sweden.gif' %}" alt="Computer Sweden"></li>
-                    <li><img src="{% static 'images/featured_logos/breakit.gif' %}" alt="Breakit"></li>
-                    <li><img src="{% static 'images/featured_logos/internetworld.gif' %}" alt="Internet World"></li>
-                    <li><img src="{% static 'images/featured_logos/dagens-media.gif' %}" alt="Dagens Media"></li>
-                    <li><img src="{% static 'images/featured_logos/resume.gif' %}" alt="Resumé"></li>
-                    <li><img src="{% static 'images/featured_logos/sss.gif' %}" alt="Startup Space Sweden"></li>
-                    <li><img src="{% static 'images/featured_logos/digitalpodden.gif' %}" alt="Digitalpodden"></li>
-                    <li><img src="{% static 'images/featured_logos/les-assorties.gif' %}" alt="Les Assorties’"></li>
-                    <li><img src="{% static 'images/featured_logos/plaza-kvinna.gif' %}" alt="Plaza Kvinna"></li>
-                    <li><img src="{% static 'images/featured_logos/webrazzi.gif' %}" alt="Webrazzi’"></li>
-                    <li><img src="{% static 'images/featured_logos/cofounder.gif' %}" alt="CoFounder"></li>
-                </ul>
-            </div>
-        </section>
-        {% endcomment %}
     </main>
-
-    {# Footer #}
-    <footer role="contentinfo">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <h5>{% trans "Follow Us" %}</h5>
-                    <ul>
-                        <li><a target="_blank" href="http://blog.apprl.com">{% trans "Blog" %}</a></li>
-                        <li><a target="_blank" href="http://www.facebook.com/apprl">Facebook</a></li>
-                        <li><a target="_blank" href="http://instagram.com/get_apprl">Instagram</a></li>
-                        <li><a target="_blank" href="https://twitter.com/get_apprl">Twitter</a></li>
-                        <li><a target="_blank" href="http://pinterest.com/apprl/">Pinterest</a></li>
-                        <li><a target="_blank" href="https://www.linkedin.com/company/apprl">LinkedIn</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-4">
-                    <h5>APPRL</h5>
-                    <ul>
-                        <li><a href="{% url 'about' %}">{% trans "About Us" %}</a></li>
-                        <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
-                        <li><a href="{% url 'jobs' %}">{% trans "Jobs" %}</a></li>
-                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Terms & Conditions" %}</a></li>
-                        <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-4">
-                    <h5>APPRL Fashion AB</h5>
-                    <address>
-                        Kammakargatan 41<br>
-                        111 24 Stockholm<br>
-                        Sweden
-                    </address>
-                </div>
-            </div>
-        </div>
-    </footer>
-
+{% endblock full-body %}
+{% block body-scripts %}
     <script src="/static/js/jquery/owl.carousel.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -404,40 +275,5 @@
             });
         });
     </script>
-    <script type="text/javascript" src="{% static 'js/money.min.js' %}"></script>
-    <script type="text/javascript">
-        fx.base = 'SEK';
-        fx.rates = {
-            {% for currency, rate in currency_rates.items %}
-            '{{ currency }}': {{ rate|unlocalize }},
-            {% endfor %}
-            'SEK': 1
-        };
-        var current_currency = '{{ CURRENCY }}';
-        function formatNumber(num) {
-            var array = parseInt(num, 10).toFixed().split('');
-            var index = -3;
-            while (array.length + index > 0) {
-                array.splice(index, 0, ' ');
-                index -= 4;
-            }
-            return array.join('');
-        };
-        function currencyConversion(elements) {
-            elements.each(function(index, element) {
-                var $element = jQuery(element);
-                var data = $element.data();
-                var converted_price = Math.round(fx.convert(data.price, {from: data.currency, to: current_currency}));
-                $element.text(formatNumber(converted_price) + ' ' + current_currency);
-            });
-        }
 
-        $('#language-dropdown > li > a').click(function(event){
-            var $this = $(this);
-            var location = $this.data("location");
-            $.removeCookie('location');
-            $.cookie('location', location, { expires: 60, path: '/' });
-        } );
-    </script>
-</body>
-</html>
+{% endblock body-scripts %}
