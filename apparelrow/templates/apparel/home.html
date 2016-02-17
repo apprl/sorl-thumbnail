@@ -6,7 +6,7 @@
     <title>{% block full-title %}{% block extra-title %}{% endblock %}APPRL - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     {% for language in LANGUAGES_DISPLAY %}
@@ -146,7 +146,7 @@
                     <div class="tools-display"><img src="{% static 'images/tools-dashboard.jpg' %}" alt=""></div>
                     <div class="tools-description">
                         <h2>{% trans "Learn from your dashboard" %}</h2>
-                        <p>{% trans "See what products, brands & retailers are the most popular amongst your audience and create more relevant content for your audience." %}</p>
+                        <p>{% trans "See your clicks & earnings and learn what products, brands & retailers are the most popular amongst your audience to create more relevant content." %}</p>
                     </div>
                 </div>
             </div>
@@ -301,7 +301,7 @@
 
         $(document).ready(function() {
             if ( mobile == true ) {
-                $('section:first').append('<div class="background-image" style="background-image: url({% static 'video/poster.jpg' %});"></div>');
+                $('section:first').append('<div class="background-image" style="background-image: url({% static 'images/splash.jpg' %});"></div>');
             }
             else {
                 $('section:first').append('<div class="background-video"><video autoplay="autoplay" preload="auto" poster="{% static "video/poster.jpg" %}" loop="loop" muted="true"><source src="{% static 'video/apprl.webm' %}" type="video/webm"><source src="{% static 'video/apprl.mp4' %}" type="video/mp4"></video></div>');

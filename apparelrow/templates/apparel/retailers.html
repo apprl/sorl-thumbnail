@@ -56,8 +56,8 @@
         <nav role="navigation">
             <a class="logo visible-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
             <ul>
-                <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
                 <li><a href="{% url 'index' %}"><span>{% trans "For Influencers" %}</span></a></li>
+                <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
                 {% comment %}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>International&nbsp;<b class="caret"></b></span></a>
@@ -129,7 +129,7 @@
 
                     <div class="feature second">
                         <div class="tools-description">
-                            <h2>{% trans "Create engaging, viral contests & campaigns" %}</h2>
+                            <h2>{% trans "Create engaging contests & campaigns" %}</h2>
                             <p>{% trans "You can use APPRL’s tools to create high ROI contests & campaigns. For example, a contest to create looks with products from your brand, distribute shoppable lookbooks, pop-up shops and more." %}</p>
                         </div>
                         <div class="tools-display"><img src="{% static 'images/tools-campaigns.jpg' %}" alt=""></div>
