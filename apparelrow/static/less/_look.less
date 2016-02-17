@@ -13,8 +13,13 @@
 
 /* Look List ---------- */
 .look-list-page {
-    main .btn {
-
+    /*main .btn {
+    }*/
+    .caption {
+        margin-bottom: 30px;
+        h4 {
+            margin-bottom: 5px;
+        }
     }
 }
 
@@ -322,8 +327,7 @@
     border: 0;
     padding: 0;
     .caption {
-        margin-bottom: 30px;
-        height: 60px;
+        margin-bottom: 15px;
     }
     h4 {
         text-align: center;
@@ -347,9 +351,17 @@
         right: 0;
         height: 60px;
         left: 0;
-        bottom: 34px;
+        bottom: 80px;
         .btn {
             max-width: none;
+        }
+    }
+    @media (min-width: @screen-sm) {
+        .caption {
+            margin-bottom: 30px;
+        }
+        .hover {
+            bottom: 70px;
         }
     }
 }
@@ -381,54 +393,58 @@
 }
 
 .look-editor-collage-page {
-  .lookedit_toolbar {
-    z-index:1000;
-    img {
-      width: 16px;
-      height: 16px;
-      margin-bottom: 3px;
+    // Override for messy modal
+    .popup-slim-dialog_mobile_menu .header {
+        height: 44px !important;
     }
-    &.active {
-      display: block;
-    }
-    position: absolute;
-    width: 100%;
-    @media (max-width: @screen-xs-max) {
-      span {
-        display: none;
-      }
-    }
-    background: #eee;
-    height: 41px;
-    line-height: 30px;
-    padding: 0 15px;
-    overflow: hidden;
-    .section {
-      float: left;
-      box-sizing: border-box;
-      width: 20%;
-      text-align: center;
-
-      a {
-        display: block;
-        padding: 8px 0px;
-        font-size: 15px;
-
-        &:hover {
-          color: #000;
-          opacity: 0.5;
+    .lookedit_toolbar {
+        z-index:1000;
+        img {
+            width: 16px;
+            height: 16px;
+            margin-bottom: 3px;
         }
-        &:focus {
-          color: #000;
+        &.active {
+            display: block;
         }
-      }
+        position: absolute;
+        width: 100%;
+        @media (max-width: @screen-xs-max) {
+            span {
+                display: none;
+            }
+        }
+        background: #eee;
+        height: 41px;
+        line-height: 30px;
+        padding: 0 15px;
+        overflow: hidden;
+        .section {
+            float: left;
+            box-sizing: border-box;
+            width: 20%;
+            text-align: center;
+
+            a {
+                display: block;
+                padding: 8px 0px;
+                font-size: 15px;
+
+                &:hover {
+                    color: #000;
+                    opacity: 0.5;
+                }
+                &:focus {
+                    color: #000;
+                }
+            }
+        }
     }
-  }
-  .product.flipped img {
-    -webkit-transform: scale(-1, 1);
-      -ms-transform: scale(-1, 1); // IE9+
-          transform: scale(-1, 1);
-  }
+    .product.flipped img {
+        -webkit-transform: scale(-1, 1);
+-ms-transform: scale(-1, 1); // IE9+
+transform: scale(-1, 1);
+}
 }
 
 .component_back, .component_forward {
