@@ -69,7 +69,7 @@ html.look-type-C .collage {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .apprl-look .close {
     width: 44px;
     height: 44px;
@@ -78,14 +78,14 @@ html.look-type-C .collage {
     top: -16px;
     right: -16px;
     border-radius: 100%;
-    background-color: #f8f8f8;
+    background-color: #999;
   }
   .apprl-look .close:before {
     font-family: 'FontAwesome';
     content: '\f00d';
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 13px;
+    right: 15px;
     font-size: 18px;
   }
 }
@@ -119,6 +119,22 @@ html.look-type-C .collage {
   float: left;
   width: 160px;
   text-align: center;
+}
+.apprl-look .tooltip-link .tooltip-container {
+  height: 80px;
+}
+.apprl-look .tooltip-link .product-meta {
+  float: none;
+  width: 100% !important;
+}
+.apprl-look .tooltip-link .tooltip-arrow-top {
+  bottom: 95px;
+}
+.apprl-look .tooltip-link .tooltip-arrow {
+  top: 95px;
+}
+.apprl-look .tooltip-link h2 {
+  margin: 10px 0;
 }
 .apprl-look .product-image {
   text-align: center;
@@ -161,10 +177,11 @@ html.look-type-C .collage {
 }
 .apprl-look .tooltip-arrow {
   position: absolute;
-  top: 130px;
   z-index: 1000;
   width: 12px;
   height: 12px;
+  left: 50%;
+  margin-left: -6px;
   background-color: white;
   -moz-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
@@ -172,6 +189,10 @@ html.look-type-C .collage {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
+}
+.apprl-look .tooltip-arrow-top {
+  top: -6px;
+  bottom: initial;
 }
 .apprl-look .tooltip-arrow-top {
   top: initial;
