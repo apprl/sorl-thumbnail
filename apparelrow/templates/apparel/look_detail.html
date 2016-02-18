@@ -91,7 +91,7 @@
             <hgroup>
                 <h1>{{ object.title }} <span class="draft-text{% if object.published %} published{% endif %}">({% trans "Not published" %})</span></h1>
                 <h3>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></h3>
-                <img style="padding-top:5px;" width="40" height="40" src="{{ object.user.avatar_circular }}"/>
+                <img style="padding-top:5px;" width="60" height="60" src="{{ object.user.avatar_circular }}"/>
             </hgroup>
 
             {% if request.user.is_authenticated %}
