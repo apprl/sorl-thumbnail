@@ -615,7 +615,8 @@ def search_view(request, model_name):
         arguments['facet.field'] = ['manufacturer']
 
     # Filter query parameters based on location
-    arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
+    if model_name != 'user':
+        arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
 
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)
