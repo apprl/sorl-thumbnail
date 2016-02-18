@@ -1,6 +1,28 @@
 /*
     Widget v1.0
+    - Shop editor
+    - Look editor
 */
+
+.widget-page {
+    @media (max-width: @screen-md) {
+        // Override for messy dialog header
+        .popup-slim-dialog_mobile_menu .header {
+            height: 44px !important;
+        }
+    }
+}
+
+/* Shop editor ---------- */
+
+/* Look editor ---------- */
+.look-editor-page {
+    ul.sidebar.flexible {
+        @media (min-width: @screen-md) {
+            display: none;
+        }
+    }
+}
 
 // Editor guide (steps)
 .look-editor-photo-page .editor-guide {
@@ -176,13 +198,16 @@
             margin: 0 auto 10px auto;
         }
         .content-container {
-            padding: 15px;
+            padding: 15px 15px 5px 15px;
         }
         @media (min-width: @screen-sm) {
             min-width: 320px;
             max-width: 480px;
             .btn {
                 max-width: 260px;
+            }
+            .content-container {
+                padding: 15px;
             }
         }
     }
