@@ -149,10 +149,10 @@ class ProfileListLookView(ListView):
 
     @method_decorator(get_current_user)
     def get(self, request, *args, **kwargs):
-        profile = args[0]
+        self.profile = args[0]
         self.user = request.user
         self.object_list = self.get_queryset()
-        context = self.get_context_data(profile=profile)
+        context = self.get_context_data(profile=self.profile)
         #paged_result = get_paged_result(self.object_list, 12, request.GET.get('page', '1'))
         if request.is_ajax():
             return render(request, self.template_name_ajax, {
@@ -163,12 +163,12 @@ class ProfileListLookView(ListView):
 
     @method_decorator(get_current_user)
     def post(self, request, *args, **kwargs):
-        profile = args[0]
-        if profile != request.user:
+        self.profile = args[0]
+        if self.profile != request.user:
             return HttpResponseForbidden()
 
         if 'change_image_form' in request.POST:
-            image_form = ProfileImageForm(request.POST, request.FILES, instance=profile)
+            image_form = ProfileImageForm(request.POST, request.FILES, instance=self.profile)
             if image_form.is_valid():
                 image_form.save()
 
