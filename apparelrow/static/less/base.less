@@ -347,11 +347,15 @@ header {
         margin: 55px 0 15px 0;
         padding: 0 15px;
         color: white;
-        background-color: @primaryColor;
+        //line-height: 46px;
+        height: 44px;
+        color: @primaryColor;
+        //background-color: @primaryColor;
         display: block;
+        border: 2px solid @primaryColor;
         &:hover, &:focus {
-            color: white !important;
-            background-color: darken(@primaryColor, 15%) !important;
+            color: @primaryColor !important;
+            //background-color: darken(@primaryColor, 15%) !important;
         }
         i {
             padding-bottom: 2px;
