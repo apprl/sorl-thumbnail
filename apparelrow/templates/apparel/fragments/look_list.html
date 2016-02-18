@@ -7,7 +7,7 @@
 {% endif %}
 <ul class="look-list list-unstyled row">
     {% for object in current_page.object_list %}
-    <li class="col-sm-6">{% if is_profile %}{% include 'apparel/fragments/look_medium.html' with is_profile=is_profile %}{% else %}{% include 'apparel/fragments/look_medium_cache.html' %}{% endif %}</li>
+    <li class="col-sm-6">{% if is_profile %}{% include 'apparel/fragments/look_medium.html' with is_profile=is_profile include_profile_image=True %}{% else %}{% include 'apparel/fragments/look_medium_cache.html' %}{% endif %}</li>
     {% empty %}
     {% comment if current_page.number == 1 %}
         <li class="col-lg-12">{% trans "No results" %}</li>

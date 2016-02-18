@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^settings/account/$', UserSettingsEmailView.as_view(), name='settings-account'),
     url(r'^settings/notifications/$', UserSettingsNotificationView.as_view(), name='settings-notifications'),
 
-    url(r'^notifications/$', RedirectView.as_view(url=reverse_lazy('settings-notifications')), name='notifications-page'),
+    url(r'^notifications/$', 'apparelrow.profile.views.notifications' , name='notifications-page'),
     url(r'^settings/publisher/$', PublisherSettingsNotificationView.as_view(), name='settings-publisher'),
     url(r'^settings/description/$', 'apparelrow.profile.views.save_description', name='settings-save-description'),
     url(r'^confirm/email/$', 'apparelrow.profile.views.confirm_email', name='user-confirm-email'),

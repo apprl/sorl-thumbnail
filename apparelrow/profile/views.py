@@ -1141,4 +1141,4 @@ def login_as_user(request, user_id):
 
 @login_required
 def notifications(request):
-    return render(request, 'profile/notifications.html')
+    return render(request, 'profile/notifications_list.html')
