@@ -303,7 +303,7 @@ $(document).ready(function() {
                .on('mouseenter', '.btn-look-like, .btn-product-like', ApparelActivity.like_handler_enter)
                .on('mouseleave', '.btn-look-like, .btn-product-like', ApparelActivity.like_handler_leave);
 
-    // Update likes box
+    // Update likes box and adds another badge
     $(document).on('like', function(event, element, type, id) {
         if (typeof userID !== 'undefined' && (!isPartnerUser || type == 'look')) {
             var likes_box = $('#likes-box');
