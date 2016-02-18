@@ -179,14 +179,10 @@ class RegisterForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        try:
-            get_user_model()._default_manager.get(email=email)
-        except get_user_model().DoesNotExist:
+        if get_user_model().objects.filter(email=email).exists():
+            raise forms.ValidationError(_('A user with that e-mail already exists.'))
+        else:
             return email
-        except get_user_model().MultipleObjectsReturned:
-            pass
-
-        raise forms.ValidationError(_('A user with that e-mail already exists.'))
 
 class RegisterCompleteForm(forms.Form):
     email = forms.EmailField(label=_('E-mail address'), required=True)

@@ -445,7 +445,6 @@ def login_flow_brands(request):
     if request.user.is_authenticated() and request.user.login_flow == 'complete':
         return HttpResponseRedirect(reverse('login-flow-complete'))
 
-
     request.user.login_flow = 'brands'
     request.user.save()
 
