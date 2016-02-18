@@ -27,8 +27,9 @@ from apparelrow.apparel.utils import get_paged_result, JSONResponse, get_ga_cook
 from apparelrow.apparel.tasks import facebook_push_graph, google_analytics_event
 
 from apparelrow.profile.utils import get_facebook_user, send_welcome_mail, reset_facebook_user
-from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm, \
-    LocationForm, ProfileImageForm
+from apparelrow.profile.forms import EmailForm, NotificationForm, NewsletterForm, FacebookSettingsForm, BioForm, \
+    PartnerSettingsForm, PartnerPaymentDetailForm, RegisterForm, RegisterCompleteForm, \
+    LocationForm, ProfileImageForm, PartnerNotificationsForm
 from apparelrow.profile.models import EmailChange, Follow, PaymentDetail
 from apparelrow.profile.tasks import send_email_confirm_task, mail_managers_task
 from apparelrow.profile.decorators import avatar_change, get_current_user
@@ -608,6 +609,10 @@ def settings_email(request):
         if facebook_form.is_valid():
             facebook_form.save()
 
+        location_warning_form = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
+        if location_warning_form.is_valid():
+            location_warning_form.save()
+
         form = EmailForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             # Remove old email change confirmations
@@ -630,6 +635,7 @@ def settings_email(request):
         return HttpResponseRedirect(reverse('settings-email'))
 
     form = EmailForm()
+    location_warning_form = PartnerNotificationsForm(instance=request.user)
     password_form = FormClass(request.user)
     facebook_form = FacebookSettingsForm(instance=request.user)
 
@@ -638,7 +644,8 @@ def settings_email(request):
             'email_form': form,
             'email_change': email_change,
             'form': password_form,
-            'facebook_settings_form': facebook_form
+            'facebook_settings_form': facebook_form,
+            'location_warning_form': location_warning_form
         })
 
 @DeprecationWarning
@@ -722,11 +729,11 @@ class PublisherSettingsNotificationView(TemplateView):
             instance = PaymentDetail.objects.get(user=self.request.user)
         except PaymentDetail.DoesNotExist:
             instance = None
-
         context.update({
             'instance': instance,
             'form': PartnerSettingsForm(instance=self.request.user),
-            'details_form': PartnerPaymentDetailForm(instance=instance)
+            'details_form': PartnerPaymentDetailForm(instance=instance),
+            'location_warning_form':PartnerNotificationsForm(instance=self.request.user)
         })
         return context
 
@@ -734,6 +741,11 @@ class PublisherSettingsNotificationView(TemplateView):
         context = self.get_context_data(**kwargs)
         context["form"] = PartnerSettingsForm(request.POST, request.FILES, instance=request.user)
         context["details_form"] = PartnerPaymentDetailForm(request.POST, request.FILES, instance=context['instance'])
+        # Todo: change here
+        context["location_warning_form"] = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
+        if context["location_warning_form"].is_valid():
+            context["location_warning_form"].save()
+        
         if context["form"].is_valid():
             context["form"].save()
         else:

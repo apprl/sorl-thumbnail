@@ -2,7 +2,8 @@
 import json
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.search import product_save, get_product_document
+from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
+from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
     extract_asos_nelly_product_url, on_boarding_follow_users, get_most_popular_user_list
 
@@ -13,8 +14,10 @@ from django.conf import settings
 from apparelrow.apparel.models import Shop, ShopEmbed
 
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
+from django.utils.translation import activate
 from apparelrow.apparel.models import Product, ProductLike
+from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.apparel.utils import shuffle_user_list
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
@@ -150,7 +153,6 @@ class TestChromeExtension(TestCase):
         self.assertTrue(json_content['product_short_link'].startswith('http://testserver/pd/4C9'))
         self.assertEqual(json_content['product_liked'], False)
 
-
     def test_product_lookup_by_url(self):
         self._login()
         product_key = 'http://example.com/example?someproduct=12345'
@@ -205,6 +207,7 @@ class TestChromeExtension(TestCase):
         self.assertEqual(json_content['product_link'], 'http://testserver/products/product/')
         self.assertEqual(json_content['product_short_link'], 'http://testserver/p/4C92/')
         self.assertEqual(json_content['product_liked'], False)
+
 
 class TestChromeExtensionSpecials(TestCase):
     fixtures = ['extensiontest_vendor.json', 'extensiontest_product.json']
@@ -478,7 +481,6 @@ class TestProductDetails(TestCase):
         self.assertAlmostEqual(earning_product,
                                Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)*Decimal(0.08),
                                places=2)
-
 
     def test_product_details_external_user_is_not_publisher(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
@@ -850,15 +852,301 @@ class TestOnBoarding(TestCase):
         on_boarding_follow_users(self.user, user_list)
         self.assertEqual(get_model('profile', 'Follow').objects.filter(user=self.user).count(), 20)
 
-def _send_product_to_solr(product_key):
 
+@override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
+class TestUtils(TestCase):
+
+    def setUp(self):
+        activate('sv')
+        vendor_success = VendorFactory.create(name="Vendor Success", is_cpc=True, is_cpo=False)
+        get_model('dashboard', 'ClickCost').objects.create(vendor=vendor_success, amount=1.00, currency="EUR")
+
+        VendorFactory.create(name="Vendor Fail", is_cpc=True, is_cpo=False)
+
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.is_partner = True
+        self.user.location = 'SE'
+        self.user.save()
+
+        self.django_image_file = _create_dummy_image()
+        self.category = CategoryFactory.create()
+        self.manufacturer = BrandFactory.create()
+        self.product_cpc = ProductFactory.create(
+            product_name='Product CPC',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        vendorproduct = VendorProductFactory.create(vendor=vendor_success, product=self.product_cpc, availability=True)
+        del self.product_cpc.default_vendor
+        product_save(self.product_cpc, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(self.product_cpc.default_vendor)
+
+        get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_success,
+                                                     cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                     referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+
+    def test_get_vendor_cost_per_click(self):
+        """ Test function that returns cost per click when is a valid Vendor with valid Cost per click
+            object associated
+        """
+        vendor_success = get_model('apparel', 'Vendor').objects.get(name="Vendor Success")
+        cost_per_click = get_vendor_cost_per_click(vendor_success)
+
+        self.assertIsNotNone(cost_per_click)
+        self.assertEqual(cost_per_click.amount, 1)
+        self.assertEqual(cost_per_click.currency, "EUR")
+        self.assertEqual(cost_per_click.vendor, vendor_success)
+
+    def test_get_vendor_cost_per_click_is_none(self):
+        """ Test function that returns cost per click when Vendor has not related Cost per Click object created.
+        """
+        vendor_fail = get_model('apparel', 'Vendor').objects.get(name="Vendor Fail")
+        cost_per_click = get_vendor_cost_per_click(vendor_fail)
+
+        self.assertIsNone(cost_per_click)
+
+    def test_product_earning_is_cpc(self):
+        """ Test functions that returns earning cut and product earning for a CPC vendor with Cost per Click
+        """
+        self.assertIsNotNone(self.product_cpc.default_vendor.vendor)
+
+        # Test get earning cut
+        earning_cut = get_earning_cut(self.user, self.product_cpc.default_vendor.vendor, self.product_cpc)
+        self.assertEqual(earning_cut, Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+
+        click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.product_cpc.default_vendor.vendor)
+        self.assertIsNotNone(click_cost)
+        # Test product earning
+        product_earning = get_product_earning(self.user, self.product_cpc.default_vendor, self.product_cpc)
+        self.assertEqual("%.2f" % product_earning, "%.2f" % (click_cost.amount * earning_cut))
+
+    def test_product_earning_is_cpo(self):
+        """ Test functions that returns earning cut and product earning for a CPO vendor
+        """
+        vendor_cpo = VendorFactory.create(name="Vendor CPO")
+        store = StoreFactory.create(vendor=vendor_cpo, commission_percentage='0.2')
+        product_cpo = ProductFactory.create(
+            product_name='Product CPO',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        vendorproduct = VendorProductFactory.create(vendor=vendor_cpo, product=product_cpo, availability=True)
+        del product_cpo.default_vendor
+        product_save(product_cpo, commit=True)
+        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(product_cpo.default_vendor)
+
+        get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_cpo,
+                                                     cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                     referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+        earning_cut = get_earning_cut(self.user, product_cpo.default_vendor.vendor, product_cpo)
+        self.assertEqual("%.2f" % earning_cut, "%.2f" %
+                               (Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT) * Decimal(store.commission_percentage)))
+
+        product_earning = get_product_earning(self.user, product_cpo.default_vendor, product_cpo)
+        self.assertEqual("%.2f" % product_earning, "%.2f" % (product_cpo.default_vendor.locale_price * earning_cut))
+
+    def test_product_earning_no_default_vendor(self):
+        """ Test functions that returns earning cut and product earning when Vendor is None
+        """
+        product_no_vendor = ProductFactory.create(
+            product_name='Product No Vendor',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        earning_cut = get_earning_cut(self.user, product_no_vendor.default_vendor, product_no_vendor)
+        self.assertIsNone(earning_cut)
+
+        product_earning = get_product_earning(self.user, product_no_vendor.default_vendor, product_no_vendor)
+        self.assertIsNone(product_earning)
+
+    def test_get_product_name(self):
+        manufacturer = BrandFactory.create()
+        product = ProductFactory.create(
+            product_name='Product Test',
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+
+        product_name = product.get_product_name_to_display
+        self.assertEqual(product_name, "%s - %s" % (manufacturer.name, product.product_name))
+
+class TestUtilsLocationWarning(TestCase):
+    def setUp(self):
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.location = 'US'
+        self.user.is_partner = True
+        self.user.show_warnings = True
+        self.user.save()
+
+    def test_get_availability_text(self):
+        # For all locations available, which is the default option so vendor_markets is None
+        vendor_markets = None
+        availability_text = get_availability_text(vendor_markets)
+        self.assertEqual(availability_text, "Available Internationally")
+
+        # One location
+        vendor_markets = ['SE']
+        availability_text = get_availability_text(vendor_markets)
+        self.assertEqual(availability_text, "Available in Sweden")
+
+        # Two locations
+        vendor_markets = ['SE', 'NO']
+        availability_text = get_availability_text(vendor_markets)
+        self.assertEqual(availability_text, "Available in Sweden and Norway")
+
+        # Three locations
+        vendor_markets = ['SE', 'NO', 'DK']
+        availability_text = get_availability_text(vendor_markets)
+        self.assertEqual(availability_text, "Available in Sweden, Norway and Denmark")
+
+    def test_get_warning_text(self):
+        # For all locations available, which is the default option so vendor_markets is None
+        vendor_markets = None
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # One location
+        vendor_markets = ['SE']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden that click on this product, not from your current location USA.")
+
+        # Two locations
+        vendor_markets = ['SE', 'NO']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden and Norway that click on this product, not from your current location USA.")
+
+        # Three locations
+        vendor_markets = ['SE', 'NO', 'DK']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "You will only earn money on visitors from Sweden, Norway and Denmark that click on this product, not from your current location USA.")
+
+        # Three locations but user location belongs to product's market
+        vendor_markets = ['SE', 'NO', 'US']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+    def test_deactivated_warning_text(self):
+        # For all locations available, which is the default option so vendor_markets is None
+        self.user.show_warnings = False
+        self.user.save()
+        vendor_markets = None
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # One location
+        vendor_markets = ['SE']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # Two locations
+        vendor_markets = ['SE', 'NO']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # Three locations
+        vendor_markets = ['SE', 'NO', 'DK']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+        # Three locations but user location belongs to product's market
+        vendor_markets = ['SE', 'NO', 'US']
+        warning_text = get_location_warning_text(vendor_markets, self.user)
+        self.assertEqual(warning_text, "")
+
+
+@override_settings(VENDOR_LOCATION_MAPPING={"Vendor SE":["SE"], "Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+class TestSearch(TransactionTestCase):
+
+    def setUp(self):
+        vendor_se = VendorFactory.create(name="Vendor SE")
+        vendor_dk = VendorFactory.create(name="Vendor DK")
+        manufacturer = BrandFactory.create(name="007")
+        self.product_key = 'http://example.com/example?someproduct=12345'
+        product_id = _send_product_to_solr(product_key=self.product_key, vendor_name=vendor_se,
+                                           product_name="ProductName12345", brand=manufacturer)
+
+        self.product_dk_key = 'http://example.dk/example?someproduct=123453'
+        product_id = _send_product_to_solr(product_key=self.product_dk_key, vendor_name=vendor_dk,
+                                           product_name="ProductName6789", brand=manufacturer)
+
+    def tearDown(self):
+        _cleanout_product(self.product_key)
+        _cleanout_product(self.product_dk_key)
+        get_user_model().objects.all().delete()
+
+    def _login(self):
+        normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        is_logged_in = self.client.login(username='normal_user', password='normal')
+        self.assertTrue(is_logged_in)
+
+    def test_search_view_no_products(self):
+        self._login()
+        session = self.client.session
+        session['location'] = 'NO'
+        session.save()
+        response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
+        json_data = json.loads(response.content)
+        self.assertEqual(len(json_data['object_list']), 0)
+
+    def test_search_view(self):
+        self._login()
+        session = self.client.session
+        session['location'] = 'SE'
+        session.save()
+        response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
+        json_data = json.loads(response.content)
+        self.assertEqual(len(json_data['object_list']), 1)
+
+    def test_brands_list_page(self):
+        manufacturer = get_model('apparel', 'Brand').objects.get(name="007")
+        self._login()
+        brands_list = get_available_brands('A', 'SE')
+        self.assertIn(manufacturer.id, brands_list)
+
+        brands_list = get_available_brands('A', 'DK')
+        self.assertIn(manufacturer.id, brands_list)
+
+        brands_list = get_available_brands('A', 'NO')
+        self.assertNotIn(manufacturer.id, brands_list)
+
+    def test_brand_page(self):
+        pass
+
+
+def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
     django_image_file = _create_dummy_image()
     _cleanout_product(product_key)
-    vendor = VendorFactory.create()
+    args_vendor = {}
+    if vendor_name:
+        args_vendor['name'] = vendor_name
+    vendor = VendorFactory.create(**args_vendor)
     category = CategoryFactory.create()
-    manufacturer = BrandFactory.create()
+    manufacturer = BrandFactory.create() if not brand else brand
+    product_name = 'Product' if not product_name else product_name
     product = ProductFactory.create(
-        product_name='Product',
+        product_name=product_name,
         category=category,
         manufacturer=manufacturer,
         gender='M',
@@ -874,9 +1162,11 @@ def _send_product_to_solr(product_key):
     product_save(product, commit=True)
     return product.id
 
+
 def _cleanout_products(product_keys):
     for product_key in product_keys:
         _cleanout_product(product_key)
+
 
 def _cleanout_product(product_key):
     product_id = product_lookup_by_solr(None, product_key)
@@ -888,6 +1178,7 @@ def _cleanout_product(product_key):
         print "%s has been removed from index." % product_solr_id
     else:
         print "No previous products found"
+
 
 def _create_dummy_image():
     from PIL import Image

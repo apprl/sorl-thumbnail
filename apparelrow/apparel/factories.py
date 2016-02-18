@@ -25,7 +25,6 @@ class CategoryFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Category %s' % n)
 
 
-
 #@factory.django.mute_signals(signals.post_delete, signals.post_save)
 class ProductFactory(factory.django.DjangoModelFactory):
 
@@ -104,3 +103,10 @@ class NellyVendorWithProductFactory(VendorFactory):
 class AsosVendorWithProductFactory(VendorFactory):
     vendorproduct2 = factory.RelatedFactory(VendorProductFactory,'vendor',
                                             product__product_key='http://www.asos.com/ASOS/ASOS-Vest-With-Extreme-Racer-Back/Prod/pgeproduct.aspx?iid=2108486&istCompanyId=07ba9e81-c032-4e26-a4a9-13073b06d73e&istItemId=wrxmwwxlw&istBid=t&channelref=affiliate',vendor__name='Asos')
+
+class StoreFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = get_model('advertiser','Store')
+    identifier = factory.Sequence(lambda n: 'Store %s' % n)
+    user = factory.SubFactory(UserFactory)

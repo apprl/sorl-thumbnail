@@ -106,6 +106,7 @@ MAX_MIN_CURRENCY = {
 }
 
 VENDOR_LOCATION_MAPPING = {
+    "Axel Arigato": ["SE", "DK", "NO", "FI"],
     "Shirtonomy": ["DK", "SE"],
     "Ted & Teresa": ["SE"],
     "ConfidentLiving": ["SE"],
@@ -115,15 +116,19 @@ VENDOR_LOCATION_MAPPING = {
     "ASOS": ["FI", "SE", "NO", "DK", "ALL"],
     "Eleven": ["SE"],
     "Happy Socks": ["SE"],
+    "Henry Kole": ["SE", "DK", "NO", "FI"],
     "Elevenfiftynine": ["SE"],
-    "Frontmen": ["ALL", "SE", "NO", "DK", "FI"],
-    "Flattered": ["SE", "DK", "NO", "FI", "ALL"],
+    "Ellos SE": ["SE"],
+    "Ellos NO": ["NO"],
+    "Flattered": ["SE", "DK", "NO", "FI"],
+    "Frontmen": ["SE", "NO", "DK", "FI"],
     "Filippa K": ["SE"],
     "Filippa K DK": ["DK"],
     "Filippa K NO": ["NO"],
     "JC": ["SE"],
+    "Nividas": ["SE", "DK", "NO", "FI"],
     "Nelly": ["SE"],
-    "Nelly No": ["NO"],
+    "Nelly NO": ["NO"],
     "Gina Tricot NO": ["NO"],
     "Gina Tricot SE": ["SE"],
     "Gina Tricot DK": ["DK"],
@@ -131,6 +136,7 @@ VENDOR_LOCATION_MAPPING = {
     "Panos Emporio": ["SE"],
     "Boozt se": ["SE"],
     "Boozt no": ["NO"],
+    "Boozt dk": ["DK"],
     "ASOS no": ["NO"],
     "QVC": ["US"],
     "Room 21 no": ["NO"],
@@ -154,6 +160,14 @@ LOCATION_LANGUAGE_MAPPING = (
     ("FI", gettext("Finland (EUR)"), LANGUAGES_DISPLAY[4]),
     ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
     ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
+)
+
+LOCATION_MAPPING_SIMPLE_TEXT = (
+    ('SE', gettext('Sweden')),
+    ('DK', gettext('Denmark')),
+    ('NO', gettext('Norway')),
+    ('US', gettext('USA')),
+    ('ALL', gettext('International')),
 )
 
 # Locale url plugin
@@ -401,6 +415,7 @@ PIPELINE_JS = {
                              'js/jquery/jquery.ui.touch-punch.min.js',
                              'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
+                             'js/bootstrap_notify/bootstrap-notify.min.js',
                              'bootstrap/js/transition.js',
                              'bootstrap/js/alert.js',
                              'bootstrap/js/modal.js',
@@ -687,10 +702,10 @@ APPAREL_ADVERTISER_MINIMUM_STORE_INVOICE = 60  # EUR
 
 # DASHBOARD
 APPAREL_DASHBOARD_CUT_DEFAULT = '0.67'
-APPAREL_DASHBOARD_MINIMUM_PAYOUT = 50  # EUR
+APPAREL_DASHBOARD_MINIMUM_PAYOUT = 100  # EUR
 APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT = '0.15'
 APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME = 'referral_cookie'
-APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '20'
+APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '50'
 APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA = 'cache_aggregated_link'
 
 # WELCOME PAGE

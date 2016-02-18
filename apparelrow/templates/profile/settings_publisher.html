@@ -65,6 +65,13 @@ $(document).ready(function() {
                     {% if details_form.orgnr.errors %}<span class="help-block">{{ details_form.orgnr.errors.as_text }}</span>{% endif %}
                 </div>
             </div>
+            <div class="form-group{% if details_form.bank_name.errors %} has-error{% endif %}">
+                <label for="id_{{ details_form.bank_name.html_name }}" class="col-sm-2 control-label">{{ details_form.bank_name.label }}</label>
+                <div class="col-sm-6">
+                    <input name="{{ details_form.bank_name.html_name }}" type="text" class="form-control" id="id_{{ details_form.bank_name.html_name }}" value="{% if details_form.bank_name.value %}{{ details_form.bank_name.value }}{% endif %}" placeholder="{{ details_form.bank_name.help_text }}">
+                    {% if details_form.bank_name.errors %}<span class="help-block">{{ details_form.bank_name.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
             <div class="form-group{% if details_form.clearingnr.errors %} has-error{% endif %}">
                 <label for="id_{{ details_form.clearingnr.html_name }}" class="col-sm-2 control-label">{{ details_form.clearingnr.label }}</label>
                 <div class="col-sm-10">
@@ -79,11 +86,19 @@ $(document).ready(function() {
                     {% if details_form.banknr.errors %}<span class="help-block">{{ details_form.banknr.errors.as_text }}</span>{% endif %}
                 </div>
             </div>
+
             <div class="form-group{% if details_form.address.errors %} has-error{% endif %}">
                 <label for="id_{{ details_form.address.html_name }}" class="col-sm-2 control-label">{{ details_form.address.label }}</label>
                 <div class="col-sm-10">
                     <input name="{{ details_form.address.html_name }}" type="text" id="id_{{ details_form.address.html_name }}" value="{% if details_form.address.value %}{{ details_form.address.value }}{% endif %}" placeholder="{{ details_form.address.help_text }}">
                     {% if details_form.address.errors %}<span class="help-block">{{ details_form.address.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="form-group{% if details_form.care_of.errors %} has-error{% endif %}">
+                <label for="id_{{ details_form.care_of.html_name }}" class="col-sm-2 control-label">{{ details_form.care_of.label }}</label>
+                <div class="col-sm-6">
+                    <input name="{{ details_form.care_of.html_name }}" type="text" class="form-control" id="id_{{ details_form.care_of.html_name }}" value="{% if details_form.care_of.value %}{{ details_form.care_of.value }}{% endif %}" placeholder="{{ details_form.care_of.help_text }}">
+                    {% if details_form.care_of.errors %}<span class="help-block">{{ details_form.care_of.errors.as_text }}</span>{% endif %}
                 </div>
             </div>
             <div class="form-group{% if details_form.postal_code.errors %} has-error{% endif %}">

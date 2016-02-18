@@ -151,6 +151,12 @@ class User(AbstractUser):
             help_text=_('Summary with the latest from the brands I follow'))
     follow_recommendations = models.CharField(max_length=1, choices=SUMMARY_CHOICES, default='W',
             help_text=_('Recommendations for who to follow'))
+    show_warnings = models.BooleanField(default=True, null=False, blank=False,
+                                       choices=((True, _("Show warnings")), (False, _("Don't show warnings"))),
+                                        help_text=_('Show warnings when I like or get links to products that are not '
+                                                    'available in my location. This is good to make sure that you only '
+                                                    'link to products that you earn money on, since retailers only pay '
+                                                    'for clicks/sales in the locations they ship to.'))
 
     followers_count = models.IntegerField(default=0, blank=False, null=False)
     popularity = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
@@ -444,17 +450,23 @@ class User(AbstractUser):
 class PaymentDetail(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=128)
-    company = models.BooleanField(default=False, null=False, blank=False, choices=((True, _('Receive payments as a company')), (False, _('Receive payments as a private person'))))
+    company = models.BooleanField(default=False, null=False, blank=False,
+                                  choices=((True, _('Receive payments as a company')),
+                                           (False, _('Receive payments as a private person'))))
     orgnr = models.CharField(max_length=32, null=True, blank=True)
-    banknr = models.CharField(max_length=32, null=True, blank=True)
-    clearingnr = models.CharField(max_length=32, null=True, blank=True)
+    bank_name = models.CharField(_('Bank name'), max_length=32, null=True, blank=True)
+    banknr = models.CharField(max_length=34, null=True, blank=True,
+                              help_text=_('Clearingnr-Banknr. IBAN for publishers outside Sweden'))
+    clearingnr = models.CharField(_('Bank-/postgiro'), max_length=32, null=True, blank=True,
+                                  help_text=_('Bank-/Postgiro. BIC/SWIFT for publishers outside Sweden'))
     address = models.CharField(_('Address'), max_length=64, null=True, blank=True)
+    care_of = models.CharField(_('C/O'), max_length=32, null=True, blank=True)
     postal_code = models.CharField(_('Postal code'), max_length=8, null=True, blank=True)
     city = models.CharField(_('City'), max_length=64, null=True, blank=True)
     notes = models.TextField(_('Notes'), null=True, blank=True)
 
     def __unicode__(self):
-        return '%s - %s' % (self.user, self.name)
+        return u'%s - %s' % (self.user, self.name)
 
 
 class EmailChange(models.Model):

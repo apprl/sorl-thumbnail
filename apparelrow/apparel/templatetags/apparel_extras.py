@@ -12,12 +12,11 @@ from django.utils.timesince import timesince
 from django.utils.translation import ugettext as _
 from django.utils.formats import number_format
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import stringfilter
 from django.utils.html import urlize
 from django.utils.safestring import mark_safe
-from django.contrib.staticfiles.storage import staticfiles_storage
 
 from apparelrow.apparel.utils import get_gender_url
 

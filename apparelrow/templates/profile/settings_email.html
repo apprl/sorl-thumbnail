@@ -1,0 +1,117 @@
+{% extends 'profile/base_settings.html' %}
+{% load i18n apparel_extras localeurl_tags %}
+
+{% block content %}
+    <!-- Email address -->
+    <div class="row">
+        <h2 id="email-address">{% trans "E-mail Address" %}</h2>
+        <p>{% trans "Here you can set which e-mail adress you want to receive messages and updates to from Apprl." %}</p>
+        {% if email_change %}
+            <p><i>{% blocktrans with email_change.email as new_email %}Pending e-mail address change to {{ new_email }}, check your inbox for confirmation mail.{% endblocktrans %}</i></p>
+        {% endif %}
+        <form class="form-horizontal" action="{% url 'settings-email' %}" method="post">{% csrf_token %}
+            <p>{% trans "Current e-mail address:" %} {{ request.user.email }}</p>
+            <div class="form-group{% if email_form.email.errors %} has-error{% endif %}">
+                <label for="id_{{ email_form.email.html_name }}" class="col-sm-2 control-label">{{ email_form.email.label }}</label>
+                <div class="col-sm-6">
+                    <input name="{{ email_form.email.html_name }}" type="text" class="form-control" id="id_{{ email_form.email.html_name }}" value="{% if email_form.email.value %}{{ email_form.email.value }}{% endif %}" placeholder="{{ email_form.email.help_text }}">
+                    {% if email_form.email.errors %}<span class="help-block">{{ email_form.email.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input class="btn btn-primary" type="submit" value="{% trans "Update email" %}" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Facebook -->
+    <div class="row top-buffer">
+        <h2 id="events">{% trans "Facebook" %}</h2>
+        {% if not request.user.facebook_user_id %}
+            <p>{% trans "Connect your Facebook account to find your friends and easier share to your timeline." %}</p>
+            {% facebook_button connect='yes' %}<br>
+            {% if request.GET.error %}
+            <p class="error">{% trans "It is not possible to connect this account with Facebook." %}</p>
+            {% endif %}
+        {% else %}
+            <p>{% trans "Here you can set which actions you want to be automatically shared to your Facebook timeline:" %}</p>
+            <form class="form-horizontal" action="{% url 'settings-email' %}" method="post">{% csrf_token %}
+                <div style="clear: both; padding: 1em 0;">
+                    {% for field in facebook_settings_form %}
+                        <p>{{ field }} {{ field.help_text }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input class="btn btn-primary" type="submit" value="{% trans "Save changes" %}" />
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+    <!-- Password -->
+    <div class="row top-buffer">
+        <h2 id="password">{% trans "Password" %}</h2>
+        <p>{% trans "Your username: "%}{{ request.user.username }}</p>
+        {% if request.user.password %}
+            <p>{% trans "Change your password:" %}</p>
+        {% else %}
+            <p>{% trans "Add a password to your account:" %}</p>
+        {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+            <p class="success">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <form class="form-horizontal" action="{% url 'settings-password' %}" method="post">{% csrf_token %}
+            <div class="form-group{% if form.old_password.errors %} has-error{% endif %}">
+                <label for="id_{{ form.old_password.html_name }}" class="col-sm-2 control-label">{{ form.old_password.label }}</label>
+                <div class="col-sm-6">
+                    <input name="{{ form.old_password.html_name }}" type="password" class="form-control" id="id_{{ form.old_password.html_name }}" value="{% if form.old_password.value %}{{ form.old_password.value }}{% endif %}" placeholder="{{ form.old_password.help_text }}">
+                    {% if form.old_password.errors %}<span class="help-block">{{ form.old_password.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="form-group{% if form.new_password1.errors %} has-error{% endif %}">
+                <label for="id_{{ form.new_password1.html_name }}" class="col-sm-2 control-label">{{ form.new_password1.label }}</label>
+                <div class="col-sm-6">
+                    <input name="{{ form.new_password1.html_name }}" type="password" class="form-control" id="id_{{ form.new_password1.html_name }}" value="{% if form.new_password1.value %}{{ form.new_password1.value }}{% endif %}" placeholder="{{ form.new_password1.help_text }}">
+                    {% if form.new_password1.errors %}<span class="help-block">{{ form.new_password1.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="form-group{% if form.new_password2.errors %} has-error{% endif %}">
+                <label for="id_{{ form.new_password2.html_name }}" class="col-sm-2 control-label">{{ form.new_password2.label }}</label>
+                <div class="col-sm-6">
+                    <input name="{{ form.new_password2.html_name }}" type="password" class="form-control" id="id_{{ form.new_password2.html_name }}" value="{% if form.new_password2.value %}{{ form.new_password2.value }}{% endif %}" placeholder="{{ form.new_password2.help_text }}">
+                    {% if form.new_password2.errors %}<span class="help-block">{{ form.new_password2.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input class="btn btn-primary" type="submit" value="{% trans "Update Password" %}" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Location -->
+    <div class="row top-buffer">
+        <h2 id="location" name="location">{% trans "Your Location" %}</h2>
+        <p>{% trans "Your location affects what retailers and products are shown on the site as well as the displayed currency." %}</p>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <a class="dropdown-toggle btn btn-primary" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
+                    <ul id="language-dropdown" class="dropdown-menu">
+                        {% for location in LOCATION_LANGUAGE_MAPPING %}
+                        <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

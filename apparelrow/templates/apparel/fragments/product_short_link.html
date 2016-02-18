@@ -6,6 +6,11 @@
             <h2 class="modal-title">{% trans "Your product link" %}</h2>
         </div>
         <div class="modal-body center">
+            {% if warning_text %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-email' %}#location-notifications">{% trans "Change your location" %}</a>
+                </div>
+            {% endif %}
             <p>{% trans "Share this link on your blog, social media, e-mail or anywhere, and you will make money on anyone who clicks on it and buys something from the store." %}</p>
             <input type="text" value="{{ product_short_link }}" data-url="{{ product_short_link }}">
         </div>

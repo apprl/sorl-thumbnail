@@ -29,6 +29,19 @@
 {% block full-body %}
 
     <div class="container" itemscope itemtype="http://data-vocabulary.org/Product">
+        {% if warning_text %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-warning alert-dismissible top-alert" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-email' %}#location-notifications">{% trans "Change your location" %}</a>
+                </div>
+
+             </div>
+        </div>
+        {% endif %}
         <div class="body-header center">
             <hgroup>
                 {% if object.manufacturer.user %}
