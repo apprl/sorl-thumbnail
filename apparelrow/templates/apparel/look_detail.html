@@ -228,17 +228,16 @@
 
                         <section class="center-sm">
                             {% cache CACHE_TIMEOUT look_detail_likes object.id LANGUAGE_CODE %}
-                            <h4>{% trans "Likes" %}</h4>
-                            <hr>
-                            {% if likes %}
-                            <ul id="likes-box" class="list-inline list-likes">
-                                {% for like in likes %}
-                                <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}"><img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a></li>
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                            <p class="center">{% trans "Be the first one to like this look!" %}</p>
-                            {% endif %}
+                                <h4>{% trans "Likes" %} </h4>
+                                    <hr>
+                                        <ul id="likes-box" class="list-inline list-likes">
+                                            <li class="{% if likes %}hide{% endif %}" style="width:inherit;">{% trans "Be the first one to like this look!" %}</li>
+                                            {% for like in likes %}
+                                                <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}">
+                                                    <img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
                             {% endcache %}
                         </section>
                     </div>

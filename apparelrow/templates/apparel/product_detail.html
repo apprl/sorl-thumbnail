@@ -229,12 +229,14 @@
                             {% cache CACHE_TIMEOUT product_detail_likes object.id LANGUAGE_CODE %}
                             <h4>{% trans "Likes" %} <span>({{ likes|length }})</span></h4>
                             <hr>
-                            <p class="center{% if likes %} hide{% endif %}">{% trans "Be the first one to like this product!" %}</p>
-                            <ul id="likes-box" class="list-likes">
-                                {% for like in likes %}
-                                <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}"><img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a></li>
-                                {% endfor %}
-                            </ul>
+                                <ul id="likes-box" class="list-inline list-likes">
+                                    <li class="{% if likes %}hide{% endif %}" style="width:inherit;">{% trans "Be the first one to like this look!" %}</li>
+                                    {% for like in likes %}
+                                        <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}">
+                                            <img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
                             {% endcache %}
                         </section>
                     </div>
