@@ -2,6 +2,7 @@ import json
 import decimal
 import logging
 from django.views.generic import TemplateView
+from progressbar import ProgressBar, Percentage, Bar
 import re
 import collections
 import HTMLParser
@@ -253,7 +254,9 @@ def rebuild_product_index(url=None, vendor_id=None):
     if vendor_id:
         valid_products = valid_products.filter(vendors=vendor_id)
 
-    for product in valid_products.iterator():
+    pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=valid_products.count()).start()
+    for index, product in enumerate(valid_products.iterator()):
+        pbar.update(index)
         document, boost = get_product_document(product, rebuild=True)
         if document is not None and document['published']:
             product_buffer.append(document)
@@ -264,6 +267,7 @@ def rebuild_product_index(url=None, vendor_id=None):
             product_count = product_count + 1
         else:
             connection.delete(id='%s.%s.%s' % (product._meta.app_label, product._meta.module_name, product.pk), commit=False)
+    pbar.finish()
 
     connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
     connection.commit()
@@ -438,7 +442,10 @@ def rebuild_look_index(url=None):
     look_count = 0
     look_buffer = collections.deque()
     boost = {}
-    for look in get_model('apparel', 'Look').objects.filter(user__is_hidden=False).iterator():
+    valid_looks = get_model('apparel', 'Look').objects.filter(user__is_hidden=False)
+    pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=valid_looks.count()).start()
+    for index, look in enumerate(valid_looks.iterator()):
+        pbar.update(index)
         document, boost = get_look_document(look)
         look_buffer.append(document)
         if len(look_buffer) == 100:
@@ -446,6 +453,7 @@ def rebuild_look_index(url=None):
             look_buffer.clear()
 
         look_count = look_count + 1
+    pbar.finish()
 
     connection.add(list(look_buffer), commit=False, boost=boost, commitWithin=False)
     connection.commit()
@@ -499,8 +507,11 @@ def rebuild_user_index(url=None):
     user_count = 0
     user_buffer = collections.deque()
     boost = {}
+    valid_users = get_user_model().objects.filter(is_hidden=False, is_brand=False)
 
-    for user in get_user_model().objects.filter(is_hidden=False, is_brand=False).iterator():
+    pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=valid_users.count()).start()
+    for index, user in enumerate(valid_users.iterator()):
+        pbar.update(index)
         document, boost = get_profile_document(user)
         user_buffer.append(document)
         if len(user_buffer) == 100:
@@ -508,6 +519,7 @@ def rebuild_user_index(url=None):
             user_buffer.clear()
 
         user_count = user_count + 1
+    pbar.finish()
 
     connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
     connection.commit()
