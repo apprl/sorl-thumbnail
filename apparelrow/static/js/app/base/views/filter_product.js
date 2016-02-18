@@ -7,6 +7,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
         'click input[name="q"]': 'filter',
         'keyup input[name="q"]': 'timed_filter',
         'click #product-filter-gender a': 'filter_gender',
+        'click #product-filter-gender-2 a': 'filter_gender',
         'click .btn-show-filters': 'toggle_filters'
     },
 
