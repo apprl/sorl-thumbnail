@@ -14,7 +14,7 @@
             <ul class="page-menu">
                 <li{% if 'terms-of-use' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Terms of Use" %}</a></li>
                 {% if request.user.is_authenticated and request.user.is_partner %}
-                <li{% if 'publisher-terms' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/publisher-terms/' %}">{% trans "Publisher terms" %}</a></li>
+                    <li{% if 'partner-terms' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/partner-terms/' %}">{% trans "Publisher terms" %}</a></li>
                 {% endif %}
                 <li{% if 'privacy-policy' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/privacy-policy/' %}">{% trans "Privacy Policy" %}</a></li>
                 <li{% if 'acceptable-use-policy' in request.path %} class="selected"{% endif %}><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/acceptable-use-policy/' %}">{% trans "Acceptable Use Policy" %}</a></li>
