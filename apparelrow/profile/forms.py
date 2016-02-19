@@ -221,7 +221,7 @@ class PartnerNotificationsForm(forms.ModelForm):
         model = get_user_model()
         fields = ('show_warnings',)
         widgets = {
-            'show_warnings': forms.RadioSelect
+            'show_warnings': CustomRadioSelect
         }
 
 
