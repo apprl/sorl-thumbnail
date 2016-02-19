@@ -527,12 +527,14 @@ class UserSettingsEmailView(FormView):
         email_form = EmailForm()
         facebook_form = FacebookSettingsForm(instance=self.request.user)
         location_form = LocationForm(instance=self.request.user)
+        location_warning_form = PartnerNotificationsForm(instance=self.request.user)
         context.update({
             'location_form': location_form,
             'email_form': email_form,
             'email_change': email_change,
             'form': FormClass(self.request.user),
-            'facebook_settings_form': facebook_form
+            'facebook_settings_form': facebook_form,
+            'location_warning_form': location_warning_form
         })
         return context
 
@@ -541,7 +543,12 @@ class UserSettingsEmailView(FormView):
         facebook_form = FacebookSettingsForm(request.POST, request.FILES, instance=request.user)
         location_form = LocationForm(request.POST, instance=request.user)
         FormClass = PasswordChangeForm if self.request.user.password else SetPasswordForm
+        location_warning_form = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
 
+        if location_warning_form.is_valid():
+            location_warning_form.save()
+        else:
+            context.update({'location_warning_form':location_warning_form})
         # Always save the facebook form
         if facebook_form.is_valid():
             facebook_form.save()
@@ -588,7 +595,6 @@ class UserSettingsEmailView(FormView):
                 location_form.save()
 
         return render(request, self.template_name, context)
-
 
 @DeprecationWarning
 @login_required
