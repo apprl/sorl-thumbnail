@@ -16,7 +16,7 @@ function keepParam(uri)
 
     <div class="body-header">
         <h1>{% trans "Looks" %}</h1>
-
+        {% if show_header %}
         <ul class="sub-menu">
             <li><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></li>
             <li><a href="?view=latest" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest" %}</a></li>
@@ -24,6 +24,7 @@ function keepParam(uri)
             <li><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></li>
             {% endif %}
         </ul>
+        {% endif %}
 
         <ul class="sidebar">
             <li class="dropdown">
