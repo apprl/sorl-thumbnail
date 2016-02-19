@@ -1467,13 +1467,15 @@ class PublisherView(TemplateView):
             if gender == 'none':
                 gender = None
 
-            if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
+            # Hiding this for the time being
+            #if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
                 #return onboarding(request)
-                return OnBoardingView.as_view()(self.request)
+            #    return OnBoardingView.as_view()(self.request)
                 # Todo: Pretty sure this is intended to be a redirect?
                 #return HttpResponseRedirect(reverse("onboarding"))
-            else:
-                return user_feed(request, gender=gender)
+            #else:
+            return user_feed(request, gender=gender)
+
         return render(request, self.template_name, self.get_context_data())
 
     def post(self, request, gender=None, *args, **kwargs):
