@@ -243,7 +243,7 @@
                             <h4>{% trans "Likes" %} <span>({{ likes|length }})</span></h4>
                             <hr>
                                 <ul id="likes-box" class="list-inline list-likes">
-                                    <li class="{% if likes %}hide{% endif %}" style="width:inherit;">{% trans "Be the first one to like this look!" %}</li>
+                                    <li class="{% if likes %}hide{% endif %}" style="width:inherit;">{% trans "Be the first one to like this product!" %}</li>
                                     {% for like in likes %}
                                         <li data-user-id="{{ like.user.pk }}"><a href="{{ like.user.get_absolute_url }}" title="{{ like.user.display_name }}">
                                             <img class="img-circle" alt="{{ like.user.display_name }}" title="{{ like.user.display_name }}" src="{{ like.user.avatar }}"></a>
