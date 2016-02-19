@@ -432,6 +432,18 @@ class ProductDetailView(DetailView):
                 logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
                     product.default_vendor, product.product_name))
 
+        # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
+        vendor_markets = None
+        if default_vendor:
+            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
+
+            # Calculate cost per click and earning cut
+            cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
+            earning_cut = get_earning_cut(request.user, default_vendor.vendor, product)
+
+        availability_text = get_availability_text(vendor_markets)
+        warning_text = get_location_warning_text(vendor_markets, request.user, "product")
+
         context.update({
             'object': product,
             'is_liked': is_liked,
@@ -449,7 +461,9 @@ class ProductDetailView(DetailView):
             'alternative_url': alternative_url,
             'earning_cut': earning_cut,
             'cost_per_click': cost_per_click,
-            'has_share_image': True
+            'has_share_image': True,
+            'availability_text': availability_text,
+            'warning_text': warning_text
         })
         return context
 
