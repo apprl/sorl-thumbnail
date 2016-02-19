@@ -1478,7 +1478,7 @@ class ReferralView(TemplateView):
     def get(self,request, *args, **kwargs):
         if all([request.user.is_authenticated(), request.user.is_partner, request.user.referral_partner]):
             context = self.get_context_data()
-            return render(self.template_name, context)
+            return render(request, self.template_name, context)
         else:
             return HttpResponseRedirect(reverse('index-publisher'))
 
