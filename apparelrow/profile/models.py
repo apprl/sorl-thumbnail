@@ -103,7 +103,7 @@ class User(AbstractUser):
     facebook_access_token = models.CharField(max_length=255, null=True, blank=True)
     facebook_access_token_expire = models.DateTimeField(null=True, blank=True)
 
-    # partner
+    # partner a.k.a publisher
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
     is_top_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Top partner user'))
     partner_group = models.ForeignKey('dashboard.Group', verbose_name=_('Commission group'), null=True, blank=True)
