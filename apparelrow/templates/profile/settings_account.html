@@ -105,6 +105,38 @@
                 </div>
             </div>
         </section>
+    {% if request.user.is_partner %}
+        <section>
+            <h2 id="location-notifications">{% trans "Location warnings" %}</h2>
+            <p>
+            {% blocktrans %}
+                Show warnings when I like or get links to products that are not available in my location.
+                This is to make sure that you only link to products that you earn money on,
+                since retailers only pay for clicks/sales in their relevant locations.
+            {% endblocktrans %}
+            </p>
+            <form name="location-warning-form" class="form-group" method="post">
+                {% csrf_token %}
+                <div class="form-content{% if email_form.email.errors %} has-error{% endif %}">
+                    <div class="form-group">
+                    <ul class="list-unstyled">
+                        {% for choice in location_warning_form.show_warnings %}
+                            <li>{{ choice }}</li>
+                        {% endfor %}
+                        </ul>
+                        {% if location_warning_form.show_warnings.errors %}<span class="help-block">{{ location_warning_form.show_warnings.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-default" type="submit" value="{% trans "Save" %}" />
+                </div>
+            </form>
+        </section>
+    {% endif %}
+
+
+
+
                  {% comment %}
                         <div class="form-group">
                         <label class="control-label" for="id_language">{% trans "Language & currency" %}</label>
