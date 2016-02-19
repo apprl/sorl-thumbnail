@@ -1,3 +1,4 @@
+from unittest import skip
 from django.contrib.sites.models import Site
 import re
 
@@ -101,6 +102,7 @@ class TestUtilities(TestCase):
         self.assertEqual("http://example.com/looks/yekshamesh/",url)
         print "Test retrieve static url look suceeded"
 
+@skip("Not doing this just yet")
 class TestOnBoardingUsers(TransactionTestCase):
 
     def setUp(self):

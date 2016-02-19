@@ -96,7 +96,7 @@ class TestChromeExtension(TestCase):
         response = self.client.get('/backend/authenticated/')
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/')
+        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/items/')
         self.assertEqual(json_content['authenticated'], True)
 
     def test_product_lookup_not_logged_in(self):
