@@ -105,6 +105,7 @@
                 </li>
 
                 <!-- Invite & Earn -->
+                {% if request.user.is_partner and request.user.referral_partner %}
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
                         {# need url function for referral page here #}
@@ -119,6 +120,7 @@
                         </article>
                     </div>
                 </li>
+                {% endif %}
 
             </ul>
         </div>
