@@ -24,7 +24,6 @@ function keepParam(uri)
             <li><a href="?view=friends" data-view="friends"{% if request.GET.view == 'friends' %} class="selected"{% endif %}>{% trans "My friends" %}</a></li>
             {% endif %}
         </ul>
-        {% endif %}
 
         <ul class="sidebar">
             <li class="dropdown">
@@ -36,6 +35,7 @@ function keepParam(uri)
                 </ul>
             </li>
         </ul>
+        {% endif %}
     </div>
 
     <div class="row">
