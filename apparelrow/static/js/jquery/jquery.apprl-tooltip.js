@@ -63,8 +63,7 @@
                 //}
             //}
 
-            // Modified on Feb 18 to account for new close button space (+20)
-            tooltip_top = component_p.top + start + Math.floor((component_h - start) / 3);
+            tooltip_top = component_p.top + start + Math.floor((component_h - start) / 3)
             tooltip_left = component_p.left + Math.floor(component_w / 2) - Math.floor(tooltip_w / 2);
 
             var tooltip_arrow = tooltip.find('.tooltip-arrow').css({left: 135});
@@ -81,13 +80,13 @@
                 tooltip_arrow.removeClass('tooltip-arrow-top').addClass('tooltip-arrow-bottom')
             }
 
+
             if(tooltip_left < 5) {
                 tooltip_arrow.css('left', 135 - (5 - tooltip_left));
                 tooltip_left = 5;
             } else if(tooltip_left + tooltip_w + 5 > container_w) {
-                // Modified on Feb 18 to account for new close button space
-                tooltip_arrow.css('left', 135 + (tooltip_w - (container_w - tooltip_left)) + 20);
-                tooltip_left -= (tooltip_w - (container_w - tooltip_left)) + 20;
+                tooltip_arrow.css('left', 135 + (tooltip_w - (container_w - tooltip_left)) + 5);
+                tooltip_left -= (tooltip_w - (container_w - tooltip_left)) + 5;
             }
         }
 

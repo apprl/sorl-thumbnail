@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block full-title %}APPRL - The Social Commerce Platform | {% trans "Apparel, shoes, bags & accessories from the best online stores selected by bloggers & brands" %}{% endblock %}
+{% block full-title %}Apprl - Social Shopping | {% trans "Apparel, shoes, bags & accessories from the best online stores selected by bloggers & brands" %}{% endblock %}
 {% block meta_description %}{% trans "Discover fashion from the world's best stores selected by bloggers, your friends & other stylemakers." %}{% endblock %}
 
-{% block extra-scripts %}
+{% block 'extra-scripts' %}
 <script type="text/javascript">
     $(function() {
         $('.feed-list .feed-verb-like_product').each(function(i, element) {
@@ -25,11 +25,9 @@
 {% block body-classes %}feed-list-page{% endblock body-classes %}
 {% block full-body %}
 
-    {% comment %}
     {% if not request.COOKIES.ar_featured and not request.GET.first %}
     {% include 'apparel/fragments/featured.html' with request=request featured=featured in_feed=True %}
     {% endif %}
-    {% endcomment %}
 
     {% if request.GET.first and request.user.is_authenticated %}
     <div class="container">
@@ -44,21 +42,24 @@
 
     <div class="container">
         <div class="body-header">
-            <h1>{% trans "Your Feed" %}</h1>
-            <ul class="sidebar">
-                <li class="dropdown">
-                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men's" %}{% elif gender == 'W' %}{% trans "Only women's" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+            <div class="body-header-col-left">
+                <h1>{% trans "Your APPRL" %}</h1>
+            </div>
+            <div class="body-header-col-right">
+                <ul class="list-inline">
+                    <li class="dropdown">
+                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men’s" %}{% elif gender == 'W' %}{% trans "Only women’s" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{% url 'index-all' %}">{% trans "Show all" %}</a></li>
-                        <li><a href="{% url 'index-men' %}">{% trans "Only men's" %}</a></li>
-                        <li><a href="{% url 'index-women' %}">{% trans "Only women's" %}</a></li>
+                        <li><a href="{% url 'index-men' %}">{% trans "Only men’s" %}</a></li>
+                        <li><a href="{% url 'index-women' %}">{% trans "Only women’s" %}</a></li>
                     </ul>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         {% include 'activity_feed/fragments/feed_list.html' %}
-
     </div>
 
 {% endblock %}

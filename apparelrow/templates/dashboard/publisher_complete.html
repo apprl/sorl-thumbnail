@@ -4,17 +4,28 @@
 {% block body-classes %}{% if analytics_identifier == 'Publisher' %}publisher-index-page{% else %}store-index-page{% endif %} index-page-complete{% endblock body-classes %}
 {% block full-body %}
 
-<div class="container center">
-    <h1>{% if analytics_identifier == 'Publisher' %}{% trans "Get an APPRL account" %}{% else %}{% trans "Thanks for your application!" %}{% endif %}</h1>
+<div class="background">
+    <div class="container">
+        <div class="body-header">
+            <div class="body-header-col-full">
+                <h1>{% if analytics_identifier == 'Publisher' %}{% trans "GET AN APPRL ACCOUNT" %}{% else %}{% trans "Thanks for your application!" %}{% endif %}</h1>
+            </div>
+        </div>
 
-    {% if analytics_identifier == 'Publisher' %}
-    <p>{% trans "Thank you for your application. Your next step now is to create an APPRL account." %}</p>
-    {% include 'registration/fragments/registration.html' %}
-    {% else %}
-    <p>{% trans "We will get in touch with you soon." %}</p>
-    {% endif %}
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="inner-content">
+                    {% if analytics_identifier == 'Publisher' %}
+                    <p>{% trans "Thank you for the application, your next step now is to create your Apprl account." %}</p>
+                    {% include 'registration/fragments/registration.html' %}
+                    {% else %}
+                    <p>{% trans "We will soon get in touch with you." %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
 <script type="text/javascript">
   ga('send', 'event', '{{ analytics_identifier }}', 'Signup', '{{ request.session.index_complete_info }}');
   var _gaq = _gaq || [];

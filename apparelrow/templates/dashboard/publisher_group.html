@@ -3,7 +3,7 @@
 {% load static from staticfiles %}
 
 {% block extra-title %}{% trans "Publisher" %} | {% endblock %}
-{% block extra-scripts %}
+{% block 'extra-scripts' %}
     <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
     <script type='text/javascript'>

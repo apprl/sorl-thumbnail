@@ -7,7 +7,6 @@ App.Views.FilterProduct =  Backbone.View.extend({
         'click input[name="q"]': 'filter',
         'keyup input[name="q"]': 'timed_filter',
         'click #product-filter-gender a': 'filter_gender',
-        'click #product-filter-gender-2 a': 'filter_gender',
         'click .btn-show-filters': 'toggle_filters'
     },
 
@@ -49,7 +48,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
 
         this.$el.find('li#product-filter-gender-2').on('click', 'a', function(e) {
              $(this).next().toggle();
-             //$(this).find('.glyphicon').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-up');
+             $(this).find('.glyphicon').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-up');
         });
 
         this.render();

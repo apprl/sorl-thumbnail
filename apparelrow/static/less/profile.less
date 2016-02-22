@@ -1,0 +1,220 @@
+
+.profile-welcome {
+    background-color: #ffffff;
+    .panel-body, .pagination, footer, .navbar-nav-main, .navbar-nav-login, .navbar-form {
+        display: none;
+    }
+    p {
+        margin-bottom: 30px;
+    }
+}
+
+.profile-welcome-complete {
+    background: #000000 url('../images/bg_bw4_lg.jpg') no-repeat center top;
+    #content-container {
+        background-color: transparent;
+    }
+    .body-header {
+        color: #ffffff;
+    }
+    .background {
+        min-height: 400px;
+    }
+    .btn-block {
+        display: table;
+        width: 100%;
+        height: 140px;
+        text-align: center;
+        white-space: normal;
+        margin-bottom: 15px;
+        > span {
+            font-size: 20px;
+            display: table-cell;
+            vertical-align: middle;
+            padding: 0 10px;
+        }
+    }
+}
+
+//
+// User medium template styling
+// ----------------------------------------------------------------------------
+
+.user-medium {
+    margin-bottom: 30px;
+    background-color: #eeeeee;
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+    .panel-heading {
+        background-color: transparent;
+        border: 0;
+        padding: 10px;
+        .btn-follow-you {
+            display: none;
+        }
+    }
+    .media-heading {
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        a {
+            color: #000000;
+            font-size: 14px;
+        }
+    }
+    .panel-body {
+        background-color: #eeeeee;
+        padding: 10px;
+        ul {
+            li:nth-child(1) {
+                /*padding-right: 0;*/
+                padding-right: 5px;
+                padding-bottom: 5px;
+            }
+            li:nth-child(2) {
+                /*padding-left: 0;*/
+                padding-left: 5px;
+                padding-bottom: 5px;
+            }
+            li:nth-child(3) {
+                /*padding-right: 0;*/
+                padding-right: 5px;
+                padding-top: 5px;
+                /*img {*/
+                    /*border-bottom-left-radius: 4px;*/
+                /*}*/
+            }
+            li:nth-child(4) {
+                /*padding-left: 0;*/
+                padding-left: 5px;
+                padding-top: 5px;
+                /*img {*/
+                    /*border-bottom-right-radius: 4px;*/
+                /*}*/
+            }
+        }
+    }
+}
+
+//
+// Profile page styling
+// ----------------------------------------------------------------------------
+
+.discover-list-page, .profile-looks {
+    .alphabet {
+        font-size: 14px;
+        border-bottom: 3px solid #000000;
+        padding-bottom: 5px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        color: #333333;
+        li {
+            padding-left: 2px;
+            padding-right: 2px;
+            &:first-child {
+                padding-left: 0;
+            }
+        }
+        li a {
+            padding: 5px;
+            color: @light_gray_color;
+            &.selected {
+                color: #000000;
+            }
+            &:first-child {
+                padding-left: 0;
+            }
+        }
+    }
+    .alphabet.topmodel {
+        font-size: 23px;
+        font-weight: 700;
+        text-transform: none;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #000000;
+        margin-bottom: 15px;
+        margin-top: 15px;
+        color: #333333;
+        @media (max-width: @screen-xs-max) {
+          font-size: 18px;
+          /*margin-top: 0;*/
+        }
+    }
+}
+
+.discover-list > .col-discover-item {
+    .make-sm-column(12);
+    @media (min-width: @screen-tablet) {
+        .make-sm-column(6);
+    }
+    @media (min-width: @screen-desktop) {
+        .make-sm-column(4);
+    }
+    @media (min-width: @screen-lg-desktop) {
+        .make-sm-column(3);
+    }
+}
+
+//
+// Profile page header
+// ----------------------------------------------------------------------------
+
+.profile-page .profile-header {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    h1 {
+        .body-header-h1;
+        margin-top: 0;
+        padding-bottom: 10px;
+    }
+    .btn-follow, .btn-unfollow, .btn-create-shop {
+        display: inline-block;
+    }
+    .description {
+        margin-top: 10px;
+        @media (max-width: @screen-xs-max) {
+            text-align: center;
+        }
+    }
+    #profile-image {
+        text-align: center;
+        position: relative;
+        margin-bottom: 10px;
+        img {
+            z-index: 1;
+            margin: 0 auto;
+        }
+        form {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 2;
+        }
+        .btn-edit, .btn-cancel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            margin-top: 0;
+        }
+    }
+    .profile-content { text-align: center; }
+    .profile-content .btn { vertical-align: text-bottom; }
+    @media (min-width: @screen-tablet) {
+        .profile-content { text-align: left; }
+    }
+    .profile-navigation > div > ul {
+        .body-header-ul;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: block;
+        li {
+            padding-right: 10px;
+            padding-left: 0;
+            padding-bottom: 10px;
+        }
+    }
+}

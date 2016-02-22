@@ -4,28 +4,28 @@
 {% block body-classes %}publisher-referral-page{% endblock body-classes %}
 {% block body %}
 
-    <h1>{% trans "Invite & Earn" %}</h1>
+    {% include 'dashboard/body_header.html' %}
 
-    <h2>{% trans "Earn money by inviting publishers and bloggers." %}</h2>
+    <h2>{% trans "Earn money by inviting publishers/bloggers" %}</h2>
     <p>{% blocktrans %}
         As one of our top members, we want to reward you when inviting other bloggers/publishers to APPRL, by just
-        entering their e-mail addresses and sending invites below. Moreover, every blogger you invite gets €20 on their
-        APPRL account to start with!{% endblocktrans %}
+        entering their e-mail addresses and sending invites below. Moreover, every blogger you invite gets €50 on their
+        Apprl account to start with!{% endblocktrans %}
     </p>
 
     <p>
     <strong>{% trans "This is how it works" %}</strong>
-    <ol>
-        <li>1. {% trans "Send invites to bloggers using the form or link below" %}</li>
-        <li>2. {% trans "Every blogger that joins Apprl via the link in your invite will instantly get €20 on their Apprl account" %}</li>
-        <li>3. {% blocktrans %}You will then make 2-4&#37; of all sales the person you have invited generates for a 6 month period without any effort at all{% endblocktrans %}</li>
+    <ol class="list-left-margin">
+        <li>{% trans "Send invites to bloggers using the form or link below" %}</li>
+        <li>{% trans "Every blogger that joins Apprl via the link in your invite will instantly get €50 on their Apprl account" %}</li>
+        <li>{% blocktrans %}You will then make 2-4&#37; of all sales the person you have invited generates for a 6 month period without any effort at all{% endblocktrans %}</li>
     </ol>
     </p>
 
     <div class="row referral-row">
         <div class="col-md-8 col-md-offset-2">
             <div class="referral-link-container box">
-                <h4>{% trans "Invite by e-mail" %}</h4>
+                <h4>{% trans "Invite by e-mail:" %}</h4>
                 {% if messages %}
                     {% for message in messages %}
                         <p>{{ message }}</p>
@@ -34,31 +34,47 @@
                 {% endif %}
                 <form method="POST" action="{% url 'dashboard-referral-mail' %}">
                     {% csrf_token %}
-                    <textarea rows="3" name="emails" placeholder="{% trans "Add e-mails, separated with comma" %}"></textarea>
-                    <button type="submit" class="btn btn-primary center">{% trans "SEND" %}</button>
+                    <textarea class="form-control" rows="3" name="emails"
+                              placeholder="{% trans "Add e-mails, separated with comma" %}"></textarea>
+                    <button type="submit" class="btn btn-primary btn-block">{% trans "SEND" %}</button>
                 </form>
-                <p>{% trans "Write addresses like this:<br><i>email1@example.com</i>, <i>email2@example.com</i>, ..." %}</p>
+                <p>{% trans "Write addresses like this:<br>email1@example.com, email2@example.com, ..." %}</p>
             </div>
         </div>
     </div>
     <div class="row referral-row">
         <div class="col-md-8 col-md-offset-2">
             <div class="referral-link-container">
-                <h4>{% trans "Or invite by sharing your invitation link" %}</h4>
-                <input onFocus="this.select()" onMouseUp="return false" type="text" class="center" value="{{ request.user.get_referral_domain_url }}">
+                <h4>{% trans "Or invite by sharing your invitation link:" %}</h4>
+                <input onFocus="this.select()" onMouseUp="return false" type="text" class="form-control"
+                       value="{{ request.user.get_referral_domain_url }}">
+
                 <p>{% trans "You also can copy and share this link in a direct message, in an e-mail, text message or any other way if you want to make it more personal." %}</p>
             </div>
         </div>
     </div>
 
+    {% comment %}
+    <p><strong>{% trans "This is how it works:" %}</strong></p>
+    <ol>
+        <li>{% trans "Share your invitation link with the person you wish to invite and ask them to click it and apply to APPRL." %}</li>
+        <li>{% trans "For every publisher/blogger that signs up to APPRL via your invitation link, they will become a “referral publisher” to you for 6 months." %}</li>
+        {% url 'dashboard' as dashboard_url %}
+        <li>{% blocktrans with dashboard_url=dashboard_url %}<strong>
+            During these 6 months, you will make half of what the publisher/blogger you have invited make</strong>. For
+            example, if they make €20 on one sale, you make €10. You can track how much you earn under
+            <a href="{{ dashboard_url }}">your statistics</a>.{% endblocktrans %}</li>
+    </ol>
+
+    <br>{% endcomment %}
     <p><strong>{% trans "The following have applied to Apprl via your link:" %}</strong></p>
-    <ul>
+    <ul class="list-unstyled">
         {% for referral in referrals %}
-        <li><a href="{{ referral.get_absolute_url }}">{{ referral.display_name }}</a> -
-            {% blocktrans with date_joined=referral.date_joined|date:"d F Y" referral_end=referral.referral_partner_parent_date|date:"d F Y" %}
-                Signed up {{ date_joined }}, your referral period ends {{ referral_end }}{% endblocktrans %}</li>
+            <li><a href="{{ referral.get_absolute_url }}">{{ referral.display_name }}</a> -
+                {% blocktrans with date_joined=referral.date_joined|date:"d F Y" referral_end=referral.referral_partner_parent_date|date:"d F Y" %}
+                    Signed up {{ date_joined }}, your referral period ends {{ referral_end }}{% endblocktrans %}</li>
         {% empty %}
-        <li>{% trans "None so far." %}</li>
+            <li>{% trans "None so far." %}</li>
         {% endfor %}
     </ul>
 

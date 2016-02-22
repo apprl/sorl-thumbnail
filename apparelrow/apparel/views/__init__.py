@@ -4,8 +4,6 @@ import json
 import datetime
 from apparelrow.profile.models import NotificationEvent
 from django.http.response import HttpResponseNotAllowed
-import itertools
-from django.views.generic import DetailView
 import os.path
 import string
 import urllib
@@ -19,7 +17,6 @@ from solrq import Q as SQ
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
-from django.http.response import HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Count, get_model
 from django.template import RequestContext, loader
@@ -30,13 +27,17 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
-from django.views.generic.base import RedirectView, TemplateView
+from django.views.generic.base import RedirectView
 from django.utils import translation, timezone
 from django.utils.encoding import smart_unicode, smart_str
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
 
 from localeurl.views import change_locale
+
+from apparelrow.profile.models import Follow
+from apparelrow.profile.utils import get_facebook_user
+from apparelrow.profile.notifications import process_like_look_created
 
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
@@ -45,17 +46,12 @@ from apparelrow.apparel.models import Look, LookLike, ShortProductLink, ShortSto
 from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives, get_available_brands
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
-    select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list, get_location, get_external_store_commission, \
-    get_availability_text, get_location_warning_text
+    select_from_multi_gender, JSONResponse, JSONPResponse, get_external_store_commission, get_availability_text, \
+    get_location_warning_text
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
+
 from apparelrow.activity_feed.views import user_feed
-from apparelrow.dashboard.views import SignupForm
-from apparelrow.profile.forms import RegisterFormSimple
-from apparelrow.profile.models import Follow
-from apparelrow.profile.utils import get_facebook_user
-from apparelrow.profile.notifications import process_like_look_created
-from apparelrow.profile.models import NotificationEvent
-from apparelrow.profile.tasks import mail_managers_task
+
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
 from pysolr import Solr
@@ -372,107 +368,6 @@ def get_product_from_slug(slug, **kwargs):
         raise Http404("No Product matches the given query.")
     return product
 
-
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = 'apparel/product_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ProductDetailView, self).get_context_data(**kwargs)
-        product = self.object
-        is_liked = False
-        request = self.request
-        if request.user.is_authenticated():
-            is_liked = ProductLike.objects.filter(user=request.user, product=product, active=True).exists()
-
-        looks_with_product = Look.published_objects.filter(user__is_hidden=False,
-                                                           components__product=product).distinct().order_by('-modified')[:2]
-        looks_with_product_count = Look.published_objects.filter(user__is_hidden=False,
-                                                                 components__product=product).distinct().count()
-        # Likes
-        likes = product.likes.filter(active=True, user__is_hidden=False).order_by('modified').select_related('user')
-        regular_likes = likes.filter(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
-        partner_likes = likes.exclude(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
-        # Full image url
-        try:
-            product_full_image = request.build_absolute_uri(
-                get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
-        except IOError:
-            logging.error('Product id %s does not have a valid image on disk' % (product.pk,))
-            raise Http404
-        # Full brand url
-        product_brand_full_url = ''
-        if product.manufacturer and product.manufacturer.user:
-            product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
-
-        mlt_body = u'{product_name} {manufacturer_name} {colors} {categories}'.format(product_name=product.product_name,
-                                                                                     manufacturer_name=product.manufacturer.name,
-                                                                                     colors=u", ".join(product.colors),
-                                                                                     categories=u", ".join([x.name for x in product.categories]))
-        alternative, alternative_url = more_alternatives(product, get_location(request), 9)
-
-        referral_sid = request.GET.get('sid', 0)
-        try:
-            sid = int(referral_sid)
-        except (TypeError, ValueError, AttributeError):
-            sid = 0
-
-        # Get the store commission
-        earning_cut = product.get_product_earning(request.user)
-        # Cost per click
-        default_vendor = product.default_vendor
-        cost_per_click = 0
-        if default_vendor and default_vendor.vendor.is_cpc:
-            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
-            click_cut = cut * publisher_cut
-            earning_cut = click_cut
-            try:
-                cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
-            except get_model('dashboard', 'ClickCost').DoesNotExist:
-                logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
-                    product.default_vendor, product.product_name))
-
-        # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
-        vendor_markets = None
-        if default_vendor:
-            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
-
-            # Calculate cost per click and earning cut
-            cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
-            earning_cut = get_earning_cut(request.user, default_vendor.vendor, product)
-
-        availability_text = get_availability_text(vendor_markets)
-        warning_text = get_location_warning_text(vendor_markets, request.user, "product")
-
-        context.update({
-            'object': product,
-            'is_liked': is_liked,
-            'looks_with_product': looks_with_product,
-            'looks_with_product_count': looks_with_product_count,
-            'object_url': request.build_absolute_uri(),
-            'more_like_this': more_like_this_product(mlt_body, product.gender, get_location(request), 9),
-            'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
-            'product_full_image': product_full_image,
-            'product_brand_full_url': product_brand_full_url,
-            'likes': regular_likes,
-            'partner_likes': partner_likes,
-            'referral_sid': referral_sid,
-            'alternative': alternative,
-            'alternative_url': alternative_url,
-            'earning_cut': earning_cut,
-            'cost_per_click': cost_per_click,
-            'has_share_image': True,
-            'availability_text': availability_text,
-            'warning_text': warning_text
-        })
-        return context
-
-    def get_object(self, **kwargs):
-        local_kwargs = {'published': True, 'gender__isnull': False}
-        slug = self.kwargs.get("slug")
-        return get_product_from_slug(slug, **local_kwargs)
-
-@DeprecationWarning
 def product_detail(request, slug):
     kwargs = {'published': True, 'gender__isnull': False}
     product = get_product_from_slug(slug, **kwargs)
@@ -505,14 +400,12 @@ def product_detail(request, slug):
         product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
 
     # More like this body
-    mlt_body = u'{product_name} {manufacturer_name} {colors} {categories}'.format(product_name=product.product_name,
-                                                                                     manufacturer_name=product.manufacturer.name,
-                                                                                     colors=u", ".join(product.colors),
-                                                                                     categories=u", ".join([x.name for x in product.categories]))
+    mlt_body = '%s %s %s %s' % (product.product_name, product.manufacturer.name, ', '.join(product.colors),
+                                ', '.join([x.name for x in product.categories]))
 
     # More alternatives
     # alternative = get_product_alternative(product)
-    alternative, alternative_url = more_alternatives(product, get_location(request), 9)
+    alternative, alternative_url = more_alternatives(product, request.session.get('location', 'ALL'), 9)
 
     # Referral SID
     referral_sid = request.GET.get('sid', 0)
@@ -546,7 +439,7 @@ def product_detail(request, slug):
             'looks_with_product': looks_with_product,
             'looks_with_product_count': looks_with_product_count,
             'object_url': request.build_absolute_uri(),
-            'more_like_this': more_like_this_product(mlt_body, product.gender, get_location(request),
+            'more_like_this': more_like_this_product(mlt_body, product.gender, request.session.get('location', 'ALL'),
                                                      9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
             'product_full_image': product_full_image,
@@ -885,7 +778,7 @@ def look_list(request, search=None, contains=None, gender=None):
     view = request.GET.get('view', 'all')
     profile = request.user
     is_authenticated = request.user.is_authenticated()
-    hide_header = False
+
     if search:
         if not gender or gender == 'A':
             gender_field = 'gender:(U OR M OR W)'
@@ -910,7 +803,6 @@ def look_list(request, search=None, contains=None, gender=None):
                     '-created')
     elif contains:
         queryset = queryset.filter(components__product__slug=contains).distinct()
-        hide_header = True
     else:
         queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
 
@@ -929,94 +821,9 @@ def look_list(request, search=None, contains=None, gender=None):
         'current_page': paged_result,
         'next': request.get_full_path(),
         'gender': gender,
-        'hide_header': hide_header
     })
 
 
-class LookDetailView(DetailView):
-    model = Product
-    template_name = 'apparel/look_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(LookDetailView, self).get_context_data(**kwargs)
-        look = self.object
-        request = self.request
-
-        if not look.published and look.user != self.request.user:
-            raise Http404()
-
-        is_liked = False
-        if request.user.is_authenticated():
-            is_liked = LookLike.objects.filter(user=request.user, look=look, active=True).exists()
-
-        looks_by_user = Look.published_objects.filter(user=look.user).exclude(pk=look.id).order_by('-modified')[:4]
-
-        look_created = False
-        if 'look_created' in request.session:
-            look_created = request.session['look_created']
-            del request.session['look_created']
-
-        look_saved = False
-        if 'look_saved' in request.session:
-            if request.user.fb_share_create_look:
-                if look.display_components.count() > 0:
-                    facebook_user = get_facebook_user(request)
-                    if facebook_user:
-                        facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'create', 'look',
-                                                  request.build_absolute_uri(look.get_absolute_url()))
-            else:
-                look_saved = request.session['look_saved']
-
-            del request.session['look_saved']
-
-        # Likes
-        likes = look.likes.filter(active=True, user__is_hidden=False).order_by('-modified').select_related('user')
-
-        # Base url
-        base_url = request.build_absolute_uri('/')[:-1]
-
-        wrapper_element = {'width': '100', 'height': '100'}
-
-        # Components
-        components = []
-        if look.display_with_component == 'C':
-            components = look.collage_components.select_related('product')
-            # look image is responsible for scaling the look view. Since the look width and height might not be different we need to rescale
-            wrapper_element = {'width': '96', 'height': '96'}
-        elif look.display_with_component == 'P':
-            components = look.photo_components.select_related('product')
-
-        for component in components:
-            component.style_embed = component._style(min(694, look.image_width) / float(look.width))
-        # Build static image if it is missing
-        if not look.static_image:
-            build_static_look_image(look.pk)
-            look = get_model('apparel', 'Look').objects.get(pk=look.pk)
-
-        context.update({
-                'object': look,
-                'components': components,
-                'looks_by_user': looks_by_user,
-                'tooltips': True,
-                'object_url': request.build_absolute_uri(look.get_absolute_url()),
-                'look_full_image': request.build_absolute_uri(look.static_image.url),
-                'look_saved': look_saved,
-                'look_created': look_created,
-                'likes': likes,
-                'base_url': base_url,
-                'is_liked': is_liked,
-                'wrapper_element': wrapper_element,
-                'resolution': '{width}x{height}'.format(width=look.width, height=look.height,),
-                'has_share_image': True
-            })
-        return context
-
-
-    def get_object(self, **kwargs):
-        slug = self.kwargs.get("slug")
-        return get_object_or_404(get_model('apparel', 'Look'), slug=slug)
-
-@DeprecationWarning
 def look_detail(request, slug):
     look = get_object_or_404(get_model('apparel', 'Look'), slug=slug)
     # Only show unpublished looks to creator
@@ -1451,74 +1258,18 @@ def user_list(request, gender=None, brand=False):
 # Index page for unauthenticated users
 #
 
-class PublisherView(TemplateView):
-    """
-    Class based view for index page
-    """
-    template_name = "apparel/publisher.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(PublisherView, self).get_context_data(**kwargs)
-        context['featured'] = get_featured_activity_today()
-        context['form'] = SignupForm(is_store_form=True)
-        return context
-
-    def get(self, request, gender=None, *args, **kwargs):
-        if request.user.is_authenticated():
-            # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
-            if gender == 'none':
-                gender = None
-
-            # Hiding this for the time being
-            #if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
-                #return onboarding(request)
-            #    return OnBoardingView.as_view()(self.request)
-                # Todo: Pretty sure this is intended to be a redirect?
-                #return HttpResponseRedirect(reverse("onboarding"))
-            #else:
-            return user_feed(request, gender=gender)
-
-        return render(request, self.template_name, self.get_context_data())
-
-    def post(self, request, gender=None, *args, **kwargs):
-        form = SignupForm(request.POST, is_store_form=True)
-        if form.is_valid():
-            # Save name and blog URL on session, for Google Analytics
-            request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
-            instance = form.save(commit=False)
-            instance.store = True
-            instance.save()
-
-            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
-                    u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
-
-            return HttpResponseRedirect(reverse('index-store-complete'))
-        else:
-            context = self.get_context_data()
-            context.update({"form":form})
-        return render(request, self.template_name, context)
-
-# Deprecated, use PublisherView instead.
-@DeprecationWarning
 def index(request, gender=None):
     if request.user.is_authenticated():
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
         if gender == 'none':
             gender = None
+        return user_feed(request, gender=gender)
 
-        if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
-            return onboarding(request)
-        else:
-            return user_feed(request, gender=gender)
-
-    return render(request, 'apparel/publisher.html', {'featured': get_featured_activity_today()})
+    return render(request, 'apparel/index.html', {'featured': get_featured_activity_today()})
 
 
 def about(request):
     return render(request, 'apparel/about.html')
-
-def contact(request):
-    return render(request, 'apparel/contact.html')
 
 
 def jobs(request):
@@ -1527,94 +1278,6 @@ def jobs(request):
 
 def founders(request):
     return render(request, 'apparel/founders.html')
-
-@DeprecationWarning
-def community(request):
-    return render(request, 'apparel/community.html')
-
-class CommunityFormView(TemplateView):
-    template_name = 'apparel/community.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CommunityFormView, self).get_context_data(**kwargs)
-        context.update({"form": RegisterFormSimple()})
-        return context
-
-    #def get(self, request, *args, **kwargs):
-    #    form = SignupForm(is_store_form=True)
-    #    return render(request, self.template_name, {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = RegisterFormSimple(request.POST)
-        if form.is_valid():
-            request.session['register_email'] = form.cleaned_data["email"]
-            request.session['register_password'] = form.cleaned_data["password"]
-            return HttpResponseRedirect(reverse('auth_register_email'))
-        return render(request, self.template_name, {'form': form})
-
-def on_boarding_follow_users(user, to_follow_list):
-    for row in to_follow_list:
-        follow_object, created = Follow.objects.get_or_create(user=user, user_follow=row)
-        follow_object.active = True
-        follow_object.save()
-
-def get_most_popular_user_list(users_amount=20, gender=None):
-    user_model = get_user_model()
-
-     # Get proportions for Brands, Users same gender and Users opposite gender to pick
-    brands_amount = users_amount * decimal.Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_BRANDS_PROPORTION)
-    other_gender_amount = users_amount * decimal.Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_OPPOSITE_GENDER_PROPORTION)
-    same_gender_amount = users_amount * decimal.Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_SAME_GENDER_PROPORTION)
-
-    # Pick brands
-    brand_list = user_model.objects.filter(is_brand=True).order_by('-popularity')[:brands_amount]
-
-    if gender:
-        opposite_gender = 'M' if gender == 'W' else 'W'
-        opposite_gender_list = user_model.objects.filter(gender=opposite_gender, is_brand=False).order_by('-popularity')[:other_gender_amount]
-        same_gender_list = user_model.objects.filter(gender=gender, is_brand=False).order_by('-popularity')[:same_gender_amount]
-        user_list = list(itertools.chain(brand_list, opposite_gender_list, same_gender_list))
-    else:
-        no_brands_list = user_model.objects.filter(is_brand=False).order_by('-popularity')[:other_gender_amount+same_gender_amount]
-        user_list = list(itertools.chain(brand_list, no_brands_list))
-
-    return user_list
-
-
-class OnBoardingView(TemplateView):
-    template_name = 'apparel/onboarding.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(OnBoardingView, self).get_context_data(**kwargs)
-        gender = self.request.user.gender
-        users_amount = settings.APPAREL_WELCOME_AMOUNT_FOLLOWING_USERS
-        user_list = get_most_popular_user_list(users_amount, gender)
-        on_boarding_follow_users(self.request.user, user_list)
-        context.update({
-                        'user_list': shuffle_user_list(user_list)
-                   })
-        return context
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        response = render(request, self.template_name, context)
-        response.delete_cookie(settings.APPAREL_WELCOME_COOKIE)
-        return response
-
-@DeprecationWarning
-def onboarding(request):
-    gender = request.user.gender
-    users_amount = settings.APPAREL_WELCOME_AMOUNT_FOLLOWING_USERS
-    user_list = get_most_popular_user_list(users_amount, gender)
-    on_boarding_follow_users(request.user, user_list)
-    random_user_list = shuffle_user_list(user_list)
-    context = {'is_welcome_page': True,
-               'user_list': random_user_list
-               }
-    response = render(request, 'apparel/onboarding.html', context)
-    response.delete_cookie(settings.APPAREL_WELCOME_COOKIE)
-
-    return response
 
 
 #

@@ -4,60 +4,64 @@
 {% block body-classes %}publisher-commissions{% endblock body-classes %}
 {% block body %}
 
-<div class="body-header">
-    <h1>{% trans "Store Commissions" %}</h1>
-</div>
+    {% include 'dashboard/body_header.html' %}
 
-<table class="table table-striped">
-    <thead class="hidden-xs">
-        <tr>
-            <th>{% trans "Store" %}</th>
-            <th>{% trans "Your earning" %}</th>
-            <th>{% trans "Link to store" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for store in stores %}
-        <tr>
-            <td><a href="{% url 'shop' %}?store={{ store.vendor_pk }}">{{ store.vendor_name }}</a></td>
-            <td>
-                {{ store.currency }} {{ store.amount }}
-                {% if store.type == "is_cpc" %}
-                    {% trans " per click" %}
-                {% elif store.type == "is_cpo" %}
-                    {% trans " per sale" %}
-                {% endif %}
-            </td>
-            <td>{% if store.link %}<a class="btn btn-outline inverted" data-store="{{ store.store_pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td>{% trans "Empty" %}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="row">
+        <div class="col-sm-12">
 
-<p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{% trans "Store" %}</th>
+                        <th>{% trans "Your earning" %}</th>
+                        <th>{% trans "Link to store" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for store in stores %}
+                    <tr>
+                        <td><a href="{% url 'shop' %}?store={{ store.vendor_pk }}">{{ store.vendor_name }}</a></td>
+                        <td>
+                            {{ store.currency }} {{ store.amount }}
+                            {% if store.type == "is_cpc" %}
+                                {% trans " per click" %}
+                            {% elif store.type == "is_cpo" %}
+                                {% trans " per sale" %}
+                            {% endif %}
+                        </td>
+                        <td>{% if store.link %}<a class="btn btn-primary" data-store="{{ store.store_pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td>{% trans "Empty" %}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-<div class="modal fade" id="modal_store_link" tabindex="-1"></div>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#modal_store_link').on('hidden.bs.modal', function () {
-            $(this).removeData('bs.modal');
+            <p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_store_link" tabindex="-1"></div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#modal_store_link').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+            });
         });
-    });
-    $("a[data-target=#modal_store_link]").click(function(event) {
-        event.preventDefault();
-        var store_pk = $(this).attr("data-store");
-        var target = href="{% url 'dashboard-commissions-popup' 999 %}";
-        target = target.replace(999, store_pk);
-        $("#modal_store_link").load(target, function(){
-            $('#modal_store_link').modal('show');
+        $("a[data-target=#modal_store_link]").click(function(event) {
+            event.preventDefault();
+            var store_pk = $(this).attr("data-store");
+            var target = href="{% url 'dashboard-commissions-popup' 999 %}";
+            target = target.replace(999, store_pk);
+            $("#modal_store_link").load(target, function(){
+                $('#modal_store_link').modal('show');
+            });
         });
-    });
-</script>
+    </script>
 
 {% endblock %}

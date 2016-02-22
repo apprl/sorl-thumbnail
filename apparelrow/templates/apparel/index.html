@@ -1,0 +1,506 @@
+{% extends 'base.html' %}
+{% load i18n compressed %}
+{% load static from staticfiles %}
+
+{% block body-scripts %}
+<script type="text/javascript">
+    $('.feed-item .featured-feed-item a').attr({'href': '#', 'data-target': '#modal_become_member', 'data-toggle': 'modal'});
+</script>
+{% endblock %}
+{% block extra-styles %}
+    {% compressed_css 'homepage' %}
+    {% compressed_css 'normalize' %}
+{% endblock extra-styles %}
+{% block body-classes %}index frontpage{% endblock %}
+{% block full-body %}
+
+
+
+<!-- Home: Header -->
+<div class="container-fluid apprl-top apprl-content"> <!-- apprl-top only required for first container -->
+
+    <div class="row apprl-home-header apprl-header" style="visibility: hidden;">
+        <div class="col-xs-12 apprl-header-wrap">
+            <div class="container apprl-header-measurement"> <!-- Reference block for jQuery calculations, minimizes code -->
+                <div class="row">
+                    <div class="col-lg-8">
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-8 apprl-header-left">
+                        <div class="row apprl-header-left-row">
+                            <div class="col-xs-12">
+                                <h1 class="apprl-c-light apprl-maintitle">{% trans "SHOP THE STYLE OF YOUR" %} <br />{% trans "FAVOURITE bloggers, MAGAZINES, TV-SHOWS AND BRANDS." %}</h1>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 apprl-link-wrap">
+                                        <a class="apprl-circle-link apprl-bg-primary" data-toggle="modal" data-target="#modal_become_member">
+                                            <h3 class="apprl-c-light">{% trans "Join" %}</h3>
+                                        </a>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 apprl-facebook">
+                                        <h4 id="apprl-scrollfromheader" class="apprl-c-light"><span>{% trans "or" %} </span> <b>{% trans "Learn more" %}</b></h4>
+                                        <div class="facepile-container">
+                                            <div class="hidden-xs fb-facepile" data-app-id="{{ FACEBOOK_APP_ID }}" data-max-rows="1" data-colorscheme="dark" data-size="medium" data-show-count="true"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 apprl-header-right">
+                        <div class="row apprl-header-right-row">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-primary apprl-publisher-puff apprl-clickable">
+                                <h3 class="apprl-c-dark">{% trans "Are you a blogger / digital publisher?" %}</h3>
+                                <h4 class="apprl-c-light">{% trans "Create great content and earn money using our tools" %}</h4>
+                                <a href="{% url 'index-publisher' %}"></a>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 apprl-bg-darkgrey apprl-retailer-puff apprl-clickable">
+                                <h3 class="apprl-c-light">{% trans "Are you a retailer?" %}</h3>
+                                <h4 class="apprl-c-primary">{% trans "Increase your reach and drive sales through our network" %}</h4>
+                                <a href="{% url 'index-retailers' %}"></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /Home: Header -->
+
+<div class="container-fluid apprl-content" id="apprl-scrolltarget">
+    <div class="row">
+        <div class="col-xs-12 apprl-bloggers">
+            <h4 class="apprl-slash text-center">{% trans "GET INSPIRED BY MAGAZINES, TV-SHOWS & BLOGGERS" %}</h4>
+            <p class="text-center">{% trans "Online magazines such as Elle & Café, blog networks like Metro Mode, TV-shows such as Project Runway & Top Model as well as independent bloggers - They all share the products they love using Apprl." %}<br/></p>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="col-xs-12 apprl-fullcol">
+            <div class="apprl-responsiveheight">
+                <div class="inner">
+                    <div class="apprl-slider apprl-slider-blocks">
+                        <div class="slider">
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style=" opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/TessMontgomery_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span sty>Tess Montgomery</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/ProjectRunway_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Project Runway</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/ProjectRunway_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/LouisNicolasDarbon_ApprlHome.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Louis-Nicolas Darbon</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/TopModel_Apprl_Front.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Top Model Sweden</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/TV3_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/CarolineSandstrom_Apprl_Front.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Caroline Sandström</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/ElinKling_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Elin Kling</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/MartinHansson_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Martin Hansson</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/MetroMode_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/Celine_Aaagard_Apprl_Front.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Celine Aagaard</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/StyleMagBadge.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/EmmaElwin_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Emma Elwin</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item apprl-bg-dark">
+                                <div class="image" style="opacity:0.8; background-image:url({{ STATIC_URL }}images/publishers/ElzanaKadric_ApprlFront.png);"></div>
+                                <div class="text">
+                                    <div class="title">
+                                        <span>Elzana Kadric</span>
+                                    </div>
+                                    <div class="button">
+                                       <img src="{% static 'images/badges/TopModel_badge_apprl_home.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <a type="button" class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
+                {% trans "Shop their styles" %}
+            </a>
+        </div>
+    </div>
+</div>
+<!-- /Home: Bloggers -->
+
+<!-- Home: Brandgroup (dark background) -->
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="col-xs-12 apprl-brandgroup">
+            <h4 class="apprl-slash text-center">  {% trans "GET THE LATEST FROM YOUR FAVOURITE BRANDS AND RETAILERS" %} </h4>
+            <p class="text-center">{% trans "Discover fashion & beauty from the world’s best online retailers in one place, share them with your friends and save them to your profile to get alerts when the price drops." %}</p>
+            <div class="row apprl-brands">
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Net-A-Porter-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Asos-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Luisa-Viaroma-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Acne-Studios-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Mr-Porter-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Burberry-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/The-Outnet-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Alexander-Wang-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Nelly-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Saint-Laurent-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/Isabel-Marant-logo-Apprl-home.png' %}" />
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-4 apprl-brandimage">
+                    <img src="{% static 'images/retailers/GinaTricot-logo-Apprl-home.png' %}" />
+                </div>
+            </div>
+            <p class="text-center">
+                <a type="button" class="btn btn-info btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
+                    {% trans "Shop brands" %}
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+<!-- /Home: Brandgroup (dark background) -->
+
+<!-- Home: Create and share w/ slider -->
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="col-xs-12 apprl-create">
+            <h4 class="apprl-slash text-center"> {% trans "CREATE LOOKS FOR YOUR BLOG & SHARE WITH OUR COMMUNITY" %}</h4>
+            <p class="text-center">{% trans "Easily create interactive mood boards, tag your photos with products and share looks with your blog readers, your friends and the Apprl community." %}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="col-xs-12 apprl-fullcol">
+            <div class="apprl-responsiveheight">
+                <div class="inner">
+                    <div class="apprl-slider apprl-slider-items">
+                        <div class="slider">
+                            <img src="{% static 'images/looks/01-look-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/02-look-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/Celine-Aagard-look-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/look-apprl-home-IW.png' %}" />
+                            <img src="{% static 'images/looks/look-home-apprl-SW.png' %}" />
+                            <img src="{% static 'images/looks/look-home-kenzo.png' %}" />
+                            <img src="{% static 'images/looks/FilippaK-Emma-Elwin-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/Look-white-homepage-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/LQ25-Marina-Ballerina-look-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/03-look-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/LQ30-Marina-Ballerina-look-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/04-look-Apprl.png' %}" />
+                            <img src="{% static 'images/looks/Okra-Livia-Inkeri-Dimle-Look-Apprl-Home.png' %}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <a type="button" class="btn btn-default btn-lg" data-toggle="modal" href="#get-started" data-target="#modal_become_member">
+                {% trans "Create your look" %}
+            </a>
+        </div>
+    </div>
+</div>
+<!-- /Home: Create and share w/ slider -->
+
+<!-- Home: Our story -->
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="col-xs-12 apprl-story">
+            <div class="container">
+                <div class="col-xs-12">
+                    <div class="row apprl-storyinner">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
+                                    <h3 class="apprl-slash">{% trans "OUR STORY" %}</h3>
+                                    <p class="quote">“ {% trans "Our idea is to connect the best online retailers, bloggers, style makers and online magazines into a connected experience through smart & simple tools." %}” </p>
+                                </div>
+                                <div class="apprl-founders col-xs-12 col-sm-6 col-md-6 col-lg-7">
+                                    <img src="{% static 'images/story.png' %}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
+                            <p class="story">
+                                {% trans "Apprl was founded by Gustav Gisseldahl and Martin Landén who had the simple insight that shopping online is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that." %}
+                                <br /><a type="button" class="story-readmore btn btn-default btn-md" href="{% url 'about' %}">
+                                    {% trans "Read more" %}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Home: Our story -->
+
+<!-- Home: Featured in -->
+<div class="container-fluid apprl-content">
+    <div class="row">
+        <div class="container">
+            <div class="col-xs-12">
+                <h4 class="apprl-slash text-center"> {% trans "FEATURED IN" %}</h4>
+                <div class="row apprl-brands apprl-featured">
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/featured_logos/InternetWorld-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/featured_logos/DagensMedia-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/featured_logos/Resume-logo-Apprl-home.png' %}"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 apprl-brandimage">
+                        <img src="{% static 'images/featured_logos/ComputerSweden-logo-Apprl-home.png' %}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(window).load(function() {
+    //Function below
+    resizeapprlheader();
+    loadSliders();
+
+    //Clickable logic for divs containing inner links
+    $(".apprl-clickable").click(function(){
+         window.location=$(this).find("a").attr("href");
+         return false;
+    });
+
+    $(".imagelink").click(function(){
+         window.location=$(this).attr("href");
+         return false;
+    });
+
+    $('.apprl-scroll').click(function(){
+
+        $('html, body').animate({
+            scrollTop: $(".apprl-scrolltarget").offset().top
+        }, 1000);
+
+    });
+
+    });
+
+    //APPRL header logic rebuilt after first delivery of code (built 20141023), (modified 20141024, 20141030)
+    //This is used to create the header widths dynamically instead of complex CSS-logic in LESS files with values
+
+    //Set a value based on navbar margin left from auto css
+    //Function needs optimization by developer
+    function resizeapprlheader() {
+        //Set vars
+        var windowWidth = $(window).width();
+        var headerLeftWidth = $('.apprl-header-measurement .col-lg-8').css('width');
+        if(windowWidth <= 767) { //Responsive logic
+            var headerLeftWidth = 'auto';
+        } else if(windowWidth <= 1300) { //Responsive logic
+            var headerLeftWidth = parseInt(headerLeftWidth, 10) - 30;
+        }
+        //Step One: Calculate and change left side of the header
+        var headerMarginValue = $('.apprl-header-measurement .row').position().left;
+        if (headerMarginValue === 0) { //if misinterpreted as 0 (FF IE correction)
+            var headerMarginValue = $('.navbar .container').css('margin');
+            $('.apprl-header .apprl-header-left').css({
+                position: $('.navbar .container').css('position'),
+                margin: headerMarginValue,
+                width: headerLeftWidth
+            });
+        } else {
+            $('.apprl-header .apprl-header-left').css({
+                position: $('.navbar .container').css('position'),
+                marginLeft: headerMarginValue,
+                width: headerLeftWidth
+            });
+        }
+
+        //Correct the margin and values
+        $('.apprl-header .apprl-header-left').css('margin-right', 0);
+        $('.apprl-header .apprl-header-left').css('padding-right', 0);
+
+        //Step Two: calculate the heights if the right puffs and set
+        var homeHeaderHeight = $('.apprl-home-header .apprl-header-left').css('height');
+        var headerSlimHeight = $('.apprl-header-slim .apprl-header-left').css('height');
+        //Measure the left section height and use for the right puffs /2
+        var homeHeaderHalfHeight = parseInt(homeHeaderHeight, 10) * 0.5;
+        var headerSlimHalfHeight = parseInt(headerSlimHeight, 10) * 0.6;
+        if(windowWidth <= 767) {
+            var homeHeaderHalfHeight = 'auto';
+            var headerSlimHalfHeight = 'auto';
+            $('.apprl-header .apprl-header-left').css('margin-left', 0);
+        } else if(windowWidth <= 880) {
+            var headerSlimHalfHeight = parseInt(headerSlimHeight, 10);
+        } else if(windowWidth <= 1000) {
+            var headerSlimHalfHeight = parseInt(headerSlimHeight, 10) * 0.8;
+        }
+        //Set heights
+        $('.apprl-home-header .apprl-publisher-puff').css('height', homeHeaderHalfHeight);
+        $('.apprl-home-header .apprl-retailer-puff').css('height', homeHeaderHalfHeight);
+        $('.apprl-header-slim .apprl-publisher-puff').css('height', headerSlimHalfHeight);
+        $('.apprl-header-slim .apprl-retailer-puff').css('height', headerSlimHalfHeight);
+        $('.apprl-header').css('visibility', '');
+    }
+
+    function loadSliders() {
+        //Style is dictated in CSS/LESS
+        $('.apprl-slider-tools').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            navPrevSelector: $('.tools_prevButton'),
+            navNextSelector: $('.tools_nextButton'),
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-publishers').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            navPrevSelector: $('.publishers_prevButton'),
+            navNextSelector: $('.publishers_nextButton'),
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-blocks').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+        $('.apprl-slider-items').iosSlider({
+            scrollbar: false,
+            snapToChildren: true,
+            desktopClickDrag: true,
+            autoSlide: true,
+            infiniteSlider: true,
+        });
+    }
+
+    $(window).bind('resize', function(){
+        resizeapprlheader();
+    });
+
+    $(window).bind('orientationchange',function(e) {
+        resizeapprlheader();
+        loadSliders();
+    });
+</script>
+<script>
+$('#apprl-scrollfromheader').click(function(){ //Det elementet man klickar på
+    $('html, body').animate({ //Scrolla till målets avstånd från toppen av sidan
+        scrollTop: $("#apprl-scrolltarget").offset().top
+    }, 1000);
+});
+</script>
+{% endblock %}

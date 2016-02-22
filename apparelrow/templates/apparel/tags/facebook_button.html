@@ -5,5 +5,8 @@
     <input type="hidden" name="access_token" value="" />
     <input type="hidden" name="uid" value="" />
     {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-    <a class="btn btn-facebook{% if extra_class %} {{extra_class}}{% endif %}" href="#">{{ text }}</a>
+    <a class="btn btn-facebook{% if extra_class %} {{extra_class}}{% endif %}" href="#">
+        <i class="btn-facebook-icon"></i>
+        {{ text }}
+    </a>
 </form>

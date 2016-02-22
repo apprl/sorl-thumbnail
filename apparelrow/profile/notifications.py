@@ -56,17 +56,6 @@ def is_duplicate(name, recipient, sender, obj):
 
     return True
 
-def get_global_variables():
-    apprl_logo_url = retrieve_static_url("logo.png")
-    global_dict = { # values to merge into template
-                    'LOGOURL': apprl_logo_url,
-                    'FBICONURL': retrieve_static_url("icon-facebook.png"),
-                    'TWITTERICONURL': retrieve_static_url("icon-twitter.png"),
-                    'PINTERESTICONURL': retrieve_static_url("icon-pinterest.png"),
-                    'INSTAICONURL': retrieve_static_url("icon-instagram.png")
-                    }
-    return global_dict
-
 # TODO: should use display_name instead of first_name and last_name
 def notify_by_mail(users, notification_name, sender, extra_context=None):
     """
@@ -155,9 +144,15 @@ def notify_with_mandrill_template(users, notification_name, merge_vars):
     msg.template_content = {                        # Content blocks to fill in
         'EMPTY_BLOCK': "<a href='apprl.com/*|URL|*'>Hello there!</a>"
     }
+    apprl_logo_url = retrieve_static_url("logo.png")
 
-    global_dict = get_global_variables()
-    msg.global_merge_vars = global_dict
+    msg.global_merge_vars = {                       # values to merge into template
+        'LOGOURL': apprl_logo_url,
+        'FBICONURL': retrieve_static_url("icon-facebook.png"),
+        'TWITTERICONURL': retrieve_static_url("icon-twitter.png"),
+        'PINTERESTICONURL': retrieve_static_url("icon-pinterest.png"),
+        'INSTAICONURL': retrieve_static_url("icon-instagram.png")
+    }
 
     msg.global_merge_vars.update(merge_vars) #add specific parameters
     #development only

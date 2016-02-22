@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if request.user.is_authenticated %}
-<a class="btn btn-primary" href="{% url 'look-create' %}"><span class="plus"></span> {% trans "Create look" %}</a>
+<a class="btn btn-success" href="{% url 'look-create' %}">{% trans "+ Create look" %}</a>
 {% else %}
-<a data-toggle="modal" class="btn btn-success" href="#modal_create_look"><span class="plus"></span> {% trans "Create look" %}</a>
+<a data-toggle="modal" class="btn btn-success" href="#modal_create_look">{% trans "+ Create look" %}</a>
 {% endif %}
