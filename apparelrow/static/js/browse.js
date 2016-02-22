@@ -129,8 +129,8 @@ $(document).ready(function() {
 
     if (!!(window.history && history.pushState)) {
         $(document).on('click', '#product-gender a', function(e) {
-            var x = $('#menu').find('> ul > li > a[data-shop^="true"]');
-            var y = $('#search[data-search^="true"]');
+            var x = $('.navbar-nav-main > li > a[data-shop^="true"]');
+            var y = $('.navbar .navbar-form[data-search^="true"]');
             var gender = $(this).data('gender');
             if (gender == 'M') {
                 x.attr('href', x.attr('href').replace('women', 'men'));
@@ -265,7 +265,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.pagination a', function(e) {
         var $this = $(this);
-        $this.addClass('disabled hover').find('.status').text($this.data('loading-text'));
+        $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
         var page = parsePage($this);
         if (page) {
             fetchPage(page);
@@ -698,7 +698,7 @@ function updateEmbeddedProducts($list) {
 
 function renderProducts(products) {
     $('#product-list > .product-list').empty();
-    $('#product-list > h4').text(products.browse_text);
+    $('#product-list > h3').text(products.browse_text);
 
     renderPage(products);
 

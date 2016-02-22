@@ -3,15 +3,15 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span></span></button>
-            <h2 class="modal-title">{% trans "Embed look" %}</h2>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">{% trans "Embed look on your site / blog" %}</h4>
         </div>
         <div class="modal-body">
 
-            <p>{% trans "It's easy to embed a look on your blog / site. Enter your preferred format below, copy and paste the embed code (in HTML mode) into your blog / site." %}</p>
+            <p>{% trans "It's easy to embed a look on your blog/site. Enter your preferred format below, copy and paste the embed-code (In HTML-mode) into your blog/site." %}</p>
 
             <form id="embed_look_form" class="form">
-                <!--<div class="form-group">
+                <div class="form-group">
                     <label class="control-label" for="id_look_width">{% trans "Width" %}</label>
                     <div class="input-group">
                         <input id="id_look_width" type="text" name="width" class="form-control" placeholder="100">
@@ -23,73 +23,43 @@
                             </ul>
                         </div>
                     </div>
-                </div>-->
+                </div>
                 <div class="form-group">
-                    <label class="control-label" for="id_look_language">{% trans "Language & Currency" %}</label>
-                    <a href="#" class="info-toggler" data-target="info-language"><i class="fa fa-question-circle"></i></a>
-                    <span class="info-box" id="info-language">Select the language for your shop and the currency the product prices should be showed in.</span>
-                    <div class="select">
-                        <span><i class="fa fa-caret-down"></i></span>
-                        <select id="id_look_language" name="language">
+                    <label class="control-label" for="id_look_language">{% trans "Language" %}</label>
+                    <div class="controls">
+                        <select id="id_look_language" name="language" class="form-control">
                             {% for language in LANGUAGES %}
                             <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label><input type="checkbox" name="show_width" id="id_show_width" value="1"><span><i class="fa fa-check"></i></span>{% trans "Manually choose width" %}</label>
-                    <a href="#" class="info-toggler" data-target="info-width"><i class="fa fa-question-circle"></i></a>
-                    <span class="info-box" id="info-width">{% trans "By default, the shop automatically adapts to the width of the device/browser it is viewed with, but if you want you can manually specify an exact number of pixels for your shop." %}</span>
-                    <div id="width-collapsed" class="form-group" style="display:none;">
-                        <label class="control-label" for="id_width">{% trans "Width" %}</label>
-                        <input id="id_width" type="text" name="width" placeholder="1000">
-                        <span class="help-block">{% trans "( pixels )" %}</span>
-                    </div>
+                    <button class="btn btn-primary btn-block">{% trans "Show embed code" %}</button>
                 </div>
-                <div class="form-group">
-                    <button class="btn btn-primary btn-block center">{% trans "Get embed code" %}</button>
-                </div>
-                <div class="form-group">
+                <div class="form-group" style="display:none;">
                     <label class="control-label" for="id_look_embed_code">{% trans "Copy and paste this code (in HTML-mode) into your site/blog" %}</label>
-                    <textarea id="id_look_embed_code" rows="8" name="embed_code"></textarea>
+                    <textarea class="form-control" id="id_look_embed_code" rows="8" name="embed_code"></textarea>
                 </div>
             </form>
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-        function updateQueryStringParameter(uri, key, value) {
-            var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-            var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-            if (uri.match(re)) {
-                return uri.replace(re, '$1' + key + "=" + value + '$2');
-            } else {
-                return uri + separator + key + "=" + value;
-            }
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        } else {
+            return uri + separator + key + "=" + value;
         }
+    }
         $(document).ready(function() {
-        // Added on December 29
-        $('.info-toggler').click(function() {
-            $('#' + $(this).data('target')).toggleClass('active');
-            return false;
-        });
-
-        // Added on December 29
-        $('#id_show_width').on('click', function() {
-            if($(this).prop('checked')) {
-                $('#width-collapsed').show();
-            } else {
-                $('#width-collapsed').hide();
-                $('#id_width').val('');
-            }
-        });
-
         var width_type = '%';
 
         $('#width_dropdown a').on('click', function(e) {

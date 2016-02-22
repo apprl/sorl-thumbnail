@@ -47,4 +47,3 @@ tldextract==1.7.1
 factory-boy==2.5.2
 fake-factory==0.5.2
 solrq==0.0.4
-progressbar==2.3

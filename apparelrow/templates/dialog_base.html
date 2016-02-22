@@ -3,12 +3,16 @@
     <div class="modal-dialog {% block extra_modal_classes %}{% endblock %}">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">{% block modal_title %}{% endblock %}</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span></span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">{% block modal_title %}{% endblock %}</h4>
             </div>
             <div class="modal-body">
                 {% block modal_content %}{% endblock %}
-                {% block modal_footer %}{% endblock %}
+            </div>
+            <div class="modal-footer">
+                {% block modal_footer %}
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+                {% endblock %}
             </div>
         </div>
     </div>

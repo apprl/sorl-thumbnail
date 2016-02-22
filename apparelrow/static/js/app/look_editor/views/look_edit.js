@@ -20,7 +20,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
         this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
-
+        
         // Look editor popup
         this.look_edit_popup = new App.Views.LookEditPopup({parent_view: this});
 
@@ -83,7 +83,7 @@ App.Views.LookEdit = App.Views.WidgetBase.extend({
         if (external_look_type == 'photo') {
             var custom_link_view = new App.Views.CustomLinkView();
 
-            window.filter_product_view.add_tab('custom-link', 'Custom', 'images/link.svg', custom_link_view);
+            window.filter_product_view.add_tab('custom-link', 'Custom (Beta)', 'images/link.svg', custom_link_view);
         }
         $(window).trigger('resize');
     },

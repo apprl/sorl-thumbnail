@@ -33,9 +33,9 @@
             </div>
             {% else %}
             {% if profile.is_brand %}
-            <p class="center">{{ profile.display_name }} {% trans "currently does not have any products." %}</p>
+            <p>{{ profile.display_name }} {% trans "currently does not have any products." %}</p>
             {% else %}
-            <p class="center">{{ profile.display_name }} {% trans "does not like any products so far." %}</p>
+            <p>{{ profile.display_name }} {% trans "does not like any products so far." %}</p>
             {% endif %}
             {% endif %}
         </div>

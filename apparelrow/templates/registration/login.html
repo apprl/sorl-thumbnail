@@ -2,52 +2,57 @@
 {% load i18n apparel_extras crispy_forms_tags %}
 
 {% block body-classes %}account login{% endblock body-classes %}
-{% block full-body %}
+{% block body %}
 
-    <div class="container center">
-         <h1>{% trans "Login" %}</h1>
-
-        {% if request.GET.error == 'user_denied' %}
-        <div class="alert alert-danger">{% trans "User denied Facebook login flow." %}</div>
-        {% elif request.GET.error %}
-        <div class="alert alert-danger">{% trans "Error during login flow. Please try again!" %}</div>
-        {% endif %}
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Login" %}</h1>
+        </div>
     </div>
 
-    <div class="form-container">
-        {% url 'login-flow-redirect' as next_url %}
-        {% if request.GET.next %}
-        {% with next_url|add:"?next="|add:request.GET.next as next_url_extra %}{% facebook_button next=next_url_extra extra_class="btn-facebook-login" %}{% endwith %}
-        {% else %}
-        {% facebook_button next=next_url extra_class="btn-facebook-login" %}
-        {% endif %}
+    <div class="row">
+        <div class="col-sm-8">
+            {% if request.GET.error == 'user_denied' %}
+            <div class="alert alert-danger">{% trans "User denied Facebook login flow." %}</div>
+            {% elif request.GET.error %}
+            <div class="alert alert-danger">{% trans "Error during login flow. Please try again!" %}</div>
+            {% endif %}
 
-        <div class="separator"><span>{% trans "or" %}</span></div>
+            {% url 'login-flow-redirect' as next_url %}
+            {% if request.GET.next %}
+            {% with next_url|add:"?next="|add:request.GET.next as next_url_extra %}{% facebook_button next=next_url_extra extra_class="btn-facebook-login" %}{% endwith %}
+            {% else %}
+            {% facebook_button next=next_url extra_class="btn-facebook-login" %}
+            {% endif %}
 
-        <form action="{% url 'auth_login' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
-            <div class="form-group{% if form.errors %} error{% endif %}">
-                <label for="inputEmail" class="control-label">{% trans "Username / E-mail address" %}</label>
-                <input name="username" type="text" id="inputEmail">
-            </div>
-            <div class="form-group{% if form.errors %} error{% endif %}">
-                <label for="inputPassword" class="control-label">{{ form.password.label }}</label>
-                <input name="password" type="password" id="inputPassword">
-            </div>
-            <div class="form-group">
-                {% if form.errors %}
-                <span class="help-block">{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</span>
-                {% endif %}
-                <button type="submit" class="btn btn-default">{% trans "Login" %}</button>
-            </div>
-            <div class="form-group center">
-                <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
-                <p>{% blocktrans %}Don't have an account yet? {% endblocktrans %} <a href="{% url 'auth_register' %}">{% trans "Sign up here" %}</a></p>
-            </div>
-        </form>
+            <p><strong>{% trans "or" %}</strong></p>
+
+            <form action="{% url 'auth_login' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'login-flow-redirect' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+                <div class="form-group{% if form.errors %} has-error{% endif %}">
+                    <label for="inputEmail" class="control-label">{% trans "Username / E-mail address" %}</label>
+                    <input name="username" type="text" class="form-control" id="inputEmail" placeholder="{% trans "Username / E-mail address" %}">
+                </div>
+                <div class="form-group{% if form.errors %} has-error{% endif %}">
+                    <label for="inputPassword" class="control-label">{{ form.password.label }}</label>
+                    <input name="password" type="password" class="form-control" id="inputPassword" placeholder="{{ form.password.label }}">
+                </div>
+                <div class="form-group">
+                    <a href="{% url 'auth_password_reset' %}">{% trans "Forgot password?" %}</a>
+                </div>
+                <div class="form-group">
+                    {% if form.errors %}
+                    <p>{% blocktrans %}Your username and password did not match. Please try again.{% endblocktrans %}</p>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
+                </div>
+            </form>
+
+             <p>
+                {% blocktrans %}Don't have an account yet? {% endblocktrans %} <a href="{% url 'auth_register' %}">{% trans "Sign up here" %}</a>
+            </p>
+        
+        </div>
     </div>
-
 {% endblock %}
-{% block footer %}
-{% endblock footer %}

@@ -5,7 +5,7 @@ from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
 from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
-    extract_asos_nelly_product_url, on_boarding_follow_users, get_most_popular_user_list
+    extract_asos_nelly_product_url
 
 from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
@@ -18,7 +18,6 @@ from django.test import TestCase, TransactionTestCase
 from django.utils.translation import activate
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
-from apparelrow.apparel.utils import shuffle_user_list
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
@@ -96,7 +95,7 @@ class TestChromeExtension(TestCase):
         response = self.client.get('/backend/authenticated/')
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/items/')
+        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/')
         self.assertEqual(json_content['authenticated'], True)
 
     def test_product_lookup_not_logged_in(self):
@@ -776,82 +775,6 @@ class TestShortLinks(TestCase):
 
         # No ProductStat were created
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
-
-
-class TestOnBoarding(TestCase):
-    def setUp(self):
-        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
-        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
-        self.user.partner_group = self.group
-        self.user.save()
-
-        # Create users
-        for i in range(20):
-            UserFactory.create(gender="M", name="A men")
-        for i in range(20):
-            UserFactory.create(gender="W", name="A woman")
-        for i in range(20):
-            UserFactory.create(is_brand=True, name="A brand")
-
-    def test_user_has_gender(self):
-        total_users = 20
-        user_list = get_most_popular_user_list(total_users, 'W')
-
-        self.assertEqual(len(user_list), 20)
-
-        brands_count = 0
-        gender_count = 0
-        opposite_gender_count = 0
-        for row in user_list:
-            if row.is_brand:
-                brands_count += 1
-            elif row.gender == 'W':
-                gender_count += 1
-            elif row.gender == 'M':
-                opposite_gender_count += 1
-
-        self.assertEqual(str(brands_count/float(total_users)), settings.APPAREL_WELCOME_FOLLOWING_USERS_BRANDS_PROPORTION)
-        self.assertEqual(str(gender_count/float(total_users)), settings.APPAREL_WELCOME_FOLLOWING_USERS_SAME_GENDER_PROPORTION)
-        self.assertEqual(str(opposite_gender_count/float(total_users)), settings.APPAREL_WELCOME_FOLLOWING_USERS_OPPOSITE_GENDER_PROPORTION)
-
-    def test_user_has_no_gender(self):
-        total_users = 20
-        user_list = get_most_popular_user_list(total_users, 'W')
-
-        self.assertEqual(len(user_list), 20)
-
-        brands_count = 0
-        no_brands_count = 0
-        for row in user_list:
-            if row.is_brand:
-                brands_count += 1
-            elif row.gender in ('W', 'M'):
-                no_brands_count += 1
-
-        no_brands_proportion = Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_SAME_GENDER_PROPORTION) + \
-                               Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_OPPOSITE_GENDER_PROPORTION)
-        self.assertEqual(str(brands_count/float(total_users)), settings.APPAREL_WELCOME_FOLLOWING_USERS_BRANDS_PROPORTION)
-        self.assertEqual(str(no_brands_count/float(total_users)), str(no_brands_proportion))
-
-    def test_shuffle_user_list(self):
-        user_list = get_most_popular_user_list(20, 'W')
-        random_user_list = shuffle_user_list(user_list)
-        # Lists are not exactly the same
-        self.assertNotEqual(user_list, random_user_list)
-
-        # Lists have the samen lenght
-        self.assertEqual(len(user_list), len(random_user_list))
-
-        # All elements from Random list are in the original list
-        for row in random_user_list:
-            self.assertIn(row, user_list)
-
-    def test_on_boarding_follow_users(self):
-        user_list = get_most_popular_user_list(20, 'W')
-        self.assertFalse(get_model('profile', 'Follow').objects.filter(user=self.user).count(), 0)
-        on_boarding_follow_users(self.user, user_list)
-        self.assertEqual(get_model('profile', 'Follow').objects.filter(user=self.user).count(), 20)
-
 
 @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
 class TestUtils(TestCase):

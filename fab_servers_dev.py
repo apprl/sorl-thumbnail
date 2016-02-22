@@ -139,8 +139,7 @@ def prestaging_common(settings=None):
     env.group = env.user
     env.run_user = 'www-data'
     #env.installed_apps = ['supervisor-gunicorn-norelic','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',]
-    #env.installed_apps = ['supervisor-gunicorn-norelic','gunicorn',]
-    env.installed_apps = ['']
+    env.installed_apps = ['supervisor-gunicorn-norelic','gunicorn',]
     env.venv_home = "/home/%(user)s" % env
     env.venv_path = "%(venv_home)s/%(project_name)s-%(settings)s" % env
     env.path = env.venv_path
@@ -197,4 +196,3 @@ def prestaging_2():
     env.db_name = 'apparel_%s' % env.settings.replace("-","_")
     env.branch = "feat-product_widget"
     env.collectstatic = True
-    env.restart = ['gunicorn']
