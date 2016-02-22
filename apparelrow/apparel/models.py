@@ -197,7 +197,7 @@ class Category(MPTTModel):
     objects = tree = TreeManager()
 
     def save(self, *args, **kwargs):
-        # FIXME: Can you get Django to auto truncate fields?
+        # FIXME: Can you get Django to auto truncate fields? K: Not really, forms are supposed to take care of it.
         self.name = self.name[:100]
         super(Category, self).save(*args, **kwargs)
 
