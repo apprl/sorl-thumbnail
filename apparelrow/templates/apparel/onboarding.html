@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load i18n apparel_extras thumbnail %}
+{% load static from staticfiles %}
+
+{% block extra-title %}{% trans "Welcome to APPRL!" %} | {% endblock %}
+
+{% block body-classes %}onboarding-page{% endblock %}
+{% block header-navigation %}{% endblock header-navigation %}
+{% block full-body %}
+    <section>
+        <div class="container">
+            <h1>{% trans "Welcome to APPRL," %} {{ profile.display_name }}!</h1>
+            <p>{% trans "Lorem ipsum dolor sit amet, minim molestie argumentum est at, pri legere torquatos instructior ex. Vis id odio atomorum oportere, quem modo fabellas sit at, dicat semper est ne. Apeirian detraxit pri eu. No solum accusam has. Ius ne harum mundi clita, eu pro tation audiam." %}</p>
+
+            <hr>
+
+            <h2>{% trans "Recommendations for you." %}</h2>
+            <a href="{% url 'index' %}" class="btn btn-primary btn-lg center">{% trans "Follow and continue" %}</a>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+        <ul class="discover-list list-unstyled row">
+            {% for profile in user_list %}
+            <li class="col-discover-item">
+                <div class="user-medium panel" id="user-medium-{{ profile.pk }}">
+                    <div class="panel-heading">
+                        <div class="media">
+                            <a class="pull-left" href="{{ profile.get_absolute_url }}">
+                                <img class="img-circle" src="{{ profile.avatar }}" alt="{{ profile.display_name }}"/>
+                            </a>
+                            <div class="media-body">
+                                <h5 class="media-heading"><a href="{{ profile.get_absolute_url }}">{% if profile.display_name|length >= 25 %}{{ profile.display_name|slice:":20" }} ...{% else %}{{ profile.display_name|slice:":20" }}{% endif %}</a></h5>
+                                {% if cached %}
+                                {% include 'apparel/fragments/follow_cache.html' %}
+                                {% else %}
+                                {% include 'apparel/fragments/follow.html' %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-unstyled row">
+                            {% for x in profile.profile_content %}
+                                {% thumbnail x.1 "192x192" crop="center" format="PNG" as im %}
+                                    <li class="col-xs-6"><a href="{{ x.0 }}"><img class="img-responsive" src="{{ im.url}}"></a></li>
+                                {% empty %}
+                                    <li class="col-xs-6"><a href="{{ profile.get_absolute_url }}"><img class="img-responsive" src="{% static 'images/brand-avatar-large.png' %}"></a></li>
+                                {% endthumbnail %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            {% endfor %}
+
+        </ul>
+        </div>
+    </section>
+
+{% endblock %}

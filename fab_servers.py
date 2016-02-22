@@ -176,7 +176,7 @@ def prod_scrapy():
     env.settings = "scrapy-aws"
     env.hosts = ['%(user)s@10.0.1.165' % env]
     #env.celery_processes = '1'
-    #env.celery_processes_background = '1'
+    env.celery_processes_background = '1'
     env.installed_apps = ['']
     env.run_user = env.user
     env.restart = ['celery_standard','celery_background']

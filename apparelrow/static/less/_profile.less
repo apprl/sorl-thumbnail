@@ -1,0 +1,301 @@
+/*
+    Profile v1.0
+
+    - Default page
+*/
+
+.profile-default {
+    main {
+        padding-top: 60px;
+    }
+    .cover {
+        background-color: black;
+        width: 100%;
+        max-height: 480px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    #cover-source {
+        display: none;
+    }
+    #cover-image {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        .translate(0,-50%);
+        /*background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        -webkit-filter: blur(20px); // Chrome, Safari, Firefox
+        filter: blur(20px);
+        filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='20'); // IE9*/
+        //overflow: hidden;
+        /*-webkit-filter: blur(5px);
+        -moz-filter: blur(5px);
+        -o-filter: blur(5px);
+        -ms-filter: blur(5px);*/
+    }
+}
+
+.profile-page {
+    .shop-list li {
+        text-align: center;
+    }
+    .product-medium .hover {
+        bottom: 79px;
+    }
+}
+
+.profile-looks {
+    main .btn-look-like {
+        max-width: none;
+    }
+    .look-medium .hover {
+        bottom: 45px;
+        height: auto;
+    }
+}
+
+.edit-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.5);
+    color: white;
+    opacity: 0;
+    line-height: 156px;
+    &:hover {
+        opacity: 1;
+        color: white;
+    }
+}
+
+#description-form {
+    margin: 10px auto 0 auto;
+    max-width: @screen-xs;
+    button, textarea {
+        margin: 0 auto 10px auto;
+    }
+    textarea {
+        max-width: none;
+    }
+}
+
+.btn-create-shop {
+    float: right;
+}
+
+.profile-welcome {
+    background-color: #ffffff;
+    .panel-body, .pagination, footer, .navbar-nav-main, .navbar-nav-login, .navbar-form {
+        display: none;
+    }
+    p {
+        margin-bottom: 30px;
+    }
+}
+
+.profile-welcome-complete {
+    background: #000000 url('../images/bg_bw4_lg.jpg') no-repeat center top;
+    #content-container {
+        background-color: transparent;
+    }
+    .body-header {
+        color: #ffffff;
+    }
+    .background {
+        min-height: 400px;
+    }
+    .btn-block {
+        display: table;
+        width: 100%;
+        height: 140px;
+        text-align: center;
+        white-space: normal;
+        margin-bottom: 15px;
+        > span {
+            font-size: 20px;
+            display: table-cell;
+            vertical-align: middle;
+            padding: 0 10px;
+        }
+    }
+}
+
+//
+// User medium template styling
+// ----------------------------------------------------------------------------
+
+.user-medium {
+    margin-bottom: 30px;
+    background-color: #eeeeee;
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+    .panel-heading {
+        background-color: transparent;
+        border: 0;
+        padding: 10px;
+        .btn-follow-you {
+            display: none;
+        }
+    }
+    .media-heading {
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        a {
+            color: #000000;
+            font-size: 14px;
+        }
+    }
+    .panel-body {
+        background-color: #eeeeee;
+        padding: 10px;
+        ul {
+            li:nth-child(1) {
+                padding-right: 5px;
+                padding-bottom: 5px;
+            }
+            li:nth-child(2) {
+                padding-left: 5px;
+                padding-bottom: 5px;
+            }
+            li:nth-child(3) {
+                padding-right: 5px;
+                padding-top: 5px;
+            }
+            li:nth-child(4) {
+                padding-left: 5px;
+                padding-top: 5px;
+            }
+        }
+    }
+}
+
+//
+// Profile page styling
+// ----------------------------------------------------------------------------
+
+.discover-list-page, .profile-looks {
+    .alphabet {
+        font-size: 14px;
+        border-bottom: 3px solid #000000;
+        padding-bottom: 5px;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        color: #333333;
+        li {
+            padding-left: 2px;
+            padding-right: 2px;
+            &:first-child {
+                padding-left: 0;
+            }
+        }
+        li a {
+            padding: 5px;
+            color: #eee;
+            &.selected {
+                color: #000000;
+            }
+            &:first-child {
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+.discover-list > .col-discover-item {
+    .make-sm-column(12);
+    @media (min-width: @screen-sm) {
+        .make-sm-column(6);
+    }
+    @media (min-width: @screen-md) {
+        .make-sm-column(4);
+    }
+    @media (min-width: @screen-lg) {
+        .make-sm-column(3);
+    }
+}
+
+//
+// Profile page header
+// ----------------------------------------------------------------------------
+
+.profile-page .profile-header {
+    h1 {
+        margin-bottom: 5px;
+    }
+    margin-bottom: 15px;
+    text-align: center;
+    .btn-follow, .btn-unfollow, .btn-create-shop {
+        margin: 15px auto;
+    }
+    .description {
+        margin-top: 10px;
+        @media (max-width: @screen-xs-max) {
+            text-align: center;
+        }
+    }
+    .image-options {
+        max-width: 320px;
+        margin: auto;
+        position: relative;
+        label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            /*span {
+                width: 44px;
+                height: 44px;
+                display: block;
+                line-height: 46px;
+                color: white;
+                background-color: @lightGrey;
+                .animate;
+            }
+            &:hover {
+                cursor: pointer;
+                span {
+                    background-color: @grey;
+                }
+            }*/
+        }
+    }
+    #replace-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+    }
+    #profile-image {
+        overflow: hidden;
+        position: relative;
+        margin: 15px auto;
+        max-width: 156px;
+        -webkit-mask-image: -webkit-radial-gradient(white,black);
+        img {
+            z-index: 1;
+            width: 156px;
+            height: 156px;
+            border-radius: 50%;
+        }
+    }
+    .profile-content {
+        text-align: center;
+        p {
+            display: inline-block;
+        }
+        .btn-edit {
+            margin-right: 10px;
+        }
+        .btn-follow {
+            margin-bottom: 0;
+        }
+    }
+}

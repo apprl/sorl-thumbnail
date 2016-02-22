@@ -12,6 +12,11 @@ settings.py
 /apparelrow/media/styles/widget.css
 /apparelrow/media/styles/beta.css
 
+# added by SE
+/apparelrow/bootstrap/bootstrap-3.3.0/docs/dist/css/bootstrap.css
+/apparelrow/bootstrap/bootstrap-3.3.0/docs/dist/css/bootstrap.css.map
+/apparelrow/bootstrap/bootstrap-3.3.0/docs/dist/css/bootstrap.min.css
+
 # generated sitemap
 /apparelrow/sitemaps/sitemap*
 
@@ -25,7 +30,8 @@ settings.py
 /apparelrow/media/styles/print.*.css
 /apparelrow/media/styles/screen.*.css
 /apparelrow/media/styles/smoothness/jquery-ui-1.8rc3.custom.*.css
-
+/bootstrap/bootstrap-3.3.0/_fonts
+/apparelrow/static_local
 /apparelrow/media/static
 /apparelrow/media/cache
 /apparelrow/media/products
@@ -52,3 +58,4 @@ bootstrap/bootstrap-3.0.0-rc1/less/bootstrap.css
 /locale
 /etc/v2
 .DS_Store
+config.codekit

@@ -22,7 +22,7 @@ from apparelrow.apparel.models import Brand
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
-from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
+from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender, get_location
 
 logger = logging.getLogger('apparel.debug')
 
@@ -194,10 +194,23 @@ def update_query_view(request, view, is_authenticated, query_arguments, gender, 
             if view == "latest":
                 query_arguments['sort'] = 'availability desc, created desc, popularity desc'
             query_arguments['fq'].append('gender:(U OR %s)' % (gender,))
-            query_arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
+            # Todo! This should be moved to all places where "likes" are not included
+            query_arguments['fq'].append('market_ss:%s' % get_location(request))
     return query_arguments, result
 
 def browse_products(request, template='apparel/browse.html', gender=None, user_gender=None, user_id=None, language=None, **kwargs):
+    """
+    TODO: This function needs to be broken down and separated
+    :param request:
+    :param template:
+    :param gender:
+    :param user_gender:
+    :param user_id:
+    :param language:
+    :param kwargs:
+    :return:
+    """
+
     if gender is None and user_gender is None:
         gender = select_from_multi_gender(request, 'shop', None)
         if gender == 'M':
@@ -233,7 +246,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     is_brand = None
     if 'is_brand' in kwargs and kwargs['is_brand']:
         is_brand = kwargs['is_brand']
-        query_arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
+        query_arguments['fq'].append('market_ss:%s' % get_location(request))
     query_arguments, result = update_query_view(request, view, is_authenticated, query_arguments, gender, result, user_id, user_gender, is_brand)
 
     # Query string
