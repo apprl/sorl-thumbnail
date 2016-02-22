@@ -6897,7 +6897,6 @@ button.close {
     display: none !important;
   }
 }
-/*# sourceMappingURL=bootstrap.css.map */
 /*
     Extensions v1.0
 */
@@ -7954,7 +7953,7 @@ a.info:hover {
 /* Lists ---------- */
 .list-points {
   list-style: disc;
-  list-style-position: inside;
+  padding-left: 15px;
 }
 .list-alphabet li {
   display: inline-block;
