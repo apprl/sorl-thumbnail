@@ -4,7 +4,7 @@
 
 {% block body-classes %}front publisher-page{% endblock body-classes %}
 
-{% block header-navigation %}
+{% block header-navigation %}ca
     {# Header #}
     <header role="banner">
         <a class="menu-toggler" href="#"><span></span></a>
@@ -275,3 +275,7 @@
         });
     </script>
 {% endblock body-scripts %}
+
+{% block footer %}
+    {% include "landing_footer.html" %}
+{% endblock footer %}
