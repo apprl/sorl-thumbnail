@@ -11,8 +11,8 @@
         <nav role="navigation">
             <a class="logo visible-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
             <ul>
-                <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
                 <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
+                <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
                 <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
             </ul>
         </nav>
