@@ -7,7 +7,7 @@ from django.db.models.loading import get_model
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
-
+from django.contrib.auth.forms import PasswordResetForm
 
 class ProfileImageForm(forms.ModelForm):
     class Meta:
@@ -184,14 +184,21 @@ class RegisterForm(UserCreationForm):
         else:
             return email
 
+
 class RegisterCompleteForm(forms.Form):
     email = forms.EmailField(label=_('E-mail address'), required=True)
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        try:
-            get_user_model()._default_manager.get(email=email, is_active=False)
-        except get_user_model().DoesNotExist:
+        if get_user_model().objects.filter(email=email, is_active=False).exists():
+            return email
+        else:
             raise forms.ValidationError(_('E-mail does not exist or account is already confirmed.'))
 
-        return email
+class EmailValidationResetPassword(PasswordResetForm):
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not get_user_model().objects.filter(email=email).exists():
+            raise forms.ValidationError(_('No account found with that email address.'))
+        else:
+            return email

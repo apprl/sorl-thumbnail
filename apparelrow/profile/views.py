@@ -516,6 +516,7 @@ def send_confirmation_email(request, instance):
 def register(request):
     return render(request, 'registration/registration.html')
 
+
 def register_email(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
@@ -712,7 +713,7 @@ def facebook_connect(request):
             request.user.save()
 
             if request.is_ajax():
-                return JSONResponse({'uid': user.pk, 'next': _get_next(request)})
+                return JSONResponse({'uid': request.user.pk, 'next': _get_next(request)})
 
             return HttpResponseRedirect(_get_next(request))
 
