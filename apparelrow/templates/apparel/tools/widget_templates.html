@@ -3,48 +3,52 @@
 
 <script type="text/template" id="dialog_login_template" data-title="{% trans "Login" %}">
     <p>{% trans "Do you want to save before logging in with Facebook?" %}</p>
-    <a href="#" class="btn btn-primary btn-block btn-cancel">{% trans "Cancel" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
+    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-primary btn-yes">{% trans "Yes" %}</a>
 </script>
 
-<script type="text/template" id="dialog_reset_template" data-title="{% trans "Reset look?" %}">
-    <p>{% trans "Are you sure you want to discard changes and start over?" %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+<script type="text/template" id="dialog_reset_template" data-title="{% trans "Reset?" %}">
+    <p style="text-align: center; margin: 15px 0 30px 0;">{% trans "Are you sure you want to discard changes and start over?" %}</p>
+    <div class="row">
+        <div class="col-sm-6"><a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a></div>
+        <div class="col-sm-6"><a href="#" class="btn btn-default btn-no">{% trans "No" %}</a></div>
+    </div>
+</script>
+
+<script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
+    <p style="text-align: center; margin: 15px 0 30px 0;">{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
+    <div class="row">
+        <div class="col-sm-6"><a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a></div>
+        <div class="col-sm-6"><a href="#" class="btn btn-default btn-no">{% trans "No" %}</a></div>
+    </div>
 </script>
 
 <script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
     <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
-</script>
-
-<script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
-    <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
 </script>
 
 <script type="text/template" id="dialog_unpublish_template" data-title="{% trans "Unpublish?" %}">
     <p>{% trans "Are you sure you want to unpublish this so that no one can see it?" %}</p>
-    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
 </script>
 
 <script type="text/template" id="dialog_save_template" data-title="{% trans "Save" %}">
     <div class="form-group">
         <label for="look_title">{% trans "Your title" %} *</label>
-        <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
+        <input id="look_title" type="text" value="<%= title %>" name="title">
     </div>
 
     <div class="form-group">
         <label for="look_description">{% trans "Description" %}</label>
-        <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
+        <textarea name="description" id="look_description"><%= description %></textarea>
     </div>
 
-    <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
-    <a href="#" class="btn btn-block btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
+    <a href="#" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
+    <a href="#" class="btn btn-primary btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
 </script>
 
 <script type="text/template" id="dialog_no_products" data-title="{% trans "No products" %}">
@@ -55,13 +59,16 @@
 <script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish" %}">
     <div class="form-group">
         <label for="look_title">{% trans "Your title" %} *</label>
-        <input id="look_title" type="text" value="<%= title %>" name="title" class="form-control">
+        <input id="look_title" type="text" value="<%= title %>" name="title">
     </div>
 
     <div class="form-group">
         <label for="look_description">{% trans "Description" %}</label>
-        <textarea name="description" id="look_description" class="form-control"><%= description %></textarea>
+        <textarea name="description" id="look_description"><%= description %></textarea>
     </div>
+
+    <!-- Hur kan jag få denna till att endast visas på Look? -->
+    <p>{% trans "After you have published your look, you can embed it on your site." %}</p>
 
     <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
     <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
@@ -69,14 +76,14 @@
 
 <script type="text/template" id="look_edit_link_info_popup_template" data-title="{% trans "Link" %}">
     <div class="content-container link-info-container">
-        <div class="content"><h4><%= title %></h4><span class="url"><%= url %></span></div>
+        <div class="content"><h2><%= title %></h2><span class="url"><%= url %></span></div>
     </div>
 </script>
 
 <script type="text/template" id="popup_slim_template" data-title="{% trans "Product info" %}">
     <div class="header group">
-        <h5 class="title"></h5>
-        <a href="#" class="close"></a>
+        <h2 class="title"></h2>
+        <a href="#" class="close"><span></span></a>
     </div>
     <div class="content-container info-container">
         <div class="content"></div>
@@ -84,12 +91,12 @@
 </script>
 
 <script type="text/template" id="look_edit_popup_loading">
-    <img class="loading" src="{% static "images/loading_white.gif" %}">
+    <img class="loading" src="{% static 'images/loading_white.gif' %}">
 </script>
 
 <script type="text/template" id="look_edit_add_popup_template" data-title="{% trans "Add product" %}">
     <div class="add-container group">
-        <img src="{% static "images/big-larrow.png" %}">
+        <i class="fa fa-chevron-left fa-3x"></i>
         <p>{% trans "Click in photo to place item" %}</p>
         <img src="<%= image_small %>">
     </div>
@@ -97,7 +104,7 @@
 
 <script type="text/template" id="look_edit_add_link_popup_template" data-title="{% trans "Add link" %}">
     <div class="add-container group">
-        <img src="{% static "images/big-larrow.png" %}">
+        <i class="fa fa-chevron-left fa-3x"></i>
         <p>{% trans "Click in photo to place link" %}</p>
     </div>
 </script>
@@ -118,16 +125,16 @@
 
             <div class="hover" style="display: none;">
                 <!--<div class="btn-group btn-group-justified">-->
-                    <a href="#" class="btn btn-primary btn-block btn-danger delete">
-                        <span class="glyphicon glyphicon-remove"></span>&nbsp;<span>{% trans 'Remove' %}</span>
+                    <a href="#" class="btn btn-secondary btn-block delete">
+                        <i class="fa fa-times"></i>&nbsp;<span>{% trans 'Remove' %}</span>
                     </a>
 
-                    <a href="#" class="btn btn-primary btn-block btn-product-info" rel="nofollow">
+                    <a href="#" class="btn btn-default btn-block btn-product-info" rel="nofollow">
                         {% trans 'Info' %}
                     </a>
                 <!--</div>-->
             </div>
-            <img class="product-image product-image-actual" src="<%= product.image_look %>"/>
+            <img class="product-image product-image-actual" src="<%= product.image_look %>">
         </div>
 
 
@@ -154,13 +161,13 @@
 </script>
 
 <script type="text/template" id="custom_link_template">
-    <div>
+    <div class="container">
          <form id="embed_product_widget_form" class="form">
              <div class="form-group">
                  <input id="id_custom_link_title" type="text" class="form-control" required placeholder="{% trans "Add a title to your link" %}" value=""/>
              </div>
              <div class="form-group">
-                 <input id="id_custom_link_url" type="url" class="form-control" required placeholder="{% trans "Your link" %}" value=""/>
+                 <input id="id_custom_link_url" type="url" class="form-control" required placeholder="http://" value=""/>
              </div>
              <div class="form-group text-center"><input type="submit" class="btn btn-primary" value="{% trans "Place link" %}"/></div>
          </form>
@@ -174,7 +181,7 @@
     <form enctype="multipart/form-data" action="{% url 'temporary-image' %}" method="POST" id="temporaryimage">
         {% csrf_token %}
         <div class="form-group">
-            <p>{% trans 'Start by adding your photo here' %}</p>
+            <p>{% trans 'Start by adding your photo here.' %}</p>
             <div class="form-group upload-field">
                 <span><input class="form-control" type="file" accept="image/*;capture=camera" capture="camera" name="image_file"></span>
             </div>
@@ -187,11 +194,11 @@
     <div class="product-small product-container">
         <a class="image-small" href="#"><img src="<%= image_small %>"></a>
         <div class="hover">
-            <a class="btn btn-block btn-primary btn-product-info" href="#">{% trans "Info" %}</a>
-            <a class="btn btn-block btn-success btn-add" href="#">{% trans "Add" %}</a>
+            <a class="btn btn-primary btn-add" href="#">{% trans "Add" %}</a>
+            <a class="btn btn-default btn-product-info" href="#">{% trans "Info" %}</a>
         </div>
         <div class="caption">
-            <h4><%= brand_name %></h4>
+            <h5><%= brand_name %></h5>
             <% if(!availability) { %>
             <span class="sold-out">SOLD OUT</span>
             <% } else { %>

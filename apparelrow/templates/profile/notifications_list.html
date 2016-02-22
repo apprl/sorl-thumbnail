@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load thumbnail apparel_extras staticfiles %}
+{% load tz %}
+
+{% block extra-title %}{% trans "Notifications" %} | {% endblock %}
+
+{% block body-classes %}notifications-page{% endblock %}
+{% block body %}
+
+    <div class="body-header">
+        <div class="body-header-col-full">
+            <h1>{% trans "Notifications" %}</h1>
+        </div>
+    </div>
+
+    <ul class="list-notifications">
+        {% localtime on %}
+            {% for event in request.user.notifications %}
+            <li class="table">
+                {% if event.type == "LIKELOOK" %}
+
+                <figure class="cell">
+                    <a href="{{ event.actor.url_likes }}">
+                        <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32">
+                    </a>
+                </figure>
+                <p class="cell message">
+                    <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong></a> liked your look
+                    <a href="{{ event.look.get_absolute_url }}"><strong>{{ event.look.title }}</strong></a>
+                </p>
+
+                {% elif event.type == "FB" %}
+
+                <figure class="cell">
+                    <a href="{{ event.actor.url_likes }}">
+                        <img class="img-circle" src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32">
+                    </a>
+                </figure>
+                <p class="cell message">Your Facebook friend <a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> is now on APPRL!</span></a></p>
+
+                {% elif event.type == "SALE" %}
+
+                <figure class="cell">
+                    <a href="{{ event.product.get_absolute_url }}">
+                        {% thumbnail event.product.product_image "32" crop="noop" as im %}
+                        <img class="img-circle" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32">
+                        {% endthumbnail %}
+                    </a>
+                </figure>
+                </span>
+                <p class="cell message"><a href="{{ event.product.get_absolute_url }}"><strong>{{ event.product }}</strong></a> is on sale!</p>
+
+                {% elif event.type == "FOLLOW" %}
+
+                <figure class="cell">
+                    <a href="{{ event.actor.url_likes }}"><img class="img-circle"  src="{{ event.actor.avatar_small }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32"/></a>
+                </figure>
+                <p class="cell message"><a href="{{ event.actor.url_likes }}"><strong>{{ event.actor }}</strong> started following you!</a></p>
+
+                {% endif %}
+
+                <span class="cell time">{{ event.created|since }}</span>
+                {% if not event.type == "SALE" %}<span class="cell">{% include 'apparel/fragments/follow.html' with profile=event.actor%}</span>{% endif %}
+            </li>
+            {% empty %}
+            <li class="no-results">
+                You have no new notifications.
+            </li>
+        {% endfor %}
+        {% endlocaltime %}
+    </ul>
+{% endblock %}

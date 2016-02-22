@@ -4,62 +4,52 @@
 {% block body-classes %}publisher-index-page{% endblock %}
 {% block full-body %}
 
-<div class="background">
-    <div class="container">
-        <div class="body-header">
-            <div class="body-header-col-full">
-                <h1>{% trans "APPLY TO BECOME AN APPRL PUBLISHER" %}</h1>
-            </div>
-        </div>
+<div class="container">
+    <h1>{% trans "Apply to become an APPRL publisher" %}</h1>
+    {% if referral_user %}
+    <div class="alert alert-warning">{% blocktrans with name=referral_user.display_name %}You have been invited by {{name}}. Therefore we will put €20 in your Apprl account to start with if you apply below.{% endblocktrans %}</div>
+    {% endif %}
+    <p>{% trans "APPRL offers a range of tools and formats for selected bloggers and other digital. fashion & beauty media. Through our tools and the support from our team we help you grow, earn money on your content and learn more about your audience." %}</p>
+    <p>{% trans "Apply to become an Apprl publisher here:" %}</p>
+</div>
 
+<div class="form-container">
+    <form action="" method="post">
+        {% csrf_token %}
         <div class="row">
-            <div class="col-sm-12">
-                <div class="inner-content">
-                    {% if referral_user %}
-                    <div class="alert alert-warning">{% blocktrans with name=referral_user.display_name %}You have been invited by {{name}}. Therefore we will put €50 in your Apprl account to start with if you apply below.{% endblocktrans %}</div>
-                    {% endif %}
-                    <p>{% trans "Apprl offers a range of tools and formats for selected bloggers and other digital. fashion & beauty media. Through our tools and the support from our team we help you grow, earn money on your content and learn more about your audience." %}</p>
-                    <p>{% trans "Apply to become an Apprl publisher here:" %}</p>
-                    <form action="" method="post" class="form-horizontal">
-                        {% csrf_token %}
-                        <div class="form-group{% if form.name.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.name.html_name }}" class="col-sm-2 control-label">{{ form.name.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.name.html_name }}" type="text" class="form-control" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}" placeholder="{{ form.name.label }}">
-                                {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.email.html_name }}" class="col-sm-2 control-label">{{ form.email.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.email.html_name }}" type="text" class="form-control" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" placeholder="{{ form.email.label }}">
-                                {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group{% if form.blog.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.blog.html_name }}" class="col-sm-2 control-label">{{ form.blog.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.blog.html_name }}" type="text" class="form-control" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}" placeholder="{{ form.blog.label }}">
-                                {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group{% if form.traffic.errors %} has-error{% endif %}">
-                            <label for="id_{{ form.traffic.html_name }}" class="col-sm-2 control-label">{{ form.traffic.label }}</label>
-                            <div class="col-sm-6">
-                                <input name="{{ form.traffic.html_name }}" type="text" class="form-control" id="id_{{ form.traffic.html_name }}" value="{% if form.traffic.value %}{{ form.traffic.value }}{% endif %}" placeholder="{{ form.traffic.help_text }}">
-                                {% if form.traffic.errors %}<span class="help-block">{{ form.traffic.errors.as_text }}</span>{% endif %}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-6">
-                                <button class="btn btn-primary btn-block btn-apply">{% trans "APPLY" %}</button>
-                            </div>
-                        </div>
-                    </form>
+            <div class="col-is-6">
+                <div class="form-group{% if form.name.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.name.html_name }}">{{ form.name.label }}</label>
+                    <input name="{{ form.name.html_name }}" type="text" id="id_{{ form.name.html_name }}" value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+                    {% if form.name.errors %}<span class="help-block">{{ form.name.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="col-is-6">
+                <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.email.html_name }}">{{ form.email.label }}</label>
+                    <input name="{{ form.email.html_name }}" type="text" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                    {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
                 </div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-is-6">
+                <div class="form-group{% if form.blog.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.blog.html_name }}">{{ form.blog.label }}</label>
+                    <input name="{{ form.blog.html_name }}" type="text" id="id_{{ form.blog.html_name }}" value="{% if form.blog.value %}{{ form.blog.value }}{% endif %}">
+                    {% if form.blog.errors %}<span class="help-block">{{ form.blog.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="col-is-6">
+                <div class="form-group{% if form.traffic.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.traffic.html_name }}">{{ form.traffic.label }}</label>
+                    <input name="{{ form.traffic.html_name }}" type="text" id="id_{{ form.traffic.html_name }}" value="{% if form.traffic.value %}{{ form.traffic.value }}{% endif %}" placeholder="{{ form.traffic.help_text }}">
+                    {% if form.traffic.errors %}<span class="help-block">{{ form.traffic.errors.as_text }}</span>{% endif %}
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-apply">{% trans "APPLY" %}</button>
+    </form>
 </div>
 
 {% endblock %}

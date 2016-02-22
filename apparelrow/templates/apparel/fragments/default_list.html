@@ -1,0 +1,43 @@
+{% load i18n thumbnail thumbnail_extras apparel_extras %}
+{% if request.GET.view == 'friends' %}
+<!-- change to "if this list is empty" -->
+<p>{% trans "You haven't liked any looks or products yet." %}</p>
+<a class="btn btn-primary" href="{% url 'user-list-popular' %}">{% trans "Find your favorites" %}</a>
+{% endif %}
+<ul class="look-list list-unstyled row">
+    {% for object in current_page.object_list %}
+    <li class="col-sm-6">
+		<div class="thumbnail look-medium {% if object.display_with_component == 'P' %}look-photo{% else %}look-collage{% endif %}" id="look-{{ object.id }}" data-id="{{ object.id }}">
+		    <div class="look-image-container">
+		        <a href="{{ object.get_absolute_url }}">
+		            {% if featured %}
+		            {% thumbnail object.static_image "280x320" is_collage=object.is_collage keep_size=True crop=False format='PNG' as im %}
+		            <img class="img-responsive look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
+		            {% endthumbnail %}
+		            {% else %}
+		            {% thumbnail object.static_image "560x420" is_collage=object.is_collage keep_size=True crop=False format='PNG' as im %}
+		            <img class="img-responsive look-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
+		            {% endthumbnail %}
+		            {% endif %}
+		        </a>
+		        <div class="hover">
+		            <div class="btn-group btn-group-justified">
+		                <a class="btn btn-default btn-block btn-look-like" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'look-like' object.slug 'like' %}" data-unlike-url="{% url 'look-like' object.slug 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}"><span><i class="fa fa-heart"></i>&nbsp;{% trans "Like" %}</span></a>
+		            </div>
+		        </div>
+		    </div>
+		    <div class="caption">
+		        <h4><a href="{{ object.get_absolute_url }}">{{ object.title }}{% if is_profile and not object.published %} ({% trans "Not published" %}){% endif %}</a></h4>
+		        <p>{% trans "by" %} <a href="{{ object.user.get_absolute_url }}">{{ object.user.display_name }}</a></p>
+		    </div>
+		</div>
+    </li>
+    {% empty %}
+    {% comment if current_page.number == 1 %}
+        <li class="col-lg-12">{% trans "No results" %}</li>
+    {% endcomment %}
+    {% endfor %}
+</ul>
+<div class="pagination">
+    {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page only %}
+</div>

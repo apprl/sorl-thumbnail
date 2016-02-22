@@ -11,10 +11,6 @@
             </div>
         </div>
         <div class="row">
-
-        {% comment %}
-            {% include 'apparel/fragments/topmodel-featured.html' %}
-        {% endcomment %}
             {% for activity in featured %}
             <div class="col-featured-item">
                 <div class="feed-item featured-feed-item panel" id="user-featured-{{ activity.user_id }}" data-user-id="{{ activity.user_id }}">

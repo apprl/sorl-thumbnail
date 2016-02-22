@@ -1,6 +1,5 @@
 from urlparse import parse_qs, urlsplit, urlunsplit
 import json
-import decimal
 import datetime
 import itertools
 import urllib
@@ -8,6 +7,7 @@ import httplib
 import uuid
 import logging
 import decimal
+import random
 
 from django.conf import settings
 from django.core.cache import cache
@@ -22,7 +22,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
-logger = logging.getLogger("apparel.debug")
+logger = logging.getLogger("apparelrow")
 
 
 def get_ga_cookie_cid(request=None):
@@ -280,8 +280,10 @@ def currency_exchange(to_currency, from_currency):
     if from_currency == to_currency:
         return 1
 
-    rates = cache.get(settings.APPAREL_RATES_CACHE_KEY)
-    if not rates:
+    rates = cache.get(settings.APPAREL_RATES_CACHE_KEY) or {}
+    if not rates or len(rates.keys()) < 20:
+        logger.warn("Not finding enough currency rates from cache [{}], loading from database instead.".
+                    format(",".join(rates.keys())))
         fxrate_model = get_model('importer', 'FXRate')
         rates = {}
         for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY):
@@ -289,8 +291,15 @@ def currency_exchange(to_currency, from_currency):
 
         if rates:
             cache.set(settings.APPAREL_RATES_CACHE_KEY, rates, 60*60)
+    rate = None
+    try:
+        rate = rates[to_currency] * (1 / rates[from_currency])
+    except KeyError:
+        if not rates:
+            rates = {}
+        logger.fatal("Unable to convert currency from {} to {}, keys available {}. Drop cache key {} and let it repopulate.".
+                     format(from_currency,to_currency,",".join(rates.keys()),settings.APPAREL_RATES_CACHE_KEY))
 
-    rate = rates[to_currency] * (1 / rates[from_currency])
     if from_currency == settings.APPAREL_BASE_CURRENCY:
         rate = rates[to_currency]
     elif to_currency == settings.APPAREL_BASE_CURRENCY:
@@ -351,12 +360,7 @@ def get_paged_result(queryset, per_page, page_num):
     except EmptyPage:
         paged_result = paginator.page(paginator.num_pages)
 
-    #JAS: this field has been used to determine whether or not to display pagination but it was never set
-   # logger.info("per pages: %s and page number: %s result: %s" % (len(paged_result.object_list), page_num, per_page * int(page_num)))
-   # logger.info("entire queryset is: %s" % len(queryset))
-    #FIXME: When this is set to False, the pagination loads for a fraction of a second and seems to fire off two more tequests (next two pages)
-    #WTF?!?
-    if(len(queryset) > (per_page * int(page_num))):
+    if len(queryset) > (per_page * int(page_num)):
         paged_result.has_next = True
     else:
         paged_result.has_next = False
@@ -477,7 +481,10 @@ class JSONPResponse(HttpResponse):
 
 
 def user_is_bot(request):
-    return request.user_agent.is_bot or "ELB" in request.user_agent.ua_string
+    if hasattr(request, "user_agent"):
+        return request.user_agent.is_bot or "ELB" in request.user_agent.ua_string
+    else:
+        return False
 
 def save_location(request, location):
     request.user.location = location
@@ -486,6 +493,15 @@ def save_location(request, location):
 def has_user_location(request):
     return hasattr(request, 'user') and hasattr(request.user, 'location') and request.user.location
 
+def shuffle_user_list(user_list):
+    return sorted(user_list, key=lambda k: random.random())
+
+def get_location(request):
+    if hasattr(request, "user") and hasattr(request.user, 'location') and request.user.location:
+        return request.user.location
+    else:
+        return request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, "ALL")
+    
 def get_location_text(location):
     for key, text in settings.LOCATION_MAPPING_SIMPLE_TEXT:
         if key == location:

@@ -3,22 +3,33 @@
 
 {% block extra-title %}{% trans "Settings" %} | {% endblock %}
 
+{% block extra-scripts %}
+<script type="text/javascript">
+$(document).ready(function() {
+    // Set active submenu link
+    var url = window.location.href.split('/');
+    $('a[href*="' + url[6] + '"]', '.page-menu').parent().addClass('active');
+
+    $('#id_location').on('change', function() {
+     document.forms['location-form'].submit();
+  });
+});
+</script>
+{% endblock %}
+
 {% block body-classes %}settings-page{% endblock %}
 {% block body %}
     <div class="body-header">
-        <div class="body-header-col-full">
-            <h1>{% trans "Settings" %}</h1>
-        </div>
+        <h1>{% trans "Settings" %}</h1>
     </div>
 
     <div class="row">
         <div class="col-sm-3">
-            <ul class="list-group">
-                <li class="list-group-item"><a href="{% url 'settings-email' %}">{% trans "Account Settings" %}</a></li>
-                <li class="list-group-item"><a href="{% url 'settings-notification' %}">{% trans "E-mail Notifications & Newsletters" %}</a></li>
+            <ul class="page-menu">
+                <li{% if 'account' in request.path %} class="selected"{% endif %}><a href="{% url 'settings-account' %}">{% trans "Account" %}</a></li>
+                <li{% if 'notification' in request.path %} class="selected"{% endif %}><a href="{% url 'settings-notifications' %}">{% trans "Notifications" %}</a></li>
                 {% if request.user.is_authenticated and request.user.is_partner %}
-                <li class="list-group-item"><a href="{% url 'settings-publisher' %}">{% trans "Publisher" %}</a></li>
-                {% else %}
+                <li{% if 'publisher' in request.path %} class="selected"{% endif %}><a href="{% url 'settings-publisher' %}">{% trans "Publisher" %}</a></li>
                 {% endif %}
             </ul>
         </div>
