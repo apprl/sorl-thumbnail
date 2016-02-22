@@ -119,7 +119,7 @@
                     <div class="look-large collage">
                         <div id="collage-background" class="look-collage">
                             {% thumbnail object.image resolution crop="center" as im %}
-                            <img src="{{ im.url }}">
+                            <img class="img-responsive" src="{{ im.url }}">
                             {% endthumbnail %}
                             <div class="component-wrapper" style="width: {{ wrapper_element.width }}%; height: {{ wrapper_element.height }}%;">
                                 {% for component in object.collage_components.all %}

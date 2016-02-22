@@ -4,7 +4,7 @@
 {% block body-classes %}{% if analytics_identifier == 'Publisher' %}publisher-index-page{% else %}store-index-page{% endif %} index-page-complete{% endblock body-classes %}
 {% block full-body %}
 
-<div class="container">
+<div class="container center">
     <h1>{% if analytics_identifier == 'Publisher' %}{% trans "Get an APPRL account" %}{% else %}{% trans "Thanks for your application!" %}{% endif %}</h1>
 
     {% if analytics_identifier == 'Publisher' %}
