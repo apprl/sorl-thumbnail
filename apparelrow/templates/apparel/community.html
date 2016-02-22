@@ -192,7 +192,7 @@
     <script src="/static/js/jquery/owl.carousel.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            //var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
+            var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
             var scroll = false,
                 resizeTimer;
 
@@ -211,7 +211,8 @@
                     $('.btn-facebook').prependTo('.login-box form');
                 }
             }
-            moveElements();
+            moveElements();*/
+
             $(window).on('scroll', function() {
                 if ($(window).scrollTop() >= 1) {
                     $('header').addClass('expand');
@@ -233,7 +234,6 @@
                 e.preventDefault();
             });
 
-            */
             $('#slider-publishers').owlCarousel({
                 //autoPlay: 3000,
                 loop: true,
