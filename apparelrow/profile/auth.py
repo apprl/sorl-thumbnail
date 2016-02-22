@@ -58,10 +58,16 @@ class FacebookProfileBackend(ModelBackend):
                 if me.get('name'):
                     defaults['name'] = me['name']
 
-            user, created = get_user_model().objects.get_or_create(facebook_user_id=fb_uid, defaults=defaults)
-            if created:
-                google_analytics_event.delay(get_ga_cookie_cid(request), 'Member', 'Signup', user.slug)
-                process_facebook_friends.delay(user, fb_graphtoken)
+            if get_user_model().objects.filter(email=defaults['email']).exists():
+                user = get_user_model().objects.filter(email=defaults['email'])[0]
+                if not user.facebook_user_id:
+                    user.facebook_user_id = fb_uid
+                    process_facebook_friends.delay(user, fb_graphtoken)
+            else:
+                user, created = get_user_model().objects.get_or_create(facebook_user_id=fb_uid, defaults=defaults)
+                if created:
+                    google_analytics_event.delay(get_ga_cookie_cid(request), 'Member', 'Signup', user.slug)
+                    process_facebook_friends.delay(user, fb_graphtoken)
 
             if user.gender is None:
                 if me.get('gender'):
