@@ -973,7 +973,15 @@ a.info {
 .list-likes {
 	text-align: center;
 	margin-bottom: 15px;
-	.clearfix();
+    zoom: 1;
+    &:before, &:after {
+        display: table;
+        content: '';
+        zoom: 1;
+    }
+    &:after {
+        clear: both;
+    }
 	li {
 		width: 16.66%;
 		float: left;

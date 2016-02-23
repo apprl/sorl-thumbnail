@@ -118,7 +118,7 @@
                         {% endfor %}
                     </ul>
                 </form>
-                <ul id="selected-manufacturers" class="level-1 list-unstyled">
+                <ul id="selected-manufacturers" class="level-1 list-filter-b">
                     {% for brand in selected_brands_data.items %}
                     <li><a id="manufacturer-{{ brand.1.id }}" href="{{ brand.1.href }}" class="selected">{{ brand.1.name }}</a></li>
                     {% endfor %}
