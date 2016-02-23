@@ -270,7 +270,7 @@ class User(AbstractUser):
         if self.image:
             return get_thumbnail(self.image, '40x40', crop='center').url
         elif self.facebook_user_id:
-            return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
+            return 'http://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
 
         if self.is_brand:
             return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
@@ -333,7 +333,7 @@ class User(AbstractUser):
         if self.image:
             image = get_thumbnail(self.image, '50x50', format="PNG").url
         elif self.facebook_user_id:
-            image_path = 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
+            image_path = 'http://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
             image = get_thumbnail(image_path, '50x50', format="PNG").url
         default.engine = old_engine
         return image
