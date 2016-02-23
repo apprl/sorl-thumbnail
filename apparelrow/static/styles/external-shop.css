@@ -114,16 +114,7 @@
   width: 100% !important;
 }
 .apprl-shop .pagination {
-  zoom: 1;
-}
-.apprl-shop .pagination:before,
-.apprl-shop .pagination:after {
-  display: table;
-  content: '';
-  zoom: 1;
-}
-.apprl-shop .pagination:after {
-  clear: both;
+  clear: both !important;
 }
 .apprl-shop .container {
   margin-right: auto;
