@@ -82,22 +82,33 @@
 {% block body-classes %}publisher dashboard{% endblock body-classes %}
 {% block body %}
 
-    {% include 'apparel/admin/header.html' %}
+    <div class="body-header">
+        <h1>{% trans "Admin Dashboard" %}</h1>
+        <ul class="submenu">
+            <li><a{% if 'publisher' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-admin' %}">{% trans "Publisher" %}</a></li>
+            <li><a{% if 'kpi' in request.path %} class="selected"{% endif %} href="{% url 'admin-kpi-dashboard' %}">{% trans "KPI" %}</a></li>
+            <li><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'admin-stores' %}">{% trans "Stores" %}</a></li>
+        </ul>
+    </div>
 
     <div class="row publisher-admin">
         <div class="col-lg-12">
             <p>
                 <label>{% trans "Show: " %}
-                    <select class="month-select">
-                        {% for item_month in month_choices %}
-                        <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
-                        {% endfor %}
-                    </select>
-                    <select class="year-select">
-                        {% for item_year in year_choices %}
-                        <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="select">
+                        <select class="month-select">
+                            {% for item_month in month_choices %}
+                            <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="select">
+                        <select class="year-select">
+                            {% for item_year in year_choices %}
+                            <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </label>
             </p>
             <ul class="list-inline col-md-10 col-md-offset-1">

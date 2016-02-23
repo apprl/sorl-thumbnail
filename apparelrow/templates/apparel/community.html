@@ -11,7 +11,7 @@
         <nav role="navigation">
             <ul>
                 <li><a href="{% url 'index' %}"><span>{% trans "For Influencers" %}</span></a></li>
-                <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
+                <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
                 <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
             </ul>
         </nav>
@@ -23,7 +23,7 @@
         <section class="community-welcome">
             <div class="background-image"></div>
             <div class="splash">
-                <h1 class="display">{% trans 'Join to create, share and shop the style of<span class="wbr"></span> bloggers, magazines and other style makers.' %}</h1>
+                <h1 class="display">{% trans 'Join APPRL Community to create, share and shop<span class="wbr"></span> the style of top influencers & other style makers.' %}</h1>
                 <div class="login-box">
                     {% facebook_button next=next_url extra_class="btn-facebook-login" %}
                     <form method="post">
@@ -191,31 +191,13 @@
         $(document).ready(function() {
             var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
                 scroll = false;
-                //resizeTimer;
-
-            /*$(window).on('resize', function(e) {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(moveElements, 250);
-            });
-
-            function moveElements() {
-                if ($(window).width() >= 768) {
-                    $('.logo').prependTo('.login-box');
-                    $('.btn-facebook').prependTo('.login-options');
-                }
-                else {
-                    $('.logo').prependTo('header');
-                    $('.btn-facebook').prependTo('.login-box form');
-                }
-            }
-            moveElements();*/
 
             $(window).on('scroll', function() {
-                if ($(window).scrollTop() >= 1) {
+                if ($(window).scrollTop() >= anchor) {
                     $('header').addClass('expand');
                     scroll = true;
                 }
-                if ($(window).scrollTop() < 1 && scroll == true) {
+                if ($(window).scrollTop() < anchor && scroll == true) {
                     $('header').removeClass('expand');
                 }
             });
