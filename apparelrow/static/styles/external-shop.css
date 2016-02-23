@@ -28,20 +28,6 @@
   /* Grid ---------- */
   /* Components ---------- */
   /* Form elements ---------- */
-  /*.filter.selected:before {
-        color: white;
-        background-color: black;
-        border-color: black;
-        font-size: 12px;
-    }
-    .list-filter a.selected {
-        color: black;
-    }
-    .list-filter a.selected:before {
-        box-shadow: inset 0 0 0 2px white;
-        background-color: black;
-        border-color: black;
-    }*/
   /* Panels & filters ---------- */
   /* Product List ---------- */
   /* Product ---------- */
@@ -127,12 +113,23 @@
 .apprl-shop .no-filters .col-product-list {
   width: 100% !important;
 }
+.apprl-shop .pagination {
+  zoom: 1;
+}
+.apprl-shop .pagination:before,
+.apprl-shop .pagination:after {
+  display: table;
+  content: '';
+  zoom: 1;
+}
+.apprl-shop .pagination:after {
+  clear: both;
+}
 .apprl-shop .container {
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
-  clear: both;
 }
 .apprl-shop .list-horizontal > li {
   margin: 0 auto 15px auto;

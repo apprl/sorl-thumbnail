@@ -115,12 +115,22 @@
     }
 
     /* Components ---------- */
+    .pagination {
+        zoom: 1;
+        &:before, &:after {
+            display: table;
+            content: '';
+            zoom: 1;
+        }
+        &:after {
+            clear: both;
+        }
+    }
     .container {
         margin-right: auto;
         margin-left: auto;
         padding-left: 15px;
         padding-right: 15px;
-        clear: both;
     }
     .list-horizontal > li {
         margin: 0 auto 15px auto;
@@ -249,20 +259,6 @@
             }
         }
     }
-    /*.filter.selected:before {
-        color: white;
-        background-color: black;
-        border-color: black;
-        font-size: 12px;
-    }
-    .list-filter a.selected {
-        color: black;
-    }
-    .list-filter a.selected:before {
-        box-shadow: inset 0 0 0 2px white;
-        background-color: black;
-        border-color: black;
-    }*/
 
     /* Panels & filters ---------- */
     .accordion-toggle {
