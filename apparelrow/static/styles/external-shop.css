@@ -118,6 +118,7 @@
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
+  clear: both;
 }
 .apprl-shop .list-horizontal > li {
   margin: 0 auto 15px auto;
