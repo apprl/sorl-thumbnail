@@ -100,11 +100,11 @@
     float: left;
     position: relative;
     min-height: 1px;
-    padding-right: 30px;
   }
   .apprl-shop .col-product-filter {
     width: 33.33333333%;
     margin-bottom: 15px;
+    padding-right: 30px;
   }
   .apprl-shop .col-product-list {
     width: 66.66666667%;
