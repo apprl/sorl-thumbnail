@@ -677,7 +677,7 @@ function updateEmbeddedProducts($list) {
         $list.find('.product-medium').each(function(i, element) {
             var buy_url = $(element).find('.btn-product-buy').attr('href');
             buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
-            $('.product-image-container > a, .caption > h4 > a', element).attr('href', buy_url);
+            $('.product-image-container > a, .caption > h5 > a', element).attr('href', buy_url);
             $('.product-image-container > a, .caption a', element).attr('target', '_blank');
             var looks_elem = $('.caption a.looks', element);
             var looks_href = looks_elem.attr('href');
@@ -698,7 +698,7 @@ function updateEmbeddedProducts($list) {
 
 function renderProducts(products) {
     $('#product-list > .product-list').empty();
-    $('#product-list > h4').text(products.browse_text);
+    $('#product-list > h5').text(products.browse_text);
 
     renderPage(products);
 
