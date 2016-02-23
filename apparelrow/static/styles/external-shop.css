@@ -81,7 +81,10 @@
 .apprl-shop #reset {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 30px;
+}
+.apprl-shop #reset i {
+  float: none;
 }
 .apprl-shop #discount-price {
   font-size: 13px;
