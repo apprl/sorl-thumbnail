@@ -39,5 +39,12 @@
         </div>
     </div>
 
-
 {% endblock %}
+
+{% block footer %}
+        {% if not request.user.is_authenticated %}
+            {% include "landing_footer.html" %}
+        {% else %}
+            {{ block.super }}
+        {% endif %}
+{% endblock footer %}
