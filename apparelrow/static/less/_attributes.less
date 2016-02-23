@@ -1,0 +1,33 @@
+/*
+    Attributes v1.0
+*/
+
+.center-sm {
+    text-align: center;
+    @media (min-width: @screen-md) {
+        text-align: left;
+    }
+}
+.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+.sortable th {
+    cursor: pointer;
+}
+.hidden {
+    display: none;
+}
+.color-primary {
+    color: @primaryColor;
+    &:hover, &:focus {
+        color: darken(@primaryColor, 15%) !important;
+    }
+}
+.color-secondary {
+    color: @secondaryColor;
+    &:hover, &:focus {
+        color: darken(@secondaryColor, 15%) !important;
+    }
+}

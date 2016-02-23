@@ -4,36 +4,90 @@
 <div class="body-header visible-md visible-lg">
     <div class="body-header-col-left visible-md visible-lg">
         {% if type == 'look_editor' %}
-            <h1>{% if object %}{{ object.title }} {% if not object.published %}({% trans "Not published" %}) {% endif %}{% else %}{% if component == 'photo' %}{% trans "Create a tagged photo" %}{% else %}{% trans "Create a collage" %}{% endif %}{% endif %}</h1>
+            <h2>
+                {% if object %}
+                    {{ object.title }}
+                    {% if not object.published %}
+                        ({% trans "Not published" %})
+                    {% endif %}
+                {% else %}
+                    {% if component == 'photo' %}
+                        {% trans "Create a tagged photo" %}
+                    {% else %}
+                        {% trans "Create a collage" %}
+                    {% endif %}
+                {% endif %}
+            </h2>
         {% else %}
-            <h1>{{ title }}</h1>
+            <h2>{{ title }}</h2>
         {% endif %}
     </div>
-    <div class="body-header-col-right">
-        <ul class="list-inline">
 
+    <div class="body-header-col-right">
+        <ul class="sidebar{% if component == 'photo' %} flexible{% endif %}">
         {% if type == 'look_editor' %}
             {% if object and object.slug %}
-            <li><button class="btn btn-delete" name="look_delete">{% trans "Delete" %}</button></li>
+                <li>
+                    <button class="btn btn-secondary btn-delete" name="look_delete">{% trans "Delete" %}</button>
+                </li>
             {% else %}
-            <li><button class="btn btn-reset" name="look_reset">{% trans "Reset look" %}</button></li>
+                <li>
+                    <button class="btn btn-reset" name="look_reset">{% trans "Reset look" %}</button>
+                </li>
             {% endif %}
-            <li><button class="btn btn-save" name="look_save" data-save-draft-text="{% trans "Save draft" %}">{% if object and object.published %}{% trans "Save" %}{% else %}{% trans "Save draft" %}{% endif %}</button></li>
-            {% if object and object.published %}
-            <li><button class="btn btn-unpublish" name="look_publish" data-publish-text="{% trans "Unpublish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Unpublish" %}</button></li>
-            {% else %}
-            <li><button class="btn btn-publish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">{% trans "Publish" %}</button></li>
-            {% endif %}
-        {% elif type == 'create_shop' %}
-            <li><a data-target="#modal_embed_shop" data-toggle="modal" data-slug="{{ object.pk }}" class="btn btn-primary btn-success btn-embed" href="#">Customize & save</a></li>
-            <li><button class="btn btn-delete" name="look_delete">{% trans "Delete" %}</button></li>
-            <li><button class="btn btn-reset" name="look_reset">{% trans "Reset shop" %}</button></li>
-        {% else %}
-            <li><a data-target="#modal_embed_product_widget" data-toggle="modal" data-slug="{{ object.pk }}" class="btn btn-primary btn-success btn-embed" href="#">Customize & save</a></li>
-            <li><button class="btn btn-delete" name="look_delete">{% trans "Delete" %}</button></li>
-            <li><button class="btn btn-reset" name="look_reset">{% trans "Reset widget" %}</button></li>
-        {% endif %}
+                <li>
+                    <button class="btn btn-primary btn-save" name="look_save" data-save-draft-text="{% trans "Save draft" %}">
+                        {% if object and object.published %}{% trans "Save" %}{% else %}{% trans "Save draft" %}{% endif %}
+                    </button>
+                </li>
 
+            {% if object and object.published %}
+                <li>
+                    <button class="btn btn-secondary btn-unpublish" name="look_publish" data-publish-text="{% trans "Unpublish" %}" data-unpublish-text="{% trans "Unpublish" %}">
+                        {% trans "Unpublish" %}
+                    </button>
+                </li>
+            {% else %}
+                <li>
+                    <button class="btn btn-primary btn-publish" name="look_publish" data-publish-text="{% trans "Publish" %}" data-unpublish-text="{% trans "Unpublish" %}">
+                        {% trans "Publish" %}
+                    </button>
+                </li>
+            {% endif %}
+
+        {% elif type == 'create_shop' %}
+            <li>
+                <a data-target="#modal_embed_shop" data-toggle="modal" data-slug="{{ object.pk }}" class="btn btn-primary btn-success btn-embed" href="#">
+                    {% trans "Customize & save" %}
+                </a>
+            </li>
+            <li>
+                <button class="btn btn-delete" name="look_delete">
+                    {% trans "Delete" %}
+                </button>
+            </li>
+            <li>
+                <button class="btn btn-reset" name="look_reset">
+                    {% trans "Reset shop" %}
+                </button>
+            </li>
+        {% else %}
+            <li>
+                <a data-target="#modal_embed_product_widget" data-toggle="modal" data-slug="{{ object.pk }}" class="btn btn-primary btn-success btn-embed" href="#">
+                    {% trans "Customize & save" %}
+                </a>
+            </li>
+            <li>
+                <button class="btn btn-delete" name="look_delete">
+                    {% trans "Delete" %}
+                </button>
+            </li>
+            <li>
+                <button class="btn btn-reset" name="look_reset">
+                    {% trans "Reset widget" %}
+                </button>
+            </li>
+        {% endif %}
         </ul>
     </div>
 </div>

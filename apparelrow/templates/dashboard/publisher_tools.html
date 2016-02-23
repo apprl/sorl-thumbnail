@@ -5,163 +5,123 @@
 {% block extra-title %}{% trans "Publisher Tools" %} | {% endblock %}
 
 {% block body-classes %}discover-list-page{% endblock %}
-{% block body-container-classes %}body-grey{% endblock %}
 {% block extra-styles %}{% compressed_css 'homepage' %}{% endblock extra-styles %}
 
 {% block full-body %}
 
-<div class="container-fluid apprl-content apprl-top">
-    <div class="row apprl-publishers-header apprl-header apprl-header-slim" style="visibility:hidden; ">
-        <div class="col-xs-12 apprl-header-wrap">
-            <div class="container apprl-header-measurement"> <!-- Reference block for jQuery calculations, minimizes code -->
-                <div class="row">
-                    <div class="col-lg-8">
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="apprl-header-left apprl-header-left-publisher publisher-top">
-                        <div class="row apprl-header-left-row">
-                            <div class="col-xs-12" style="min-height: 350px;">
-                                <h1 class="apprl-c-primary apprl-maintitle">{% trans "PUBLISHER TOOLS" %}</h1>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="container">
-    <div class="header-screens">
-        <img class="image-header"  src="{% static 'images/screens.png' %}" />
+    <div class="body-header">
+        <h1>{% trans "Create & Earn" %}</h1>
+        <p>{% trans "APPRL offers a range of tools and formats for you to earn money by creating different types of shoppable content. We also have smart tools to save time for you, for example you can install APPRL for Chrome to add products directly from retailers' sites." %}</p>
     </div>
-</div>
-<div class="container" style="background: #eeeeee;">
-    <div class="row">
-        <div class="col-lg-12 apprl-tools">
-            <h4 class="apprl-slash text-center">{% trans "Our Tools" %}</h4>
-            <p class="text-center">{% trans "Apprl offers a range of tools and formats for bloggers and other digital fashion beauty and media. Through our tools and the support from our team we help you grow, earn money on your content and learn more about your audience." %}<br />&nbsp;</p>
-        </div>
-        <div class="col-lg-12">
 
-            <!-- Shop -->
+    <div class="row">
+        <div class="col-lg-12">
             <ul class="discover-list list-unstyled row">
-                <li class="col-discover-item clickable-boxes">
-                    <div class="user-medium panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_shop">
-                            <div class="image" align=center>
-                                <img src="{% static 'images/tools/PublisherToolShop_thumb.png' %}" />
-                            </div>
-                        </a>
-                        <div class="text">
-                            <div class="bg"></div>
-                            <div class="title">
-                                <span>{% trans "Shop" %}</span>
-                            </div>
-                            <div class="desc">
-                                <span>{% trans "Create a shop for your site in just a few minutes" %}</span>
-                            </div>
-                            <a class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" data-target="#modal_tool_shop">
-                                {% trans "Get started" %}
+
+                <!-- Shop -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a href="{% url 'create-shop' %}"><img src="{% static 'images/tools/PublisherToolShop_thumb.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Shop" %}</h2>
+                            <p>{% trans "Create a shop for your site in just a few minutes." %}</p>
+                            <a class="btn btn-primary" href="{% url 'create-shop' %}">
+                                {% trans "Create Shop" %}
                             </a>
-                        </div>
+                            <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_shop">
+                                {% trans "Info" %}
+                            </a>
+                        </article>
                     </div>
                 </li>
 
                 <!-- Collage -->
-                <li class="col-discover-item clickable-boxes">
-                    <div class="user-medium panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_collage">
-                            <div class="image" align=center>
-                                <img src="{% static 'images/tools/ApprlCollage_icon.jpg' %}" />
-                            </div>
-                        </a>
-                        <div class="text">
-                            <div class="bg"></div>
-                            <div class="title">
-                                <span>{% trans "Collage" %}</span>
-                            </div>
-                            <div class="desc">
-                                <span>{% trans "Share interactive mood boards with your audience" %}</span>
-                            </div>
-                            <a class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" data-target="#modal_tool_collage">
-                                {% trans "Get started" %}
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a href="{% url 'look-editor' 'collage' %}"><img src="{% static 'images/tools/ApprlCollage_icon.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Collage" %}</h2>
+                            <p>{% trans "Share interactive mood boards with your audience." %}</p>
+                            <a class="btn btn-primary" href="{% url 'look-editor' 'collage' %}">
+                                {% trans "Create Collage" %}
                             </a>
-                        </div>
+                            <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_collage">
+                                {% trans "Info" %}
+                            </a>
+                        </article>
                     </div>
                 </li>
 
-                <!-- Tagged photo -->
-                <li class="col-discover-item clickable-boxes">
-                    <div class="user-medium panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_tagged_photo">
-                            <div class="image" align=center>
-                                <img src="{% static 'images/tools/ApprlTaggedPhoto_icon.png' %}" />
-                            </div>
-                        </a>
-                        <div class="text">
-                            <div class="bg"></div>
-                            <div class="title">
-                                <span>{% trans "Tagged Photos" %}</span>
-                            </div>
-                            <div class="desc">
-                                <span>{% trans "Let your audience shop your photos" %}</span>
-                            </div>
-                            <a class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" data-target="#modal_tool_tagged_photo">
-                                {% trans "Get started" %}
+                <!-- Tagged Photos -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static 'images/tools/ApprlTaggedPhoto_icon.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Tagged Photos" %}</h2>
+                            <p>{% trans "Let your audience shop your curated photos." %}</p>
+                            <a class="btn btn-primary" href="{% url 'look-editor' 'photo' %}">
+                                {% trans "Create Tagged Photo" %}
                             </a>
-                        </div>
+                            <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_tagged_photo">
+                                {% trans "Info" %}
+                            </a>
+                        </article>
                     </div>
                 </li>
 
-                <!-- Text links -->
-                <li class="col-discover-item clickable-boxes">
-                    <div class="user-medium panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_text_link">
-                            <div class="image" align=center>
-                                <img src="{% static 'images/tools/ApprlProductlink_Icon2.jpg' %}" />
-                            </div>
-                        </a>
-                        <div class="text">
-                            <div class="bg"></div>
-                            <div class="title">
-                                <span>{% trans "Product Links" %}</span>
-                            </div>
-                            <div class="desc">
-                                <span>{% trans "Get short links for products with a click" %}</span>
-                            </div>
-                            <a class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" data-target="#modal_tool_text_link">
-                                {% trans "Get started" %}
+                <!-- Product Links -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/ApprlProductlink_Icon2.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Product Links" %}</h2>
+                            <p>{% trans "Get short links for products with just a click." %}</p>
+                            <a class="btn btn-primary" href="{% url 'shop' %}">
+                                {% trans "Get Links" %}
                             </a>
-                        </div>
+                            <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_text_link">
+                                {% trans "Info" %}
+                            </a>
+                        </article>
                     </div>
                 </li>
 
-                <!-- Chrome extension -->
-                <li class="col-discover-item clickable-boxes">
-                    <div class="user-medium panel publisher-panel">
-                        <a data-toggle="modal" data-target="#modal_tool_text_link">
-                            <div class="image" align=center>
-                                <img src="{% static 'images/tools/ApprlChromeExtension_Icon.jpg' %}" />
-                            </div>
-                        </a>
-                        <div class="text">
-                            <div class="bg"></div>
-                            <div class="title">
-                                <span>{% trans "Chrome Extension" %}</span>
-                            </div>
-                            <div class="desc">
-                                <span>{% trans "Get links and like products directly from retailers’ sites" %}</span>
-                            </div>
-                            <a class="btn btn-default btn-apprldark btn-lg" data-toggle="modal" data-target="#modal_tool_chrome_ext">
-                                {% trans "Get started" %}
+                <!-- APPRL for Chrome -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a target="_blank" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm"><img src="{% static 'images/tools/ApprlChromeExtension_Icon.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "APPRL for Chrome" %}</h2>
+                            <p>{% trans "Get links and like products directly from retailers' sites." %}</p>
+                            <a target="_blank" class="btn btn-primary" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm">
+                                {% trans "Download" %}
                             </a>
-                        </div>
+                            <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_chrome_ext">
+                                {% trans "Info" %}
+                            </a>
+                        </article>
                     </div>
                 </li>
+
+                <!-- Invite & Earn -->
+                {% if request.user.is_partner and request.user.referral_partner %}
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        {# need url function for referral page here #}
+                        <a href="{% url 'dashboard-referral' %}"><img src="{% static 'images/tools/referral.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Invite & Earn" %}</h2>
+                            <p>{% trans "Earn money by inviting publishers and bloggers." %}</p>
+                            <a class="btn btn-primary" href="{% url 'dashboard-referral' %}">
+                                {% trans "Get Started" %}
+                            </a>
+                            <span class="empty"></span>
+                        </article>
+                    </div>
+                </li>
+                {% endif %}
+
             </ul>
         </div>
     </div>
@@ -174,9 +134,9 @@
 {% include 'dashboard/fragments/dialog_tool_chrome_ext.html' with request=request csrf_token=csrf_token next=next only %}
 
 <script type="text/javascript">
-    $('.modal').on('shown.bs.modal', function (e) {
+    /*$('.modal').on('shown.bs.modal', function (e) {
         resizeSliderContainer(this);
-    });
+    });*/
     $('.modal').on('shown.bs.modal', function () {
         var modalSlider = $(this).find('.iosSlider')
         modalSlider.iosSlider('destroy');
@@ -199,7 +159,7 @@
 </script>
 
 <script type="text/javascript">
-    $(window).load(function() {
+    /*$(window).load(function() {
         //Function below
         resizeapprlheader();
         placeScreens();
@@ -268,10 +228,10 @@
         $(modal).find('.slider-container').css({
             height: setHeight
         });
-    }
+    }*/
 
     /* Locate screens in the header */
-    function placeScreens() {
+    /*function placeScreens() {
         //Set vars
         var windowWidth = $(window).width();
         var screensWidth = $('.apprl-header-measurement').css('width');
@@ -301,6 +261,6 @@
     $(window).bind('orientationchange',function(e) {
         placeScreens();
         resizeSliderContainer($('.in'));
-    });
+    });*/
 </script>
 {% endblock %}

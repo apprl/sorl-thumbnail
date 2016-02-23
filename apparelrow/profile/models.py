@@ -103,7 +103,7 @@ class User(AbstractUser):
     facebook_access_token = models.CharField(max_length=255, null=True, blank=True)
     facebook_access_token_expire = models.DateTimeField(null=True, blank=True)
 
-    # partner
+    # partner a.k.a publisher
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
     is_top_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Top partner user'))
     partner_group = models.ForeignKey('dashboard.Group', verbose_name=_('Commission group'), null=True, blank=True)
@@ -268,7 +268,7 @@ class User(AbstractUser):
     @cached_property
     def avatar_small(self):
         if self.image:
-            return get_thumbnail(self.image, '32x32', crop='center').url
+            return get_thumbnail(self.image, '40x40', crop='center').url
         elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
 
@@ -398,6 +398,7 @@ class User(AbstractUser):
             return reverse('brand-followers', args=[self.slug])
 
         return reverse('profile-followers', args=[self.slug])
+
     @cached_property
     def url_following(self):
         if self.is_brand:
@@ -407,7 +408,6 @@ class User(AbstractUser):
 
     def has_partner_group_ownership(self):
         return get_model('dashboard', 'Group').objects.filter(owner=self).exists()
-
 
     def is_referral_parent_valid(self):
         if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():

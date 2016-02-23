@@ -1,23 +1,23 @@
 {% load i18n apparel_extras %}
 <ul class="shop-list list-unstyled row">
     {% for object in current_page.object_list %}
-        <li class="shop col-sm-4">
-            <h4 class="shop-title"><a href="{% url 'create-shop' object.pk %}">{{ object.title }}</a></h4>
-            <div class="description">
-
-            </div>
-
+        <li class="col-sm-4">
+            <h4><a href="{% url 'create-shop' object.pk %}">{{ object.title }}</a></h4>
+            <div class="description"></div>
             <p>
                 {% if object.show_liked %}
                     {% trans 'Your liked products' %}
                 {% else %}
                    {% trans 'Contains' %} {{ object.products.count }} {% trans 'products' %}
                 {% endif %}
-                <br/>
+                <br>
                 {% trans 'Last modified' %}: {{ object.created|since }}
-                <br/>
-                <a class="btn btn-success" href="{% url 'create-shop' object.pk %}">Edit</a> <a class="btn btn-danger" href="#" data-toggle="modal" data-shopid="{{ object.pk }}" data-shoptitle="{{ object.title }}" data-target="#modal_shop_delete">Delete</a>
+                <br>
             </p>
+            <div class="btn-group">
+                <a class="btn btn-default" href="{% url 'create-shop' object.pk %}"><i class="fa fa-pencil"></i> Edit</a>
+                <a class="btn btn-secondary" href="#" data-toggle="modal" data-shopid="{{ object.pk }}" data-shoptitle="{{ object.title }}" data-target="#modal_shop_delete">Delete</a>
+            </div>
         </li>
     {% empty %}
     {% if current_page.number == 1 %}

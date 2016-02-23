@@ -1,14 +1,71 @@
-{% load comments %}
+{% load i18n comments %}
 {% get_comment_list for object as comments %}
+{% get_comment_count for object as comment_count %}
 {% if comments or user.is_authenticated %}
 <div class="comment-box">
     <ul class="comments-list">
+    {# Fix: Sort the comments in reverse order (recently published on top) #}
     {% for comment in comments %}
     {% include 'comments/comment.html' %}
     {% endfor %}
     </ul>
+    {% if comments %}
+    <a class="btn-show_more" data-toggle="v" href="#"><span>{% trans "Show all comments" %} ({{ comment_count }})</span></a>
+    {% endif %}
     {% if user and user.is_authenticated %}
     {% render_comment_form for object %}
+    {% else %}
+    <div class="comment-logged_out">
+        <a class="btn btn-success" data-toggle="modal" href="#" data-target="#modal_comment">{% trans "Comment" %}</a>
+    </div>
     {% endif %}
 </div>
 {% endif %}
+
+<script type="text/javascript" src="/static/js/jquery/jquery.autosize-min.js" charset="utf-8"></script>
+<script>
+    $(document).ready(function() {
+        autosize($('#id_comment'));
+
+        var counter = 1,
+            mobile_device = false;
+
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            mobile_device = true;
+        }
+
+        $('.comments-list li').each(function() {
+            if ( counter > 3 ) {
+                $(this).hide();
+            }
+            counter++;
+        });
+
+        $('.btn-show_more').click(function() {
+            $(this).fadeOut(200);
+            $('.comments-list li').slideDown(200);
+            return false;
+        });
+
+        $('#id_comment').on('keydown', function(event){
+            if (event.which === 13 && !event.shiftKey) {
+                if (mobile_device == true) {
+                    $('.comment-box textarea').animate({height: '80px'}, 250);
+                    expanded = true;
+                }
+                else {
+                    $('.comment-box form').submit();
+                    return false;
+                }
+            }
+            /*if (event.which === 50 ) {
+                $('.comments-mention').fadeIn(200);
+            }*/
+        });
+
+        /*$('.comments-mention').click(function() {
+            $(this).fadeOut(200);
+            return false;
+        });*/
+    });
+</script>

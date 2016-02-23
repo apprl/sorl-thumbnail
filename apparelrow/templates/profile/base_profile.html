@@ -17,108 +17,157 @@
     <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
 {% endblock extra-styles %}
 
-{% block 'extra-scripts' %}
+{% block extra-scripts %}
 {% if request.user.is_authenticated and request.user == profile %}
 <script type="text/javascript">
 $(document).ready(function() {
+    $('#id_image').change(function() {
+        $('form .btn-group').toggleClass('hidden');
+        readURL(this);
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#replace-image').show().find('img').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('a[href="#cancel"]').click(function(e) {
+        $('form .btn-group').toggleClass('hidden');
+        $('#id_image').val('');
+        $('#replace-image').hide().find('img').attr('src', '');
+        e.preventDefault();
+    });
+
     $('.profile-header .btn-change-description').enableEditable();
 });
 </script>
 {% endif %}
-{% endblock 'extra-scripts' %}
+{% endblock %}
 
 {% block body-classes %}profile-page{% endblock body-classes %}
 {% block full-body %}
 <div class="profile-header">
     <div class="container">
-
-        <div class="row">
-            <div class="col-sm-2">
-                <div id="profile-image">
-                    <a href="{{ profile.get_absolute_url }}"><img src="{{ profile.avatar_large }}" class="img-responsive"></a>
-                    {% if request.user.is_authenticated and request.user == profile %}
-                    <a href="#edit" class="btn btn-success btn-sm btn-block btn-edit" style="display: none;">{% trans "Change picture" %}</a>
-                    <a href="#cancel" class="btn btn-danger btn-sm btn-block btn-cancel" style="display: none;">{% trans "Cancel" %}</a>
-                    {% include 'profile/fragments/change_image_form.html' with form_enctype='multipart/form-data' %}
-                    {% endif %}
+        <div class="image-options">
+            <div id="profile-image">
+                <span id="replace-image">
+                    <img src="{{ profile.avatar_circular_large }}">
+                </span>
+                <img src="{{ profile.avatar_circular_large }}">
+            </div>
+            {% if request.user.is_authenticated and request.user == profile %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="change_image_form" value="yes">
+                <label>
+                    <input type="file" name="image" id="id_image">
+                    <span class="btn btn-edit">
+                        <i class="fa fa-camera"></i>
+                    </span>
+                </label>
+                <div class="btn-group hidden">
+                    <button type="submit" class="btn btn-primary btn-sm">{% trans "Save" %}</button>
+                    <a href="#cancel" class="btn btn-secondary btn-sm">{% trans "Cancel" %}</a>
                 </div>
-            </div>
-            <div class="col-sm-10 profile-content">
-                <h1>{{ profile.display_name }}</h1>
-                {% if request.user.is_authenticated and request.user == profile %}
-                <a class="btn btn-primary btn-create-shop" data-slug="{{ request.user.slug }}" href="{% url 'create-shop' %}">{% trans "Create a shop on your site" %}</a>
-                {% else %}
-                {% include 'apparel/fragments/follow.html' %}
-                {% endif %}
-                {% if profile and profile.is_brand and profile.translated_manual_about %}
-                <p class="description">{{ profile.translated_manual_about|urlize_target_blank|linebreaksbr }}</p>
-                {% else %}
-                <p class="description">{% if profile.about %}{{ profile.about|urlize_target_blank|linebreaksbr }}{% else %}{% if request.user.is_authenticated and request.user == profile %}{% trans "Add your description by clicking here." %}{% endif %}{% endif %}</p>
-                {% endif %}
+            </form>
+            {% endif %}
+        </div>
+        <div class="profile-content">
+            <h1>{{ profile.display_name }}</h1>
+            {% if request.user.is_authenticated and request.user == profile %}
+            {% else %}
+            {% include 'apparel/fragments/follow.html' %}
+            {% endif %}
+            {% if request.user.is_authenticated and request.user == profile %}
+            <a class="btn btn-edit btn-change-description" href="#"><i class="fa fa-pencil"></i></a>
+            {% endif %}
+            {% if profile and profile.is_brand and profile.translated_manual_about %}
+            <p class="description">{{ profile.translated_manual_about|urlize_target_blank|linebreaksbr }}</p>
+            {% else %}
+            {% if profile.about %}<p class="description">{{ profile.about|urlize_target_blank|linebreaksbr }}{% else %}{% if request.user.is_authenticated and request.user == profile %}{% trans "Add a brief description of yourself here." %}</p>{% endif %}{% endif %}
+            {% endif %}
 
-                {% if request.user.is_authenticated and request.user == profile %}
-                <form id="description-form" method="post" action="{% url 'settings-save-description' %}" style="display: none;">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <textarea class="form-control" rows="5" name="description">{{ profile.about }}</textarea>
-                    </div>
-                    <button class="btn btn-success btn-save-description">{% trans "Save description" %}</button>
-                    <button class="btn btn-danger btn-cancel-description">{% trans "Cancel" %}</button>
-                </form>
-                <a class="btn btn-primary btn-change-description" href="#">{% trans "Change description" %}</a>
-                {% endif %}
-            </div>
+            {% if request.user.is_authenticated and request.user == profile %}
+            <form id="description-form" method="post" action="{% url 'settings-save-description' %}" style="display: none;">
+                {% csrf_token %}
+                <textarea rows="4" name="description">{{ profile.about }}</textarea>
+                <div class="btn-group">
+                    <button class="btn btn-primary btn-sm btn-save-description">{% trans "Save" %}</button>
+                    <button class="btn btn-secondary btn-sm btn-cancel-description">{% trans "Cancel" %}</button>
+                </div>
+            </form>
+            {% endif %}
         </div>
 
-        <div class="profile-navigation row">
-            <div class="col-lg-12">
-                {% with likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
-                <ul class="list-inline">
-                    <li>
-                    {% if profile and profile.is_brand %}
-                        {% url 'brand-likes-men' profile.slug as likes_url_men %}
-                        {% url 'brand-likes-women' profile.slug as likes_url_women %}
-                        <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">
-                            {% blocktrans count products as product_count %}{{product_count}} Item{% plural %}{{product_count}} Items{% endblocktrans %}
-                        </a>
-                    {% else %}
-                        <a{% if request.path == likes_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ likes_url }}">
-                            {% blocktrans count products as product_count %}{{product_count}} Item{% plural %}{{product_count}} Items{% endblocktrans %}
-                        </a>
-                    {% endif %}
-                    </li>
-                    <li>
-                        <a{% if request.path == looks_url %} class="selected"{% endif %} href="{{ looks_url }}">
-                            {% blocktrans count profile.total_look_count as look_count %}{{look_count}} Look{% plural %}{{look_count}} Looks{% endblocktrans %}
-                        </a>
-                    </li>
-                    {% if profile.shops and request.user.is_authenticated and request.user == profile%}
-
-                    <li>
-                        <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">
-                            {% blocktrans count profile.shops as shop_count %}{{shop_count}} Shop{% plural %}{{shop_count}} Shops{% endblocktrans %}
-                        </a>
-                    </li>
-                    {% endif %}
-                    <li>
-                    <a{% if request.path == followers_url %} class="selected"{% endif %} href="{{ followers_url }}">
-                            {% blocktrans count profile.followers_count as followers_count %}{{followers_count}} Follower{% plural %}{{followers_count}} Followers{% endblocktrans %}
-                        </a>
-                    </li>
-                    <li>
-                    <a{% if request.path == following_url %} class="selected"{% endif %} href="{{ following_url }}">
-                            {% blocktrans count following as following_count %}{{following_count}} Following{% plural %}{{following_count}} Following{% endblocktrans %}
-                        </a>
-                    </li>
-                </ul>
-                {% endwith %}
-            </div>
-        </div>
+        {% with likes_url=profile.url_likes looks_url=profile.url_looks likedlooks_url=profile.url_likedlooks brandlooks_url=profile.url_brandlooks shops_url=profile.url_shops followers_url=profile.url_followers following_url=profile.url_following %}
+        <ul class="sub-menu">
+            <li>
+            {% if profile and profile.is_brand %}
+                {% url 'brand-likes-men' profile.slug as likes_url_men %}
+                {% url 'brand-likes-women' profile.slug as likes_url_women %}
+                <a{% if request.path == likes_url or request.path == likes_url_men or request.path == likes_url_women %} class="selected"{% endif %} href="{{ likes_url }}">
+                    {% blocktrans count products as product_count %}Item ({{product_count}}){% plural %}Items ({{product_count}}){% endblocktrans %}
+                </a>
+                <!-- span>({{ products.count }})</span -->
+            {% else %}
+                <a{% if request.path == likes_url %} class="selected"{% endif %} href="{{ likes_url }}">
+                    {% blocktrans count products as product_count %}Item ({{product_count}}){% plural %}Items ({{product_count}}){% endblocktrans %}
+                </a>
+                <!--span>({{ products }})</span-->
+            {% endif %}
+            </li>
+            <li>
+                <a{% if request.path == looks_url or request.path == likedlooks_url or request.path == brandlooks_url %} class="selected"{% endif %} href="{{ looks_url }}">
+                    {% blocktrans count profile.total_look_count as look_count %}Look ({{look_count}}){% plural %}Looks ({{look_count}}){% endblocktrans %}
+                </a>
+                <!-- span>({{ profile.total_look_count }})</span-->
+            </li>
+            {% if profile.shops and request.user.is_authenticated and request.user == profile%}
+            <li>
+                <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">
+                    {% blocktrans count profile.shops as shop_count %}Shop ({{shop_count}}){% plural %}Shops ({{shop_count}}){% endblocktrans %}
+                </a>
+                <!-- span>({{ profile.shops }})</span -->
+            </li>
+            {% endif %}
+            <li>
+                <a{% if request.path == followers_url %} class="selected"{% endif %} href="{{ followers_url }}">
+                    {% blocktrans count profile.followers_count as followers_count %}Follower ({{followers_count}}){% plural %}Followers ({{followers_count}}){% endblocktrans %}
+                </a>
+                <!-- span>({{ profile.followers_count }})</span -->
+            </li>
+            <li>
+                <a{% if request.path == following_url %} class="selected"{% endif %} href="{{ following_url }}">
+                    {% blocktrans count following as following_count %}Following ({{following_count}}){% plural %}Following ({{following_count}}){% endblocktrans %}
+                </a>
+                <!--span>({{ following }})</span-->
+            </li>
+        </ul>
+        {% endwith %}
 
     </div>
 </div>
 
 <div class="container">
-    {% block content %}{% endblock content %}
+    {% block content %}{% endblock %}
 </div>
 {% endblock %}
+{% block body-scripts %}
+<script>
+
+        $("btn-save-description").click(function() {
+            var description = $('#description-form textarea');
+            $.ajax({
+                type: "post",
+                url: "{% url 'settings-save-description' %}",
+                data: { description: description }
+            });
+        });
+</script>
+{% endblock body-scripts %}

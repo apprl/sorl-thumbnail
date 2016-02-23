@@ -15,36 +15,64 @@
                 <div style="position: relative">
                     <div class="lookedit_toolbar">
                         <div class="section">
-                            <a href="#" class="component_clone"><img src="{% static "images/clone.svg" %}"/> <span>{% trans "Clone" %}</span></a>
+                            <a href="#" class="component_clone"><i class="fa fa-clone"></i> <span>{% trans "Clone" %}</span></a>
                         </div>
                         <div class="section">
-                            <a href="#" class="component_forward"><img src="{% static "images/forward.svg" %}"/> <span>{% trans "Forward" %}</span></a>
+                            <a href="#" class="component_forward"><i class="fa fa-share"></i> <span>{% trans "Forward" %}</span></a>
                         </div>
                         <div class="section">
-                            <a href="#" class="component_back"><img src="{% static "images/back.svg" %}"/> <span>{% trans "Back" %}</span></a>
+                            <a href="#" class="component_back"><i class="fa fa-reply"></i> <span>{% trans "Back" %}</span></a>
                         </div>
                         <div class="section">
-                            <a href="#" class="component_flip"><img src="{% static "images/flip.svg" %}"/> <span>{% trans "Flip" %}</span></a>
+                            <a href="#" class="component_flip"><i class="fa fa-undo"></i> <span>{% trans "Flip" %}</span></a>
                         </div>
                         <div class="section">
-                            <a href="#" class="component_delete"><img src="{% static "images/close.svg" %}"/> <span>{% trans "Delete" %}</span></a>
+                            <a href="#" class="component_delete"><i class="fa fa-times"></i> <span>{% trans "Delete" %}</span></a>
                         </div>
                     </div>
                 </div>
                 <div id="edit-look"></div>
 
             </div>
-            <div id="startsplash">{% if object and not object.id %}{% trans "Start by adding the items here" %}{% endif %}</div>
+            <!--<div id="startsplash">{% trans "Start by adding products." %}</div>-->
             <div class="col-md-6 visible-md visible-lg">
                 {% include "apparel/tools/product_picker.html" %}
             </div>
         </div>
     </div>
 
+    {# Editor guide (steps) #}
+    <div class="editor-guide collage-step-1">
+        <img src="{% static 'images/guide-thumbnail.png' %}" width="128" height="128" alt="">
+        <p>{% trans "Start by adding products here." %}</p>
+        <span></span>
+    </div>
+
+    <div class="editor-guide collage-step-2">
+        <p>{% trans "When you're done and want to save or publish, click here." %}</p>
+        <span></span>
+    </div>
+
     {% include "apparel/tools/widget_templates.html" %}
 
     {% include "apparel/tools/widget_footer.html" %}
     <script type="text/javascript">
+        $(document).ready(function() {
+            var test = $('.sidebar');
+
+            $('.add-item-col button').click(function() {
+                $('.editor-guide').hide();
+            });
+
+            $('.btn-add').on('click', function() {
+                $('#startsplash').hide();
+            });
+
+            $('body').on('click', '#image-form .btn', function() {
+                $('.sidebar').css('display', 'block');
+            });
+        });
+
         var external_look_type = '{{ component }}';
         var external_look_id = {% if object %}{{ object.id }}{% else %}-1{% endif %};
         var external_has_liked = '{{ has_liked }}';
