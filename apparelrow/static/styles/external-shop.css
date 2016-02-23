@@ -29,9 +29,6 @@
   /* Components ---------- */
   /* Form elements ---------- */
   /* Panels & filters ---------- */
-  /*.panel-collapse.collapse {
-        display: none;
-    }*/
   /* Product List ---------- */
   /* Product ---------- */
 }
@@ -109,6 +106,15 @@
   .apprl-shop .col-product-list {
     width: 66.66666667%;
   }
+}
+.apprl-shop .no-filters .col-product-list {
+  width: 100% !important;
+}
+.apprl-shop .container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 .apprl-shop .list-horizontal > li {
   margin: 0 auto 15px auto;
@@ -886,6 +892,11 @@
 @media (min-width: 992px) {
   .apprl-shop .col-product-item {
     width: 33.33333333%;
+  }
+}
+@media (min-width: 768px) {
+  .apprl-shop .no-filters .col-product-item {
+    width: 33.33333333% !important;
   }
 }
 .apprl-shop .price.discounted,
