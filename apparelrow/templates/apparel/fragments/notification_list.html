@@ -12,7 +12,7 @@
                     </g>
                 </g>
             </svg>
-            <span id="unread_count" class="badge">4</span>
+            <span id="unread_count" class="badge">{{ request.user.unread_count }}</span>
             {% if request.user.unread_count > 0 %}<span id="unread_count" class="unread_count badge">{{ request.user.unread_count }}</span>{% endif %}
         </span>
     </a>

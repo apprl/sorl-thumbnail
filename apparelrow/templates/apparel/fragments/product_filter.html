@@ -11,7 +11,7 @@
         </div>
         <div id="collapseGender" class="panel-collapse collapse">
             <div class="panel-body" id="product-gender">
-                <ul id="product-gender" class="list-filter">
+                <ul id="product-gender" class="list-filter-a">
                     {% if user_gender == 'A' %}
                     <li class="all"><a{% if not gender or gender == 'A' %} class="selected"{% endif %} data-gender="A" href="{% url 'shop' %}">{% trans "Show everything" %}</a></li>
                     {% endif %}
@@ -33,7 +33,7 @@
                 {% if categories_all %}
                     {% for category, structure in categories_all|tree_info %}
                     {% if structure.new_level %}
-                    <ul class="level-{{ category.get_level }} list-filter">
+                    <ul class="level-{{ category.get_level }} list-filter-a">
                         {% else %}
                         </li>
                         {% endif %}
@@ -112,7 +112,7 @@
                 <a class="reset" href="">{% trans "Reset this filter" %} <i class="fa fa-times"></i></a>
                 <form>
                     <input type="text" name="brand" value="{% trans "Search brands" %}" />
-                    <ul id="available-manufacturers" class="list-filter">
+                    <ul id="available-manufacturers" class="list-filter-b">
                         {% for manufacturer in manufacturers %}
                         <li><a{% if selected_brands and manufacturer.0 in selected_brands %} class="selected"{% endif %} id="available-manufacturer-{{ manufacturer.0 }}" href="?manufacturer={{ manufacturer.0 }}">{{ manufacturer.1 }}</a></li>
                         {% endfor %}
@@ -136,7 +136,7 @@
         <div id="collapseFive" class="panel-collapse collapse">
             <div class="panel-body" id="product-stores">
                 <a class="reset" href="">{% trans "Reset this filter" %} <i class="fa fa-times"></i></a>
-                <ul id="available-stores" class="list-filter">
+                <ul id="available-stores" class="list-filter-b">
                     {% for store in stores %}
                     <li><a{% if store.0 in selected_stores %} class="selected"{% endif %} id="available-store-{{ store.0 }}" href="?store={{ store.0 }}">{{ store.1 }}</a></li>
                     {% empty %}
@@ -155,7 +155,7 @@
         </div>
         <div id="collapseSort" class="panel-collapse collapse">
             <div class="panel-body" id="product-sort">
-                <ul class="list-filter">
+                <ul class="list-filter-a">
                     <li><a href="?sort=pop" data-sort="pop" class="selected">{% trans "popular" %}</a></li>
                     <li><a href="?sort=lat" data-sort="lat">{% trans "latest" %}</a></li>
                     <li><a href="?sort=che" data-sort="che">{% trans "low price" %}</a></li>
