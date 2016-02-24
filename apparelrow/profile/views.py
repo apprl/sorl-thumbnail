@@ -39,6 +39,7 @@ from apparelrow.apparel.browse import browse_products
 PROFILE_PAGE_SIZE = 24
 
 logger = logging.getLogger('apparel.debug')
+log = logging.getLogger("apparelrow")
 
 def get_facebook_friends(request):
     facebook_user = get_facebook_user(request)
@@ -1055,28 +1056,44 @@ def flow(request):
 
 
 def facebook_redirect_login(request):
+    log.info(u"Received facebook login request, code received [{code}]".format(code=request.GET.get('code', None)))
     if request.GET.get('code'):
         facebook_token_uri = 'https://graph.facebook.com/oauth/access_token?client_id={app_id}&redirect_uri={redirect_uri}&client_secret={app_secret}&code={code_parameter}'
-        response = requests.get(facebook_token_uri.format(app_id=settings.FACEBOOK_APP_ID,
+        request_url = facebook_token_uri.format(app_id=settings.FACEBOOK_APP_ID,
                                                           redirect_uri=request.build_absolute_uri(reverse('auth_facebook_login')),
                                                           app_secret=settings.FACEBOOK_SECRET_KEY,
-                                                          code_parameter=request.GET.get('code')))
+                                                          code_parameter=request.GET.get('code'))
+        log.info("Code exists, sending request to {}".format(request_url))
+        response = requests.get(request_url)
+        log.info("Responsecode: {}".format(response.status_code))
         if response.status_code == 200:
             query_dict = urlparse.parse_qs(response.text)
             access_token = query_dict.get('access_token')[0]
 
             facebook_debug_token_uri = 'https://graph.facebook.com/debug_token?input_token={access_token}&access_token={app_access_token}'
-            response = requests.get(facebook_debug_token_uri.format(access_token=access_token,
-                                                                    app_access_token=settings.FACEBOOK_APP_ACCESS_TOKEN))
+            request_url = facebook_debug_token_uri.format(access_token=access_token,
+                                                                    app_access_token=settings.FACEBOOK_APP_ACCESS_TOKEN)
+            log.info("Facebook debug token request: {}".format(request_url))
+            response = requests.get(request_url)
+            log.info("Responsecode: {}".format(response.status_code))
             if response.status_code == 200:
                 response_json = response.json()
+                log.info("Debug token request ok, facebook authenticating user!")
+                for key in response_json.keys():
+                    log.info("{}: {}".format(key, response_json.get(key, None)))
                 user = auth.authenticate(fb_uid=response_json['data']['user_id'], fb_graphtoken=access_token, request=request)
                 if user and user.is_active:
+                    log.info("Authenticated user is {first_name} {last_name}.".format(first_name=user.first_name, last_name=user.last_name))
                     auth.login(request, user)
                     reset_facebook_user(request)
-
+                    log.info("Request is Ajax: {}, redirect to {}".format(request.is_ajax()), _get_next(request))
                     return _login_flow(request, user)
+            else:
+                log.info("Responsecode FAIL for debug_token url, just redirecting to front page: {}".format(response.status_code))
+        else:
+            log.info("Responsecode FAIL just redirecting to front page: {}".format(response.status_code))
     elif request.GET.get('error_reason'):
+        log.info("Failed to login user to facebook, reason: {}".format(request.GET.get('error_reason')))
         if request.GET.get('error_reason') == 'user_denied' and request.GET.get('error') == 'access_denied':
             return HttpResponseRedirect('{0}?error=user_denied'.format(reverse('auth_login')))
 
