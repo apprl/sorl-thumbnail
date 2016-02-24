@@ -6,14 +6,15 @@
 {% block header-navigation %}
     {# Header #}
     <header role="banner">
-        <a class="logo visible-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
+        <a class="login visible-xs" href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a>
         <a class="menu-toggler" href="#"><span></span></a>
         <nav role="navigation">
+            <a class="logo visible-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
             <ul>
                 <li><a href="{% url 'index' %}"><span>{% trans "For Influencers" %}</span></a></li>
                 <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
                 <li><a href="{% url 'jobs' %}">{% trans "We're hiring!" %}</a></li>
-                <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
+                <li></li>
             </ul>
         </nav>
     </header>
@@ -26,6 +27,7 @@
             <div class="splash">
                 <h1 class="display">{% trans 'Join APPRL Community to create, share and shop<span class="wbr"></span> the style of top influencers & other style makers.' %}</h1>
                 <div class="login-box">
+                    <a class="logo hidden-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
                     {% facebook_button next=next_url extra_class="btn-facebook-login" %}
                     <form method="post">
                         {% csrf_token %}
@@ -228,10 +230,10 @@
                       items: 2
                     },
                     768: {
-                      items: 4
+                      items: 3
                     },
                     992: {
-                      items: 5
+                      items: 4
                     }
                 }
             });
@@ -249,10 +251,10 @@
                       items: 2
                     },
                     768: {
-                      items: 4
+                      items: 3
                     },
                     992: {
-                      items: 5
+                      items: 4
                     }
                 }
             });

@@ -7,6 +7,7 @@
 {% block header-navigation %}
     {# Header #}
     <header role="banner">
+        <a class="login visible-xs" href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a>
         <a class="menu-toggler" href="#"><span></span></a>
         <nav role="navigation">
             <a class="logo visible-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
@@ -14,7 +15,6 @@
                 <li><a href="{% url 'index-retailers' %}"><span>{% trans "For Retailers" %}</span></a></li>
                 <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
                 <li><a href="{% url 'jobs' %}">{% trans "We're hiring!" %}</a></li>
-                <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
             </ul>
         </nav>
     </header>
@@ -31,9 +31,8 @@
                 <a class="crosslink" href="{% url 'index-community' %}">{% trans 'Looking for APPRL Community?' %}</a>
             </div>
             <a class="btn-scroll btn-arrow" href="#" data-scroll="publisher-users"><i class="fa fa-angle-down"></i></a>
+            <span class="brand-line"></span>
         </section>
-
-        <span class="brand-line"></span>
 
         {# Users #}
         <section class="publisher-users">
