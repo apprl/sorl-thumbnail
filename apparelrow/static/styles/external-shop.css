@@ -4,13 +4,13 @@
 /* Fonts ---------- */
 @font-face {
   font-family: 'Neuzeit Regular';
-  src: url('http://s-staging.apprl.com/fonts/Neuzeit-Regular.eot');
-  src: url('http://s-staging.apprl.com/fonts/Neuzeit-Regular.woff') format('woff'), url('http://s-staging.apprl.com/fonts/Neuzeit-Regular.woff2') format('woff2'), url('http://s-staging.apprl.com/fonts/Neuzeit-Regular.ttf') format('truetype');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.eot');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Regular.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Regular.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Neuzeit Bold';
-  src: url('http://s-staging.apprl.com/fonts/Neuzeit-Bold.eot');
-  src: url('http://s-staging.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('http://s-staging.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('http://s-staging.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Bold.eot');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
 }
 /* Shop ---------- */
 .apprl-shop {
@@ -577,6 +577,9 @@
 }
 .apprl-shop #product-manufacturers.active #selected-manufacturers {
   padding: 10px 0 0 0;
+}
+.apprl-shop #product-manufacturers #selected-manufacturers {
+  margin-top: 10px;
 }
 .apprl-shop #product-manufacturers #selected-manufacturers li a:before {
   background-position: -14px 0px;
