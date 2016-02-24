@@ -3,7 +3,7 @@
 <div class="row product-list-container {% if is_embed_shop and not show_filters %}no-filters{% endif %}">
     {% if not is_embed_shop or show_filters %}
     <div class="col-product-filter">
-        <div class="hidden-xs">
+        <div class="filter-header">
             <h4>{% trans "Filter products" %}</h4>
             <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %} <i class="fa fa-times"></i></a>
             <hr>

@@ -26,6 +26,28 @@ body.shop, body.profile-likes {
         }
     }
 
+    .filter-header {
+        max-width: 320px;
+        margin: 0 auto 10px auto;
+        text-align: center;
+        h4, hr {
+            display: none;
+        }
+        @media screen and (min-width: @screen-sm) {
+            text-align: left;
+            margin: 0 auto;
+            max-width: none;
+            h4, hr {
+                display: block;
+            }
+            #reset {
+                position: absolute;
+                top: -2px;
+                right: 15px;
+            }
+        }
+    }
+
     .accordion-toggle, .btn-filter {
         position: relative;
     }
@@ -397,12 +419,6 @@ body.shop, body.profile-likes {
                 }
             }
         }
-    }
-
-    #reset {
-        position: absolute;
-        top: -2px;
-        right: @grid-gutter-width / 2;
     }
 }
 

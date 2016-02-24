@@ -74,13 +74,17 @@
             chart.draw();
         }
         $(document).ready(function() {
-            $('.monthly-list select').change(function() {
-                var $selected = $(this).find(':selected');
-                var year = $selected.data('year');
-                var month = $selected.data('month');
-
+            $('.month-select').change(function() {
+                var month = $('.month-select').find(':selected').data('month');
+                var year = $('.year-select').find(':selected').data('year');
                 window.location.href = '/a/admin/' + year + '/' + month + '/';
             });
+            $('.year-select').change(function() {
+                var month = $('.month-select').find(':selected').data('month');
+                var year = $('.year-select').find(':selected').data('year');
+                window.location.href = '/a/admin/' + year + '/' + month + '/';
+            });
+
             if ($('table#clicks_tb').length) {
                 new Tablesort($('table#clicks_tb').get(0));
             }
@@ -133,20 +137,32 @@
     </section>
 
     <section class="container center">
-        <ul class="list-horizontal center">
-            <li>{% trans "Show statistics for: " %}</li>
+        <ul class="list-horizontal monthly-list date-dropdown center">
+            <li><label>{% trans "Show statistics for: " %}</label></li>
             <li>
                 <div class="select">
                     <span><i class="fa fa-caret-down"></i></span>
-                    <select>
-                        {% for date in dates %}
-                        <option data-year="{{ date.year }}" data-month="{{ date.month }}"{% if date.year == year and date.month == month %} selected{%endif %}>{{ date|date:"F Y" }}</option>
+                    <select class="month-select">
+                        {% for item_month in month_choices %}
+                        <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </li>
+            <li>
+                <div class="select">
+                    <span><i class="fa fa-caret-down"></i></span>
+                    <select class="year-select">
+                        {% for item_year in year_choices %}
+                        <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+            </li>
         </ul>
 
+
+        <br>
         {% if vendor.is_cpc %}
         <p>{% trans "Clicks to your store this month:" %} <strong>{{ clicks_delivered_per_month }}</strong><br>{% trans "Value:" %} {{ currency }} <strong>{{ monthly_click_value }}</strong></p>
         {% endif %}

@@ -6,6 +6,7 @@
     {% block header-navigation %}
     {# Header #}
     <header role="banner">
+        <a class="login visible-xs" href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a>
         <a class="menu-toggler" href="#"><span></span></a>
         <nav role="navigation">
             <a class="logo visible-xs" href="/"><img src="{% static 'images/logo.svg' %}" alt="APPRL" /></a>
@@ -13,7 +14,7 @@
                 <li><a href="{% url 'index' %}"><span>{% trans "For Influencers" %}</span></a></li>
                 <li><a href="{% url 'index-community' %}"><span>APPRL Community</span></a></li>
                 <li><a href="{% url 'jobs' %}">{% trans "We're hiring!" %}</a></li>
-                <li><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
+                <li class="hidden-xs"><a href="{% url 'auth_login' %}"><span>{% trans "Log In" %}</span></a></li>
             </ul>
         </nav>
     </header>
@@ -29,9 +30,8 @@
                 <a class="btn btn-scroll btn-outline" href="#" data-scroll="retailer-apply">{% trans "Apply to join" %}</a>
             </div>
             <a class="btn-arrow btn-scroll" href="#" data-scroll="retailer-users"><i class="fa fa-angle-down"></i></a>
+            <span class="brand-line"></span>
         </section>
-
-        <span class="brand-line"></span>
 
         {# Features #}
         <section class="retailer-users">
@@ -66,14 +66,14 @@
                     <div class="feature first">
                         <div class="tools-display"><img src="{% static 'images/tools-inspiration.jpg' %}" alt=""></div>
                         <div class="tools-description">
-                            <h2>{% trans "Create engaging contests & campaigns" %}</h2>
+                            <h2>{% trans "Your products at the point of inspiration" %}</h2>
                             <p>{% trans "Have your products featured in the content of high end media & top influencers in a range of shoppable content formats, generating high quality traffic to your store. Reach new audiences and get more out of your existing media partnerships." %}</p>
                         </div>
                     </div>
 
                     <div class="feature second">
                         <div class="tools-description">
-                            <h2>{% trans "Create engaging, viral contests & campaigns" %}</h2>
+                            <h2>{% trans "Create engaging contests & campaigns" %}</h2>
                             <p>{% trans "You can use APPRL’s tools to create high ROI contests & campaigns. For example, a contest to create looks with products from your brand, distribute shoppable lookbooks, pop-up shops and more." %}</p>
                         </div>
                         <div class="tools-display"><img src="{% static 'images/tools-campaigns.jpg' %}" alt=""></div>

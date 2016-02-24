@@ -353,7 +353,6 @@ a.info {
 	}
 	a {
 		display: inline-block;
-		color: @lightGrey;
 		font-family: @secondaryFontBold;
 		font-size: 12px;
 		letter-spacing: 1px;
@@ -1097,6 +1096,7 @@ a.info {
 	}
 }
 .list-looks {
+	.clearfix;
 	li {
 		float: left;
 		width: 50%;
@@ -1344,4 +1344,10 @@ main div.message {
 	&:hover {
 		background-color: #3cdaa4;
 	}
+}
+li.discount-price, span.discount-price {
+	color: @secondaryColor;
+}
+li.price.discounted {
+	text-decoration: line-through;
 }

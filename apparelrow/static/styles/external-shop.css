@@ -578,6 +578,9 @@
 .apprl-shop #product-manufacturers.active #selected-manufacturers {
   padding: 10px 0 0 0;
 }
+.apprl-shop #product-manufacturers #selected-manufacturers {
+  margin-top: 10px;
+}
 .apprl-shop #product-manufacturers #selected-manufacturers li a:before {
   background-position: -14px 0px;
 }
