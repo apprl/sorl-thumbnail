@@ -5,13 +5,13 @@
 {% block extra-title %}{% trans "Publisher" %} | {% endblock %}
 
 {% block extra-scripts %}
-    <script type="text/javascript" src="{% static "js/vendor/panellesort.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
     <script type='text/javascript' src='http://www.google.com/jsapi'></script>
     <script type='text/javascript'>
         google.load('visualization', '1', {packages: ['corechart']});
         google.setOnLoadCallback(drawChart);
         function drawChart () {
-            var data = new google.visualization.Datapanelle();
+            var data = new google.visualization.Datatable();
             data.addColumn('date', 'X');
             data.addColumn('number', '{% trans "Commission Earnings" %} ({{ currency }})');
             data.addColumn('number', '{% trans "Referral earnings" %} ({{ currency }})')
@@ -72,7 +72,7 @@
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
                 containerId: 'graph',
-                datapanelle: view,
+                datatable: view,
                 options: {
                     vAxes: {
                         0: {
@@ -108,18 +108,18 @@
                 window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
             });
 
-            new panellesort($('panelle#earnings').get(0));
-            new panellesort($('panelle#top-products').get(0));
-            new panellesort($('panelle#top-products-more').get(0));
-            new panellesort($('panelle#top-publishers').get(0));
-            new panellesort($('panelle#top-publishers-more').get(0));
+            new Tablesort($('table#earnings').get(0));
+            new Tablesort($('table#top-products').get(0));
+            new Tablesort($('table#top-products-more').get(0));
+            new Tablesort($('table#top-publishers').get(0));
+            new Tablesort($('table#top-publishers-more').get(0));
 
         });
         /*
             Load detail click earning details for clicks in a modal
         */
         function load_detailed_data_clicks(json_detail, date, vendor, currency){
-            var html = "<panelle>";
+            var html = "<table>";
             for (i = 0; i < json_detail.length; i++){
                 html += "<tr>" +
                         "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
@@ -127,7 +127,7 @@
                         "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
                         "<tr>";
             }
-            html += "</panelle>";
+            html += "</table>";
             $("#content-clicks").html(html);
             $("#modal-date").html(date);
             $("#modal-vendor").html(vendor);
@@ -237,7 +237,7 @@
         </ul>
         <ul class="list-inline monthly-list">
             <li>{% blocktrans %}Commission earnings:{% endblocktrans %} {{ currency }} {% if month_commission %}{{ month_commission }}{% else %}0.00{% endif %}</li>
-            <li>{% blocktrans %}Sales:{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0.00{% endif %}</li>
+            <li>{% blocktrans %}Sales:{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0{% endif %}</li>
             <li>{% blocktrans %}Clicks: {{ month_clicks }}{% endblocktrans %}</li>
             {%  comment %}<li>{% blocktrans with conversion_rate=month_conversion_rate|floatdot %}Conversion rate: {{ conversion_rate }}%{% endblocktrans %}</li>{%  endcomment %}
         </ul>
@@ -276,10 +276,10 @@
 
     {% if is_owner %}
         <div class="row">
-            <div class="col-lg-12 panelle-responsive">
+            <div class="col-lg-12 table-responsive">
                 <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2></div>
                 <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a></small></h2></div>
-                <panelle id="top-publishers" class="sorpanelle panelle">
+                <table id="top-publishers" class="sortable table">
                     <thead>
                         <tr>
                             <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
@@ -316,16 +316,16 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                </panelle>
+                </table>
             </div>
         </div>
     {% endif %}
 
     <div class="row">
-        <div class="col-lg-12 panelle-responsive">
+        <div class="col-lg-12 table-responsive">
             <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2></div>
             <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a></small></h2></div>
-            <panelle id="top-products" class="sorpanelle panelle">
+            <table id="top-products" class="sortable table">
                 <thead>
                     <tr>
                         <th class="col-md-1 product-image center">{% trans "Product" %}</th>
@@ -364,14 +364,14 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-            </panelle>
+            </table>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-12 panelle-responsive">
+        <div class="col-lg-12 table-responsive">
             <h2 class="sales-header">{% trans "Your earnings" %} {{ month_display }} {{ year }}</h2>
-                <panelle id="all-earnings" class="sorpanelle panelle sortable">
+                <table id="all-earnings" class="sortable table sortable">
                     <thead>
                         <tr>
                             <th class="hidden-xs">{% trans "Date" %}</th>
@@ -389,7 +389,7 @@
                         </td>
                     </tr>
                     </tbody>
-                </panelle>
+                </table>
         </div>
     </div>
     {% endif %}

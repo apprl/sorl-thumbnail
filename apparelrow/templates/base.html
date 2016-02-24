@@ -152,9 +152,7 @@
                                 {% endif %}
                                 {% if request.user.is_partner %}
                                 <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
-                                {% if not request.user.advertiser_store %}
                                 <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
-                                {% endif %}
                                 {% endif %}
                                 <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
                                 <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
