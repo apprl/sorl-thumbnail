@@ -1086,7 +1086,7 @@ def facebook_redirect_login(request):
                     log.info("Authenticated user is {first_name} {last_name}.".format(first_name=user.first_name, last_name=user.last_name))
                     auth.login(request, user)
                     reset_facebook_user(request)
-                    log.info("Request is Ajax: {}, redirect to {}".format(request.is_ajax()), _get_next(request))
+                    log.info("Request is Ajax: {}, redirect to {}".format(request.is_ajax(), _get_next(request)))
                     return _login_flow(request, user)
             else:
                 log.info("Responsecode FAIL for debug_token url, just redirecting to front page: {}".format(response.status_code))
