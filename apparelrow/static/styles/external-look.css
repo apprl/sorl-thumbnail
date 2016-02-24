@@ -4,13 +4,13 @@
 /* Fonts ---------- */
 @font-face {
   font-family: 'Neuzeit Regular';
-  src: url('http://s-staging.apprl.com/fonts/Neuzeit-Regular.eot');
-  src: url('http://s-staging.apprl.com/fonts/Neuzeit-Regular.woff') format('woff'), url('http://s-staging.apprl.com/fonts/Neuzeit-Regular.woff2') format('woff2'), url('http://s-staging.apprl.com/fonts/Neuzeit-Regular.ttf') format('truetype');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.eot');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Regular.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Regular.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Neuzeit Bold';
-  src: url('http://s-staging.apprl.com/fonts/Neuzeit-Bold.eot');
-  src: url('http://s-staging.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('http://s-staging.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('http://s-staging.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Bold.eot');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
 }
 html.look-type-C {
   height: 100%;
@@ -88,6 +88,9 @@ html.look-type-C .collage {
     right: 15px;
     font-size: 18px;
   }
+}
+.apprl-look .discount-price {
+  color: #f64747;
 }
 .apprl-look .tooltip {
   background-color: white;
