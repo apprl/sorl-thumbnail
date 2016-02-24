@@ -24,7 +24,7 @@
     </div>
 
     <div class="body-header-col-right">
-        <ul class="sidebar{% if component == 'photo' %} flexible{% endif %}">
+        <ul class="sidebar{% if component == 'photo' and object.published == false %} flexible{% endif %}">
         {% if type == 'look_editor' %}
             {% if object and object.slug %}
                 <li>

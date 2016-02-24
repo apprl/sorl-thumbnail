@@ -66,7 +66,7 @@
     }
     h5 {
         font-size: 15px;
-        margin: 0 0 5px 0;
+        margin: 5px 0;
     }
     hr {
         border: 0;
@@ -116,15 +116,7 @@
 
     /* Components ---------- */
     .pagination {
-        zoom: 1;
-        &:before, &:after {
-            display: table;
-            content: '';
-            zoom: 1;
-        }
-        &:after {
-            clear: both;
-        }
+        clear: both !important;
     }
     .container {
         margin-right: auto;

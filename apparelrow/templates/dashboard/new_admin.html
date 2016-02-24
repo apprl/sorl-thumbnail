@@ -84,196 +84,199 @@
 
     <div class="body-header">
         <h1>{% trans "Admin Dashboard" %}</h1>
-        <ul class="submenu">
+        <ul class="sub-menu">
             <li><a{% if 'publisher' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-admin' %}">{% trans "Publisher" %}</a></li>
             <li><a{% if 'kpi' in request.path %} class="selected"{% endif %} href="{% url 'admin-kpi-dashboard' %}">{% trans "KPI" %}</a></li>
             <li><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'admin-stores' %}">{% trans "Stores" %}</a></li>
         </ul>
     </div>
 
-    <div class="row publisher-admin">
-        <div class="col-lg-12">
-            <p>
-                <label>{% trans "Show: " %}
-                    <div class="select">
-                        <select class="month-select">
-                            {% for item_month in month_choices %}
-                            <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="select">
-                        <select class="year-select">
-                            {% for item_year in year_choices %}
-                            <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </label>
-            </p>
-            <ul class="list-inline col-md-10 col-md-offset-1">
-                <li class="col-md-2"></li>
+    <div class="publisher-admin">
+        <ul class="list-horizontal center">
+            <li>Show statistics for: </li>
+            <li>
+                <div class="select">
+                    <span><i class="fa fa-caret-down"></i></span>
+                    <select class="month-select">
+                        {% for item_month in month_choices %}
+                        <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </li>
+            <li>
+                <div class="select">
+                    <span><i class="fa fa-caret-down"></i></span>
+                    <select class="year-select">
+                        {% for item_year in year_choices %}
+                        <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </li>
+        </ul>
+
+        <section class="row statistics">
+            <ul class="col-md-12">
+                <li class="col-md-3"></li>
                 <li class="col-md-3"><strong>{% blocktrans %}Total{% endblocktrans %}</strong></li>
                 <li class="col-md-3"><strong>{% blocktrans %}Publisher{% endblocktrans %}</strong></li>
                 <li class="col-md-3"><strong>{% blocktrans %}Apprl{% endblocktrans %}</strong></li>
             </ul>
             {% for heading, total, publisher, apprl in monthly_array %}
-            <ul class="list-inline col-md-10 col-md-offset-1">
-                <li class="col-md-2 text-right"><strong>{% blocktrans %}{{ heading }} - {% endblocktrans %}</strong></li>
+            <ul class="col-md-12">
+                <li class="col-md-3 text-right"><strong>{% blocktrans %}{{ heading }} - {% endblocktrans %}</strong></li>
                 <li class="col-md-3">{{ total }}</li>
                 <li class="col-md-3">{{ publisher }}</li>
                 <li class="col-md-3">{{ apprl }}</li>
             </ul>
             {% endfor %}
 
-            <ul class="list-inline col-md-10 col-md-offset-1">
-                <li role="separator" class="divider"></li>
+            <ul class="col-md-12">
+                <li class="divider"></li>
             </ul>
-            <ul class="list-inline col-md-10 col-md-offset-1">
-                <li class="col-md-2"></li>
+            <ul class="col-md-12">
+                <li class="col-md-3"></li>
                 <li class="col-md-3"><strong>{% blocktrans %}Total{% endblocktrans %}</strong></li>
                 <li class="col-md-3"><strong>{% blocktrans %}PPC{% endblocktrans %}</strong></li>
                 <li class="col-md-3"><strong>{% blocktrans %}PPO{% endblocktrans %}</strong></li>
             </ul>
             {% for heading, total, ppc, ppo in clicks_array %}
-            <ul class="list-inline col-md-10 col-md-offset-1">
-                <li class="col-md-2 text-right"><strong>{% blocktrans %}{{ heading }}{% endblocktrans %}</strong></li>
+            <ul class="col-md-12">
+                <li class="col-md-3 text-right"><strong>{% blocktrans %}{{ heading }}{% endblocktrans %}</strong></li>
                 <li class="col-md-3">{{ total }}</li>
                 <li class="col-md-3">{{ ppc }}</li>
                 <li class="col-md-3">{{ ppo }}</li>
             </ul>
             {% endfor %}
+        </section>
 
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12">
+        <section>
             <div id="chart_div" style="width: 100%; height: 300px"></div>
             <div id="clicks_chart" style="width: 100%; height: 300px;"></div>
-        </div>
-    </div>
+        </section>
 
-    <div class="row">
-        <div class="col-lg-12 table-responsive">
-            <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2></div>
-            <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a></small></h2></div>
-            <table id="top-publishers" class="sortable table">
-                <thead>
-                    <tr>
-                        <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
-                        <th class="col-md-5 hidden-xs center"></th>
-                        <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
-                        <th class="col-md-2 center">{% trans "Earning per click" %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for publisher in top_publishers|top_five %}
-                    <tr>
-                        <td data-sort="{{ publisher.user_name }}" class="col-md-1 product-image center">
-                            <a href="{{ publisher.user_link }}">
-                                <img src="{{ publisher.user_image }}">
-                            </a>
-                        </td>
-                        <td class="col-md-5 hidden-xs">
-                            <a href="{{ publisher.user_link }}">{{ publisher.user_name }} </a>
-                            <a href="{% url 'new-dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
-                        </td>
-                        <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
-                            {{ publisher.total_clicks }}
-                        </td>
-                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
-                            {{ currency }} {{ publisher.total_earnings }}
-                        </td>
-                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|commission_rate:publisher.total_clicks }}">
-                            {% if publisher.total_clicks %}{{ currency }} {% endif %}
-                            {{ publisher.total_earnings|decimal_div:publisher.total_clicks }}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3">{% trans "No sales yet." %}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <section class="row">
+            <div class="col-lg-12 table-responsive">
+                <h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2>
+                <a class="center btn btn-default" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a>
+                <table id="top-publishers" class="sortable table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
+                            <th class="col-md-5 hidden-xs center"></th>
+                            <th class="col-md-2 center">{% trans "Clicks" %}</th>
+                            <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                            <th class="col-md-2 center">{% trans "Earning per click" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for publisher in top_publishers|top_five %}
+                        <tr>
+                            <td data-sort="{{ publisher.user_name }}" class="col-md-1 product-image center">
+                                <a href="{{ publisher.user_link }}">
+                                    <img src="{{ publisher.user_image }}">
+                                </a>
+                            </td>
+                            <td class="col-md-5 hidden-xs">
+                                <a href="{{ publisher.user_link }}">{{ publisher.user_name }} </a>
+                                <a href="{% url 'new-dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
+                            </td>
+                            <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
+                                {{ publisher.total_clicks }}
+                            </td>
+                            <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
+                                {{ currency }} {{ publisher.total_earnings }}
+                            </td>
+                            <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|commission_rate:publisher.total_clicks }}">
+                                {% if publisher.total_clicks %}{{ currency }} {% endif %}
+                                {{ publisher.total_earnings|decimal_div:publisher.total_clicks }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="12">{% trans "No sales yet." %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <div class="row">
-        <div class="col-lg-12 table-responsive">
-            <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2></div>
-            <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a></small></h2></div>
-            <table id="top-products" class="sortable table">
-                <thead>
-                    <tr>
-                        <th class="col-md-1 product-image center">{% trans "Product" %}</th>
-                        <th class="col-md-5 hidden-xs center"></th>
-                        <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for product in top_products|top_five %}
-                    <tr>
-                        <td data-sort="{{ product.aggregated_from_name }}" class="col-md-1 product-image center">
-                            <a href="{{ product.aggregated_from_link }}" target="_blank">
-                                <img src="{{ product.aggregated_from_image }}">
-                            </a>
-                        </td>
-                        <td class="col-md-5 hidden-xs">
-                            <a href="{{ product.aggregated_from_link }}" target="_blank">
-                                {{ product.aggregated_from_name }}
-                            </a>
-                        </td>
-                        <td class="col-md-2 center" data-sort="{{ product.total_clicks }}" >
-                            {{ product.total_clicks }}
-                        </td>
-                        <td class="col-md-2 center" data-sort="{{ product.total_earnings }}" >
-                            {{ currency }} {{ product.total_earnings }}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3">{% trans "No sales yet." %}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <section class="row">
+            <div class="col-lg-12 table-responsive">
+                <h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2>
+                <a class="center btn btn-default" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a>
+                <table id="top-products" class="sortable table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1 product-image center">{% trans "Product" %}</th>
+                            <th class="col-md-5 hidden-xs center"></th>
+                            <th class="col-md-2 center">{% trans "Clicks" %}</th>
+                            <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in top_products|top_five %}
+                        <tr>
+                            <td data-sort="{{ product.aggregated_from_name }}" class="col-md-1 product-image center">
+                                <a href="{{ product.aggregated_from_link }}" target="_blank">
+                                    <img src="{{ product.aggregated_from_image }}">
+                                </a>
+                            </td>
+                            <td class="col-md-5 hidden-xs">
+                                <a href="{{ product.aggregated_from_link }}" target="_blank">
+                                    {{ product.aggregated_from_name }}
+                                </a>
+                            </td>
+                            <td class="col-md-2 center" data-sort="{{ product.total_clicks }}" >
+                                {{ product.total_clicks }}
+                            </td>
+                            <td class="col-md-2 center" data-sort="{{ product.total_earnings }}" >
+                                {{ currency }} {{ product.total_earnings }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="12">{% trans "No sales yet." %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <h2>{% trans "Latest earnings" %} {{ month_display }} {{ year }}</h2>
-            <table class="sortable table" id="all-earnings">
-                <thead>
-                    <tr>
-                        <th>{% trans "Date" %}</th>
-                        <th>{% trans "Sale id" %}</th>
-                        <th>{% trans "Product" %}</th>
-                        <th></th>
-                        <th>{% trans "User" %}</th>
-                        <th></th>
-                        <th>{% trans "From" %}</th>
-                        <th>{% trans "Earnings" %}</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                      <td colspan="7"><i>{% trans "Only showing last 40 earnings" %}</i></td>
-                    </tr>
-                </tfoot>
-                <tbody id="body-earnings">
-                    <tr>
-                        <td colspan="6">
-                            <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <section class="row">
+            <div class="col-lg-12">
+                <h2>{% trans "Latest earnings" %} {{ month_display }} {{ year }}</h2>
+                <table class="sortable table" id="all-earnings">
+                    <thead>
+                        <tr>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "Sale id" %}</th>
+                            <th>{% trans "Product" %}</th>
+                            <th></th>
+                            <th>{% trans "User" %}</th>
+                            <th></th>
+                            <th>{% trans "From" %}</th>
+                            <th>{% trans "Earnings" %}</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                          <td colspan="12"><i>{% trans "Only showing last 40 earnings" %}</i></td>
+                        </tr>
+                    </tfoot>
+                    <tbody id="body-earnings">
+                        <tr>
+                            <td colspan="6">
+                                <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
 <script>
     $(".click-detail").click(function() {
