@@ -192,13 +192,13 @@
         </ul>
         <ul class="list-horizontal">
             <li>{% blocktrans %}Commission earnings:{% endblocktrans %} <strong>{{ currency }} {% if month_commission %}{{ month_commission }}{% else %}0.00{% endif %}</strong></li>
-            <li>{% blocktrans %}Sales:<strong>{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0.00{% endif %}</strong></li>
+            <li>{% blocktrans %}Sales:<strong>{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0{% endif %}</strong></li>
             <li>{% blocktrans %}Clicks: <strong>{{ month_clicks }}{% endblocktrans %}</strong></li>
         </ul>
         {% if request.user.referral_partner %}
         <ul class="list-horizontal">
             <li>{% blocktrans %}Referral earnings: <strong>{{ currency }} {{ referral_commission }}{% endblocktrans %}</strong></li>
-            <li>{% blocktrans %}Referrals:<strong>{% endblocktrans %} {% if referral_sales %}{{referral_sales}}{% else %}0.00{% endif %}</strong></li>
+            <li>{% blocktrans %}Referrals:<strong>{% endblocktrans %} {% if referral_sales %}{{referral_sales}}{% else %}0{% endif %}</strong></li>
         </ul>
         {% endif %}
         <ul class="list-horizontal">
