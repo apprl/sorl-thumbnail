@@ -23,17 +23,6 @@
         width: 100% !important;
         height: 100% !important;
         .translate(0,-50%);
-        /*background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        -webkit-filter: blur(20px); // Chrome, Safari, Firefox
-        filter: blur(20px);
-        filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='20'); // IE9*/
-        //overflow: hidden;
-        /*-webkit-filter: blur(5px);
-        -moz-filter: blur(5px);
-        -o-filter: blur(5px);
-        -ms-filter: blur(5px);*/
     }
 }
 
@@ -102,18 +91,13 @@
         padding: 0;
     }
     .background-image {
+        height: auto;
         background-image: url('../images/bg_bw4_lg.jpg');
     }
     .splash {
-        padding: 0 15px;
-        width: 100%;
+        padding: 90px 0 0 0;
         text-align: center;
-        position: absolute;
-        top: 50%;
-        z-index: 10;
-        -ms-transform: translateY(-50%);
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
+        //padding: 0 15px;
         h1, h2, p {
             color: white !important;
         }
@@ -145,6 +129,20 @@
             display: table-cell;
             vertical-align: middle;
             padding: 0 10px;
+        }
+    }
+    @media (min-width: 768px) {
+        .background-image {
+            height: 100vh;
+        }
+        .splash {
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            z-index: 10;
+            -ms-transform: translateY(-50%);
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
         }
     }
 }

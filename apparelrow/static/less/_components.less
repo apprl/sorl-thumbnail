@@ -1150,12 +1150,15 @@ main div.message {
 	background-color: rgba(103, 226, 184, .4);
 	border: 1px solid @primaryColor;
 	border-radius: 0;
+	text-align: center;
+	font-size: 14px;
 	&.alert-warning {
 		color: rgba(0,0,0,.7);
 	}
 	.close {
 		position: absolute;
-		rigth: 4px !important;
+		right: 0 !important;
+		top: 0 !important;
 		span {
 			padding-left: 14px;
 			&:before, &:after {
@@ -1171,7 +1174,7 @@ main div.message {
 		}
 	}
 	&.alert-dismissible {
-		padding-right: 0;
+		padding-right: 44px;
 	}
 	a.alert-warning {
 		background-color: transparent;

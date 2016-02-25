@@ -324,16 +324,21 @@
                     </div>
                 </div>
                 <div class="col-md-4">
+                    <h5>APPRL Fashion AB</h5>
+                    <address>
+                        Kammakargatan 41<br>
+                        111 24 Stockholm<br>
+                        Sweden
+                    </address>
+                    {% comment %}
                     <div class="row">
                         <div class="col-is-6">
                             <h5>Get our newsletter</h5>
                             <a class="btn btn-default" href="{% url 'newsletter-redirect' %}">{% trans "Sign Up" %}</a>
-                            {% comment %}
                             <form action="http://apprl.us4.list-manage.com/subscribe/post" method="POST">
                                 <input type="email" autocapitalize="off" autocorrect="off" id="MERGE0" placeholder="Your email" required="required" />
                                 <input type="submit" value="Sign Up" />
                             </form>
-                            {% endcomment %}
                         </div>
                         <div class="col-is-6">
                             <h5>APPRL Fashion AB</h5>
@@ -344,6 +349,7 @@
                             </address>
                         </div>
                     </div>
+                    {% endcomment %}
                 </div>
             </div>
         </div>

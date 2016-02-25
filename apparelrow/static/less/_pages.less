@@ -464,6 +464,11 @@
             color: white;
         }
     }
+    // iPhone landscape
+    @media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation : landscape) {
+
+    }
+
     /*.community-about {
         background-color: @offwhite;
         padding-bottom: 0 !important;
@@ -1040,6 +1045,27 @@
         &.single {
             float: none;
             margin: auto;
+        }
+    }
+    #tools-demo {
+        position: relative;
+        height: 454px;
+        max-width: 320px;
+        margin: 0 auto 30px auto;
+        img {
+            position: absolute;
+            z-index: 1;
+            display: none;
+            top: 0;
+            right: 0;
+            &.active {
+                display: block;
+                z-index: 3;
+            }
+        }
+        @media (min-width: @screen-sm) {
+            //height: 454px; This might need tweaking
+            width: 320px;
         }
     }
 }
