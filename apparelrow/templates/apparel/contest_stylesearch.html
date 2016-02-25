@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block extra-title %}{% trans "Fashion week style search" %} | {% endblock %}
+
+{% block body-classes %}contest-stylesearch{% endblock %}
+{% block body %}
+
+    <div class="row">
+        <h1 class="col-sm-12">{% trans "Fashion week style search" %}</h1>
+        <h2 class="col-sm-12">{% trans "Create your fall look in 5 mins for a chance to win €500 to shop for" %}</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 media-container">
+
+            <div class="row">
+                <div class="col-contest-image">
+                    <img src="{% static image %}" alt="{% trans "Fashion week style search" %}" class="img-responsive">
+                </div>
+                <div class="col-contest-text">
+                    <p><strong>{% trans "Competition is now closed" %}</strong></p>
+                    <p><strong style="text-decoration: line-through;">{% trans "Competition open 26th Aug - Sept 1st" %}</strong></p>
+                    <p>{% trans "The looks with most votes by the end of Sept 1st enter the final." %}</p>
+
+                    <p><strong>{% trans "To join:" %}</strong></p>
+                    <ol>
+                        <li>
+                        <p>{% trans "Like APPRL on Facebook here:" %}</p>
+                        <div class="fb-like" data-href="https://facebook.com/apprl/" data-layout="button" data-send="false" data-width="100" data-show-faces="false"></div>
+                        </li>
+                        <li>
+                        <p>{% trans "Create your fall look here:" %}</p>
+                        {% if request.user.is_authenticated %}
+                        <a class="btn btn-primary btn-lg" href="{% url 'look-create' %}">{% trans "+ CREATE LOOK" %}</a>
+                        {% else %}
+                        <a data-toggle="modal" class="btn btn-primary" href="#modal_create_look">{% trans "+ CREATE LOOK" %}</a>
+                        {% endif %}
+                        </li>
+                        <li>{% trans 'Promote your look - the 10 looks with the most <span class="heart">♥</span> likes on APPRL enter the final round.' %}</li>
+                        <li>{% trans "Top blogger <strong>Elin Kling</strong> selects the final winner on our Facebook page." %}</li>
+                    </ol>
+                </div>
+                <div class="col-contest-button"><a class="btn btn-primary btn-block" href="{% url 'contest-stylesearch-charts' %}">{% trans "SEE FINALISTS" %}</a></div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 small-text">
+            <small>{% trans "All looks created between 26th of August and 1st of September are included in the contest. The 10 looks with most likes on Apprl by the end of September 1st are published on our Facebook page where blogger Elin Kling chooses the winner. The winning prize is products for €500 at any of the stores connected to Apprl, following Apprl's process for this. The contestant is responsible to pay any taxes if required and that uploaded images (if any) follows Apprl's Terms of Service. Apprl holds the right to disqualify contestants for suspected cheating, abuse or other reason. Our general terms of service & privacy policy apply." %}</small>
+            <small>{% trans "For questions & info contact " %}<a target="_blank" href="mailto:info@apprl.com">info@apprl.com</a></small>
+        </div>
+    </div>
+
+{% endblock %}
