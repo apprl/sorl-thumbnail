@@ -772,12 +772,12 @@ ApparelSearch = {
 
                 var href_attr = '#';
                 switch(opts.selector) {
-                    case '.search-result-products':
+                    case '#search-result-products':
                         href_attr = browse_url + '?' + ApparelSearch.format_query(opts.query);
                         h4_a.attr('href', href_attr);
                         break;
 
-                    case '.search-result-looks':
+                    case '#search-result-looks':
                         href_attr = looks_search_url + '?' + ApparelSearch.format_query(opts.query);
                         h4_a.attr('href', href_attr);
                         break;

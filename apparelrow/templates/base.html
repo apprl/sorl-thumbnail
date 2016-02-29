@@ -148,11 +148,11 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{ request.user.url_likes }}">{% trans "Profile" %}</a></li>
                                 {% if request.user.advertiser_store %}
-                                <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
+                                    <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
                                 {% endif %}
-                                {% if request.user.is_partner %}
-                                <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
-                                <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
+                                {% if request.user.is_partner  %}
+                                    <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+                                    <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
                                 {% endif %}
                                 <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
                                 <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
@@ -214,13 +214,11 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{ request.user.url_likes }}">{% trans "Profile" %}</a></li>
                                 {% if request.user.advertiser_store %}
-                                <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
+                                    <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
                                 {% endif %}
-                                {% if request.user.is_partner %}
-                                <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
-                                {% if not request.user.advertiser_store %}
-                                <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
-                                {% endif %}
+                                {% if request.user.is_partner  %}
+                                    <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+                                    <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
                                 {% endif %}
                                 <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
                                 <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>

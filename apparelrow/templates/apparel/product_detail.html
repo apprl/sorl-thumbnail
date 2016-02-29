@@ -208,7 +208,9 @@
                         </section>
 
                         <section>
-                            <a class="helper" href="{% url 'product-look-list' contains=object.slug %}">{% trans "See all" %}</a>
+                            {% if looks_with_product_count > 2 %}
+                                <a class="helper" href="{% url 'product-look-list' contains=object.slug %}">{% trans "See all" %}</a>
+                            {% endif %}
                                 <h4>{% trans "Looks with this item" %} <span>({{ looks_with_product_count }})</span></h4>
                             <hr>
                             <ul class="list-looks center-sm">
