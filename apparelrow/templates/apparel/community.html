@@ -1,3 +1,4 @@
+{% extends "base.html" %}
 {% comment %}
 
     Community v1.0
@@ -5,7 +6,6 @@
     - Styles are set under .community-page in _pages.less
 
 {% endcomment %}
-{% extends "base.html" %}
 {% load i18n l10n apparel_extras compressed login_bar cache localeurl_tags %}
 {% load static from staticfiles %}
 
@@ -188,7 +188,7 @@
 {% endblock full-body %}
 
 {% block body-scripts %}
-    <script src="{% static '/js/jquery/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery/owl.carousel.min.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
