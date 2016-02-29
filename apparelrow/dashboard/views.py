@@ -1608,9 +1608,16 @@ def retailer_form(request):
 
     return render(request, 'apparel/retailer_contact.html', {'form': form})
 
-
 class RetailerView(TemplateView):
     template_name = 'apparel/retailers.html'
+
+
+class RetailerView(TemplateView):
+    template_name = 'apparel/retailer_contact.html'
+
+    def get(self, request, *args, **kwargs):
+        form = SignupForm(is_store_form=True)
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         form = SignupForm(request.POST, is_store_form=True)

@@ -34,7 +34,6 @@
             </article>
         </div>
     </div>
-
     <div class="partners">
         <h4>Supported by</h4>
         <ul>
@@ -81,3 +80,11 @@
         });
     </script>
 {% endblock body-scripts %}
+
+{% block footer %}
+        {% if not request.user.is_authenticated %}
+            {% include "landing_footer.html" %}
+        {% else %}
+            {{ block.super }}
+        {% endif %}
+{% endblock footer %}
