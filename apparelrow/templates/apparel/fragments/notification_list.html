@@ -45,15 +45,15 @@
                 {% elif event.type == "SALE" %}
                     <a href="{% url 'product-detail' slug=event.product.slug %}">
                         <figure>
-                            {% if event.product.product_image %}
+                            {% if event.actor.avatar_small %}
                             {% thumbnail event.product.product_image "32" crop="noop" as im %}
-                            <img class="img-circle" src="{{ im.url }}" alt="{{ event.product }}" title="{{ event.product }}" width="32" height="32" />
+                            <img class="img-circle" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32" />
                             {% endthumbnail %}
                             {% else %}
                             <span class="img-block"></span>
                             {% endif %}
                         </figure>
-                        <p class="message"><strong>{{ event.product }}</strong> is on sale!</p>
+                        <p class="message"><strong>{% if event.product.product_name|length >= 25 %}{{ event.product.product_name|slice:":20" }}...{% else %}{{ event.product.product_name|slice:":20" }}{% endif %}</strong> is on sale!</p>
                     </a>
                 {% elif event.type == "FOLLOW" %}
                     <a href="{{ event.actor.url_likes }}">

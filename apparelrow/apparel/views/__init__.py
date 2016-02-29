@@ -1492,7 +1492,7 @@ class PublisherView(TemplateView):
             mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
                     u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
 
-            return HttpResponseRedirect(reverse('index-store-complete'))
+            return HttpResponseRedirect(reverse('index-publisher-complete'))
         else:
             context = self.get_context_data()
             context.update({"form":form})
