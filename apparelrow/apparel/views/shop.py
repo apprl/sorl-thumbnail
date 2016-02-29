@@ -686,12 +686,14 @@ def browse_products(request, template='apparel/browse.html', shop=None, embed_sh
 
     return response
 
+"""
+Duplicated function
 def select_from_multi_gender(request, gender_key, gender=None, default=None):
-    """
-    This utility function has two use cases, it either returns a gender from
-    the multi gender cookie based on the gender_key or it sets a gender if the
-    gender parameter is not None.
-    """
+    #
+    #This utility function has two use cases, it either returns a gender from
+    #the multi gender cookie based on the gender_key or it sets a gender if the
+    #ender parameter is not None.
+    #
     if gender is None:
         gender = request.app_multi_gender.get(gender_key, None)
         if gender is None:
@@ -704,6 +706,7 @@ def select_from_multi_gender(request, gender_key, gender=None, default=None):
         request.app_multi_gender[gender_key] = gender
 
     return gender
+"""
 
 def set_query_arguments(query_arguments, request, facet_fields=None, currency=None):
     """

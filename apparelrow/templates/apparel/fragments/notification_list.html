@@ -45,9 +45,9 @@
                 {% elif event.type == "SALE" %}
                     <a href="{% url 'product-detail' slug=event.product.slug %}">
                         <figure>
-                            {% if event.actor.avatar_small %}
+                            {% if event.product.product_image %}
                             {% thumbnail event.product.product_image "32" crop="noop" as im %}
-                            <img class="img-circle" src="{{ im.url }}" alt="{{ event.actor }}" title="{{ event.actor }}" width="32" height="32" />
+                            <img class="img-circle" src="{{ im.url }}" alt="{{ event.product }}" title="{{ event.product }}" width="32" height="32" />
                             {% endthumbnail %}
                             {% else %}
                             <span class="img-block"></span>
