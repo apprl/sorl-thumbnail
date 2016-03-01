@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from apparelrow.profile.views import ProfileView, ProfileListLookView, ProfileListLikedLookView, \
     ProfileListBrandLookView, ProfileListShopView, ProfileListFollowersView, ProfileListFollowingView, \
-    UserSettingsEmailView, UserSettingsNotificationView, PublisherSettingsNotificationView
+    UserSettingsEmailView, UserSettingsNotificationView, PublisherSettingsNotificationView, RedirectProfileView
 
 urlpatterns = patterns('',
     url(r'^flow/$', 'apparelrow.profile.views.flow', name='login-flow-redirect'),
@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^confirm/email/$', 'apparelrow.profile.views.confirm_email', name='user-confirm-email'),
     url(r'^welcome/$', 'apparelrow.profile.views.login_flow_brands', name='login-flow-brands'),
     url(r'^welcome/complete/$', 'apparelrow.profile.views.login_flow_complete', name='login-flow-complete'),
-    url(r'^(?:([^\/]+?)/)?$', ProfileView.as_view(), name='profile-default'),
+    url(r'^(?:([^\/]+?)/)?$', RedirectProfileView.as_view(), name='profile-default'),
     url(r'^(?:([^\/]+?)/)?items/$', ProfileView.as_view(template_name='profile/likes.html'), name='profile-likes'),
     url(r'^(?:([^\/]+?)/)?updates/$', RedirectView.as_view(url=reverse_lazy('profile-likes')), name='redirect-profile-updates'),
     url(r'^(?:([^\/]+?)/)?looks/$', ProfileListLookView.as_view(), name='profile-looks'),

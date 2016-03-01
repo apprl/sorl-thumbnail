@@ -18,6 +18,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models.loading import get_model
+from django.views.generic import RedirectView
 from django.views.generic import TemplateView, ListView, View, DetailView, FormView
 
 import requests
@@ -82,6 +83,16 @@ def save_description(request):
     description_html = t.render(c)
 
     return HttpResponse(description_html, mimetype='text/html')
+
+
+class RedirectProfileView(RedirectView):
+    template_name = 'profile/likes.html'
+
+    @method_decorator(get_current_user)
+    def get(self, request, *args, **kwargs):
+        profile = args[0]
+        self.url = '/profile/%s/items' % (profile.slug)
+        return super(RedirectProfileView, self).get(request, args, **kwargs)
 
 
 class ProfileView(TemplateView):
