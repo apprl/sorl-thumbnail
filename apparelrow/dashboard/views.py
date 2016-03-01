@@ -166,6 +166,7 @@ def referral_mail(request):
 
     return HttpResponseRedirect(reverse('dashboard-referral'))
 
+
 def referral_signup(request, code):
     user_id = None
     try:
@@ -194,7 +195,7 @@ def commissions(request):
                   % request.user)
         raise Http404
 
-    cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) or request.session.get('location','ALL')
+    cookie_value = get_location(request)
     vendors = get_available_stores(cookie_value)
     user_id = request.user.id
     stores = {}
@@ -246,8 +247,10 @@ def index_complete(request, view):
 
     return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
+
 def retailer(request):
     return render(request, 'apparel/retailers.html')
+
 
 def retailer_form(request):
     if request.method == 'POST':
@@ -270,8 +273,10 @@ def retailer_form(request):
 
     return render(request, 'apparel/retailer_contact.html', {'form': form})
 
+
 def index(request):
     return render(request, 'dashboard/index.html')
+
 
 def publisher_contact(request):
     if request.method == 'POST':
@@ -307,8 +312,10 @@ def publisher_contact(request):
 
     return render(request, 'dashboard/publisher_contact.html', {'form': form, 'referral_user': referral_user})
 
+
 def publisher_tools(request):
     return render(request, 'dashboard/publisher_tools.html')
+
 
 def clicks_detail(request):
     """
@@ -326,7 +333,6 @@ def clicks_detail(request):
             data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
-
 
 #
 # PUBLISHER DASHBOARD
@@ -1452,10 +1458,6 @@ def dashboard(request, year=None, month=None):
                                                             'is_owner': is_owner})
     return HttpResponseRedirect(reverse('index-publisher'))
 
-
-def dashboard_info(request):
-    return render(request, 'dashboard/info.html')
-
 #
 # Referral
 #
@@ -1483,108 +1485,8 @@ class ReferralView(TemplateView):
             return HttpResponseRedirect(reverse('index-publisher'))
 
 
-def referral_mail(request):
-    emails = request.POST.get('emails')
-    emails = re.split(r'[\s,]+', emails)
-
-    referral_code = request.user.get_referral_domain_url()
-    referral_name = request.user.display_name
-    referral_email = request.user.email
-    referral_language = get_language()
-
-    template = 'dashboard/referral_mail_en.html'
-    # TODO: fix when we have swedish email
-    #if referral_language == 'sv':
-        #template = 'dashboard/referral_mail_sv.html'
-
-    body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
-
-    for email in emails:
-        send_email_task.delay('Invitation from %s' % (referral_name,), body, email, '%s <%s>' % (referral_name, referral_email))
-
-    messages.add_message(request, messages.SUCCESS, 'Sent mail to %s' % (', '.join(emails),))
-
-    return HttpResponseRedirect(reverse('dashboard-referral'))
-
-def referral_signup(request, code):
-    user_id = None
-    try:
-        user = get_user_model().objects.get(referral_partner_code=code)
-        user_id = user.pk
-    except:
-        pass
-    response = redirect(reverse('publisher-contact'))
-    if user_id:
-        expires_datetime = timezone.now() + datetime.timedelta(days=15)
-        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime,
-                                   httponly=True)
-
-    return response
-
-#
-# Commissions
-#
-def commissions(request):
-    if not request.user.is_authenticated() or not request.user.is_partner:
-        log.error('Unauthorized user trying to access store commission page. Returning 404.')
-        raise Http404
-
-    if not request.user.partner_group:
-        log.error('User %s is partner but has no partner group. Disallowing viewing of store commissions page.'
-                  % request.user)
-        raise Http404
-
-    cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) or request.session.get('location','ALL')
-    vendors = get_available_stores(cookie_value)
-    user_id = request.user.id
-    stores = {}
-    for vendor in vendors:
-        try:
-            temp = {}
-            vendor_obj = get_model('apparel', 'Vendor').objects.get(name=vendor)
-            store = get_model('dashboard', 'StoreCommission').objects.get(vendor=vendor_obj)
-            store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
-            temp['vendor_pk'] = vendor_obj.pk
-            temp['vendor_name'] = vendor_obj.name
-            temp['link'] = store.link
-            temp['store_pk'] = store.pk
-            if vendor_obj.is_cpc:
-                _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
-                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
-                temp['amount'] = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
-                temp['currency'] = click_cost.locale_currency
-                temp['type'] = "is_cpc"
-            elif vendor_obj.is_cpo:
-                temp['amount'] = store.commission
-                temp['type'] = "is_cpo"
-            stores[vendor] = temp
-        except get_model('dashboard', 'ClickCost').DoesNotExist:
-            log.warning("ClickCost for vendor %s does not exist" % vendor)
-        except get_model('dashboard', 'StoreCommission').DoesNotExist:
-            log.warning("StoreCommission for vendor %s does not exist" % vendor)
-    stores = [x for x in sorted(stores.values(), key=lambda x: x['vendor_name'])]
-    return render(request, 'dashboard/commissions.html', {'stores': stores})
-
-def commissions_popup(request, pk):
-    if not request.user.is_authenticated() or not request.user.is_partner:
-        raise Http404
-
-    store = get_object_or_404(get_model('dashboard', 'StoreCommission'), pk=pk)
-    link = None
-    if store.link:
-        link = '{}{}/'.format(store.link, request.user.pk)
-
-    return render(request, 'dashboard/commissions_popup.html', {'link': link, 'name': store.vendor.name})
-
-#
 # Publisher / Store signup
 #
-def index_complete(request, view):
-    analytics_identifier = 'Publisher'
-    if view == 'store':
-        analytics_identifier = 'Store'
-
-    return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
 @DeprecationWarning
 def retailer_form(request):
@@ -1608,17 +1510,12 @@ def retailer_form(request):
 
     return render(request, 'apparel/retailer_contact.html', {'form': form})
 
+#class RetailerView(TemplateView):
+#    template_name = 'apparel/retailers.html'
+
 
 class RetailerView(TemplateView):
-    template_name = 'apparel/retailers.html'
-
-@DeprecationWarning
-def retailer(request):
-    return render(request, 'apparel/retailers.html')
-
-
-class RetailerFormView(TemplateView):
-    template_name = "apparel/retailer_contact.html"
+    template_name = 'apparel/retailer_contact.html'
 
     def get(self, request, *args, **kwargs):
         form = SignupForm(is_store_form=True)
@@ -1639,43 +1536,10 @@ class RetailerFormView(TemplateView):
             return HttpResponseRedirect(reverse('index-store-complete'))
         return render(request, self.template_name, {'form': form})
 
+@DeprecationWarning
+def retailer(request):
+    return render(request, 'apparel/retailers.html')
 
-def index(request):
-    return render(request, 'dashboard/index.html')
-
-def publisher_contact(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            # Save name and blog URL on session, for Google Analytics
-            request.session['index_complete_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
-            instance = form.save(commit=False)
-            instance.referral_user = get_referral_user_from_cookie(request)
-            instance.save()
-
-            if instance.referral_user:
-                site_object = Site.objects.get_current()
-                referral_user_url = 'http://%s%s' % (site_object.domain, instance.referral_user.get_absolute_url())
-
-                mail_managers_task.delay('New publisher signup by referral: %s' % (form.cleaned_data['name'],),
-                        'Name: %s\nEmail: %s\nBlog: %s\nReferral User: %s - %s\n' % (form.cleaned_data['name'],
-                                                           form.cleaned_data['email'],
-                                                           form.cleaned_data['blog'],
-                                                           instance.referral_user.display_name,
-                                                           referral_user_url))
-            else:
-                mail_managers_task.delay('New publisher signup: %s' % (form.cleaned_data['name'],),
-                        'Name: %s\nEmail: %s\nBlog: %s' % (form.cleaned_data['name'],
-                                                           form.cleaned_data['email'],
-                                                           form.cleaned_data['blog']))
-
-            return HttpResponseRedirect(reverse('index-dashboard-complete'))
-    else:
-        form = SignupForm()
-
-    referral_user = get_referral_user_from_cookie(request)
-
-    return render(request, 'dashboard/publisher_contact.html', {'form': form, 'referral_user': referral_user})
 
 @DeprecationWarning
 def publisher_tools(request):
@@ -1795,6 +1659,7 @@ def products(request, year=None, month=None):
                                                             'referral_commission': ('%.2f' % sum([x[2] for x in data_per_day.values()])),
                                                             'currency': 'EUR'})
     return HttpResponseRedirect(reverse('index-publisher'))
+
 
 def publishers(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_partner:

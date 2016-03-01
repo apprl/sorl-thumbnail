@@ -375,7 +375,7 @@ def shop_widget(request, shop_id=None):
 
     return response
 
-
+# Most probably deprecated
 def dialog_embed(request, shop_id=None):
     shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
 

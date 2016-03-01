@@ -1,4 +1,10 @@
 {% extends "base.html" %}
+{% comment %}
+
+    Retailers v1.0
+    - Styles are set under .retailer-page in _pages.less
+
+{% endcomment %}
 {% load i18n l10n apparel_extras compressed login_bar cache localeurl_tags %}
 {% load static from staticfiles %}
 
@@ -30,8 +36,9 @@
                 <a class="btn btn-scroll btn-outline" href="#" data-scroll="retailer-apply">{% trans "Apply to join" %}</a>
             </div>
             <a class="btn-arrow btn-scroll" href="#" data-scroll="retailer-users"><i class="fa fa-angle-down"></i></a>
-            <span class="brand-line"></span>
         </section>
+
+        <span class="brand-line"></span>
 
         {# Features #}
         <section class="retailer-users">
@@ -172,7 +179,7 @@
         <a class="promo" href="{% url 'jobs' %}">{% trans "We're hiring!" %}</a>
     {% endblock full-body %}
 
-{% block body-scripts %}
+    {% block body-scripts %}
     <script>
         $(document).ready(function() {
             var anchor = $('section:first').offset().top + $('section:first').outerHeight(),
@@ -231,7 +238,7 @@
             SlideCrossFade.start();
         });
     </script>
-{% endblock body-scripts %}
+    {% endblock body-scripts %}
 
 {% block footer %}
     {% include "landing_footer.html" %}

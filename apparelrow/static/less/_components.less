@@ -10,6 +10,7 @@
 	- Grids (non-framework)
 	- Lists
 	- Notifications & Messages
+	- Alerts
 	- Panels & filters
 	- Miscellaneous
 */
@@ -418,7 +419,7 @@ a.info {
 		margin: auto;
 		overflow: hidden;
 		&:focus, &:active, &:visited {
-			background-color: black !important;
+			background-color: transparent !important;
 			color: white !important;
 		}
 		&.hover {
@@ -428,7 +429,7 @@ a.info {
 		}
     }
     .status {
-    	background-color: black !important;
+    	background-color: transparent !important;
     	color: white !important;
     }
 	.loader {
@@ -492,6 +493,9 @@ a.info {
     bottom: 30px;
     right: 30px;
     background-color: rgba(0,0,0,.25);
+    &:hover {
+    	background-color: rgba(0,0,0,.5);
+    }
 }
 .info-toggler {
     opacity: .25;
@@ -1138,6 +1142,51 @@ main div.message {
 }
 .notification.success {
 	background-color: lighten(@primaryColor, 25%);
+}
+
+/* Alerts ---------- */
+.alert {
+	position: relative;
+	background-color: rgba(103, 226, 184, .4);
+	border: 1px solid @primaryColor;
+	border-radius: 0;
+	text-align: center;
+	font-size: 14px;
+	&.alert-warning {
+		color: rgba(0,0,0,.7);
+	}
+	.close {
+		position: absolute;
+		right: 0 !important;
+		top: 0 !important;
+		span {
+			padding-left: 14px;
+			&:before, &:after {
+				width: 14px;
+				height: 2px;
+				background-color: @grey;
+			}
+		}
+		&:hover span {
+			&:before, &:after {
+				background-color: black !important;
+			}
+		}
+	}
+	&.alert-dismissible {
+		padding-right: 44px;
+	}
+	a.alert-warning {
+		background-color: transparent;
+		border: 0;
+		color: black;
+		text-decoration: none !important;
+		padding-bottom: 1px;
+		border-bottom: 1px solid transparent;
+		&:hover {
+			border-color: black;
+		}
+	}
 }
 
 /* Panels & Filters ---------- */

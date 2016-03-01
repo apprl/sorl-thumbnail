@@ -80,8 +80,7 @@ $(document).ready(function() {
         </div>
         <div class="profile-content">
             <h1>{{ profile.display_name }}</h1>
-            {% if request.user.is_authenticated and request.user == profile %}
-            {% else %}
+            {% if request.user.is_authenticated and request.user != profile %}
             {% include 'apparel/fragments/follow.html' %}
             {% endif %}
             {% if request.user.is_authenticated and request.user == profile %}

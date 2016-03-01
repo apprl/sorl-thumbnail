@@ -1412,7 +1412,7 @@ def user_list(request, gender=None, brand=False):
                                                advertiser_store__isnull=True)
     queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
     if brand:
-        brands_list = get_available_brands(gender, request.session.get('location','ALL'))
+        brands_list = get_available_brands(gender, get_location(request))
         queryset = queryset.filter(Q(brand__id__in=brands_list))
 
     extra_parameter = None
@@ -1492,7 +1492,7 @@ class PublisherView(TemplateView):
             mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
                     u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
 
-            return HttpResponseRedirect(reverse('index-store-complete'))
+            return HttpResponseRedirect(reverse('index-publisher-complete'))
         else:
             context = self.get_context_data()
             context.update({"form":form})

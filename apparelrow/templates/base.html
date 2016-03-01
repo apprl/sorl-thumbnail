@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
-
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title>{% block full-title %}{% block extra-title %}{% endblock %}APPRL - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
@@ -172,7 +172,8 @@
                                         </g>
                                     </svg>
                                     {% if request.user.unread_count > 0 %}
-                                        <span id="unread_count" class="unread_count badge">{{ request.user.unread_count }}</span>{% endif %}
+                                    <span id="unread_count" class="unread_count badge">{{ request.user.unread_count }}</span>
+                                    {% endif %}
                                 </span>
                                 &nbsp;{% trans "Notifications" %}
                              </a>
@@ -322,16 +323,21 @@
                     </div>
                 </div>
                 <div class="col-md-4">
+                    <h5>APPRL Fashion AB</h5>
+                    <address>
+                        Kammakargatan 41<br>
+                        111 24 Stockholm<br>
+                        Sweden
+                    </address>
+                    {% comment %}
                     <div class="row">
                         <div class="col-is-6">
                             <h5>Get our newsletter</h5>
                             <a class="btn btn-default" href="{% url 'newsletter-redirect' %}">{% trans "Sign Up" %}</a>
-                            {% comment %}
                             <form action="http://apprl.us4.list-manage.com/subscribe/post" method="POST">
                                 <input type="email" autocapitalize="off" autocorrect="off" id="MERGE0" placeholder="Your email" required="required" />
                                 <input type="submit" value="Sign Up" />
                             </form>
-                            {% endcomment %}
                         </div>
                         <div class="col-is-6">
                             <h5>APPRL Fashion AB</h5>
@@ -342,6 +348,7 @@
                             </address>
                         </div>
                     </div>
+                    {% endcomment %}
                 </div>
             </div>
         </div>
@@ -352,10 +359,15 @@
 
     <script>
     $(document).ready(function(){
-        $(".notification-mini").click(function() {
-            var user_id = $(this).data("user");
+        $('.notifications').click(function() {
+            if ($('#unread_count').is(':visible') ) {
+                $('#unread_count').fadeOut();
+            }
+        });
+        $('.notification-mini').click(function() {
+            var user_id = $(this).data('user');
             $.ajax({
-                type: "post",
+                type: 'post',
                 url: "{% url 'notifications-seen' %}",
                 data: { user_id: user_id },
                 success: function (response) {

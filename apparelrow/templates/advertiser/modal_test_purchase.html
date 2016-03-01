@@ -7,7 +7,7 @@
 {% block modal_content %}
     <p>{% trans "Here you can make a test purchase to make sure that the Apprl tracking is implemented correctly and is reporting sales that are generated via Apprl back to the Apprl system. This is what you need to do:" %}</p>
 
-    <div class="center">
+    <div>
         <p>1. {% trans "Input the URL to the page of your store to be tested. This could be for example to the home page or a product page. The tracking should work for any page on your site:" %}</p>
         <div class="form-group">
             <label class="control-label" for="id_url_shop">{% trans "URL" %}</label>
@@ -29,7 +29,7 @@
 
 {% endblock %}
 {% block modal_footer %}
-<button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+<button type="button" class="btn btn-default center" data-dismiss="modal">{% trans "Close" %}</button>
 <script type="text/javascript">
 
 function startsWith(word, str){
