@@ -23,7 +23,7 @@ from django.db.models.loading import get_model
 from django.utils import translation
 
 from apparelrow.apparel.models import Product, ProductLike, Look, ShopProduct
-from apparelrow.apparel.utils import select_from_multi_gender
+from apparelrow.apparel.utils import select_from_multi_gender, get_location
 from apparelrow.apparel.tasks import product_popularity
 from sorl.thumbnail import get_thumbnail
 
@@ -50,7 +50,7 @@ class ResultContainer:
 def more_like_this_product(body, gender, location, limit):
     kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
-    kwargs['fq'].append('market_ss:%s' % location)
+    kwargs['fq'].append('market_ss:{location}'.format(location=location))
 
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
     connection = Solr(settings.SOLR_URL)
@@ -68,18 +68,18 @@ def more_alternatives(product, location, limit):
                        'fl': 'image_small,slug',
                        'sort': 'price asc, popularity desc, created desc'}
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
-    query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
-    query_arguments['fq'].append('category:%s' % (product.category_id))
-    query_arguments['fq'].append('market_ss:%s' % location)
+    query_arguments['fq'].append('gender:({gender} OR U)'.format(gender=product.gender))
+    query_arguments['fq'].append('category:{category}'.format(category=product.category_id))
+    query_arguments['fq'].append('market_ss:{location}'.format(location))
     if colors_pk:
-        query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+        query_arguments['fq'].append('color:({colors})'.format(colors=' OR '.join(colors_pk)))
     search = ApparelSearch('*:*', **query_arguments)
     docs = search.get_docs()
     if docs:
         shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
-        shop_url = '%s?category=%s' % (reverse(shop_reverse), product.category_id)
+        shop_url = '{shop_url}?category={category}'.format(shop_url=reverse(shop_reverse), category=product.category_id)
         if colors_pk:
-            shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+            shop_url = '{full_shop_url}&color={colors}'.format(full_shop_url=shop_url, colors=','.join(colors_pk))
 
         return docs, shop_url
 
@@ -655,7 +655,7 @@ def search_view(request, model_name):
         arguments['facet.field'] = ['manufacturer']
 
     # Filter query parameters based on location
-    arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
+    arguments['fq'].append('market_ss:{location}'.format(location=get_location(request)))
 
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)
@@ -736,7 +736,7 @@ def get_available_brands(gender, location):
     else:
         gender_field = 'gender:(U OR %s)' % (gender,)
     arguments = {'fq': ['django_ct:apparel.product', 'availability:true', gender_field, 'published:true',
-                        'market_ss:%s' % location],
+                        'market_ss:{location}'.format(location=location)],
                  'qf': ['manufacturer_auto'],
                  'defType': ['edismax'],
                  'start': 0,

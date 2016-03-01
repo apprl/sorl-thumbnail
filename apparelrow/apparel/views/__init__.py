@@ -1412,7 +1412,7 @@ def user_list(request, gender=None, brand=False):
                                                advertiser_store__isnull=True)
     queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
     if brand:
-        brands_list = get_available_brands(gender, request.session.get('location','ALL'))
+        brands_list = get_available_brands(gender, get_location(request))
         queryset = queryset.filter(Q(brand__id__in=brands_list))
 
     extra_parameter = None
