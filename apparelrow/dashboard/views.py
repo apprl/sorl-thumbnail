@@ -3,20 +3,17 @@ import re
 import json
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, Http404
+from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
 from django.forms import ModelForm
-from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.template.loader import render_to_string
 
-from sorl.thumbnail import get_thumbnail
-from sorl.thumbnail.fields import ImageField
 from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
-from apparelrow.apparel.utils import currency_exchange, get_location
+from apparelrow.apparel.utils import get_location
 from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
 from django.views.generic import TemplateView
@@ -136,6 +133,63 @@ def dashboard_info(request):
 #
 # Referral
 #
+
+
+def referral_signup(request, code):
+    user_id = None
+    try:
+        user = get_user_model().objects.get(referral_partner_code=code)
+        user_id = user.pk
+    except:
+        pass
+    response = redirect(reverse('publisher-contact'))
+    if user_id:
+        expires_datetime = timezone.now() + datetime.timedelta(days=15)
+        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime,
+                                   httponly=True)
+
+    return response
+
+
+class ReferralView(TemplateView):
+    template_name = 'dashboard/referral.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReferralView, self).get_context_data(**kwargs)
+        context["referrals"] = get_user_model().objects.filter(referral_partner_parent=self.request.user, is_partner=True)
+        return context
+
+    def get(self,request, *args, **kwargs):
+
+        if request.user.is_authenticated() and all([request.user.is_partner, request.user.referral_partner]):
+            context = self.get_context_data()
+            return render(request, self.template_name, context)
+        else:
+            return HttpResponseRedirect(reverse('index-publisher'))
+
+    def post(self, request, *args, **kwargs):
+        emails = request.POST.get('emails')
+        emails = re.split(r'[\s,]+', emails)
+
+        referral_code = request.user.get_referral_domain_url()
+        referral_name = request.user.display_name
+        referral_email = request.user.email
+        referral_language = get_language()
+
+        template = 'dashboard/referral_mail_en.html'
+        # TODO: fix when we have swedish email
+        #if referral_language == 'sv':
+            #template = 'dashboard/referral_mail_sv.html'
+        body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
+
+        for email in emails:
+            send_email_task.delay('Invitation from {referral_name}'.format(referral_name=referral_name), body, email,
+                                  '{} <{}>'.format(referral_name, referral_email))
+        messages.add_message(request, messages.SUCCESS, 'Sent mail to %s' % (', '.join(emails),))
+        return render(request, self.template_name)
+
+
+@DeprecationWarning
 def referral(request):
     if request.user.is_authenticated() and request.user.is_partner and request.user.referral_partner:
         referrals = get_user_model().objects.filter(referral_partner_parent=request.user, is_partner=True)
@@ -143,6 +197,7 @@ def referral(request):
 
     return HttpResponseRedirect(reverse('index-publisher'))
 
+@DeprecationWarning
 def referral_mail(request):
     emails = request.POST.get('emails')
     emails = re.split(r'[\s,]+', emails)
@@ -166,21 +221,6 @@ def referral_mail(request):
 
     return HttpResponseRedirect(reverse('dashboard-referral'))
 
-
-def referral_signup(request, code):
-    user_id = None
-    try:
-        user = get_user_model().objects.get(referral_partner_code=code)
-        user_id = user.pk
-    except:
-        pass
-    response = redirect(reverse('publisher-contact'))
-    if user_id:
-        expires_datetime = timezone.now() + datetime.timedelta(days=15)
-        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime,
-                                   httponly=True)
-
-    return response
 
 #
 # Commissions
@@ -1458,32 +1498,6 @@ def dashboard(request, year=None, month=None):
                                                             'is_owner': is_owner})
     return HttpResponseRedirect(reverse('index-publisher'))
 
-#
-# Referral
-#
-@DeprecationWarning
-def referral(request):
-    if request.user.is_authenticated() and request.user.is_partner and request.user.referral_partner:
-        referrals = get_user_model().objects.filter(referral_partner_parent=request.user, is_partner=True)
-        return render(request, 'dashboard/referral.html', {'referrals': referrals})
-
-    return HttpResponseRedirect(reverse('index-publisher'))
-
-class ReferralView(TemplateView):
-    template_name = 'dashboard/referral.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ReferralView, self).get_context_data(**kwargs)
-        context["referrals"] = get_user_model().objects.filter(referral_partner_parent=self.request.user, is_partner=True)
-        return context
-
-    def get(self,request, *args, **kwargs):
-        if all([request.user.is_authenticated(), request.user.is_partner, request.user.referral_partner]):
-            context = self.get_context_data()
-            return render(request, self.template_name, context)
-        else:
-            return HttpResponseRedirect(reverse('index-publisher'))
-
 
 # Publisher / Store signup
 #
@@ -1510,11 +1524,8 @@ def retailer_form(request):
 
     return render(request, 'apparel/retailer_contact.html', {'form': form})
 
-#class RetailerView(TemplateView):
-#    template_name = 'apparel/retailers.html'
 
-
-class RetailerView(TemplateView):
+class RetailerFormView(TemplateView):
     template_name = 'apparel/retailer_contact.html'
 
     def get(self, request, *args, **kwargs):
@@ -1535,6 +1546,10 @@ class RetailerView(TemplateView):
 
             return HttpResponseRedirect(reverse('index-store-complete'))
         return render(request, self.template_name, {'form': form})
+
+class RetailerPublicFormView(RetailerFormView):
+    template_name = 'apparel/retailers.html'
+
 
 @DeprecationWarning
 def retailer(request):

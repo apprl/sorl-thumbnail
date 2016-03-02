@@ -1,6 +1,6 @@
 {% load i18n apparel_extras mptt_tags %}
 
-<a id="product-filter-button" class="btn btn-grey btn-block btn-filter" data-toggle="collapse" data-target="#product-filter-accordion">{% trans "Filter products" %} <i class="fa fa-chevron-down"></i></a>
+<a id="product-filter-button" href="#" class="btn btn-grey btn-block btn-filter" data-toggle="collapse" data-target="#product-filter-accordion">{% trans "Filter products" %} <i class="fa fa-chevron-down"></i></a>
 
 <div class="panel-group collapse" id="product-filter-accordion">
 
@@ -32,10 +32,10 @@
                 <a class="reset" href="">{% trans "Reset this filter" %} <i class="fa fa-times"></i></a>
                 {% if categories_all %}
                     {% for category, structure in categories_all|tree_info %}
-                    {% if structure.new_level %}
-                    <ul class="level-{{ category.get_level }} list-filter-a">
+                        {% if structure.new_level %}
+                            <ul class="level-{{ category.get_level }} list-filter-a">
                         {% else %}
-                        </li>
+                            <!-- /li -->
                         {% endif %}
                         <li class="{% if categories and category.id not in categories %} to_filter{% endif %}">
                         <a data-order="{{ category.name_order }}" id="category-{{ category.id }}" class="{% if category.id in selected_categories %} selected{% endif %}" href="?category={{ category.id }}">{{ category.name }}</a>

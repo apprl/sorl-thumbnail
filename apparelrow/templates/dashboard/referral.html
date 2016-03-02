@@ -32,9 +32,8 @@
                     {% for message in messages %}
                         <p>{{ message }}</p>
                     {% endfor %}
-                    </ul>
                 {% endif %}
-                <form method="POST" action="{% url 'dashboard-referral-mail' %}">
+                <form method="POST">
                     {% csrf_token %}
                     <textarea rows="3" name="emails" placeholder="{% trans "Add e-mails, separated with comma" %}"></textarea>
                     <button type="submit" class="btn btn-primary center">{% trans "SEND" %}</button>
