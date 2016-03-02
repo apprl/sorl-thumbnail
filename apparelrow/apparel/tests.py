@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+from django.http import SimpleCookie
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
@@ -1104,7 +1105,7 @@ class TestSearch(TransactionTestCase):
     def test_search_view_no_products(self):
         self._login()
         session = self.client.session
-        session['location'] = 'NO'
+        self.client.cookies = SimpleCookie({settings.APPAREL_LOCATION_COOKIE: 'NO'})
         session.save()
         response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
         json_data = json.loads(response.content)
@@ -1113,7 +1114,8 @@ class TestSearch(TransactionTestCase):
     def test_search_view(self):
         self._login()
         session = self.client.session
-        session['location'] = 'SE'
+        self.client.cookies = SimpleCookie({settings.APPAREL_LOCATION_COOKIE: 'SE'})
+        #session['location'] = 'SE'
         session.save()
         response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
         json_data = json.loads(response.content)
