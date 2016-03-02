@@ -359,13 +359,13 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     selected_brands = filter(None, map(_to_int, request.GET.get('manufacturer', '').split(',')))
     selected_brands_data = {}
     for brand in Brand.objects.values('id', 'name').filter(pk__in=selected_brands):
-        brand['href'] = '%s?manufacturer=%s' % (reverse('apparelrow.apparel.browse.browse_products'), brand['id'])
+        brand['href'] = '%s?manufacturer=%s' % (reverse('apparelrow.apparel.browse.browse_products', user_gender=gender), brand['id'])
         selected_brands_data[brand['id']] = brand
 
     selected_stores = filter(None, map(_to_int, request.GET.get('store', '').split(',')))
     selected_stores_data = {}
     for store in Vendor.objects.values('id', 'name').filter(pk__in=selected_stores):
-        store['href'] = '%s?store=%s' % (reverse('apparelrow.apparel.browse.browse_products'), store['id'])
+        store['href'] = '%s?store=%s' % (reverse('apparelrow.apparel.browse.browse_products', user_gender=gender), store['id'])
         selected_stores_data[store['id']] = store
 
     result.update(
