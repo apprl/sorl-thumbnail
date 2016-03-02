@@ -885,7 +885,7 @@ def look_list(request, search=None, contains=None, gender=None):
     view = request.GET.get('view', 'all')
     profile = request.user
     is_authenticated = request.user.is_authenticated()
-    hide_header = False
+    show_header = True
     if search:
         if not gender or gender == 'A':
             gender_field = 'gender:(U OR M OR W)'
@@ -910,7 +910,7 @@ def look_list(request, search=None, contains=None, gender=None):
                     '-created')
     elif contains:
         queryset = queryset.filter(components__product__slug=contains).distinct()
-        hide_header = True
+        show_header = False
     else:
         queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
 
@@ -922,14 +922,13 @@ def look_list(request, search=None, contains=None, gender=None):
             'objects_list': paged_result,
         })
 
-    #return HttpResponseRedirect()
     return render(request, 'apparel/look_list.html', {
         'query': request.GET.get('q'),
         'paginator': paged_result.paginator,
         'current_page': paged_result,
         'next': request.get_full_path(),
         'gender': gender,
-        'hide_header': hide_header
+        'show_header': show_header,
     })
 
 
