@@ -43,6 +43,7 @@ urlpatterns = patterns('',
     url(r'^all/women/$', RedirectView.as_view(url='/')),
 
     # Shop
+    url(r'^shop/(?P<user_gender>\w+)$', 'apparelrow.apparel.browse.browse_products', name='shop'),
     url(r'^shop/$', 'apparelrow.apparel.browse.browse_products', name='shop'),
     url(r'^shop/men/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'M'}, name='shop-men'),
     url(r'^shop/women/$', 'apparelrow.apparel.browse.browse_products', {'gender': 'W'}, name='shop-women'),
