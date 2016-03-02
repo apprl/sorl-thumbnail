@@ -181,7 +181,7 @@
                             </td>
                             <td class="col-md-3 hidden-xs">
                                 <a href="{{ publisher.user_link }}">{{ publisher.user_name }} </a>
-                                <a href="{% url 'new-dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
+                                <a href="{% url 'dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
                                 {{ publisher.total_clicks }}

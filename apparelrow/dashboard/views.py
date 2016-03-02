@@ -460,7 +460,7 @@ class DashboardView(TemplateView):
                             'ppc_earnings': ppc_earnings,
                             }
             return render(request, 'dashboard/new_dashboard.html', context_data)
-        return HttpResponseRedirect(reverse('new-dashboard'))
+        return HttpResponseRedirect(reverse('dashboard'))
 
 
 #
@@ -635,7 +635,7 @@ class AdminDashboardView(TemplateView):
                             'top_publishers': top_publishers, 'top_products': top_products,
                             'monthly_array': monthly_array, 'clicks_array': clicks_array }
             return render(request, 'dashboard/new_admin.html', context_data)
-        return HttpResponseRedirect(reverse('new-admin'))
+        return HttpResponseRedirect(reverse('admin'))
 
 
 #
