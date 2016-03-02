@@ -1104,19 +1104,14 @@ class TestSearch(TransactionTestCase):
 
     def test_search_view_no_products(self):
         self._login()
-        session = self.client.session
         self.client.cookies = SimpleCookie({settings.APPAREL_LOCATION_COOKIE: 'NO'})
-        session.save()
         response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
         json_data = json.loads(response.content)
         self.assertEqual(len(json_data['object_list']), 0)
 
     def test_search_view(self):
         self._login()
-        session = self.client.session
         self.client.cookies = SimpleCookie({settings.APPAREL_LOCATION_COOKIE: 'SE'})
-        #session['location'] = 'SE'
-        session.save()
         response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
         json_data = json.loads(response.content)
         self.assertEqual(len(json_data['object_list']), 1)
