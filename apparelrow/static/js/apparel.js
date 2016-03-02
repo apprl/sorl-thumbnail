@@ -458,7 +458,7 @@ function unlikeElement($element) {
 
 function showWarning($element) {
     var slug = $element.attr('data-slug');
-    var settings_link = '/profile/settings/email/#location-notifications';
+    var settings_link = '/profile/settings/account/#location';
     jQuery.ajax({
         type: 'GET',
         url: '/products/check_location/' + slug + '/',
