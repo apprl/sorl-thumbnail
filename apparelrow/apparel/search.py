@@ -48,7 +48,7 @@ class ResultContainer:
         self.__dict__.update(entries)
 
 def more_like_this_product(body, gender, location, limit):
-    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
+    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:{}'.format(gender)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
     kwargs['fq'].append('market_ss:{location}'.format(location=location))
 
