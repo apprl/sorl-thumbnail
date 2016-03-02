@@ -2142,6 +2142,21 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(start_date.strftime("%Y-%m-%d"), "2013-05-01")
         self.assertEqual(end_date.strftime("%Y-%m-%d"), "2013-05-31")
 
+    def test_parse_date_first_to_first(self):
+        print "Testing extra option for parse date function, first to first"
+        today = datetime.date(2015, 04, 01)
+
+        start_date, stop_date = parse_date(today.month, today.year)
+        self.assertEquals(start_date, datetime.date(2015, 04, 01))
+        self.assertEquals(stop_date, datetime.date(2015, 04, 30))
+
+
+        start_date, stop_date = parse_date(today.month, today.year, first_to_first=True)
+        self.assertEquals(start_date, datetime.date(2015, 04, 01))
+        self.assertEquals(stop_date, datetime.date(2015, 05, 01))
+
+        print "Testing first to first option done!"
+
     def test_enumerate_months(self):
         """ Test months choices, year choices and display text for month passed as input are correct.
         """
@@ -2257,7 +2272,7 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(invalid_clicks[2], 248)
 
 
-class TestAggregatedData(TransactionTestCase):
+class TestAggregatedData_2(TransactionTestCase):
     def setUp(self):
         self.group = get_model('dashboard', 'Group').objects.create(name='group_name')
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
@@ -2267,7 +2282,10 @@ class TestAggregatedData(TransactionTestCase):
         self.user.save()
 
     def test_get_aggregated_products_and_publishers(self):
-        yesterday = (datetime.date.today() - datetime.timedelta(1))
+        year = 2015
+        month = 1
+        order_day = datetime.date(year, month ,15)
+        click_day = order_day+relativedelta(days=-1)
 
         # Generate Earnings and click data with product information
         vendor = VendorFactory.create(name="Vendor Aggregated CPO")
@@ -2286,30 +2304,31 @@ class TestAggregatedData(TransactionTestCase):
         # Generate clicks for CPO
         for index in range(200):
             ProductStatFactory.create(vendor=vendor.name, is_valid=True, ip= "1.22.3.4", product=product.slug,
-                                      created=yesterday, user_id=self.user.id)
+                                      created=click_day, user_id=self.user.id)
 
         # Generate clicks for CPC
         for index in range(100):
             ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.22.3.4", product=product_cpc.slug,
-                                      created=yesterday, user_id=self.user.id)
+                                      created=click_day, user_id=self.user.id)
 
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(user_id=self.user.id).count(), 300)
 
-        # Generate earnings CPC
-        management.call_command('clicks_summary', verbosity=0)
+        # Generate earnings CPC,
+        management.call_command('clicks_summary', verbosity=0, date="2015-01-14")
+        # Management call creates a Sale object based on all clicks previous day (click_day)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 1)
 
         # Generate earnings CPO
         for index in range(1, 11):
-            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=yesterday,
-                               sale_date=yesterday, pk=index+2)
-
+            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=click_day,
+                               sale_date=click_day, pk=index+2)
         self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 11)
         self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
         self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=self.user).count(), 11)
 
-        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False, date="2015-01-14")
 
-        start_date, end_date = get_current_month_range()
+        start_date, end_date = parse_date(year=str(year), month=str(month), first_to_first=True)
         # Check data from get_aggregated_products is correct
         top_products = get_aggregated_products(None, start_date, end_date)
         self.assertEqual(len(top_products), 2)

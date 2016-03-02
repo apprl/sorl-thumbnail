@@ -164,9 +164,10 @@
                     <thead>
                         <tr>
                             <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
-                            <th class="col-md-5 hidden-xs center"></th>
+                            <th class="col-md-3 hidden-xs center"></th>
                             <th class="col-md-2 center">{% trans "Clicks" %}</th>
                             <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                            <th class="col-md-2 center">{% trans "Network earnings" %}</th>
                             <th class="col-md-2 center">{% trans "Earning per click" %}</th>
                         </tr>
                     </thead>
@@ -178,7 +179,7 @@
                                     <img src="{{ publisher.user_image }}">
                                 </a>
                             </td>
-                            <td class="col-md-5 hidden-xs">
+                            <td class="col-md-3 hidden-xs">
                                 <a href="{{ publisher.user_link }}">{{ publisher.user_name }} </a>
                                 <a href="{% url 'new-dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
                             </td>
@@ -187,6 +188,9 @@
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
                                 {{ currency }} {{ publisher.total_earnings }}
+                            </td>
+                            <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
+                                {{ currency }} {{ publisher.total_network_earnings }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|commission_rate:publisher.total_clicks }}">
                                 {% if publisher.total_clicks %}{{ currency }} {% endif %}
