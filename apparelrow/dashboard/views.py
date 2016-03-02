@@ -183,9 +183,9 @@ class ReferralView(TemplateView):
         body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
 
         for email in emails:
-            send_email_task.delay('Invitation from {referral_name}'.format(referral_name=referral_name), body, email,
-                                  '{} <{}>'.format(referral_name, referral_email))
-        messages.add_message(request, messages.SUCCESS, 'Sent mail to %s' % (', '.join(emails),))
+            send_email_task.delay(u'Invitation from {referral_name}'.format(referral_name=referral_name), body, email,
+                                  u'{} <{}>'.format(referral_name, referral_email))
+        messages.add_message(request, messages.SUCCESS, u'Sent mail to %s' % (', '.join(emails),))
         return render(request, self.template_name)
 
 
