@@ -27,7 +27,7 @@ MANAGERS = ADMINS + (
     ('Gustav', 'gustav@apprl.com'),
 )
 
-ALLOWED_HOSTS = ['.apprl.com']
+ALLOWED_HOSTS = ['.apprl.com','.apparelrow.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://www.postgresql.org/docs/8.1/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
