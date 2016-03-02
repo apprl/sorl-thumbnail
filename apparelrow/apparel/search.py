@@ -48,7 +48,7 @@ class ResultContainer:
         self.__dict__.update(entries)
 
 def more_like_this_product(body, gender, location, limit):
-    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
+    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:{}'.format(gender)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
     kwargs['fq'].append('market_ss:{location}'.format(location=location))
 
@@ -70,7 +70,7 @@ def more_alternatives(product, location, limit):
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
     query_arguments['fq'].append('gender:({gender} OR U)'.format(gender=product.gender))
     query_arguments['fq'].append('category:{category}'.format(category=product.category_id))
-    query_arguments['fq'].append('market_ss:{location}'.format(location))
+    query_arguments['fq'].append('market_ss:{location}'.format(location=location))
     if colors_pk:
         query_arguments['fq'].append('color:({colors})'.format(colors=' OR '.join(colors_pk)))
     search = ApparelSearch('*:*', **query_arguments)

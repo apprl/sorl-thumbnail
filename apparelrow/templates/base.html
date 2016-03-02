@@ -364,14 +364,14 @@
                 $('#unread_count').fadeOut();
             }
         });
-        $('.notification-mini').click(function() {
+        $('.notifications').click(function() {
             var user_id = $(this).data('user');
             $.ajax({
                 type: 'post',
                 url: "{% url 'notifications-seen' %}",
                 data: { user_id: user_id },
                 success: function (response) {
-                    window.location.href = "{% url 'notifications-page' %}";
+                    //window.location.href = "{% url 'notifications-page' %}";
                 }
             });
 
