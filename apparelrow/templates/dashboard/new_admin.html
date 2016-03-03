@@ -44,13 +44,13 @@
         $('.month-select').change(function() {
             var month = $('.month-select').find(':selected').data('month');
             var year = $('.year-select').find(':selected').data('year');
-            window.location.href = '/publisher/new_admin/' + year + '/' + month + '/';
+            window.location.href = '{% url "dashboard-admin" %}' + year + '/' + month + '/';
 
         });
         $('.year-select').change(function() {
             var month = $('.month-select').find(':selected').data('month');
             var year = $('.year-select').find(':selected').data('year');
-            window.location.href = '/publisher/new_admin/' + year + '/' + month + '/';
+            window.location.href = '{% url "dashboard-admin" %}' + year + '/' + month + '/';
         });
         new Tablesort($('table#all-earnings').get(0));
         new Tablesort($('table#top-products').get(0));
