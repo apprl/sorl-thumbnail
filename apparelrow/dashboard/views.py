@@ -635,7 +635,7 @@ class AdminDashboardView(TemplateView):
                             'top_publishers': top_publishers, 'top_products': top_products,
                             'monthly_array': monthly_array, 'clicks_array': clicks_array }
             return render(request, 'dashboard/new_admin.html', context_data)
-        return HttpResponseRedirect(reverse('admin'))
+        return HttpResponseNotFound()
 
 
 #
