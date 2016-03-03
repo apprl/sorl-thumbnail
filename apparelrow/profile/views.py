@@ -789,7 +789,6 @@ def login_flow_brands(request):
     if request.user.is_authenticated() and request.user.login_flow == 'complete':
         return HttpResponseRedirect(reverse('login-flow-complete'))
 
-
     request.user.login_flow = 'brands'
     request.user.save()
 
@@ -1062,7 +1061,6 @@ def flow(request):
                             max_age=365 * 24 * 60 * 60)
 
         return response
-
     return HttpResponseRedirect(_get_next(request))
 
 
