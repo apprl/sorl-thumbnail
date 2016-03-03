@@ -18,12 +18,12 @@
         <h5><a href="{{ object.get_absolute_url|chlocale:LANGUAGE_CODE }}">{{ object.manufacturer }}</a></h5>
         <ul class="list-inline">
             {% if object.availability and object.default_vendor and object.default_vendor.availability != 0 %}
-            {% if object.default_vendor.original_discount_price %}
-            <li class="discount-price" data-price="{{ object.default_vendor.original_discount_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_discount_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</li>
-            <li class="price discounted" data-price="{{ object.default_vendor.original_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</li>
-            {% else %}
-            <li class="price" data-price="{{ object.default_vendor.original_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</li>
-            {% endif %}
+            <li class="computed-price" data-price="{{ object.default_vendor.original_discount_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">
+                {% if object.default_vendor.original_discount_price %}
+                <span class="discount-price price" style="margin-right:5px;">{{ object.default_vendor.original_discount_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</span>
+                {% endif %}
+                <span class="price" style="{% if object.default_vendor.original_discount_price %}text-decoration:line-through; {% endif %}margin-right:5px;">{{ object.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</span>
+            </li>
             {% else %}
             <li class="sold-out">{% trans "Sold out" %}</li>
             {% endif %}
