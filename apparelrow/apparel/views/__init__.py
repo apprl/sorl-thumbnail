@@ -1460,7 +1460,7 @@ class PublisherView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PublisherView, self).get_context_data(**kwargs)
         context['featured'] = get_featured_activity_today()
-        context['form'] = SignupForm(is_store_form=True)
+        context['form'] = SignupForm(is_store_form=False)
         return context
 
     def get(self, request, gender=None, *args, **kwargs):
@@ -1481,7 +1481,7 @@ class PublisherView(TemplateView):
         return render(request, self.template_name, self.get_context_data())
 
     def post(self, request, gender=None, *args, **kwargs):
-        form = SignupForm(request.POST, is_store_form=True)
+        form = SignupForm(request.POST, is_store_form=False)
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
             request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
@@ -1489,7 +1489,7 @@ class PublisherView(TemplateView):
             instance.store = True
             instance.save()
 
-            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
+            mail_managers_task.delay(u'New Publisher signup: {name}'.format(**form.cleaned_data),
                     u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
 
             return HttpResponseRedirect(reverse('index-publisher-complete'))

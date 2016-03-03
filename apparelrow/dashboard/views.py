@@ -287,11 +287,11 @@ def index_complete(request, view):
 
     return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
-
+@DeprecationWarning
 def retailer(request):
     return render(request, 'apparel/retailers.html')
 
-
+@DeprecationWarning
 def retailer_form(request):
     if request.method == 'POST':
         form = SignupForm(request.POST, is_store_form=True)

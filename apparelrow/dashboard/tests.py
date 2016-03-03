@@ -18,7 +18,6 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
-from apparelrow.dashboard.views import publisher_contact
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache

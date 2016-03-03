@@ -98,13 +98,13 @@
             $('.month-select').change(function() {
                 var month = $('.month-select').find(':selected').data('month');
                 var year = $('.year-select').find(':selected').data('year');
-                window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
+                window.location.href = '{% url "dashboard" %}' + year + '/' + month + '/';
 
             });
             $('.year-select').change(function() {
                 var month = $('.month-select').find(':selected').data('month');
                 var year = $('.year-select').find(':selected').data('year');
-                window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
+                window.location.href = '{% url "dashboard" %}' + year + '/' + month + '/';
             });
 
             /*new Tablesort($('table#earnings').get(0));
