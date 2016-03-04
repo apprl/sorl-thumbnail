@@ -15,8 +15,10 @@ App.Views.DialogUnpublish = Backbone.View.extend({
     },
 
     yes: function(e) {
+        App.Events.trigger('widget:unpublish');
         $('.button-container .btn-save').text($('.button-container .btn-save').data('save-draft-text'));
-        App.Events.trigger('popup_dispatcher:hide');
+
+        return false;
     },
 
     render: function() {
