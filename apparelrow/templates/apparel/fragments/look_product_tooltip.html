@@ -9,7 +9,7 @@
         <div class="media-body">
             <h2 class="media-heading"><a href="{% internal_referral_url product.get_absolute_url owner.pk %}" title="{{ product }}">{{ product.manufacturer.name }}</a></h2>
             {% if product.default_vendor %}
-            <div class="vendor_price">
+            <div class="vendor-price">
                 {% with product.default_vendor as vendor %}
                 {% if vendor.locale_discount_price %}
                 <span class="discount-price price">{{ vendor.locale_discount_price|floatformat:0|apprl_intcomma }}&#160;</span>
