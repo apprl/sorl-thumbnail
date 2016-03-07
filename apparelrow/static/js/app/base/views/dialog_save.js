@@ -17,14 +17,16 @@ App.Views.DialogSave = Backbone.View.extend({
         this.model = options.model
     },
 
-    save: function() {
+    save: function(e) {
         if (this._prepare_save()) {
+            e.preventDefault();
             App.Events.trigger('widget:save', {title: this.title, description: this.description});
         }
     },
 
-    publish: function() {
+    publish: function(e) {
         if (this._prepare_save()) {
+            e.preventDefault();
             App.Events.trigger('widget:publish', {title: this.title, description: this.description});
         }
     },
