@@ -1027,3 +1027,7 @@ LOGGING = {
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
 GEOIP_DEBUG = False
 GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"
+
+# Variable for temporary tracking string for tailsweep campaign.
+GINA_TRACKING = {"user_ids": [30714,30716,30733,30717,24257,30164,30719,30720,30721,30722,30724,30725,24312,30732,30738],
+                 "tracking_string": "&utm_source=tailsweep_apprl&utm_medium=social&utm_campaign=conversions_2016_se"}
