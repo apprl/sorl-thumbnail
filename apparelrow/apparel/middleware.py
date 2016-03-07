@@ -17,7 +17,7 @@ from apparelrow.statistics.utils import get_country_by_ip
 REFERRAL_COOKIE_NAME = 'aid_cookie'
 REFERRAL_COOKIE_DAYS = 30
 
-logger = logging.getLogger('apparelrow.apparel.middleware')
+logger = logging.getLogger('apparelrow')
 
 
 class UpdateLocaleSessionMiddleware(object):
@@ -58,6 +58,7 @@ class GenderMiddleware(object):
                 pass
 
         return response
+
 
 class LocationMiddleware(object):
     """
@@ -103,6 +104,7 @@ class LocationMiddleware(object):
             location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
             response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
         return response
+
 
 class InternalReferralMiddleware(object):
     def process_response(self, request, response):
