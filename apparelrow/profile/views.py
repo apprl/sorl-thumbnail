@@ -1061,6 +1061,10 @@ def flow(request):
                             max_age=365 * 24 * 60 * 60)
 
         return response
+
+    if request.user.is_authenticated() and request.user.is_partner:
+        return HttpResponseRedirect(reverse('publisher-tools'))
+
     return HttpResponseRedirect(_get_next(request))
 
 

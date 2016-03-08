@@ -1468,8 +1468,6 @@ class PublisherView(TemplateView):
             if gender == 'none':
                 gender = None
 
-            if request.user.is_partner:
-                return HttpResponseRedirect(reverse('publisher-tools'))
             # Hiding this for the time being
             #if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
                 #return onboarding(request)
