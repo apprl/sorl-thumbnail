@@ -448,3 +448,10 @@ def show_display_name(value):
         display_name += " ..."
     return display_name
 
+@register.filter
+def get_selected_by(value):
+    """
+    Adds 1 to Selected by figure, which represents the Brand the products belongs to and it's always included in the
+    Selected by list but not counted
+    """
+    return len(value) + 1
