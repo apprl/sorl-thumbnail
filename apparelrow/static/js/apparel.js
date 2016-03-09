@@ -173,6 +173,9 @@ $(document).ready(function() {
                .on('click', 'body.registration-email .btn-email-signup', trackSignup('Signup', 'ClickEmailSignupSubmit'))
                .on('click', 'body.profile-welcome .btn-login-flow-continue', trackSignup('Signup', 'FollowBrandsPageCompleted'));
 
+    // Set pointer for checkboxes and radiobuttons labels
+    $('input[type="checkbox"]').parents().css("cursor", "pointer");
+    $('input[type="radio"]').parents().css("cursor", "pointer");
 
     // Facebook button sign in
     $(document).on('click', '.btn-facebook', function(e) {
