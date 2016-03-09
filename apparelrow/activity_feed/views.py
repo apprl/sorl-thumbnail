@@ -119,6 +119,13 @@ class ActivityFeedRender(object):
 
 @login_required
 def user_feed(request, gender=None):
+    """
+    Todo: Rewrite this using ListView and built in pagination.
+    :param request:
+    :param gender:
+    :return:
+    """
+
     gender = select_from_multi_gender(request, 'feed', gender)
 
     htmlset = ActivityFeedRender(request, gender, request.user).run()

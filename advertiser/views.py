@@ -12,18 +12,20 @@ from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.template.loader import render_to_string
+from django.conf import settings
 
 import dateutil.parser
 
 from apparelrow.statistics.utils import get_client_ip
 from apparelrow.apparel.utils import exchange_amount
-from apparelrow.dashboard.utils import get_clicks_amount, get_total_clicks_per_vendor, get_number_clicks
+from apparelrow.dashboard.utils import get_clicks_amount, get_total_clicks_per_vendor, get_number_clicks, parse_date, \
+    enumerate_months
 
 from advertiser.tasks import send_text_email_task
 from advertiser.utils import make_advertiser_url
 
 
-logger = logging.getLogger('advertiser')
+logger = logging.getLogger('apparelrow')
 
 
 def get_cookie_name(store_id):
@@ -224,7 +226,19 @@ def link(request):
     placement = request.GET.get('placement')
     custom = request.GET.get('custom')
     if user_id and placement:
-        custom = '%s-%s-%s' % (user_id, product_id, placement)
+        custom = u'{user_id}-{product_id}-{placement}'.format(user_id=user_id, product_id=product_id, placement=placement)
+    else:
+        try:
+            # Temporary GT tracking, very quick & dirty solution for single scenario with Tailsweep. Not an ideal and
+            # perfect solution but enough to make it work.
+            user_id = custom.split("-")[0]
+            if int(user_id) in settings.GINA_TRACKING.get("user_ids"):
+                if not "?" in url:
+                    url = u"{}?{}".format(url, settings.GINA_TRACKING.get("tracking_string"))
+                else:
+                    url = u"{}{}".format(url, settings.GINA_TRACKING.get("tracking_string"))
+        except:
+            logger.warn(u"Failed to split custom string to extract user id. Custom string [{custom}]".format(custom=custom))
 
     # Cookie date
     current_datetime = timezone.now()
@@ -311,21 +325,16 @@ def store_admin(request, year=None, month=None):
     except get_model('advertiser', 'Store').DoesNotExist:
         raise Http404()
 
+    start_date, end_date = parse_date(month, year)
+
     # Start date and end date + current month and year
-    if year is not None and month is not None:
-        start_date = datetime.date(int(year), int(month), 1)
-    else:
-        start_date = datetime.date.today().replace(day=1)
-
-    end_date = start_date
-    end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
-
     year = start_date.year
-    month = start_date.month
-    month_display = start_date.strftime('%B')
+    if month != "0":
+        month = start_date.month
 
     start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
     end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+    month_display, month_choices, year_choices = enumerate_months(request.user, month)
 
     end_date_clicks_query = end_date_query
     if end_date >= datetime.date.today():
@@ -415,14 +424,6 @@ def store_admin(request, year=None, month=None):
         if 'amount' in total_sales_query and total_sales_query['amount']:
             sales_generated = total_sales_query['amount']
 
-    dt1 = request.user.date_joined.date()
-    dt2 = datetime.date.today()
-    start_month = dt1.month
-    end_months = (dt2.year - dt1.year) * 12 + dt2.month + 1
-    dates = [datetime.datetime(year=yr, month=mn, day=1) for (yr, mn) in (
-        ((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
-    )]
-
     # Chart data (transactions and clicks)
     data_per_month = {}
     for day in range(1, (end_date - start_date).days + 2):
@@ -438,7 +439,6 @@ def store_admin(request, year=None, month=None):
     return render(request, 'advertiser/store_admin.html', { # General data
                                                             'transactions': transactions,
                                                             'store': request.user.advertiser_store,
-                                                            'dates': dates,
                                                             'year': year,
                                                             'month': month,
                                                             'month_display': month_display,
@@ -447,6 +447,8 @@ def store_admin(request, year=None, month=None):
                                                             'accepted_commission': accepted_commission,
                                                             'commission_to_be_invoiced': commission_to_be_invoiced,
                                                             'data_per_month': data_per_month,
+                                                            'year_choices': year_choices,
+                                                            'month_choices': month_choices,
 
                                                             # CPO data
                                                             'sales_generated': sales_generated,

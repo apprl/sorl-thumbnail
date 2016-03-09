@@ -12,83 +12,115 @@
 
 <div class="row">
     <div class="col-sm-3">
-        <ul class="list-group">
-            <li class="list-group-item"><a href="#blog">{% trans "Grow your blog and gain followers" %}</a></li>
-            <li class="list-group-item"><a href="#product">{% trans "Make money on product links" %}</a></li>
-            <li class="list-group-item"><a href="#links">{% trans "Earn money on store links" %}</a></li>
-            <li class="list-group-item"><a href="#profile">{% trans "Make money from your profile" %}</a></li>
-            <li class="list-group-item"><a href="#looks">{% trans "Make money on looks for your site/blog" %}</a></li>
-            <li class="list-group-item"><a href="#shop">{% trans "Create an APPRL-shop for your site/blog" %}</a></li>
-            <li class="list-group-item"><a href="#brands">{% trans "Our stores & brands" %}</a></li>
-            <li class="list-group-item"><a href="#statistics">{% trans "Your statistics" %}</a></li>
-            <li class="list-group-item"><a href="#questions">{% trans "Questions?" %}</a></li>
+        <ul class="page-menu">
+            <li><a href="#blog">{% trans "Grow your blog and gain followers" %}</a></li>
+            <li><a href="#product">{% trans "Make money on product links" %}</a></li>
+            <li><a href="#links">{% trans "Earn money on store links" %}</a></li>
+            <li><a href="#profile">{% trans "Make money from your profile" %}</a></li>
+            <li><a href="#looks">{% trans "Make money on looks for your site/blog" %}</a></li>
+            <li><a href="#shop">{% trans "Create an APPRL-shop for your site/blog" %}</a></li>
+            <li><a href="#brands">{% trans "Our stores & brands" %}</a></li>
+            <li><a href="#statistics">{% trans "Your statistics" %}</a></li>
+            <li><a href="#questions">{% trans "Questions?" %}</a></li>
         </ul>
     </div>
     <div class="col-sm-9">
+        <section>
+            {% if not request.user.is_partner %}
+            <a class="btn btn-primary" href="{% url 'dashboard' %}">{% trans "Apply for publisher" %}</a>
+            {% endif %}
+            <p>{% trans "As a fashion blogger you can apply to our publisher program. As a publisher you make money when linking to Apprl products. If someone buys a product that you have linked to, you make up to 10&#37; of the order value. As a publisher you will also grow your blog/site and create looks to share with your readers." %}</p>
+        </section>
 
-        {% if not request.user.is_partner %}
-        <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PUBLISHER HERE" %}</a></p>
-        {% endif %}
-        <p class="center">{% trans "Questions? Let us know on" %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a></p>
+        <hr>
 
-        <p>{% trans "As a fashion blogger you can apply to our publisher program. As a publisher you make money when linking to Apprl products. If someone buys a product that you have linked to, you make up to 10&#37; of the order value. As a publisher you will also grow your blog/site and create looks to share with your readers." %}</p>
+        <section id="blog">
+            <h2>{% trans "Grow your blog and gain followers" %}</h2>
+            <p>{% trans "Every time you save a product on Apprl.com, we show that the product is selected by you with a link back to your blog/site." %}</p>
+            <img class="display" src="{% static "images/dashboard_traffic_"|add:LANGUAGE_CODE|add:".png" %}">
+            <p>{% trans "By getting followers on Apprl, more people will discover your blog/site. You can promote your Apprl profile by putting one of these badges on your blog/site and linking them to your profile:" %}</p>
+            <ul class="list-horizontal">
+                <li><a href="{% static "images/follow_me_on_apprl_small_"|add:LANGUAGE_CODE|add:".png" %}" target="_blank">
+                    <img src="{% static "images/follow_me_on_apprl_small_"|add:LANGUAGE_CODE|add:".png" %}">
+                </a></li>
+                <li>
+                <a href="{% static "images/follow_me_on_apprl_large_"|add:LANGUAGE_CODE|add:".png" %}" target="_blank">
+                    <img src="{% static "images/follow_me_on_apprl_large_"|add:LANGUAGE_CODE|add:".png" %}">
+                </a></li>
+            </ul>
+        </section>
 
-        <h4 id="blog">{% trans "Grow your blog and gain followers" %}</h4>
-        <p>{% trans "Every time you “like” a product on Apprl.com, we show that the product is selected by you with a link back to your blog/site." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_traffic_"|add:LANGUAGE_CODE|add:".png" %}">
-        <p>{% trans "By getting followers on Apprl, more people will discover your blog/site. You can promote your Apprl profile by putting one of these badges on your blog/site and linking them to your profile:" %}</p>
-        <p class="center">
-            <a href="{% static "images/follow_me_on_apprl_small_"|add:LANGUAGE_CODE|add:".png" %}" target="_blank">
-                <img class="img-responsive" src="{% static "images/follow_me_on_apprl_small_"|add:LANGUAGE_CODE|add:".png" %}">
-            </a>
-            <br>
-            <a href="{% static "images/follow_me_on_apprl_large_"|add:LANGUAGE_CODE|add:".png" %}" target="_blank">
-                <img class="img-responsive" src="{% static "images/follow_me_on_apprl_large_"|add:LANGUAGE_CODE|add:".png" %}">
-            </a>
-        </p>
+        <hr>
 
-        <h4 id="product">{% trans "Make money on product links" %}</h4>
-        <p>{% trans "The easiest way to start making money is to simply link to our products. As a publisher just click the “Get product link”-button and share the link on your blog, Facebook page or elsewhere." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_product_link_"|add:LANGUAGE_CODE|add:".png" %}">
+        <section id="product">
+            <h2>{% trans "Make money on product links" %}</h2>
+            <p>{% trans "The easiest way to start making money is to simply link to our products. As a publisher just click the “Get product link”-button and share the link on your blog, Facebook page or elsewhere." %}</p>
+            <img class="display" src="{% static "images/dashboard_product_link_"|add:LANGUAGE_CODE|add:".png" %}">
+        </section>
 
-        <h4 id="links">{% trans "Earn money on store links" %}</h4>
-        <p>{% trans "You can also link directly to the home page of our partner stores, for example asos.com or net-a-porter.com and earn money the same way as when linking directly to products: When someone buys something from a store you have linked to within 30-45 days you earn commission." %}</p>
-        {% url 'dashboard-commissions' as store_url %}
-        <p>{% blocktrans with host=request.META.HTTP_HOST %}To get store links go to "Stores" under the "For Publishers"-page (<a href="http://{{ host }}{{ store_url }}">http://{{ host }}{{ store_url }}</a>). Here you can also see how much commission you earn from the different stores.{% endblocktrans %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_store_link_"|add:LANGUAGE_CODE|add:".png" %}">
+        <hr>
 
-        <h4 id="profile">{% trans "Make money from your profile" %}</h4>
-        <p>{% trans "All products that you “like” on Apprl.com ends up on your profile page. Every time someone clicks and buys a product – you make money." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_profile_"|add:LANGUAGE_CODE|add:".png" %}">
+        <section id="links">
+            <h2>{% trans "Earn money on store links" %}</h2>
+            <p>{% trans "You can also link directly to the home page of our partner stores, for example asos.com or net-a-porter.com and earn money the same way as when linking directly to products: When someone buys something from a store you have linked to within 30-45 days you earn commission." %}</p>
+            {% url 'dashboard-commissions' as store_url %}
+            <p>{% blocktrans with host=request.META.HTTP_HOST %}To get store links go to "Stores" under the "For Publishers"-page (<a href="http://{{ host }}{{ store_url }}">http://{{ host }}{{ store_url }}</a>). Here you can also see how much commission you earn from the different stores.{% endblocktrans %}</p>
+            <img class="display" src="{% static "images/dashboard_store_link_"|add:LANGUAGE_CODE|add:".png" %}">
+        </section>
 
-        <h4 id="looks">{% trans "Make money on looks for your site/blog" %}</h4>
-        <p>{% trans "On Apprl you can create two types of looks: Tagged photos & collages." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_look_create_"|add:LANGUAGE_CODE|add:".png" %}">
-        <img class="img-responsive" src="{% static "images/dashboard_look_type_"|add:LANGUAGE_CODE|add:".png" %}">
-        <p>{% trans "To put a look on your blog/site, just click the “EMBED ON YOUR BLOG / SITE”-button and follow instructions to choose the width & language of your look." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_look_embed_"|add:LANGUAGE_CODE|add:".png" %}">
-        <img class="img-responsive" src="{% static "images/dashboard_look_blog_"|add:LANGUAGE_CODE|add:".png" %}">
-        <p>{% trans "As a publisher you will now make money on every person that clicks and buys a product from your look." %}</p>
+        <hr>
 
-        <h4 id="shop">{% trans "Create an APPRL-shop for your site/blog" %}</h4>
-        <p>{% trans "It’s super easy to create an APPRL-shop for your blog/site. Just click the “CREATE A SHOP ON YOUR SITE”-button on your profile page and follow instructions to choose the width, height and language for your shop." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_create_shop_"|add:LANGUAGE_CODE|add:".png" %}">
-        <p>{% trans "You may then embed your store on your site, for example by creating a new page on your blog. You will make money on every person that clicks and buys a product from your shop." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_shop_"|add:LANGUAGE_CODE|add:".png" %}">
+        <section id="profile">
+            <h2>{% trans "Make money from your profile" %}</h2>
+            <p>{% trans "All products that you “like” on Apprl.com ends up on your profile page. Every time someone clicks and buys a product – you make money." %}</p>
+            <img class="display" src="{% static "images/dashboard_profile_"|add:LANGUAGE_CODE|add:".png" %}">
+        </section>
 
-        <h4 id="brands">{% trans "Our stores & brands" %}</h4>
-        <p>{% trans "You’ll find all the products from leading international online retailers & brands at Apprl, for you to link to, create looks from and share." %}<br><a href="mailto:info@apprl.com?subject={% trans "I would like to suggest a store/brand..." %}">{% trans "If you’re missing a store let us know!" %}</a></p>
-        <img class="img-responsive" src="{% static "images/dashboard_stores_"|add:LANGUAGE_CODE|add:".png" %}">
+        <hr>
 
-        <h4 id="statistics">{% trans "Your statistics" %}</h4>
-        <p>{% trans "You will be able to follow how much you’re making day by day." %}</p>
-        <img class="img-responsive" src="{% static "images/dashboard_statistics_"|add:LANGUAGE_CODE|add:".png" %}">
+        <section id="looks">
+            <h2>{% trans "Make money on looks for your site/blog" %}</h2>
+            <p>{% trans "On Apprl you can create two types of looks: Tagged photos & collages." %}</p>
+            <img class="display" src="{% static "images/dashboard_look_create_"|add:LANGUAGE_CODE|add:".png" %}">
+            <img class="display" src="{% static "images/dashboard_look_type_"|add:LANGUAGE_CODE|add:".png" %}">
+            <p>{% trans "To put a look on your blog/site, just click the “EMBED ON YOUR BLOG / SITE”-button and follow instructions to choose the width & language of your look." %}</p>
+            <img class="display" src="{% static "images/dashboard_look_embed_"|add:LANGUAGE_CODE|add:".png" %}">
+            <img class="display" src="{% static "images/dashboard_look_blog_"|add:LANGUAGE_CODE|add:".png" %}">
+            <p>{% trans "As a publisher you will now make money on every person that clicks and buys a product from your look." %}</p>
+        </section>
 
-        {% if not request.user.is_partner %}
-        <p class="center"><a class="btn btn-upper btn-positive" href="{% url 'dashboard' %}">{% trans "APPLY TO BECOME A PUBLISHER HERE" %}</a></p>
-        {% endif %}
-        <p id="questions" class="center">{% trans "Questions? Let us know on" %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a></p>
+        <hr>
 
+        <section id="shop">
+            <h2>{% trans "Create an APPRL-shop for your site/blog" %}</h2>
+            <p>{% trans "It’s super easy to create an APPRL-shop for your blog/site. Just click the “CREATE A SHOP ON YOUR SITE”-button on your profile page and follow instructions to choose the width, height and language for your shop." %}</p>
+            <img class="display" src="{% static "images/dashboard_create_shop_"|add:LANGUAGE_CODE|add:".png" %}">
+            <p>{% trans "You may then embed your store on your site, for example by creating a new page on your blog. You will make money on every person that clicks and buys a product from your shop." %}</p>
+            <img class="display" src="{% static "images/dashboard_shop_"|add:LANGUAGE_CODE|add:".png" %}">
+        </section>
+
+        <hr>
+
+        <section id="brands">
+            <h2>{% trans "Our stores & brands" %}</h2>
+            <p>{% trans "You’ll find all the products from leading international online retailers & brands at Apprl, for you to link to, create looks from and share." %}<br><a href="mailto:info@apprl.com?subject={% trans "I would like to suggest a store/brand..." %}">{% trans "If you’re missing a store let us know!" %}</a></p>
+            <img src="{% static "images/dashboard_stores_"|add:LANGUAGE_CODE|add:".png" %}">
+        </section>
+
+        <hr>
+
+        <section id="statistics">
+            <h2>{% trans "Your statistics" %}</h2>
+            <p>{% trans "You will be able to follow how much you’re making day by day." %}</p>
+            <img class="display" src="{% static "images/dashboard_statistics_"|add:LANGUAGE_CODE|add:".png" %}">
+            {% if not request.user.is_partner %}
+            <a class="btn btn-primary" href="{% url 'dashboard' %}">{% trans "Apply for buslisher" %}</a>
+            {% endif %}
+        </section>
+
+        <hr>
+
+        <p id="questions">{% trans "Questions? Let us know on" %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a></p>
     </div>
 </div>
 

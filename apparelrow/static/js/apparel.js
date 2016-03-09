@@ -292,7 +292,7 @@ $(document).ready(function() {
     });
     $('#profile-image .btn-cancel').click(function() {
         $('#profile-image .btn-edit').show();
-        $(this).hide().siblings('form').hide();
+        $(this).parent().hide();
         hover_edit_button = true;
         return false;
     });
@@ -303,7 +303,7 @@ $(document).ready(function() {
                .on('mouseenter', '.btn-look-like, .btn-product-like', ApparelActivity.like_handler_enter)
                .on('mouseleave', '.btn-look-like, .btn-product-like', ApparelActivity.like_handler_leave);
 
-    // Update likes box
+    // Update likes box and adds another badge
     $(document).on('like', function(event, element, type, id) {
         if (typeof userID !== 'undefined' && (!isPartnerUser || type == 'look')) {
             var likes_box = $('#likes-box');
@@ -456,6 +456,31 @@ function unlikeElement($element) {
     $element.removeClass('liked').find('span:first').text($element.data('like-text'));
 }
 
+function showWarning($element) {
+    var slug = $element.attr('data-slug');
+    var settings_link = '/profile/settings/email/#location-notifications';
+    jQuery.ajax({
+        type: 'GET',
+        url: '/products/check_location/' + slug + '/',
+        success: function(response, status, request) {
+            if(response){
+                $.notify({
+                    message: response + " <a class='alert-warning' style='text-decoration: underline;' href='" + settings_link + "'>Change your location</a>"
+                }, { // settings
+                    type: 'warning',
+                    z_index: 10031,
+                    offset: 80,
+                    delay: 0,
+                    placement: {
+                        from: "top",
+                        align: "center"
+                    }
+                });
+            }
+        }
+    });
+}
+
 /**
  * Activity functionality
  */
@@ -505,6 +530,10 @@ ApparelActivity = {
                 });
             } else {
                 likeElement(element);
+                // Only show warning if current page is not a product page
+                if (typeof element.attr('data-product-page') === 'undefined') {
+                    showWarning(element);
+                }
                 $.post(element.data('like-url'), function(data) {
                     if(data['success'] == true) {
                         $(document).trigger('like', [element, event.data.type, element.data('id')]);
@@ -628,7 +657,7 @@ ApparelSearch = {
         jQuery('#search > input').val('');
     },
     search: function(callback, query, gender) {
-        // Preforms a search
+        // Performs a search
         var s = '';
         if(query) {
             $('#search > input').val(query);
@@ -734,23 +763,23 @@ ApparelSearch = {
                 });
 
                 var name = opts.model.charAt(0).toUpperCase() + opts.model.slice(1) + ' search';
-                ga('send', 'event', 'Search', name, opts.query['q'], response.paginator.count)
+                ga('send', 'event', 'Search', name, opts.query['q'], response.paginator.count);
                 _gaq.push(['_trackEvent', 'Search', name, opts.query['q'], response.paginator.count]);
 
-                var h3 = $('h3.' + opts.selector.substring(1));
-                    h3.find('> span').text(response.header_text);
-                var h3_a = h3.find('> a');
+                var h4 = $('h4.' + opts.selector.substring(1));
+                    h4.find('> span').text(response.header_text);
+                var h4_a = h4.find('> a');
 
                 var href_attr = '#';
                 switch(opts.selector) {
                     case '#search-result-products':
                         href_attr = browse_url + '?' + ApparelSearch.format_query(opts.query);
-                        h3_a.attr('href', href_attr);
+                        h4_a.attr('href', href_attr);
                         break;
 
                     case '#search-result-looks':
                         href_attr = looks_search_url + '?' + ApparelSearch.format_query(opts.query);
-                        h3_a.attr('href', href_attr);
+                        h4_a.attr('href', href_attr);
                         break;
                 }
 
@@ -758,7 +787,7 @@ ApparelSearch = {
 
                 if(response.paginator.count > opts.query['limit']) {
                     abutton.show();
-                    h3_a.show();
+                    h4_a.show();
                 }
 
                 list.data('last-query', opts.query);
@@ -953,12 +982,14 @@ jQuery(document).ready(function() {
         // Fetch via ajax on pagination clicks
         $pagination.on('click', '.btn-pagination', function() {
             // Keep fetching automatically after the first click
+            $('#pagination-loader').show();
             var $this = $(this);
             $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
 
             $(window).data('dont-scroll', false);
 
             getPage($this);
+            $('#pagination-loader').hide();
             return false;
         });
 

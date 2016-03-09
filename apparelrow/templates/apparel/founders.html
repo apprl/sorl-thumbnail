@@ -14,18 +14,31 @@
             <img src="{% static 'images/about_founders.jpg' %}" class="img-responsive">
         </div>
         <div class="col-md-6 col-md-pull-6">
-            <h4>Gustav Gisseldahl</h4>
-            <p>Gustav is the ex-banker turned digital media business developer, who is excited about how the transformation of media changes the rules for brands & consumers and makes way for entirely new business models. You could say he's pretty into <a href="{% url 'profile-likes' 'gustav-gisseldahl' %}?category=5&color=1">black jeans</a> and <a href="{% url 'profile-likes' 'gustav-gisseldahl' %}?category=229">leather jackets</a>.</p>
-            <p>Prior to Apprl, Gustav was a corporate advisor at Danske Bank in London, worked with sales and commercial collaborations at TV4 digital media and creative sales & business development at Fashion Networks.</p>
-            <p>Gustav’s background is a MSc in Business Administration degree from the International Business School in Jönköping and MBA courses in management & marketing from Hawaii Pacific University as well as Victoria University of Technology.</p>
-            <p><a target="_blank" href="mailto:gustav@apprl.com">gustav@apprl.com</a></p>
-            <br><br>
-            <h4>Martin Landén</h4>
-            <p>Martin is the product-focused engineer & marketer with a passion for creating great user experiences through design, tech & innovation. He frequently browses Apprl for <a href="{% url 'profile-likes' 'martin-landen' %}?category=225&gender=M&color=1">short black jackets</a> & <a href="{% url 'profile-likes' 'martin-landen' %}?category=86&gender=M&color=3">white designer sneakers</a>.</p>
-            <p>Martin started up his first web consultancy at the age of 16 and has since then co-founded a social network in Dubai, headed up digital strategy at DDB Stockholm, won the Cyber Grand Prix at the Cannes Lions, was recently Head of Strategy & Planning of LBi Sweden and Innovation Director at Thinkable.</p>
-            <p>Martin holds parallell degrees in MSc Media Technology from the Stockholm Royal Institute of Technology and a BBA from Stockholm University, wrote his master thesis at Stockholm School of Economics and has studied graphic design at Parson’s School of Design in New York.</p>
-            <p><a target="_blank" href="mailto:martin@apprl.com">martin@apprl.com</a></p>
+            <h2>Gustav Gisseldahl</h2>
+            <a class="cta" target="_blank" href="mailto:gustav@apprl.com">gustav@apprl.com</a>
+            <article>
+                <p>Gustav is the ex-banker turned digital media business developer, who is excited about how the transformation of media changes the rules for brands & consumers and makes way for entirely new business models. You could say he's pretty into <a href="{% url 'profile-likes' 'gustav-gisseldahl' %}?category=5&color=1">black jeans</a> and <a href="{% url 'profile-likes' 'gustav-gisseldahl' %}?category=229">leather jackets</a>.</p>
+                <p>Prior to Apprl, Gustav was a corporate advisor at Danske Bank in London, worked with sales and commercial collaborations at TV4 digital media and creative sales & business development at Fashion Networks.</p>
+                <p>Gustav’s background is a MSc in Business Administration degree from the International Business School in Jönköping and MBA courses in management & marketing from Hawaii Pacific University as well as Victoria University of Technology.</p>
+            </article>
+            <br>
+
+            <h2>Martin Landén</h2>
+            <a class="cta" target="_blank" href="mailto:martin@apprl.com">martin@apprl.com</a>
+            <article>
+                <p>Martin is the product-focused engineer & marketer with a passion for creating great user experiences through design, tech & innovation. He frequently browses Apprl for <a href="{% url 'profile-likes' 'martin-landen' %}?category=225&gender=M&color=1">short black jackets</a> & <a href="{% url 'profile-likes' 'martin-landen' %}?category=86&gender=M&color=3">white designer sneakers</a>.</p>
+                <p>Martin started up his first web consultancy at the age of 16 and has since then co-founded a social network in Dubai, headed up digital strategy at DDB Stockholm, won the Cyber Grand Prix at the Cannes Lions, was recently Head of Strategy & Planning of LBi Sweden and Innovation Director at Thinkable.</p>
+                <p>Martin holds parallell degrees in MSc Media Technology from the Stockholm Royal Institute of Technology and a BBA from Stockholm University, wrote his master thesis at Stockholm School of Economics and has studied graphic design at Parson’s School of Design in New York.</p>
+            </article>
         </div>
     </div>
 
 {% endblock %}
+
+{% block footer %}
+        {% if not request.user.is_authenticated %}
+            {% include "landing_footer.html" %}
+        {% else %}
+            {{ block.super }}
+        {% endif %}
+{% endblock footer %}

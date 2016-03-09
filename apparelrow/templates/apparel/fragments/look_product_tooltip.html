@@ -7,7 +7,7 @@
             {% endthumbnail %}
         </a>
         <div class="media-body">
-            <h4 class="media-heading"><a href="{% internal_referral_url product.get_absolute_url owner.pk %}" title="{{ product }}">{{ product.manufacturer.name }}</a></h4>
+            <h2 class="media-heading"><a href="{% internal_referral_url product.get_absolute_url owner.pk %}" title="{{ product }}">{{ product.manufacturer.name }}</a></h2>
             {% if product.default_vendor %}
             <div class="vendor_price">
                 {% with product.default_vendor as vendor %}

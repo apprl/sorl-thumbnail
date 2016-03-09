@@ -1,9 +1,6 @@
 {% load i18n thumbnail apparel_extras buy_extras cache thumbnail_extras %}
 
 <div class="product-container row">
-    <div class="col-xs-12">
-        <h4>{{ object.manufacturer }} - {{ object.product_name }}</h4>
-    </div>
     <div class="product-image col-sm-4 col-cs-12">
         {% thumbnail object.product_image "224x291" crop=False as im %}
         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}" style="margin:{{ im|positive_margin:'224x291' }}" class="img-responsive">
@@ -12,9 +9,13 @@
 
     {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}
     <div class="col-xs-12 col-sm-8">
+        <h2 class="product-title">{{ object.manufacturer }} - {{ object.product_name }}</h2>
         <p class="bodycopy description hidden-xs">{{ object.description }}</p>
         <div class="product-vendors group">
             <div class="product-vendor">
+                <!-- example, replace with real object value -->
+                <span class="vendor-name">{% trans "by" %} {{ object.default_vendor.name }}</span>
+                <!-- /example -->
                 <div class="computed-price">
                     {% if object.default_vendor.locale_discount_price %}
                     <span class="discount-price price">{{ object.default_vendor.locale_discount_price|floatformat:0|apprl_intcomma }}</span>
@@ -29,8 +30,8 @@
         </div>
     </div>
     <div class="col-xs-12">
-        <a href="#" class="btn btn-success btn-add">{% trans "Add product" %}</a>
+        <a href="#" class="pull-left btn btn-default btn-product-like{% if is_liked %} liked{% endif %}" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i>&nbsp;<span>{% if is_liked %}{% trans "Saved" %}{% else %}{% trans "Save" %}{% endif %}</span></a>
+        <a href="#" class="pull-right btn btn-primary btn-add">{% trans "Add product" %}</a>
     </div>
     {% endcache %}
-
 </div>

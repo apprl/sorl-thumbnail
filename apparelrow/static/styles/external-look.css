@@ -1,0 +1,258 @@
+/*
+    External look widget v1.0
+*/
+/* Fonts ---------- */
+@font-face {
+  font-family: 'Neuzeit Regular';
+  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.eot');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Regular.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Neuzeit Bold';
+  src: url('http://s.apprl.com/fonts/Neuzeit-Bold.eot');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
+}
+html.look-type-C {
+  height: 100%;
+}
+html.look-type-C body,
+html.look-type-C .container {
+  height: 100%;
+}
+html.look-type-C .container {
+  border: 1px solid #d9d9d9;
+}
+html.look-type-C .collage {
+  width: 96%;
+  height: 96%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+html.look-type-C .container,
+html.look-type-C .collage {
+  box-sizing: border-box;
+}
+.apprl-look {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  background-color: white;
+  font-family: 'Neuzeit Regular', sans-serif;
+  color: black;
+  letter-spacing: .01rem;
+  font-size: 14px;
+  /* Components ---------- */
+  /* Collage ---------- */
+  /* Tagged Photo ---------- */
+}
+.apprl-look a {
+  color: black;
+  text-decoration: none;
+}
+.apprl-look img {
+  max-width: 100%;
+  height: auto;
+}
+.apprl-look ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.apprl-look h2 {
+  font-size: 18px;
+  margin: 0 0 5px 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+@media (max-width: 640px) {
+  .apprl-look .close {
+    width: 44px;
+    height: 44px;
+    display: block;
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    border-radius: 100%;
+    background-color: #eee;
+  }
+  .apprl-look .close:before {
+    font-family: 'FontAwesome';
+    content: '\f00d';
+    position: absolute;
+    top: 13px;
+    right: 15px;
+    font-size: 18px;
+  }
+}
+.apprl-look .discount-price {
+  color: #f64747;
+}
+.apprl-look .tooltip {
+  background-color: white;
+  display: none;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
+  z-index: 1100;
+  position: absolute;
+  white-space: nowrap;
+  opacity: 0;
+  border: 1px solid rgba(0, 0, 0, 0);
+  width: 280px;
+}
+.apprl-look .currency {
+  color: #666;
+}
+.apprl-look .tooltip-container {
+  width: 260px;
+  height: 115px;
+  background-color: white;
+  padding: 10px;
+  z-index: 1099;
+  position: relative;
+}
+.apprl-look .vendor-price {
+  text-align: center;
+  color: #999;
+}
+.apprl-look .product-meta {
+  float: left;
+  width: 160px;
+  text-align: center;
+}
+.apprl-look .tooltip-link .tooltip-container {
+  height: 80px;
+}
+.apprl-look .tooltip-link .product-meta {
+  float: none;
+  width: 100% !important;
+}
+.apprl-look .tooltip-link .tooltip-arrow-top {
+  bottom: 95px;
+}
+.apprl-look .tooltip-link .tooltip-arrow {
+  top: 95px;
+}
+.apprl-look .tooltip-link h2 {
+  margin: 10px 0;
+}
+.apprl-look .product-image {
+  text-align: center;
+  float: left;
+  width: 90px;
+  height: 115px;
+  line-height: 113px;
+  margin: 0 10px 10px 0;
+  overflow: hidden;
+}
+.apprl-look .btn {
+  display: block;
+  margin: 5px 0;
+  background-color: black;
+  color: white;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Neuzeit Bold', sans-serif;
+  line-height: 40px;
+  height: 38px;
+  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.apprl-look .btn:hover {
+  background-color: #333;
+}
+.apprl-look .alternative {
+  font-size: 11px;
+  border-bottom: 1px solid black;
+}
+.apprl-look .vendor_button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 150px;
+  text-align: center;
+  z-index: 10;
+}
+.apprl-look .tooltip-arrow {
+  position: absolute;
+  z-index: 1000;
+  width: 12px;
+  height: 12px;
+  left: 50%;
+  bottom: -6px;
+  margin-left: -6px;
+  background-color: white;
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.17);
+}
+.apprl-look .tooltip-arrow-top {
+  top: -6px;
+  bottom: initial;
+}
+.apprl-look .tooltip-arrow-top {
+  top: initial;
+  bottom: 130px;
+}
+.apprl-look .collage-image img {
+  width: 100% !important;
+  height: auto !important;
+}
+.apprl-look .product {
+  position: absolute;
+}
+.apprl-look #photo-markers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.apprl-look #photo-markers .hotspot {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  background-size: contain;
+  cursor: pointer;
+}
+@media (max-width: 480px) {
+  .apprl-look #photo-markers .hotspot {
+    width: 40px;
+    height: 40px;
+  }
+}
+@media (max-width: 320px) {
+  .apprl-look .container .tooltip {
+    width: 240px;
+  }
+  .apprl-look .container .tooltip .tooltip-arrow {
+    display: none;
+  }
+  .apprl-look .container .tooltip .tooltip-container {
+    width: 220px;
+  }
+  .apprl-look .container .tooltip .tooltip-container .product-meta {
+    width: 120px;
+  }
+  .apprl-look .container .tooltip .tooltip-container .product-meta .vendor_button {
+    width: 120px;
+  }
+  .apprl-look .container .tooltip .tooltip-container .product-meta .vendor_button .alternative {
+    font-size: 9px;
+  }
+  .apprl-look .container .tooltip .tooltip-container .product-meta h2 {
+    margin-top: 5px;
+  }
+}

@@ -89,7 +89,7 @@ class Parser(object):
 
         for key in ['sku', 'vendor', 'affiliate', 'in_stock', 'images']:
             value = item.get_scraped(key)
-            if value:
+            if value is not None:
                 item.data[ProductItem.KEY_PARSED][key] = value
 
         stock = item.get_scraped('stock')

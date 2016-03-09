@@ -27,7 +27,7 @@ MANAGERS = ADMINS + (
     ('Gustav', 'gustav@apprl.com'),
 )
 
-ALLOWED_HOSTS = ['.apprl.com']
+ALLOWED_HOSTS = ['.apprl.com','.apparelrow.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://www.postgresql.org/docs/8.1/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
@@ -106,6 +106,7 @@ MAX_MIN_CURRENCY = {
 }
 
 VENDOR_LOCATION_MAPPING = {
+    "Axel Arigato": ["SE", "DK", "NO", "FI"],
     "Shirtonomy": ["DK", "SE"],
     "Ted & Teresa": ["SE"],
     "ConfidentLiving": ["SE"],
@@ -115,15 +116,19 @@ VENDOR_LOCATION_MAPPING = {
     "ASOS": ["FI", "SE", "NO", "DK", "ALL"],
     "Eleven": ["SE"],
     "Happy Socks": ["SE"],
+    "Henry Kole": ["SE", "DK", "NO", "FI"],
     "Elevenfiftynine": ["SE"],
-    "Frontmen": ["ALL", "SE", "NO", "DK", "FI"],
-    "Flattered": ["SE", "DK", "NO", "FI", "ALL"],
+    "Ellos SE": ["SE"],
+    "Ellos NO": ["NO"],
+    "Flattered": ["SE", "DK", "NO", "FI"],
+    "Frontmen": ["SE", "NO", "DK", "FI"],
     "Filippa K": ["SE"],
     "Filippa K DK": ["DK"],
     "Filippa K NO": ["NO"],
     "JC": ["SE"],
+    "Nividas": ["SE", "DK", "NO", "FI"],
     "Nelly": ["SE"],
-    "Nelly No": ["NO"],
+    "Nelly NO": ["NO"],
     "Gina Tricot NO": ["NO"],
     "Gina Tricot SE": ["SE"],
     "Gina Tricot DK": ["DK"],
@@ -155,6 +160,14 @@ LOCATION_LANGUAGE_MAPPING = (
     ("FI", gettext("Finland (EUR)"), LANGUAGES_DISPLAY[4]),
     ("US", gettext("USA (USD)"), LANGUAGES_DISPLAY[0]),
     ("ALL", gettext("International (USD)"), LANGUAGES_DISPLAY[0]),
+)
+
+LOCATION_MAPPING_SIMPLE_TEXT = (
+    ('SE', gettext('Sweden')),
+    ('DK', gettext('Denmark')),
+    ('NO', gettext('Norway')),
+    ('US', gettext('USA')),
+    ('ALL', gettext('International')),
 )
 
 # Locale url plugin
@@ -339,7 +352,7 @@ PIPELINE_CSS = {
     'bootstrap': {
         'source_filenames': (
             'less/base.less',
-            'js/vendor/add2home.css',
+            #'js/vendor/add2home.css',
         ),
         'output_filename': 'css/ender.css',
         'extra_context': {
@@ -402,6 +415,7 @@ PIPELINE_JS = {
                              'js/jquery/jquery.ui.touch-punch.min.js',
                              'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
+                             'js/bootstrap_notify/bootstrap-notify.min.js',
                              'bootstrap/js/transition.js',
                              'bootstrap/js/alert.js',
                              'bootstrap/js/modal.js',
@@ -689,11 +703,18 @@ APPAREL_ADVERTISER_MINIMUM_STORE_INVOICE = 60  # EUR
 
 # DASHBOARD
 APPAREL_DASHBOARD_CUT_DEFAULT = '0.67'
-APPAREL_DASHBOARD_MINIMUM_PAYOUT = 50  # EUR
+APPAREL_DASHBOARD_MINIMUM_PAYOUT = 100  # EUR
 APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT = '0.15'
 APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME = 'referral_cookie'
-APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '20'
+APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '50'
 APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA = 'cache_aggregated_link'
+
+# WELCOME PAGE
+APPAREL_WELCOME_COOKIE = 'welcome_cookie'
+APPAREL_WELCOME_AMOUNT_FOLLOWING_USERS = 20
+APPAREL_WELCOME_FOLLOWING_USERS_OPPOSITE_GENDER_PROPORTION= '0.1'
+APPAREL_WELCOME_FOLLOWING_USERS_BRANDS_PROPORTION = '0.4'
+APPAREL_WELCOME_FOLLOWING_USERS_SAME_GENDER_PROPORTION = '0.5'
 
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_DEFAULT_CLICKS_LIMIT = 7500
@@ -1008,3 +1029,7 @@ LOGGING = {
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
 GEOIP_DEBUG = False
 GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"
+
+# Variable for temporary tracking string for tailsweep campaign.
+GINA_TRACKING = {"user_ids": [24,30714,30716,30733,30717,24257,30164,30719,30720,30721,30722,30724,30725,24312,30732,30738,30744],
+                 "tracking_string": "&utm_source=tailsweep_apprl&utm_medium=social&utm_campaign=conversions_2016_se"}

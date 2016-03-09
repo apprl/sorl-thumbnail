@@ -2,26 +2,26 @@
 {% load i18n %}
 
 {% block content %}
-        <h2 id="events">{% trans "E-mail Notifications & Newsletters" %}</h2>
-        <form action="{% url 'settings-notification' %}" method="post">{% csrf_token %}
+        <h2 id="events">{% trans "E-mail Notifications" %}</h2>
+        <form action="" method="post">
+            {% csrf_token %}
             <div class="form-content">
-                <br>
-                <h4>{% trans "Notifications" %}</h4>
-                <p>{% trans "Here you can set which type of notifications you want to get via email" %}</p>
-                <br>
+                <p>{% trans "Here you can set which type of notifications you want to get via email." %}</p>
                 {% for field in notification_form %}
-                <div>{{ field.help_text }}</div>
+                <h5>{{ field.help_text }}</h5>
                 <div>{{ field }}</div>
                 {% endfor %}
-                <p>{{ newsletter_form.discount_notification }} {{ newsletter_form.discount_notification.help_text }}</p>
-            </div>
-            <div>
                 <br>
-                <h4>{% trans "Newsletter" %}</h4>
+                <p>
+                    {{ newsletter_form.discount_notification }} {{ newsletter_form.discount_notification.help_text }}
+                </p>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h2>{% trans "Newsletters" %}</h2>
                 <p>{{ newsletter_form.newsletter }} {{ newsletter_form.newsletter.help_text }}</p>
             </div>
-            <div>
-                <input class="btn btn-primary" type="submit" value="{% trans "Save changes" %}" />
-            </div>
+
+            <input class="btn btn-default" type="submit" value="{% trans "Save changes" %}">
         </form>
 {% endblock content %}

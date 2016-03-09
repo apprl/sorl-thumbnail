@@ -74,7 +74,7 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = ('username', 'slug', 'name', 'first_name', 'last_name', 'email', 'is_brand', 'is_hidden', 'date_joined')
     list_filter = ('is_brand', 'is_partner', 'is_active', 'is_staff', 'is_superuser', 'is_hidden')
-    raw_id_fields = ('brand', 'referral_partner_parent')
+    raw_id_fields = ('brand', 'referral_partner_parent','owner_network')
     search_fields = ('username', 'name', 'slug', 'first_name', 'last_name')
     readonly_fields = ('referral_partner_code', 'referral_partner_url')
     fieldsets = (
@@ -151,7 +151,7 @@ admin.site.register(Follow, FollowAdmin)
 
 
 class PaymentDetailAdmin(admin.ModelAdmin):
-    list_display = ('custom_user', 'name', 'company', 'orgnr', 'clearingnr', 'banknr')
+    list_display = ('custom_user', 'name', 'company', 'orgnr', 'bank_name', 'banknr', 'clearingnr')
     raw_id_fields = ('user',)
 
     def custom_user(self, obj):

@@ -1,0 +1,275 @@
+/*
+	Forms v1.0
+*/
+
+button, input, select, textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    max-width: 320px;
+    letter-spacing: 0.01rem;
+    border-radius: 0;
+    font-size: 16px;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+    &:focus, &:active {
+        outline: 0;
+    }
+}
+button, input, textarea {
+    border: 0 !important;
+}
+textarea {
+    resize: none;
+}
+label {
+    color: @grey;
+    font-size: 16px;
+    font-family: @secondaryFontBold;
+    letter-spacing: 0;
+    font-weight: normal;
+}
+select, input[type="submit"], input[type="radio"]:hover, input[type="checkbox"]:hover {
+    cursor: pointer;
+}
+select {
+    text-indent: 1px;
+    text-overflow: '';
+    height: 34px;
+    line-height: 34px;
+    background-color: white;
+    border: 1px solid @lightGrey;
+    padding: 0 15px;
+    color: transparent !important;
+    text-shadow: 0 0 0 black !important;
+    &:focus, &:hover, &:active {
+        border: 1px solid @grey;
+    }
+}
+input[type="submit"] {
+    height: 44px;
+    line-height: 48px;
+    background-color: black;
+    color: white;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: @secondaryFontBold;
+    &:hover {
+        background-color: #333;
+    }
+}
+input[type="checkbox"], input[type="radio"] {
+    display:none;
+}
+input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+// fixa hover state för hela label för radio o checkboxes
+label input[type="radio"] + span, label input[type="checkbox"] + span {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    line-height: 16px;
+    border: 2px solid #999;
+    margin: -3px 10px 0 0;
+    vertical-align: middle;
+    text-align: center;
+    .animate;
+}
+label input[type="checkbox"] + span {
+    padding-left: 1px;
+}
+label input[type="radio"] + span {
+    box-shadow: inset 0 0 0 18px white;
+    background-color: white;
+    border-radius: 100%;
+}
+label input[type="radio"]:checked + span {
+    box-shadow: inset 0 0 0 2px white;
+    background-color: black;
+    border-color: black;
+}
+label input[type="checkbox"] + span {
+    background-color: transparent;
+    font-family: 'FontAwesome';
+    content: '\f00c';
+    font-size: 0;
+    color: transparent;
+}
+label input[type="checkbox"]:checked + span {
+    color: white;
+    background-color: black;
+    border-color: black;
+    font-size: 14px;
+}
+input[type="text"], input[type="url"], input[type="email"], input[type="password"], textarea, main input[type="search"] {
+    padding: 10px;
+    background-image: linear-gradient(black,black),linear-gradient(#ccc,#ccc);
+    background-size: 0 2px, 100% 1px;
+    background-repeat: no-repeat;
+    background-position: center bottom, center calc(100% - 1px);
+    background-color: @offwhite;
+    &:focus {
+        background-image: linear-gradient(black,black),linear-gradient(#ccc,#ccc);
+        -webkit-animation: highlight 0.25s forwards;
+        animation: highlight 0.25s forwards;
+        background-size: 0 2px, 100% 1px;
+    }
+}
+textarea:focus {
+    background-position: center bottom, center calc(100% - 1px);
+}
+.select {
+    position: relative;
+    display: block;
+    min-width: 260px;
+    max-width: 320px;
+    span {
+        top: 8px;
+        right: 15px;
+        position: absolute;
+        font-size: 16px;
+        pointer-events: none;
+    }
+}
+.form-group {
+    .clearfix;
+    label {
+        display: block;
+    }
+    &.error {
+        background-color: #ffcdd2;
+    }
+}
+@-webkit-keyframes highlight {
+    0% { background-size: 0 2px, 100% 1px }
+    100% { background-size: 100% 2px, 100% 1px }
+}
+@keyframes highlight {
+    0% { background-size: 0 2px, 100% 1px }
+    100% { background-size: 100% 2px, 100% 1px }
+}
+.form-control {
+    font-size: 16px;
+    box-shadow: none;
+    &:focus {
+        box-shadow: none;
+    }
+}
+.form-group.error {
+    background-color: transparent;
+    .help-block {
+        color: #f64747;
+    }
+    input {
+        background-color: #feeded;
+        background-image: linear-gradient(#f64747, #f64747), linear-gradient(#f64747, #f64747);
+    }
+}
+.input-group {
+    display: block;
+    > input, div {
+        float: left;
+    }
+    div {
+        margin-left: 15px;
+    }
+}
+.input-helper {
+    .clearfix;
+    input, span {
+        float: left;
+    }
+    span {
+        margin-left: 15px;
+        font-size: 13px;
+        letter-spacing: 0.02rem;
+        line-height: 44px;
+    }
+}
+.filter {
+    &:before {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #ccc;
+        cursor: pointer;
+        line-height: 14px;
+        border: 2px solid #999;
+        margin: -3px 5px 0 0;
+        vertical-align: middle;
+        background-color: transparent;
+        font-family: 'FontAwesome';
+        content: '\f00c';
+        font-size: 0;
+        color: transparent;
+        padding-left: 1px;
+        .animate;
+    }
+    &.selected {
+	    color: black;
+        &:before {
+            color: white;
+            background-color: black;
+            border-color: black;
+            font-size: 12px;
+        }
+    }
+}
+.form-container {
+	max-width: 480px;
+	margin: 30px auto;
+	text-align: center;
+	padding: 0 15px;
+	label {
+		text-align: left;
+	}
+    input {
+        max-width: none;
+    }
+	.btn {
+		margin: auto;
+	}
+    .btn-primary {
+        margin-top: 15px !important;
+    }
+    .row {
+        margin: 0;
+    }
+    &.narrow {
+        @media (min-width: @screen-is) {
+            max-width: 480px;
+        }
+    }
+    @media (min-width: @screen-is) {
+        max-width: 720px;
+    }
+    @media (min-width: @screen-sm) {
+        .row {
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+    }
+}
+#filter-collapsed {
+    margin-left: 22px;
+}
+#embed_look_form {
+    input, select, textarea, .select {
+        max-width: none;
+    }
+    .btn {
+        margin-bottom: 0;
+    }
+}
+#modal_embed_shop label, #embed_look_form label {
+    display: inline-block;
+}

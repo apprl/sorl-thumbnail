@@ -365,7 +365,6 @@ class LookView(View):
 
         return JSONResponse({'message': 'not authenicated'}, status=401)
 
-
     def put(self, request, pk, *args, **kwargs):
         """
         Update a look based on primary key.
@@ -466,7 +465,6 @@ class LookView(View):
             look_like_products(request, look.pk)
 
         return JSONResponse(status=204)
-
 
     def post(self, request, *args, **kwargs):
         """

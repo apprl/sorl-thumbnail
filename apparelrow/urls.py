@@ -3,6 +3,9 @@ from django.conf.urls import patterns, url, include, handler404, handler500
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import RedirectView
+from apparelrow.profile.views import RegisterEmailFormView, RegisterEmailCompleteFormView, RegisterActivateView, \
+    RegisterView
+
 admin.autodiscover()
 
 from sitemaps import sitemaps
@@ -12,10 +15,14 @@ urlpatterns = patterns('',
 
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'}, name='auth_login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/accounts/login/'}, name='auth_logout'),
-    url(r'^accounts/register/$', 'apparelrow.profile.views.register', name='auth_register'),
-    url(r'^accounts/register/email/$', 'apparelrow.profile.views.register_email', name='auth_register_email'),
-    url(r'^accounts/register/complete/$', 'apparelrow.profile.views.register_complete', name='auth_register_complete'),
-    url(r'^accounts/activate/(?P<key>[\w-]+)/$', 'apparelrow.profile.views.register_activate', name='auth_register_activate'),
+    url(r'^accounts/register/$', RegisterView.as_view(), name='auth_register'),
+    #url(r'^accounts/register/$', 'apparelrow.profile.views.register', name='auth_register'),
+    url(r'^accounts/register/email/$', RegisterEmailFormView.as_view(), name='auth_register_email'),
+    #url(r'^accounts/register/email/$', 'apparelrow.profile.views.register_email', name='auth_register_email'),
+    url(r'^accounts/register/complete/$', RegisterEmailCompleteFormView.as_view(), name='auth_register_complete'),
+    #url(r'^accounts/register/complete/$', 'apparelrow.profile.views.register_complete', name='auth_register_complete'),
+    #url(r'^accounts/activate/(?P<key>[\w-]+)/$', 'apparelrow.profile.views.register_activate', name='auth_register_activate'),
+    url(r'^accounts/activate/(?P<key>[\w-]+)/$', RegisterActivateView.as_view(), name='auth_register_activate'),
     url(r'^accounts/reset/$', 'django.contrib.auth.views.password_reset', name='auth_password_reset'),
     url(r'^accounts/facebook/login', 'apparelrow.profile.views.facebook_redirect_login', name='auth_facebook_login'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
@@ -46,4 +53,9 @@ urlpatterns = patterns('',
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^(?P<url>about/.*)$', 'flatpage', name='about'),
 
+    # Temporary url for new home page (work in progress)
+    url(r'^home/$', 'flatpage', name='home'),
+
+    # Temporary url for onboarding page (work in progress)
+    url(r'^onboarding/$', 'flatpage', name='onboarding'),
 )

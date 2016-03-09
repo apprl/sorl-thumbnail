@@ -4,12 +4,11 @@
 {% block body-classes %}account registration{% endblock body-classes %}
 {% block body %}
 
-    <div class="body-header">
-        <div class="body-header-col-full">
-            <h1>{% trans "Become a member" %}</h1>
-        </div>
-    </div>
+<div class="container center">
+    <h1>{% trans "Become a member" %}</h1>
 
     {% include 'registration/fragments/registration.html' %}
-
 {% endblock %}
+
+{% block footer %}
+{% endblock footer %}

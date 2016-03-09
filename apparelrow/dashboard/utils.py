@@ -17,6 +17,7 @@ from sorl.thumbnail.fields import ImageField
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import ugettext_lazy as _
 from apparelrow.apparel.utils import currency_exchange
+from dateutil.relativedelta import *
 
 log = logging.getLogger(__name__)
 
@@ -45,20 +46,28 @@ def map_placement(placement):
 
     return link
 
-def parse_date(month, year):
+def parse_date(month, year, first_to_first=False):
     if year is None and month is None:
+        # If not date is selected then take the range from day one this month
         start_date = datetime.date.today().replace(day=1)
-        end_date = start_date
-        end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+        end_date = start_date+relativedelta(months=+1)
+        if not first_to_first:
+            end_date = end_date+relativedelta(days=-1)
+
     else:
+        # If either year or month has been selected.
         start_date = datetime.date(int(year), int(1), 1)
-        end_date = start_date
-        end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
+        end_date = start_date + relativedelta(years=+1)
+        if not first_to_first:
+            end_date = end_date + relativedelta(days=-1)
 
         if month != "0":
-            start_date = datetime.date(int(year), int(month), 1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+            # If month has been provided, then we need to get the range inside the requested month
+            start_date = start_date.replace(month=int(month))
+            end_date = start_date+relativedelta(months=+1)
+            if not first_to_first:
+                end_date = end_date+relativedelta(days=-1)
+
     return start_date, end_date
 
 def get_clicks_from_sale(sale):
@@ -464,7 +473,8 @@ def get_aggregated_publishers(user_id, start_date, end_date, is_admin=False):
 
 def get_aggregated_products(user_id, start_date, end_date):
     """
-    Return AggregatedData summary per product for the given period
+    Return AggregatedData summary per product for the given period.
+    Note that this method uses __range funcion which is non inclusive when using Date.
     """
     filter_dict = dict()
     filter_dict['created__range'] = (start_date, end_date)
@@ -526,8 +536,9 @@ def get_previous_period(start_date, end_date):
     """
     # Check if it is a month period or a year period
     if start_date.date().month == end_date.date().month:
-        prev_month = start_date.date().month - 1
-        prev_start_date = start_date.replace(month=prev_month)
+        last_month_date = start_date.replace(day=1) - datetime.timedelta(days=1)
+        prev_month = last_month_date.month
+        prev_start_date = start_date.replace(month=prev_month, year=last_month_date.year)
         prev_end_date = prev_start_date
         prev_end_date = prev_start_date.replace(day=calendar.monthrange(prev_end_date.year, prev_end_date.month)[1])
         prev_end_date = datetime.datetime.combine(prev_end_date, datetime.time(23, 59, 59, 999999))

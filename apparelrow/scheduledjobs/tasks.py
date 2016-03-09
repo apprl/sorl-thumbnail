@@ -109,7 +109,7 @@ def recalculate_earnings():
     management.call_command('update_aggregated_data')
 
 # daily just after midnight
-@periodic_task(name='apparelrow.scheduledjobs.tasks.collect_calculate_earnings', run_every=crontab(minute='30',hour='0'), max_retries=3, ignore_result=True)
+@periodic_task(name='apparelrow.scheduledjobs.tasks.collect_calculate_earnings', run_every=crontab(minute='0',hour='6'), max_retries=3, ignore_result=True)
 def calculate_earnings():
     from django.core import management
     management.call_command('collect_aggregated_data')

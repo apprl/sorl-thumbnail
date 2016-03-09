@@ -35,7 +35,7 @@ def facebook_button(context, text=None, next=None, connect=False, disable_flow=F
         next = context['next']
 
     if text is None:
-        text = _('Login with Facebook')
+        text = _('Continue with Facebook')
     else:
         text = _(text)
 
@@ -438,3 +438,13 @@ def multiply(value, arg):
         return "-"
     result = decimal.Decimal(value) * arg
     return "%s" % (format(result, '.2f'))
+
+@register.filter
+def show_display_name(value):
+    display_name = value
+    while len(display_name) > 25:
+        display_name = display_name.rsplit(" ", 1)[0]
+    if len(display_name) != len(value):
+        display_name += " ..."
+    return display_name
+

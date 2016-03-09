@@ -1,12 +1,10 @@
 {% load i18n %}
 
 <div class="body-header">
-    <div class="body-header-col-full">
-        <h1>{% trans "Admin dashboard" %}</h1>
-        <ul class="list-inline">
-            <li><h2><a{% if 'publisher' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-admin' %}">{% trans "Publisher" %}</a></h2></li>
-            <li><h2><a{% if 'kpi' in request.path %} class="selected"{% endif %} href="{% url 'admin-kpi-dashboard' %}">{% trans "KPI" %}</a></h2></li>
-            <li><h2><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'admin-stores' %}">{% trans "Stores" %}</a></h2></li>
-        </ul>
-    </div>
+    <h1>{% trans "Admin Dashboard" %}</h1>
+    <ul class="sub-menu">
+        <li><a{% if 'publisher' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-admin' %}">{% trans "Publisher" %}</a></li>
+        <li><a{% if 'kpi' in request.path %} class="selected"{% endif %} href="{% url 'admin-kpi-dashboard' %}">{% trans "KPI" %}</a></li>
+        <li><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'admin-stores' %}">{% trans "Stores" %}</a></li>
+    </ul>
 </div>

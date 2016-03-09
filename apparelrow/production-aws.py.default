@@ -95,4 +95,4 @@ if EMAIL_DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT,'../logs/emails')
 
-ALLOWED_HOSTS = ['aws.apprl.com','{{ hostname }}.apprl.com','apprl.com','{{ internal_ip }}']
+ALLOWED_HOSTS = ['aws.apprl.com','{{ hostname }}.apprl.com','apprl.com','{{ internal_ip }}', '.apparelrow.com']
