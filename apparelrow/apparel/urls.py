@@ -10,7 +10,7 @@ from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
 from apparelrow.apparel.views import BrandRedirectView, PublisherView, ProductDetailView, CommunityFormView, LookDetailView, \
     OnBoardingView
-from apparelrow.dashboard.views import RetailerView
+from apparelrow.dashboard.views import RetailerPublicFormView, RetailerFormView
 from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersView, ProfileListFollowingView, \
     ProfileView
 
@@ -20,7 +20,8 @@ urlpatterns = patterns('',
     url(r'^all/$', PublisherView.as_view(), {'gender': 'A'}, name='index-all'),
     url(r'^men/$', PublisherView.as_view(), {'gender': 'M'}, name='index-men'),
     url(r'^women/$', PublisherView.as_view(), {'gender': 'W'}, name='index-women'),
-    url(r'^retailer/$', RetailerView.as_view(), name='index-retailers'),
+    url(r'^retailer/$', RetailerPublicFormView.as_view(), name='index-retailers'),
+    url(r'^retailer/apply/$', RetailerFormView.as_view(), name='retailer-form'),
     #url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),
     url(r'^apply/complete/$', 'apparelrow.dashboard.views.index_complete', {'view': 'store'}, name='index-store-complete'),
     url(r'^apply/complete/publisher$', 'apparelrow.dashboard.views.index_complete', {'view': 'publisher'}, name='index-publisher-complete'),

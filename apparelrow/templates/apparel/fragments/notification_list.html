@@ -53,7 +53,7 @@
                             <span class="img-block"></span>
                             {% endif %}
                         </figure>
-                        <p class="message"><strong>{% if event.product.product_name|length >= 25 %}{{ event.product.product_name|slice:":20" }}...{% else %}{{ event.product.product_name|slice:":20" }}{% endif %}</strong> is on sale!</p>
+                        <p class="message"><strong>{{ event.product.product_name|truncatechars:25 }}</strong> is on sale!</p>
                     </a>
                 {% elif event.type == "FOLLOW" %}
                     <a href="{{ event.actor.url_likes }}">
@@ -92,8 +92,8 @@
                 obj.textContent = text;
             });
             var user_id = $(this).data("user");
-            var unread_count = document.getElementById("unread_count");
-            document.getElementById("unread_count").style.display = 'none';
+            //var unread_count = document.getElementById("unread_count");
+            //document.getElementById("unread_count").style.display = 'none';
             $.ajax({
                 type: "post",
                 url: "{% url 'notifications-seen' %}",

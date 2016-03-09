@@ -205,7 +205,7 @@ def generate_sid(product_id, target_user_id=0, page='Default'):
     except (TypeError, ValueError, AttributeError):
         product_id = 0
 
-    return smart_str('%s-%s-%s' % (target_user_id, product_id, page))
+    return smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
 
 
 def parse_sid(sid):
@@ -250,13 +250,13 @@ def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
 
     # Tradedoubler
     if site_vendor.provider == 'tradedoubler':
-        url = '%sepi(%s)' % (url, sid)
+        url = u'{url}epi({sid})'.format(url=url, sid=sid)
     # Commission Junction
     elif site_vendor.provider == 'cj':
         url = set_query_parameter(url, 'SID', sid)
     # Zanox
     elif site_vendor.provider == 'zanox':
-        url = '%s&zpar0=%s' % (url, sid)
+        url = u'{url}&zpar0={sid}'.format(url=url, sid=sid)
     # Linkshare
     elif site_vendor.provider == 'linkshare':
         url = set_query_parameter(url, 'u1', sid)

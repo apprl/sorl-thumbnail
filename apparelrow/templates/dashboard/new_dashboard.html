@@ -10,7 +10,7 @@
         google.load('visualization', '1', {packages: ['corechart']});
         google.setOnLoadCallback(drawChart);
         function drawChart () {
-            var data = new google.visualization.Datatable();
+            var data = new google.visualization.DataTable();
             data.addColumn('date', 'X');
             data.addColumn('number', '{% trans "Commission Earnings" %} ({{ currency }})');
             data.addColumn('number', '{% trans "Referral earnings" %} ({{ currency }})')
@@ -71,7 +71,7 @@
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
                 containerId: 'graph',
-                datatable: view,
+                dataTable: view,
                 options: {
                     vAxes: {
                         0: {
@@ -98,13 +98,13 @@
             $('.month-select').change(function() {
                 var month = $('.month-select').find(':selected').data('month');
                 var year = $('.year-select').find(':selected').data('year');
-                window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
+                window.location.href = '{% url "dashboard" %}' + year + '/' + month + '/';
 
             });
             $('.year-select').change(function() {
                 var month = $('.month-select').find(':selected').data('month');
                 var year = $('.year-select').find(':selected').data('year');
-                window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
+                window.location.href = '{% url "dashboard" %}' + year + '/' + month + '/';
             });
 
             /*new Tablesort($('table#earnings').get(0));

@@ -62,6 +62,7 @@
 
                 <span class="cell time">{{ event.created|since }}</span>
                 {% if not event.type == "SALE" %}<span class="cell">{% include 'apparel/fragments/follow.html' with profile=event.actor%}</span>{% endif %}
+                {% if event.type == "SALE" %}<span class="cell"><a href="{{ event.product.get_absolute_url }}" class="btn btn-default">Go to product</a></span>{% endif %}
             </li>
             {% empty %}
             <li class="no-results">

@@ -2,20 +2,15 @@
 import logging
 import json
 import datetime
-from apparelrow.profile.models import NotificationEvent
-from django.http.response import HttpResponseNotAllowed
 import itertools
-from django.views.generic import DetailView
 import os.path
 import string
 import urllib
 import urlparse
-from apparelrow.apparel.utils import currency_exchange
 import decimal
 import re
 import tldextract
 
-from solrq import Q as SQ
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
@@ -30,13 +25,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
+from django.views.generic import DetailView
 from django.views.generic.base import RedirectView, TemplateView
 from django.utils import translation, timezone
 from django.utils.encoding import smart_unicode, smart_str
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail import get_thumbnail
 
-from localeurl.views import change_locale
 
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
@@ -58,7 +52,11 @@ from apparelrow.profile.models import NotificationEvent
 from apparelrow.profile.tasks import mail_managers_task
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
+
+from localeurl.views import change_locale
+from sorl.thumbnail import get_thumbnail
 from pysolr import Solr
+from solrq import Q as SQ
 
 logger = logging.getLogger("apparelrow")
 
@@ -92,26 +90,8 @@ def sitemap_view(request, section):
     f = open(path)
     content = f.readlines()
     f.close()
-    return HttpResponse(content, mimetype='application/xml')
+    return HttpResponse(content, content_type='application/xml')
 
-
-#
-# Redirects
-#
-
-def product_redirect_by_id(request, pk):
-    """
-    Makes it
-    """
-    product = get_object_or_404(Product, pk=pk, published=True)
-    return HttpResponsePermanentRedirect(product.get_absolute_url())
-
-def brand_redirect(request, pk):
-    """
-    Redirect from a brand id to brand profile page.
-    """
-    brand = get_object_or_404(Brand, pk=pk)
-    return HttpResponsePermanentRedirect(brand.user.get_absolute_url())
 
 #
 # Earnings
@@ -274,7 +254,7 @@ def facebook_share(request, activity):
     if not facebook_user:
         return HttpResponse(
             json.dumps(dict(success=False, message='', error=_('Check your browser settings.').encode('utf-8'))),
-            mimetype='application/json')
+            content_type='application/json')
 
     if activity == 'push':
         facebook_push_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_url)
@@ -283,7 +263,7 @@ def facebook_share(request, activity):
 
     return HttpResponse(
         json.dumps(dict(success=True, message=_('Shared to your Facebook timeline!').encode('utf-8'), error='')),
-        mimetype='application/json')
+        content_type='application/json')
 
 
 #
@@ -325,27 +305,6 @@ def follow_unfollow(request, profile_id, do_follow=True):
                                   request.build_absolute_uri(profile.get_absolute_url()))
 
     return HttpResponse(status=204)
-
-
-#
-# Store short link
-#
-
-def store_short_link(request, short_link, user_id=None):
-    """
-    Takes a short short link and redirect to associated url.
-    """
-    try:
-        url, name = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
-    except ShortStoreLink.DoesNotExist:
-        raise Http404
-
-    if user_id is None:
-        user_id = 0
-
-    return render(request, 'redirect_no_product.html',
-                  {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store',
-                   'event': 'StoreLinkClick'})
 
 
 #
@@ -599,6 +558,28 @@ def product_generate_short_link(request, slug):
     return render(request, 'apparel/fragments/product_short_link.html', {'product_short_link': product_short_link,
                                                                          'warning_text': warning_text})
 
+
+##################################################################
+############# Store short link and redirect views ################
+##################################################################
+
+def store_short_link(request, short_link, user_id=None):
+    """
+    Takes a short short link and redirect to associated url.
+    """
+    try:
+        url, name = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
+    except ShortStoreLink.DoesNotExist:
+        raise Http404
+
+    if user_id is None:
+        user_id = 0
+
+    return render(request, 'redirect_no_product.html',
+                  {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store',
+                   'event': 'StoreLinkClick'})
+
+
 def product_short_link(request, short_link):
     """
     Takes a short product link and redirect to buy url.
@@ -631,6 +612,26 @@ def domain_short_link(request, short_link):
 def product_redirect(request, pk, page='Default', sid=0):
     """
     Display a html redirect page for product pk and page/sid combo.
+    This method is used when clicking on buy links on the apparel web page, then the sid equals zero.
+
+    Example of a link coming from inside the apprl product detail site.
+    http://apprl.com/en/redirect/2864722/Product/0/
+
+    Example of a link from an external shop, with pk and user id attached as well as type of link
+    http://apprl.com/sv/redirect/2864722/Ext-Shop/26976/
+
+    If the product in the shop is sold out it will disappear when the cache for the shop html times out.
+    In the collage or look widget the links change and point to the apprl site instead.
+    Example
+    http://apprl.com/products/whyred-heather/?sid=26976
+
+    The links are changed and regenerated with javascripts embedded in the widget html. Thus no trace of this is found
+    in the html templates generated into solr and in turn used to generate the widget template cache.
+
+    If the product is found, then a link resembling this one will be generated.
+    http://apprl.com/a/link/?url=http%3A%2F%2Fshirtonomy.se%2Fskjortor%2Ftyg%2Fhofen-hunter-check%2F&store_id=shirtonomy&custom=26976-2864722-Ext-Shop
+
+    The context variables will then be injected in the javascript on the redirect.html page and do a js redirect (window.location.replace('{{ redirect_url|safe }}');)
     """
     product = get_object_or_404(Product, pk=pk, published=True)
 
@@ -648,6 +649,7 @@ def product_redirect(request, pk, page='Default', sid=0):
     else:
         logger.error('Could not find vendor for product id %s' % (pk,))
     url = vendor_buy_url(pk, product.default_vendor, sid, page)
+
     data = {'id': product.pk,
             'redirect_url': url,
             'store': store,
@@ -686,6 +688,26 @@ def product_track(request, pk, page='Default', sid=0):
                                 get_user_agent(request), sid, page, False)
     return response
 
+#
+# Redirects
+#
+
+def product_redirect_by_id(request, pk):
+    """
+    Makes it
+    """
+    product = get_object_or_404(Product, pk=pk, published=True)
+    return HttpResponsePermanentRedirect(product.get_absolute_url())
+
+def brand_redirect(request, pk):
+    """
+    Redirect from a brand id to brand profile page.
+    """
+    brand = get_object_or_404(Brand, pk=pk)
+    return HttpResponsePermanentRedirect(brand.user.get_absolute_url())
+
+#### End product redirect related view functions ###
+
 
 def product_popup(request):
     product_ids = []
@@ -706,7 +728,7 @@ def product_popup(request):
 
         result.append(product_result)
 
-    return HttpResponse(json.dumps(result), mimetype='application/json')
+    return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 def look_popup(request):
@@ -727,7 +749,7 @@ def look_popup(request):
 
         result.append(temp_result)
 
-    return HttpResponse(json.dumps(result), mimetype='application/json')
+    return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 @login_required
@@ -737,18 +759,18 @@ def product_action(request, pk, action):
     """
     if not request.user or not request.user.is_authenticated():
         return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
-                            mimetype='application/json')
+                            content_type='application/json')
     if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), content_type='application/json')
     if action not in ['like', 'unlike']:
         return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     try:
         product = Product.objects.get(pk=pk)
     except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
         return HttpResponse(json.dumps(dict(success=False, error_message='No product found')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     return _product_like(request, product, action)
 
@@ -760,18 +782,18 @@ def product_like(request, slug, action):
     """
     if not request.user.is_authenticated():
         return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
-                            mimetype='application/json')
+                            content_type='application/json')
     if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), content_type='application/json')
     if action not in ['like', 'unlike']:
         return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     try:
         product = Product.objects.get(slug=slug)
     except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
         return HttpResponse(json.dumps(dict(success=False, error_message='No product found')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     return _product_like(request, product, action)
 
@@ -812,7 +834,7 @@ def _product_like(request, product, action):
                 product_like.active = default_active
                 product_like.save()
 
-    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+    return HttpResponse(json.dumps(dict(success=True, error_message=None)), content_type='application/json')
 
 
 @login_required
@@ -821,18 +843,18 @@ def look_like(request, slug, action):
     Like or unlike a look through ajax.
     """
     if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')), content_type='application/json')
     if not request.user.is_authenticated():
         return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
-                            mimetype='application/json')
+                            content_type='application/json')
     if action not in ['like', 'unlike']:
         return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     try:
         look = Look.objects.get(slug=slug)
     except (Look.MultipleObjectsReturned, Look.DoesNotExist) as e:
-        return HttpResponse(json.dumps(dict(success=False, error_message='No look found')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='No look found')), content_type='application/json')
 
     if action == 'like':
         if request.user.fb_share_like_look:
@@ -861,7 +883,7 @@ def look_like(request, slug, action):
 
     look_popularity.delay(look)
 
-    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+    return HttpResponse(json.dumps(dict(success=True, error_message=None)), content_type='application/json')
 
 
 def look_list(request, search=None, contains=None, gender=None):
@@ -1393,7 +1415,7 @@ def follow_backend(request):
                                            context_instance=RequestContext(request))
             follows.append({'id': profile.pk, 'html': follow_html})
 
-    return HttpResponse(json.dumps(follows), mimetype='application/json')
+    return HttpResponse(json.dumps(follows), content_type='application/json')
 
 
 def user_list(request, gender=None, brand=False):
@@ -1411,7 +1433,7 @@ def user_list(request, gender=None, brand=False):
                                                advertiser_store__isnull=True)
     queryset = queryset.filter(Q(gender__in=gender_list.get(gender)) | Q(gender__isnull=True))
     if brand:
-        brands_list = get_available_brands(gender, request.session.get('location','ALL'))
+        brands_list = get_available_brands(gender, get_location(request))
         queryset = queryset.filter(Q(brand__id__in=brands_list))
 
     extra_parameter = None
@@ -1459,7 +1481,7 @@ class PublisherView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PublisherView, self).get_context_data(**kwargs)
         context['featured'] = get_featured_activity_today()
-        context['form'] = SignupForm(is_store_form=True)
+        context['form'] = SignupForm(is_store_form=False)
         return context
 
     def get(self, request, gender=None, *args, **kwargs):
@@ -1480,7 +1502,7 @@ class PublisherView(TemplateView):
         return render(request, self.template_name, self.get_context_data())
 
     def post(self, request, gender=None, *args, **kwargs):
-        form = SignupForm(request.POST, is_store_form=True)
+        form = SignupForm(request.POST, is_store_form=False)
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
             request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
@@ -1488,7 +1510,7 @@ class PublisherView(TemplateView):
             instance.store = True
             instance.save()
 
-            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
+            mail_managers_task.delay(u'New Publisher signup: {name}'.format(**form.cleaned_data),
                     u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
 
             return HttpResponseRedirect(reverse('index-publisher-complete'))

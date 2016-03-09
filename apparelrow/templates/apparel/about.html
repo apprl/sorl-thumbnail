@@ -11,11 +11,17 @@
 
     <div class="row">
         <div class="col-md-6 col-md-push-6">
-            <img src="{% static 'images/about_apprl.jpg' %}" alt="About APPRL">
+            <div class="tools-display center">
+                <div id="tools-demo">
+                    <img src="{% static 'images/tools-demo-4.jpg' %}" class="active" alt="">
+                    <img src="{% static 'images/tools-demo-5.jpg' %}" alt="">
+                    <img src="{% static 'images/tools-demo-6.jpg' %}" alt="">
+                </div>
+            </div>
         </div>
         <div class="col-md-6 col-md-pull-6">
             <article>
-                <h2>Connecting Inspiration &amp; Shopping</h2>
+                <h2>Connecting inspiration &amp; shopping</h2>
                 <p>APPRL was founded from the simple insight that online shopping is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that.</p>
                 <p>APPRL is focused on connecting top lifestyle media and digital influencers with the leading online retailers &amp; brands through a set of smart digital tools.</p>
                 <ul class="list-points">
@@ -27,19 +33,53 @@
                 <p>Want to <a href="{% url 'jobs' %}">join our journey</a>?</p>
             </article>
         </div>
-
-        <div class="partners">
-            <h4>Supported by</h4>
-            <ul>
-                <li><img src="{% static 'images/supported_logos/sting.gif' %}" alt="STING"></li>
-                <li><img src="{% static 'images/supported_logos/eit-digital.gif' %}" alt="EIT Digital"></li>
-                <li><img src="{% static 'images/supported_logos/almi.gif' %}" alt="ALMI"></li>
-                <li><img src="{% static 'images/supported_logos/sup46.gif' %}" alt="SUP46"></li>
-            </ul>
-        </div>
+    </div>
+    <div class="partners">
+        <h4>Supported by</h4>
+        <ul>
+            <li><img src="{% static 'images/supported_logos/sting.gif' %}" alt="STING"></li>
+            <li><img src="{% static 'images/supported_logos/eit-digital.gif' %}" alt="EIT Digital"></li>
+            <li><img src="{% static 'images/supported_logos/almi.gif' %}" alt="ALMI"></li>
+            <li><img src="{% static 'images/supported_logos/sup46.gif' %}" alt="SUP46"></li>
+        </ul>
     </div>
 
 {% endblock %}
+{% block body-scripts %}
+    <script>
+        $(document).ready(function() {
+            (function(window) {
+                SlideCrossFade = {
+                    container: 'tools-demo',
+                    displayTime: 5000,
+                    fadeTime: 1500,
+
+                    start: function() {
+                        var self = this;
+                        $('#' + this.container + ' img').show();
+                        setInterval(function() { self.next(); }, this.displayTime);
+                    },
+
+                    next: function() {
+                        var $active = $('#' + this.container + ' .active');
+                        var $next = ($active.next().length > 0) ? $active.next() : $('#' + this.container + ' img:first');
+                        $next.css('z-index', 2);
+
+                        $active.fadeOut(this.fadeTime, function() {
+                            $active.css('z-index', 1).show().removeClass('active');
+                            $next.css('z-index', 3).addClass('active');
+                        });
+                    }
+                };
+                window.SlideCrossFade = SlideCrossFade;
+            })(this);
+
+            $(window).load(function() {
+                SlideCrossFade.start();
+            });
+        });
+    </script>
+{% endblock body-scripts %}
 
 {% block footer %}
         {% if not request.user.is_authenticated %}
