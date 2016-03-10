@@ -541,14 +541,10 @@ def get_location_warning_text(vendor_markets, user, page=""):
             markets_text = get_market_text_array(vendor_markets)
             countries_text = generate_countries_text(markets_text)
             location_data = {'country': countries_text, 'location': get_location_text(user.location)}
-            if page == "product":
-                warning_text = _("Warning: You currently have {location} set as your location, this product is only "
-                                 "available in {country}. You will not earn money on clicks from {location} on this "
-                                 "product.".format(**location_data))
-            elif page == "chrome-ext":
-                warning_text = _("Warning: You currently have {location} set as your location, this store is only "
-                                 "available in {country}. You will not earn money on clicks from {location} to this "
-                                 "store.".format(**location_data))
+            if page == "product" or page == "chrome-ext":
+                warning_text = _("Warning: This product is only available in {country}, therefore you will only earn "
+                                 "money on clicks from {country}. You currently have {location} set as your location."
+                                 .format(**location_data))
             else:
                 warning_text = _("You will only earn money on visitors from {country} that click on this product, not "
                                  "from your current location {location}.".format(**location_data))
