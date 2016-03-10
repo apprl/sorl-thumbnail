@@ -3,7 +3,8 @@ import json
 from django.http import SimpleCookie
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
+from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning, \
+    product_lookup_by_domain
 from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
     extract_asos_nelly_product_url, on_boarding_follow_users, get_most_popular_user_list

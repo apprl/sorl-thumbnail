@@ -575,6 +575,8 @@ def get_location_warning_text(vendor_markets, user, page=""):
             else:
                 warning_text = _("You will only earn money on visitors from {country} that click on this product, not "
                                  "from your current location {location}.".format(**location_data))
+        else:
+            pass
     return warning_text
 
 def get_external_store_commission(stores, product=None):
