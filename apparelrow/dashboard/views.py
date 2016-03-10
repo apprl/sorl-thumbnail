@@ -3,9 +3,8 @@ import re
 import json
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, Http404
+from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
 from django.forms import ModelForm
-from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.sites.models import Site
 from django.contrib import messages
@@ -14,7 +13,7 @@ from django.template.loader import render_to_string
 from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
-from apparelrow.apparel.utils import currency_exchange
+from apparelrow.apparel.utils import get_location
 from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
 from django.views.generic import TemplateView
@@ -22,6 +21,28 @@ from django.views.generic import TemplateView
 import logging
 log = logging.getLogger(__name__)
 
+def map_placement(placement):
+    link = _('Unknown')
+    if placement == 'Ext-Shop':
+        link = _('Shop on your site')
+    elif placement == 'Ext-Look':
+        link = _('Look on your site')
+    elif placement == 'Ext-Link':
+        link = _('Product link on your site')
+    elif placement == 'Ext-Store':
+        link = _('Store link on your site')
+    elif placement == 'Look':
+        link = _('Look on Apprl.com')
+    elif placement == 'Shop':
+        link = _('Shop on Apprl.com')
+    elif placement == 'Feed':
+        link = _('Feed on Apprl.com')
+    elif placement == 'Profile':
+        link = _('Your profile on Apprl.com')
+    elif placement == 'Product':
+        link = _('Product page')
+    elif placement == 'Ext-Banner':
+        link = _('Banner on your site')
 
 class SignupForm(ModelForm):
 
@@ -112,6 +133,63 @@ def dashboard_info(request):
 #
 # Referral
 #
+
+
+def referral_signup(request, code):
+    user_id = None
+    try:
+        user = get_user_model().objects.get(referral_partner_code=code)
+        user_id = user.pk
+    except:
+        pass
+    response = redirect(reverse('publisher-contact'))
+    if user_id:
+        expires_datetime = timezone.now() + datetime.timedelta(days=15)
+        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime,
+                                   httponly=True)
+
+    return response
+
+
+class ReferralView(TemplateView):
+    template_name = 'dashboard/referral.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReferralView, self).get_context_data(**kwargs)
+        context["referrals"] = get_user_model().objects.filter(referral_partner_parent=self.request.user, is_partner=True)
+        return context
+
+    def get(self,request, *args, **kwargs):
+
+        if request.user.is_authenticated() and all([request.user.is_partner, request.user.referral_partner]):
+            context = self.get_context_data()
+            return render(request, self.template_name, context)
+        else:
+            return HttpResponseRedirect(reverse('index-publisher'))
+
+    def post(self, request, *args, **kwargs):
+        emails = request.POST.get('emails')
+        emails = re.split(r'[\s,]+', emails)
+
+        referral_code = request.user.get_referral_domain_url()
+        referral_name = request.user.display_name
+        referral_email = request.user.email
+        referral_language = get_language()
+
+        template = 'dashboard/referral_mail_en.html'
+        # TODO: fix when we have swedish email
+        #if referral_language == 'sv':
+            #template = 'dashboard/referral_mail_sv.html'
+        body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
+
+        for email in emails:
+            send_email_task.delay(u'Invitation from {referral_name}'.format(referral_name=referral_name), body, email,
+                                  u'{} <{}>'.format(referral_name, referral_email))
+        messages.add_message(request, messages.SUCCESS, u'Sent mail to %s' % (', '.join(emails),))
+        return render(request, self.template_name)
+
+
+@DeprecationWarning
 def referral(request):
     if request.user.is_authenticated() and request.user.is_partner and request.user.referral_partner:
         referrals = get_user_model().objects.filter(referral_partner_parent=request.user, is_partner=True)
@@ -119,6 +197,7 @@ def referral(request):
 
     return HttpResponseRedirect(reverse('index-publisher'))
 
+@DeprecationWarning
 def referral_mail(request):
     emails = request.POST.get('emails')
     emails = re.split(r'[\s,]+', emails)
@@ -142,20 +221,6 @@ def referral_mail(request):
 
     return HttpResponseRedirect(reverse('dashboard-referral'))
 
-def referral_signup(request, code):
-    user_id = None
-    try:
-        user = get_user_model().objects.get(referral_partner_code=code)
-        user_id = user.pk
-    except:
-        pass
-    response = redirect(reverse('publisher-contact'))
-    if user_id:
-        expires_datetime = timezone.now() + datetime.timedelta(days=15)
-        response.set_signed_cookie(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, user_id, expires=expires_datetime,
-                                   httponly=True)
-
-    return response
 
 #
 # Commissions
@@ -170,7 +235,7 @@ def commissions(request):
                   % request.user)
         raise Http404
 
-    cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None) or request.session.get('location','ALL')
+    cookie_value = get_location(request)
     vendors = get_available_stores(cookie_value)
     user_id = request.user.id
     stores = {}
@@ -222,9 +287,11 @@ def index_complete(request, view):
 
     return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
+@DeprecationWarning
 def retailer(request):
     return render(request, 'apparel/retailers.html')
 
+@DeprecationWarning
 def retailer_form(request):
     if request.method == 'POST':
         form = SignupForm(request.POST, is_store_form=True)
@@ -246,8 +313,10 @@ def retailer_form(request):
 
     return render(request, 'apparel/retailer_contact.html', {'form': form})
 
+
 def index(request):
     return render(request, 'dashboard/index.html')
+
 
 def publisher_contact(request):
     if request.method == 'POST':
@@ -283,8 +352,10 @@ def publisher_contact(request):
 
     return render(request, 'dashboard/publisher_contact.html', {'form': form, 'referral_user': referral_user})
 
+
 def publisher_tools(request):
     return render(request, 'dashboard/publisher_tools.html')
+
 
 def clicks_detail(request):
     """
@@ -302,7 +373,6 @@ def clicks_detail(request):
             data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
-
 
 #
 # PUBLISHER DASHBOARD
@@ -390,7 +460,7 @@ class DashboardView(TemplateView):
                             'ppc_earnings': ppc_earnings,
                             }
             return render(request, 'dashboard/new_dashboard.html', context_data)
-        return HttpResponseRedirect(reverse('new-dashboard'))
+        return HttpResponseRedirect(reverse('dashboard'))
 
 
 #
@@ -565,7 +635,7 @@ class AdminDashboardView(TemplateView):
                             'top_publishers': top_publishers, 'top_products': top_products,
                             'monthly_array': monthly_array, 'clicks_array': clicks_array }
             return render(request, 'dashboard/new_admin.html', context_data)
-        return HttpResponseRedirect(reverse('new-admin'))
+        return HttpResponseNotFound()
 
 
 #
@@ -1025,6 +1095,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
                           if x['sales'] > 0]
     return sales, most_sold_products
 
+
 def merge_top_products(most_sold_products, network_publishers, limit=5):
     network_total_publishers = {}
     temp_products = []
@@ -1427,6 +1498,73 @@ def dashboard(request, year=None, month=None):
                                                             'is_owner': is_owner})
     return HttpResponseRedirect(reverse('index-publisher'))
 
+
+# Publisher / Store signup
+#
+
+@DeprecationWarning
+def retailer_form(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST, is_store_form=True)
+        if form.is_valid():
+            # Save name and blog URL on session, for Google Analytics
+            request.session['index_complete_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
+            instance = form.save(commit=False)
+            instance.store = True
+            instance.save()
+
+            mail_managers_task.delay('New store signup: %s' % (form.cleaned_data['name'],),
+                    'Name: %s\nEmail: %s\nURL: %s' % (form.cleaned_data['name'],
+                                                      form.cleaned_data['email'],
+                                                      form.cleaned_data['blog']))
+
+            return HttpResponseRedirect(reverse('index-store-complete'))
+    else:
+        form = SignupForm(is_store_form=True)
+
+    return render(request, 'apparel/retailer_contact.html', {'form': form})
+
+
+class RetailerFormView(TemplateView):
+    template_name = 'apparel/retailer_contact.html'
+
+    def get(self, request, *args, **kwargs):
+        form = SignupForm(is_store_form=True)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = SignupForm(request.POST, is_store_form=True)
+        if form.is_valid():
+            # Save name and blog URL on session, for Google Analytics
+            request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
+            instance = form.save(commit=False)
+            instance.store = True
+            instance.save()
+
+            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
+                    u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
+
+            return HttpResponseRedirect(reverse('index-store-complete'))
+        return render(request, self.template_name, {'form': form})
+
+class RetailerPublicFormView(RetailerFormView):
+    template_name = 'apparel/retailers.html'
+
+
+@DeprecationWarning
+def retailer(request):
+    return render(request, 'apparel/retailers.html')
+
+
+@DeprecationWarning
+def publisher_tools(request):
+    return render(request, 'dashboard/publisher_tools.html')
+
+
+class PublisherToolsView(TemplateView):
+    template_name='dashboard/publisher_tools.html'
+
+
 def products(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_partner:
         start_date, end_date = parse_date(month, year)
@@ -1536,6 +1674,7 @@ def products(request, year=None, month=None):
                                                             'referral_commission': ('%.2f' % sum([x[2] for x in data_per_day.values()])),
                                                             'currency': 'EUR'})
     return HttpResponseRedirect(reverse('index-publisher'))
+
 
 def publishers(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_partner:

@@ -1,6 +1,5 @@
 from urlparse import parse_qs, urlsplit, urlunsplit
 import json
-import decimal
 import datetime
 import itertools
 import urllib
@@ -8,6 +7,7 @@ import httplib
 import uuid
 import logging
 import decimal
+import random
 
 from django.conf import settings
 from django.core.cache import cache
@@ -22,7 +22,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
-logger = logging.getLogger("apparel.debug")
+logger = logging.getLogger("apparelrow")
 
 
 def get_ga_cookie_cid(request=None):
@@ -208,7 +208,7 @@ def generate_sid(product_id, target_user_id=0, page='Default', source_link=None)
     except (TypeError, ValueError, AttributeError):
         product_id = 0
 
-    sid = smart_str('%s-%s-%s' % (target_user_id, product_id, page))
+    sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
     if source_link:
         sid += "/%s" % source_link
     return sid
@@ -264,13 +264,13 @@ def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default', source_
 
     # Tradedoubler
     if site_vendor.provider == 'tradedoubler':
-        url = '%sepi(%s)' % (url, sid)
+        url = u'{url}epi({sid})'.format(url=url, sid=sid)
     # Commission Junction
     elif site_vendor.provider == 'cj':
         url = set_query_parameter(url, 'SID', sid)
     # Zanox
     elif site_vendor.provider == 'zanox':
-        url = '%s&zpar0=%s' % (url, sid)
+        url = u'{url}&zpar0={sid}'.format(url=url, sid=sid)
     # Linkshare
     elif site_vendor.provider == 'linkshare':
         url = set_query_parameter(url, 'u1', sid)
@@ -294,8 +294,10 @@ def currency_exchange(to_currency, from_currency):
     if from_currency == to_currency:
         return 1
 
-    rates = cache.get(settings.APPAREL_RATES_CACHE_KEY)
-    if not rates:
+    rates = cache.get(settings.APPAREL_RATES_CACHE_KEY) or {}
+    if not rates or len(rates.keys()) < 20:
+        logger.warn("Not finding enough currency rates from cache [{}], loading from database instead.".
+                    format(",".join(rates.keys())))
         fxrate_model = get_model('importer', 'FXRate')
         rates = {}
         for rate_obj in fxrate_model.objects.filter(base_currency=settings.APPAREL_BASE_CURRENCY):
@@ -303,8 +305,15 @@ def currency_exchange(to_currency, from_currency):
 
         if rates:
             cache.set(settings.APPAREL_RATES_CACHE_KEY, rates, 60*60)
+    rate = None
+    try:
+        rate = rates[to_currency] * (1 / rates[from_currency])
+    except KeyError:
+        if not rates:
+            rates = {}
+        logger.fatal("Unable to convert currency from {} to {}, keys available {}. Drop cache key {} and let it repopulate.".
+                     format(from_currency,to_currency,",".join(rates.keys()),settings.APPAREL_RATES_CACHE_KEY))
 
-    rate = rates[to_currency] * (1 / rates[from_currency])
     if from_currency == settings.APPAREL_BASE_CURRENCY:
         rate = rates[to_currency]
     elif to_currency == settings.APPAREL_BASE_CURRENCY:
@@ -356,6 +365,15 @@ def select_from_multi_gender(request, gender_key, gender=None, default=None):
 
 
 def get_paged_result(queryset, per_page, page_num):
+    """
+    Handles pagination, this should be done with the built in Pagination class
+    inside a class based view. Todo: migrate and remove this functionality
+    :param queryset: 
+    :param per_page: 
+    :param page_num: 
+    :return:
+    """
+    
     paginator = Paginator(queryset, per_page)
     paginator._count = 10000
     try:
@@ -365,12 +383,7 @@ def get_paged_result(queryset, per_page, page_num):
     except EmptyPage:
         paged_result = paginator.page(paginator.num_pages)
 
-    #JAS: this field has been used to determine whether or not to display pagination but it was never set
-   # logger.info("per pages: %s and page number: %s result: %s" % (len(paged_result.object_list), page_num, per_page * int(page_num)))
-   # logger.info("entire queryset is: %s" % len(queryset))
-    #FIXME: When this is set to False, the pagination loads for a fraction of a second and seems to fire off two more tequests (next two pages)
-    #WTF?!?
-    if(len(queryset) > (per_page * int(page_num))):
+    if len(queryset) > (per_page * int(page_num)):
         paged_result.has_next = True
     else:
         paged_result.has_next = False
@@ -491,7 +504,10 @@ class JSONPResponse(HttpResponse):
 
 
 def user_is_bot(request):
-    return request.user_agent.is_bot or "ELB" in request.user_agent.ua_string
+    if hasattr(request, "user_agent"):
+        return request.user_agent.is_bot or "ELB" in request.user_agent.ua_string
+    else:
+        return False
 
 def save_location(request, location):
     request.user.location = location
@@ -500,6 +516,15 @@ def save_location(request, location):
 def has_user_location(request):
     return hasattr(request, 'user') and hasattr(request.user, 'location') and request.user.location
 
+def shuffle_user_list(user_list):
+    return sorted(user_list, key=lambda k: random.random())
+
+def get_location(request):
+    if hasattr(request, "user") and hasattr(request.user, 'location') and request.user.location:
+        return request.user.location
+    else:
+        return request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, "ALL")
+    
 def get_location_text(location):
     for key, text in settings.LOCATION_MAPPING_SIMPLE_TEXT:
         if key == location:
@@ -532,15 +557,24 @@ def get_availability_text(vendor_markets):
         return generate_text_for_markets_array(markets_text)
     return "Available Internationally"
 
-def get_location_warning_text(vendor_markets, user):
+def get_location_warning_text(vendor_markets, user, page=""):
     warning_text = ""
     if hasattr(user, 'show_warnings') and user.show_warnings and user.is_partner:
         if vendor_markets and user.location not in vendor_markets:
             markets_text = get_market_text_array(vendor_markets)
             countries_text = generate_countries_text(markets_text)
             location_data = {'country': countries_text, 'location': get_location_text(user.location)}
-            warning_text = _("You will only earn money on visitors from {country} that click on this product, "
-                             "not from your current location {location}.".format(**location_data))
+            if page == "product":
+                warning_text = _("Warning: You currently have {location} set as your location, this product is only "
+                                 "available in {country}. You will not earn money on clicks from {location} on this "
+                                 "product.".format(**location_data))
+            elif page == "chrome-ext":
+                warning_text = _("Warning: You currently have {location} set as your location, this store is only "
+                                 "available in {country}. You will not earn money on clicks from {location} to this "
+                                 "store.".format(**location_data))
+            else:
+                warning_text = _("You will only earn money on visitors from {country} that click on this product, not "
+                                 "from your current location {location}.".format(**location_data))
     return warning_text
 
 def get_external_store_commission(stores, product=None):

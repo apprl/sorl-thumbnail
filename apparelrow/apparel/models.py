@@ -201,7 +201,7 @@ class Category(MPTTModel):
     objects = tree = TreeManager()
 
     def save(self, *args, **kwargs):
-        # FIXME: Can you get Django to auto truncate fields?
+        # FIXME: Can you get Django to auto truncate fields? K: Not really, forms are supposed to take care of it.
         self.name = self.name[:100]
         super(Category, self).save(*args, **kwargs)
 
@@ -261,6 +261,10 @@ class Product(models.Model):
     objects = models.Manager()
     valid_objects = ProductManager(availability=True)
     published_objects = ProductManager(availability=False)
+
+    @cached_property
+    def get_product_name_to_display(self):
+        return "%s - %s" % (self.manufacturer.name, self.product_name)
 
     @cached_property
     def score(self):

@@ -4,13 +4,9 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
-from django.core.urlresolvers import reverse, resolve
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext
-
 import facebook
 
 from apparelrow.profile.tasks import send_welcome_email_task
@@ -80,38 +76,6 @@ def slugify_unique(value, model, slugfield='slug'):
         if not model.objects.filter(**{slugfield: potential}).count():
             return potential
         suffix += 1
-
-
-def get_current_user(view_func):
-    """
-    """
-    def _decorator(request, slug=None, *args, **kwargs):
-        if not slug:
-            if not request.user.is_authenticated():
-                return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-
-            user = request.user
-        else:
-            try:
-                user = get_user_model().objects.get(slug=slug)
-            except get_user_model().DoesNotExist:
-                try:
-                    user = get_user_model().objects.get(username=slug)
-                    if user.slug:
-                        url_result = resolve(request.path)
-
-                        return HttpResponsePermanentRedirect(reverse(url_result.url_name, args=[user.slug]))
-                except get_user_model().DoesNotExist:
-                    raise Http404()
-
-        return view_func(request, user, *args, **kwargs)
-
-    _decorator.__name__ = view_func.__name__
-    _decorator.__dict__ = view_func.__dict__
-    _decorator.__doc__  = view_func.__doc__
-
-    return _decorator
-
 
 def send_welcome_mail(user):
     subject = ugettext(u'Welcome to Apprl %(name)s') % {'name': user.display_name}

@@ -3,20 +3,20 @@
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head{% block head-data %}{% endblock head-data %}>
-
-    <title>{% block full-title %}{% block extra-title %}{% endblock %}Apprl - The Social Commerce Platform{% endblock %}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>{% block full-title %}{% block extra-title %}{% endblock %}APPRL - The Social Commerce Platform{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="description" content="{% spaceless %}{% block meta_description %}{% endblock %}{% endspaceless %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     {% for language in LANGUAGES_DISPLAY %}
     <link rel="alternate" hreflang="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">
     {% endfor %}
-    <link rel="shortcut icon" href="{% static "images/favicon.ico" %}">
+    <link rel="icon" href="{% static "images/favicon.png" %}">
     <link rel="apple-touch-icon" sizes="120x120" href="{% static "images/apple-touch-icon-120x120.png" %}">
     <link rel="apple-touch-icon" sizes="152x152" href="{% static "images/apple-touch-icon-152x152.png" %}">
-    <link href='http://fonts.googleapis.com/css?family=Lato:400|IM+Fell+Great+Primer:400italic' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     {% if not has_share_image %}
         <meta property="og:image" content="{% static "images/share-image.jpg" %}">
     {% endif %}
@@ -24,11 +24,12 @@
 
     {% compressed_css 'bootstrap' %}
     {% block extra-styles %}
-    {% endblock extra-styles %}
+    {% endblock %}
     <script type="text/javascript">var addToHomeConfig = {returningVisitor: true, touchIcon: true, expire: 20160};</script>
     <script src="//cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
+
     <script type="text/javascript">
         var language_code = '{{ LANGUAGE_CODE }}';
         var product_popup_url = '{% url "product-popup" %}';
@@ -75,8 +76,8 @@
             }, {scope: facebook_scope});
         };
     </script>
-    {% block 'extra-scripts' %}
-    {% endblock 'extra-scripts' %}
+    {% block extra-scripts %}
+    {% endblock %}
     <script type="text/javascript">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -119,263 +120,276 @@
             ref.parentNode.insertBefore(js, ref);
         }(document));
     </script>
-
-    {% comment %}
-        <div class="contest-bar">
+    {% block header-navigation %}
+    {# Header #}
+        <header role="banner">
+        <nav role="navigation">
             <div class="container">
-                <div class="row">
-                    <div class="col-xs-11">
-                        <p><a href="{% url 'festivalsommar' %}">{% trans "FESTIVALSOMMAR MED JC" %} <span class="arrow">»</span><span class="long">{% trans "Skapa din festivallook och tävla om 10 000kr" %}</span></a></p>
-                    </div>
-                    <div class="col-xs-1">
-                        <a class="btn btn-primary btn-sm pull-right" href="{% url 'festivalsommar' %}">{% trans "TILL TÄVLINGEN" %}</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endcomment %}
-
-    <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
-                <button type="button" class="navbar-toggle navbar-left" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-                    <span class="sr-only">{% trans "Toggle navigation" %}</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                <a class="logo" href="/"><img src="{% static 'images/logo.svg' %}" width="140" height="20" alt="APPRL"></a>
+                {# request.path == onboarding #}
+                {# request.path #}
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar top-bar"></span>
+                    <span class="icon-bar middle-bar"></span>
+                    <span class="icon-bar bottom-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% multi_gender_url request 'feed' 'index' %}">
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Apprl">
-                </a>
-            </div>
 
-            <div class="navbar-collapse collapse navbar-responsive-collapse">
-                {% block custom_navigation %}{% endblock %}
+                <div class="navbar-collapse collapse navbar-responsive-collapse" id="menu">
+                    <ul class="primary-nav">
+                        {% if not request.user.is_authenticated %}
+                        <li class="visible-xs visible-sm"><a href="{% url 'auth_register' %}">{% trans "Get started" %}</a></li>
+                        <li class="visible-xs visible-sm"><a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></li>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                        <li class="visible-xs visible-sm"><a class="link-create" href="{% url 'publisher-tools' %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %} <i class="fa fa-caret-right"></i></a></li>
+                        <li class="visible-xs visible-sm dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
+                            <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="profile-icon" src="{{ request.user.avatar_small }}"><u>{% trans 'You' %} <b class="caret"></b> </u></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ request.user.url_likes }}">{% trans "Profile" %}</a></li>
+                                {% if request.user.advertiser_store %}
+                                    <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
+                                {% endif %}
+                                {% if request.user.is_partner  %}
+                                    <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+                                    <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
+                                {% endif %}
+                                <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
+                                <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
+                                <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+                            </ul>
+                        </li>
+                        <!--<li class="visible-xs visible-sm"><a href="{% url 'notifications-page' %}">{% trans "Notifications" %}</span>{# if request.user.unread_count > 0 #}<span class="unread_count badge">{{ request.user.unread_count }}</span>{# endif #}</a></li>-->
+                        <li class="visible-xs visible-sm">
+                            <a class="notifications" href="{% url 'notifications-page' %}">
+                                <span class="icon">
+                                    <?xml version="1.0" encoding="utf-8" standalone="no"?>
+                                    <svg width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g stroke="none" stroke-width="1" fill="none">
+                                            <g fill="#ffffff">
+                                                <path d="M5.56425,5.4157037 L7.61271429,0.231407407 L1.854,0.231407407 L0.297321429,7.78607407 L3.17667857,7.78607407 L1.25228571,15.7685926 L8.70235714,5.4157037 L5.56425,5.4157037 L5.56425,5.4157037 Z"></path>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    {% if request.user.unread_count > 0 %}
+                                    <span id="unread_count" class="unread_count badge">{{ request.user.unread_count }}</span>
+                                    {% endif %}
+                                </span>
+                                &nbsp;{% trans "Notifications" %}
+                             </a>
+                        </li>
+                        <hr class="visible-xs visible-sm">
+                        <li class="{% selected_url request "/" %}"><a href="{% multi_gender_url request 'feed' 'index' %}"><u>{% trans "Feed" %}</u>{# <span class="unread_count badge"></span> #}</a></li>
+                        <li class="{% selected_url request "/shop" "/products" %}"><a data-shop="true" href="{% multi_gender_url request 'shop' 'shop' %}"><u>{% trans "Products" %}</u></a></li>
+                        <li class="dropdown {% selected_url request "/brands" "/users" %}">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="{% multi_gender_url request 'user' 'user-list' %}"><u>{% trans "Discover" %} <b class="caret"></b></u></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% multi_gender_url request 'user' 'look-list' %}">{% trans "Looks" %}</a></li>
+                                <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
+                                <li><a href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
 
-                <form data-search="true" action="{% multi_gender_url request 'shop' 'search' %}" class="navbar-form navbar-right" autocomplete="off" id="search">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control input-sm" placeholder="{% trans "Search for products, members & brands" %}">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default btn-xs" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-                            </span>
-                        </div>
-                    </div>
-                </form>
-
-
-
-
-                <ul class="nav navbar-nav navbar-nav-login navbar-right">
-                    {% if not request.user.is_authenticated %}
-                    <li class="visible-xs"><a href="{% url 'auth_register' %}"><span>{% trans "Get started" %}</span></a></li>
-                    <li><a href="{% url 'auth_login' %}"><span>{% trans "Log in" %}</span></a></li>
-                    {% else %}
-                    <li class="dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
-                       <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="img-circle" src="{{ request.user.avatar_small }}"><span> {{ request.user.display_name }}</span> <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ request.user.url_likes }}">{% trans "Your profile" %}</a></li>
-                            {% if request.user.advertiser_store %}
-                            <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
-                            {% endif %}
-                            {% if request.user.is_partner %}
-                            <li><a href="{% url 'dashboard' %}">{% trans "For publishers" %}</a></li>
-                            <li><a href="{% url 'publisher-tools' %}">{% trans "+ Publisher tools" %}</a></li>
-                            {% endif %}
-                            <li><a href="{% url 'look-create' %}">{% trans "+ Create look" %}</a></li>
-                            <li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li>
-                            {% comment %}<li><a href="{% url 'create-shop' %}">{% trans "+ Create shop" %}</a></li>
-                            {% comment %}<li><a href="{% url 'create-product-widget-single' %}">{% trans "+ Create product widget" %}</a></li>
-                            <li><a href="{% url 'create-product-widget-multiple' %}">{% trans "+ Create product widget 2" %}</a></li>{% endcomment %}
-                            <li><a href="{% url 'settings-notification' %}">{% trans "Settings" %}</a></li>
-                            <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
-                        </ul>
-                    </li>
-                    {% endif %}
-                </ul>
-                {% comment %}
-                {% if request.user.is_authenticated %}
-                <ul class="nav navbar-nav navbar-right hidden-xs">
-                        {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}
-                </ul>
-                {% endif %}
-                {% endcomment %}
-                <ul class="nav navbar-nav navbar-nav-main">
                     {% if request.user.is_authenticated %}
-                    <li class="visible-xs"><a href="{% multi_gender_url request 'feed' 'index' %}"><span>{% trans "Your APPRL" %}</span></a></li>
-                    <li class="visible-xs"><a class="notification-mini" data-user="{{ request.user.id }}" href="#"><span>{% trans "Notifications" %}</span>{% if request.user.unread_count > 0 %}<span class="unread_count badge">{{ request.user.unread_count }}</span>{% endif %}</a></li>
+                    <a class="btn btn-outline btn-create hidden-xs visible-md visible-lg"
+                    {% if request.user.is_partner %}
+                    href="{% url 'publisher-tools' %}">
+                    {% trans "Create & Earn" %}
+                    {% else %}
+                    href="{% url 'look-create' %}">
+                    {% trans "Create" %}
+                    {% endif %}</a>
                     {% endif %}
-                    <li class="{% selected_url request "/shop" "/products" %}"><a data-shop="true" href="{% multi_gender_url request 'shop' 'shop' %}"><span>{% trans "Shop" %}</span></a></li>
-                    <li class="{% selected_url request "/looks" %}"><a href="{% multi_gender_url request 'look' 'look-list' %}"><span>{% trans "Looks" %}</span></a></li>
-                    <li class="dropdown {% selected_url request "/brands" "/users" %}">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{% multi_gender_url request 'user' 'user-list' %}"><span>{% trans "Follow" %} <b class="caret"></b></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></li>
-                            <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
-                        </ul>
-                    </li>
-                </ul>
 
-                <ul class="nav navbar-nav navbar-nav-language visible-xs">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
-                        <ul id="language-dropdown" class="dropdown-menu">
+                    <ul class="secondary-nav">
+                        {% if not request.user.is_authenticated %}
+                        <li class="hidden-xs hidden-sm"><a href="{% url 'index-community' %}"><u>{% trans "Sign Up" %}</u></a></li>
+                        <li class="hidden-xs hidden-sm"><a href="{% url 'auth_login' %}"><u>{% trans "Log in" %}</u></a></li>
+                        {% else %}
+                        {% include 'apparel/fragments/notification_list.html' with request=request csrf_token=csrf_token next=next only %}
+                        <li class="visible-md visible-lg dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
+                            <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="profile-icon" src="{{ request.user.avatar_small }}"><u>{% trans 'You' %} <b class="caret"></b> </u></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ request.user.url_likes }}">{% trans "Profile" %}</a></li>
+                                {% if request.user.advertiser_store %}
+                                    <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
+                                {% endif %}
+                                {% if request.user.is_partner  %}
+                                    <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+                                    <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
+                                {% endif %}
+                                <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
+                                <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
+                                <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+                            </ul>
+                        </li>
+                        <hr class="visible-xs visible-sm">
+                        <li class="visible-xs visible-sm"><a href="{% url 'settings-email' %}#location"><u>{% get_location_text request.user.location %}</u></a></li>
+                        {% comment %}
+                        <li class="visible-xs visible-sm dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
+                            <ul id="language-dropdown" class="dropdown-menu">
                             {% for location in LOCATION_LANGUAGE_MAPPING %}
                                 <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
                             {% endfor %}
-                            {% comment %}
-                            {% for language in LANGUAGES_DISPLAY %}
-                            <li><a data-language="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">{% trans language.1 %}</a></li>
-                            {% endfor %}
-                            {% endcomment %}
-                        </ul>
-                    </li>
-                </ul>
+                            </ul>
+                        </li>
+                        {% endcomment %}
+                        <li class="search-box">
+                            <form data-search="true" action="{% multi_gender_url request 'shop' 'search' %}" class="navbar-form" autocomplete="off" id="search">
+                                <button class="btn-search" type="submit"><i class="fa fa-search"></i></button>
+                                <input type="search" name="q" placeholder="{% trans 'Search anything' %}" />
+                            </form>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {# endif #}
             </div>
-        </div>
-    </nav>
-
-    {% comment %} Disabled for now
-    {% if not user.is_authenticated %}
-    {% login_bar request.path %}
-    {% endif %}
-    {% endcomment %}
-
-    <div id="content-container" class="{% block body-container-classes %}{% endblock %}">
+        </nav>
+    </header>
+    {% endblock header-navigation %}
+    {# Main #}
+    <main role="main" id="content-container" class="{% block body-container-classes %}{% endblock %}">
         {% block full-body %}
         <div class="container">
             {% block body-header %}{% endblock %}
             {% block body %}{% endblock %}
         </div>
         {% endblock %}
-    </div>
+    </main>
 
-    <footer>
+    {# Footer #}
+    {% block footer %}
+    <footer role="contentinfo">
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
                     <div class="row">
-                        <ul class="list-unstyled col-xs-6">
-                            <li><h4>{% trans "Your Location" %}</h4></li>
-                            <li class="dropdown">
-                            {% if request.user.is_authenticated %}
-                            <a href="{% url 'settings' %}#location"><span>{% get_location_text request.location %}</span></a>
-                            {% else %}
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
-                                <ul id="language-dropdown" class="dropdown-menu">
-                                    {% comment %}
-                                    {% for language in LANGUAGES_DISPLAY %}
-                                    <li><a data-language="{{ language.0 }}" href="{{ request.path|chlocale:language.0 }}">{% trans language.1 %}</a></li>
-                                    {% endfor %}
-                                    {% endcomment %}
-                                    {% for location in LOCATION_LANGUAGE_MAPPING %}
-                                    <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                            </li>
-                            {% if request.user.is_authenticated %}
-                            <li><a href="{% url 'settings' %}#location"><span>Change location »</span></a></li>
-                            {% endif %}
-                            <li><br></li>
-                            <li><a href="{% url 'index-retailers' %}"><i>{% trans "Do you have a store?" %}</i></a></li>
-                            <li><a href="{% url 'index-publisher' %}"><i>{% trans "Are you a blogger?" %}</i></a></li>
-                        </ul>
-                        <ul class="list-unstyled col-xs-6">
-                            <li><h4>{% trans "Shop" %}</h4></li>
-                            <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
-                            <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
-                            <li><a href="{% multi_gender_url request 'look' 'look-list' %}">{% trans "Looks" %}</a></li>
-                            <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <ul class="list-unstyled col-xs-6">
-                            <li><h4>{% trans "Follow us" %}</h4></li>
-                            <li><a target="_blank" href="http://instagram.com/get_apprl">{% trans "Instagram" %}</a></li>
-                            <li><a target="_blank" href="http://pinterest.com/apprl/">{% trans "Pinterest" %}</a></li>
-                            <li><a target="_blank" href="http://www.facebook.com/apprl">{% trans "Facebook" %}</a></li>
-                            <li><a target="_blank" href="https://twitter.com/get_apprl">{% trans "Twitter" %}</a></li>
-                            <li><a target="_blank" href="https://www.linkedin.com/company/apprl">{% trans "LinkedIn" %}</a></li>
-                            <li><a target="_blank" href="http://blog.apprl.com">{% trans "Blog" %}</a></li>
-                            <li><a target="_blank" href="{% url 'newsletter-redirect' %}">{% trans "E-mail newsletter" %}</a></li>
-                        </ul>
-                        <ul class="list-unstyled col-xs-6">
-                            <li><h4>{% trans "Apprl" %}</h4></li>
-                            <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
-                            <li><a target="_blank" href="mailto:info@apprl.com">{% trans "Contact" %}</a></li>
-                            <li><a href="{% url 'jobs' %}">{% trans "Jobs" %}</a></li>
-                            <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Privacy & Terms" %}</a></li>
-                            <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <ul class="list-unstyled col-xs-6">
-                            <li><h4>Apprl Fashion AB</h4></li>
-                            <li>
-                                <address>
-                                    Kammakargatan 41<br>
-                                    111 24 Stockholm<br>
-                                    {% trans "Sweden" %}
-                                </address>
-                            </li>
-                        </ul>
-                        <div class="footer-social col-xs-6">
-                            <div class="fb-like" data-href="https://facebook.com/apprl/" data-layout="button_count" data-send="false" data-width="100" data-show-faces="false"></div>
-                            <!--div class="last">
-                                <a data-pin-do="buttonFollow" href="http://pinterest.com/apprl/">APPRL</a>
-                            </div-->
+                        <div class="col-is-6">
+                            <h5>{% trans 'Your Location' %}</h5>
+                            <ul>
+                                <li class="dropdown">
+                                {% if request.user.is_authenticated %}
+                                    <a class="btn btn-sm btn-grey" href="{% url 'settings-email' %}#location">{% get_location_text request.user.location %}</a>
+                                {% else %}
+                                    <a class="btn btn-sm btn-grey dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
+                                    <ul id="language-dropdown" class="dropdown-menu">
+                                        {% for location in LOCATION_LANGUAGE_MAPPING %}
+                                            <li><a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                </li>
+                                <li><a href="{% url 'index-retailers' %}"><i>{% trans "Are you a retailer?" %}</i></a></li>
+                            </ul>
+                        </div>
+                        <div class="col-is-6">
+                            <h5>{% trans 'Shop' %}</h5>
+                            <ul>
+                                <li><a class="women" href="{% gender_url 'W' 'shop' %}">{% trans "Women" %}</a></li>
+                                <li><a class="men" href="{% gender_url 'M' 'shop' %}">{% trans "Men" %}</a></li>
+                                <li><a href="{% multi_gender_url request 'look' 'look-list' %}">{% trans "Looks" %}</a></li>
+                                <li><a href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></li>
+                            </ul>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-is-6">
+                            <h5>{% trans 'Follow Us' %}</h5>
+                            <ul>
+                                <li><a target="_blank" href="http://blog.apprl.com">{% trans 'Blog' %}</a></li>
+                                <li><a target="_blank" href="http://www.facebook.com/apprl">Facebook</a></li>
+                                <li><a target="_blank" href="http://instagram.com/get_apprl">Instagram</a></li>
+                                <li><a target="_blank" href="https://twitter.com/get_apprl">Twitter</a></li>
+                                <li><a target="_blank" href="http://pinterest.com/apprl/">Pinterest</a></li>
+                                <li><a target="_blank" href="https://www.linkedin.com/company/apprl">LinkedIn</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-is-6">
+                            <h5>{% trans 'APPRL' %}</h5>
+                            <ul>
+                                <li><a href="{% url 'about' %}">{% trans "About Us" %}</a></li>
+                                <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
+                                <li><a href="{% url 'jobs' %}">{% trans "Jobs" %}</a></li>
+                                <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' %}">{% trans "Terms & Conditions" %}</a></li>
+                                <li><a href="{% url 'django.contrib.flatpages.views.flatpage' url='about/cookies/' %}">{% trans "Cookies" %}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>APPRL Fashion AB</h5>
+                    <address>
+                        Kammakargatan 41<br>
+                        111 24 Stockholm<br>
+                        Sweden
+                    </address>
+                    {% comment %}
+                    <div class="row">
+                        <div class="col-is-6">
+                            <h5>Get our newsletter</h5>
+                            <a class="btn btn-default" href="{% url 'newsletter-redirect' %}">{% trans "Sign Up" %}</a>
+                            <form action="http://apprl.us4.list-manage.com/subscribe/post" method="POST">
+                                <input type="email" autocapitalize="off" autocorrect="off" id="MERGE0" placeholder="Your email" required="required" />
+                                <input type="submit" value="Sign Up" />
+                            </form>
+                        </div>
+                        <div class="col-is-6">
+                            <h5>APPRL Fashion AB</h5>
+                            <address>
+                                Kammakargatan 41<br>
+                                111 24 Stockholm<br>
+                                Sweden
+                            </address>
+                        </div>
+                    </div>
+                    {% endcomment %}
                 </div>
             </div>
         </div>
     </footer>
-    
-    <div class="scroll-top-wrapper ">
-        <span class="scroll-top-inner">
-            <i class="glyphicon glyphicon-chevron-up"></i>
-        </span>
-    </div>
+    {% endblock footer %}
+
+    <a class="btn-scroll btn-arrow scroll-top" href="#"><i class="fa fa-angle-up"></i>
+
     <script>
     $(document).ready(function(){
-        $(".notification-mini").click(function() {
-            var user_id = $(this).data("user");
+        $('.notifications').click(function() {
+            if ($('#unread_count').is(':visible') ) {
+                $('#unread_count').fadeOut();
+            }
+        });
+        $('.notifications').click(function() {
+            var user_id = $(this).data('user');
             $.ajax({
-                type: "post",
+                type: 'post',
                 url: "{% url 'notifications-seen' %}",
                 data: { user_id: user_id },
                 success: function (response) {
-                    window.location.href = "{% url 'notifications-page' %}";
+                    //window.location.href = "{% url 'notifications-page' %}";
                 }
             });
 
         });
-    });
-    $(function(){
+
         $(document).on( 'scroll', function(){
-     
             if ($(window).scrollTop() > 100) {
-                $('.scroll-top-wrapper').addClass('show');
+                $('.scroll-top').fadeIn(200);
             } else {
-                $('.scroll-top-wrapper').removeClass('show');
+                $('.scroll-top').fadeOut(200);
             }
         });
-        $('.scroll-top-wrapper').on('click', scrollToTop);
+
+        $('.scroll-top').on('click', function(e) {
+            $('html, body').animate({scrollTop: 0}, 500);
+            e.preventDefault();
+        });
     });
-     
-    function scrollToTop() {
-        verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
-        element = $('body');
-        offset = element.offset();
-        offsetTop = offset.top;
-        $('html, body').animate({scrollTop: offsetTop}, 500, 'linear');
-    }
     </script>
 
     {% include 'apparel/fragments/dialog_like_product.html' with request=request csrf_token=csrf_token next=next only %}
@@ -390,7 +404,7 @@
     <div class="modal fade" id="modal_embed_shop" tabindex="-1"></div>
 
     <script type="text/html" id="user_like_template">
-        <li data-user-id="{{ request.user.pk }}"><a href="{{ request.user.get_absolute_url }}" title="{{ request.user.display_name }}"><img class="img-circle" alt="{{ request.user.display_name }}" title="{{ request.user.display_name }}" src="{{ request.user.avatar }}"></a></li>
+        <li data-user-id="{{ request.user.pk }}"><a href="{{ request.user.get_absolute_url }}" title="{{ request.user.display_name }}"><img class="img-circle" alt="{{ request.user.display_name }}" title="{{ request.user.display_name }}" src="{{ request.user.avatar }}"></a></li>
     </script>
     {% endif %}
 
@@ -403,6 +417,7 @@
     {% endfor %}
     'SEK': 1
   };
+
   var current_currency = '{{ CURRENCY }}';
   function formatNumber(num) {
     var array = parseInt(num, 10).toFixed().split('');
@@ -422,18 +437,19 @@
   });
 }
 
-  $('#language-dropdown > li > a').click(function(event){
-      var $this = $(this);
-      var location = $this.data("location");
-      $.removeCookie('location');
-      $.cookie('location', location, { expires: 60, path: '/' });
-  } );
-
+  {% if not request.user.is_authenticated %}
+      $('#language-dropdown > li > a').click(function(event){
+          var $this = $(this);
+          var location = $this.data("location");
+          $.removeCookie('location');
+          $.cookie('location', location, { expires: 60, path: '/' });
+      } );
+  {% endif %}
 </script>
 
 {% include 'mouseflow.html' only %}
 
-{% block body-scripts %}{% endblock body-scripts %}
+{% block body-scripts %}{% endblock %}
 
 {% comment %}
 {% block pinterest-scripts %}

@@ -129,8 +129,8 @@ $(document).ready(function() {
 
     if (!!(window.history && history.pushState)) {
         $(document).on('click', '#product-gender a', function(e) {
-            var x = $('.navbar-nav-main > li > a[data-shop^="true"]');
-            var y = $('.navbar .navbar-form[data-search^="true"]');
+            var x = $('#menu').find('> ul > li > a[data-shop^="true"]');
+            var y = $('#search[data-search^="true"]');
             var gender = $(this).data('gender');
             if (gender == 'M') {
                 x.attr('href', x.attr('href').replace('women', 'men'));
@@ -265,7 +265,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.pagination a', function(e) {
         var $this = $(this);
-        $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
+        $this.addClass('disabled hover').find('.status').text($this.data('loading-text'));
         var page = parsePage($this);
         if (page) {
             fetchPage(page);
@@ -677,7 +677,7 @@ function updateEmbeddedProducts($list) {
         $list.find('.product-medium').each(function(i, element) {
             var buy_url = $(element).find('.btn-product-buy').attr('href');
             buy_url = buy_url.replace('Shop/0/', 'Ext-Shop/' + embed_shop_user_id + '/');
-            $('.product-image-container > a, .caption > h4 > a', element).attr('href', buy_url);
+            $('.product-image-container > a, .caption > h5 > a', element).attr('href', buy_url);
             $('.product-image-container > a, .caption a', element).attr('target', '_blank');
             var looks_elem = $('.caption a.looks', element);
             var looks_href = looks_elem.attr('href');
@@ -698,7 +698,7 @@ function updateEmbeddedProducts($list) {
 
 function renderProducts(products) {
     $('#product-list > .product-list').empty();
-    $('#product-list > h3').text(products.browse_text);
+    $('#product-list > h4').text(products.browse_text);
 
     renderPage(products);
 

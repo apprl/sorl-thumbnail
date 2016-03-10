@@ -41,7 +41,7 @@ App.Views.WidgetBase = Backbone.View.extend({
     hide_product_filter: function() {
         $('.col-widget').removeClass('visible-md').removeClass('visible-lg');
         $('#product-chooser').parent().removeClass('visible-xs').removeClass('visible-sm');
-        $('.widget-footer').css('visibility', '')
+        $('.widget-footer').css('visibility', '');
         $(window).trigger('resize');
     }
 });

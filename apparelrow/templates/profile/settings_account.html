@@ -1,0 +1,151 @@
+{% extends 'profile/base_settings.html' %}
+{% load i18n apparel_extras localeurl_tags %}
+
+{% block content %}
+
+        {# E-mail & Username #}
+        <section>
+            <h2 id="email-address">{% trans "E-mail & Username" %}</h2>
+            <p>{% trans "Your username is "%}<strong>{{ request.user.username }}</strong>.</p>
+            <br>
+            <p>{% trans "You can change the e-mail address associated with your APPRL account." %}</p>
+            {% if email_change %}
+                <p><i>{% blocktrans with email_change.email as new_email %}Pending e-mail address change to {{ new_email }}, check your inbox for confirmation mail.{% endblocktrans %}</i></p>
+            {% endif %}
+            <form action="{% url 'settings-account' %}" method="post">{% csrf_token %}
+                <p>{% trans "Current e-mail address:" %} <strong>{{ request.user.email }}</strong></p>
+                <div class="form-group{% if email_form.email.errors %} has-error{% endif %}">
+                    <label for="id_{{ email_form.email.html_name }}" class="control-label">{{ email_form.email.label }}</label>
+                    <input name="{{ email_form.email.html_name }}" type="text" id="id_{{ email_form.email.html_name }}" value="{% if email_form.email.value %}{{ email_form.email.value }}{% endif %}" placeholder="{{ email_form.email.help_text }}">
+                    {% if email_form.email.errors %}<span class="help-block">{{ email_form.email.errors.as_text }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-default" type="submit" value="{% trans "Update email" %}" />
+                </div>
+            </form>
+        </section>
+
+        {# Facebook #}
+        <section>
+            <h2 id="events">{% trans "Facebook" %}</h2>
+            {% if not request.user.facebook_user_id %}
+                <p>{% trans "Connect your Facebook account to find your friends, make it easier to share things you like or just have one less password to remember." %}</p>
+                {% facebook_button connect='yes' %}<br>
+                {% if request.GET.error %}
+                <p class="error">{% trans "It is not possible to connect this account with Facebook." %}</p>
+                {% endif %}
+            {% else %}
+                <p>{% trans "Here you can set which actions you want to be automatically shared to your Facebook timeline:" %}</p>
+                <form action="{% url 'settings-account' %}" method="post">{% csrf_token %}
+                    <div>
+                        {% for field in facebook_settings_form %}
+                            <p>{{ field }} {{ field.help_text }}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <input class="btn btn-default" type="submit" value="{% trans "Save changes" %}" />
+                    </div>
+                </form>
+            {% endif %}
+        </section>
+
+        {# Password #}
+        <section>
+            <h2 id="password">{% trans "Password" %}</h2>
+            {% if request.user.password %}
+                <p>{% trans "Change your password:" %}</p>
+            {% else %}
+                <p>{% trans "Add a password to your account:" %}</p>
+            {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                <p><strong style="color: #67e2b8;">{{ message }}</strong></p>
+                {% endfor %}
+            {% endif %}
+            <form action="{% url 'settings-account' %}" method="post">{% csrf_token %}
+                <div class="form-group{% if form.old_password.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.old_password.html_name }}" class="control-label">{% trans "Current password" %}</label>
+                    <input name="{{ form.old_password.html_name }}" type="password" id="id_{{ form.old_password.html_name }}" value="{% if form.old_password.value %}{{ form.old_password.value }}{% endif %}" placeholder="{{ form.old_password.help_text }}">
+                    {% if form.old_password.errors %}<span class="help-block">{{ form.old_password.errors.as_text }}</span>{% endif %}
+                </div>
+                <div class="form-group{% if form.new_password1.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.new_password1.html_name }}" class="control-label">{% trans "New password" %}</label>
+                    <input name="{{ form.new_password1.html_name }}" type="password" id="id_{{ form.new_password1.html_name }}" value="{% if form.new_password1.value %}{{ form.new_password1.value }}{% endif %}" placeholder="{{ form.new_password1.help_text }}">
+                    {% if form.new_password1.errors %}<span class="help-block">{{ form.new_password1.errors.as_text }}</span>{% endif %}
+                </div>
+                <div class="form-group{% if form.new_password2.errors %} has-error{% endif %}">
+                    <label for="id_{{ form.new_password2.html_name }}" class="control-label">{% trans "Confirm new password" %}</label>
+                    <input name="{{ form.new_password2.html_name }}" type="password" id="id_{{ form.new_password2.html_name }}" value="{% if form.new_password2.value %}{{ form.new_password2.value }}{% endif %}" placeholder="{{ form.new_password2.help_text }}">
+                    {% if form.new_password2.errors %}<span class="help-block">{{ form.new_password2.errors.as_text }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-default" type="submit" value="{% trans "Update Password" %}" />
+                </div>
+            </form>
+        </section>
+
+        {# Location #}
+        <section>
+            <h2 id="location">{% trans "Your Location" %}</h2>
+            <p>{% trans "Your location affects what retailers and products are shown on the site as well as the displayed currency." %}</p>
+            <div class="form-group">
+                <form name="location-form" method="post">
+                    {% csrf_token %}
+                <!-- a class="dropdown-toggle btn btn-default" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.user.location %} <b class="caret"></b></span></a -->
+                <!-- ul id="language-dropdown" class="dropdown-menu" -->
+                <div class="select">
+                     <span><i class="fa fa-caret-down"></i></span>
+                    <select id="id_location" name="location">
+                        {% for location in LOCATION_LANGUAGE_MAPPING %}
+                            <option {% if request.user.location == location.0 %} selected="selected"{% endif %} value="{{ location.0 }}">{{ location.1 }}
+                                {% comment %}<a data-language="{{ location.2.0 }}" data-location="{{ location.0 }}" href="{{ request.path|chlocale:location.2.0 }}">{{ location.1 }}</a>{% endcomment %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </section>
+    {% if request.user.is_partner %}
+        <section>
+            <h2 id="location-notifications">{% trans "Location warnings" %}</h2>
+            <p>
+            {% blocktrans %}
+                Show warnings when I like or get links to products that are not available in my location.
+                This is to make sure that you only link to products that you earn money on,
+                since retailers only pay for clicks/sales in their relevant locations.
+            {% endblocktrans %}
+            </p>
+            <form name="location-warning-form" class="form-group" method="post">
+                {% csrf_token %}
+                <div class="form-content{% if email_form.email.errors %} has-error{% endif %}">
+                    <div class="form-group">
+                    <ul class="list-unstyled">
+                        {% for choice in location_warning_form.show_warnings %}
+                            <li>{{ choice }}</li>
+                        {% endfor %}
+                        </ul>
+                        {% if location_warning_form.show_warnings.errors %}<span class="help-block">{{ location_warning_form.show_warnings.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-default" type="submit" value="{% trans "Save" %}" />
+                </div>
+            </form>
+        </section>
+    {% endif %}
+
+
+
+
+                 {% comment %}
+                        <div class="form-group">
+                        <label class="control-label" for="id_language">{% trans "Language & currency" %}</label>
+                        <select id="id_language" name="language" class="form-control">
+                            {% for language in LANGUAGES %}
+                            <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endcomment %}
+
+{% endblock content %}

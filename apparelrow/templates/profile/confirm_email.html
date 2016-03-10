@@ -2,9 +2,9 @@
 <html>
     <head></head>
     <body>
-        <p>{% blocktrans %}Hi {{ username }},{% endblocktrans %}</p>
-        <p>{% trans "You have requested an e-mail address change, if you wish to continue with it click on the link below to complete it:" %}</p>
-        <p><a href="{{ link }}?token={{ token }}">{{ link }}?token={{ token }}</a></p>
-        <p>{% trans "With ♥ from Apprl" %}</p>
+        <p>{% blocktrans %}Hi {{ username }},{% endblocktrans %}<br>
+        {% trans "You have requested an e-mail address change, if you wish to continue with it click on the link below to complete it:" %}</p>
+        <a href="{{ link }}?token={{ token }}">{{ link }}?token={{ token }}</a>
+        <small>{% trans "With ♥ from Apprl" %}</small>
     </body>
 </html>

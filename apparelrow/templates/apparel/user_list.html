@@ -18,38 +18,43 @@
     {% endif %}
 
     <div class="body-header">
-        <div class="{% if is_brand %}body-header-col-full{% else %}body-header-col-left{% endif %}">
-            <h1>{% trans "Follow" %}</h1>
-            <ul class="list-inline">
-                <li><h2><a{% if 'users' in request.path %} class="selected"{% endif %} href="{% multi_gender_url request 'user' 'user-list' %}">{% trans "Members" %}</a></h2></li>
-                <li><h2><a{% if 'brands' in request.path %} class="selected"{% endif %} href="{% multi_gender_url request 'user' 'brand-list' %}">{% trans "Brands" %}</a></h2></li>
-            </ul>
-        </div>
+        {% if 'users' in request.path %}
+        <h1>{% trans "Members" %}</h1>
+        <!--<ul class="sub-menu">
+            <li><a href="#">{% trans "Popular" %}</a></li>
+            <li><a href="#">{% trans "New" %}</a></li>
+        </ul>-->
+        {% elif 'brands' in request.path %}
+        <h1>{% trans "Brands" %}</h1>
+        <!--<ul class="sub-menu">
+            <li><a href="#">{% trans "Popular" %}</a></li>
+            <li><a href="#">{% trans "New" %}</a></li>
+        </ul>-->
+        {% endif %}
         {% if not is_brand %}
-        <div class="body-header-col-right">
-            <ul class="list-inline">
-                <li class="dropdown">
-                    <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men" %}{% elif gender == 'W' %}{% trans "Only women" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'user-list' %}">{% trans "Show all" %}</a></li>
-                        <li><a href="{% url 'user-list-men' %}">{% trans "Only men" %}</a></li>
-                        <li><a href="{% url 'user-list-women' %}">{% trans "Only women" %}</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+        <ul class="sidebar">
+            <li class="dropdown">
+                <button type="button" class="btn btn-gender dropdown-toggle" data-toggle="dropdown">{% if gender == 'M' %}{% trans "Only men" %}{% elif gender == 'W' %}{% trans "Only women" %}{% else %}{% trans "Show all" %}{% endif %} <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'user-list' %}">{% trans "Show all" %}</a></li>
+                    <li><a href="{% url 'user-list-men' %}">{% trans "Only men" %}</a></li>
+                    <li><a href="{% url 'user-list-women' %}">{% trans "Only women" %}</a></li>
+                </ul>
+            </li>
+        </ul>
         {% endif %}
     </div>
 
     <div class="row">
         <div class="col-lg-12">
-            <ul class="alphabet list-inline">
+            <ul class="list-alphabet">
                 <li><a{% if not selected_alphabet %} class="selected"{% endif %} href="{{ request.path }}">{% trans "Show all" %}</a></li>
                 <li><a{% if selected_alphabet == '0-9' %} class="selected"{% endif %} href="?alphabet=0-9">0-9</a></li>
                 {% for character in alphabet %}
                 <li><a{% if selected_alphabet == character %} class="selected"{% endif %} href="?alphabet={{ character }}">{{ character }}</a></li>
                 {% endfor %}
             </ul>
+            <hr>
         </div>
     </div>
     <div class="row">
