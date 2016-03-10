@@ -79,7 +79,8 @@ def get_clicks_from_sale(sale):
     end_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(23, 59, 59, 999999))
     vendor_name = sale.vendor
     clicks = get_model('statistics', 'ProductStat').objects.filter(vendor=vendor_name, user_id=user_id,
-                                                          created__range=[start_date_query, end_date_query]).count()
+                                                          created__range=[start_date_query, end_date_query],
+                                                                   is_valid=True).count()
     return clicks
 
 def dictfetchall(cursor):
