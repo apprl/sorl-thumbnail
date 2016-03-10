@@ -63,7 +63,7 @@ class Importer(BaseImporter):
                         data_row['original_commission'] = row.mCommissionAmount[0].dAmount[0]
                         data_row['original_currency'] = row.mCommissionAmount[0].sCurrency[0]
                         data_row['original_amount'] = row.mSaleAmount[0].dAmount[0]
-                        data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row.sClickref[0])
+                        data_row['user_id'], data_row['product_id'], data_row['placement'], data_row['source_link'] = self.map_placement_and_user(row.sClickref[0])
                         data_row['status'] = self.map_status(row.sStatus[0])
                         data_row['sale_date'] = dateutil.parser.parse(row.dTransactionDate[0])
 

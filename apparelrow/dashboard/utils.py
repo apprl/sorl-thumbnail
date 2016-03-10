@@ -432,12 +432,14 @@ def aggregated_data_per_month(user_id, start_date, end_date):
                           Sum('network_sales'), Sum('referral_sales'), Sum('paid_clicks'), Sum('total_clicks'))
     return sum_data
 
-def enumerate_months(user, month):
+def enumerate_months(user, month, is_admin=False):
     """
     Return list of tuples with ID, Text for the different months of the year
     """
     dt1 = user.date_joined.date()
     dt2 = datetime.date.today()
+    if is_admin:
+        dt1 = dt1.replace(year=2011)
     year_choices = range(dt1.year, dt2.year+1)
     month_display = ""
     month_choices = [(0, _('All year'))]

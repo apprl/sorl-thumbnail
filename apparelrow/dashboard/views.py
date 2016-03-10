@@ -603,7 +603,7 @@ class AdminDashboardView(TemplateView):
             start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
             end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
-            month_display, month_choices, year_choices = enumerate_months(request.user, month)
+            month_display, month_choices, year_choices = enumerate_months(request.user, month, is_admin=True)
 
             # Aggregate data per day
             values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',

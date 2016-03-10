@@ -40,7 +40,7 @@ from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives, get_available_brands
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list, get_location, get_external_store_commission, \
-    get_availability_text, get_location_warning_text
+    get_availability_text, get_location_warning_text, generate_sid
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 from apparelrow.activity_feed.views import user_feed
 from apparelrow.dashboard.views import SignupForm
@@ -1208,7 +1208,9 @@ def product_lookup_by_domain(request, domain, key):
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
-        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
+
+        sid = generate_sid(0, user_id, 'Ext-Link', url)
+        return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
     return None, None
 
 
@@ -1321,10 +1323,10 @@ def product_lookup(request):
                 key = ''.join(temp)
             product_pk = product_lookup_by_solr(request, key)
             if not product_pk:
-                logger.info("Failed to extract product from solr for %s" % key)
+                logger.info(u"Failed to extract product from solr for %s" % key)
                 product_pk = product_lookup_asos_nelly(original_key, is_nelly_product)
             else:
-                logger.info("Successfully found product in SOLR for key %s" % key)
+                logger.info(u"Successfully found product in SOLR for key %s" % key)
         else:
             logger.info("Successfully found product in SOLR for key %s" % key)
     # TODO: must go through theimp database right now to fetch site product by real url
@@ -1346,7 +1348,7 @@ def product_lookup(request):
         product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
         product_short_link_str = reverse('product-short-link', args=[product_short_link.link()])
         product_short_link_str = request.build_absolute_uri(product_short_link_str)
-        logger.info("Product match found for key, creating short product link [%s]." % product_short_link_str)
+        logger.info(u"Product match found for key, creating short product link [%s]." % product_short_link_str)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product,
                                                                            active=True).exists()
         product_name = product.get_product_name_to_display
@@ -1362,14 +1364,14 @@ def product_lookup(request):
                 currency = product.default_vendor.locale_currency
         if currency:
             if vendor.is_cpo:
-                product_earning = "You will earn approx. %s %.2f per generated sale to %s." % (currency, earning, vendor.name)
+                product_earning = u"You will earn approx. %s %.2f per generated sale to %s." % (currency, earning, vendor.name)
             elif vendor.is_cpc:
-                product_earning = "You will earn approx. %s %.2f per generated click of this item." % (currency, earning)
+                product_earning = u"You will earn approx. %s %.2f per generated click of this item." % (currency, earning)
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
-        logger.info("No product found for key, falling back to domain deep linking.")
+        logger.info(u"No product found for key, falling back to domain deep linking.")
         product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
-        logger.info("No product found for key, falling back to domain deep linking.")
+        logger.info(u"No product found for key, falling back to domain deep linking.")
         if product_short_link_str is not None:
             product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
                                                                                 user=request.user, vendor=vendor)
@@ -1383,13 +1385,15 @@ def product_lookup(request):
                     store_commission = get_vendor_commission(vendor)
                     if store_commission:
                         earning_cut = earning_cut * store_commission
-                        product_earning = "You will earn approx. %.2f %% per generated sale of this item." % (earning_cut * 100)
+                        product_earning = u"You will earn approx. %.2f %% per generated sale of this item." % \
+                                          (earning_cut * 100)
                 elif vendor.is_cpc:
                     cost_per_click = get_vendor_cost_per_click(vendor)
                     if cost_per_click:
-                        product_earning = "You will earn approx. %s %.2f per generated click when linking to " \
+                        product_earning = u"You will earn approx. %s %.2f per generated click when linking to " \
                                           "this retailer" % \
                                           (cost_per_click.currency, (earning_cut * cost_per_click.amount))
+    vendor_markets = None
     if vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
     warning_text = get_location_warning_text(vendor_markets, request.user, "chrome-ext")
@@ -1527,17 +1531,19 @@ def index(request, gender=None):
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
         if gender == 'none':
             gender = None
-
-        if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
-            return onboarding(request)
-        else:
-            return user_feed(request, gender=gender)
+        
+        # This is deactivated for the time being (20160310)/K
+        #if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
+        #    return onboarding(request)
+        #else:
+        return user_feed(request, gender=gender)
 
     return render(request, 'apparel/publisher.html', {'featured': get_featured_activity_today()})
 
 
 def about(request):
     return render(request, 'apparel/about.html')
+
 
 def contact(request):
     return render(request, 'apparel/contact.html')

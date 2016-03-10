@@ -97,6 +97,7 @@ class Sale(models.Model):
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     log_info = JSONField(_('Log info'), null=True, blank=True,
                  help_text='Includes information about the products contained in the sale and their status.')
+    source_link = models.CharField(max_length=512, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
