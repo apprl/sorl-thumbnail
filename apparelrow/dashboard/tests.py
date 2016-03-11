@@ -18,6 +18,8 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
+from apparelrow.dashboard.views import publisher_contact
+from apparelrow.apparel.utils import generate_sid, parse_sid
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
@@ -1336,6 +1338,20 @@ class TestAffiliateNetworks(TransactionTestCase):
         boozt_no_sales = sale_model.objects.filter(vendor=self.boozt_no_vendor).count()
         self.assertEqual(boozt_no_sales, 5)
 
+    def test_dashboard_links(self):
+        text = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_test.csv')).read()
+        data = text.splitlines()
+        management.call_command('dashboard_import', 'linkshare', data=data, verbosity=0, interactive=False)
+
+        sale_model = get_model('dashboard', 'Sale')
+
+        self.assertEqual(sale_model.objects.count(), 13)
+        self.assertEqual(sale_model.objects.exclude(source_link__exact='').count(), 3)
+
+        links_sales = sale_model.objects.exclude(source_link__exact='')
+        for item in links_sales:
+            self.assertEqual(item.source_link, 'http://www.mystore.com/shop/woman/shoes')
+
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestSalesPerClick(TransactionTestCase):
@@ -2081,7 +2097,7 @@ class TestUtils(TransactionTestCase):
 
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         self.user.is_partner = True
-        self.user.date_joined = datetime.datetime.strptime("2013-05-07", "%Y-%m-%d")
+        self.user.date_joined = datetime.datetime.strptime("2014-05-07", "%Y-%m-%d")
         self.user.partner_group = self.group
         self.user.save()
 
@@ -2091,6 +2107,59 @@ class TestUtils(TransactionTestCase):
         get_model('dashboard', 'ClickCost').objects.create(vendor=self.vendor_cpc, amount=1.00, currency="EUR")
         get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
                                                      vendor=self.vendor_cpc)
+        self.short_link = ShortLinkFactory(user=self.user)
+
+    def test_generate_sid_no_data(self):
+        product_id = None
+        sid = generate_sid(product_id)
+        self.assertEqual(sid, "0-0-Default")
+
+    def test_generate_sid_no_product(self):
+        product_id = None
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        source_link = self.short_link.link()
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=source_link)
+        self.assertEqual(sid, "%s-0-%s/%s" % (target_user_id, page, source_link))
+
+    def test_generate_sid(self):
+        product_id = 20
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page)
+        self.assertEqual(sid, "%s-%s-%s" % (target_user_id, product_id, page))
+
+    def test_generate_sid_with_source_link(self):
+        product_id = 20
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        source_link = self.short_link.link()
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=source_link)
+        self.assertEqual(sid, "%s-%s-%s/%s" % (target_user_id, product_id, page, source_link))
+
+    def test_parse_sid(self):
+        sid = "12-21-Ext-Store/http://apprl.com/p/AJSJ"
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 12)
+        self.assertEqual(product_id, 21)
+        self.assertEqual(placement, "Ext-Store")
+        self.assertEqual(source_link, "http://apprl.com/p/AJSJ")
+
+    def test_parse_sid_no_data(self):
+        sid = ""
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 0)
+        self.assertEqual(product_id, 0)
+        self.assertEqual(placement, "Unknown")
+        self.assertEqual(source_link, "")
+
+    def test_parse_sid_no_source_link(self):
+        sid = "12-21-Ext-Store"
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 12)
+        self.assertEqual(product_id, 21)
+        self.assertEqual(placement, "Ext-Store")
+        self.assertEqual(source_link, "")
 
     def test_map_placement(self):
         self.assertEqual(map_placement('Unknown'), 'Unknown')
@@ -2160,9 +2229,21 @@ class TestUtils(TransactionTestCase):
         """ Test months choices, year choices and display text for month passed as input are correct.
         """
         june = 06
-        year_list = [row for row in range(2013, datetime.date.today().year+1)]
+        year_list = [row for row in range(self.user.date_joined.year, datetime.date.today().year+1)]
 
         month_display, month_choices, year_choices = enumerate_months(self.user, june)
+        self.assertEqual(month_display, "June")
+        self.assertEqual(year_choices, year_list)
+        self.assertEqual(len(month_choices), 13) # 12 months  All Year option
+
+    def test_enumerate_months_is_admin(self):
+        """ Test months choices, year choices and display text for month passed as input are correct when
+        logged as an admin. It should return a list of years since 2011 until the current year.
+        """
+        june = 06
+        year_list = [row for row in range(2011, datetime.date.today().year+1)]
+
+        month_display, month_choices, year_choices = enumerate_months(self.user, june, is_admin=True)
         self.assertEqual(month_display, "June")
         self.assertEqual(year_choices, year_list)
         self.assertEqual(len(month_choices), 13) # 12 months  All Year option
@@ -2374,8 +2455,10 @@ class TestAggregatedData_2(TransactionTestCase):
         top_publishers = get_aggregated_publishers(None, start_date, end_date)
         self.assertEqual(len(top_publishers), 0)
 
+
 class MockRequest(object):
     pass
+
 
 class TestReferralBonus(TransactionTestCase):
 

@@ -36,7 +36,7 @@ class Importer(BaseImporter):
             data_row['original_commission'] = transaction.commission
             data_row['original_currency'] = transaction.currency
             data_row['original_amount'] = transaction.order_value
-            data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(transaction.custom)
+            data_row['user_id'], data_row['product_id'], data_row['placement'], data_row['source_link'] = self.map_placement_and_user(transaction.custom)
             data_row['sale_date'] = transaction.created
             data_row['status'] = Sale.PENDING
             if transaction.status == Transaction.ACCEPTED:

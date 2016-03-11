@@ -9,7 +9,6 @@ from apparelrow.apparel.models import ShortStoreLink, ShortDomainLink
 from celery.task import task, periodic_task
 from celery.schedules import crontab
 
-from django.core.urlresolvers import resolve
 from urlparse import urlparse
 import redis
 from apparelrow.statistics.utils import extract_short_link_from_url
@@ -43,6 +42,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
         price = None
 
     action = 'BuyReferral'
+    source_link = ''
     if page == 'Ext-Store':
         parsed_url = urlparse(referer.split("\n")[1])
         log.info("External store click found, trying to fetch vendor for link: %s and user_id: %s" % (parsed_url.path, user_id))
@@ -51,6 +51,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
         #short_link = match.kwargs['short_link']
         try:
             _, vendor = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
+            source_link = ShortStoreLink.objects.get_original_url_for_link(short_link)
             log.info("Found vendor %s." % vendor)
         except Exception, msg:
             log.info("Failed to extract vendor and ShortStoreLink [%s] Error:[%s]." % (parsed_url.path,msg))
@@ -61,6 +62,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
         short_link = extract_short_link_from_url(parsed_url.path)
         log.info("Extracting short link: %s from url. Trying to fetch ShortDomainLink object." % short_link)
         _, vendor, _ = ShortDomainLink.objects.get_short_domain_for_link(short_link)
+        source_link = ShortDomainLink.objects.get_original_url_for_link(short_link)
 
     get_model('statistics', 'ProductStat').objects.create(
         action=action,
@@ -72,6 +74,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
         referer=referer,
         ip=ip,
         user_agent=user_agent,
+        source_link=source_link,
         is_valid=bool(not cookie_already_exists))
 
 

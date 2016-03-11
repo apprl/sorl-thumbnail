@@ -75,7 +75,7 @@ class Importer(BaseImporter):
                     data_row['original_commission'] = row['affiliateCommission']
                     data_row['original_currency'] = 'SEK'
                     data_row['original_amount'] = row['orderValue']
-                    data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['epi1'])
+                    data_row['user_id'], data_row['product_id'], data_row['placement'], data_row['source_link'] = self.map_placement_and_user(row['epi1'])
                     data_row['status'] = self.map_status(row['pendingStatus'])
                     data_row['sale_date'] = dateutil.parser.parse(row.get('timeOfEvent', '') or '')
 

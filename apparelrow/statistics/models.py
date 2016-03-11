@@ -76,6 +76,7 @@ class ProductStat(models.Model):
     page = models.CharField(max_length=50, null=True, blank=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False)
     referer = models.TextField(null=True, blank=True)
+    source_link = models.CharField(max_length=512, null=True, blank=True)
     user_agent = models.TextField(null=True, blank=True)
     ip = models.GenericIPAddressField()
     is_valid = models.BooleanField(default=True)
