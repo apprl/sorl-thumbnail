@@ -13,6 +13,7 @@ from django.test import Client
 
 from localeurl.utils import locale_url
 from apparelrow.apparel.models import Look
+from apparelrow.profile.forms import RegisterForm
 from apparelrow.profile.notifications import retrieve_full_url, retrieve_static_url
 
 
@@ -46,6 +47,22 @@ class TestProfile(TransactionTestCase):
         user = get_user_model().objects.get(email='test@xvid.se')
         self.assertTrue(user.is_active)
         print "Verified user is active"
+
+    def test_signup_email_already_registered(self):
+        get_user_model().objects.create(name="Blogger Test", username="usertest", slug="user_test",
+                                        email="user@test.com")
+
+        form_data = {'first_name': 'test',
+                     'last_name': 'svensson',
+                     'username': 'test',
+                     'email': 'user@test.com',
+                     'password1': 'test',
+                     'password2': 'test',
+                     'gender': 'M'}
+
+        form = RegisterForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertEquals(form.errors['email'], [u"A user with that e-mail already exists."])
 
 class TestUtilities(TestCase):
     temp_static_url = "http://s-staging.apprl.com/"

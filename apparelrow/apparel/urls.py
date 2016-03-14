@@ -89,9 +89,8 @@ urlpatterns = patterns('',
 
     # Search
     url(r'^search/$', SearchBaseTemplate.as_view(), {'gender': 'A'}, name='search'),
-    #url(r'^search/$', 'apparelrow.apparel.search.search', {'gender': 'A'}, name='search'),
-    url(r'^search/men/$', 'apparelrow.apparel.search.search', {'gender': 'M'}, name='search-men'),
-    url(r'^search/women/$', 'apparelrow.apparel.search.search', {'gender': 'W'}, name='search-women'),
+    url(r'^search/men/$', SearchBaseTemplate.as_view(), {'gender': 'M'}, name='search-men'),
+    url(r'^search/women/$', SearchBaseTemplate.as_view(), {'gender': 'W'}, name='search-women'),
     url(r'^backend/search/(?P<model_name>\w+)/', 'apparelrow.apparel.search.search_view'),
 
     # Notifications

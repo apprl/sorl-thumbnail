@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_unicode
+from django.contrib.auth.forms import PasswordResetForm
 
 #
 # Custom widgets for rendering Radio buttons and Checkboxes
@@ -260,23 +261,26 @@ class RegisterForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        try:
-            get_user_model()._default_manager.get(email=email)
-        except get_user_model().DoesNotExist:
+        if get_user_model().objects.filter(email=email).exists():
+            raise forms.ValidationError(_('A user with that e-mail already exists.'))
+        else:
             return email
-        except get_user_model().MultipleObjectsReturned:
-            pass
 
-        raise forms.ValidationError(_('A user with that e-mail already exists.'))
 
 class RegisterCompleteForm(forms.Form):
     email = forms.EmailField(label=_('E-mail address'), required=True)
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        try:
-            get_user_model()._default_manager.get(email=email, is_active=False)
-        except get_user_model().DoesNotExist:
+        if get_user_model().objects.filter(email=email, is_active=False).exists():
+            return email
+        else:
             raise forms.ValidationError(_('E-mail does not exist or account is already confirmed.'))
 
-        return email
+class EmailValidationResetPassword(PasswordResetForm):
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not get_user_model().objects.filter(email=email).exists():
+            raise forms.ValidationError(_('No account found with that email address.'))
+        else:
+            return email

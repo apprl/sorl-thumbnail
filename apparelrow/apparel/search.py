@@ -568,7 +568,7 @@ class SearchBaseTemplate(TemplateView):
         context.update({'q': query, 'gender': gender})
         return context
 
-
+@DeprecationWarning
 def search(request, gender=None):
     """
     Search page, DEPRECATED
@@ -584,7 +584,8 @@ def search(request, gender=None):
 
 def search_view(request, model_name):
     """
-    Generic search view for different models.
+    Generic search view for different models. This method is being called asyncronously 
+    from the web layer. 
     :param request:
     :param model_name:
     :return: Json
@@ -655,7 +656,8 @@ def search_view(request, model_name):
         arguments['facet.field'] = ['manufacturer']
 
     # Filter query parameters based on location
-    arguments['fq'].append('market_ss:{location}'.format(location=get_location(request)))
+    if model_name != 'user':
+        arguments['fq'].append('market_ss:{location}'.format(location=get_location(request)))
 
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)

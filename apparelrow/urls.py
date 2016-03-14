@@ -8,6 +8,8 @@ from apparelrow.profile.views import RegisterEmailFormView, RegisterEmailComplet
 
 admin.autodiscover()
 
+from apparelrow.profile.forms import EmailValidationResetPassword
+
 from sitemaps import sitemaps
 
 urlpatterns = patterns('',
@@ -23,7 +25,7 @@ urlpatterns = patterns('',
     #url(r'^accounts/register/complete/$', 'apparelrow.profile.views.register_complete', name='auth_register_complete'),
     #url(r'^accounts/activate/(?P<key>[\w-]+)/$', 'apparelrow.profile.views.register_activate', name='auth_register_activate'),
     url(r'^accounts/activate/(?P<key>[\w-]+)/$', RegisterActivateView.as_view(), name='auth_register_activate'),
-    url(r'^accounts/reset/$', 'django.contrib.auth.views.password_reset', name='auth_password_reset'),
+    url(r'^accounts/reset/$', 'django.contrib.auth.views.password_reset', {'password_reset_form': EmailValidationResetPassword}, name='auth_password_reset'),
     url(r'^accounts/facebook/login', 'apparelrow.profile.views.facebook_redirect_login', name='auth_facebook_login'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^a/', include('advertiser.urls')),
