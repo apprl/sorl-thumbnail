@@ -56,7 +56,8 @@
         new Tablesort($('table#top-products').get(0));
         new Tablesort($('table#top-products-more').get(0));
         new Tablesort($('table#top-publishers').get(0));
-        new Tablesort($('table#top-publishers-more').get(0))
+        new Tablesort($('table#top-publishers-more').get(0));
+        new Tablesort($('table#detail-clicks-more').get(0));
       });
         /*
             Load detail click earning details for clicks in a modal
@@ -263,6 +264,7 @@
                             <th>{% trans "User" %}</th>
                             <th></th>
                             <th>{% trans "From" %}</th>
+                            <th>{% trans "Sale value" %}</th>
                             <th>{% trans "Earnings" %}</th>
                         </tr>
                     </thead>
@@ -328,6 +330,8 @@
                 // Date
                 row.append('<td data-sort="' + this.date_timestamp + '">' + this.date_string + '</td>');
                 row.append('<td data-sort="' + this.sale_id + '">' + this.sale_id + '</td>');
+                row.append('<td data-sort="' + this.product_name + '"><a src="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
+                row.append('<td data-sort="' + this.product_name + '">' + this.product_name + '</td>');
 
                 // Description
                 if (this.description_image != '') {
