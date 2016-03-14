@@ -210,7 +210,6 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     :param kwargs:
     :return:
     """
-
     if gender is None and user_gender is None:
         gender = select_from_multi_gender(request, 'shop', None)
         if gender == 'M':

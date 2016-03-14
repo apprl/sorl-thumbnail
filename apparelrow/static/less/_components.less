@@ -418,10 +418,6 @@ a.info {
     .btn-pagination {
 		margin: auto;
 		overflow: hidden;
-		&:focus, &:active, &:visited {
-			background-color: transparent !important;
-			color: white !important;
-		}
 		&.hover {
 			.loader {
 				display: block;
@@ -439,7 +435,7 @@ a.info {
 		display: none;
 		float: right;
 		margin-top: -6px;
-		float: right;
+		background-color: inherit;
 		> span {
 			width: 100%;
 			height: 100%;
@@ -449,7 +445,6 @@ a.info {
 		    position: absolute;
 		    top: 0;
 		    left: 0;
-		    background-color: white;
 		    -webkit-animation: bounce 2s infinite ease-in-out both;
 		    animation: bounce 2s infinite ease-in-out both;
 		}
@@ -479,6 +474,13 @@ a.info {
 			transform: scale(1);
 		}
 	}
+
+    .disabled {
+        span {
+            background-color: inherit;
+            color: inherit;
+        }
+    }
 }
 .helper {
 	float: right;

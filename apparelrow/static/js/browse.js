@@ -256,6 +256,8 @@ $(document).ready(function() {
 
     infiniteScroll(function(callback) {
         var page = parsePage($('.pagination .btn-pagination'));
+        var $this = $(".btn-pagination");
+        $this.addClass('disabled hover').find('.status').text($this.data('loading-text'));
         if (page) {
             fetchPage(page, callback);
         } else {
@@ -273,7 +275,6 @@ $(document).ready(function() {
 
         // Set up auto-scrolling
         $(window).data('dont-scroll', false);
-
         return false;
     });
 
