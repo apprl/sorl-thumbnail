@@ -187,7 +187,7 @@
                                 {{ publisher.total_clicks }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
-                                {{ currency }} {{ publisher.total_earnings }}
+                                {{ currency }} {{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
                                 {{ currency }} {{ publisher.total_network_earnings }}
@@ -274,7 +274,7 @@
                     <tbody id="body-earnings">
                         <tr>
                             <td colspan="6">
-                                <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
+                                Loading earnings <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
                             </td>
                         </tr>
                     </tbody>
@@ -305,7 +305,8 @@
 
     function fetchEarnings(month, year, currency, callback) {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year), true);
+        xhr.open('GET', EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year)
+                + '&limit=40', true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
               var parsed = {};
