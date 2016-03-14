@@ -418,6 +418,9 @@ a.info {
     .btn-pagination {
 		margin: auto;
 		overflow: hidden;
+		/*&:focus, &:active, &:visited {
+			background-color: transparent !important;
+		}*/
 		&.hover {
 			.loader {
 				display: block;
@@ -435,20 +438,21 @@ a.info {
 		display: none;
 		float: right;
 		margin-top: -6px;
-		background-color: inherit;
+	  	background-color: inherit;
 		> span {
-			width: 100%;
-			height: 100%;
+			width: 50%;
+			height: 50%;
 			display: inline-block;
 		    border-radius: 50%;
 	    	opacity: 0.6;
 		    position: absolute;
-		    top: 0;
+		    top: 10px;
 		    left: 0;
+		    background-color: white !important;
 		    -webkit-animation: bounce 2s infinite ease-in-out both;
 		    animation: bounce 2s infinite ease-in-out both;
 		}
-		.two {
+		.double-bounce2 {
 			-webkit-animation-delay: -1s;
 			animation-delay: -1s;
 		}
@@ -475,12 +479,12 @@ a.info {
 		}
 	}
 
-    .disabled {
+  	.disabled {
         span {
-            background-color: inherit;
-            color: inherit;
-        }
-    }
+		  background-color: transparent;
+		  color: inherit;
+		}
+	}
 }
 .helper {
 	float: right;
