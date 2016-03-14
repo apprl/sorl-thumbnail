@@ -188,7 +188,6 @@ class FacebookSettingsForm(forms.ModelForm):
 class PartnerPaymentDetailForm(forms.ModelForm):
     name = forms.CharField(label=_('Name'))
     orgnr = forms.CharField(label=_('Personal / Organization number'))
-    clearingnr = forms.CharField(label=_('Bank clearing number'))
     bank_name = forms.CharField(label=_('Bank name'))
     banknr = forms.CharField(label=_('Bank account number'))
     clearingnr = forms.CharField(label=_('Bank-/postgiro'))
