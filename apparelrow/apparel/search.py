@@ -1,6 +1,8 @@
 import json
 import decimal
 import logging
+from django.views.generic import TemplateView
+from progressbar import ProgressBar, Percentage, Bar
 import re
 import collections
 import HTMLParser
@@ -21,13 +23,13 @@ from django.db.models.loading import get_model
 from django.utils import translation
 
 from apparelrow.apparel.models import Product, ProductLike, Look, ShopProduct
-from apparelrow.apparel.utils import select_from_multi_gender
+from apparelrow.apparel.utils import select_from_multi_gender, get_location
 from apparelrow.apparel.tasks import product_popularity
 from sorl.thumbnail import get_thumbnail
 
-from pysolr import Solr
+from pysolr import Solr, SolrError, Results
 
-logger = logging.getLogger('apparel.search')
+logger = logging.getLogger('apparelrow')
 
 RESULTS_PER_PAGE = 10
 PRODUCT_SEARCH_FIELDS = ['manufacturer_name', 'category_names^40', 'product_name', 'color_names^40', 'description']
@@ -46,13 +48,17 @@ class ResultContainer:
         self.__dict__.update(entries)
 
 def more_like_this_product(body, gender, location, limit):
-    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:%s' % (gender,)], 'rows': limit, 'fl': 'image_small,slug'}
+    kwargs = {'fq': ['django_ct:apparel.product', 'published:true', 'availability:true', 'gender:{}'.format(gender)], 'rows': limit, 'fl': 'image_small,slug'}
     kwargs['stream.body'] = body
-    kwargs['fq'].append('market_ss:%s' % location)
+    kwargs['fq'].append('market_ss:{location}'.format(location=location))
 
     mlt_fields = ['manufacturer_name', 'category_names', 'product_name', 'color_names', 'description']
     connection = Solr(settings.SOLR_URL)
-    result = connection.more_like_this('', mlt_fields, **kwargs)
+    try:
+        result = connection.more_like_this('', mlt_fields, **kwargs)
+    except SolrError as ex:
+        logger.error("Failed to get more like this from SOLR, reason [{}] connection [{}]".format(ex.message, settings.SOLR_URL))
+        result = Results({}, 0)
     return result
 
 def more_alternatives(product, location, limit):
@@ -62,18 +68,18 @@ def more_alternatives(product, location, limit):
                        'fl': 'image_small,slug',
                        'sort': 'price asc, popularity desc, created desc'}
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
-    query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
-    query_arguments['fq'].append('category:%s' % (product.category_id))
-    query_arguments['fq'].append('market_ss:%s' % location)
+    query_arguments['fq'].append('gender:({gender} OR U)'.format(gender=product.gender))
+    query_arguments['fq'].append('category:{category}'.format(category=product.category_id))
+    query_arguments['fq'].append('market_ss:{location}'.format(location=location))
     if colors_pk:
-        query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+        query_arguments['fq'].append('color:({colors})'.format(colors=' OR '.join(colors_pk)))
     search = ApparelSearch('*:*', **query_arguments)
     docs = search.get_docs()
     if docs:
         shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
-        shop_url = '%s?category=%s' % (reverse(shop_reverse), product.category_id)
+        shop_url = '{shop_url}?category={category}'.format(shop_url=reverse(shop_reverse), category=product.category_id)
         if colors_pk:
-            shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+            shop_url = '{full_shop_url}&color={colors}'.format(full_shop_url=shop_url, colors=','.join(colors_pk))
 
         return docs, shop_url
 
@@ -227,6 +233,7 @@ def rebuild_product_index(url=None, vendor_id=None):
     connection = Solr(url or settings.SOLR_URL)
     product_count = 0
     product_buffer = collections.deque()
+    boost = {}
 
     products = get_model('apparel', 'Product').objects.filter(likes__isnull=False, likes__active=True).order_by('-modified')
 
@@ -247,7 +254,9 @@ def rebuild_product_index(url=None, vendor_id=None):
     if vendor_id:
         valid_products = valid_products.filter(vendors=vendor_id)
 
-    for product in valid_products.iterator():
+    pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=valid_products.count()).start()
+    for index, product in enumerate(valid_products.iterator()):
+        pbar.update(index)
         document, boost = get_product_document(product, rebuild=True)
         if document is not None and document['published']:
             product_buffer.append(document)
@@ -258,6 +267,7 @@ def rebuild_product_index(url=None, vendor_id=None):
             product_count = product_count + 1
         else:
             connection.delete(id='%s.%s.%s' % (product._meta.app_label, product._meta.module_name, product.pk), commit=False)
+    pbar.finish()
 
     connection.add(list(product_buffer), commit=False, boost=boost, commitWithin=False)
     connection.commit()
@@ -348,8 +358,10 @@ def get_product_document(instance, rebuild=False):
 
         # Shops and their products
         shops = list(get_model('apparel', 'ShopProduct').objects.filter(product=instance, shop_embed__published=True).values_list('shop_embed__id', 'shop_embed__modified'))
+        # Adding array with the different shops that the product has been added to.
         document['shop_products'] = [x[0] for x in shops]
         for x in shops:
+            # Adding the shop products with a date for use as sorting parameter when fetching shop products.
             document['%s_spd' % (x[0],)] = x[1]
 
         # Templates
@@ -429,8 +441,11 @@ def rebuild_look_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
     look_count = 0
     look_buffer = collections.deque()
-
-    for look in get_model('apparel', 'Look').objects.filter(user__is_hidden=False).iterator():
+    boost = {}
+    valid_looks = get_model('apparel', 'Look').objects.filter(user__is_hidden=False)
+    pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=valid_looks.count()).start()
+    for index, look in enumerate(valid_looks.iterator()):
+        pbar.update(index)
         document, boost = get_look_document(look)
         look_buffer.append(document)
         if len(look_buffer) == 100:
@@ -438,6 +453,7 @@ def rebuild_look_index(url=None):
             look_buffer.clear()
 
         look_count = look_count + 1
+    pbar.finish()
 
     connection.add(list(look_buffer), commit=False, boost=boost, commitWithin=False)
     connection.commit()
@@ -471,6 +487,7 @@ def get_look_document(instance):
 
 @receiver(post_save, sender=get_user_model(), dispatch_uid='search_index_user_save')
 def search_index_user_save(instance, **kwargs):
+    boost = {}
     if 'solr' in kwargs and kwargs['solr']:
         connection = kwargs['solr']
     else:
@@ -489,8 +506,12 @@ def rebuild_user_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
     user_count = 0
     user_buffer = collections.deque()
+    boost = {}
+    valid_users = get_user_model().objects.filter(is_hidden=False, is_brand=False)
 
-    for user in get_user_model().objects.filter(is_hidden=False, is_brand=False).iterator():
+    pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=valid_users.count()).start()
+    for index, user in enumerate(valid_users.iterator()):
+        pbar.update(index)
         document, boost = get_profile_document(user)
         user_buffer.append(document)
         if len(user_buffer) == 100:
@@ -498,6 +519,7 @@ def rebuild_user_index(url=None):
             user_buffer.clear()
 
         user_count = user_count + 1
+    pbar.finish()
 
     connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
     connection.commit()
@@ -532,9 +554,24 @@ def decode_store_facet(data):
 # Generic search
 #
 
+class SearchBaseTemplate(TemplateView):
+    template_name = 'search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchBaseTemplate,self).get_context_data(**kwargs)
+        gender = kwargs.get("gender")
+        gender = select_from_multi_gender(self.request, 'shop', gender)
+        query = self.request.GET.get('q', '')
+
+        h = HTMLParser.HTMLParser()
+        query = h.unescape(query)
+        context.update({'q': query, 'gender': gender})
+        return context
+
+@DeprecationWarning
 def search(request, gender=None):
     """
-    Search page
+    Search page, DEPRECATED
     """
     gender = select_from_multi_gender(request, 'shop', gender)
     query = request.GET.get('q', '')
@@ -547,7 +584,11 @@ def search(request, gender=None):
 
 def search_view(request, model_name):
     """
-    Generic search view
+    Generic search view for different models. This method is being called asyncronously 
+    from the web layer. 
+    :param request:
+    :param model_name:
+    :return: Json
     """
     try:
         limit = int(request.REQUEST.get('limit', RESULTS_PER_PAGE))
@@ -616,7 +657,7 @@ def search_view(request, model_name):
 
     # Filter query parameters based on location
     if model_name != 'user':
-        arguments['fq'].append('market_ss:%s' % request.session.get('location','ALL'))
+        arguments['fq'].append('market_ss:{location}'.format(location=get_location(request)))
 
     # Used in look image to bring up popup with products
     ids = request.GET.get('ids', False)
@@ -697,7 +738,7 @@ def get_available_brands(gender, location):
     else:
         gender_field = 'gender:(U OR %s)' % (gender,)
     arguments = {'fq': ['django_ct:apparel.product', 'availability:true', gender_field, 'published:true',
-                        'market_ss:%s' % location],
+                        'market_ss:{location}'.format(location=location)],
                  'qf': ['manufacturer_auto'],
                  'defType': ['edismax'],
                  'start': 0,

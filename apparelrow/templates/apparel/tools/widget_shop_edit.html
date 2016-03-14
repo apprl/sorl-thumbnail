@@ -5,13 +5,41 @@
     <div id="shop-display-settings">
         <div class="buttons">
             <p>{% trans 'What products do you want to include in your shop?' %}</p>
-            <a id="show_liked" data-value="likes" href="#" class="btn btn-primary btn-block">{% trans 'My liked products' %}</a>
-            <a id="pick_products" data-value="pick" href="#" class="btn btn-primary btn-block">{% trans 'Choose products manually' %}</a>
+            <a id="show_liked" data-value="likes" href="#" class="btn btn-default btn-block">{% trans 'All my liked products' %}</a>
+            <a id="pick_products" data-value="pick" href="#" class="btn btn-default btn-block">{% trans 'Choose products' %}</a>
+            <a href="#" class="shop-helper-toggler">{% trans "Need help?" %}</a>
+            <div class="shop-display-helper" style="display:none;">
+                <p><strong>{% trans 'All my liked products' %}</strong><br>{% trans 'All current and future products that you like on APPRL are automatically included in your shop.' %}</p>
+                <p><strong>{% trans 'Choose products' %}</strong><br>{% trans 'The products you decide to add to this shop are featured. This is a good option if you want to create a shop with a specific collection of items, for example "My favourite jackets".' %}</p>
+            </div>
         </div>
     </div>
+
+    {# Editor guide (steps) #}
+    <div class="editor-guide shop-step-1" style="display:none;">
+        <img src="{% static 'images/guide-thumbnail.png' %}" width="128" height="128" alt="">
+        <p>{% trans "Start by adding products here." %}</p>
+        <span></span>
+    </div>
+
+    <div class="editor-guide shop-step-2" style="display:none;">
+        <p>{% trans "When you're done and want to save or publish, click here." %}</p>
+        <span></span>
+    </div>
+
     <script type="text/javascript">
         $(document).ready(function() {
+            $('.shop-helper-toggler').click(function(e) {
+                $('.shop-display-helper').fadeToggle();
+                e.preventDefault();
+            });
+
+            $('.widget-footer button').click(function() {
+                $('.editor-guide').hide();
+            });
+
             $('#show_liked, #pick_products').click(function(e) {
+                $('.editor-guide').show();
                 e.preventDefault();
                 var show_liked = ($(this).attr('data-value') == 'likes');
                 App.Events.trigger('widget:product_display', show_liked);
@@ -26,8 +54,8 @@
         <div>
             <div class="col-product-filter">
                 <h3>{% trans "Filter products" %}</h3>
-                <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %} <span class="glyphicon glyphicon-remove-circle"></span></a>
-                    {% include 'apparel/fragments/product_filter.html' with is_embed_shop=is_embed_shop %}
+                <a id="reset" class="reset" href=""{% if not request.GET %} style="display: none;"{% endif %}>{% trans "Reset all" %} <i class="fa fa-times"></i></a>
+                {% include 'apparel/fragments/product_filter.html' with is_embed_shop=is_embed_shop %}
             </div>
 
             <div id="shop-product-list" class="col-product-list{% if show_liked == 'true' %} liked-products{% endif %}">

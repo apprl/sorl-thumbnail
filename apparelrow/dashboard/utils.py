@@ -17,6 +17,7 @@ from sorl.thumbnail.fields import ImageField
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.translation import ugettext_lazy as _
 from apparelrow.apparel.utils import currency_exchange
+from dateutil.relativedelta import *
 
 log = logging.getLogger(__name__)
 
@@ -45,20 +46,28 @@ def map_placement(placement):
 
     return link
 
-def parse_date(month, year):
+def parse_date(month, year, first_to_first=False):
     if year is None and month is None:
+        # If not date is selected then take the range from day one this month
         start_date = datetime.date.today().replace(day=1)
-        end_date = start_date
-        end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+        end_date = start_date+relativedelta(months=+1)
+        if not first_to_first:
+            end_date = end_date+relativedelta(days=-1)
+
     else:
+        # If either year or month has been selected.
         start_date = datetime.date(int(year), int(1), 1)
-        end_date = start_date
-        end_date = end_date.replace(day=calendar.monthrange(start_date.year, 12)[1], month=12)
+        end_date = start_date + relativedelta(years=+1)
+        if not first_to_first:
+            end_date = end_date + relativedelta(days=-1)
 
         if month != "0":
-            start_date = datetime.date(int(year), int(month), 1)
-            end_date = start_date
-            end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
+            # If month has been provided, then we need to get the range inside the requested month
+            start_date = start_date.replace(month=int(month))
+            end_date = start_date+relativedelta(months=+1)
+            if not first_to_first:
+                end_date = end_date+relativedelta(days=-1)
+
     return start_date, end_date
 
 def get_clicks_from_sale(sale):
@@ -70,7 +79,8 @@ def get_clicks_from_sale(sale):
     end_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(23, 59, 59, 999999))
     vendor_name = sale.vendor
     clicks = get_model('statistics', 'ProductStat').objects.filter(vendor=vendor_name, user_id=user_id,
-                                                          created__range=[start_date_query, end_date_query]).count()
+                                                          created__range=[start_date_query, end_date_query],
+                                                                   is_valid=True).count()
     return clicks
 
 def dictfetchall(cursor):
@@ -422,12 +432,14 @@ def aggregated_data_per_month(user_id, start_date, end_date):
                           Sum('network_sales'), Sum('referral_sales'), Sum('paid_clicks'), Sum('total_clicks'))
     return sum_data
 
-def enumerate_months(user, month):
+def enumerate_months(user, month, is_admin=False):
     """
     Return list of tuples with ID, Text for the different months of the year
     """
     dt1 = user.date_joined.date()
     dt2 = datetime.date.today()
+    if is_admin:
+        dt1 = dt1.replace(year=2011)
     year_choices = range(dt1.year, dt2.year+1)
     month_display = ""
     month_choices = [(0, _('All year'))]
@@ -464,7 +476,8 @@ def get_aggregated_publishers(user_id, start_date, end_date, is_admin=False):
 
 def get_aggregated_products(user_id, start_date, end_date):
     """
-    Return AggregatedData summary per product for the given period
+    Return AggregatedData summary per product for the given period.
+    Note that this method uses __range funcion which is non inclusive when using Date.
     """
     filter_dict = dict()
     filter_dict['created__range'] = (start_date, end_date)

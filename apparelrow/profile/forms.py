@@ -7,7 +7,77 @@ from django.db.models.loading import get_model
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import conditional_escape
+from django.utils.safestring import mark_safe
+from django.utils.encoding import force_unicode
 from django.contrib.auth.forms import PasswordResetForm
+
+#
+# Custom widgets for rendering Radio buttons and Checkboxes
+#
+
+
+class CustomRadioSelect(forms.RadioSelect):
+    """
+    Widget for Radio Buttons select with customized output.
+    """
+    class CustomRadioInput(forms.widgets.RadioInput):
+
+        def __unicode__(self):
+            return self.render()
+
+        def render(self, name=None, value=None, attrs=None, choices=()):
+            name = name or self.name
+            value = value or self.value
+            attrs = attrs or self.attrs
+            if 'id' in self.attrs:
+                label_for = " for='%s_%s'" % (self.attrs['id'], self.index)
+            else:
+                label_for = ''
+            choice_label = conditional_escape(force_unicode(self.choice_label))
+            return mark_safe(u'<label%s> %s <span></span> %s</label>' % (label_for, self.tag(), choice_label))
+
+    class CustomRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
+        def __iter__(self):
+            for i, choice in enumerate(self.choices):
+                yield CustomRadioSelect.CustomRadioInput(self.name, self.value,
+                                       self.attrs.copy(), choice, i)
+
+        def __getitem__(self, idx):
+            choice = self.choices[idx]
+            return CustomRadioSelect.CustomRadioInput(self.name, self.value,
+                                    self.attrs.copy(), choice, idx)
+
+        def render(self, *args, **kwargs):
+            return mark_safe(u'<ul class="form-button-radio">\n%s\n</ul>' % u'\n'.join([u'<li>%s</li>'
+                    % force_unicode(w) for w in self]))
+
+    renderer = CustomRadioFieldRenderer
+
+
+class CustomCheckboxInput(forms.widgets.CheckboxInput):
+    """
+    Widget for Checkboxes with customized output.
+    """
+    input_type = 'checkbox'
+
+    def __unicode__(self):
+        return self.render()
+
+    def render(self, *args, **kwargs):
+        output = super(CustomCheckboxInput, self).render(*args,**kwargs)
+        if 'id' in self.attrs:
+            label_for = " for='%s_%s'" % (self.attrs['id'], self.index)
+        else:
+            label_for = ''
+        #output = '<label%s>%s <span><i class="fa fa-check"></i></span></label>' % (label_for,output)
+        output = '<label{label}>{output}<span><i class="fa fa-check"></i></span></label>'.format(label=label_for, output=output)
+        return mark_safe(output)
+
+#
+# Forms
+#
+
 
 class ProfileImageForm(forms.ModelForm):
     class Meta:
@@ -25,9 +95,10 @@ class ProfileAboutForm(forms.ModelForm):
 
 class BioForm(forms.ModelForm):
     name = forms.CharField(required=True, label=_('Your name'))
-    gender = forms.ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=forms.RadioSelect, label='')
+    gender = forms.ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=CustomRadioSelect, label='')
     email = forms.EmailField(required=True, label=_('Your e-mail address'))
-    about = forms.CharField(required=False, widget=forms.Textarea, label=_('Write something about yourself, include links to your blog or website'))
+    about = forms.CharField(required=False, widget=forms.Textarea,
+                            label=_('Write something about yourself, include links to your blog or website'))
 
     def __init__(self, *args, **kwargs):
         super(BioForm, self).__init__(*args, **kwargs)
@@ -62,47 +133,53 @@ class EmailForm(forms.ModelForm):
 class NotificationForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('like_look_created', 'follow_user', 'facebook_friends', 'summary_mails', 'product_like_summaries', 'look_like_summaries', 'earning_summaries')
+        fields = ('like_look_created', 'follow_user', 'facebook_friends', 'summary_mails', 'product_like_summaries', 'look_like_summaries')
         #fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
         widgets = {
-            'comment_product_wardrobe': forms.RadioSelect,
-            'comment_product_comment': forms.RadioSelect,
-            'comment_look_created': forms.RadioSelect,
-            'comment_look_comment': forms.RadioSelect,
-            'like_look_created': forms.RadioSelect,
-            'follow_user': forms.RadioSelect,
-            'facebook_friends': forms.RadioSelect,
-            'summary_mails': forms.RadioSelect,
-            'product_like_summaries': forms.RadioSelect,
-            'look_like_summaries': forms.RadioSelect,
-            'earning_summaries': forms.RadioSelect,
-            'friend_summaries': forms.RadioSelect,
-            'brand_summaries': forms.RadioSelect,
-            'follow_recommendations': forms.RadioSelect,
+            'comment_product_wardrobe': CustomRadioSelect,
+            'comment_product_comment': CustomRadioSelect,
+            'comment_look_created': CustomRadioSelect,
+            'comment_look_comment': CustomRadioSelect,
+            'like_look_created': CustomRadioSelect,
+            'follow_user': CustomRadioSelect,
+            'facebook_friends': CustomRadioSelect,
+            'summary_mails': CustomRadioSelect,
+            'product_like_summaries': CustomRadioSelect,
+            'look_like_summaries': CustomRadioSelect,
+            #'earning_summaries': CustomRadioSelect,
+            'friend_summaries': CustomRadioSelect,
+            'brand_summaries': CustomRadioSelect,
+            'follow_recommendations': CustomRadioSelect,
         }
 
     def __init__(self, *args, **kwargs):
         from django.forms.widgets import HiddenInput
         is_publisher = kwargs.pop('is_publisher',None)
         super(NotificationForm, self).__init__(*args, **kwargs)
-        if not is_publisher:
-            self.fields['earning_summaries'].widget = HiddenInput()
+        #if not is_publisher:
+        #    self.fields['earning_summaries'].widget = HiddenInput()
 
 
 class NewsletterForm(forms.ModelForm):
-    newsletter = forms.BooleanField(required=False, help_text=_(u'I\'d like to receive e-mails with trending products, looks and other inspiration.'))
-    discount_notification = forms.BooleanField(required=False, help_text=_(u'I want to receive sale alerts on items that I ♥.'))
+    newsletter = forms.BooleanField(required=False, help_text=_(u'I\'d like to receive e-mails with trending products, looks and other inspiration.'), widget=CustomCheckboxInput)
+    discount_notification = forms.BooleanField(required=False, help_text=_(u'I want to receive sale alerts on items that I ♥.'), widget=CustomCheckboxInput)
 
     class Meta:
         model = get_user_model()
         fields = ('discount_notification', 'newsletter')
 
 
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('location',)
+
+
 class FacebookSettingsForm(forms.ModelForm):
-    fb_share_like_product = forms.BooleanField(required=False, help_text=_(u'When you ♥ a product'))
-    fb_share_like_look = forms.BooleanField(required=False, help_text=_(u'When you ♥ a look'))
-    fb_share_create_look = forms.BooleanField(required=False, help_text=_(u'When you create a look'))
-    fb_share_follow_profile = forms.BooleanField(required=False, help_text=_(u'When you follow someone'))
+    fb_share_like_product = forms.BooleanField(required=False, help_text=_(u'When you ♥ a product'), widget=CustomCheckboxInput)
+    fb_share_like_look = forms.BooleanField(required=False, help_text=_(u'When you ♥ a look'), widget=CustomCheckboxInput)
+    fb_share_create_look = forms.BooleanField(required=False, help_text=_(u'When you create a look'), widget=CustomCheckboxInput)
+    fb_share_follow_profile = forms.BooleanField(required=False, help_text=_(u'When you follow someone'), widget=CustomCheckboxInput)
 
     class Meta:
         model = get_user_model()
@@ -127,7 +204,7 @@ class PartnerPaymentDetailForm(forms.ModelForm):
         fields = ('company', 'name', 'orgnr', 'bank_name', 'clearingnr', 'banknr', 'address', 'care_of', 'postal_code',
                   'city', 'notes')
         widgets = {
-            'company': forms.RadioSelect
+            'company': forms.RadioSelect # TODO Falta arreglar aca
         }
 
 
@@ -145,15 +222,20 @@ class PartnerNotificationsForm(forms.ModelForm):
         model = get_user_model()
         fields = ('show_warnings',)
         widgets = {
-            'show_warnings': forms.RadioSelect
+            'show_warnings': CustomRadioSelect
         }
+
+
+class RegisterFormSimple(forms.Form):
+    email = forms.EmailField(label=_('E-mail address'), required=True, error_messages={'invalid': _('Please enter a valid email address.')})
+    password = forms.CharField(label=_('Password'), required=True, widget=forms.PasswordInput)
 
 
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(label=_('First name'), required=True, error_messages={'required': _('At least a first name is required.')})
     last_name = forms.CharField(label=_('Last name'), required=False)
     email = forms.EmailField(label=_('E-mail address'), required=True, error_messages={'invalid': _('Please enter a valid email address.')})
-    gender = forms.ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=forms.RadioSelect, label=_('Gender'))
+    gender = forms.ChoiceField(required=True, choices=(('M', _('Man')), ('W', _('Woman'))), widget=CustomRadioSelect, label=_('Gender'))
     password1 = forms.CharField(label=_('Password'),
         widget=forms.PasswordInput)
     password2 = forms.CharField(label=_('Password confirmation'),

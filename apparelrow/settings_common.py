@@ -27,7 +27,7 @@ MANAGERS = ADMINS + (
     ('Gustav', 'gustav@apprl.com'),
 )
 
-ALLOWED_HOSTS = ['.apprl.com']
+ALLOWED_HOSTS = ['.apprl.com','.apparelrow.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://www.postgresql.org/docs/8.1/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
@@ -319,6 +319,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'localeurl',
     'jsonfield',
+    'parse',
 
     # Internal
     'theimp',
@@ -352,7 +353,7 @@ PIPELINE_CSS = {
     'bootstrap': {
         'source_filenames': (
             'less/base.less',
-            'js/vendor/add2home.css',
+            #'js/vendor/add2home.css',
         ),
         'output_filename': 'css/ender.css',
         'extra_context': {
@@ -708,6 +709,13 @@ APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME = 'referral_cookie'
 APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION = '50'
 APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA = 'cache_aggregated_link'
 
+# WELCOME PAGE
+APPAREL_WELCOME_COOKIE = 'welcome_cookie'
+APPAREL_WELCOME_AMOUNT_FOLLOWING_USERS = 20
+APPAREL_WELCOME_FOLLOWING_USERS_OPPOSITE_GENDER_PROPORTION= '0.1'
+APPAREL_WELCOME_FOLLOWING_USERS_BRANDS_PROPORTION = '0.4'
+APPAREL_WELCOME_FOLLOWING_USERS_SAME_GENDER_PROPORTION = '0.5'
+
 # INTERNAL APPAREL CONFIGURATIONS
 APPAREL_DEFAULT_CLICKS_LIMIT = 7500
 APPAREL_GENDER_COOKIE = 'gender'
@@ -1020,3 +1028,7 @@ LOGGING = {
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
 GEOIP_DEBUG = False
 GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"
+
+# Variable for temporary tracking string for tailsweep campaign.
+GINA_TRACKING = {"user_ids": [24,30714,30716,30733,30717,24257,30164,30719,30720,30721,30722,30724,30725,24312,30732,30738,30744],
+                 "tracking_string": "&utm_source=tailsweep_apprl&utm_medium=social&utm_campaign=conversions_2016_se"}

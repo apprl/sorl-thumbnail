@@ -19,6 +19,7 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
 from apparelrow.dashboard.views import publisher_contact
+from apparelrow.apparel.utils import generate_sid, parse_sid
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
@@ -1337,6 +1338,20 @@ class TestAffiliateNetworks(TransactionTestCase):
         boozt_no_sales = sale_model.objects.filter(vendor=self.boozt_no_vendor).count()
         self.assertEqual(boozt_no_sales, 5)
 
+    def test_dashboard_links(self):
+        text = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_test.csv')).read()
+        data = text.splitlines()
+        management.call_command('dashboard_import', 'linkshare', data=data, verbosity=0, interactive=False)
+
+        sale_model = get_model('dashboard', 'Sale')
+
+        self.assertEqual(sale_model.objects.count(), 13)
+        self.assertEqual(sale_model.objects.exclude(source_link__exact='').count(), 3)
+
+        links_sales = sale_model.objects.exclude(source_link__exact='')
+        for item in links_sales:
+            self.assertEqual(item.source_link, 'http://www.mystore.com/shop/woman/shoes')
+
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestSalesPerClick(TransactionTestCase):
@@ -2082,7 +2097,7 @@ class TestUtils(TransactionTestCase):
 
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         self.user.is_partner = True
-        self.user.date_joined = datetime.datetime.strptime("2013-05-07", "%Y-%m-%d")
+        self.user.date_joined = datetime.datetime.strptime("2014-05-07", "%Y-%m-%d")
         self.user.partner_group = self.group
         self.user.save()
 
@@ -2092,6 +2107,59 @@ class TestUtils(TransactionTestCase):
         get_model('dashboard', 'ClickCost').objects.create(vendor=self.vendor_cpc, amount=1.00, currency="EUR")
         get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
                                                      vendor=self.vendor_cpc)
+        self.short_link = ShortLinkFactory(user=self.user)
+
+    def test_generate_sid_no_data(self):
+        product_id = None
+        sid = generate_sid(product_id)
+        self.assertEqual(sid, "0-0-Default")
+
+    def test_generate_sid_no_product(self):
+        product_id = None
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        source_link = self.short_link.link()
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=source_link)
+        self.assertEqual(sid, "%s-0-%s/%s" % (target_user_id, page, source_link))
+
+    def test_generate_sid(self):
+        product_id = 20
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page)
+        self.assertEqual(sid, "%s-%s-%s" % (target_user_id, product_id, page))
+
+    def test_generate_sid_with_source_link(self):
+        product_id = 20
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        source_link = self.short_link.link()
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=source_link)
+        self.assertEqual(sid, "%s-%s-%s/%s" % (target_user_id, product_id, page, source_link))
+
+    def test_parse_sid(self):
+        sid = "12-21-Ext-Store/http://apprl.com/p/AJSJ"
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 12)
+        self.assertEqual(product_id, 21)
+        self.assertEqual(placement, "Ext-Store")
+        self.assertEqual(source_link, "http://apprl.com/p/AJSJ")
+
+    def test_parse_sid_no_data(self):
+        sid = ""
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 0)
+        self.assertEqual(product_id, 0)
+        self.assertEqual(placement, "Unknown")
+        self.assertEqual(source_link, "")
+
+    def test_parse_sid_no_source_link(self):
+        sid = "12-21-Ext-Store"
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(user_id, 12)
+        self.assertEqual(product_id, 21)
+        self.assertEqual(placement, "Ext-Store")
+        self.assertEqual(source_link, "")
 
     def test_map_placement(self):
         self.assertEqual(map_placement('Unknown'), 'Unknown')
@@ -2142,13 +2210,40 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(start_date.strftime("%Y-%m-%d"), "2013-05-01")
         self.assertEqual(end_date.strftime("%Y-%m-%d"), "2013-05-31")
 
+    def test_parse_date_first_to_first(self):
+        print "Testing extra option for parse date function, first to first"
+        today = datetime.date(2015, 04, 01)
+
+        start_date, stop_date = parse_date(today.month, today.year)
+        self.assertEquals(start_date, datetime.date(2015, 04, 01))
+        self.assertEquals(stop_date, datetime.date(2015, 04, 30))
+
+
+        start_date, stop_date = parse_date(today.month, today.year, first_to_first=True)
+        self.assertEquals(start_date, datetime.date(2015, 04, 01))
+        self.assertEquals(stop_date, datetime.date(2015, 05, 01))
+
+        print "Testing first to first option done!"
+
     def test_enumerate_months(self):
         """ Test months choices, year choices and display text for month passed as input are correct.
         """
         june = 06
-        year_list = [row for row in range(2013, datetime.date.today().year+1)]
+        year_list = [row for row in range(self.user.date_joined.year, datetime.date.today().year+1)]
 
         month_display, month_choices, year_choices = enumerate_months(self.user, june)
+        self.assertEqual(month_display, "June")
+        self.assertEqual(year_choices, year_list)
+        self.assertEqual(len(month_choices), 13) # 12 months  All Year option
+
+    def test_enumerate_months_is_admin(self):
+        """ Test months choices, year choices and display text for month passed as input are correct when
+        logged as an admin. It should return a list of years since 2011 until the current year.
+        """
+        june = 06
+        year_list = [row for row in range(2011, datetime.date.today().year+1)]
+
+        month_display, month_choices, year_choices = enumerate_months(self.user, june, is_admin=True)
         self.assertEqual(month_display, "June")
         self.assertEqual(year_choices, year_list)
         self.assertEqual(len(month_choices), 13) # 12 months  All Year option
@@ -2257,7 +2352,7 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(invalid_clicks[2], 248)
 
 
-class TestAggregatedData(TransactionTestCase):
+class TestAggregatedData_2(TransactionTestCase):
     def setUp(self):
         self.group = get_model('dashboard', 'Group').objects.create(name='group_name')
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
@@ -2267,7 +2362,10 @@ class TestAggregatedData(TransactionTestCase):
         self.user.save()
 
     def test_get_aggregated_products_and_publishers(self):
-        yesterday = (datetime.date.today() - datetime.timedelta(1))
+        year = 2015
+        month = 1
+        order_day = datetime.date(year, month ,15)
+        click_day = order_day+relativedelta(days=-1)
 
         # Generate Earnings and click data with product information
         vendor = VendorFactory.create(name="Vendor Aggregated CPO")
@@ -2286,30 +2384,31 @@ class TestAggregatedData(TransactionTestCase):
         # Generate clicks for CPO
         for index in range(200):
             ProductStatFactory.create(vendor=vendor.name, is_valid=True, ip= "1.22.3.4", product=product.slug,
-                                      created=yesterday, user_id=self.user.id)
+                                      created=click_day, user_id=self.user.id)
 
         # Generate clicks for CPC
         for index in range(100):
             ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.22.3.4", product=product_cpc.slug,
-                                      created=yesterday, user_id=self.user.id)
+                                      created=click_day, user_id=self.user.id)
 
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(user_id=self.user.id).count(), 300)
 
-        # Generate earnings CPC
-        management.call_command('clicks_summary', verbosity=0)
+        # Generate earnings CPC,
+        management.call_command('clicks_summary', verbosity=0, date="2015-01-14")
+        # Management call creates a Sale object based on all clicks previous day (click_day)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 1)
 
         # Generate earnings CPO
         for index in range(1, 11):
-            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=yesterday,
-                               sale_date=yesterday, pk=index+2)
-
+            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=click_day,
+                               sale_date=click_day, pk=index+2)
         self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 11)
         self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
         self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=self.user).count(), 11)
 
-        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False, date="2015-01-14")
 
-        start_date, end_date = get_current_month_range()
+        start_date, end_date = parse_date(year=str(year), month=str(month), first_to_first=True)
         # Check data from get_aggregated_products is correct
         top_products = get_aggregated_products(None, start_date, end_date)
         self.assertEqual(len(top_products), 2)
@@ -2356,8 +2455,10 @@ class TestAggregatedData(TransactionTestCase):
         top_publishers = get_aggregated_publishers(None, start_date, end_date)
         self.assertEqual(len(top_publishers), 0)
 
+
 class MockRequest(object):
     pass
+
 
 class TestReferralBonus(TransactionTestCase):
 

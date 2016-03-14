@@ -103,7 +103,7 @@ class User(AbstractUser):
     facebook_access_token = models.CharField(max_length=255, null=True, blank=True)
     facebook_access_token_expire = models.DateTimeField(null=True, blank=True)
 
-    # partner
+    # partner a.k.a publisher
     is_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Partner user'))
     is_top_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Top partner user'))
     partner_group = models.ForeignKey('dashboard.Group', verbose_name=_('Commission group'), null=True, blank=True)
@@ -115,7 +115,9 @@ class User(AbstractUser):
     referral_partner_parent_date = models.DateTimeField(null=True, blank=True)
 
     # publisher network
-    owner_network = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='publisher_network', verbose_name=_("Belongs to Publisher Network"), help_text="Assign publisher to another user's Publisher Network.")
+    owner_network = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
+                                      related_name='publisher_network', verbose_name=_("Belongs to Publisher Network"),
+                                      help_text="Assign publisher to another user's Publisher Network.")
 
     # for publisher network owners
     is_subscriber = models.BooleanField(default=False, null=False, blank=False)
@@ -268,9 +270,9 @@ class User(AbstractUser):
     @cached_property
     def avatar_small(self):
         if self.image:
-            return get_thumbnail(self.image, '32x32', crop='center').url
+            return get_thumbnail(self.image, '40x40', crop='center').url
         elif self.facebook_user_id:
-            return 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
+            return 'http://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
 
         if self.is_brand:
             return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
@@ -333,7 +335,7 @@ class User(AbstractUser):
         if self.image:
             image = get_thumbnail(self.image, '50x50', format="PNG").url
         elif self.facebook_user_id:
-            image_path = 'http://graph.facebook.com/%s/picture?width=32&height=32' % self.facebook_user_id
+            image_path = 'http://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
             image = get_thumbnail(image_path, '50x50', format="PNG").url
         default.engine = old_engine
         return image
@@ -398,6 +400,7 @@ class User(AbstractUser):
             return reverse('brand-followers', args=[self.slug])
 
         return reverse('profile-followers', args=[self.slug])
+
     @cached_property
     def url_following(self):
         if self.is_brand:
@@ -407,7 +410,6 @@ class User(AbstractUser):
 
     def has_partner_group_ownership(self):
         return get_model('dashboard', 'Group').objects.filter(owner=self).exists()
-
 
     def is_referral_parent_valid(self):
         if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():

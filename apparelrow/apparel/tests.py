@@ -1,23 +1,28 @@
 # -*- coding: utf-8 -*-
 import json
+from django.http import SimpleCookie
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
+from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning, \
+    product_lookup_by_domain
 from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
-    extract_asos_nelly_product_url
+    extract_asos_nelly_product_url, on_boarding_follow_users, get_most_popular_user_list
 
 from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
 from decimal import Decimal
 from django.conf import settings
-from apparelrow.apparel.models import Shop, ShopEmbed
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
 from django.utils.translation import activate
+from django.test import TestCase, RequestFactory
+from apparelrow.apparel.models import Shop, ShopEmbed
+from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
+from apparelrow.apparel.utils import shuffle_user_list
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
@@ -95,7 +100,7 @@ class TestChromeExtension(TestCase):
         response = self.client.get('/backend/authenticated/')
         json_content = json.loads(response.content)
 
-        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/')
+        self.assertEqual(json_content['profile'], u'http://testserver/profile/normal_user/items/')
         self.assertEqual(json_content['authenticated'], True)
 
     def test_product_lookup_not_logged_in(self):
@@ -742,6 +747,8 @@ class TestShortLinks(TestCase):
         self.user.partner_group = self.group
         self.user.save()
 
+        self.factory = RequestFactory()
+
     def test_store_link(self):
         template = "http://www.anrdoezrs.net/links/4125005/type/dlg/sid/{sid}/http://www.nastygal.com/"
         store_link = get_model('apparel', 'ShortStoreLink').objects.create(vendor=self.vendor, template=template)
@@ -775,6 +782,179 @@ class TestShortLinks(TestCase):
 
         # No ProductStat were created
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
+
+    def test_short_domain_link_aan(self):
+        vendor = VendorFactory.create(name="Henry Kole", provider="aan")
+        template = "http://apprl.com/a/link/?store_id=henrykole&custom={sid}&url={url}"
+        key = "http://www.henrykole.se/shoes.html"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.henrykole.se/")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.henrykole.se/", key)
+        sid = "%s-0-Ext-Link/http://www.henrykole.se/shoes.html" % self.user.id
+        self.assertEqual(link, "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_affiliate_window(self):
+        vendor = VendorFactory.create(name="Oki-Ni", provider="affiliatewindow")
+        template = "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref={sid}&p={url}"
+        key = "http://www.oki-ni.com/en/outerwear/coats"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.oki-ni.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.oki-ni.com", key)
+        sid = "%s-0-Ext-Link/http://www.oki-ni.com/en/outerwear/coats" % self.user.id
+        self.assertEqual(link, "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref=%s&p=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_linkshare(self):
+        vendor = VendorFactory.create(name="ALDO", provider="linkshare")
+        template = "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1" \
+                   "&type=10&tmpid=12919&u1={sid}&RD_PARM1={url}"
+        key = "http://www.aldoshoes.com/ca/en/women/c/100"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.aldoshoes.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.aldoshoes.com", key)
+        sid = "%s-0-Ext-Link/http://www.aldoshoes.com/ca/en/women/c/100" % self.user.id
+        self.assertEqual(link, "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1&"
+                               "type=10&tmpid=12919&u1=%s&RD_PARM1=%s" % (sid,key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_tradedoubler(self):
+        vendor = VendorFactory.create(name="Nelly", provider="tradedoubler")
+        template = "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi={sid}&url={url}"
+        key = "http://nelly.com/se/skor-kvinna/"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="http://nelly.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "nelly.com", key)
+        sid = "%s-0-Ext-Link/http://nelly.com/se/skor-kvinna/" % self.user.id
+
+        self.assertEqual(link, "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi=%s&url=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_zanox(self):
+        vendor = VendorFactory.create(name="Dagmar", provider="zanox")
+        template = "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[{ulp}]]&zpar0=[[{sid}]]"
+        key = "http://www.houseofdagmar.se/product-category/sweaters/"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.houseofdagmar.se")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.houseofdagmar.se", key)
+        ulp = "/product-category/sweaters/"
+        sid = "%s-0-Ext-Link/http://www.houseofdagmar.se/product-category/sweaters/" % self.user.id
+        self.assertEqual(link, "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[%s]]&zpar0=[[%s]]" % (ulp, sid))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_get_store_link_from_short_link(self):
+        store_link = ShortStoreLinkFactory.create()
+        short_link = store_link.link()
+
+        instance = get_store_link_from_short_link(short_link)
+        self.assertEqual(instance, store_link)
+
+    def test_get_store_link_from_short_link_store_link_does_not_exist(self):
+        store_link = ShortStoreLinkFactory.create()
+        short_link = store_link.link()
+        store_link.delete()
+
+        with self.assertRaises(get_model('apparel', 'ShortStoreLink').DoesNotExist):
+            get_store_link_from_short_link(short_link)
+
+    def test_short_store_link_get_original_link(self):
+        vendor = VendorFactory.create(name="My Vendor", homepage="http://mystore.com")
+        store_link = ShortStoreLinkFactory.create(vendor=vendor)
+        original_link = get_model('apparel', 'ShortStoreLink').objects.get_original_url_for_link(store_link.link())
+        self.assertEqual(original_link, "http://mystore.com")
+
+    def test_short_domain_link_get_original_link(self):
+        vendor = VendorFactory.create(name="Vendor test")
+        template = "http://apprl.com/a/link/?store_id=vendortest&custom={sid}&url={url}"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.vendorstoretest.se/")
+        key = "http://www.google.com"
+        sid = "24-0-Ext-Link/%s" % key
+        url = "http://apprl.com/a/link/?store_id=vendortest&custom=%s&url=%s" % (sid, key)
+        short_link = ShortDomainLinkFactory.create(url=url, user=self.user, vendor=vendor)
+        original_link = get_model('apparel', 'ShortDomainLink').objects.get_original_url_for_link(short_link.link())
+        self.assertEqual(original_link, key)
+
+
+
+class TestOnBoarding(TestCase):
+    def setUp(self):
+        self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.partner_group = self.group
+        self.user.save()
+
+        # Create users
+        for i in range(20):
+            UserFactory.create(gender="M", name="A men")
+        for i in range(20):
+            UserFactory.create(gender="W", name="A woman")
+        for i in range(20):
+            UserFactory.create(is_brand=True, name="A brand")
+
+    def test_user_has_gender(self):
+        total_users = 20
+        user_list = get_most_popular_user_list(total_users, 'W')
+
+        self.assertEqual(len(user_list), 20)
+
+        brands_count = 0
+        gender_count = 0
+        opposite_gender_count = 0
+        for row in user_list:
+            if row.is_brand:
+                brands_count += 1
+            elif row.gender == 'W':
+                gender_count += 1
+            elif row.gender == 'M':
+                opposite_gender_count += 1
+
+        self.assertEqual(str(brands_count/float(total_users)), settings.APPAREL_WELCOME_FOLLOWING_USERS_BRANDS_PROPORTION)
+        self.assertEqual(str(gender_count/float(total_users)), settings.APPAREL_WELCOME_FOLLOWING_USERS_SAME_GENDER_PROPORTION)
+        self.assertEqual(str(opposite_gender_count/float(total_users)), settings.APPAREL_WELCOME_FOLLOWING_USERS_OPPOSITE_GENDER_PROPORTION)
+
+    def test_user_has_no_gender(self):
+        total_users = 20
+        user_list = get_most_popular_user_list(total_users, 'W')
+
+        self.assertEqual(len(user_list), 20)
+
+        brands_count = 0
+        no_brands_count = 0
+        for row in user_list:
+            if row.is_brand:
+                brands_count += 1
+            elif row.gender in ('W', 'M'):
+                no_brands_count += 1
+
+        no_brands_proportion = Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_SAME_GENDER_PROPORTION) + \
+                               Decimal(settings.APPAREL_WELCOME_FOLLOWING_USERS_OPPOSITE_GENDER_PROPORTION)
+        self.assertEqual(str(brands_count/float(total_users)), settings.APPAREL_WELCOME_FOLLOWING_USERS_BRANDS_PROPORTION)
+        self.assertEqual(str(no_brands_count/float(total_users)), str(no_brands_proportion))
+
+    def test_shuffle_user_list(self):
+        user_list = get_most_popular_user_list(20, 'W')
+        random_user_list = shuffle_user_list(user_list)
+        # Lists are not exactly the same
+        self.assertNotEqual(user_list, random_user_list)
+
+        # Lists have the samen lenght
+        self.assertEqual(len(user_list), len(random_user_list))
+
+        # All elements from Random list are in the original list
+        for row in random_user_list:
+            self.assertIn(row, user_list)
+
+    def test_on_boarding_follow_users(self):
+        user_list = get_most_popular_user_list(20, 'W')
+        self.assertFalse(get_model('profile', 'Follow').objects.filter(user=self.user).count(), 0)
+        on_boarding_follow_users(self.user, user_list)
+        self.assertEqual(get_model('profile', 'Follow').objects.filter(user=self.user).count(), 20)
+
 
 @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
 class TestUtils(TestCase):
@@ -1026,18 +1206,14 @@ class TestSearch(TransactionTestCase):
 
     def test_search_view_no_products(self):
         self._login()
-        session = self.client.session
-        session['location'] = 'NO'
-        session.save()
+        self.client.cookies = SimpleCookie({settings.APPAREL_LOCATION_COOKIE: 'NO'})
         response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
         json_data = json.loads(response.content)
         self.assertEqual(len(json_data['object_list']), 0)
 
     def test_search_view(self):
         self._login()
-        session = self.client.session
-        session['location'] = 'SE'
-        session.save()
+        self.client.cookies = SimpleCookie({settings.APPAREL_LOCATION_COOKIE: 'SE'})
         response = self.client.post("/backend/search/product/?q=productname12345", follow=True)
         json_data = json.loads(response.content)
         self.assertEqual(len(json_data['object_list']), 1)

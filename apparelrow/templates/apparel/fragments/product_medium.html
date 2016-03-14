@@ -4,20 +4,18 @@
     <div class="product-image-container">
         <a href="{{ object.get_absolute_url|chlocale:LANGUAGE_CODE }}">
             {% thumbnail object.product_image "280x320" keep_size=True crop=False format='PNG' as im %}
-            <img class="product-image img-responsive" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
+            <img class="product-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
             {% endthumbnail %}
         </a>
         <div class="hover">
-            <div class="btn-group btn-group-justified">
-                <a class="btn btn-primary btn-block btn-product-like" href="#" data-liked-text="{% trans "Liked" %}" data-unlike-text="{% trans "Unlike" %}" data-like-text="{% trans "Like" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><span>{% trans "Like" %}</span>&nbsp;<span class="glyphicon glyphicon-heart"></span></a>
-                {% if object.default_vendor and object.default_vendor.availability != 0 and object.availability %}
-                <a rel="nofollow" class="btn btn-success btn-block btn-product-buy" target="_blank" href="{% buy_url object.id object.default_vendor '0' 'Shop' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
-                {% endif %}
-            </div>
+            <a class="pull-left btn btn-default btn-product-like" href="#" data-liked-text="{% trans "Saved" %}" data-unlike-text="{% trans "Unsave" %}" data-like-text="{% trans "Save" %}" data-like-url="{% url 'product-action' object.id 'like' %}" data-unlike-url="{% url 'product-action' object.id 'unlike' %}" data-slug="{{ object.slug }}" data-id="{{ object.id }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}"><i class="fa fa-heart"></i>&nbsp;<span class="hidden-xs">{% trans "Save" %}</span></a>
+            {% if object.default_vendor and object.default_vendor.availability != 0 and object.availability %}
+            <a rel="nofollow" class="pull-right btn btn-primary btn-product-buy" target="_blank" href="{% buy_url object.id object.default_vendor '0' 'Shop' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
+            {% endif %}
         </div>
     </div>
     <div class="caption">
-        <h4><a href="{{ object.get_absolute_url|chlocale:LANGUAGE_CODE }}">{{ object.manufacturer }}</a></h4>
+        <h5><a href="{{ object.get_absolute_url|chlocale:LANGUAGE_CODE }}">{{ object.manufacturer }}</a></h5>
         <ul class="list-inline">
             {% if object.availability and object.default_vendor and object.default_vendor.availability != 0 %}
             {% if object.default_vendor.original_discount_price %}

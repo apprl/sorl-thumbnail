@@ -17,7 +17,7 @@ from apparelrow.statistics.utils import get_country_by_ip
 REFERRAL_COOKIE_NAME = 'aid_cookie'
 REFERRAL_COOKIE_DAYS = 30
 
-logger = logging.getLogger('apparelrow.apparel.middleware')
+logger = logging.getLogger('apparelrow')
 
 
 class UpdateLocaleSessionMiddleware(object):
@@ -59,6 +59,7 @@ class GenderMiddleware(object):
 
         return response
 
+
 class LocationMiddleware(object):
     """
     Read market cookie and add it to request object
@@ -67,48 +68,43 @@ class LocationMiddleware(object):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
         # If user is authenticated and has a stored location
         if request.user.is_authenticated():
-            if has_user_location(request):
-                # When user logs in
-                try:
-                    if request.session['location'] != request.user.location and \
-                            request.session['location'] == cookie_value:
-                        request.session['location'] = request.user.location
-                    # When user change location on settings
-                    elif request.session['location'] != cookie_value and \
-                            request.session['location'] == request.user.location:
-                        request.session['location'] = cookie_value
-                        save_location(request, cookie_value)
-                except KeyError:
-                    request.session['location'] = cookie_value
-            else:
-                save_location(request, cookie_value)
+            # When user is logged in
+            if not has_user_location(request):
+                # User is logged in but has no location and no cookie value, take location by ip unless bot
+                save_location(request, get_country_by_ip(request) if not user_is_bot(request) else 'ALL')
+                request.location = request.user.location
         else:
+            # User is NOT logged in, then take cookie value and set the request.location setting
             if cookie_value:
-                request.session['location'] = cookie_value
-            elif not user_is_bot(request):
-                request.session['location'] = get_country_by_ip(request)
-        request.location = request.session.get('location','ALL')
+                request.location = cookie_value
+            else:
+                request.location = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
 
     def process_response(self, request, response):
         cookie_value = request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, None)
-        if not request.session.get('location',None) and not cookie_value:
+        if hasattr(request, 'user') :
+            is_auth = request.user.is_authenticated()
+        else:
+            is_auth = False
+
+        if is_auth:
             try:
-                # Depending on localeurl strip path method
-                location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
-                locale, path = utils.strip_path(request.path)
-                if locale:
-                    for location, location_text, lang in settings.LOCATION_LANGUAGE_MAPPING:
-                        if lang[0] == locale:
-                            location_choice = location
-                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
+                if has_user_location(request):
+                    response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.user.location, max_age=45 * 24 * 60 * 60)
+                else:
+                    location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
+                    save_location(request, location_choice if not user_is_bot(request) else 'ALL')
+                    response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
             except:
                 pass
-        if request.session.get('location',None):
-            if not cookie_value:
-                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session.get('location'), max_age=45 * 24 * 60 * 60)
-            elif not request.session.get('location') == cookie_value:
-                response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=request.session['location'], max_age=45 * 24 * 60 * 60)
+        elif cookie_value:
+            response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=cookie_value, max_age=45 * 24 * 60 * 60)
+        else:
+        # If user had no cookie and is not authenticated
+            location_choice = get_country_by_ip(request) if not user_is_bot(request) else 'ALL'
+            response.set_cookie(settings.APPAREL_LOCATION_COOKIE, value=location_choice, max_age=45 * 24 * 60 * 60)
         return response
+
 
 class InternalReferralMiddleware(object):
     def process_response(self, request, response):

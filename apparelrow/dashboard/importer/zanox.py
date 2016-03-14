@@ -98,7 +98,7 @@ class Importer(BaseImporter):
                             sid = row['gpps']['gpp']['$']
                         else:
                             sid = ''
-                        data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(sid)
+                        data_row['user_id'], data_row['product_id'], data_row['placement'], data_row['source_link'] = self.map_placement_and_user(sid)
                         data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
                         data_row['status'] = self.map_status(row['reviewState'])
 

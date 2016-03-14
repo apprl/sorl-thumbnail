@@ -4,18 +4,20 @@
 
 {% block modal_id %}modal_tool_text_link{% endblock %}
 {% block modal_title %}&nbsp;{% endblock %}
+{% comment %}
 {% block extra_modal_classes %}modal_pub_tools{% endblock %}
+{% endcomment %}
 {% block modal_content %}
-<div class="col-xs-12 publisher-panel" >
-    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9"><h1 class="body-header-h1" >{% trans "PRODUCT LINK TOOL" %}</h1></div>
-    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-        <a class="btn btn-success btn-lg" href="{% url 'shop' %}">
-            {% trans "Find products to link" %}
-        </a>
-    </div>
 
-    <div class="row">
-        <div class="col-xs-12 apprl-modal-tools-content">
+<div class="modal-header">
+    <h2>{% trans "Product Links" %}</h2>
+    <a class="hidden-xs btn btn-primary" href="{% url 'shop' %}">{% trans "Get Links" %}</a>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span></span></button>
+</div>
+
+<div class="modal-content">
+    <div class="modal-body">
+        <div class="apprl-modal-tools-content">
             <div class="slider-container">
                 <div class = 'iosSlider'>
                     <div class = 'slider'>
@@ -23,60 +25,56 @@
                         <div class='item'><img src="{% static 'images/tools/ApprlProductlinkExample-2.jpg' %}" /></div>
                         <div class='item'><img src="{% static 'images/tools/ApprlProductlinkExample-3.jpg' %}" /></div>
                     </div>
-                    <div class="hidden-xs tools_prevButton"><span class="glyphicon glyphicon-chevron-left"></span></div>
-                    <div class="hidden-xs tools_nextButton"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                    <div class="hidden-xs tools_prevButton"><i class="fa fa-angle-left fa-3x"></i></div>
+                    <div class="hidden-xs tools_nextButton"><i class="fa fa-angle-right fa-3x"></i></div>
                 </div>
             </div>
+        </div>
 
+        <div class="tool-description">
+            <a class="center hidden-sm hidden-md hidden-lg btn btn-primary" href="{% url 'shop' %}">{% trans "Get Links" %}</a>
 
-            <div class="modal-tools-description">
-                <h4 class="modal-tools-font"><b>{% trans "DESCRIPTION" %}</b></h4>
-                <p class="modal-tools-font">
-                {% blocktrans %}
-                    The easiest and most flexible way to link to Apprl products is with regular text links.
-                {% endblocktrans %}
-                </p>
+            <h4>{% trans "Description" %}</h4>
+            <p>
+            {% blocktrans %}
+                The easiest and most flexible way to link to Apprl products is with regular text links.
+            {% endblocktrans %}
+            </p>
 
-                <br>
-                <h4 class="modal-tools-font"><b>{% trans "KEY FEATURES" %}</b></h4>
-                <ul>
-                    <li>
-                        <p class="modal-tools-font">
-                        {% blocktrans %}
-                            Easy to use: To get a product link, just go to the product page of the product you want to
-                            link to, click the “Get product link”- button and copy the link in the popup that comes up.
-                            Now you’ll just need to paste the link on whatever text or picture you want to link!
-                        {% endblocktrans %}
-                        </p>
-                    </li>
-                    <li>
-                        <p class="modal-tools-font">
-                        {% blocktrans %}
-                            Flexible: A typical way to use text links is to link text in your blog posts, but product
-                            links can also be used on for example to link images, in e-mails, on Twitter, Facebook
-                            and other social media.
-                        {% endblocktrans %}
-                        </p>
-                    </li>
-                    <li>
-                        <p class="modal-tools-font">
-                        {% blocktrans %}
-                            Help your readers: Once the links are on your site, your readers can click the products in
-                            your collage and get directly to the products in the online store selling them.
-                        {% endblocktrans %}
-                        </p>
-                    </li>
-                    <li>
-                        <p class="modal-tools-font">
-                        {% blocktrans %}
-                            Earn money: You earn money on all sales/clicks generated from your links.
-                        {% endblocktrans %}
-                        </p>
-                    </li>
-                </ul>
-            </div>
+            <h4>{% trans "Key Features" %}</h4>
+            <ul>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Easy to use: To get a product link, just go to the product page of the product you want to
+                        link to, click the “Get product link”- button and copy the link in the popup that comes up.
+                        Now you’ll just need to paste the link on whatever text or picture you want to link!
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Flexible: A typical way to use text links is to link text in your blog posts, but product
+                        links can also be used on for example to link images, in e-mails, on Twitter, Facebook
+                        and other social media.
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Help your readers: Once the links are on your site, your readers can click the products in
+                        your collage and get directly to the products in the online store selling them.
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Earn money: You earn money on all sales/clicks generated from your links.
+                    {% endblocktrans %}
+                </li>
+            </ul>
         </div>
     </div>
+
+    <div class="modal-footer">
+        <a class="btn btn-primary" href="{% url 'shop' %}">{% trans "Get Links" %}</a>
+    </div>
 </div>
-<span>&nbsp;</span>
+
 {% endblock %}

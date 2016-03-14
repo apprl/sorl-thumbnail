@@ -1,23 +1,30 @@
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import TemplateView, RedirectView
+from apparelrow.apparel.search import SearchBaseTemplate
 
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
 from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
-from apparelrow.apparel.views import BrandRedirectView
+from apparelrow.apparel.views import BrandRedirectView, PublisherView, ProductDetailView, CommunityFormView, LookDetailView, \
+    OnBoardingView
+from apparelrow.dashboard.views import RetailerPublicFormView, RetailerFormView
+from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersView, ProfileListFollowingView, \
+    ProfileView
 
 urlpatterns = patterns('',
     # Index
-    url(r'^$', 'apparelrow.apparel.views.index', {'gender': 'none'}, name='index'),
-    url(r'^all/$', 'apparelrow.apparel.views.index', {'gender': 'A'}, name='index-all'),
-    url(r'^men/$', 'apparelrow.apparel.views.index', {'gender': 'M'}, name='index-men'),
-    url(r'^women/$', 'apparelrow.apparel.views.index', {'gender': 'W'}, name='index-women'),
-    url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),
-    url(r'^retailer/apply/$', 'apparelrow.dashboard.views.retailer_form', name='retailer-form'),
-    url(r'^store/complete/$', 'apparelrow.dashboard.views.index_complete', {'view': 'store'}, name='index-store-complete'),
+    url(r'^$', PublisherView.as_view(), {'gender': 'none'}, name='index'),
+    url(r'^all/$', PublisherView.as_view(), {'gender': 'A'}, name='index-all'),
+    url(r'^men/$', PublisherView.as_view(), {'gender': 'M'}, name='index-men'),
+    url(r'^women/$', PublisherView.as_view(), {'gender': 'W'}, name='index-women'),
+    url(r'^retailer/$', RetailerPublicFormView.as_view(), name='index-retailers'),
+    url(r'^retailer/apply/$', RetailerFormView.as_view(), name='retailer-form'),
+    #url(r'^retailer/$', 'apparelrow.dashboard.views.retailer', name='index-retailers'),
+    url(r'^apply/complete/$', 'apparelrow.dashboard.views.index_complete', {'view': 'store'}, name='index-store-complete'),
+    url(r'^apply/complete/publisher$', 'apparelrow.dashboard.views.index_complete', {'view': 'publisher'}, name='index-publisher-complete'),
 
     # Contests
     url(r'^stylesearch/$', 'apparelrow.apparel.views.contest_stylesearch', name='contest-stylesearch'),
@@ -65,14 +72,24 @@ urlpatterns = patterns('',
 
     # About pages
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),
+    url(r'^contact/$', 'apparelrow.apparel.views.contact', name='contact'),
     url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
     url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
+
+    # Temporary url for new home page (work in progress)
+    #url(r'^community/$', 'apparelrow.apparel.views.community', name='index-community'),
+    url(r'^community/$', CommunityFormView.as_view(), name='index-community'),
+
+    # Temporary url for onboarding page (work in progress)
+    url(r'^onboarding/$', OnBoardingView.as_view(), name='onboarding'),
+    #url(r'^onboarding/$', 'apparelrow.apparel.views.onboarding', name='onboarding'),
 
     # Facebook friends widget
     (r'^home/friends/$', 'apparelrow.apparel.views.facebook_friends_widget'),
 
     # Search
-    url(r'^search/$', 'apparelrow.apparel.search.search', {'gender': 'A'}, name='search'),
+    url(r'^search/$', SearchBaseTemplate.as_view(), {'gender': 'A'}, name='search'),
+    #url(r'^search/$', 'apparelrow.apparel.search.search', {'gender': 'A'}, name='search'),
     url(r'^search/men/$', 'apparelrow.apparel.search.search', {'gender': 'M'}, name='search-men'),
     url(r'^search/women/$', 'apparelrow.apparel.search.search', {'gender': 'W'}, name='search-women'),
     url(r'^backend/search/(?P<model_name>\w+)/', 'apparelrow.apparel.search.search_view'),
@@ -102,7 +119,10 @@ urlpatterns = patterns('',
     url(r'^products/(?P<pk>[\d]+)/$', 'apparelrow.apparel.views.product_redirect_by_id', name='product-redirect-by-id'),
     url(r'^products/(?P<pk>[\wd]+)/popup/$', 'apparelrow.apparel.views.products.product_detail_popup', name='product-detail-popup'),
     url(r'^products/(?P<pk>[\d]+)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.product_action', name='product-action'),
-    url(r'^products/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.product_detail', name='product-detail'),
+
+    url(r'^products/(?P<slug>[\w-]+)/$', ProductDetailView.as_view(), name='product-detail'),
+    #url(r'^products/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.product_detail', name='product-detail'),
+
     url(r'^products/(?P<slug>[\w-]+)/short/$', 'apparelrow.apparel.views.product_generate_short_link', name='product-generate-short-link'),
     url(r'^products/(?P<contains>[\w-]+)/looks/$', 'apparelrow.apparel.views.look_list', name='product-look-list'),
     url(r'^products/check_location/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.get_warnings_for_location', name='check-product-location'),
@@ -129,13 +149,18 @@ urlpatterns = patterns('',
     url(r'^brands/women/$', 'apparelrow.apparel.views.user_list', {'gender': 'W', 'brand': True}, name='brand-list-women'),
 
     # Brand profile
-    url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.profile.views.likes', name='brand-likes'),
+    url(r'^brand/(?:([^\/]+?)/)?$', ProfileView.as_view(template_name='profile/likes.html'), name='brand-likes'),
+    #url(r'^brand/(?:([^\/]+?)/)?$', 'apparelrow.profile.views.likes', name='brand-likes'),
     url(r'^brand/(?P<slug>[\w-]+)/men/$', BrandRedirectView.as_view(), {'gender': 'M'}, name='brand-likes-men'),
     url(r'^brand/(?P<slug>[\w-]+)/women/$', BrandRedirectView.as_view(), {'gender': 'W'}, name='brand-likes-women'),
     url(r'^brand/(?P<slug>[\w-]+)/updates/$', BrandRedirectView.as_view(), name='redirect-brand-updates'),
-    url(r'^brand/(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='brand-looks'),
-    url(r'^brand/(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='brand-followers'),
-    url(r'^brand/(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='brand-following'),
+
+    url(r'^brand/(?:([^\/]+?)/)?looks/$', ProfileListLookView.as_view(), name='brand-looks'),
+    url(r'^brand/(?:([^\/]+?)/)?followers/$', ProfileListFollowersView.as_view(), name='brand-followers'),
+    url(r'^brand/(?:([^\/]+?)/)?following/$', ProfileListFollowingView.as_view(), name='brand-following'),
+    #url(r'^brand/(?:([^\/]+?)/)?looks/$', 'apparelrow.profile.views.looks', name='brand-looks'),
+    #url(r'^brand/(?:([^\/]+?)/)?followers/$', 'apparelrow.profile.views.followers', name='brand-followers'),
+    #url(r'^brand/(?:([^\/]+?)/)?following/$', 'apparelrow.profile.views.following', name='brand-following'),
 
     # Look / Product popup
     url(r'^popup/product/$', 'apparelrow.apparel.views.product_popup', name='product-popup'),
@@ -168,7 +193,8 @@ urlpatterns = patterns('',
     url(r'^looks/popular/$', RedirectView.as_view(url=reverse_lazy('look-list'))),
     url(r'^looks/(?P<slug>[\w-]+)/publish/$', 'apparelrow.apparel.views.looks.publish', name='look-publish'),
     url(r'^looks/(?P<slug>[\w-]+)/unpublish/$', 'apparelrow.apparel.views.looks.unpublish', name='look-unpublish'),
-    url(r'^looks/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_detail', name='look-detail'),
+    url(r'^looks/(?P<slug>[\w-]+)/$', LookDetailView.as_view(), name='look-detail'),
+    #url(r'^looks/(?P<slug>[\w-]+)/$', 'apparelrow.apparel.views.look_detail', name='look-detail'),
     url(r'^looks/(?P<slug>[\w-]+?)/delete/$', 'apparelrow.apparel.views.look_delete', name='look-delete'),
     url(r'^looks/(?P<slug>[\w-]+?)/(?P<action>like|unlike)/?$', 'apparelrow.apparel.views.look_like', name='look-like'),
 

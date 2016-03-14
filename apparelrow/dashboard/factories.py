@@ -68,3 +68,10 @@ class AggregatedDataFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = get_model('dashboard', 'AggregatedData')
+
+
+class ShortLinkFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = get_model('apparel','ShortDomainLink')
+    vendor = factory.SubFactory(VendorFactory)

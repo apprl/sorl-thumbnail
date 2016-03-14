@@ -93,6 +93,6 @@ if EMAIL_DEBUG:
     EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT,'../logs/emails')
 
 
-ALLOWED_HOSTS = ['dev-aws.apprl.com','staging.apprl.com','{{ hostname }}.apprl.com','{{ internal_ip }}']
+ALLOWED_HOSTS = ['dev-aws.apprl.com','staging.apprl.com','{{ hostname }}.apprl.com','{{ internal_ip }}', '.apparelrow.com']
 
 GEOIP_URL = 'http://staging-geoip.apprl.com/ip/%s'

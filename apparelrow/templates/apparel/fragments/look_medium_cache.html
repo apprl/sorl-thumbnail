@@ -1,4 +1,4 @@
 {% load cache %}
 {% cache CACHE_TIMEOUT look_medium object.id LANGUAGE_CODE %}
-{% include 'apparel/fragments/look_medium.html' %}
+{% include 'apparel/fragments/look_medium.html' with include_profile_image=True %}
 {% endcache %}

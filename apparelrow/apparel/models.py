@@ -1,10 +1,13 @@
 import logging
 import uuid
+import urlparse
 from django.core.cache import get_cache
 import os.path
+import decimal
 import datetime
 
 from django.db import models
+from django.db.models import Sum, Min
 from django.db.models.loading import get_model
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
@@ -12,7 +15,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
-from django.db.models.signals import post_save, pre_delete, pre_save
+from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -21,7 +24,7 @@ from django.utils.functional import cached_property
 from apparelrow.apparel.signals import look_saved
 from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
-from apparelrow.apparel.utils import currency_exchange, get_brand_and_category, get_external_store_commission
+from apparelrow.apparel.utils import currency_exchange, get_brand_and_category, get_external_store_commission, generate_sid, parse_sid
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
 from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache
 
@@ -34,6 +37,7 @@ from sorl.thumbnail import ImageField, get_thumbnail
 from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
+from parse import *
 
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
 from decimal import Decimal, ROUND_HALF_UP
@@ -197,7 +201,7 @@ class Category(MPTTModel):
     objects = tree = TreeManager()
 
     def save(self, *args, **kwargs):
-        # FIXME: Can you get Django to auto truncate fields?
+        # FIXME: Can you get Django to auto truncate fields? K: Not really, forms are supposed to take care of it.
         self.name = self.name[:100]
         super(Category, self).save(*args, **kwargs)
 
@@ -492,20 +496,30 @@ def product_like_pre_delete(sender, instance, **kwargs):
 
 SHORT_CONSTANT = 999999
 
+def get_store_link_from_short_link(short_link):
+    calculated_id = None
+    try:
+        calculated_id = saturate(short_link) - SHORT_CONSTANT
+        instance = ShortStoreLink.objects.get(pk=calculated_id)
+    except:
+        logger.error("Short store link can not be found, Short link: %s and desaturated id: %s" % (short_link, calculated_id))
+        raise ShortStoreLink.DoesNotExist("Unable to find ShortStoreLink for id:%s" % calculated_id)
+    return instance
+
+
 class ShortStoreLinkManager(models.Manager):
+
     def get_for_short_link(self, short_link, user_id=None):
-        calculated_id = None
-        instance = None
-        try:
-            calculated_id = saturate(short_link) - SHORT_CONSTANT
-            instance = ShortStoreLink.objects.get(pk=calculated_id)
-        except:
-            logger.error("Short store link can not be found, Short link: %s and desaturated id: %s" % (short_link, calculated_id))
-            raise ShortStoreLink.DoesNotExist("Unable to find ShirtStoreLink for id:%s" % calculated_id)
+        instance = get_store_link_from_short_link(short_link)
         if user_id is None:
             user_id = 0
 
-        return instance.template.format(sid='{}-0-Ext-Store'.format(user_id)), instance.vendor.name
+        sid = generate_sid(0, user_id, 'Ext-Store', instance.vendor.homepage)
+        return instance.template.format(sid=sid), instance.vendor.name
+
+    def get_original_url_for_link(self, short_link):
+        instance = get_store_link_from_short_link(short_link)
+        return '' if not instance else instance.vendor.homepage
 
 
 class ShortStoreLink(models.Model):
@@ -536,6 +550,19 @@ class ShortDomainLinkManager(models.Manager):
 
         return instance.url, instance.vendor.name, instance.user.pk
 
+    def get_original_url_for_link(self, short_link):
+        url, vendor_name, _ = self.get_short_domain_for_link(short_link)
+        vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_name)
+        domain_deep_link = get_model('apparel', 'DomainDeepLinking').objects.filter(vendor=vendor)
+        source_link = ''
+        if len(domain_deep_link) > 0:
+            template = domain_deep_link[0].template
+            result = parse(template, url)
+            _, _, _, source_link = parse_sid(result['sid'])
+        else:
+            logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
+        return source_link
+
 
 class ShortDomainLink(models.Model):
     url = models.CharField(max_length=512, blank=False, null=False)
@@ -550,7 +577,6 @@ class ShortDomainLink(models.Model):
 
     class Meta:
         unique_together = ('url', 'user')
-
 
 
 class ShortProductLinkManager(models.Manager):
