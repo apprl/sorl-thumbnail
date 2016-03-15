@@ -9,7 +9,7 @@
             {% if warning_text %}
                 <div class="alert alert-warning alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="modal"><span></span></button>
-                    {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-account' %}#location-notifications">{% trans "Change your location" %}</a>
+                    {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-account' %}#location">{% trans "Change your location" %}</a>
                 </div>
             {% endif %}
             <p>{% trans "Share this link on your blog, social media, e-mail or anywhere, and you will make money on anyone who clicks on it and buys something from the store." %}</p>
