@@ -91,7 +91,7 @@ class RedirectProfileView(RedirectView):
     @method_decorator(get_current_user)
     def get(self, request, *args, **kwargs):
         profile = args[0]
-        self.url = '/profile/%s/items' % (profile.slug)
+        self.url = reverse('profile-likes', args=[profile.slug,])
         return super(RedirectProfileView, self).get(request, args, **kwargs)
 
 
