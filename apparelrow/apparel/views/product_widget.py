@@ -303,12 +303,12 @@ class ProductWidgetView(View):
 
 def product_widget_widget(request, product_widget_id=None):
     if request.method != 'POST':
-        return HttpResponseNotAllowed()
+        return HttpResponseNotAllowed("Method is now allowed")
 
     product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
 
-    if request.user.pk is not product_widget.user.pk:
-        return HttpResponseNotAllowed()
+    if not request.user.pk == product_widget.user.pk:
+        return HttpResponseNotAllowed("Owner of widget is not the same as logged in user.")
 
 
     content = {}
