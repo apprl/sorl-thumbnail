@@ -571,7 +571,7 @@ class SearchBaseTemplate(TemplateView):
 @DeprecationWarning
 def search(request, gender=None):
     """
-    Search page, DEPRECATED
+    Search page
     """
     gender = select_from_multi_gender(request, 'shop', gender)
     query = request.GET.get('q', '')
