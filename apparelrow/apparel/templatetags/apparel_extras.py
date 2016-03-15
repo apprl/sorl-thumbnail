@@ -454,4 +454,7 @@ def get_selected_by(value):
     Adds 1 to Selected by figure, which represents the Brand the products belongs to and it's always included in the
     Selected by list but not counted
     """
-    return len(value) + 1
+    selected_by = 1  # Brand is always included
+    if value:
+        selected_by = len(value) + 1
+    return selected_by
