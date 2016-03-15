@@ -356,8 +356,7 @@ class Command(BaseCommand):
     def generate_aggregated_clicks_from_links(self, start_date, end_date):
         # Total clicks under the given period group by product
         aggregated_product_stat = get_model('statistics', 'ProductStat').objects.\
-            filter(created__range=(start_date, end_date), is_valid=True, page__in=('Ext-Store', 'Ext-Link'),
-                   product__in=(0, '')).\
+            filter(created__range=(start_date, end_date), is_valid=True, page__in=('Ext-Store', 'Ext-Link')).\
             exclude(source_link__isnull=True).\
             extra(select={'day': 'date( created )'}).\
             values('user_id', 'source_link', 'vendor', 'day').\
