@@ -645,7 +645,7 @@ def settings_email(request):
                                   {'email_form': form, 'email_change': email_change,
                                    'form': password_form, 'facebook_settings_form': facebook_form },
                                   context_instance=RequestContext(request))
-        return HttpResponseRedirect(reverse('settings-email'))
+        return HttpResponseRedirect(reverse('settings-account'))
 
     form = EmailForm()
     location_warning_form = PartnerNotificationsForm(instance=request.user)
