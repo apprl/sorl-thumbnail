@@ -86,13 +86,8 @@ def save_description(request):
 
 
 class RedirectProfileView(RedirectView):
-    template_name = 'profile/likes.html'
-
-    @method_decorator(get_current_user)
-    def get(self, request, *args, **kwargs):
-        profile = args[0]
-        self.url = '/profile/%s/items' % (profile.slug)
-        return super(RedirectProfileView, self).get(request, args, **kwargs)
+    def get_redirect_url(self, slug):
+        return reverse_lazy('profile-likes', args=(slug,))
 
 
 class ProfileView(TemplateView):
