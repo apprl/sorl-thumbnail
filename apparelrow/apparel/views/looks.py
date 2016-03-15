@@ -28,7 +28,8 @@ from sorl.thumbnail import get_thumbnail
 from apparelrow.profile.utils import get_facebook_user
 
 from apparelrow.apparel.signals import look_saved
-from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
+from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange, \
+    get_gender_url
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph
 from apparelrow.apparel.views import _product_like
 from apparelrow.apparel.search import ApparelSearch
@@ -89,10 +90,12 @@ def embed(request, slug, identifier=None):
             search = ApparelSearch('*:*', **query_arguments)
             docs = search.get_docs()
             if docs:
-                shop_reverse = 'shop-men' if component.product.gender == 'M' else 'shop-women'
-                shop_url = '%s?aid=%s&alink=Ext-Look&category=%s' % (reverse(shop_reverse), look.user.pk, component.product.category_id)
+                shop_url_base = get_gender_url(component.product.gender, 'shop')
+                shop_url = '{shop_url}?aid={user_id}&alink=Ext-Look&category={category}'.format(shop_url=shop_url_base,
+                                                                                                user_id=look.user.pk,
+                                                                                                category=component.product.category_id)
                 if colors_pk:
-                    shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+                    shop_url = '{shop_url}&color={colors}'.format(shop_url=shop_url, colors=','.join(colors_pk))
 
                 price, currency = docs[0].price.split(',')
                 rate = currency_exchange(language_currency, currency)
