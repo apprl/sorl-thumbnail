@@ -509,7 +509,7 @@ def confirm_email(request):
         request.user.save()
         email_change.delete()
 
-    return HttpResponseRedirect(reverse('settings'))
+    return HttpResponseRedirect(reverse('settings-account'))
 
 
 class UserSettingsEmailView(FormView):
