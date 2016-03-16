@@ -244,26 +244,34 @@ def commissions(request):
             temp = {}
             vendor_obj = get_model('apparel', 'Vendor').objects.get(name=vendor)
             store = get_model('dashboard', 'StoreCommission').objects.get(vendor=vendor_obj)
-            store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
+
+            cuts_for_user_vendor = get_cuts_for_user_and_vendor(user_id, store.vendor)
+            standard_from = 0 if not store else store.get_standard_from(store.commission, *cuts_for_user_vendor)
+            store.calculated_commissions(store.commission, *cuts_for_user_vendor)
             temp['vendor_pk'] = vendor_obj.pk
             temp['vendor_name'] = vendor_obj.name
             temp['link'] = store.link
             temp['store_pk'] = store.pk
+
+            # Get different cuts
+            _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
+
             if vendor_obj.is_cpc:
-                _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
                 click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
                 temp['amount'] = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
+                temp['amount_float'] = click_cost.locale_price * publisher_cut * normal_cut
                 temp['currency'] = click_cost.locale_currency
                 temp['type'] = "is_cpc"
             elif vendor_obj.is_cpo:
                 temp['amount'] = store.commission
+                temp['amount_float'] = standard_from
                 temp['type'] = "is_cpo"
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
         except get_model('dashboard', 'StoreCommission').DoesNotExist:
             log.warning("StoreCommission for vendor %s does not exist" % vendor)
-    stores = [x for x in sorted(stores.values(), key=lambda x: x['vendor_name'])]
+    stores = [x for x in sorted(stores.values(), key=lambda x: (x['amount_float'], x['vendor_name']))]
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):
