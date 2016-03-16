@@ -13,6 +13,10 @@
     <div class="body-header">
         <h1>{% trans "Create & Earn" %}</h1>
         <p>{% trans "APPRL offers a range of tools and formats for you to earn money by creating different types of shoppable content. We also have smart tools to save time for you, for example you can install APPRL for Chrome to add products directly from retailers' sites." %}</p>
+        <ul class="list-shortcuts">
+            <li><a href="{% url 'dashboard' %}" class="btn btn-default">{% trans "Your Dashboard" %}</a></li>
+            <li><a href="{% url 'dashboard-commissions' %}" class="btn btn-default">{% trans "Store Commissions" %}</a></li>
+        </ul>
     </div>
 
     <div class="row">
