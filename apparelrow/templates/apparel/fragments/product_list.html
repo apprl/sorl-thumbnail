@@ -1,7 +1,33 @@
 {% spaceless %}
-<ul class="product-list list-unstyled row {% if not show_product_brand and is_embed_shop%}hide-captions{% endif %}">
-    {% for html in current_page.html %}
-    <li class="col-product-item">{{ html|safe }}</li>
+<ul class="product-list list-unstyled row {% if not show_product_brand and is_embed_shop %}hide-captions{% endif %}">
+    {% for html, product in current_page.html %}
+        <li class="col-product-item">
+            {{ html|safe }}
+            {% if not is_embed_shop and user.is_partner%}
+                <div class="product-medium-earning" id="product-medium-earning-{{ product }}"></div>
+            {% endif %}
+        </li>
+        {% if not is_embed_shop and user.is_partner%}
+        <script>
+            $.ajax({
+                url: '{% url 'backend-product-earnings' product %}',
+                success: function(data) {
+                    var productEarningBlock = $("#product-medium-earning-{{ product }}");
+                    productEarningBlock.html("");
+
+                    if (data['code'] == "success") {
+                        var helpText = "/click";
+                        if (data['type'] == "is_cpo")
+                            helpText = "/sale";
+                        productEarningBlock.html("You'll earn " + data['user_earning'] + helpText + " on this product");
+                    }
+                },
+                error: function() {
+                    $("#product-medium-earning-{{ product }}").html("");
+                }
+            })
+        </script>
+        {% endif %}
     {% endfor %}
 </ul>
 <div class="pagination">

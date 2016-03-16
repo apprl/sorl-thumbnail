@@ -1278,6 +1278,7 @@ main div.message {
 	    right: 0;
 	    bottom: 60px;
 	    left: 0;
+	  	z-index:3;
 	}
 }
 .embed {
@@ -1401,4 +1402,19 @@ li.discount-price, span.discount-price {
 li.price.discounted {
   	width: auto;
 	text-decoration: line-through;
+}
+.product-medium-earning {
+  	position:relative;
+  	bottom: 163px;
+  	right: 0;
+  	left: 0;
+  	width: 100%;
+  	background: rgba(0, 0, 0, 0.4);
+	color: #fff;
+  	text-align:center;
+  	visibility: hidden;
+  	@media (max-width: @screen-md) {
+		font-size: 14px;
+	 	bottom: 159px;
+	}
 }

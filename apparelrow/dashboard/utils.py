@@ -148,7 +148,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
             except:
                 log.warn("No cut exists for %s and vendor %s, please do correct this." % (user.partner_group,vendor))
     except get_user_model().DoesNotExist:
-        pass
+        log.warn("User %s does not exist" % user_id)
 
     return user, normal_cut, referral_cut, publisher_cut
 

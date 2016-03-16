@@ -173,6 +173,9 @@ $(document).ready(function() {
                .on('click', 'body.registration-email .btn-email-signup', trackSignup('Signup', 'ClickEmailSignupSubmit'))
                .on('click', 'body.profile-welcome .btn-login-flow-continue', trackSignup('Signup', 'FollowBrandsPageCompleted'));
 
+    // Set pointer for checkboxes and radiobuttons labels
+    $('input[type="checkbox"]').parents().css("cursor", "pointer");
+    $('input[type="radio"]').parents().css("cursor", "pointer");
 
     // Facebook button sign in
     $(document).on('click', '.btn-facebook', function(e) {
@@ -328,6 +331,12 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('mouseenter', '.product-medium-earning', function () {
+        $(this).parent().find('.product-medium > .product-image-container').trigger("mouseenter");
+    });
+    $(document).on('mouseleave', '.product-medium-earning', function () {
+        $(this).parent().find('.product-medium > .product-image-container').trigger("mouseleave");
+    });
     // Product hover, works with medium
     $(document).on('mouseenter', '.product-medium > .product-image-container', function() {
         var element = $(this),
@@ -347,10 +356,12 @@ $(document).ready(function() {
         }
         element.data('load_data', true);
         element.find('.hover').show();
+        element.parentsUntil("ul").find('.product-medium-earning').css('visibility', 'visible');
         element.find('.product-image').css({opacity: 0.3});
     }).on('mouseleave', '.product-medium > .product-image-container', function() {
         $(this).find('.hover').hide();
         $('.product-image').css({opacity: 1});
+        $(this).parentsUntil("ul").find('.product-medium-earning').css('visibility', 'hidden');
     });
 
     // Look hover, works with medium

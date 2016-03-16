@@ -224,39 +224,51 @@ class StoreCommission(models.Model):
                                               'It could be written as 0 if it is a PPC (Pay per click) store.'))
     link = models.CharField(max_length=255, null=True, blank=True, help_text=_('Only our own store links works, should be copied excactly as they appear in short store link admin list without a user id.'))
 
+    def get_standard_from(self, commission, *args):
+        """
+        Returns (lowest) commission the Store can provide
+        """
+        normal_cut = args[1]
+        publisher_cut = args[3]
+        commission_array = commission.split("/")
+        standard_from = (decimal.Decimal(commission_array[0].replace("%", ""))*normal_cut*publisher_cut).quantize(decimal.Decimal('1'),rounding=decimal.ROUND_HALF_UP)
+        return standard_from
 
-    def calculated_commissions(self,commission,*args):
-        from decimal import Decimal,ROUND_HALF_UP,ROUND_UP
+    def calculated_commissions(self, commission, *args):
+        from decimal import Decimal, ROUND_HALF_UP
         commission_array = commission.split("/")
         normal_cut = args[1]
-        referral_cut = args[2]
         publisher_cut = args[3]
 
         try:
             if not len(commission_array) == 3 or commission_array[0] == '0':
-                logger.warn('Store commission %s is invalidly structured. Needs to be in the format [X/Y/Z] where X <> 0!' % self.vendor)
+                logger.warn('Store commission %s is invalidly structured. '
+                            'Needs to be in the format [X/Y/Z] where X <> 0!' % self.vendor)
             else:
-                standard_from = (Decimal(commission_array[0])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
-                standard_to = (Decimal(commission_array[1])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
-                sale = (Decimal(commission_array[2])*normal_cut*publisher_cut).quantize(Decimal('1'),rounding=ROUND_HALF_UP)
+                standard_from = (Decimal(commission_array[0])*normal_cut*publisher_cut).\
+                    quantize(Decimal('1'), rounding=ROUND_HALF_UP)
+                standard_to = (Decimal(commission_array[1])*normal_cut*publisher_cut).\
+                    quantize(Decimal('1'), rounding=ROUND_HALF_UP)
+                sale = (Decimal(commission_array[2])*normal_cut*publisher_cut).\
+                    quantize(Decimal('1'), rounding=ROUND_HALF_UP)
                 if standard_from == standard_to:
                     commission_array[1] = '0'
 
                 if commission_array[1] == '0':
                     if commission_array[2] == '0':
-                        self.commission =  _('%(standard_from)s%%' % {'standard_from':standard_from})
+                        self.commission = _('%(standard_from)s%%' % {'standard_from': standard_from})
                     else:
-                        self.commission =  _('%(standard_from)s%% (sale items %(sale)s%%)' % {'standard_from':standard_from,
-                                                                                    'sale':sale})
+                        self.commission = _('%(standard_from)s%% (sale items %(sale)s%%)' %
+                                            {'standard_from': standard_from, 'sale': sale})
                 elif commission_array[2] == '0':
                         self.commission = _('%(standard_from)s-%(standard_to)s%%' %
-                                            {'standard_from':standard_from,
-                                             'standard_to':standard_to})
+                                            {'standard_from': standard_from,
+                                             'standard_to': standard_to})
                 else:
                     self.commission = _('%(standard_from)s-%(standard_to)s%% (sale items %(sale)s%%)' %
-                                           {'standard_from':standard_from,
-                                            'standard_to':standard_to,
-                                            'sale':sale})
+                                           {'standard_from': standard_from,
+                                            'standard_to': standard_to,
+                                            'sale': sale})
         except Exception,msg:
             logger.warn('Unable to convert store commissions for %s. [%s]' % (self,msg))
         return self
