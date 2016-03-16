@@ -422,7 +422,7 @@ class Command(BaseCommand):
         earnings = UserEarning.objects.filter(date__range=(start_date, end_date), status__gte=Sale.PENDING)
 
         # Loop over all earnings for the given period
-        logger.debug("Generating aggregated data with % earnings... " % earnings.count())
+        logger.debug("Generating aggregated data with %s earnings... " % earnings.count())
         for row in earnings:
             user_dict = get_user_dict(row.user)
             earning_amount = decimal.Decimal(row.amount)
