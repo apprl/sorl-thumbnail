@@ -376,9 +376,6 @@ class TestDashboard(TransactionTestCase):
         #self.assertEqual(referral_user_sale.referral_user, referral_user)
         #self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
-    def test_referred_user_get_20_eur(self):
-        pass
-
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestDashboardCuts(TransactionTestCase):
@@ -2535,4 +2532,29 @@ class TestReferralBonus(TransactionTestCase):
         self.assertTrue(sale_admin_form.is_valid())
         self.assertEqual(Sale.objects.filter(is_promo=False, user_id=self.user.pk).count(), 1)
 
+class TestStoreCommission(TransactionTestCase):
 
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.is_partner = True
+        self.user.save()
+        self.group = GroupFactory.create(name='group_name')
+
+        self.user.partner_group = self.group
+        self.user.save()
+
+    def get_store_earnings_cpc_store(self):
+        vendor = VendorFactory.create(is_cpc=True)
+        CutFactory.create(group=self.group, vendor=vendor)
+
+        store = StoreFactory.create(vendor=vendor)
+        standard_from = 0
+        _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
+
+        get_model('dashboard', 'ClickCost').objects.create(vendor=vendor, amount=1.5, currency="SEK")
+        amount, amount_float, currency, type = get_store_earnings(vendor, publisher_cut, normal_cut, standard_from, store)
+
+        self.assertAlmostEqual(amount, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
+        self.assertAlmostEqual(amount_float, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
+        self.assertEqual(currency, "SEK")
+        self.assertEqual(type, "is_cpc")

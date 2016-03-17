@@ -39,6 +39,7 @@
         var look_api_base_url = '{% url "look_list" %}';
         var create_store_api_base_url = '{% url "create_shop" %}';
         var create_product_widget_api_base_url = '{% url "product_widget-api" %}';
+        var product_earnings_url = '{% url "backend-product-earnings" %}';
 
         var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
         {% if request.user.is_authenticated %}
