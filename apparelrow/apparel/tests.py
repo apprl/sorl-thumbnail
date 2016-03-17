@@ -430,6 +430,8 @@ class TestChromeExtensionSpecials(TestCase):
 
 
 class TestProductDetails(TestCase):
+    fixtures = ['test-fxrates.yaml']
+
     def setUp(self):
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
