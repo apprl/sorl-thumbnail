@@ -1068,7 +1068,8 @@ class TestUtils(TestCase):
         self.assertEqual(currency, vendor_product.locale_currency)
 
     def test_backend_product_earnings(self):
-        """ #TODO Write description
+        """ Test Backend call that returns a JSON object with Earning and other information related about a product
+        given its id
         """
         vendor_cpo = VendorFactory.create(name="Vendor CPO")
         StoreFactory.create(vendor=vendor_cpo, commission_percentage='0.2')
@@ -1088,13 +1089,12 @@ class TestUtils(TestCase):
                                                       cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
                                                       referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
 
-        json_earning_url = reverse('backend-product-earnings', kwargs={'product_id': product_cpo.pk})
+        json_earning_url = "%s?id=%s" % (reverse('backend-product-earnings'), product_cpo.pk)
         self.client.login(username='normal_user', password='normal')
         json_data = self.client.get(json_earning_url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         dict_data = json.loads(json_data.content)
         self.assertEqual(dict_data['code'], 'success')
         self.assertEqual(dict_data['type'], 'is_cpo')
-        self.assertEqual(dict_data['product_id'], str(product_cpo.pk))
         self.assertNotEqual(dict_data['user_earning'], '')
 
     def test_backend_product_earnings_user_is_not_partner(self):
@@ -1119,15 +1119,13 @@ class TestUtils(TestCase):
         get_model('dashboard', 'Cut').objects.create(group=self.user.partner_group, vendor=vendor_cpo,
                                                      cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
                                                      referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
-
-        json_earning_url = reverse('backend-product-earnings', kwargs={'product_id': product_cpo.pk})
+        json_earning_url = "%s?id=%s" % (reverse('backend-product-earnings'), product_cpo.pk)
 
         self.client.login(username='normal_user', password='normal')
         json_data = self.client.get(json_earning_url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         dict_data = json.loads(json_data.content)
 
         self.assertEqual(dict_data['code'], 'fail')
-        self.assertEqual(dict_data['product_id'], str(product_cpo.pk))
         self.assertEqual(dict_data['user_earning'], '')
 
     def test_get_product_name(self):
