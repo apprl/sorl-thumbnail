@@ -353,6 +353,19 @@ $(document).ready(function() {
                     }
                 }
             });
+
+            if (typeof(loadEarnings) != "undefined" && loadEarnings) {
+                $.getJSON(product_earnings_url + '?id=' + product_id, function(json) {
+                    var productEarningBlock = $("#product-medium-earning-" + product_id);
+                    productEarningBlock.html("");
+                    if (json['code'] == "success") {
+                        var helpText = "/click";
+                        if (json['type'] == "is_cpo")
+                            helpText = "/sale";
+                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText + " on this product");
+                    }
+                });
+            }
         }
         element.data('load_data', true);
         element.find('.hover').show();

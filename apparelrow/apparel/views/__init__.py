@@ -108,25 +108,25 @@ def get_vendor_commission(vendor):
         return get_external_store_commission(store_commission)
     return None
 
-def backend_product_earnings(request, product_id=None):
+def backend_product_earnings(request):
     """
     # Returns JSON object with data about earnings for the given product_id
     :param request:
     :param product_id:
     :return:
     """
-    if request.is_ajax():
-        dict = {}
-        user = request.user
-        dict['code'] = "fail"
-        dict['product_id'] = product_id
-        dict['user_earning'] = ""
+    dict = {}
+    user = request.user
+    dict['code'] = "fail"
+    dict['user_earning'] = ""
+    product_id = int(request.GET.get("id", None))
+    if product_id:
         try:
             product_obj = get_model('apparel', 'Product').objects.get(id=product_id)
             vendor_product = product_obj.default_vendor
             product_earning, currency = vendor_product.get_product_earning(user)
             if product_earning:
-                dict['user_earning'] = "%s %s" % (product_earning, currency)
+                dict['user_earning'] = "%s %s" % (currency, product_earning)
                 dict['code'] = "success"
 
                 if vendor_product.vendor.is_cpc:
@@ -139,7 +139,7 @@ def backend_product_earnings(request, product_id=None):
                 logging.warning("Could not calculate cut for user %s and vendor %s" % (user.id, vendor_product.vendor.name))
         except get_model('apparel', 'Product').DoesNotExist:
             logging.warning("Product with id %s does not exist" % product_id)
-    return JSONResponse(dict)
+    return HttpResponse(json.dumps(dict), content_type='application/json')
 
 #
 # Notifications

@@ -12,6 +12,12 @@
     </div>
     {% endif %}
 
+    {% if not is_embed_shop and user.is_partner%}
+        <script>
+            var loadEarnings = true;
+        </script>
+    {% endif %}
+
     <div id="product-list" class="col-product-list">
         {% if not is_embed_shop or show_filters %}<h4>{{ browse_text }}</h4><hr>{% endif %}
         {% if extra_html %}
