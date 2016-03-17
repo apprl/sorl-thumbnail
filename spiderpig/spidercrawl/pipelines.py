@@ -10,8 +10,11 @@ from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop
 
+from django.core.cache import get_cache
 from theimp.models import Product, Vendor
 from theimp.parser import Parser
+
+cache = get_cache("importer")
 
 class MissingFieldDrop(DropItem):
     """
@@ -60,6 +63,7 @@ class DatabaseHandler:
     """
     Handles scraped and dropped product updates in database
     """
+    scraped_cache_key = "scraped_{id}"
     @classmethod
     def from_crawler(cls, crawler):
         ext = cls()
@@ -119,23 +123,39 @@ class DatabaseHandler:
 
         vendor, _ = Vendor.objects.get_or_create(name=item['vendor'])
         product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
-
+        product_hash = self._get_hash(item)
+        updated = False
         if product.is_released:
             spider.log('Product %s is released and will not be parsed.' % item['key'])
             return item
 
         if not created:
-            json_data = json.loads(product.json)
-            json_data['scraped'].update(dict(item))
-            product.json = json.dumps(json_data)
-            product.vendor = vendor
-            product.is_dropped = False
-            product.save()
+            previous_hash = cache.get(self.scraped_cache_key.format(id=product.id))
+            if not previous_hash == product_hash:
+                updated = True
+                json_data = json.loads(product.json)
+                json_data['scraped'].update(dict(item))
+                product.json = json.dumps(json_data)
+                product.vendor = vendor
+                product.is_dropped = False
+                product.save()
+                cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600)
+
+        if created or updated:
+            cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600)
+            updated = True
 
         self.parser.parse(product)
 
         return item
 
+    def _get_hash(self, item):
+        include = ("sku", "name", "url", "category", "description", "brand", "gender", "colors", "regular_price",
+                   "discount_price", "currency", "in_stock", "stock")
+        attributes = []
+        for key in include:
+            attributes.append(item.get(key))
+        return hashlib.sha1(''.join(attributes)).hexdigest()
 
 class RequiredFieldsPipeline:
     required_fields = ['key', 'sku', 'name', 'brand',
