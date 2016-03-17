@@ -56,7 +56,8 @@
         new Tablesort($('table#top-products').get(0));
         new Tablesort($('table#top-products-more').get(0));
         new Tablesort($('table#top-publishers').get(0));
-        new Tablesort($('table#top-publishers-more').get(0))
+        new Tablesort($('table#top-publishers-more').get(0));
+        new Tablesort($('table#detail-clicks-more').get(0));
       });
         /*
             Load detail click earning details for clicks in a modal
@@ -187,7 +188,7 @@
                                 {{ publisher.total_clicks }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
-                                {{ currency }} {{ publisher.total_earnings }}
+                                {{ currency }} {{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
                                 {{ currency }} {{ publisher.total_network_earnings }}
@@ -263,6 +264,7 @@
                             <th>{% trans "User" %}</th>
                             <th></th>
                             <th>{% trans "From" %}</th>
+                            <th>{% trans "Sale value" %}</th>
                             <th>{% trans "Earnings" %}</th>
                         </tr>
                     </thead>
@@ -274,7 +276,7 @@
                     <tbody id="body-earnings">
                         <tr>
                             <td colspan="6">
-                                <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
+                                Loading earnings <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
                             </td>
                         </tr>
                     </tbody>
@@ -305,7 +307,8 @@
 
     function fetchEarnings(month, year, currency, callback) {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year), true);
+        xhr.open('GET', EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year)
+                + '&limit=40', true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
               var parsed = {};
@@ -327,6 +330,8 @@
                 // Date
                 row.append('<td data-sort="' + this.date_timestamp + '">' + this.date_string + '</td>');
                 row.append('<td data-sort="' + this.sale_id + '">' + this.sale_id + '</td>');
+                row.append('<td data-sort="' + this.product_name + '"><a src="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
+                row.append('<td data-sort="' + this.product_name + '">' + this.product_name + '</td>');
 
                 // Description
                 if (this.description_image != '') {
