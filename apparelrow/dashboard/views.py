@@ -366,7 +366,11 @@ def clicks_detail(request):
         vendor = request.GET.get('vendor', None)
         currency = request.GET.get('currency', 'EUR')
         num_clicks = request.GET.get('clicks', 0)
-        amount_for_clicks = request.GET.get('amount', 0).replace(',', '.')
+        try:
+            amount_for_clicks = request.GET.get('amount', "0").replace(',', '.')
+        except:
+            amount_for_clicks = "0"
+
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
