@@ -579,7 +579,7 @@ class AdminDashboardView(TemplateView):
         headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
                         'Commission CR']
         if is_bottom_summary:
-            headings = ['EPC', 'Clicks', 'Invalid clicks']
+            headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
         top_summary_array = []
         for row in zip(headings, summary):
             temp_list = []
@@ -590,6 +590,9 @@ class AdminDashboardView(TemplateView):
                     if not percentage:
                         percentage = "-"
                     temp_list.append("%s (%s)" % (value, percentage))
+            elif heading is "Commission CR":
+                for value, percentage in map(None, row[1][0], row[1][1]):
+                    temp_list.append("%.2f%% (%s)" % (value, percentage))
             else:
                 for value, percentage in map(None, row[1][0], row[1][1]):
                     if not percentage:
