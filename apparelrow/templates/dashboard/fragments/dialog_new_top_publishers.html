@@ -53,8 +53,8 @@
                         <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
                             {{ publisher.total_clicks }}
                         </td>
-                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
-                            {{ currency }} {{ publisher.total_earnings }}
+                        <td class="col-md-2 center" data-sort="{% if is_admin %}{{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }}{% else %}{{ publisher.total_earnings }}{% endif %}">
+                            {{ currency }} {% if is_admin %} {{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }} {% else %} {{ publisher.total_earnings }} {% endif %}
                         </td>
                         {% if is_owner or is_admin %}
                         <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
@@ -62,7 +62,7 @@
                         </td>
                         {% endif %}
                         {% if is_admin %}
-                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|commission_rate:publisher.total_clicks }}">
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|decimal_div:publisher.total_clicks }}">
                             {% if publisher.total_clicks %}{{ currency }} {% endif %}
                             {{ publisher.total_earnings|decimal_div:publisher.total_clicks }}
                         </td>

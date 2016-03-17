@@ -366,7 +366,11 @@ def clicks_detail(request):
         vendor = request.GET.get('vendor', None)
         currency = request.GET.get('currency', 'EUR')
         num_clicks = request.GET.get('clicks', 0)
-        amount_for_clicks = request.GET.get('amount', 0).replace(',', '.')
+        try:
+            amount_for_clicks = request.GET.get('amount', "0").replace(',', '.')
+        except:
+            amount_for_clicks = "0"
+
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
@@ -571,7 +575,7 @@ class AdminDashboardView(TemplateView):
         headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
                         'Commission CR']
         if is_bottom_summary:
-            headings = ['EPC', 'Clicks', 'Invalid clicks']
+            headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
         top_summary_array = []
         for row in zip(headings, summary):
             temp_list = []
@@ -582,6 +586,9 @@ class AdminDashboardView(TemplateView):
                     if not percentage:
                         percentage = "-"
                     temp_list.append("%s (%s)" % (value, percentage))
+            elif heading is "Commission CR":
+                for value, percentage in map(None, row[1][0], row[1][1]):
+                    temp_list.append("%.2f%% (%s)" % (value, percentage))
             else:
                 for value, percentage in map(None, row[1][0], row[1][1]):
                     if not percentage:
