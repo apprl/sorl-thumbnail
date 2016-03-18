@@ -266,12 +266,13 @@ def commissions(request):
                 temp['amount'] = store.commission
                 temp['amount_float'] = standard_from
                 temp['type'] = "is_cpo"
+            temp['type_code'] = 0 if temp['type'] == "is_cpc" else 1
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
         except get_model('dashboard', 'StoreCommission').DoesNotExist:
             log.warning("StoreCommission for vendor %s does not exist" % vendor)
-    stores = [x for x in sorted(stores.values(), key=lambda x: (x['amount_float'], x['vendor_name']))]
+    stores = [x for x in sorted(stores.values(), key=lambda x: (x['type_code'], -x['amount_float'], x['vendor_name']))]
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):
