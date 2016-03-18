@@ -581,7 +581,7 @@ class AdminDashboardView(TemplateView):
         Returns list of lists ready for display from the given matrix with Summary data
         """
         headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
-                        'Commission CR']
+                    'Commission CR']
         if is_bottom_summary:
             headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
         top_summary_array = []
