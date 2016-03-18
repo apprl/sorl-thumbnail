@@ -225,6 +225,22 @@ def referral_mail(request):
 #
 # Commissions
 #
+def get_store_earnings(vendor_obj, publisher_cut, normal_cut, standard_from, store):
+    currency = ''
+    if vendor_obj.is_cpc:
+        click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
+        amount = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
+        amount_float = click_cost.locale_price * publisher_cut * normal_cut
+        currency = click_cost.locale_currency
+        type = "is_cpc"
+    elif vendor_obj.is_cpo:
+        amount = store.commission
+        amount_float = standard_from
+        type = "is_cpo"
+    type_code = 0 if type == "is_cpc" else 1
+
+    return amount, amount_float, currency, type, type_code
+
 def commissions(request):
     if not request.user.is_authenticated() or not request.user.is_partner:
         log.error('Unauthorized user trying to access store commission page. Returning 404.')
@@ -255,18 +271,8 @@ def commissions(request):
 
             # Get different cuts
             _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
-
-            if vendor_obj.is_cpc:
-                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
-                temp['amount'] = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
-                temp['amount_float'] = click_cost.locale_price * publisher_cut * normal_cut
-                temp['currency'] = click_cost.locale_currency
-                temp['type'] = "is_cpc"
-            elif vendor_obj.is_cpo:
-                temp['amount'] = store.commission
-                temp['amount_float'] = standard_from
-                temp['type'] = "is_cpo"
-            temp['type_code'] = 0 if temp['type'] == "is_cpc" else 1
+            temp['amount'], temp['amount_float'], temp['currency'], temp['type'], temp['type_code'] = \
+                get_store_earnings(vendor_obj, publisher_cut, normal_cut, standard_from, store)
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
