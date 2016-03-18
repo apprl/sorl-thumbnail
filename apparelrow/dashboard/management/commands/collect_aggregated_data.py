@@ -12,8 +12,8 @@ from apparelrow.dashboard.views import get_clicks_from_sale
 from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_dict, get_user_thumbnail_and_link, \
     get_user_attrs, get_day_range
 
-from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.management.base import BaseCommand
 
 logger = logging.getLogger('dashboard')
@@ -188,6 +188,7 @@ class Command(BaseCommand):
             instance.referral_earnings += earning_amount
         instance.sale_plus_click_earnings += earning_amount
         instance.aggregated_from_slug = link
+        instance.aggregated_from_image = staticfiles_storage.url(settings.APPAREL_DEFAULT_LINK_ICON)
         instance.save()
 
         if created:
@@ -387,8 +388,9 @@ class Command(BaseCommand):
                                   aggregated_from_id=0, aggregated_from_name=link_name,
                                   aggregated_from_link=row['source_link'])
                 if created:
-                    _, instance.user_name, instance.user_username  = get_user_attrs(user)
+                    _, instance.user_name, instance.user_username = get_user_attrs(user)
                     instance.user_image, instance.user_link = get_user_thumbnail_and_link(user)
+                    instance.aggregated_from_image = staticfiles_storage.url(settings.APPAREL_DEFAULT_LINK_ICON)
 
                     if vendor.is_cpc:
                         instance.paid_clicks += decimal.Decimal(row['clicks'])
