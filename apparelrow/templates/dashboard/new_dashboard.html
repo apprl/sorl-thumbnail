@@ -120,7 +120,7 @@
             var html = "";
             for (i = 0; i < json_detail.length; i++){
                 html += "<tr>" +
-                        "<td data-sort=\"" + json_detail[i].product_name + "\"><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
+                        "<td class='pull-left-cell' data-sort=\"" + json_detail[i].product_name + "\"><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
                         "<td data-sort=\""+ json_detail[i].clicks +"\" class='center'>"  + json_detail[i].clicks + "</td>" +
                         "<td data-sort=\"" + json_detail[i].product_earning+ "\" class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
                         "<tr>";
@@ -212,8 +212,8 @@
     {% if is_owner %}
         <div class="row">
             <div class="col-lg-12 table-responsive">
-                <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2></div>
-                <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a></small></h2></div>
+                <h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2>
+                <a class="center btn btn-default" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a>
                 <table id="top-publishers" class="sortable table top-publishers">
                     <thead>
                         <tr>
@@ -256,17 +256,17 @@
         </div>
     {% endif %}
 
-    <div class="row">
+    <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
             <h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2>
             <a class="btn btn-default center" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a>
             <table id="top-products" class="sortable table top-products">
                 <thead>
                     <tr>
-                        <th class="col-md-1 product-image center">{% trans "Product" %}</th>
-                        <th class="col-md-5 hidden-xs center"></th>
-                        <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        <th class="col-md-1">{% trans "Product" %}</th>
+                        <th class="col-md-5 hidden-xs"></th>
+                        <th class="col-md-2">{% trans "Clicks" %}</th>
+                        <th class="col-md-2">{% trans "Publisher earnings" %}</th>
                         {% if is_owner %}<th class="col-md-2 center">{% trans "Network earnings" %}</th>{% endif %}
                     </tr>
                 </thead>
@@ -295,7 +295,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="3">{% trans "No sales yet." %}</td>
+                        <td colspan="3">{% trans "Nothing to show here yet." %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -303,18 +303,18 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
             <h2 class="sales-header">{% trans "Your earnings" %} {{ month_display }} {{ year }}</h2>
-                <table id="all-earnings" class="sortable table sortable">
+                <table id="all-earnings" class="sortable table">
                     <thead>
                         <tr>
-                            <th class="hidden-xs">{% trans "Date" %}</th>
-                            <th>{% trans "Description" %}</th>
-                            <th class="hidden-xs"></th>
-                            <th class="hidden-xs">{% trans "Details" %}</th>
-                            <th>{% trans "Sale value" %}</th>
-                            <th>{% trans "Your earnings" %}</th>
+                            <th class="col-lg-1 hidden-xs">{% trans "Date" %}</th>
+                            <th class="col-lg-2">{% trans "Description" %}</th>
+                            <th class="col-lg-3" class="hidden-xs"></th>
+                            <th class="col-lg-2 hidden-xs center">{% trans "Details" %}</th>
+                            <th class="col-lg-2 center">{% trans "Sale value" %}</th>
+                            <th class="col-lg-2 center">{% trans "Your earnings" %}</th>
                         </tr>
                     </thead>
                     <tbody id="body-earnings">
@@ -364,12 +364,12 @@
                     } else {
                         row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
                     }
-                    row.append('<td>' + this.description_text + '</td>');
+                    row.append('<td style="text-align:left;">' + this.description_text + '</td>');
                 } else {
                     if (this.description_link == '') {
-                        row.append('<td colspan="2">' + this.description_text + '</td>');
+                        row.append('<td colspan="2" style="text-align:left;">' + this.description_text + '</td>');
                     } else {
-                        row.append('<td colspan="2"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
+                        row.append('<td colspan="2" style="text-align:left;"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
                     }
                 }
                 // Details
@@ -388,7 +388,7 @@
                             'data-clicks="' + this.clicks + '">' +
                             'See details</a></td>');
                 } else {
-                    row.append('<td data-sort="' + this.sale_amount + '">' + currency +"  " + this.sale_amount + '</td>');
+                    row.append('<td data-sort="' + this.sale_amount + '" >' + currency +"  " + this.sale_amount + '</td>');
                 }
                 // Earning
                 row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');

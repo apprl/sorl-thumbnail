@@ -156,7 +156,9 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
     """
     Return a sorted list with detailed information from click earnings per product
     for a given user, vendor and day
+
     """
+    # Todo: Change this to dates only, remove 23.59:59:99999 and such
     start_date_query = datetime.datetime.combine(date, datetime.time(0, 0, 0, 0))
     end_date_query = datetime.datetime.combine(date, datetime.time(23, 59, 59, 999999))
     values = [vendor_name, start_date_query, end_date_query]
@@ -256,6 +258,7 @@ def get_total_clicks_per_vendor(vendor):
     """
     Return total number of clicks for a Vendor
     """
+    # Todo: Change this to dates only, remove 23.59:59:99999 and such
     today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
     return get_model('statistics', 'ProductStat').objects.filter(vendor=vendor, is_valid=True).\
@@ -313,6 +316,7 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
     """
     Return a list of dictionaries with detailed data of User Earnings
     """
+    # Todo: Change this to dates only, remove 23.59:59:99999 and such
     start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
     end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
     earnings = get_model('dashboard', 'UserEarning').objects\
@@ -385,6 +389,7 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
     return earnings_list
 
 def get_day_range(q_date):
+    # Todo: Change this to dates only, remove 23.59:59:99999 and such
     start_date = datetime.datetime.combine(q_date, datetime.time(0, 0, 0, 0))
     end_date = datetime.datetime.combine(q_date, datetime.time(23, 59, 59, 999999))
     return start_date, end_date
@@ -630,6 +635,7 @@ def get_available_stores(current_location):
 def render_detail_earnings(request):
     """
     Return a list of user earning details given a date range when an AJAX request is made
+    Todo: Very heavy method, need to be fixed.
     """
     if request.method == 'GET':
         month = request.GET.get('month', None)

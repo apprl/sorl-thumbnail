@@ -22,7 +22,7 @@
                 {% if product.default_vendor and product.default_vendor.availability != 0 %}
                 <a rel="nofollow" target="_blank" class="btn btn-success btn-block btn-look-tooltip btn-buy" href="{% buy_url product.id product.default_vendor owner.pk 'Look' %}" data-sid="{% get_sid product.id owner.pk 'Ext-Look' %}" data-slug="{{ product.slug }}" data-vendor="{{ product.default_vendor.vendor }}" data-price="{{ product.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Buy" %}</a>
                 {% else %}
-                <a href="{% internal_referral_url product.get_absolute_url owner.pk %}" class="btn btn-default btn-block disabled btn-look-tooltip">{% trans "Sold out" %}</a>
+                <a href="{% internal_referral_url product.get_absolute_url owner.pk %}" class="btn btn-lg disabled btn-block btn-look-tooltip">{% trans "Sold out" %}</a>
                 {% endif %}
             </div>
         </div>

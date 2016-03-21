@@ -32,7 +32,7 @@
         {% if warning_text %}
         <div class="alert alert-warning alert-dismissible top-alert" role="alert">
             <button type="button" class="close" data-dismiss="modal"><span></span></button>
-            {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-email' %}#location-notifications">{% trans "Go to location settings" %}</a>
+            {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-account' %}#location">{% trans "Go to location settings" %}</a>
         </div>
         {% endif %}
 
@@ -167,7 +167,7 @@
                             {% cache CACHE_TIMEOUT product_detail_selected_by object.id LANGUAGE_CODE %}
                             {% if partner_likes or object.manufacturer.user %}
                                 <a class="helper" href="#">{% trans "See all" %}</a>
-                                    <h4>{% trans "Selected by" %} <span>({{ partner_likes|length }})</span></h4>
+                                    <h4>{% trans "Selected by" %} <span>({{ partner_likes|get_selected_by }})</span></h4>
                             <hr>
 
                             <ul class="list-selected-by center-sm">

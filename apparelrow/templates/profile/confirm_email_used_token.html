@@ -6,7 +6,7 @@
 
 <div id="content">
     <h1>{% trans "Link is already used" %}</h1>
-    {% url 'settings-email' as settings_url %}
+    {% url 'settings-account' as settings_url %}
     <p>{% blocktrans with settings_url=settings_url %}This link is already used. To change you e-mail address address go to <a href="{{settings_url}}">your settings</a>.{% endblocktrans %}
 </div>
 {% endblock %}

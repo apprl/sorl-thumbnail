@@ -23,7 +23,7 @@
 
     <div class="body-header">
         <h1>{% trans "Products" %}</h1>
-        <ul class="sub-menu">
+        <ul class="sub-menu shop-view">
             <li><a href="?view=all" data-view="all"{% if not request.GET.view or request.GET.view == 'all' %} class="selected"{% endif %}>{% trans "Popular" %}</a></li>
             <li><a href="?view=latest" data-view="latest"{% if request.GET.view == 'latest' %} class="selected"{% endif %}>{% trans "Latest in" %}</a></li>
             <li><a href="?view=brands" data-view="brands"{% if request.GET.view == 'brands' %} class="selected"{% endif %}>{% trans "My brands" %}</a></li>

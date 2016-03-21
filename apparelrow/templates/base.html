@@ -158,7 +158,7 @@
                                     {% endif %}
                                 {% endif %}
                                 <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
-                                <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
+                                <li><a href="{% url 'settings-account' %}">{% trans "Settings" %}</a></li>
                                 <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                             </ul>
                         </li>
@@ -224,12 +224,17 @@
                                     <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
                                 {% endif %}
                                 <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
-                                <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
+                                <li><a href="{% url 'settings-account' %}">{% trans "Settings" %}</a></li>
                                 <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                             </ul>
                         </li>
                         <hr class="visible-xs visible-sm">
-                        <li class="visible-xs visible-sm"><a href="{% url 'settings-email' %}#location"><u>{% get_location_text request.user.location %}</u></a></li>
+                        <li class="visible-xs visible-sm">
+                            <a href="{% url 'settings-account' %}#location">
+                                {% get_location_text request.user.location %}
+                                <span class="underline-text">Change</span>
+                            </a>
+                        </li>
                         {% comment %}
                         <li class="visible-xs visible-sm dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
@@ -276,7 +281,7 @@
                             <ul>
                                 <li class="dropdown">
                                 {% if request.user.is_authenticated %}
-                                    <a class="btn btn-sm btn-grey" href="{% url 'settings-email' %}#location">{% get_location_text request.user.location %}</a>
+                                    <a class="btn btn-sm btn-grey" href="{% url 'settings-account' %}#location">{% get_location_text request.user.location %}</a>
                                 {% else %}
                                     <a class="btn btn-sm btn-grey dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                                     <ul id="language-dropdown" class="dropdown-menu">

@@ -7,6 +7,7 @@
 <div class="container center">
     <h1>{% trans "Apply to become an APPRL publisher" %}</h1>
     {% if referral_user %}
+    <br>
     <div class="alert alert-warning">{% blocktrans with name=referral_user.display_name %}You have been invited by {{name}}. Therefore we will put €20 in your Apprl account to start with if you apply below.{% endblocktrans %}</div>
     {% endif %}
     <article style="margin-top: 30px;">
