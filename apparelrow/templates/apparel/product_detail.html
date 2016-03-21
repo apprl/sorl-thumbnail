@@ -32,7 +32,7 @@
         {% if warning_text %}
         <div class="alert alert-warning alert-dismissible top-alert" role="alert">
             <button type="button" class="close" data-dismiss="modal"><span></span></button>
-            {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-email' %}#location-notifications">{% trans "Go to location settings" %}</a>
+            {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-account' %}#location">{% trans "Go to location settings" %}</a>
         </div>
         {% endif %}
 
