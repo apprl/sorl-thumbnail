@@ -75,3 +75,10 @@ class ShortLinkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = get_model('apparel','ShortDomainLink')
     vendor = factory.SubFactory(VendorFactory)
+
+class StoreFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = get_model('advertiser','Store')
+    identifier = factory.Sequence(lambda n: 'Store %s' % n)
+    user = factory.SubFactory(UserFactory)
