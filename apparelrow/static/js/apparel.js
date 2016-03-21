@@ -364,6 +364,10 @@ $(document).ready(function() {
                             helpText = "/sale";
                         productEarningBlock.html("You'll earn " + json['user_earning'] + helpText);
                         productEarningBlock.css("padding", "10px");
+                        productEarningBlock.click(function() {
+                            window.location = element.find("a").attr("href");
+                            return false;
+                        })
                     }
                 });
             }
