@@ -239,7 +239,7 @@ def get_store_earnings(vendor_obj, publisher_cut, normal_cut, standard_from, sto
     elif vendor_obj.is_cpo:
         amount = store.commission
         amount_float = standard_from
-    type_code = 0 if type == "is_cpc" else 1
+    type_code = 0 if earning_type == "is_cpc" else 1
 
     return amount, amount_float, currency, earning_type, type_code
 

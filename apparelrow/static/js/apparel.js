@@ -362,7 +362,8 @@ $(document).ready(function() {
                         var helpText = "/click";
                         if (json['type'] == "is_cpo")
                             helpText = "/sale";
-                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText + " on this product");
+                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText);
+                        productEarningBlock.css("padding", "10px");
                     }
                 });
             }
