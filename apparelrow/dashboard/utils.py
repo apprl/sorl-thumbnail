@@ -148,7 +148,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
             except:
                 log.warn("No cut exists for %s and vendor %s, please do correct this." % (user.partner_group,vendor))
     except get_user_model().DoesNotExist:
-        pass
+        log.warn("User %s does not exist" % user_id)
 
     return user, normal_cut, referral_cut, publisher_cut
 
@@ -403,7 +403,7 @@ def aggregated_data_per_day(start_date, end_date, dashboard_type, values_opt, qu
     data_per_day = {}
 
     # Initialize array that contains data per day
-    for day in range(0, (end_date - start_date).days + 2):
+    for day in range(0, (end_date - start_date).days + 1):
         data_per_day[start_date + datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
 
     if dashboard_type == 'publisher':

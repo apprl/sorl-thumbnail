@@ -331,6 +331,12 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('mouseenter', '.product-medium-earning', function () {
+        $(this).parent().find('.product-medium > .product-image-container').trigger("mouseenter");
+    });
+    $(document).on('mouseleave', '.product-medium-earning', function () {
+        $(this).parent().find('.product-medium > .product-image-container').trigger("mouseleave");
+    });
     // Product hover, works with medium
     $(document).on('mouseenter', '.product-medium > .product-image-container', function() {
         var element = $(this),
@@ -347,13 +353,28 @@ $(document).ready(function() {
                     }
                 }
             });
+
+            if (typeof(loadEarnings) != "undefined" && loadEarnings) {
+                $.getJSON(product_earnings_url + '?id=' + product_id, function(json) {
+                    var productEarningBlock = $("#product-medium-earning-" + product_id);
+                    productEarningBlock.html("");
+                    if (json['code'] == "success") {
+                        var helpText = "/click";
+                        if (json['type'] == "is_cpo")
+                            helpText = "/sale";
+                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText + " on this product");
+                    }
+                });
+            }
         }
         element.data('load_data', true);
         element.find('.hover').show();
+        element.parentsUntil("ul").find('.product-medium-earning').css('visibility', 'visible');
         element.find('.product-image').css({opacity: 0.3});
     }).on('mouseleave', '.product-medium > .product-image-container', function() {
         $(this).find('.hover').hide();
         $('.product-image').css({opacity: 1});
+        $(this).parentsUntil("ul").find('.product-medium-earning').css('visibility', 'hidden');
     });
 
     // Look hover, works with medium

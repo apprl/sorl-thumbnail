@@ -22,7 +22,8 @@ from apparelrow.apparel.models import Brand
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
-from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender, get_location, get_gender_url
+from apparelrow.apparel.views import backend_product_earnings
+from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender, get_location
 
 logger = logging.getLogger('apparel.debug')
 
@@ -56,7 +57,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
     """
     Set query arguments that are common for every browse page access.
     """
-    query_arguments['fl'] = 'template:{0}_template'.format(translation.get_language())
+    query_arguments['fl'] = 'template:{0}_template, product:django_id'.format(translation.get_language())
 
     query_arguments['facet'] = 'on'
     query_arguments['facet.limit'] = -1
@@ -214,7 +215,6 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
         gender = select_from_multi_gender(request, 'shop', None)
         return HttpResponseRedirect(u'{shop_url}?{parameters}'.format(shop_url=get_gender_url(gender, 'shop'),
                                                                       parameters=request.GET.urlencode()))
-
     elif user_gender is None:
         gender = select_from_multi_gender(request, 'shop', gender)
 
@@ -328,7 +328,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
 
     result.update(browse_text=browse_text)
 
-    paged_result.html = [o.template for o in paged_result.object_list if o and hasattr(o, 'template')]
+    paged_result.html = [(o.template, o.product) for o in paged_result.object_list if o and hasattr(o, 'template')]
     paged_result.object_list = []
 
     if not paged_result.html:
@@ -391,7 +391,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
             html = loader.render_to_string('apparel/fragments/product_list.html',
                 {
                     'current_page': paged_result,
-                    'pagination': pagination
+                    'pagination': pagination,
                 },
                 context_instance=RequestContext(request)
             ),

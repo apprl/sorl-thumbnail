@@ -172,6 +172,8 @@ urlpatterns = patterns('',
     url(r'^backend/colors/$', 'apparelrow.apparel.views.list_colors', name='backend-list-colors'),
     url(r'^backend/authenticated/$', 'apparelrow.apparel.views.authenticated_backend', name='backend-authenticated'),
     url(r'^backend/product/lookup/$', 'apparelrow.apparel.views.product_lookup', name='backend-product-lookup'),
+    url(r'^backend/product/earning/$', 'apparelrow.apparel.views.backend_product_earnings',
+        name='backend-product-earnings'),
 
     # Dashboard backend
     url(r'^backend/detail/earnings/$', 'apparelrow.dashboard.views.render_detail_earnings', name='detail-earnings'),

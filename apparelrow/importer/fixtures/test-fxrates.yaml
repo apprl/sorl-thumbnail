@@ -104,3 +104,17 @@
     base_currency: SEK
     currency: SEK
     rate: "1.000"
+
+- model: importer.fxrate
+  pk: 6
+  fields:
+    base_currency: SEK
+    currency: USD
+    rate: "8.500"
+
+- model: importer.fxrate
+  pk: 7
+  fields:
+    base_currency: USD
+    currency: SEK
+    rate: "0.01"

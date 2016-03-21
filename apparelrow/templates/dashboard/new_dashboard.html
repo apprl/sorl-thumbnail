@@ -117,15 +117,14 @@
             Load detail click earning details for clicks in a modal
         */
         function load_detailed_data_clicks(json_detail, date, vendor, currency){
-            var html = "<table>";
+            var html = "";
             for (i = 0; i < json_detail.length; i++){
                 html += "<tr>" +
-                        "<td class='pull-left-cell'><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
-                        "<td>"  + json_detail[i].clicks + "</td>" +
-                        "<td>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
+                        "<td class='pull-left-cell' data-sort=\"" + json_detail[i].product_name + "\"><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
+                        "<td data-sort=\""+ json_detail[i].clicks +"\" class='center'>"  + json_detail[i].clicks + "</td>" +
+                        "<td data-sort=\"" + json_detail[i].product_earning+ "\" class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
                         "<tr>";
             }
-            html += "</table>";
             $("#content-clicks").html(html);
             $("#modal-date").html(date);
             $("#modal-vendor").html(vendor);

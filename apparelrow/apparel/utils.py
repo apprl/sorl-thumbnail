@@ -578,13 +578,29 @@ def get_external_store_commission(stores, product=None):
     store_commission = None
     if len(stores) > 0:
         commission_array = stores[0].commission.split("/")
-        standard_from = decimal.Decimal(commission_array[0])
-        standard_to = decimal.Decimal(commission_array[1])
-        sale = decimal.Decimal(commission_array[2])
-        if sale != 0 and product and product.default_vendor.locale_discount_price:
-            store_commission = sale / 100
-        else:
-            standard_from = standard_to if not standard_from else standard_from
-            standard_to = standard_from if not standard_to else standard_to
-            store_commission = (standard_from + standard_to)/(2*100)
+        if len(commission_array) > 0:
+            if len(commission_array) == 1:
+                return decimal.Decimal(commission_array[0])/100
+            standard_from = decimal.Decimal(commission_array[0])
+            standard_to = decimal.Decimal(commission_array[1])
+            sale = decimal.Decimal(commission_array[2])
+            if sale != 0 and product and product.default_vendor.locale_discount_price:
+                store_commission = sale / 100
+            else:
+                standard_from = standard_to if not standard_from else standard_from
+                standard_to = standard_from if not standard_to else standard_to
+                store_commission = (standard_from + standard_to)/(2*100)
     return store_commission
+
+def get_vendor_cost_per_click(vendor):
+    """
+    Get cost per click for CPC vendor
+    """
+    click_cost = None
+    if vendor:
+        if vendor.is_cpc:
+            try:
+                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
+            except get_model('dashboard', 'ClickCost').DoesNotExist:
+                logger.warning("ClickCost not defined for vendor %s" % vendor)
+    return click_cost

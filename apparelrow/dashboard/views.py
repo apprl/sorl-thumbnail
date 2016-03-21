@@ -244,26 +244,34 @@ def commissions(request):
             temp = {}
             vendor_obj = get_model('apparel', 'Vendor').objects.get(name=vendor)
             store = get_model('dashboard', 'StoreCommission').objects.get(vendor=vendor_obj)
-            store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
+
+            cuts_for_user_vendor = get_cuts_for_user_and_vendor(user_id, store.vendor)
+            standard_from = 0 if not store else store.get_standard_from(store.commission, *cuts_for_user_vendor)
+            store.calculated_commissions(store.commission, *cuts_for_user_vendor)
             temp['vendor_pk'] = vendor_obj.pk
             temp['vendor_name'] = vendor_obj.name
             temp['link'] = store.link
             temp['store_pk'] = store.pk
+
+            # Get different cuts
+            _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
+
             if vendor_obj.is_cpc:
-                _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
                 click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
                 temp['amount'] = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
+                temp['amount_float'] = click_cost.locale_price * publisher_cut * normal_cut
                 temp['currency'] = click_cost.locale_currency
                 temp['type'] = "is_cpc"
             elif vendor_obj.is_cpo:
                 temp['amount'] = store.commission
+                temp['amount_float'] = standard_from
                 temp['type'] = "is_cpo"
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
         except get_model('dashboard', 'StoreCommission').DoesNotExist:
             log.warning("StoreCommission for vendor %s does not exist" % vendor)
-    stores = [x for x in sorted(stores.values(), key=lambda x: x['vendor_name'])]
+    stores = [x for x in sorted(stores.values(), key=lambda x: (x['amount_float'], x['vendor_name']))]
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):
@@ -366,7 +374,11 @@ def clicks_detail(request):
         vendor = request.GET.get('vendor', None)
         currency = request.GET.get('currency', 'EUR')
         num_clicks = request.GET.get('clicks', 0)
-        amount_for_clicks = request.GET.get('amount', 0).replace(',', '.')
+        try:
+            amount_for_clicks = request.GET.get('amount', "0").replace(',', '.')
+        except:
+            amount_for_clicks = "0"
+
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
@@ -571,7 +583,7 @@ class AdminDashboardView(TemplateView):
         headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
                         'Commission CR']
         if is_bottom_summary:
-            headings = ['EPC', 'Clicks', 'Invalid clicks']
+            headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
         top_summary_array = []
         for row in zip(headings, summary):
             temp_list = []
@@ -582,6 +594,9 @@ class AdminDashboardView(TemplateView):
                     if not percentage:
                         percentage = "-"
                     temp_list.append("%s (%s)" % (value, percentage))
+            elif heading is "Commission CR":
+                for value, percentage in map(None, row[1][0], row[1][1]):
+                    temp_list.append("%.2f%% (%s)" % (value, percentage))
             else:
                 for value, percentage in map(None, row[1][0], row[1][1]):
                     if not percentage:

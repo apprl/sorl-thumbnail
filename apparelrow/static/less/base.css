@@ -8377,6 +8377,7 @@ main div.message .btn {
   right: 0;
   bottom: 50px;
   left: 0;
+  z-index: 3;
 }
 .embed {
   margin: 15px auto;
@@ -8496,10 +8497,29 @@ main div.message .btn {
 }
 li.discount-price,
 span.discount-price {
+  width: auto;
   color: #f64747;
 }
 li.price.discounted {
+  width: auto;
   text-decoration: line-through;
+}
+.product-medium-earning {
+  position: relative;
+  bottom: 163px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  text-align: center;
+  visibility: hidden;
+}
+@media (max-width: 992px) {
+  .product-medium-earning {
+    font-size: 14px;
+    bottom: 159px;
+  }
 }
 /*
     Attributes v1.0
