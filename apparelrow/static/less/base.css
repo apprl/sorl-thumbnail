@@ -7954,6 +7954,15 @@ a.info:hover {
   max-width: none;
 }
 /* Lists ---------- */
+.list-shortcuts {
+  margin-top: 15px;
+}
+.list-shortcuts li {
+  width: 100%;
+  max-width: 240px;
+  display: inline-block;
+  margin: 0 15px;
+}
 .list-points {
   list-style: disc;
   padding-left: 15px;
@@ -8237,11 +8246,12 @@ main div.message .btn {
 /* Alerts ---------- */
 .alert {
   position: relative;
-  background-color: rgba(103, 226, 184, 0.4);
+  background-color: #d2f6ea;
   border: 1px solid #67e2b8;
   border-radius: 0;
   text-align: center;
   font-size: 14px;
+  color: #666;
 }
 .alert.alert-warning {
   color: rgba(0, 0, 0, 0.7);
@@ -8372,6 +8382,7 @@ main div.message .btn {
   right: 0;
   bottom: 60px;
   left: 0;
+  z-index: 3;
 }
 .embed {
   margin: 15px auto;
@@ -8491,10 +8502,29 @@ main div.message .btn {
 }
 li.discount-price,
 span.discount-price {
+  width: auto;
   color: #f64747;
 }
 li.price.discounted {
+  width: auto;
   text-decoration: line-through;
+}
+.product-medium-earning {
+  position: relative;
+  bottom: 163px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  text-align: center;
+  visibility: hidden;
+}
+@media (max-width: 992px) {
+  .product-medium-earning {
+    font-size: 14px;
+    bottom: 159px;
+  }
 }
 /*
     Attributes v1.0
