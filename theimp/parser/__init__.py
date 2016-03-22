@@ -1,3 +1,4 @@
+from django.core.cache import get_cache
 import logging
 import json
 import decimal
@@ -8,10 +9,10 @@ from django.db.models.loading import get_model
 from django.utils import timezone
 from django.utils.html import strip_tags
 
-from theimp.utils import ProductItem
-
+from theimp.utils import ProductItem, get_product_hash
 
 logger = logging.getLogger(__name__)
+cache = get_cache("importer")
 
 
 class Parser(object):
@@ -19,6 +20,7 @@ class Parser(object):
     required_fields = ['sku', 'name', 'description', 'brand', 'category', 'gender', 'images',
                        'currency', 'regular_price', 'url', 'vendor']
     gender_values = ['M', 'W', 'U']
+    final_cache_key = "finalized_{id}"
 
     def __init__(self):
         self.modules = [
@@ -45,6 +47,11 @@ class Parser(object):
                 logger.exception('Could not load module')
 
     def parse(self, product):
+        """
+        Take the scraped data and filter it through the loaded_modules after it has been prepared with initial_parse
+        :param product:
+        :return:
+        """
         if not product:
             logger.error('Could not parse invalid product')
             return
@@ -74,14 +81,28 @@ class Parser(object):
         validated = self.validate(item, vendor)
         item = self.finalize(item, validated)
 
+        final_hash = get_product_hash(item.data[ProductItem.KEY_FINAL])
+        previous_hash = cache.get(self.final_cache_key.format(id=product.id))
+
         product.is_validated = validated if not product.is_dropped else False
         product.parsed_date = timezone.now()
-        product.json = json.dumps(item.data)
-        product.save()
+
+        # Only save the new data if it has changed. Saves time.
+        if not previous_hash == final_hash:
+            cache.set(self.final_cache_key.format(id=product.id), final_hash, 3600*6)
+            product.json = json.dumps(item.data)
+            product.save()
+        else:
+            product.save(update_fields=['is_validated', 'parsed_date'])
 
         return validated
 
     def initial_parse(self, item):
+        """
+        Inital parse consists of migrating key fields from scraped (item) to parsed.
+        :param item: ProductItem object containing three (four if counting manual input) versions of the product attributes
+        :return:
+        """
         for key in ['name', 'description']:
             value = item.get_scraped(key)
             if value:
@@ -101,7 +122,14 @@ class Parser(object):
 
         return item
 
+
     def finalize(self, item, validated):
+        """
+        Moves all the parsed fields into column final, which is later used for importing into apparel.Product
+        :param item:
+        :param validated:
+        :return: ProductItem with updated Final
+        """
         item.data[ProductItem.KEY_FINAL] = {}
         if validated:
             for key in item.data[ProductItem.KEY_PARSED].keys():

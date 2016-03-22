@@ -9,10 +9,11 @@ from scrapy import signals
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop
-
+from django.utils import timezone
 from django.core.cache import get_cache
 from theimp.models import Product, Vendor
 from theimp.parser import Parser
+from theimp.utils import get_product_hash
 
 cache = get_cache("importer")
 
@@ -123,7 +124,7 @@ class DatabaseHandler:
 
         vendor, _ = Vendor.objects.get_or_create(name=item['vendor'])
         product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
-        product_hash = self._get_hash(item)
+        product_hash = get_product_hash(item)
         updated = False
         if product.is_released:
             spider.log('Product %s is released and will not be parsed.' % item['key'])
@@ -139,23 +140,16 @@ class DatabaseHandler:
                 product.vendor = vendor
                 product.is_dropped = False
                 product.save()
-                cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600)
 
-        if created or updated:
-            cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600)
-            updated = True
-
-        self.parser.parse(product)
-
+        if bool(created or updated):
+            cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600*6)
+            self.parser.parse(product)
+        else:
+            # Todo: Set some date to acknowledge scraping has taken place
+            product.parsed_date = timezone.now()
+            product.save(update_fields=['parsed_date'])
         return item
 
-    def _get_hash(self, item):
-        include = ("sku", "name", "url", "category", "description", "brand", "gender", "colors", "regular_price",
-                   "discount_price", "currency", "in_stock", "stock")
-        attributes = []
-        for key in include:
-            attributes.append(item.get(key))
-        return hashlib.sha1(''.join(attributes)).hexdigest()
 
 class RequiredFieldsPipeline:
     required_fields = ['key', 'sku', 'name', 'brand',

@@ -1,4 +1,5 @@
 import datetime
+from django.core.cache import get_cache
 import logging
 import os.path
 import re
@@ -10,18 +11,19 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 
 from theimp.models import Vendor, Product
-from theimp.utils import ProductItem
+from theimp.utils import ProductItem, get_site_product_hash
 
 
 logger = logging.getLogger(__name__)
-links_logger = logging.getLogger('theimp.links')
 
+cache = get_cache("importer")
 
 class SiteImportError(Exception):
     pass
 
 
 class Importer(object):
+    imported_cache_key = "imported_{id}"
 
     def __init__(self, site_queue=None):
         self.site_product_model = get_model('apparel', 'Product')
@@ -42,28 +44,31 @@ class Importer(object):
             imported_date = None
             product_queryset = Product.objects.filter(vendor=vendor)
             if vendor.last_imported_date and not force:
+                # Fetch all products that has been updated since the last vendor.imported date.
                 product_queryset = product_queryset.filter(parsed_date__gte=vendor.last_imported_date)
-            logger.info('Import %s products for vendor %s' % (product_queryset.count(), vendor))
+            logger.info(u'Import {count} products for vendor {vendor}'.format(count=product_queryset.count(), vendor=vendor))
             for product_id in product_queryset.values_list('pk', flat=True):
                 try:
                     product = Product.objects.get(pk=product_id)
                 except Product.DoesNotExist as e:
-                    logger.exception('Could not load product with id %s' % (product_id,))
+                    logger.exception(u'Could not load product with id {id}'.format(id=product_id,))
                     continue
 
                 if not dry:
-                    logger.debug('Import product %s [valid = %s]' % (product.key, product.is_validated))
+                    logger.debug(u'Import product {key} [valid = {valid}]'.format(key=product.key, valid=product.is_validated))
                     try:
                         with transaction.atomic():
                             imported_date = self.site_import(product, product.is_validated)
-
                     except (SiteImportError, IntegrityError) as e:
-                        logger.exception('Could not import product with id %s' % (product_id,))
+                        logger.exception(u'Could not import product with id {id}'.format(id=product_id,))
                         continue
 
+            # Run through all products and set new values. Reason I suspect we iterate through every product is to trigger save signals in django
+            # which in turn trigger other things. Todo: Look at making this more effective
             yesterday = timezone.now() - datetime.timedelta(hours=48)
             for product_id in self.site_product_model.objects.filter(vendors=vendor.vendor_id, availability=True, modified__lte=yesterday).values_list('id', flat=True):
-                logger.debug('Setting availability to false for product with id %s due to the item has not been imported since %s or later [%s]' % (product_id,yesterday,vendor))
+                logger.debug(u'Setting availability to false for product with id {id} due to the item has not been imported since {yday} or later [{vendor}]'.
+                             format(id=product_id, yday=yesterday, vendor=vendor))
                 if not dry:
                     product = self.site_product_model.objects.get(pk=product_id)
                     product.availability=False
@@ -76,13 +81,19 @@ class Importer(object):
 
     def site_import(self, product, is_valid):
         import datetime
-        item = ProductItem(product)
-        site_product = self._find_site_product(item)
-        time_limit = datetime.datetime.today() + datetime.timedelta(days=-4)
 
+        # Convert into ProductItem = bundle of dicts
+        item = ProductItem(product)
+
+        # Get corresponding apparel.Product object
+        site_product = self._find_site_product(item)
         if is_valid:
             if site_product:
-                self.update_product(product, item, site_product)
+                updated = self.update_product(product, item, site_product)
+                logger.info("Product {name} {id} update was written to disk: {update_completed}".
+                                                                                format(name=site_product.product_name,
+                                                                                    id=site_product.id,
+                                                                                    update_completed=updated))
             else:
                 site_product = self.add_product(product, item)
         else:
@@ -90,12 +101,11 @@ class Importer(object):
                 logger.info('Hiding product %s' % site_product)
                 self.hide_product(site_product)
 
-        if site_product:
+        # This is always done now, not necessary unless something changes.
+        # Added check if there is a site key already set
+        if is_valid and site_product and item.get_site_product() is None :
             item.set_site_product(site_product.pk)
             item.save()
-
-            if is_valid and product.created > time_limit:
-                links_logger.info(site_product.get_absolute_url())
 
         product.imported_date = timezone.now()
         product.save()
@@ -151,10 +161,19 @@ class Importer(object):
         site_product.gender = item.get_final('gender')
         site_product.availability = bool(item.get_final('in_stock', False))
         site_product.product_image = self._product_image(item)
-        site_product.save()
 
-        self._update_vendor_product(item, site_product)
-        self._update_product_options(item, site_product)
+        imported_hash = get_site_product_hash(site_product, **item.data[ProductItem.KEY_FINAL])
+        previous_hash = cache.get(self.imported_cache_key.format(id=site_product.id))
+        if not imported_hash == previous_hash:
+            cache.set(self.imported_cache_key.format(id=site_product.id), imported_hash, 3600*6)
+            site_product.save()
+            self._update_vendor_product(item, site_product)
+            self._update_product_options(item, site_product)
+            return True
+        else:
+            logger.info("{} - {}".format(imported_hash, previous_hash))
+            logger.info("Not updating product {id}, since product is the same.".format(id=site_product.id))
+        return False
 
     def hide_product(self, site_product):
         site_product.availability = False
