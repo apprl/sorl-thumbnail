@@ -183,9 +183,9 @@ class ReferralView(TemplateView):
         body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
 
         for email in emails:
-            send_email_task.delay('Invitation from {referral_name}'.format(referral_name=referral_name), body, email,
-                                  '{} <{}>'.format(referral_name, referral_email))
-        messages.add_message(request, messages.SUCCESS, 'Sent mail to %s' % (', '.join(emails),))
+            send_email_task.delay(u'Invitation from {referral_name}'.format(referral_name=referral_name), body, email,
+                                  u'{} <{}>'.format(referral_name, referral_email))
+        messages.add_message(request, messages.SUCCESS, u'Sent mail to %s' % (', '.join(emails),))
         return render(request, self.template_name)
 
 
@@ -244,26 +244,34 @@ def commissions(request):
             temp = {}
             vendor_obj = get_model('apparel', 'Vendor').objects.get(name=vendor)
             store = get_model('dashboard', 'StoreCommission').objects.get(vendor=vendor_obj)
-            store.calculated_commissions(store.commission, *get_cuts_for_user_and_vendor(user_id, store.vendor))
+
+            cuts_for_user_vendor = get_cuts_for_user_and_vendor(user_id, store.vendor)
+            standard_from = 0 if not store else store.get_standard_from(store.commission, *cuts_for_user_vendor)
+            store.calculated_commissions(store.commission, *cuts_for_user_vendor)
             temp['vendor_pk'] = vendor_obj.pk
             temp['vendor_name'] = vendor_obj.name
             temp['link'] = store.link
             temp['store_pk'] = store.pk
+
+            # Get different cuts
+            _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
+
             if vendor_obj.is_cpc:
-                _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
                 click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
                 temp['amount'] = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
+                temp['amount_float'] = click_cost.locale_price * publisher_cut * normal_cut
                 temp['currency'] = click_cost.locale_currency
                 temp['type'] = "is_cpc"
             elif vendor_obj.is_cpo:
                 temp['amount'] = store.commission
+                temp['amount_float'] = standard_from
                 temp['type'] = "is_cpo"
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
         except get_model('dashboard', 'StoreCommission').DoesNotExist:
             log.warning("StoreCommission for vendor %s does not exist" % vendor)
-    stores = [x for x in sorted(stores.values(), key=lambda x: x['vendor_name'])]
+    stores = [x for x in sorted(stores.values(), key=lambda x: (x['amount_float'], x['vendor_name']))]
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):
@@ -287,11 +295,11 @@ def index_complete(request, view):
 
     return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
-
+@DeprecationWarning
 def retailer(request):
     return render(request, 'apparel/retailers.html')
 
-
+@DeprecationWarning
 def retailer_form(request):
     if request.method == 'POST':
         form = SignupForm(request.POST, is_store_form=True)
@@ -366,7 +374,11 @@ def clicks_detail(request):
         vendor = request.GET.get('vendor', None)
         currency = request.GET.get('currency', 'EUR')
         num_clicks = request.GET.get('clicks', 0)
-        amount_for_clicks = request.GET.get('amount', 0).replace(',', '.')
+        try:
+            amount_for_clicks = request.GET.get('amount', "0").replace(',', '.')
+        except:
+            amount_for_clicks = "0"
+
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
@@ -460,7 +472,7 @@ class DashboardView(TemplateView):
                             'ppc_earnings': ppc_earnings,
                             }
             return render(request, 'dashboard/new_dashboard.html', context_data)
-        return HttpResponseRedirect(reverse('new-dashboard'))
+        return HttpResponseRedirect(reverse('dashboard'))
 
 
 #
@@ -571,7 +583,7 @@ class AdminDashboardView(TemplateView):
         headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
                         'Commission CR']
         if is_bottom_summary:
-            headings = ['EPC', 'Clicks', 'Invalid clicks']
+            headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
         top_summary_array = []
         for row in zip(headings, summary):
             temp_list = []
@@ -582,6 +594,9 @@ class AdminDashboardView(TemplateView):
                     if not percentage:
                         percentage = "-"
                     temp_list.append("%s (%s)" % (value, percentage))
+            elif heading is "Commission CR":
+                for value, percentage in map(None, row[1][0], row[1][1]):
+                    temp_list.append("%.2f%% (%s)" % (value, percentage))
             else:
                 for value, percentage in map(None, row[1][0], row[1][1]):
                     if not percentage:
@@ -603,7 +618,7 @@ class AdminDashboardView(TemplateView):
             start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
             end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
-            month_display, month_choices, year_choices = enumerate_months(request.user, month)
+            month_display, month_choices, year_choices = enumerate_months(request.user, month, is_admin=True)
 
             # Aggregate data per day
             values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
@@ -635,7 +650,7 @@ class AdminDashboardView(TemplateView):
                             'top_publishers': top_publishers, 'top_products': top_products,
                             'monthly_array': monthly_array, 'clicks_array': clicks_array }
             return render(request, 'dashboard/new_admin.html', context_data)
-        return HttpResponseRedirect(reverse('new-admin'))
+        return HttpResponseNotFound()
 
 
 #

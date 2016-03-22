@@ -1,13 +1,15 @@
 import logging
 import uuid
-from django.core.cache import get_cache
+import urlparse
 import os.path
+import decimal
 import datetime
 
 from django.db import models
 from django.db.models.loading import get_model
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import get_cache
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
@@ -21,7 +23,8 @@ from django.utils.functional import cached_property
 from apparelrow.apparel.signals import look_saved
 from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
-from apparelrow.apparel.utils import currency_exchange, get_brand_and_category, get_external_store_commission
+from apparelrow.apparel.utils import currency_exchange, get_brand_and_category, get_external_store_commission, \
+    generate_sid, parse_sid, get_vendor_cost_per_click
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
 from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache
 
@@ -34,6 +37,7 @@ from sorl.thumbnail import ImageField, get_thumbnail
 from django_extensions.db.fields import AutoSlugField
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
+from parse import *
 
 from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
 from decimal import Decimal, ROUND_HALF_UP
@@ -357,33 +361,6 @@ class Product(models.Model):
 
         return categories
 
-    def get_product_earning(self, user):
-        """
-        Calculates earnings percentage for the user based on the store and commission group
-        """
-        vendor = self.default_vendor.vendor if self.default_vendor else None
-        if not vendor:
-            return None
-        earning_cut = None
-        store_commission = 0
-        if hasattr(user,"is_partner") and user.is_partner:
-            has_cut = get_model('dashboard', 'Cut').objects.filter(group=user.partner_group, vendor=vendor).exists()
-            if user.partner_group and has_cut:
-                stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
-                if len(stores) > 0:
-                    store_commission = stores[0].commission_percentage
-                else:
-                    stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
-                    store_commission = get_external_store_commission(stores, self)
-                if store_commission > 0:
-                    user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
-                    earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
-                else:
-                    logging.warning('No commission percentage defined for the store %s'%(vendor))
-            else:
-                return None
-        return earning_cut
-
     def save(self, *args, **kwargs):
         if not self.pk:
             self.date_added = datetime.datetime.now()
@@ -492,20 +469,30 @@ def product_like_pre_delete(sender, instance, **kwargs):
 
 SHORT_CONSTANT = 999999
 
+def get_store_link_from_short_link(short_link):
+    calculated_id = None
+    try:
+        calculated_id = saturate(short_link) - SHORT_CONSTANT
+        instance = ShortStoreLink.objects.get(pk=calculated_id)
+    except:
+        logger.error("Short store link can not be found, Short link: %s and desaturated id: %s" % (short_link, calculated_id))
+        raise ShortStoreLink.DoesNotExist("Unable to find ShortStoreLink for id:%s" % calculated_id)
+    return instance
+
+
 class ShortStoreLinkManager(models.Manager):
+
     def get_for_short_link(self, short_link, user_id=None):
-        calculated_id = None
-        instance = None
-        try:
-            calculated_id = saturate(short_link) - SHORT_CONSTANT
-            instance = ShortStoreLink.objects.get(pk=calculated_id)
-        except:
-            logger.error("Short store link can not be found, Short link: %s and desaturated id: %s" % (short_link, calculated_id))
-            raise ShortStoreLink.DoesNotExist("Unable to find ShirtStoreLink for id:%s" % calculated_id)
+        instance = get_store_link_from_short_link(short_link)
         if user_id is None:
             user_id = 0
 
-        return instance.template.format(sid='{}-0-Ext-Store'.format(user_id)), instance.vendor.name
+        sid = generate_sid(0, user_id, 'Ext-Store', instance.vendor.homepage)
+        return instance.template.format(sid=sid), instance.vendor.name
+
+    def get_original_url_for_link(self, short_link):
+        instance = get_store_link_from_short_link(short_link)
+        return '' if not instance else instance.vendor.homepage
 
 
 class ShortStoreLink(models.Model):
@@ -536,6 +523,19 @@ class ShortDomainLinkManager(models.Manager):
 
         return instance.url, instance.vendor.name, instance.user.pk
 
+    def get_original_url_for_link(self, short_link):
+        url, vendor_name, _ = self.get_short_domain_for_link(short_link)
+        vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_name)
+        domain_deep_link = get_model('apparel', 'DomainDeepLinking').objects.filter(vendor=vendor)
+        source_link = ''
+        if len(domain_deep_link) > 0:
+            template = domain_deep_link[0].template
+            result = parse(template, url)
+            _, _, _, source_link = parse_sid(result['sid'])
+        else:
+            logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
+        return source_link
+
 
 class ShortDomainLink(models.Model):
     url = models.CharField(max_length=512, blank=False, null=False)
@@ -550,7 +550,6 @@ class ShortDomainLink(models.Model):
 
     class Meta:
         unique_together = ('url', 'user')
-
 
 
 class ShortProductLinkManager(models.Manager):
@@ -739,6 +738,70 @@ class VendorProduct(models.Model):
             return rate * self.original_discount_price
 
         return rate * self.original_price
+
+    def get_earning_cut_for_product(self, user):
+        """
+        Calculate earnings percentage for the user based on the store and commission group
+        """
+        vendor = self.vendor
+        product = self.product
+        earning_cut = None
+        if vendor:
+            if hasattr(user, "is_partner") and user.is_partner: # User must be partner
+                has_cut = get_model('dashboard', 'Cut').objects.\
+                            filter(group=user.partner_group, vendor=vendor).exists()
+                if user.partner_group and has_cut:
+                    user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
+                    total_publisher_cut = decimal.Decimal(cut * publisher_cut)
+                    if vendor.is_cpo: # Check if Store is CPC or CPO
+                            stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
+                            store_commission = None if not len(stores) > 0 else stores[0].commission_percentage
+                            if not store_commission:
+                                stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
+                                store_commission = get_external_store_commission(stores, self)
+
+                            # Calculate earning cut including Store commission
+                            if store_commission and store_commission > 0:
+                                earning_cut = (Decimal(store_commission * total_publisher_cut * 100)).\
+                                                  quantize(Decimal('1'),rounding=ROUND_HALF_UP) / 100
+                            else:
+                                logging.warning('No commission percentage defined for the store %s' % vendor)
+                    elif vendor.is_cpc:
+                        earning_cut = total_publisher_cut
+                    else:
+                        logger.warning("Vendor %s has not being marked as CPC or CPO vendor" % vendor.name)
+                else:
+                    logger.warning("Could not calculate earning cut for user %s because user does not have a cut"
+                                   % user.id)
+            else:
+                logger.warning("Could not calculate earning cut for user %s because user is not partner" % user.id)
+        else:
+            logger.warning("No default vendor for product %s %s" % (product.product_name, product.id))
+        return earning_cut
+
+    def get_product_earning(self, user):
+        """
+        Calculate earnings in local currency according to Commission Group's cut and Publisher Network owner's cut
+        """
+        product_earning = None
+        currency = None
+
+        earning_cut = self.get_earning_cut_for_product(user)
+        if earning_cut:
+            earning_total = decimal.Decimal(0)
+            if self.vendor.is_cpc:
+                try:
+                    cost_per_click = get_vendor_cost_per_click(self.vendor)
+                    earning_total = cost_per_click.locale_price
+                    currency = cost_per_click.locale_currency
+                except:
+                    logger.warn("Not able to calculate earning for {}".format(self.product.product_name))
+                    earning_total = 0
+            elif self.vendor.is_cpo:
+                earning_total = self.locale_price if not self.locale_discount_price else self.locale_discount_price
+                currency = self.locale_currency
+            product_earning = Decimal((earning_total * earning_cut).quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
+        return product_earning, currency
 
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)

@@ -27,7 +27,7 @@ MANAGERS = ADMINS + (
     ('Gustav', 'gustav@apprl.com'),
 )
 
-ALLOWED_HOSTS = ['.apprl.com']
+ALLOWED_HOSTS = ['.apprl.com','.apparelrow.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://www.postgresql.org/docs/8.1/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
@@ -114,6 +114,9 @@ VENDOR_LOCATION_MAPPING = {
     "Care of Carl": ["SE", "NO"],
     "ALDO": ["US"],
     "ASOS": ["FI", "SE", "NO", "DK", "ALL"],
+    "Lexington": ["FI", "SE", "NO", "DK"],
+    "Zalando": ["SE"],
+    "Soft Goat": ["FI", "SE", "NO", "DK"],
     "Eleven": ["SE"],
     "Happy Socks": ["SE"],
     "Henry Kole": ["SE", "DK", "NO", "FI"],
@@ -319,6 +322,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'localeurl',
     'jsonfield',
+    'parse',
 
     # Internal
     'theimp',
@@ -1027,3 +1031,7 @@ LOGGING = {
 GEOIP_URL = 'http://production-geoip.apprl.com/ip/%s'
 GEOIP_DEBUG = False
 GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"
+
+# Variable for temporary tracking string for tailsweep campaign.
+GINA_TRACKING = {"user_ids": [24,30714,30716,30733,30717,24257,30164,30719,30720,30721,30722,30724,30725,24312,30732,30738,30744],
+                 "tracking_string": "&utm_source=tailsweep_apprl&utm_medium=social&utm_campaign=conversions_2016_se"}

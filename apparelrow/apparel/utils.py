@@ -194,7 +194,10 @@ def remove_query_parameter(url, param_name):
     return urlunsplit((scheme, netloc, path, new_query_string, fragment))
 
 
-def generate_sid(product_id, target_user_id=0, page='Default'):
+def generate_sid(product_id, target_user_id=0, page='Default', source_link=None):
+    """
+    Return string with the structure [user_id]-[product_id]-[page]/[source_link] from the given parameters
+    """
     try:
         target_user_id = int(target_user_id)
     except (TypeError, ValueError, AttributeError):
@@ -205,38 +208,49 @@ def generate_sid(product_id, target_user_id=0, page='Default'):
     except (TypeError, ValueError, AttributeError):
         product_id = 0
 
-    return smart_str('%s-%s-%s' % (target_user_id, product_id, page))
+    sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
+    if source_link:
+        sid += "/%s" % source_link
+    return sid
 
 
 def parse_sid(sid):
+    """
+    Return tuple (user_id, product_id, placement, source_link) from a given id with the
+    structure user_id-product_id-placement/source_link
+    """
+    target_user_id = 0
+    product_id = 0
+    page = 'Unknown'
+    source_link = ''
     if sid:
-        try:
-            target_user_id, rest = sid.split('-', 1)
-            try:
-                product_id, page = rest.split('-', 1)
-                return (int(target_user_id), int(product_id), page)
-            except ValueError:
+        sid_array = sid.split('-', 1)
+        if len(sid_array) > 1:
+            target_user_id = int(sid_array[0])
+            rest = sid_array[1]
+            sid_array = rest.split('-', 1)
+            if len(sid_array) > 1:
+                product_id = int(sid_array[0])
+                page = sid_array[1]
+                if len(page.split('/', 1)) > 1:
+                    page, source_link = page.split('/', 1)
+            else:
                 try:
-                    return (int(target_user_id), int(rest), 'Unknown')
+                    product_id = int(rest)
                 except ValueError:
-                    pass
-                return (int(target_user_id), 0, rest)
-        except ValueError:
-            pass
+                    page = rest
+        else:
+            try:
+                product_id = int(sid)
+            except ValueError:
+                pass
+    return target_user_id, product_id, page, source_link
 
-        try:
-            return (int(sid), 0, 'Unknown')
-        except ValueError:
-            pass
-
-    return (0, 0, 'Unknown')
-
-
-def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
+def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default', source_link=''):
     """
     Append custom SID to every vendor buy URL.
     """
-    sid = generate_sid(product_id, target_user_id, page)
+    sid = generate_sid(product_id, target_user_id, page, source_link)
 
     if not vendor or not vendor.buy_url:
         return ''
@@ -250,13 +264,13 @@ def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default'):
 
     # Tradedoubler
     if site_vendor.provider == 'tradedoubler':
-        url = '%sepi(%s)' % (url, sid)
+        url = u'{url}epi({sid})'.format(url=url, sid=sid)
     # Commission Junction
     elif site_vendor.provider == 'cj':
         url = set_query_parameter(url, 'SID', sid)
     # Zanox
     elif site_vendor.provider == 'zanox':
-        url = '%s&zpar0=%s' % (url, sid)
+        url = u'{url}&zpar0={sid}'.format(url=url, sid=sid)
     # Linkshare
     elif site_vendor.provider == 'linkshare':
         url = set_query_parameter(url, 'u1', sid)
@@ -351,6 +365,15 @@ def select_from_multi_gender(request, gender_key, gender=None, default=None):
 
 
 def get_paged_result(queryset, per_page, page_num):
+    """
+    Handles pagination, this should be done with the built in Pagination class
+    inside a class based view. Todo: migrate and remove this functionality
+    :param queryset: 
+    :param per_page: 
+    :param page_num: 
+    :return:
+    """
+    
     paginator = Paginator(queryset, per_page)
     paginator._count = 10000
     try:
@@ -541,30 +564,44 @@ def get_location_warning_text(vendor_markets, user, page=""):
             markets_text = get_market_text_array(vendor_markets)
             countries_text = generate_countries_text(markets_text)
             location_data = {'country': countries_text, 'location': get_location_text(user.location)}
-            if page == "product":
-                warning_text = _("Warning: You currently have {location} set as your location, this product is only "
-                                 "available in {country}. You will not earn money on clicks from {location} on this "
-                                 "product.".format(**location_data))
-            elif page == "chrome-ext":
-                warning_text = _("Warning: You currently have {location} set as your location, this store is only "
-                                 "available in {country}. You will not earn money on clicks from {location} to this "
-                                 "store.".format(**location_data))
+            if page == "product" or page == "chrome-ext":
+                warning_text = _("Warning: This product is only available in {country}, therefore you will only earn "
+                                 "money on clicks from {country}. You currently have {location} set as your location."
+                                 .format(**location_data))
             else:
                 warning_text = _("You will only earn money on visitors from {country} that click on this product, not "
                                  "from your current location {location}.".format(**location_data))
+        else:
+            pass
     return warning_text
 
 def get_external_store_commission(stores, product=None):
     store_commission = None
     if len(stores) > 0:
         commission_array = stores[0].commission.split("/")
-        standard_from = decimal.Decimal(commission_array[0])
-        standard_to = decimal.Decimal(commission_array[1])
-        sale = decimal.Decimal(commission_array[2])
-        if sale != 0 and product and product.default_vendor.locale_discount_price:
-            store_commission = sale / 100
-        else:
-            standard_from = standard_to if not standard_from else standard_from
-            standard_to = standard_from if not standard_to else standard_to
-            store_commission = (standard_from + standard_to)/(2*100)
+        if len(commission_array) > 0:
+            if len(commission_array) == 1:
+                return decimal.Decimal(commission_array[0])/100
+            standard_from = decimal.Decimal(commission_array[0])
+            standard_to = decimal.Decimal(commission_array[1])
+            sale = decimal.Decimal(commission_array[2])
+            if sale != 0 and product and product.default_vendor.locale_discount_price:
+                store_commission = sale / 100
+            else:
+                standard_from = standard_to if not standard_from else standard_from
+                standard_to = standard_from if not standard_to else standard_to
+                store_commission = (standard_from + standard_to)/(2*100)
     return store_commission
+
+def get_vendor_cost_per_click(vendor):
+    """
+    Get cost per click for CPC vendor
+    """
+    click_cost = None
+    if vendor:
+        if vendor.is_cpc:
+            try:
+                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
+            except get_model('dashboard', 'ClickCost').DoesNotExist:
+                logger.warning("ClickCost not defined for vendor %s" % vendor)
+    return click_cost

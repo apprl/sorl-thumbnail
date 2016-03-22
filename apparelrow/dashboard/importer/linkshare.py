@@ -45,7 +45,7 @@ class Importer(BaseImporter):
                     # diffrent reports, set GBP for now, can change when we know more.
                     data_row['original_currency'] = 'GBP' if not 'Currency' in row else row['Currency']
                     data_row['original_amount'] = row['Sales($)'].replace(',', '')
-                    data_row['user_id'], data_row['product_id'], data_row['placement'] = self.map_placement_and_user(row['Member ID'])
+                    data_row['user_id'], data_row['product_id'], data_row['placement'], data_row['source_link'] = self.map_placement_and_user(row['Member ID'])
                     data_row['sale_date'] = dateutil.parser.parse('%s %s' % (row['Transaction Date'], row['Transaction Time']))
 
                     # Confirm transaction after 100 days

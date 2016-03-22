@@ -95,6 +95,19 @@ class DomainDeepLinkingFactory(factory.django.DjangoModelFactory):
     vendor = factory.SubFactory(VendorFactory)
 
 
+class ShortDomainLinkFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = get_model('apparel','ShortDomainLink')
+    vendor = factory.SubFactory(VendorFactory)
+
+class ShortStoreLinkFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = get_model('apparel','ShortStoreLink')
+    vendor = factory.SubFactory(VendorFactory)
+
+
 class NellyVendorWithProductFactory(VendorFactory):
     vendorproduct = factory.RelatedFactory(VendorProductFactory,'vendor',
                                             product__product_key='http://nelly.com/se/skor-kvinna/skor/vardagsskor/nike-1013/wmns-nike-air-max-thea-118540-54/',vendor__name='Nelly')

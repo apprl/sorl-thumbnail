@@ -79,7 +79,8 @@ def get_clicks_from_sale(sale):
     end_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(23, 59, 59, 999999))
     vendor_name = sale.vendor
     clicks = get_model('statistics', 'ProductStat').objects.filter(vendor=vendor_name, user_id=user_id,
-                                                          created__range=[start_date_query, end_date_query]).count()
+                                                          created__range=[start_date_query, end_date_query],
+                                                                   is_valid=True).count()
     return clicks
 
 def dictfetchall(cursor):
@@ -147,7 +148,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
             except:
                 log.warn("No cut exists for %s and vendor %s, please do correct this." % (user.partner_group,vendor))
     except get_user_model().DoesNotExist:
-        pass
+        log.warn("User %s does not exist" % user_id)
 
     return user, normal_cut, referral_cut, publisher_cut
 
@@ -397,7 +398,7 @@ def aggregated_data_per_day(start_date, end_date, dashboard_type, values_opt, qu
     data_per_day = {}
 
     # Initialize array that contains data per day
-    for day in range(0, (end_date - start_date).days + 2):
+    for day in range(0, (end_date - start_date).days + 1):
         data_per_day[start_date + datetime.timedelta(day)] = [0, 0, 0, 0, 0, 0]
 
     if dashboard_type == 'publisher':
@@ -431,12 +432,14 @@ def aggregated_data_per_month(user_id, start_date, end_date):
                           Sum('network_sales'), Sum('referral_sales'), Sum('paid_clicks'), Sum('total_clicks'))
     return sum_data
 
-def enumerate_months(user, month):
+def enumerate_months(user, month, is_admin=False):
     """
     Return list of tuples with ID, Text for the different months of the year
     """
     dt1 = user.date_joined.date()
     dt2 = datetime.date.today()
+    if is_admin:
+        dt1 = dt1.replace(year=2011)
     year_choices = range(dt1.year, dt2.year+1)
     month_display = ""
     month_choices = [(0, _('All year'))]

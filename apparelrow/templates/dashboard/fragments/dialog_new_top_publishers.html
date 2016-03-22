@@ -15,7 +15,7 @@
                         <th class="col-md-5 hidden-xs center"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
                         <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
-                        {% if is_owner %}
+                        {% if is_owner or is_admin %}
                         <th class="col-md-2 center">{% trans "Network earnings" %}</th>
                         {% endif %}
                         {% if is_admin %}
@@ -35,7 +35,7 @@
                         <td data-sort="{{ publisher.user_name }}" class="col-md-5 hidden-xs">
                             <a href="{{ publisher.user_link }}">{{ publisher.user_name }}</a>
                             {% if is_admin %}
-                            <a href="{% url 'new-dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">
+                            <a href="{% url 'dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">
                                 ({% trans "See dashboard" %})
                             </a>
                             {% endif %}
@@ -53,16 +53,16 @@
                         <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
                             {{ publisher.total_clicks }}
                         </td>
-                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
-                            {{ currency }} {{ publisher.total_earnings }}
+                        <td class="col-md-2 center" data-sort="{% if is_admin %}{{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }}{% else %}{{ publisher.total_earnings }}{% endif %}">
+                            {{ currency }} {% if is_admin %} {{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }} {% else %} {{ publisher.total_earnings }} {% endif %}
                         </td>
-                        {% if is_owner %}
+                        {% if is_owner or is_admin %}
                         <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
                             {{ currency }} {{ publisher.total_network_earnings }}
                         </td>
                         {% endif %}
                         {% if is_admin %}
-                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|commission_rate:publisher.total_clicks }}">
+                        <td class="col-md-2 center" data-sort="{{ publisher.total_earnings|decimal_div:publisher.total_clicks }}">
                             {% if publisher.total_clicks %}{{ currency }} {% endif %}
                             {{ publisher.total_earnings|decimal_div:publisher.total_clicks }}
                         </td>

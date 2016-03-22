@@ -98,13 +98,13 @@
             $('.month-select').change(function() {
                 var month = $('.month-select').find(':selected').data('month');
                 var year = $('.year-select').find(':selected').data('year');
-                window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
+                window.location.href = '{% url "dashboard" %}' + year + '/' + month + '/';
 
             });
             $('.year-select').change(function() {
                 var month = $('.month-select').find(':selected').data('month');
                 var year = $('.year-select').find(':selected').data('year');
-                window.location.href = '/publisher/new_dashboard/' + year + '/' + month + '/';
+                window.location.href = '{% url "dashboard" %}' + year + '/' + month + '/';
             });
 
             /*new Tablesort($('table#earnings').get(0));
@@ -117,15 +117,14 @@
             Load detail click earning details for clicks in a modal
         */
         function load_detailed_data_clicks(json_detail, date, vendor, currency){
-            var html = "<table>";
+            var html = "";
             for (i = 0; i < json_detail.length; i++){
                 html += "<tr>" +
-                        "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
-                        "<td class='center'>"  + json_detail[i].clicks + "</td>" +
-                        "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
+                        "<td data-sort=\"" + json_detail[i].product_name + "\"><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
+                        "<td data-sort=\""+ json_detail[i].clicks +"\" class='center'>"  + json_detail[i].clicks + "</td>" +
+                        "<td data-sort=\"" + json_detail[i].product_earning+ "\" class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
                         "<tr>";
             }
-            html += "</table>";
             $("#content-clicks").html(html);
             $("#modal-date").html(date);
             $("#modal-vendor").html(vendor);

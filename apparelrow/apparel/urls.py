@@ -89,9 +89,8 @@ urlpatterns = patterns('',
 
     # Search
     url(r'^search/$', SearchBaseTemplate.as_view(), {'gender': 'A'}, name='search'),
-    #url(r'^search/$', 'apparelrow.apparel.search.search', {'gender': 'A'}, name='search'),
-    url(r'^search/men/$', 'apparelrow.apparel.search.search', {'gender': 'M'}, name='search-men'),
-    url(r'^search/women/$', 'apparelrow.apparel.search.search', {'gender': 'W'}, name='search-women'),
+    url(r'^search/men/$', SearchBaseTemplate.as_view(), {'gender': 'M'}, name='search-men'),
+    url(r'^search/women/$', SearchBaseTemplate.as_view(), {'gender': 'W'}, name='search-women'),
     url(r'^backend/search/(?P<model_name>\w+)/', 'apparelrow.apparel.search.search_view'),
 
     # Notifications
@@ -172,6 +171,8 @@ urlpatterns = patterns('',
     url(r'^backend/colors/$', 'apparelrow.apparel.views.list_colors', name='backend-list-colors'),
     url(r'^backend/authenticated/$', 'apparelrow.apparel.views.authenticated_backend', name='backend-authenticated'),
     url(r'^backend/product/lookup/$', 'apparelrow.apparel.views.product_lookup', name='backend-product-lookup'),
+    url(r'^backend/product/earning/$', 'apparelrow.apparel.views.backend_product_earnings',
+        name='backend-product-earnings'),
 
     # Dashboard backend
     url(r'^backend/detail/earnings/$', 'apparelrow.dashboard.views.render_detail_earnings', name='detail-earnings'),

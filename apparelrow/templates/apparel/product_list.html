@@ -12,12 +12,18 @@
     </div>
     {% endif %}
 
+    {% if not is_embed_shop and user.is_partner%}
+        <script>
+            var loadEarnings = true;
+        </script>
+    {% endif %}
+
     <div id="product-list" class="col-product-list">
         {% if not is_embed_shop or show_filters %}<h4>{{ browse_text }}</h4><hr>{% endif %}
         {% if extra_html %}
             {{ extra_html }}
         {% else %}
-            {% include 'apparel/fragments/product_list.html' with current_page=current_page pagination=pagination show_product_brand=show_product_brand is_embed_shop=is_embed_shop only %}
+            {% include 'apparel/fragments/product_list.html' with user=user current_page=current_page pagination=pagination show_product_brand=show_product_brand is_embed_shop=is_embed_shop only %}
         {% endif %}
     </div>
 </div>

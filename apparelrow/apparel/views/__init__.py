@@ -2,20 +2,15 @@
 import logging
 import json
 import datetime
-from apparelrow.profile.models import NotificationEvent
-from django.http.response import HttpResponseNotAllowed
 import itertools
-from django.views.generic import DetailView
 import os.path
 import string
 import urllib
 import urlparse
-from apparelrow.apparel.utils import currency_exchange
 import decimal
 import re
 import tldextract
 
-from solrq import Q as SQ
 from django.conf import settings
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
@@ -30,13 +25,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
+from django.views.generic import DetailView
 from django.views.generic.base import RedirectView, TemplateView
 from django.utils import translation, timezone
 from django.utils.encoding import smart_unicode, smart_str
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail import get_thumbnail
 
-from localeurl.views import change_locale
 
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
@@ -46,7 +40,7 @@ from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives, get_available_brands
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list, get_location, get_external_store_commission, \
-    get_availability_text, get_location_warning_text
+    get_availability_text, get_location_warning_text, generate_sid, get_vendor_cost_per_click
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
 from apparelrow.activity_feed.views import user_feed
 from apparelrow.dashboard.views import SignupForm
@@ -58,7 +52,11 @@ from apparelrow.profile.models import NotificationEvent
 from apparelrow.profile.tasks import mail_managers_task
 from apparelrow.statistics.tasks import product_buy_click
 from apparelrow.statistics.utils import get_client_referer, get_client_ip, get_user_agent
+
+from localeurl.views import change_locale
+from sorl.thumbnail import get_thumbnail
 from pysolr import Solr
+from solrq import Q as SQ
 
 logger = logging.getLogger("apparelrow")
 
@@ -92,83 +90,12 @@ def sitemap_view(request, section):
     f = open(path)
     content = f.readlines()
     f.close()
-    return HttpResponse(content, mimetype='application/xml')
+    return HttpResponse(content, content_type='application/xml')
 
-
-#
-# Redirects
-#
-
-def product_redirect_by_id(request, pk):
-    """
-    Makes it
-    """
-    product = get_object_or_404(Product, pk=pk, published=True)
-    return HttpResponsePermanentRedirect(product.get_absolute_url())
-
-def brand_redirect(request, pk):
-    """
-    Redirect from a brand id to brand profile page.
-    """
-    brand = get_object_or_404(Brand, pk=pk)
-    return HttpResponsePermanentRedirect(brand.user.get_absolute_url())
 
 #
 # Earnings
 #
-
-def get_earning_cut(user, vendor, product=None):
-    """
-    Get publisher's earning cut
-    """
-    earning_cut = None
-    if vendor:
-        if vendor.is_cpo:
-            # Get the store commission
-            earning_cut = product.get_product_earning(user)
-        elif vendor.is_cpc:
-            # Cost per click
-            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
-            earning_cut = cut * publisher_cut
-        else:
-            logger.warning("Vendor %s has not being marked as CPC or CPO vendor" % vendor.name)
-    else:
-        logger.warning("No default vendor for product %s %s" % (product.product_name, product.id))
-    return earning_cut
-
-def get_vendor_cost_per_click(vendor):
-    """
-    Get cost per click for CPC vendor
-    """
-    click_cost = None
-    if vendor:
-        if vendor.is_cpc:
-            try:
-                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
-            except get_model('dashboard', 'ClickCost').DoesNotExist:
-                logger.warning("ClickCost not defined for vendor %s" % vendor)
-    return click_cost
-
-def get_product_earning(user, default_vendor, product):
-    product_earning = None
-    if not default_vendor or not default_vendor.vendor:
-        return None
-
-    earning_cut = get_earning_cut(user, default_vendor.vendor, product)
-    if earning_cut:
-        earning_total = decimal.Decimal(0)
-        if default_vendor.vendor.is_cpc:
-            try:
-                cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
-                earning_total = cost_per_click.amount
-            except:
-                logger.warn("Not able to calculate earning for {}".format(product.product_name))
-                earning_total = 0
-        elif default_vendor.vendor.is_cpo:
-            earning_total = default_vendor.locale_price
-        product_earning = earning_total * earning_cut
-    return product_earning
-
 def get_vendor_commission(vendor):
     """
     Get commission for Vendor either if it is an AAN Store or any other affiliate network
@@ -180,6 +107,39 @@ def get_vendor_commission(vendor):
         store_commission = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
         return get_external_store_commission(store_commission)
     return None
+
+def backend_product_earnings(request):
+    """
+    # Returns JSON object with data about earnings for the given product_id
+    :param request:
+    :param product_id:
+    :return:
+    """
+    dict = {}
+    user = request.user
+    dict['code'] = "fail"
+    dict['user_earning'] = ""
+    product_id = int(request.GET.get("id", None))
+    if product_id:
+        try:
+            product_obj = get_model('apparel', 'Product').objects.get(id=product_id)
+            vendor_product = product_obj.default_vendor
+            product_earning, currency = vendor_product.get_product_earning(user)
+            if product_earning:
+                dict['user_earning'] = "%s %s" % (currency, product_earning)
+                dict['code'] = "success"
+
+                if vendor_product.vendor.is_cpc:
+                    dict['type'] = "is_cpc"
+                elif vendor_product.vendor.is_cpo:
+                    dict['type'] = "is_cpo"
+                else:
+                    logger.warning("Vendor %s has not be defined as CPC or CPO vendor" % vendor_product.vendor.name)
+            else:
+                logging.warning("Could not calculate cut for user %s and vendor %s" % (user.id, vendor_product.vendor.name))
+        except get_model('apparel', 'Product').DoesNotExist:
+            logging.warning("Product with id %s does not exist" % product_id)
+    return HttpResponse(json.dumps(dict), content_type='application/json')
 
 #
 # Notifications
@@ -274,7 +234,7 @@ def facebook_share(request, activity):
     if not facebook_user:
         return HttpResponse(
             json.dumps(dict(success=False, message='', error=_('Check your browser settings.').encode('utf-8'))),
-            mimetype='application/json')
+            content_type='application/json')
 
     if activity == 'push':
         facebook_push_graph.delay(request.user.pk, facebook_user.access_token, action, object_type, object_url)
@@ -283,7 +243,7 @@ def facebook_share(request, activity):
 
     return HttpResponse(
         json.dumps(dict(success=True, message=_('Shared to your Facebook timeline!').encode('utf-8'), error='')),
-        mimetype='application/json')
+        content_type='application/json')
 
 
 #
@@ -325,27 +285,6 @@ def follow_unfollow(request, profile_id, do_follow=True):
                                   request.build_absolute_uri(profile.get_absolute_url()))
 
     return HttpResponse(status=204)
-
-
-#
-# Store short link
-#
-
-def store_short_link(request, short_link, user_id=None):
-    """
-    Takes a short short link and redirect to associated url.
-    """
-    try:
-        url, name = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
-    except ShortStoreLink.DoesNotExist:
-        raise Http404
-
-    if user_id is None:
-        user_id = 0
-
-    return render(request, 'redirect_no_product.html',
-                  {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store',
-                   'event': 'StoreLinkClick'})
 
 
 #
@@ -417,10 +356,11 @@ class ProductDetailView(DetailView):
         except (TypeError, ValueError, AttributeError):
             sid = 0
 
-        # Get the store commission
-        earning_cut = product.get_product_earning(request.user)
         # Cost per click
         default_vendor = product.default_vendor
+
+        # Get the store commission
+        earning_cut = default_vendor.get_product_earning(request.user)
         cost_per_click = 0
         if default_vendor and default_vendor.vendor.is_cpc:
             user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
@@ -439,7 +379,7 @@ class ProductDetailView(DetailView):
 
             # Calculate cost per click and earning cut
             cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
-            earning_cut = get_earning_cut(request.user, default_vendor.vendor, product)
+            earning_cut = default_vendor.get_earning_cut_for_product(request.user)
 
         availability_text = get_availability_text(vendor_markets)
         warning_text = get_location_warning_text(vendor_markets, request.user, "product")
@@ -523,17 +463,13 @@ def product_detail(request, slug):
 
     default_vendor = product.default_vendor
 
-    earning_cut = None
-    cost_per_click = None
-
     # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
     vendor_markets = None
     if default_vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
 
         # Calculate cost per click and earning cut
-        cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
-        earning_cut = get_earning_cut(request.user, default_vendor.vendor, product)
+        product_earning, currency = product.default_vendor.get_product_earning(request.user)
 
     availability_text = get_availability_text(vendor_markets)
     warning_text = get_location_warning_text(vendor_markets, request.user, "product")
@@ -556,8 +492,8 @@ def product_detail(request, slug):
             'referral_sid': referral_sid,
             'alternative': alternative,
             'alternative_url': alternative_url,
-            'earning_cut': earning_cut,
-            'cost_per_click': cost_per_click,
+            'product_earning': product_earning,
+            'currency': currency,
             'has_share_image': True,
             'availability_text': availability_text,
             'warning_text': warning_text
@@ -599,6 +535,28 @@ def product_generate_short_link(request, slug):
     return render(request, 'apparel/fragments/product_short_link.html', {'product_short_link': product_short_link,
                                                                          'warning_text': warning_text})
 
+
+##################################################################
+############# Store short link and redirect views ################
+##################################################################
+
+def store_short_link(request, short_link, user_id=None):
+    """
+    Takes a short short link and redirect to associated url.
+    """
+    try:
+        url, name = ShortStoreLink.objects.get_for_short_link(short_link, user_id)
+    except ShortStoreLink.DoesNotExist:
+        raise Http404
+
+    if user_id is None:
+        user_id = 0
+
+    return render(request, 'redirect_no_product.html',
+                  {'redirect_url': url, 'name': name, 'user_id': user_id, 'page': 'Ext-Store',
+                   'event': 'StoreLinkClick'})
+
+
 def product_short_link(request, short_link):
     """
     Takes a short product link and redirect to buy url.
@@ -631,6 +589,26 @@ def domain_short_link(request, short_link):
 def product_redirect(request, pk, page='Default', sid=0):
     """
     Display a html redirect page for product pk and page/sid combo.
+    This method is used when clicking on buy links on the apparel web page, then the sid equals zero.
+
+    Example of a link coming from inside the apprl product detail site.
+    http://apprl.com/en/redirect/2864722/Product/0/
+
+    Example of a link from an external shop, with pk and user id attached as well as type of link
+    http://apprl.com/sv/redirect/2864722/Ext-Shop/26976/
+
+    If the product in the shop is sold out it will disappear when the cache for the shop html times out.
+    In the collage or look widget the links change and point to the apprl site instead.
+    Example
+    http://apprl.com/products/whyred-heather/?sid=26976
+
+    The links are changed and regenerated with javascripts embedded in the widget html. Thus no trace of this is found
+    in the html templates generated into solr and in turn used to generate the widget template cache.
+
+    If the product is found, then a link resembling this one will be generated.
+    http://apprl.com/a/link/?url=http%3A%2F%2Fshirtonomy.se%2Fskjortor%2Ftyg%2Fhofen-hunter-check%2F&store_id=shirtonomy&custom=26976-2864722-Ext-Shop
+
+    The context variables will then be injected in the javascript on the redirect.html page and do a js redirect (window.location.replace('{{ redirect_url|safe }}');)
     """
     product = get_object_or_404(Product, pk=pk, published=True)
 
@@ -648,6 +626,7 @@ def product_redirect(request, pk, page='Default', sid=0):
     else:
         logger.error('Could not find vendor for product id %s' % (pk,))
     url = vendor_buy_url(pk, product.default_vendor, sid, page)
+
     data = {'id': product.pk,
             'redirect_url': url,
             'store': store,
@@ -686,6 +665,26 @@ def product_track(request, pk, page='Default', sid=0):
                                 get_user_agent(request), sid, page, False)
     return response
 
+#
+# Redirects
+#
+
+def product_redirect_by_id(request, pk):
+    """
+    Makes it
+    """
+    product = get_object_or_404(Product, pk=pk, published=True)
+    return HttpResponsePermanentRedirect(product.get_absolute_url())
+
+def brand_redirect(request, pk):
+    """
+    Redirect from a brand id to brand profile page.
+    """
+    brand = get_object_or_404(Brand, pk=pk)
+    return HttpResponsePermanentRedirect(brand.user.get_absolute_url())
+
+#### End product redirect related view functions ###
+
 
 def product_popup(request):
     product_ids = []
@@ -706,7 +705,7 @@ def product_popup(request):
 
         result.append(product_result)
 
-    return HttpResponse(json.dumps(result), mimetype='application/json')
+    return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 def look_popup(request):
@@ -727,7 +726,7 @@ def look_popup(request):
 
         result.append(temp_result)
 
-    return HttpResponse(json.dumps(result), mimetype='application/json')
+    return HttpResponse(json.dumps(result), content_type='application/json')
 
 
 @login_required
@@ -737,18 +736,18 @@ def product_action(request, pk, action):
     """
     if not request.user or not request.user.is_authenticated():
         return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
-                            mimetype='application/json')
+                            content_type='application/json')
     if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), content_type='application/json')
     if action not in ['like', 'unlike']:
         return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     try:
         product = Product.objects.get(pk=pk)
     except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
         return HttpResponse(json.dumps(dict(success=False, error_message='No product found')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     return _product_like(request, product, action)
 
@@ -760,18 +759,18 @@ def product_like(request, slug, action):
     """
     if not request.user.is_authenticated():
         return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
-                            mimetype='application/json')
+                            content_type='application/json')
     if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='Requires POST')), content_type='application/json')
     if action not in ['like', 'unlike']:
         return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     try:
         product = Product.objects.get(slug=slug)
     except (Product.MultipleObjectsReturned, Product.DoesNotExist) as e:
         return HttpResponse(json.dumps(dict(success=False, error_message='No product found')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     return _product_like(request, product, action)
 
@@ -812,7 +811,7 @@ def _product_like(request, product, action):
                 product_like.active = default_active
                 product_like.save()
 
-    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+    return HttpResponse(json.dumps(dict(success=True, error_message=None)), content_type='application/json')
 
 
 @login_required
@@ -821,18 +820,18 @@ def look_like(request, slug, action):
     Like or unlike a look through ajax.
     """
     if request.method == 'GET':
-        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='POST only')), content_type='application/json')
     if not request.user.is_authenticated():
         return HttpResponse(json.dumps(dict(success=False, error_message='Not authenticated')),
-                            mimetype='application/json')
+                            content_type='application/json')
     if action not in ['like', 'unlike']:
         return HttpResponse(json.dumps(dict(success=False, error_message='Unknown command')),
-                            mimetype='application/json')
+                            content_type='application/json')
 
     try:
         look = Look.objects.get(slug=slug)
     except (Look.MultipleObjectsReturned, Look.DoesNotExist) as e:
-        return HttpResponse(json.dumps(dict(success=False, error_message='No look found')), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(success=False, error_message='No look found')), content_type='application/json')
 
     if action == 'like':
         if request.user.fb_share_like_look:
@@ -861,7 +860,7 @@ def look_like(request, slug, action):
 
     look_popularity.delay(look)
 
-    return HttpResponse(json.dumps(dict(success=True, error_message=None)), mimetype='application/json')
+    return HttpResponse(json.dumps(dict(success=True, error_message=None)), content_type='application/json')
 
 
 def look_list(request, search=None, contains=None, gender=None):
@@ -1186,7 +1185,9 @@ def product_lookup_by_domain(request, domain, key):
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
-        return instance.template.format(sid='{}-0-Ext-Link'.format(user_id), url=url, ulp=ulp), instance.vendor
+
+        sid = generate_sid(0, user_id, 'Ext-Link', url)
+        return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
     return None, None
 
 
@@ -1299,10 +1300,10 @@ def product_lookup(request):
                 key = ''.join(temp)
             product_pk = product_lookup_by_solr(request, key)
             if not product_pk:
-                logger.info("Failed to extract product from solr for %s" % key)
+                logger.info(u"Failed to extract product from solr for %s" % key)
                 product_pk = product_lookup_asos_nelly(original_key, is_nelly_product)
             else:
-                logger.info("Successfully found product in SOLR for key %s" % key)
+                logger.info(u"Successfully found product in SOLR for key %s" % key)
         else:
             logger.info("Successfully found product in SOLR for key %s" % key)
     # TODO: must go through theimp database right now to fetch site product by real url
@@ -1311,43 +1312,30 @@ def product_lookup(request):
 
     #json_data = json.loads(imported_product.json)
     #product_pk = json_data.get('site_product', None)
-    product_short_link = None
     product_link = None
     product_liked = False
     product_name = None
     product_earning = None
-    vendor = None
-    currency = None
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
         product_short_link, created = ShortProductLink.objects.get_or_create(product=product, user=request.user)
         product_short_link_str = reverse('product-short-link', args=[product_short_link.link()])
         product_short_link_str = request.build_absolute_uri(product_short_link_str)
-        logger.info("Product match found for key, creating short product link [%s]." % product_short_link_str)
+        logger.info(u"Product match found for key, creating short product link [%s]." % product_short_link_str)
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product,
                                                                            active=True).exists()
         product_name = product.get_product_name_to_display
         vendor = product.default_vendor.vendor
-        earning_cut = get_earning_cut(request.user, vendor, product)
-        if vendor and earning_cut:
-            if vendor.is_cpc:
-                earning_total = get_vendor_cost_per_click(vendor)
-                currency = earning_total.currency
-                earning = earning_total.amount * earning_cut
-            elif vendor.is_cpo:
-                earning = earning_cut * product.default_vendor.locale_price
-                currency = product.default_vendor.locale_currency
-        if currency:
-            if vendor.is_cpo:
-                product_earning = "You will earn approx. %s %.2f per generated sale to %s." % (currency, earning, vendor.name)
-            elif vendor.is_cpc:
-                product_earning = "You will earn approx. %s %.2f per generated click of this item." % (currency, earning)
+        earning, currency = product.default_vendor.get_product_earning(request.user)
+        if earning and currency:
+            help_text = "sale" if vendor.is_cpo else "click"
+            product_earning = "You will earn approx. %s %s per generated %s of this item." % (currency, earning, help_text)
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
-        logger.info("No product found for key, falling back to domain deep linking.")
+        logger.info(u"No product found for key, falling back to domain deep linking.")
         product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
-        logger.info("No product found for key, falling back to domain deep linking.")
+        logger.info(u"No product found for key, falling back to domain deep linking.")
         if product_short_link_str is not None:
             product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
                                                                                 user=request.user, vendor=vendor)
@@ -1361,13 +1349,15 @@ def product_lookup(request):
                     store_commission = get_vendor_commission(vendor)
                     if store_commission:
                         earning_cut = earning_cut * store_commission
-                        product_earning = "You will earn approx. %.2f %% per generated sale of this item." % (earning_cut * 100)
+                        product_earning = u"You will earn approx. %.2f %% per generated sale of this item." % \
+                                          (earning_cut * 100)
                 elif vendor.is_cpc:
                     cost_per_click = get_vendor_cost_per_click(vendor)
                     if cost_per_click:
-                        product_earning = "You will earn approx. %s %.2f per generated click when linking to " \
+                        product_earning = u"You will earn approx. %s %.2f per generated click when linking to " \
                                           "this retailer" % \
                                           (cost_per_click.currency, (earning_cut * cost_per_click.amount))
+    vendor_markets = None
     if vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
     warning_text = get_location_warning_text(vendor_markets, request.user, "chrome-ext")
@@ -1394,7 +1384,7 @@ def follow_backend(request):
                                            context_instance=RequestContext(request))
             follows.append({'id': profile.pk, 'html': follow_html})
 
-    return HttpResponse(json.dumps(follows), mimetype='application/json')
+    return HttpResponse(json.dumps(follows), content_type='application/json')
 
 
 def user_list(request, gender=None, brand=False):
@@ -1460,7 +1450,7 @@ class PublisherView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PublisherView, self).get_context_data(**kwargs)
         context['featured'] = get_featured_activity_today()
-        context['form'] = SignupForm(is_store_form=True)
+        context['form'] = SignupForm(is_store_form=False)
         return context
 
     def get(self, request, gender=None, *args, **kwargs):
@@ -1481,7 +1471,7 @@ class PublisherView(TemplateView):
         return render(request, self.template_name, self.get_context_data())
 
     def post(self, request, gender=None, *args, **kwargs):
-        form = SignupForm(request.POST, is_store_form=True)
+        form = SignupForm(request.POST, is_store_form=False)
         if form.is_valid():
             # Save name and blog URL on session, for Google Analytics
             request.session['index_complete_info'] = u"{name} {blog}".format(**form.cleaned_data)
@@ -1489,7 +1479,7 @@ class PublisherView(TemplateView):
             instance.store = True
             instance.save()
 
-            mail_managers_task.delay(u'New store signup: {name}'.format(**form.cleaned_data),
+            mail_managers_task.delay(u'New Publisher signup: {name}'.format(**form.cleaned_data),
                     u'Name: {name}\nEmail: {email}\nURL: {blog}\nTraffic: {traffic}'.format(**form.cleaned_data))
 
             return HttpResponseRedirect(reverse('index-publisher-complete'))
@@ -1505,17 +1495,19 @@ def index(request, gender=None):
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
         if gender == 'none':
             gender = None
-
-        if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
-            return onboarding(request)
-        else:
-            return user_feed(request, gender=gender)
+        
+        # This is deactivated for the time being (20160310)/K
+        #if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
+        #    return onboarding(request)
+        #else:
+        return user_feed(request, gender=gender)
 
     return render(request, 'apparel/publisher.html', {'featured': get_featured_activity_today()})
 
 
 def about(request):
     return render(request, 'apparel/about.html')
+
 
 def contact(request):
     return render(request, 'apparel/contact.html')

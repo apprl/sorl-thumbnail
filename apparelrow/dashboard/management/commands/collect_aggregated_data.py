@@ -12,6 +12,8 @@ from apparelrow.dashboard.views import get_clicks_from_sale
 from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_dict, get_user_thumbnail_and_link, \
     get_user_attrs, get_day_range
 
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
 from django.core.management.base import BaseCommand
 
 logger = logging.getLogger('dashboard')
@@ -162,6 +164,42 @@ class Command(BaseCommand):
             user = None if user_dict['user_id'] == 0 else get_user_model().objects.get(id=user_dict['user_id'])
             _, instance.user_name, instance.user_username = get_user_attrs(user)
             instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(row.from_product)
+        instance.save()
+
+    def generate_aggregated_from_links(self, row, user_dict, earning_amount, start_date, end_date):
+
+        link = row.sale.source_link
+        logger.debug("Generating aggregated data for links %s" % link)
+        link_name = "Link to %s " % link
+        instance, created = AggregatedData.objects.\
+            get_or_create(user_id=user_dict['user_id'], created=row.date.date(), data_type='aggregated_from_product',
+                          aggregated_from_id=0, aggregated_from_name=link_name, aggregated_from_link=link)
+        if created:
+            logger.debug("Link %s has been created" % link)
+            instance.user_image, instance.user_link = get_user_thumbnail_and_link(row.user)
+            instance.user_name = user_dict['user_name']
+            instance.user_username = user_dict['user_name']
+
+        if row.user_earning_type in ('publisher_sale_commission', 'apprl_commission'):
+            instance.sale_earnings += row.amount
+            instance.sales += 1
+        elif row.user_earning_type == 'referral_sale_commission':
+            instance.referral_sales += 1
+            instance.referral_earnings += earning_amount
+        instance.sale_plus_click_earnings += earning_amount
+        instance.aggregated_from_slug = link
+        instance.save()
+
+        if created:
+            clicks_count = get_model('statistics', 'ProductStat').objects.\
+                filter(is_valid=True, user_id=user_dict['user_id'], vendor=row.sale.vendor.name,
+                       source_link=link, created__range=(start_date, end_date)).count()
+            if row.sale.vendor.is_cpc:
+                instance.paid_clicks = clicks_count
+            instance.total_clicks = clicks_count
+
+            user = None if user_dict['user_id'] == 0 else get_user_model().objects.get(id=user_dict['user_id'])
+            _, instance.user_name, instance.user_username = get_user_attrs(user)
         instance.save()
 
     def generate_aggregated_from_publisher(self, row, user_dict, start_date, end_date):
@@ -315,6 +353,64 @@ class Command(BaseCommand):
                         self.generate_aggregated_data_network_owner(user.owner_network, product, vendor, row['day'],
                                                                     row['clicks'], user)
 
+    def generate_aggregated_clicks_from_links(self, start_date, end_date):
+        # Total clicks under the given period group by product
+        aggregated_product_stat = get_model('statistics', 'ProductStat').objects.\
+            filter(created__range=(start_date, end_date), is_valid=True, page__in=('Ext-Store', 'Ext-Link')).\
+            exclude(source_link__isnull=True).\
+            extra(select={'day': 'date( created )'}).\
+            values('user_id', 'source_link', 'vendor', 'day').\
+            annotate(clicks=Count('source_link')).\
+            order_by('clicks')
+
+        for row in aggregated_product_stat:
+            user = None
+            vendor = None
+
+            # Try fetch vendor if it exists
+            try:
+                vendor = get_model('apparel', 'Vendor').objects.get(name=row['vendor'])
+            except get_model('apparel', 'Vendor').DoesNotExist:
+                logger.warning("Vendor %s does not exist" % row['vendor'])
+
+            # Try fetch user if it is not APPRL user and if user exists
+            if row['user_id'] != 0:
+                try:
+                    user = get_user_model().objects.get(id=row['user_id'])
+                except get_user_model().DoesNotExist:
+                    logger.warning("User %s does not exist" % row['user_id'])
+
+            if vendor:
+                link_name = "Link to %s " % row['source_link']
+                instance, created = AggregatedData.objects.\
+                    get_or_create(user_id=row['user_id'], created=row['day'], data_type='aggregated_from_product',
+                                  aggregated_from_id=0, aggregated_from_name=link_name,
+                                  aggregated_from_link=row['source_link'])
+                if created:
+                    _, instance.user_name, instance.user_username  = get_user_attrs(user)
+                    instance.user_image, instance.user_link = get_user_thumbnail_and_link(user)
+
+                    if vendor.is_cpc:
+                        instance.paid_clicks += decimal.Decimal(row['clicks'])
+                        try:
+                            sale = Sale.objects.get(user_id=row['user_id'], sale_date__range=(start_date, end_date),
+                                                    vendor=vendor, affiliate="cost_per_click")
+                            earning = UserEarning.objects.get(user_id=row['user_id'], date=row['day'], sale=sale,
+                                                              user_earning_type='publisher_sale_click_commission')
+                            clicks_amount = get_clicks_from_sale(earning.sale)
+                            click_cost = 0
+                            if clicks_amount > 0:
+                                click_cost = earning.amount / clicks_amount
+                            clicks = decimal.Decimal(row['clicks'])
+                            instance.click_earnings += click_cost * clicks
+                            instance.sale_plus_click_earnings += click_cost * clicks
+                        except UserEarning.DoesNotExist:
+                            logger.warning("Click earning for user %s date %s does not exist" % (row['user_id'], row['day']))
+                        except Sale.DoesNotExist:
+                            logger.warning("Sale for user %s date %s does not exist" % (row['user_id'], row['day']))
+                    instance.total_clicks += decimal.Decimal(row['clicks'])
+                    instance.save()
+
     def handle(self, *args, **options):
         start_date, end_date = self.get_date_range(options.get('date'))
         logger.debug("Start collect agreggated data between %s and %s" % (start_date, end_date))
@@ -326,7 +422,7 @@ class Command(BaseCommand):
         earnings = UserEarning.objects.filter(date__range=(start_date, end_date), status__gte=Sale.PENDING)
 
         # Loop over all earnings for the given period
-        logger.debug("Generating aggregated data with % earnings... " % earnings.count())
+        logger.debug("Generating aggregated data with %s earnings... " % earnings.count())
         for row in earnings:
             user_dict = get_user_dict(row.user)
             earning_amount = decimal.Decimal(row.amount)
@@ -336,11 +432,14 @@ class Command(BaseCommand):
             self.generate_aggregated_from_total(row, user_dict, earning_amount)
             if row.from_product:
                 self.generate_aggregated_from_product(row, user_dict, earning_amount, start_date, end_date)
+            elif row.sale.source_link and not row.sale.source_link == '':
+                self.generate_aggregated_from_links(row, user_dict, earning_amount, start_date, end_date)
             self.generate_aggregated_from_publisher(row, user_dict, start_date, end_date)
 
         logger.debug("Generating aggregated clicks... ")
         self.generate_aggregated_clicks_from_publisher(start_date, end_date)
         self.generate_aggregated_clicks_from_product(start_date, end_date)
+        self.generate_aggregated_clicks_from_links(start_date, end_date)
 
         logger.debug("Finishing collect agreggated data successfully")
         return

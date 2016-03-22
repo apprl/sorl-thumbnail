@@ -3,7 +3,7 @@ import json
 from django.http import SimpleCookie
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.views import get_earning_cut, get_vendor_cost_per_click, get_product_earning
+from apparelrow.apparel.views import get_vendor_cost_per_click, product_lookup_by_domain
 from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
     extract_asos_nelly_product_url, on_boarding_follow_users, get_most_popular_user_list
@@ -12,11 +12,13 @@ from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
 from decimal import Decimal
 from django.conf import settings
-from apparelrow.apparel.models import Shop, ShopEmbed
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
 from django.utils.translation import activate
+from django.test import TestCase, RequestFactory
+from apparelrow.apparel.models import Shop, ShopEmbed
+from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.apparel.utils import shuffle_user_list
@@ -428,13 +430,15 @@ class TestChromeExtensionSpecials(TestCase):
 
 
 class TestProductDetails(TestCase):
+    fixtures = ['test-fxrates.yaml']
+
     def setUp(self):
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='mystore')
         self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
-        self.product = product = get_model('apparel', 'Product').objects.create()
+        self.product = get_model('apparel', 'Product').objects.create()
 
-        get_model('apparel', 'VendorProduct').objects.create(product=self.product, vendor=self.vendor)
+        self.vendor_product = VendorProductFactory.create(product=self.product, vendor=self.vendor)
         get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=self.vendor,
                                                            cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
                                                            referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
@@ -452,10 +456,11 @@ class TestProductDetails(TestCase):
                                                                 commission_percentage='0.2',
                                                                 vendor=self.vendor)
 
-        earning_product = self.product.get_product_earning(self.user)
-        self.assertAlmostEqual(earning_product,
-                               Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)*Decimal(store.commission_percentage),
-                               places=2)
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
+        calculated_cut = "%.2f" % \
+                         (Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT) * Decimal(store.commission_percentage))
+
+        self.assertAlmostEqual(earning_product, self.vendor_product.locale_price * Decimal(calculated_cut), places=2)
 
     def test_product_details_aan_user_is_not_publisher(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
@@ -466,8 +471,9 @@ class TestProductDetails(TestCase):
                                                                 user=store_user,
                                                                 commission_percentage='0.2',
                                                                 vendor=self.vendor)
-        earning_product = self.product.get_product_earning(self.user)
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
         self.assertIsNone(earning_product)
+        self.assertIsNone(currency)
 
     def test_product_details_external_user_is_publisher(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
@@ -476,11 +482,11 @@ class TestProductDetails(TestCase):
         self.user.partner_group = self.group
         self.user.save()
 
-        get_model('dashboard', 'StoreCommission').objects.create(vendor=self.vendor,commission="6/10/0")
+        get_model('dashboard', 'StoreCommission').objects.create(vendor=self.vendor, commission="6/10/0")
 
-        earning_product = self.product.get_product_earning(self.user)
-        self.assertAlmostEqual(earning_product,
-                               Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)*Decimal(0.08),
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
+        calculated_cut = "%.2f" % (Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT) * Decimal(0.08))
+        self.assertAlmostEqual(earning_product, self.product.default_vendor.locale_price * Decimal(calculated_cut),
                                places=2)
 
     def test_product_details_external_user_is_not_publisher(self):
@@ -488,8 +494,9 @@ class TestProductDetails(TestCase):
         self.assertTrue(is_logged_in)
         get_model('dashboard', 'StoreCommission').objects.create(vendor=self.vendor,commission="6/10/0")
 
-        earning_product = self.product.get_product_earning(self.user)
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
         self.assertIsNone(earning_product)
+        self.assertIsNone(currency)
 
     def test_product_details_user_is_not_publisher_no_commission(self):
         is_logged_in = self.client.login(username='normal_user', password='normal')
@@ -500,8 +507,9 @@ class TestProductDetails(TestCase):
 
         get_model('dashboard', 'StoreCommission').objects.create(vendor=self.vendor,commission="6/10/0")
 
-        earning_product = self.product.get_product_earning(self.user)
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
         self.assertIsNone(earning_product)
+        self.assertIsNone(currency)
 
     def test_extracting_suffix(self):
         from apparelrow.apparel.views import extract_domain_with_suffix
@@ -744,6 +752,8 @@ class TestShortLinks(TestCase):
         self.user.partner_group = self.group
         self.user.save()
 
+        self.factory = RequestFactory()
+
     def test_store_link(self):
         template = "http://www.anrdoezrs.net/links/4125005/type/dlg/sid/{sid}/http://www.nastygal.com/"
         store_link = get_model('apparel', 'ShortStoreLink').objects.create(vendor=self.vendor, template=template)
@@ -777,6 +787,103 @@ class TestShortLinks(TestCase):
 
         # No ProductStat were created
         self.assertEqual(get_model('statistics', 'ProductStat').objects.count(), stats_count)
+
+    def test_short_domain_link_aan(self):
+        vendor = VendorFactory.create(name="Henry Kole", provider="aan")
+        template = "http://apprl.com/a/link/?store_id=henrykole&custom={sid}&url={url}"
+        key = "http://www.henrykole.se/shoes.html"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.henrykole.se/")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.henrykole.se/", key)
+        sid = "%s-0-Ext-Link/http://www.henrykole.se/shoes.html" % self.user.id
+        self.assertEqual(link, "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_affiliate_window(self):
+        vendor = VendorFactory.create(name="Oki-Ni", provider="affiliatewindow")
+        template = "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref={sid}&p={url}"
+        key = "http://www.oki-ni.com/en/outerwear/coats"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.oki-ni.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.oki-ni.com", key)
+        sid = "%s-0-Ext-Link/http://www.oki-ni.com/en/outerwear/coats" % self.user.id
+        self.assertEqual(link, "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref=%s&p=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_linkshare(self):
+        vendor = VendorFactory.create(name="ALDO", provider="linkshare")
+        template = "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1" \
+                   "&type=10&tmpid=12919&u1={sid}&RD_PARM1={url}"
+        key = "http://www.aldoshoes.com/ca/en/women/c/100"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.aldoshoes.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.aldoshoes.com", key)
+        sid = "%s-0-Ext-Link/http://www.aldoshoes.com/ca/en/women/c/100" % self.user.id
+        self.assertEqual(link, "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1&"
+                               "type=10&tmpid=12919&u1=%s&RD_PARM1=%s" % (sid,key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_tradedoubler(self):
+        vendor = VendorFactory.create(name="Nelly", provider="tradedoubler")
+        template = "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi={sid}&url={url}"
+        key = "http://nelly.com/se/skor-kvinna/"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="http://nelly.com")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "nelly.com", key)
+        sid = "%s-0-Ext-Link/http://nelly.com/se/skor-kvinna/" % self.user.id
+
+        self.assertEqual(link, "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi=%s&url=%s" % (sid, key))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_short_domain_link_zanox(self):
+        vendor = VendorFactory.create(name="Dagmar", provider="zanox")
+        template = "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[{ulp}]]&zpar0=[[{sid}]]"
+        key = "http://www.houseofdagmar.se/product-category/sweaters/"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.houseofdagmar.se")
+        request = self.factory.get('/index/')
+        request.user = self.user
+        link, link_vendor = product_lookup_by_domain(request, "www.houseofdagmar.se", key)
+        ulp = "/product-category/sweaters/"
+        sid = "%s-0-Ext-Link/http://www.houseofdagmar.se/product-category/sweaters/" % self.user.id
+        self.assertEqual(link, "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[%s]]&zpar0=[[%s]]" % (ulp, sid))
+        self.assertEqual(vendor, link_vendor)
+
+    def test_get_store_link_from_short_link(self):
+        store_link = ShortStoreLinkFactory.create()
+        short_link = store_link.link()
+
+        instance = get_store_link_from_short_link(short_link)
+        self.assertEqual(instance, store_link)
+
+    def test_get_store_link_from_short_link_store_link_does_not_exist(self):
+        store_link = ShortStoreLinkFactory.create()
+        short_link = store_link.link()
+        store_link.delete()
+
+        with self.assertRaises(get_model('apparel', 'ShortStoreLink').DoesNotExist):
+            get_store_link_from_short_link(short_link)
+
+    def test_short_store_link_get_original_link(self):
+        vendor = VendorFactory.create(name="My Vendor", homepage="http://mystore.com")
+        store_link = ShortStoreLinkFactory.create(vendor=vendor)
+        original_link = get_model('apparel', 'ShortStoreLink').objects.get_original_url_for_link(store_link.link())
+        self.assertEqual(original_link, "http://mystore.com")
+
+    def test_short_domain_link_get_original_link(self):
+        vendor = VendorFactory.create(name="Vendor test")
+        template = "http://apprl.com/a/link/?store_id=vendortest&custom={sid}&url={url}"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.vendorstoretest.se/")
+        key = "http://www.google.com"
+        sid = "24-0-Ext-Link/%s" % key
+        url = "http://apprl.com/a/link/?store_id=vendortest&custom=%s&url=%s" % (sid, key)
+        short_link = ShortDomainLinkFactory.create(url=url, user=self.user, vendor=vendor)
+        original_link = get_model('apparel', 'ShortDomainLink').objects.get_original_url_for_link(short_link.link())
+        self.assertEqual(original_link, key)
+
 
 
 class TestOnBoarding(TestCase):
@@ -856,6 +963,7 @@ class TestOnBoarding(TestCase):
 
 @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
 class TestUtils(TestCase):
+    fixtures = ['test-fxrates.yaml']
 
     def setUp(self):
         activate('sv')
@@ -883,10 +991,10 @@ class TestUtils(TestCase):
             availability=True,
             product_image=self.django_image_file
         )
-        vendorproduct = VendorProductFactory.create(vendor=vendor_success, product=self.product_cpc, availability=True)
+        self.vendor_product = VendorProductFactory.create(vendor=vendor_success, product=self.product_cpc, availability=True)
         del self.product_cpc.default_vendor
         product_save(self.product_cpc, commit=True)
-        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(self.vendor_product.id)
         self.assertIsNotNone(self.product_cpc.default_vendor)
 
         get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_success,
@@ -919,14 +1027,16 @@ class TestUtils(TestCase):
         self.assertIsNotNone(self.product_cpc.default_vendor.vendor)
 
         # Test get earning cut
-        earning_cut = get_earning_cut(self.user, self.product_cpc.default_vendor.vendor, self.product_cpc)
+        earning_cut = self.vendor_product.get_earning_cut_for_product(self.user)
         self.assertEqual(earning_cut, Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
         click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=self.product_cpc.default_vendor.vendor)
         self.assertIsNotNone(click_cost)
         # Test product earning
-        product_earning = get_product_earning(self.user, self.product_cpc.default_vendor, self.product_cpc)
-        self.assertEqual("%.2f" % product_earning, "%.2f" % (click_cost.amount * earning_cut))
+        product_earning, currency = self.vendor_product.get_product_earning(self.user)
+        self.assertEqual(currency, click_cost.locale_currency)
+        self.assertEqual("%.2f" % product_earning, "%.2f" % (click_cost.locale_price * earning_cut))
+        self.assertEqual(currency, click_cost.locale_currency)
 
     def test_product_earning_is_cpo(self):
         """ Test functions that returns earning cut and product earning for a CPO vendor
@@ -942,27 +1052,31 @@ class TestUtils(TestCase):
             availability=True,
             product_image=self.django_image_file
         )
-        vendorproduct = VendorProductFactory.create(vendor=vendor_cpo, product=product_cpo, availability=True)
+        vendor_product = VendorProductFactory.create(vendor=vendor_cpo, product=product_cpo, availability=True)
         del product_cpo.default_vendor
         product_save(product_cpo, commit=True)
-        self.assertIsNotNone(vendorproduct.id)
+        self.assertIsNotNone(vendor_product.id)
         self.assertIsNotNone(product_cpo.default_vendor)
 
         get_model('dashboard', 'Cut').objects.create(group=self.group, vendor=vendor_cpo,
                                                      cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
                                                      referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
-        earning_cut = get_earning_cut(self.user, product_cpo.default_vendor.vendor, product_cpo)
+        earning_cut = vendor_product.get_earning_cut_for_product(self.user)
         self.assertEqual("%.2f" % earning_cut, "%.2f" %
                                (Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT) * Decimal(store.commission_percentage)))
 
-        product_earning = get_product_earning(self.user, product_cpo.default_vendor, product_cpo)
+        product_earning, currency = vendor_product.get_product_earning(self.user)
         self.assertEqual("%.2f" % product_earning, "%.2f" % (product_cpo.default_vendor.locale_price * earning_cut))
+        self.assertEqual(currency, vendor_product.locale_currency)
 
-    def test_product_earning_no_default_vendor(self):
-        """ Test functions that returns earning cut and product earning when Vendor is None
+    def test_backend_product_earnings(self):
+        """ Test Backend call that returns a JSON object with Earning and other information related about a product
+        given its id
         """
-        product_no_vendor = ProductFactory.create(
-            product_name='Product No Vendor',
+        vendor_cpo = VendorFactory.create(name="Vendor CPO")
+        StoreFactory.create(vendor=vendor_cpo, commission_percentage='0.2')
+        product_cpo = ProductFactory.create(
+            product_name="Product CPO",
             category=self.category,
             manufacturer=self.manufacturer,
             gender='M',
@@ -970,11 +1084,51 @@ class TestUtils(TestCase):
             availability=True,
             product_image=self.django_image_file
         )
-        earning_cut = get_earning_cut(self.user, product_no_vendor.default_vendor, product_no_vendor)
-        self.assertIsNone(earning_cut)
+        VendorProductFactory.create(vendor=vendor_cpo, product=product_cpo, availability=True)
+        del product_cpo.default_vendor
+        product_save(product_cpo, commit=True)
+        get_model('dashboard', 'Cut').objects.create(group=self.user.partner_group, vendor=vendor_cpo,
+                                                      cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                      referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
 
-        product_earning = get_product_earning(self.user, product_no_vendor.default_vendor, product_no_vendor)
-        self.assertIsNone(product_earning)
+        json_earning_url = "%s?id=%s" % (reverse('backend-product-earnings'), product_cpo.pk)
+        self.client.login(username='normal_user', password='normal')
+        json_data = self.client.get(json_earning_url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        dict_data = json.loads(json_data.content)
+        self.assertEqual(dict_data['code'], 'success')
+        self.assertEqual(dict_data['type'], 'is_cpo')
+        self.assertNotEqual(dict_data['user_earning'], '')
+
+    def test_backend_product_earnings_user_is_not_partner(self):
+        self.user.is_partner = False
+        self.user.save()
+
+        vendor_cpo = VendorFactory.create(name="Vendor CPO")
+        StoreFactory.create(vendor=vendor_cpo, commission_percentage='0.2')
+        product_cpo = ProductFactory.create(
+            product_name='Product CPO',
+            category=self.category,
+            manufacturer=self.manufacturer,
+            gender='M',
+            published=True,
+            availability=True,
+            product_image=self.django_image_file
+        )
+        VendorProductFactory.create(vendor=vendor_cpo, product=product_cpo, availability=True)
+        del product_cpo.default_vendor
+        product_save(product_cpo, commit=True)
+
+        get_model('dashboard', 'Cut').objects.create(group=self.user.partner_group, vendor=vendor_cpo,
+                                                     cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                                     referral_cut=settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT)
+        json_earning_url = "%s?id=%s" % (reverse('backend-product-earnings'), product_cpo.pk)
+
+        self.client.login(username='normal_user', password='normal')
+        json_data = self.client.get(json_earning_url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        dict_data = json.loads(json_data.content)
+
+        self.assertEqual(dict_data['code'], 'fail')
+        self.assertEqual(dict_data['user_earning'], '')
 
     def test_get_product_name(self):
         manufacturer = BrandFactory.create()
@@ -1083,14 +1237,14 @@ class TestSearch(TransactionTestCase):
     def setUp(self):
         vendor_se = VendorFactory.create(name="Vendor SE")
         vendor_dk = VendorFactory.create(name="Vendor DK")
-        manufacturer = BrandFactory.create(name="007")
+        self.manufacturer = BrandFactory.create(name="007", pk=999999999)
         self.product_key = 'http://example.com/example?someproduct=12345'
         product_id = _send_product_to_solr(product_key=self.product_key, vendor_name=vendor_se,
-                                           product_name="ProductName12345", brand=manufacturer)
+                                           product_name="ProductName12345", brand=self.manufacturer)
 
         self.product_dk_key = 'http://example.dk/example?someproduct=123453'
         product_id = _send_product_to_solr(product_key=self.product_dk_key, vendor_name=vendor_dk,
-                                           product_name="ProductName6789", brand=manufacturer)
+                                           product_name="ProductName6789", brand=self.manufacturer)
 
     def tearDown(self):
         _cleanout_product(self.product_key)
@@ -1117,20 +1271,15 @@ class TestSearch(TransactionTestCase):
         self.assertEqual(len(json_data['object_list']), 1)
 
     def test_brands_list_page(self):
-        manufacturer = get_model('apparel', 'Brand').objects.get(name="007")
         self._login()
         brands_list = get_available_brands('A', 'SE')
-        self.assertIn(manufacturer.id, brands_list)
+        self.assertIn(self.manufacturer.id, brands_list)
 
         brands_list = get_available_brands('A', 'DK')
-        self.assertIn(manufacturer.id, brands_list)
+        self.assertIn(self.manufacturer.id, brands_list)
 
         brands_list = get_available_brands('A', 'NO')
-        self.assertNotIn(manufacturer.id, brands_list)
-
-    def test_brand_page(self):
-        pass
-
+        self.assertNotIn(self.manufacturer.id, brands_list)
 
 def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
     django_image_file = _create_dummy_image()

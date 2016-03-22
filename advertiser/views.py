@@ -12,6 +12,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.template.loader import render_to_string
+from django.conf import settings
 
 import dateutil.parser
 
@@ -24,7 +25,7 @@ from advertiser.tasks import send_text_email_task
 from advertiser.utils import make_advertiser_url
 
 
-logger = logging.getLogger('advertiser')
+logger = logging.getLogger('apparelrow')
 
 
 def get_cookie_name(store_id):
@@ -225,7 +226,19 @@ def link(request):
     placement = request.GET.get('placement')
     custom = request.GET.get('custom')
     if user_id and placement:
-        custom = '%s-%s-%s' % (user_id, product_id, placement)
+        custom = u'{user_id}-{product_id}-{placement}'.format(user_id=user_id, product_id=product_id, placement=placement)
+    else:
+        try:
+            # Temporary GT tracking, very quick & dirty solution for single scenario with Tailsweep. Not an ideal and
+            # perfect solution but enough to make it work.
+            user_id = custom.split("-")[0]
+            if int(user_id) in settings.GINA_TRACKING.get("user_ids"):
+                if not "?" in url:
+                    url = u"{}?{}".format(url, settings.GINA_TRACKING.get("tracking_string"))
+                else:
+                    url = u"{}{}".format(url, settings.GINA_TRACKING.get("tracking_string"))
+        except:
+            logger.warn(u"Failed to split custom string to extract user id. Custom string [{custom}]".format(custom=custom))
 
     # Cookie date
     current_datetime = timezone.now()
