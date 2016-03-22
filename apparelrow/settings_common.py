@@ -415,7 +415,6 @@ PIPELINE_JS = {
         'source_filenames': ('js/vendor/underscore.js',
                              'js/vendor/jquery-2.1.1.js',
                              'js/vendor/jquery-ui-1.9.2.custom.js',
-                             'js/vendor/add2home.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
                              'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
