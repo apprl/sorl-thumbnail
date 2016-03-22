@@ -228,7 +228,7 @@ def referral_mail(request):
 def get_store_earnings(vendor_obj, publisher_cut, normal_cut, standard_from, store):
     currency = ''
     amount_float = decimal.Decimal(0)
-    amount = "%.2f" % decimal.Decimal(amount_float)
+    amount = "%.2f" % amount_float
     earning_type = "is_cpo"  # Default is_cpo = True for vendors
     if vendor_obj.is_cpc:
         click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
