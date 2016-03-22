@@ -540,6 +540,7 @@ PIPELINE_JS = {
             'js/app/base/views/dialog_save.js',
             'js/app/base/views/dialog_login.js',
             'js/app/base/views/dialog_no_products.js',
+            'js/app/base/views/dialog_few_products.js',
             'js/app/product_widget_editor/views/product_widget_create.js',
             'js/app/product_widget_editor/views/product_widget_edit_popup.js',
             'js/app/look_editor/views/look_edit_filter_tabs.js',
@@ -728,6 +729,7 @@ APPAREL_PRODUCT_MAX_AGE = 24 * 60 * 60
 APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 NGINX_SHOP_RESET_KEY = "shopembed-reset-%s"
+NGINX_PRODUCTWIDGET_RESET_KEY = "productwidget-reset-%s"
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/rss-feed/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR = 'images/brand-avatar.png'

@@ -332,6 +332,11 @@ header {
         }
     }
     .dropdown-avatar {
+        &:hover {
+            u {
+                border-color: white;
+            }
+        }
         figure {
             float: left;
             margin-right: 5px;
@@ -358,15 +363,12 @@ header {
         margin: 55px 0 15px 0;
         padding: 0 15px;
         color: white;
-        //line-height: 46px;
         height: 44px;
         color: @primaryColor;
-        //background-color: @primaryColor;
         display: block;
         border: 2px solid @primaryColor;
         &:hover, &:focus {
             color: @primaryColor !important;
-            //background-color: darken(@primaryColor, 15%) !important;
         }
         i {
             padding-bottom: 2px;

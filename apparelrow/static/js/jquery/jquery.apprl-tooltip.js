@@ -7,14 +7,14 @@
     var tooltip_left = 0;
     var last_id = false;
 
-    function open(event) {
+    function open(event, autoclose) {
         var component = jQuery(event.currentTarget);
         var attr_id = component.attr('id').split('-');
         var component_id = attr_id.pop();
         var component_type = attr_id.pop();
 
         cancel(event);
-        if(last_id != component_id) {
+        if(last_id != component_id && !is_mobile()) {
             close(event);
         }
 
@@ -123,7 +123,11 @@
         jQuery(document).on({'touchstart': function(event) {event.preventDefault(); open(event); }}, selector)
         jQuery(document).on({'mouseenter': open, 'mouseleave': timer}, selector);
         jQuery(document).on({'mouseenter': open, 'mouseleave': timer}, '.tooltip');
-        jQuery(document).on('click', close);
+         if (is_mobile()) {
+            jQuery(document).on('touchstart','.close', close);
+        } else {
+            jQuery(document).on('click', close);
+        }
         jQuery('.tooltip .product-image').hover(
             function(e) {
                 jQuery(e.currentTarget).parent().find('.product-meta > a').addClass('hover');

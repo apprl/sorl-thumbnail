@@ -3,6 +3,7 @@ import math
 import os.path
 import decimal
 import json
+import uuid
 
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
 from django.conf import settings
@@ -32,6 +33,8 @@ from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.models import ProductWidget, ProductWidgetProduct, ProductWidgetEmbed
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender
 
+from apparelrow.apparel.views.shop import set_query_arguments
+
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
 
@@ -54,13 +57,12 @@ def _to_int(s):
 def create(request, type):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
-
-    return render(request, 'apparel/create_product_widget.html', {'external_product_widget_id': 0, 'type': type})
+    return render(request, 'apparel/create_product_widget.html', {'external_product_widget_id': 0, 'type': type,
+                                                                  'external_widget_url': request.user.url_widgets})
 
 def editor(request, template='apparel/create_product_widget.html', product_widget_id=None, **kwargs):
     if not request.user.is_authenticated():
         return HttpResponse('Unauthorized', status=401)
-
     product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
 
     if request.user.pk is not product_widget.user.pk:
@@ -68,7 +70,9 @@ def editor(request, template='apparel/create_product_widget.html', product_widge
 
     return render(request, template, {
         'external_product_widget_id': product_widget_id if product_widget_id is not None else 0,
-        'object': product_widget
+        'type': product_widget.type,
+        'object': product_widget,
+        'external_widget_url': request.user.url_widgets
     })
 
 def product_widget_instance_to_dict(product_widget):
@@ -82,39 +86,82 @@ def product_widget_instance_to_dict(product_widget):
         'type': product_widget.type,
         'show_liked': product_widget.show_liked
     }
-
     product_widget_dict['products'] = []
     if product_widget.show_liked:
-        for like in product_widget.user.product_likes.select_related('product').all():
-            product = like.product
-            manufacturer_name = product.manufacturer.name if product.manufacturer else None
-            product_widget_dict['products'].append({
-                'id': product.id,
-                'slug': product.slug,
-                'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
-                'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
-                'product_name': product.product_name,
-                'brand_name': manufacturer_name,
-                'currency': product.default_vendor.locale_currency,
-                'price': product.default_vendor.locale_price,
-                'discount_price': product.default_vendor.locale_discount_price,
-            })
+        user_id = product_widget.user.id
+
+        language = get_language()
+        translation.activate(language)
+
+        currency = settings.APPAREL_BASE_CURRENCY
+        if language in settings.LANGUAGE_TO_CURRENCY:
+            currency = settings.LANGUAGE_TO_CURRENCY.get(language)
+
+        query_arguments = {'rows': 10, 'start': 0}
+        class Request:
+            pass
+        request = Request()
+        request.GET = {}
+        query_arguments = set_query_arguments(query_arguments, request, facet_fields=None, currency=currency)
+
+        query_arguments['fl'] = ['id:django_id']
+
+        query_arguments['fq'].append('availability:true')
+
+        query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
+        query_arguments['fq'].append('user_likes:%s' % (user_id,))
+
+        query_string = '*:*'
+
+        search = ApparelSearch(query_string, **query_arguments)
+        paged_result, pagination = get_pagination_page(search, 10, 1)
+
+        product_ids = [product.id for product in paged_result.object_list if product]
+
+        for product in Product.objects.filter(pk__in=product_ids):
+            if product.default_vendor:
+                manufacturer_name = product.manufacturer.name if product.manufacturer else None
+                product_widget_dict['products'].append({
+                    'id': product.id,
+                    'slug': product.slug,
+                    'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
+                    'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                    'product_name': product.product_name,
+                    'brand_name': manufacturer_name,
+                    'currency': product.default_vendor.locale_currency,
+                    'price': product.default_vendor.locale_price,
+                    'discount_price': product.default_vendor.locale_discount_price,
+                })
     else:
         for product in product_widget.products.all():
-            manufacturer_name = product.manufacturer.name if product.manufacturer else None
-            product_widget_dict['products'].append({
-                'id': product.id,
-                'slug': product.slug,
-                'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
-                'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
-                'product_name': product.product_name,
-                'brand_name': manufacturer_name,
-                'currency': product.default_vendor.locale_currency,
-                'price': product.default_vendor.locale_price,
-                'discount_price': product.default_vendor.locale_discount_price,
-            })
+            if product.default_vendor:
+                manufacturer_name = product.manufacturer.name if product.manufacturer else None
+                product_widget_dict['products'].append({
+                    'id': product.id,
+                    'slug': product.slug,
+                    'image_small': get_thumbnail(product.product_image, '112x145', crop=False, format='PNG', transparent=True).url,
+                    'image_look': get_thumbnail(product.product_image, '224x291', crop=False, format='PNG', transparent=True).url,
+                    'product_name': product.product_name,
+                    'brand_name': manufacturer_name,
+                    'currency': product.default_vendor.locale_currency,
+                    'price': product.default_vendor.locale_price,
+                    'discount_price': product.default_vendor.locale_discount_price,
+                })
 
     return product_widget_dict
+
+def delete_productwidget(request, product_widget_id):
+    productwidget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
+
+    if request.user.is_authenticated() and request.user == productwidget.user:
+        productwidget.delete()
+        if get_model('apparel', 'ProductWidget').objects.filter(user=request.user).exists():
+            return HttpResponseRedirect(reverse('profile-widgets', args=(request.user.slug,)))
+        else:
+            return HttpResponseRedirect(reverse('profile-likes', args=(request.user.slug,)))
+    else:
+        return HttpResponseRedirect(reverse('profile-widgets', args=(request.user.slug,)))
+
 
 class ProductWidgetView(View):
     def get(self, request, pk, *args, **kwargs):
@@ -230,7 +277,7 @@ class ProductWidgetView(View):
         if show_liked:
             components = []
             try:
-                product_widget = get_model('apparel', 'ProductWidget').objects.filter(user=request.user)[0]
+                product_widget = get_model('apparel', 'ProductWidget').objects.filter(user=request.user, show_liked=True, type=json_data['type'])[0]
             except:
                 product_widget = get_model('apparel', 'ProductWidget')(**json_data)
         else:
@@ -256,12 +303,12 @@ class ProductWidgetView(View):
 
 def product_widget_widget(request, product_widget_id=None):
     if request.method != 'POST':
-        return HttpResponseNotAllowed()
+        return HttpResponseNotAllowed("Method is now allowed")
 
     product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
 
-    if request.user.pk is not product_widget.user.pk:
-        return HttpResponseNotAllowed()
+    if not request.user.pk == product_widget.user.pk:
+        return HttpResponseNotAllowed("Owner of widget is not the same as logged in user.")
 
 
     content = {}
@@ -276,13 +323,21 @@ def product_widget_widget(request, product_widget_id=None):
     if content['width_type'] == '%' and int(content['width']) > 100:
         content['width'] = 100
     elif content['width_type'] == 'px':
-        if content['width'] == '' or content['width'] < 600:
-            content['width'] = 600
-        elif content['width'] > 1200:
+        if content['width'] == '' or int(content['width']) < 400:
+            content['width'] = 400
+        elif int(content['width']) > 1200:
             content['width'] = 1200
+        else:
+            content['width'] = int(content['width'])
 
-    if content['height'] < 400 or content['height'] =='':
-        content['height'] = 400
+    if content['height'] == '':
+        if product_widget.type == 'single':
+            content['height'] = 300
+        else:
+            content['height'] = 200
+    content['height'] = int(content['height'])
+    if content['height'] < 50:
+        content['height'] = 50
 
     product_widget_embed = ProductWidgetEmbed(
         product_widget=product_widget,
@@ -291,11 +346,9 @@ def product_widget_widget(request, product_widget_id=None):
         width_type=content['width_type'],
         height=content['height'],
         language=content['language'][0],
-        show_product_brand=show_product_brand,
-        show_filters=show_filters,
-        show_filters_collapsed=show_filters_collapsed
+        show_product_brand=show_product_brand
     )
-
+    content['slug'] = uuid.uuid4().hex
     product_widget_embed.save()
     content['object'] = product_widget_embed
 
@@ -329,7 +382,7 @@ def embed_product_widget(request, template='apparel/product_widget_embed.html', 
         nginx_key = reverse('embed-product-widget', args=[embed_product_widget_id])
     except get_model('apparel', 'ProductWidgetEmbed').DoesNotExist:
         #nginx_key = reverse('look-embed', args=[slug])
-        pass
+        return
 
     # TODO: replace alternative code with get_product_alternative from apparel.utils
     language_currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)

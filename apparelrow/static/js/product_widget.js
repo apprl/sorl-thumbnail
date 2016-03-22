@@ -17,32 +17,47 @@ function getParameterByName(name) {
 jQuery(document).ready(function() {
     var parentHost = getParameterByName('host');
 
-    var $ul = $('ul');
-    var $items = $ul.children('li');
-    var childwidth = 0;
+    var $ul = $('ul.productcontainer');
+    var $items = $ul.children('li.product');
     var index = 0;
     var running = false;
-    var ratio = 112/145;
     var visiblechildren;
     var doslide = false;
+    var $container = $('.slidecontainer');
+    var padding = 20;
+    var $slidenext = $('.next');
+    var $slideprevious = $('.previous');
+    var itemwidth = 0;
+    var slidefactor = 1;
+
     function slide(direction) {
         if (running) return;
         running = true;
-        index -= direction;
+        if (embed_type == 'single') {
+            index -= direction;
+        } else {
+            slidefactor = visiblechildren*2 <= $items.length ? visiblechildren : $items.length - visiblechildren;
+            index -= slidefactor*direction;
+        }
         if (index < 0) {
-            $items.last().detach().prependTo($ul);
-            $ul.css('left', ($ul.position().left - childwidth) + 'px');
+            for (var i=0;i<-1*index;i++) {
+                $ul.children('li').last().detach().prependTo($ul);
+            }
+            $ul.css('left', -1*slidefactor*itemwidth + 'px');
+            // adjust index
             index = 0;
             $items = $ul.children('li');
-        } else if (index + visiblechildren > $items.length) {
-            $items.first().detach().appendTo($ul);
-            $ul.css('left', ($ul.position().left + childwidth) + 'px');
-            index -= 1;
+        } else if (index + visiblechildren > $items.length || ($ul.width() + direction*itemwidth*slidefactor + $ul.position().left < $container.width())) {
+            var diff = index+visiblechildren-$items.length;
+            for (var i=0;i<diff;i++) {
+                $ul.children('li').first().detach().appendTo($ul);
+            }
+            $ul.css('left', $ul.position().left + diff*itemwidth + 'px');
+            // adjust index
+            index = $items.length - visiblechildren;
             $items = $ul.children('li');
         }
-
-        running = false;
-        $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { running = false; }});
+        $ul.animate({'left': '+=' + slidefactor*direction*itemwidth}, {'complete': function() { running = false; }});
     }
 
     var mc = new Hammer($('.slidecontainer')[0]);
@@ -50,14 +65,14 @@ jQuery(document).ready(function() {
 
     function enableslide() {
         if (!doslide) {
-            $('.previous').on('click', function () {
+            $slideprevious.on('click', function () {
                 slide(1);
             });
-            $('.next').on('click', function () {
+            $slidenext.on('click', function () {
                 slide(-1);
             });
         }
-        $('.next').parent().show();
+        $slidenext.parent().show();
         doslide = true;
     }
 
@@ -69,56 +84,67 @@ jQuery(document).ready(function() {
 
     function resize() {
         var $window = $(window);
-        var $container = $('.slidecontainer');
-        var ratio = 112/145;
         var $this;
         var imgratio;
         var maxheight = 0;
         var $images = $('a.product img');
+        var childwidth = 0;
+        var margin = 120;
+        $('.navigation').width($window.width());
+        var captionheight = $('.caption').length ? $('.caption').first().height() + 10 : 0;
+
         $images.each(function(item, i) {
             $this = $(this);
             imgratio = $this.attr('width')/$this.attr('height');
-            if (imgratio > ratio && $window.width()/$window.height() < ratio) {
-                var width = Math.round($window.height()*ratio);
+            if (imgratio > 1 && $window.width()/$window.height() < 1) {
                 if (width > $window.width()) width = $window.width();
                 $this.css({'width': width, height: Math.round($(this).attr('height')/$(this).attr('width')*width)});
             } else {
-                $this.css({height: $window.height(), width: Math.round($(this).attr('width')/$(this).attr('height')*$window.height())});
+                $this.css({height: $window.height() - captionheight, width: Math.round($(this).attr('width')/$(this).attr('height')*($window.height()-captionheight))});
             }
 
             maxheight = Math.max(maxheight, $this.height());
             childwidth = Math.max(childwidth, $this.width());
         });
 
-        $images.each(function(item, i) {
-            $this = $(this);
-            if ($this.width() < childwidth) {
-                $this.css('padding', '0 '+Math.floor((childwidth-$this.width())/2)+'px');
-            }
-        });
+        if ((childwidth + margin + padding) > $window.width()) {
+            var width = ($window.width() - margin - padding);
+            imgratio = $this.attr('width')/$this.attr('height');
+            width = (width/imgratio - captionheight) * imgratio;
+            $images.each(function(item, i) {
+                $(this).css({width: width, height: 'auto'});
+            });
+            childwidth = width;
+        }
 
-        $items.css({'line-height': maxheight + 'px'});
-        $ul.css('left', -1*index*childwidth);
-        $ul.width($items.length * childwidth);
+        itemwidth = $items.first().width() + padding;
 
         if (embed_type == 'single') {
-            $container.width(childwidth);
-            visiblechildren = 1;
-        } else {
-            if (Math.floor($window.width()/childwidth) < $items.length) {
-                visiblechildren = Math.floor($window.width()/childwidth);
-                $container.width(visiblechildren*childwidth);
+            $container.width(itemwidth);
+            if ($items.length > 1) {
                 enableslide();
             } else {
-                visiblechildren = $items.length;
-                $container.width($items.length*childwidth);
+                disableslide();
+            }
+            visiblechildren = 1;
+        } else {
+            visiblechildren = Math.floor(($window.width() - margin)/(itemwidth));
+            $container.width(visiblechildren*(itemwidth));
+            if (Math.floor(visiblechildren) < $items.length) {
+                enableslide();
+            } else {
                 disableslide()
             }
         }
-
-        $('.previous').css({left: $container[0].offsetLeft+'px', top: ($container.height()/2-20)+'px'});
-        $('.next').css({left: ($container[0].offsetLeft + $container.width() - 58)+'px', top: ($container.height()/2-10)+'px'});
+        index = 0;
+        $ul.css('left', 0);
+        var containermargin = parseInt($container.css('marginLeft').substr(0, $container.css('marginLeft').length -2));
+        // Set width of list
+        $ul.width($items.length * itemwidth);
+        $slideprevious.css({left: Math.max(10, containermargin-$slideprevious.width() - 10), top: (($container.height()-captionheight - $slidenext.height())/2)+'px'});
+        $slidenext.css({right: Math.max(10, containermargin-$slideprevious.width() - 10), top: (($container.height()-captionheight - $slidenext.height())/2)+'px'});
     }
+
     enableslide();
     $(window).on('resize', resize);
     resize();

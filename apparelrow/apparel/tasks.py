@@ -56,6 +56,18 @@ def empty_embed_shop_cache(embed_shop_id):
     # Remove semaphore
     get_cache('nginx').delete(key)
 
+@task(name='apparelrow.apparel.tasks.empty_embed_productwidget_cache', max_retries=5, ignore_result=True)
+def empty_embed_productwidget_cache(embed_productwidget_id):
+    """
+        Invalidate embedded shops 2.0 from cache
+    """
+    nginx_key = reverse('embed-product-widget', args=[embed_productwidget_id])
+    logging.info("Removing embedded productwidget %s from memcached" % nginx_key)
+    key = settings.NGINX_PRODUCTWIDGET_RESET_KEY % embed_productwidget_id
+    get_cache('nginx').delete(nginx_key)
+    # Remove semaphore
+    get_cache('nginx').delete(key)
+
 # @task(name='apparelrow.apparel.tasks.empty_embed_shop_cache', max_retries=5, ignore_result=True)
 # def empty_embed_shop_cache(embed_shop_id):
 #    for x in itertools.product((x[0] for x in settings.LANGUAGES), ['A', 'M', 'W']):
@@ -340,9 +352,10 @@ def build_static_look_image(look_id):
     for component in look.display_components.order_by('z_index').all():
         if look.display_with_component == 'P':
             component_image = Image.open(finders.find('images/look-hotspot.png')).resize((component_size, component_size), Image.ANTIALIAS)
-            if thumbnail.width < look.width or thumbnail.height < look.height:
-                component.left = int(component.left*thumbnail.width/look.width)
-                component.top = int(component.top*thumbnail.height/look.height)
+            component.left += (component.width-component_size)/2
+            component.top += (component.height-component_size)/2
+            component.left = int(component.left*thumbnail.width/look.width)
+            component.top = int(component.top*thumbnail.height/look.height)
         else:
             if not component.product.product_image:
                 continue

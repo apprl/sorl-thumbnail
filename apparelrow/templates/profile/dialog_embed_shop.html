@@ -144,6 +144,13 @@
             }
             App.Events.trigger('widget:save', {title: $('#embed_shop_form #id_name').val()});
         });
+        /*
+        $('.btn-continue').on('click', function(e) {
+            if (external_shop_id && !shop_id) {
+                window.location.replace('/shop/edit/' + external_shop_id);
+            }
+        });
+        */
 
         $('#width_dropdown a').on('click', function(e) {
             e.preventDefault();

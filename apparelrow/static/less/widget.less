@@ -53,8 +53,9 @@
           }
         }
       }
-      .product-image img{
+      .product-image img {
         margin: 0 0;
+        max-width: 100%;
       }
     }
     .popup-slim-widget-popup {
@@ -67,6 +68,7 @@
 
 #popup-slim {
   .product-image img {
+    max-width: 50%;
     margin: 0 auto !important;
   }
   .info-container {
@@ -504,7 +506,10 @@ html.look-type-C, html.look-type-P {
           }
         }
       }
-      .close {
+    }
+  }
+  body.is-mobile {
+    .close {
         background-image: url('../images/cross.png');
         background-size: contain;
         width: 18px;
@@ -513,7 +518,6 @@ html.look-type-C, html.look-type-P {
         position: absolute;
         top: 5px;
         right: 5px;
-      }
     }
   }
 }
@@ -560,6 +564,17 @@ html.look-type-C, html.look-type-P {
     border-left: 4px solid transparent;
   }
 
+.widget-page {
+  .modal {
+    .modal-footer {
+      .btn + .btn {
+        margin-left: 0px;
+      }
+    }
+  }
+
+}
+
 .create-product-widget-page {
   #product-widget-preview {
     width: 100%;
@@ -569,9 +584,6 @@ html.look-type-C, html.look-type-P {
       overflow: auto;
       border: 2px solid @light_gray_color;
       border-top: 0px;
-      > div {
-        padding-top: 10px;
-      }
     }
 
     &.splash {
@@ -601,11 +613,6 @@ html.look-type-C, html.look-type-P {
       font-weight: bold;
       color: #555;
     }
-    @media (min-width: @screen-lg) {
-      .product-list .col-product-item {
-        width: 25%;
-      }
-    }
   }
   #product-widget-display-settings {
     display: none;
@@ -614,6 +621,7 @@ html.look-type-C, html.look-type-P {
     top: 50%;
     left: 50%;
     width: 80%;
+    z-index:10;
     transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
     @media (min-width: @screen-sm) {

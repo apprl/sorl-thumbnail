@@ -19,15 +19,15 @@
         });
     </script>
     <div id="preview-header" class="preview-header">
-        {%  trans 'My widget preview' %}
+        {%  trans '0 products selected' %}
     </div>
     <div class="product-list-container">
+        <a href="#" class="navigation-el previous"><i></i></a>
+        <a href="#" class="navigation-el next"><i></i></a>
         <div id="product-widget-product-list" class="">
-            <a class="previous">Previous</a>
-            <a class="next">Next</a>
             <ul class="product-list list-unstyled"></ul>
         </div>
     </div>
 </div>
 
-{% include 'apparel/tools/dialog_embed_product_widget.html' with request=request LANGUAGES=LANGUAGES external_product_widget_id=external_product_widget_id only %}
+{% include 'apparel/tools/dialog_embed_product_widget.html' with request=request LANGUAGES=LANGUAGES title=title external_product_widget_id=external_product_widget_id only %}

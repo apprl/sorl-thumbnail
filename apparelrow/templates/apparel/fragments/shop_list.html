@@ -1,25 +1,44 @@
 {% load i18n apparel_extras %}
 <ul class="shop-list list-unstyled row">
     {% for object in current_page.object_list %}
-        <li class="col-sm-4">
-            <h4><a href="{% url 'create-shop' object.pk %}">{{ object.title }}</a></h4>
-            <div class="description"></div>
-            <p>
-                {% if object.show_liked %}
-                    {% trans 'Your liked products' %}
-                {% else %}
-                   {% trans 'Contains' %} {{ object.products.count }} {% trans 'products' %}
-                {% endif %}
-                <br>
-                {% trans 'Last modified' %}: {{ object.created|since }}
-                <br>
-            </p>
-            <div class="btn-group">
-                <a class="btn btn-default" href="{% url 'create-shop' object.pk %}"><i class="fa fa-pencil"></i> Edit</a>
-                <a class="btn btn-secondary" href="#" data-toggle="modal" data-shopid="{{ object.pk }}" data-shoptitle="{{ object.title }}" data-target="#modal_shop_delete">Delete</a>
-            </div>
-        </li>
-    {% empty %}
+        <li class="shop col-sm-4">
+            {% if object.type %} 
+               <h4 class="shop-title"><a href="{% url 'edit-product-widget' object.pk %}">{{ object.title }}</a></h4>
+                <div class="description">
+                </div>
+
+                <p>
+                    {% trans "Product widget" %}<br/>
+                    {% if object.show_liked %}
+                        {% trans 'Your liked products' %}
+                    {% else %}
+                       {% trans 'Contains' %} {{ object.products.count }} {% trans 'products' %}
+                    {% endif %}
+                    <br/>
+                    {% trans 'Last modified' %}: {{ object.modified|since }}
+                    <br/>
+                    <a class="btn btn-success" href="{% url 'edit-product-widget' object.pk %}">Edit</a> <a class="btn btn-danger" href="#" data-toggle="modal" data-productwidgetid="{{ object.pk }}" data-productiwidgettitle="{{ object.title }}" data-target="#modal_productwidget_delete">Delete</a>
+                </p> 
+               {% else %}
+                <h4><a href="{% url 'create-shop' object.pk %}">{{ object.title }}</a></h4>
+                <div class="description"></div>
+                <p>
+                    {% if object.show_liked %}
+                        {% trans 'Your liked products' %}
+                    {% else %}
+                       {% trans 'Contains' %} {{ object.products.count }} {% trans 'products' %}
+                    {% endif %}
+                    <br>
+                    {% trans 'Last modified' %}: {{ object.created|since }}
+                    <br>
+                </p>
+                <div class="btn-group">
+                    <a class="btn btn-default" href="{% url 'create-shop' object.pk %}"><i class="fa fa-pencil"></i> Edit</a>
+                    <a class="btn btn-secondary" href="#" data-toggle="modal" data-shopid="{{ object.pk }}" data-shoptitle="{{ object.title }}" data-target="#modal_shop_delete">Delete</a>
+                </div>
+           {% endif %} 
+           </li>
+        {% empty %}
     {% if current_page.number == 1 %}
     <li class="col-lg-12">{% trans "No results" %}</li>
     {% endif %}
@@ -29,3 +48,4 @@
     {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page only %}
 </div>
 {% include 'apparel/fragments/modal_shop_delete.html' %}
+{% include 'apparel/fragments/modal_productwidget_delete.html' %}
