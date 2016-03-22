@@ -180,9 +180,16 @@ def clean_index(app_label=None, module_name=None, url=None):
 # ProductIndex
 #
 
+# Todo: Move this method to the corresponding models.py that contain the Product method its attached to.
 @receiver(post_save, sender=Product, dispatch_uid='product_save')
 def product_save(instance, **kwargs):
     if not hasattr(instance, 'id'):
+        return
+
+    # If this post save signal is a result of only a date update we do not have to update the search index either
+    #if kwargs and "imported_date" in kwargs.keys():
+    if 'update_fields' in kwargs and len(kwargs['update_fields']) == 1 and 'modified' in kwargs['update_fields']:
+        logger.info(kwargs.get('update_fields', None))
         return
 
     # If this post save signal is from a product popularity update we do not

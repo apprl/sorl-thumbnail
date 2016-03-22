@@ -85,7 +85,6 @@ def get_site_product_hash(site_product, **kwargs):
         attributes.append(repr(getattr(site_product, key)))
 
     # Kwargs contain data from ProductItem.Final
-    logger.info(kwargs)
     if kwargs:
         for key in kwarg_keys:
             attributes.append(repr(kwargs.get(key)))

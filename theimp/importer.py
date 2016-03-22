@@ -94,6 +94,9 @@ class Importer(object):
                                                                                 format(name=site_product.product_name,
                                                                                     id=site_product.id,
                                                                                     update_completed=updated))
+                if not updated:
+                    site_product.modified = datetime.datetime.now()
+                    site_product.save(update_fields=["modified"])
             else:
                 site_product = self.add_product(product, item)
         else:
@@ -171,7 +174,7 @@ class Importer(object):
             self._update_product_options(item, site_product)
             return True
         else:
-            logger.info("{} - {}".format(imported_hash, previous_hash))
+            #logger.info("{} - {}".format(imported_hash, previous_hash))
             logger.info("Not updating product {id}, since product is the same.".format(id=site_product.id))
         return False
 
