@@ -362,7 +362,12 @@ $(document).ready(function() {
                         var helpText = "/click";
                         if (json['type'] == "is_cpo")
                             helpText = "/sale";
-                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText + " on this product");
+                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText);
+                        productEarningBlock.css("padding", "10px");
+                        productEarningBlock.click(function() {
+                            window.location = element.find("a").attr("href");
+                            return false;
+                        })
                     }
                 });
             }
@@ -487,7 +492,7 @@ function showWarning($element) {
         type: 'GET',
         url: '/products/check_location/' + slug + '/',
         success: function(response, status, request) {
-            if(response){
+            if(response && !$("body").hasClass("product-detail-page")){
                 $.notify({
                     message: response + " <a class='alert-warning' style='text-decoration: underline;' href='" + settings_link + "'>Go to location settings</a>"
                 }, { // settings

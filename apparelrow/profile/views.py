@@ -554,13 +554,12 @@ class UserSettingsEmailView(FormView):
 
         if location_warning_form.is_valid():
             location_warning_form.save()
-        else:
-            context.update({'location_warning_form':location_warning_form})
+            context.update({'location_warning_form': location_warning_form})
         # Always save the facebook form
         if facebook_form.is_valid():
             facebook_form.save()
         else:
-            context.update({'facebook_settings_form':facebook_form})
+            context.update({'facebook_settings_form': facebook_form})
 
         email_form = EmailForm(request.POST, request.FILES, instance=request.user)
         if "email" in request.POST:
@@ -581,7 +580,6 @@ class UserSettingsEmailView(FormView):
                     })
                 send_email_confirm_task.delay(subject, body, self.request.user.email)
                 #return HttpResponseRedirect(reverse('settings-account'))
-            else:
                 context.update({"email_form": email_form})
 
         elif "old_password" in request.POST:
@@ -594,7 +592,6 @@ class UserSettingsEmailView(FormView):
                     messages.success(request, _('Password was updated'))
                 else:
                     messages.success(request, _('Password was added'))
-            else:
                 context.update({'form': password_form})
 
         elif "location" in request.POST:
@@ -651,7 +648,6 @@ def settings_email(request):
     location_warning_form = PartnerNotificationsForm(instance=request.user)
     password_form = FormClass(request.user)
     facebook_form = FacebookSettingsForm(instance=request.user)
-
 
     return render(request, 'profile/settings_account.html', {
             'email_form': form,

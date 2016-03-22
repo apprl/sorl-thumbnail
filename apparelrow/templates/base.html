@@ -25,7 +25,9 @@
     {% compressed_css 'bootstrap' %}
     {% block extra-styles %}
     {% endblock %}
+    {% comment  %}
     <script type="text/javascript">var addToHomeConfig = {returningVisitor: true, touchIcon: true, expire: 20160};</script>
+    {% endcomment  %}
     <script src="//cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
@@ -231,8 +233,7 @@
                         <hr class="visible-xs visible-sm">
                         <li class="visible-xs visible-sm">
                             <a href="{% url 'settings-account' %}#location">
-                                {% get_location_text request.user.location %}
-                                <span class="underline-text">Change</span>
+                                <u>{% get_location_text request.user.location %}</u>
                             </a>
                         </li>
                         {% comment %}

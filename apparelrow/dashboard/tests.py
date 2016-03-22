@@ -18,7 +18,7 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
 
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
-from apparelrow.dashboard.views import publisher_contact
+from apparelrow.dashboard.views import publisher_contact, get_store_earnings
 from apparelrow.apparel.utils import generate_sid, parse_sid
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
@@ -2552,9 +2552,10 @@ class TestStoreCommission(TransactionTestCase):
         _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
 
         get_model('dashboard', 'ClickCost').objects.create(vendor=vendor, amount=1.5, currency="SEK")
-        amount, amount_float, currency, type = get_store_earnings(vendor, publisher_cut, normal_cut, standard_from, store)
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(vendor, publisher_cut, normal_cut, standard_from, store)
 
         self.assertAlmostEqual(amount, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
         self.assertAlmostEqual(amount_float, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
         self.assertEqual(currency, "SEK")
-        self.assertEqual(type, "is_cpc")
+        self.assertEqual(earning_type, "is_cpc")
+        self.assertEqual(type_code, 0)

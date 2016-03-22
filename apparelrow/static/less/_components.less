@@ -1156,7 +1156,7 @@ main div.message {
 /* Alerts ---------- */
 .alert {
 	position: relative;
-	background-color: rgba(103, 226, 184, .4);
+	background-color: #C2F3E3;
 	border: 1px solid @primaryColor;
 	border-radius: 0;
 	text-align: center;
@@ -1196,6 +1196,10 @@ main div.message {
 			border-color: black;
 		}
 	}
+}
+
+[data-notify="container"] {
+  width: 70%;
 }
 
 /* Panels & Filters ---------- */
@@ -1414,16 +1418,20 @@ li.price.discounted {
 }
 .product-medium-earning {
   	position:relative;
-  	bottom: 163px;
+  	bottom: 158px;
+  	font-size: 14px;
   	right: 0;
   	left: 0;
   	width: 100%;
-  	background: rgba(0, 0, 0, 0.4);
+  	background: rgba(0, 0, 0, 0.6);
 	color: #fff;
   	text-align:center;
   	visibility: hidden;
   	@media (max-width: @screen-md) {
-		font-size: 14px;
-	 	bottom: 159px;
+		font-size: 12px;
+	 	bottom: 155px;
+	}
+  	&:hover {
+	  cursor: pointer;
 	}
 }

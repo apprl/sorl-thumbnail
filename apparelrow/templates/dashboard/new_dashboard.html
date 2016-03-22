@@ -258,15 +258,15 @@
 
     <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
-            <h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2>
+            <h2>{% trans "Top Links" %} {{ month_display }} {{ year }}</h2>
             <a class="btn btn-default center" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a>
             <table id="top-products" class="sortable table top-products">
                 <thead>
                     <tr>
                         <th class="col-md-1">{% trans "Product" %}</th>
                         <th class="col-md-5 hidden-xs"></th>
-                        <th class="col-md-2">{% trans "Clicks" %}</th>
-                        <th class="col-md-2">{% trans "Publisher earnings" %}</th>
+                        <th class="col-md-2 center">{% trans "Clicks" %}</th>
+                        <th class="col-md-2 center">{% trans "Earnings" %}</th>
                         {% if is_owner %}<th class="col-md-2 center">{% trans "Network earnings" %}</th>{% endif %}
                     </tr>
                 </thead>

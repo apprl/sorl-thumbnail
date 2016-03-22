@@ -7,14 +7,14 @@
 {% block modal_content %}
     <div class="row">
         <div class="col-lg-12">
-            <h2>{% trans "Top products in" %} {{ month }} {{ year }}</h2>
+            <h2>{% trans "Top Links in" %} {{ month }} {{ year }}</h2>
             <table id="top-products-more" class="sortable table">
                 <thead>
                     <tr>
                         <th class="col-md-1 product-image center">{% trans "Product" %}</th>
                         <th class="col-md-5 hidden-xs center"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        <th class="col-md-2 center">{% trans "Earnings" %}</th>
                         {% if is_owner %}<th class="col-md-2 center">{% trans "Network earnings" %}</th>{% endif %}
                     </tr>
                 </thead>

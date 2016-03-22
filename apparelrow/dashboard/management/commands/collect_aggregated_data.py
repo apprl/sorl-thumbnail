@@ -12,6 +12,9 @@ from apparelrow.dashboard.views import get_clicks_from_sale
 from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_dict, get_user_thumbnail_and_link, \
     get_user_attrs, get_day_range
 
+from django.conf import settings
+from django.contrib.staticfiles.storage import staticfiles_storage
+
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.core.management.base import BaseCommand
@@ -170,15 +173,15 @@ class Command(BaseCommand):
 
         link = row.sale.source_link
         logger.debug("Generating aggregated data for links %s" % link)
-        link_name = "Link to %s " % link
         instance, created = AggregatedData.objects.\
             get_or_create(user_id=user_dict['user_id'], created=row.date.date(), data_type='aggregated_from_product',
-                          aggregated_from_id=0, aggregated_from_name=link_name, aggregated_from_link=link)
+                          aggregated_from_id=0, aggregated_from_link=link)
         if created:
             logger.debug("Link %s has been created" % link)
             instance.user_image, instance.user_link = get_user_thumbnail_and_link(row.user)
             instance.user_name = user_dict['user_name']
             instance.user_username = user_dict['user_name']
+            instance.aggregated_from_name = "Link to %s " % link
 
         if row.user_earning_type in ('publisher_sale_commission', 'apprl_commission'):
             instance.sale_earnings += row.amount
@@ -188,6 +191,7 @@ class Command(BaseCommand):
             instance.referral_earnings += earning_amount
         instance.sale_plus_click_earnings += earning_amount
         instance.aggregated_from_slug = link
+        instance.aggregated_from_image = staticfiles_storage.url(settings.APPAREL_DEFAULT_LINK_ICON)
         instance.save()
 
         if created:
@@ -380,15 +384,16 @@ class Command(BaseCommand):
                 except get_user_model().DoesNotExist:
                     logger.warning("User %s does not exist" % row['user_id'])
 
-            if vendor:
-                link_name = "Link to %s " % row['source_link']
+            if vendor and row['source_link'] != "" and (user or row['user_id'] == 0):
                 instance, created = AggregatedData.objects.\
                     get_or_create(user_id=row['user_id'], created=row['day'], data_type='aggregated_from_product',
-                                  aggregated_from_id=0, aggregated_from_name=link_name,
-                                  aggregated_from_link=row['source_link'])
+                                  aggregated_from_id=0, aggregated_from_link=row['source_link'])
                 if created:
-                    _, instance.user_name, instance.user_username  = get_user_attrs(user)
+                    _, instance.user_name, instance.user_username = get_user_attrs(user)
                     instance.user_image, instance.user_link = get_user_thumbnail_and_link(user)
+                    instance.aggregated_from_image = staticfiles_storage.url(settings.APPAREL_DEFAULT_LINK_ICON)
+                    instance.aggregated_from_name = "Link to %s " % row['source_link']
+                    instance.aggregated_from_slug = row['source_link']
 
                     if vendor.is_cpc:
                         instance.paid_clicks += decimal.Decimal(row['clicks'])

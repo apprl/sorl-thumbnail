@@ -29,9 +29,9 @@
             </td>
             <td data-sort="{{ store.amount_float }}">
                 {{ store.currency }} {{ store.amount }}
-                {% if store.type == "is_cpc" %}
+                {% if store.earning_type == "is_cpc" %}
                     {% trans " per click" %}
-                {% elif store.type == "is_cpo" %}
+                {% elif store.earning_type == "is_cpo" %}
                     {% trans " per sale" %}
                 {% endif %}
             </td>

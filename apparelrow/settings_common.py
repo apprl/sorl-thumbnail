@@ -415,7 +415,6 @@ PIPELINE_JS = {
         'source_filenames': ('js/vendor/underscore.js',
                              'js/vendor/jquery-2.1.1.js',
                              'js/vendor/jquery-ui-1.9.2.custom.js',
-                             'js/vendor/add2home.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
                              'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
@@ -495,6 +494,7 @@ PIPELINE_JS = {
             'js/app/base/views/header.js',
             'js/app/base/views/dialog_header_mobile.js',
             'js/app/base/views/filter_product.js',
+            'js/app/base/views/filter_product_store.js',
             'js/app/base/views/filter_product_category.js',
             'js/app/base/views/filter_product_subcategory.js',
             'js/app/base/views/filter_product_color.js',
@@ -546,6 +546,7 @@ PIPELINE_JS = {
             'js/app/base/views/header.js',
             'js/app/base/views/dialog_header_mobile.js',
             'js/app/base/views/filter_product.js',
+            'js/app/base/views/filter_product_store.js',
             'js/app/base/views/filter_product_category.js',
             'js/app/base/views/filter_product_subcategory.js',
             'js/app/base/views/filter_product_color.js',
@@ -593,6 +594,7 @@ PIPELINE_JS = {
                              'js/app/base/views/header.js',
                              'js/app/base/views/dialog_header_mobile.js',
                              'js/app/base/views/filter_product.js',
+                             'js/app/base/views/filter_product_store.js',
                              'js/app/base/views/filter_product_category.js',
                              'js/app/base/views/filter_product_subcategory.js',
                              'js/app/base/views/filter_product_color.js',
@@ -739,6 +741,9 @@ APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR = 'images/brand-avatar-large-circular.png'
 APPAREL_DEFAULT_BRAND_AVATAR = 'images/brand-avatar.png'
 APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM = 'images/brand-avatar-medium.png'
 APPAREL_DEFAULT_BRAND_AVATAR_LARGE = 'images/brand-avatar-large.png'
+APPAREL_DEFAULT_LINK_ICON = 'images/link-icon-small.jpg'
+APPAREL_DEFAULT_LINK_ICON_MEDIUM = 'images/link-icon-medium.jpg'
+APPAREL_DEFAULT_LINK_ICON_LARGE = 'images/link-icon-large.jpg'
 APPAREL_MISC_IMAGE_ROOT = 'static/images'
 APPAREL_BACKGROUND_IMAGE_ROOT = 'static/images/background'
 APPAREL_TEMPORARY_IMAGE_ROOT = 'static/images/temp'
