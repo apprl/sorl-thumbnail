@@ -272,7 +272,7 @@ def get_user_attrs(user):
     return user_dict['user_id'], user_dict['user_name'], user_dict['user_username']
 
 def get_user_dict(user):
-    user_id = None if not user else user.id
+    user_id = 0 if not user else user.id
     user_name = 'APPRL' if user_id == 0 else ''
     user_username = 'APPRL' if user_id == 0 else ''
     if user:
