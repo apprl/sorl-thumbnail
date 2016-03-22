@@ -1011,14 +1011,12 @@ jQuery(document).ready(function() {
         // Fetch via ajax on pagination clicks
         $pagination.on('click', '.btn-pagination', function() {
             // Keep fetching automatically after the first click
-            $('#pagination-loader').show();
             var $this = $(this);
-            $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
+            $this.addClass('disabled hover').find('.status').text($this.data('loading-text'));
 
             $(window).data('dont-scroll', false);
 
             getPage($this);
-            $('#pagination-loader').hide();
             return false;
         });
 

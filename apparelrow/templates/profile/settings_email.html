@@ -9,7 +9,7 @@
         {% if email_change %}
             <p><i>{% blocktrans with email_change.email as new_email %}Pending e-mail address change to {{ new_email }}, check your inbox for confirmation mail.{% endblocktrans %}</i></p>
         {% endif %}
-        <form class="form-horizontal" action="{% url 'settings-email' %}" method="post">{% csrf_token %}
+        <form class="form-horizontal" action="{% url 'settings-account' %}" method="post">{% csrf_token %}
             <p>{% trans "Current e-mail address:" %} {{ request.user.email }}</p>
             <div class="form-group{% if email_form.email.errors %} has-error{% endif %}">
                 <label for="id_{{ email_form.email.html_name }}" class="col-sm-2 control-label">{{ email_form.email.label }}</label>
@@ -37,7 +37,7 @@
             {% endif %}
         {% else %}
             <p>{% trans "Here you can set which actions you want to be automatically shared to your Facebook timeline:" %}</p>
-            <form class="form-horizontal" action="{% url 'settings-email' %}" method="post">{% csrf_token %}
+            <form class="form-horizontal" action="{% url 'settings-account' %}" method="post">{% csrf_token %}
                 <div style="clear: both; padding: 1em 0;">
                     {% for field in facebook_settings_form %}
                         <p>{{ field }} {{ field.help_text }}</p>

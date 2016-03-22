@@ -10,7 +10,6 @@ from scrapy import log
 from spiderpig.spidercrawl.settings import USER_AGENT_LIST
 
 
-
 class DownloadGzipMiddleware(object):
 
     def custom_is_gzipped(self, response):
@@ -26,6 +25,7 @@ class DownloadGzipMiddleware(object):
         if isinstance(response, Response) and self.custom_is_gzipped(response):
             response = response.replace(body=gunzip(response.body))
         return response
+
 
 class DownloadZipMiddleware(object):
 
@@ -62,6 +62,9 @@ class RelCanonicalMiddleware(object):
 
 
 class RandomUserAgentMiddleware:
+
+    def __init__(self):
+        pass
 
     def process_request(self, request, spider):
         ua = random.choice(USER_AGENT_LIST)

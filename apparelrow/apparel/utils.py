@@ -120,17 +120,16 @@ def get_product_alternative(product, default=None):
                        'fl': 'price,discount_price',
                        'sort': 'price asc, popularity desc, created desc'}
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
-    query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
-    query_arguments['fq'].append('category:%s' % (product.category_id))
+    query_arguments['fq'].append('gender:({gender} OR U)'.format(gender=product.gender,))
+    query_arguments['fq'].append('category:{category}'.format(category=product.category_id))
     if colors_pk:
-        query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+        query_arguments['fq'].append('color:({colors})'.format(colors=' OR '.join(colors_pk),))
     search = ApparelSearch('*:*', **query_arguments)
     docs = search.get_docs()
     if docs:
-        shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
-        shop_url = '%s?category=%s' % (reverse(shop_reverse), product.category_id)
+        shop_url = u'{shop_url}?category={category}'.format(shop_url=get_gender_url(product.gender, 'shop'), category=product.category_id)
         if colors_pk:
-            shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+            shop_url = u'{shop_url}&color={colors}'.format(shop_url=shop_url, colors=','.join(colors_pk))
 
         price, currency = docs[0].price.split(',')
         rate = currency_exchange(language_currency, currency)

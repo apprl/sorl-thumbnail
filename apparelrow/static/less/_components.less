@@ -418,10 +418,9 @@ a.info {
     .btn-pagination {
 		margin: auto;
 		overflow: hidden;
-		&:focus, &:active, &:visited {
+		/*&:focus, &:active, &:visited {
 			background-color: transparent !important;
-			color: white !important;
-		}
+		}*/
 		&.hover {
 			.loader {
 				display: block;
@@ -439,21 +438,21 @@ a.info {
 		display: none;
 		float: right;
 		margin-top: -6px;
-		float: right;
+	  	background-color: inherit;
 		> span {
-			width: 100%;
-			height: 100%;
+			width: 50%;
+			height: 50%;
 			display: inline-block;
 		    border-radius: 50%;
 	    	opacity: 0.6;
 		    position: absolute;
-		    top: 0;
+		    top: 10px;
 		    left: 0;
-		    background-color: white;
+		    background-color: white !important;
 		    -webkit-animation: bounce 2s infinite ease-in-out both;
 		    animation: bounce 2s infinite ease-in-out both;
 		}
-		.two {
+		.double-bounce2 {
 			-webkit-animation-delay: -1s;
 			animation-delay: -1s;
 		}
@@ -477,6 +476,13 @@ a.info {
 		50% {
 			-webkit-transform: scale(1);
 			transform: scale(1);
+		}
+	}
+
+  	.disabled {
+        span {
+		  background-color: transparent;
+		  color: inherit;
 		}
 	}
 }
@@ -912,6 +918,9 @@ a.info {
 			color: @grey;
 		}
 	}
+  	a.selected {
+		color: black;
+	}
 }
 .list-horizontal > li {
 	margin: 0 auto 15px auto;
@@ -1280,7 +1289,7 @@ main div.message {
 		display: none;
         position: absolute;
 	    right: 0;
-	    bottom: 60px;
+	    bottom: 50px;
 	    left: 0;
 	  	z-index:3;
 	}

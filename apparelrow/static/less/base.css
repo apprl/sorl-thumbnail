@@ -7467,12 +7467,9 @@ a.info:hover {
 .pagination .btn-pagination {
   margin: auto;
   overflow: hidden;
-}
-.pagination .btn-pagination:focus,
-.pagination .btn-pagination:active,
-.pagination .btn-pagination:visited {
-  background-color: transparent !important;
-  color: white !important;
+  /*&:focus, &:active, &:visited {
+			background-color: transparent !important;
+		}*/
 }
 .pagination .btn-pagination.hover .loader {
   display: block;
@@ -7486,23 +7483,24 @@ a.info:hover {
   height: 48px;
   position: relative;
   display: none;
-  margin-top: -6px;
   float: right;
+  margin-top: -6px;
+  background-color: inherit;
 }
 .pagination .loader > span {
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 50%;
   display: inline-block;
   border-radius: 50%;
   opacity: 0.6;
   position: absolute;
-  top: 0;
+  top: 10px;
   left: 0;
-  background-color: white;
+  background-color: white !important;
   -webkit-animation: bounce 2s infinite ease-in-out both;
   animation: bounce 2s infinite ease-in-out both;
 }
-.pagination .loader .two {
+.pagination .loader .double-bounce2 {
   -webkit-animation-delay: -1s;
   animation-delay: -1s;
 }
@@ -7527,6 +7525,10 @@ a.info:hover {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
+}
+.pagination .disabled span {
+  background-color: transparent;
+  color: inherit;
 }
 .helper {
   float: right;
@@ -7980,6 +7982,9 @@ a.info:hover {
 .list-alphabet a:hover {
   color: #666666;
 }
+.list-alphabet a.selected {
+  color: black;
+}
 .list-horizontal > li {
   margin: 0 auto 15px auto;
 }
@@ -8370,8 +8375,9 @@ main div.message .btn {
   display: none;
   position: absolute;
   right: 0;
-  bottom: 60px;
+  bottom: 50px;
   left: 0;
+  z-index: 3;
 }
 .embed {
   margin: 15px auto;
@@ -8491,10 +8497,29 @@ main div.message .btn {
 }
 li.discount-price,
 span.discount-price {
+  width: auto;
   color: #f64747;
 }
 li.price.discounted {
+  width: auto;
   text-decoration: line-through;
+}
+.product-medium-earning {
+  position: relative;
+  bottom: 163px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  text-align: center;
+  visibility: hidden;
+}
+@media (max-width: 992px) {
+  .product-medium-earning {
+    font-size: 14px;
+    bottom: 159px;
+  }
 }
 /*
     Attributes v1.0
@@ -10057,6 +10082,13 @@ textarea:focus {
 .top-products {
   text-align: left;
 }
+.top-buffer {
+  margin-top: 50px;
+}
+.pull-left-cell {
+  width: 100%;
+  text-align: left;
+}
 /*
     Look v1.0
 
@@ -10242,7 +10274,7 @@ textarea:focus {
   border: 0 !important;
 }
 .popover .currency {
-  color: #666;
+  color: #000;
 }
 .popover .popover-content {
   padding: 10px 10px 9px 10px;
@@ -11665,7 +11697,7 @@ body.store-index-page .background {
   line-height: 1.2;
 }
 .product-medium .hover {
-  bottom: 55px;
+  bottom: 50px;
   height: 44px !important;
 }
 .product-medium .hover .btn {
@@ -12634,7 +12666,7 @@ html.look-type-C .collage {
   text-align: center;
 }
 .profile-page .product-medium .hover {
-  bottom: 79px;
+  bottom: 50px;
 }
 .profile-looks main .btn-look-like {
   max-width: none;
@@ -13237,6 +13269,9 @@ a:active {
 u {
   text-decoration: none;
 }
+.underline-text {
+  text-decoration: underline;
+}
 ul,
 ol {
   list-style: none;
@@ -13728,6 +13763,7 @@ header .navbar-form .btn-search {
 }
 header .notifications {
   margin-top: 10px;
+  line-height: 20px;
   display: inline-block;
 }
 header .notifications .icon {
@@ -13841,7 +13877,7 @@ header .notifications:active .icon {
 }
 .notifications-menu .message {
   float: left;
-  width: 180px;
+  width: 160px;
   height: 34px;
   margin: 0;
   line-height: 15px;

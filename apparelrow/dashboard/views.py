@@ -1600,7 +1600,6 @@ def products(request, year=None, month=None):
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
 
-
         # Enumerate months
         dt1 = request.user.date_joined.date()
         dt2 = datetime.date.today()

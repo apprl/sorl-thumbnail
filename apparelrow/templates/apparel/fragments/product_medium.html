@@ -1,5 +1,19 @@
 {% load l10n i18n thumbnail thumbnail_extras buy_extras localeurl_tags %}
 
+{% comment %}
+
+ATTENTION!
+Do not change *anything* in this file unless you know what the effects are and you know what you are doing.
+
+This is a template for the product templates that are inserted into solr AND the products that are shown in the internal shops.
+They have different designfiles, trigger classes and id:s but share the same template file. Any changes to this template
+that does not take into account the styling for both the internal and external view will break design and functionality
+for both views. Any changes here will also have to be coupled with a full reindexing of the solr index, this takes a very long time.
+
+So, before changing anything here, do take this into consideration and talk to the person in charge.
+
+{% endcomment %}
+
 <div class="thumbnail product-medium" id="product-{{ object.id }}" data-id="{{ object.id }}">
     <div class="product-image-container">
         <a href="{{ object.get_absolute_url|chlocale:LANGUAGE_CODE }}">
@@ -19,7 +33,7 @@
         <ul class="list-inline">
             {% if object.availability and object.default_vendor and object.default_vendor.availability != 0 %}
             {% if object.default_vendor.original_discount_price %}
-            <li class="discount-price" data-price="{{ object.default_vendor.original_discount_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_discount_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</li>
+            <li class="discount-price" data-price="{{ object.default_vendor.original_discount_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_discount_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</li>
             <li class="price discounted" data-price="{{ object.default_vendor.original_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</li>
             {% else %}
             <li class="price" data-price="{{ object.default_vendor.original_price|unlocalize }}" data-currency="{{ object.default_vendor.original_currency }}">{{ object.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ object.default_vendor.original_currency }}</li>
@@ -27,7 +41,6 @@
             {% else %}
             <li class="sold-out">{% trans "Sold out" %}</li>
             {% endif %}
-        </ul>
-        <p>{% if has_looks %}<a class="looks" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" href="{% locale_url LANGUAGE_CODE 'product-look-list' contains=object.slug %}">{% trans "See looks »" %}</a>{% endif %}</p>
+        </ul>        <p>{% if has_looks %}<a class="looks" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" href="{% locale_url LANGUAGE_CODE 'product-look-list' contains=object.slug %}">{% trans "See looks »" %}</a>{% endif %}</p>
     </div>
 </div>

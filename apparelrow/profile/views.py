@@ -18,6 +18,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models.loading import get_model
+from django.views.generic import RedirectView
 from django.views.generic import TemplateView, ListView, View, DetailView, FormView
 
 import requests
@@ -82,6 +83,11 @@ def save_description(request):
     description_html = t.render(c)
 
     return HttpResponse(description_html, mimetype='text/html')
+
+
+class RedirectProfileView(RedirectView):
+    def get_redirect_url(self, slug):
+        return reverse_lazy('profile-likes', args=(slug,))
 
 
 class ProfileView(TemplateView):
@@ -636,7 +642,7 @@ def settings_email(request):
                                   {'email_form': form, 'email_change': email_change,
                                    'form': password_form, 'facebook_settings_form': facebook_form },
                                   context_instance=RequestContext(request))
-        return HttpResponseRedirect(reverse('settings-email'))
+        return HttpResponseRedirect(reverse('settings-account'))
 
     form = EmailForm()
     location_warning_form = PartnerNotificationsForm(instance=request.user)
@@ -773,7 +779,6 @@ def login_flow_brands(request):
     """
     if request.user.is_authenticated() and request.user.login_flow == 'complete':
         return HttpResponseRedirect(reverse('login-flow-complete'))
-
 
     request.user.login_flow = 'brands'
     request.user.save()
@@ -1047,6 +1052,9 @@ def flow(request):
                             max_age=365 * 24 * 60 * 60)
 
         return response
+
+    if request.user.is_authenticated() and request.user.is_partner:
+        return HttpResponseRedirect(reverse('publisher-tools'))
 
     return HttpResponseRedirect(_get_next(request))
 

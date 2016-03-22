@@ -211,13 +211,10 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     :param kwargs:
     :return:
     """
-
     if gender is None and user_gender is None:
         gender = select_from_multi_gender(request, 'shop', None)
-        if gender == 'M':
-            return HttpResponseRedirect('%s?%s' % (reverse('shop-men'), request.GET.urlencode()))
-        else:
-            return HttpResponseRedirect('%s?%s' % (reverse('shop-women'), request.GET.urlencode()))
+        return HttpResponseRedirect(u'{shop_url}?{parameters}'.format(shop_url=get_gender_url(gender, 'shop'),
+                                                                      parameters=request.GET.urlencode()))
     elif user_gender is None:
         gender = select_from_multi_gender(request, 'shop', gender)
 
@@ -360,13 +357,15 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     selected_brands = filter(None, map(_to_int, request.GET.get('manufacturer', '').split(',')))
     selected_brands_data = {}
     for brand in Brand.objects.values('id', 'name').filter(pk__in=selected_brands):
-        brand['href'] = '%s?manufacturer=%s' % (reverse('apparelrow.apparel.browse.browse_products'), brand['id'])
+        brand['href'] = u'{shop_url}?manufacturer={brand}'.format(shop_url=get_gender_url(gender, 'shop'),
+                                                                  brand=brand['id'])
         selected_brands_data[brand['id']] = brand
 
     selected_stores = filter(None, map(_to_int, request.GET.get('store', '').split(',')))
     selected_stores_data = {}
     for store in Vendor.objects.values('id', 'name').filter(pk__in=selected_stores):
-        store['href'] = '%s?store=%s' % (reverse('apparelrow.apparel.browse.browse_products'), store['id'])
+        store['href'] = u'{shop_url}?store={store}'.format(shop_url=get_gender_url(gender, 'shop'),
+                                                           store=store['id'])
         selected_stores_data[store['id']] = store
 
     result.update(
