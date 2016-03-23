@@ -11,7 +11,10 @@
     <p>{% trans "Thank you for your application. Your next step now is to create an APPRL account." %}</p>
     {% include 'registration/fragments/registration.html' %}
     {% else %}
-    <p>{% trans "We will get in touch with you soon." %}</p>
+    <div class="row" style="margin:50px;">
+        <p margin>{% trans "We will get in touch with you soon." %}</p>
+        <p>{% trans "Let us know if you have questions or need aditional info on retailer@apprl.com." %}</p>
+    </div>
     {% endif %}
 </div>
 
