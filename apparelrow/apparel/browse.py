@@ -23,6 +23,7 @@ from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.views import backend_product_earnings
+from apparelrow.apparel.utils import get_gender_url
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender, get_location
 
 logger = logging.getLogger('apparel.debug')
