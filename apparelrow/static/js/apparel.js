@@ -496,6 +496,7 @@ function showWarning($element) {
                 $.notify({
                     message: response + " <a class='alert-warning' style='text-decoration: underline;' href='" + settings_link + "'>Go to location settings</a>"
                 }, { // settings
+                    allow_dismiss: true,
                     type: 'warning',
                     z_index: 10031,
                     offset: 80,
@@ -505,6 +506,7 @@ function showWarning($element) {
                         align: "center"
                     }
                 });
+                $(".alert").addClass("alert-dismissible");
             }
         }
     });
