@@ -282,4 +282,9 @@ class EmailValidationResetPassword(PasswordResetForm):
         if not get_user_model().objects.filter(email=email).exists():
             raise forms.ValidationError(_('No account found with that email address.'))
         else:
+            user = get_user_model().objects.filter(email=email)[0]
+            if user.facebook_user_id and not user.has_usable_password():
+                raise forms.ValidationError(_("It's not possible to reset your password for this email address, since "
+                                              "it's connected to a Facebook account. Try to login with your "
+                                              "Facebook account instead."))
             return email
