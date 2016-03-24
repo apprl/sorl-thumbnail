@@ -1,5 +1,6 @@
 /*
     Widget v1.0
+    - Product editor
     - Shop editor
     - Look editor
 */
@@ -9,6 +10,196 @@
         // Override for messy dialog header
         .popup-slim-dialog_mobile_menu .header {
             height: 44px !important;
+        }
+    }
+}
+
+/* Product editor ---------- */
+.create-product-widget-page {
+    #product-widget-preview {
+        width: 100%;
+        float: left;
+        position: relative;
+        .product-list-container {
+            overflow: auto;
+            border: 2px solid #eee;
+            border-top: 0px;
+            > div {
+                padding-top: 10px;
+            }
+        }
+        .thumbnail {
+            padding: 0;
+        }
+        .navigation-el {
+            background-color: #f8f8f8;
+            position: absolute;
+            display: block;
+            z-index: 10;
+            height: 44px;
+            width: 44px;
+            top: 50%;
+            transition: background-color .2s ease-in-out;
+            text-align: center;
+            i {
+                transition: color .2s ease-in-out;
+                font-size: 32px;
+                line-height: 44px;
+            }
+            &:hover {
+                background-color: black;
+                i {
+                    color: white;
+                }
+            }
+            &.previous {
+                left: 0 !important;
+                i {
+                    padding-right: 2px;
+                }
+            }
+            &.next {
+                right: 0 !important;
+                i {
+                    padding-left: 2px;
+                }
+            }
+        }
+        /*.previous {
+            left: -10px;
+        }
+        .next {
+            right: -10px;
+        }*/
+        &.splash {
+            .product-list-container {
+                border-top: 2px solid @lightGrey;
+            }
+            .col-product-list {
+                h3 {
+                    display: none;
+                }
+            }
+            .preview-header {
+                display: none;
+            }
+        }
+        &.no-filter {
+            .col-product-filter {
+                display: none;
+            }
+        }
+        .preview-header {
+            background: @offwhite;
+            width: 100%;
+            text-align: center;
+            padding: 9px 0px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+        @media (min-width: @screen-sm) {
+            .navigation-el.previous {
+                left: 15px !important;
+            }
+            .navigation-el.next {
+                right: 15px !important;
+            }
+            /*.product-list .col-product-item {
+                width: 25%;
+            }*/
+        }
+    }
+    #popup-slim {
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.25);
+    }
+    #product-widget-display-settings {
+        display: none;
+        position: absolute;
+        overflow: hidden;
+        top: 50%;
+        left: 50%;
+        width: 80%;
+        text-align: center;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        p {
+            margin-bottom: 15px;
+        }
+    }
+}
+#modal_embed_product_widget {
+    input, textarea, select, .select {
+        max-width: none;
+    }
+    label {
+        display: inline-block;
+    }
+}
+#product-widget-product-list {
+    overflow:hidden;
+    margin: 0 auto;
+    position: relative;
+    top: 50%;
+    .translate(0, -50%);
+    .product-list {
+        position: relative;
+    }
+    .col-product-item {
+        float: left;
+        padding: 0px 10px;
+    }
+    &.liked-products {
+        .hover {
+            display: none !important;
+        }
+    }
+    .product-medium {
+        margin: 0px;
+        max-width: none;
+    }
+    .caption {
+        display: none;
+    }
+    .product-image-container {
+        position: relative;
+        /*.btn {
+            width: 100%;
+        }*/
+    }
+    .product-image {
+        opacity: 1;
+        &.product-image-actual {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            max-width: 200px;
+            max-height: 100%;
+            .translate(-50%, -50%);
+        }
+        &.fake-product-image {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .hover {
+        bottom: auto;
+        top: 50%;
+        z-index: 2;
+        .translate(0, -50%);
+        .btn {
+            width: 50%;
+            margin: 0 auto 10px auto;
+        }
+    }
+    @media (min-width: 375px) {
+        .product-image.product-image-actual {
+            max-width: 100%;
+        }
+    }
+    @media (min-width: @screen-sm) {
+        .hover .btn {
+            width: 100%;
         }
     }
 }
@@ -805,68 +996,6 @@ html.look-type-C, html.look-type-P {
     }
 }
 
-.create-product-widget-page {
-    #product-widget-preview {
-        width: 100%;
-        float: left;
-        position: relative;
-        .product-list-container {
-            overflow: auto;
-            border: 2px solid @lightGrey;
-            border-top: 0px;
-            > div {
-                padding-top: 10px;
-            }
-        }
-
-        &.splash {
-            .product-list-container {
-                border-top: 2px solid @lightGrey;
-            }
-            .col-product-list {
-                h3 {
-                    display: none;
-                }
-            }
-            .preview-header {
-                display: none;
-            }
-        }
-        &.no-filter {
-            .col-product-filter {
-                display: none;
-            }
-        }
-        .preview-header {
-            background: @offwhite;
-            width: 100%;
-            text-align: center;
-            padding: 9px 0px;
-            font-size: 15px;
-            font-weight: bold;
-            color: #555;
-        }
-        @media (min-width: @screen-lg) {
-            .product-list .col-product-item {
-                width: 25%;
-            }
-        }
-    }
-    #product-widget-display-settings {
-        display: none;
-        position: absolute;
-        overflow: hidden;
-        top: 50%;
-        left: 50%;
-        width: 80%;
-        transform: translate(-50%, -50%);
-        -webkit-transform: translate(-50%, -50%);
-        @media (min-width: @screen-sm) {
-            width: 50%;
-        }
-    }
-}
-
 #product-chooser {
     @media (min-width: @screen-md) {
         border: 2px solid #eee;
@@ -885,4 +1014,3 @@ html.look-type-C, html.look-type-P {
         }
     }
 }
-
