@@ -166,8 +166,10 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             this.model.components.remove(model);
             model.destroy();
         }), this);
-        this.$container.find('ul').children().remove();
+        this.indexes = [];
+        this.$container.find('ul.product-list').children().remove();
         this.update_title(0, 0);
+        this.resize();
     },
     resize: function() {
         $footer = $('.widget-footer:visible');
