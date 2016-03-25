@@ -183,6 +183,8 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         this.num_multi = container_width <= 480 ? (container_width <= 375 ? 1 : 2) : 3;
         this.$container.css('height', new_height);
 
+        var $col = $ul.find('.col-product-item'),
+                padding = $col.outerWidth()-$col.width();
         if (external_product_widget_type == 'single') {
             if (container_width/this.$container.height() > imageratio) {
                 this.$productlist.height(new_height*this.list_width_factor).width(new_height*this.list_width_factor/imageratio);
@@ -190,7 +192,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
                 this.$productlist.width(container_width*this.list_width_factor).height(container_width*imageratio);
             }
             $ul.width(this.model.components.length*this.$productlist.width()).css('left', -1*this.indexes.indexOf(this.current_index)*this.$productlist.width());
-            $ul.find('img.fake-product-image').width(this.$productlist.width()).height(this.$productlist.height());
+            $ul.find('img.fake-product-image').width(this.$productlist.width()-padding).height(this.$productlist.height());
             controlpos = Math.max(5, (container_width - this.$productlist.width())/2 - this.$controls[0].width());
         } else {
             if (container_width/this.$container.height() > this.num_multi*imageratio) {
@@ -199,8 +201,6 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
                 this.$productlist.width(container_width*this.list_width_factor).height(container_width*imageratio/this.num_multi);
             }
 
-            var $col = $ul.find('.col-product-item'),
-                padding = $col.outerWidth()-$col.width();
             $ul.width(this.model.components.length*this.$productlist.width()/this.num_multi);
             $ul.find('img.fake-product-image').width(this.$productlist.width()/this.num_multi-padding).height(this.$productlist.height());
             if (this.model.components.length > this.num_multi) {
