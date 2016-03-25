@@ -38,7 +38,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
 
         var self = this;
         $(window).on('show.bs.modal', function(e) {
-            if ($(e.relatedTarget).hasClass('btn-embed') && self.model.components.length < 3 && external_product_widget_type == 'multiple') {
+            if ($(e.relatedTarget).hasClass('btn-embed') && self.model.components.length < 3 && external_product_widget_type == 'multiple' && !self.model.get('show_liked')) {
                 self.popup_dispatcher.show('dialog_few_products');
                 return e.preventDefault();
             }
@@ -111,9 +111,9 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             if (!this.model.attributes.id) {
                 this.save_product_widget({ title: "My liked products", 'callback': function(id) {
                     $("#embed_product_widget_form #id_name").val("My liked products");
-                    window.product_widget_create.init_products();
                     external_product_widget_id = id;
-                }});
+                    window.product_widget_create.init_products();
+               }});
             }
             $('body').addClass('show-liked');
             $('.widget-footer .btn-add-item').prop('disabled', true);
@@ -176,35 +176,39 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             new_height = window_height - this.$el.offset().top -
                 ($header.length ? $header.height() + 18 : 0) - ($footer.length ? $footer.height() : 18),
             imageratio = 1,
+            $ul = this.$productlist.find('ul.product-list'),
+            container_width = this.$container.width(),
             controlpos;
 
-        this.num_multi = this.$container.width() <= 480 ? 2 : 3;
+        this.num_multi = container_width <= 480 ? (container_width <= 375 ? 1 : 2) : 3;
         this.$container.css('height', new_height);
 
         if (external_product_widget_type == 'single') {
-            if (this.$container.width()/this.$container.height() > imageratio) {
+            if (container_width/this.$container.height() > imageratio) {
                 this.$productlist.height(new_height*this.list_width_factor).width(new_height*this.list_width_factor/imageratio);
             } else {
-                this.$productlist.width(this.$container.width()*this.list_width_factor).height(this.$container.width()*imageratio);
+                this.$productlist.width(container_width*this.list_width_factor).height(container_width*imageratio);
             }
-            this.$productlist.find('ul.product-list').width(this.model.components.length*this.$productlist.width()).css('left', -1*this.indexes.indexOf(this.current_index)*this.$productlist.width());
-            this.$productlist.find('ul.product-list img.fake-product-image').width(this.$productlist.width()).height(this.$productlist.height());
-            controlpos = Math.max(5, (this.$container.width() - this.$productlist.width())/2 - this.$controls[0].width());
+            $ul.width(this.model.components.length*this.$productlist.width()).css('left', -1*this.indexes.indexOf(this.current_index)*this.$productlist.width());
+            $ul.find('img.fake-product-image').width(this.$productlist.width()).height(this.$productlist.height());
+            controlpos = Math.max(5, (container_width - this.$productlist.width())/2 - this.$controls[0].width());
         } else {
-            if (this.$container.width()/this.$container.height() > this.num_multi*imageratio) {
+            if (container_width/this.$container.height() > this.num_multi*imageratio) {
                 this.$productlist.height(new_height*this.list_width_factor).width(this.num_multi*new_height*this.list_width_factor/imageratio);
             } else {
-                this.$productlist.width(this.$container.width()*this.list_width_factor).height(this.$container.width()*imageratio/this.num_multi);
-            }
-            this.$productlist.find('ul.product-list').width(this.model.components.length*this.$productlist.width()/this.num_multi);
-            this.$productlist.find('ul.product-list img.fake-product-image').width(this.$productlist.width()/this.num_multi).height(this.$productlist.height());
-            if (this.model.components.length > this.num_multi) {
-                this.$productlist.find('ul.product-list').css('left',  Math.max(-1*(this.indexes.length-this.num_multi)*this.$productlist.width()/this.num_multi, -1*this.indexes.indexOf(this.current_index)*this.$productlist.width()/this.num_multi));
-            } else {
-                this.$productlist.find('ul.product-list').css('left', 0);
+                this.$productlist.width(container_width*this.list_width_factor).height(container_width*imageratio/this.num_multi);
             }
 
-            controlpos = Math.max(5, (this.$container.width() - this.$productlist.width())/2 - this.$controls[0].width());
+            var $col = $ul.find('.col-product-item'),
+                padding = $col.outerWidth()-$col.width();
+            $ul.width(this.model.components.length*this.$productlist.width()/this.num_multi);
+            $ul.find('img.fake-product-image').width(this.$productlist.width()/this.num_multi-padding).height(this.$productlist.height());
+            if (this.model.components.length > this.num_multi) {
+                $ul.css('left',  Math.max(-1*(this.indexes.length-this.num_multi)*this.$productlist.width()/this.num_multi, -1*this.indexes.indexOf(this.current_index)*this.$productlist.width()/this.num_multi));
+            } else {
+                $ul.css('left', 0);
+            }
+            controlpos = Math.max(5, (container_width - this.$productlist.width())/2 - this.$controls[0].width());
         }
         this.$controls[0].css('left', controlpos-10);
         this.$controls[1].css('right', controlpos-10);
