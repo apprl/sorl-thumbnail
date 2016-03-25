@@ -168,7 +168,7 @@ class Importer(object):
         imported_hash = get_site_product_hash(site_product, **item.data[ProductItem.KEY_FINAL])
         previous_hash = cache.get(self.imported_cache_key.format(id=site_product.id))
         if not imported_hash == previous_hash:
-            cache.set(self.imported_cache_key.format(id=site_product.id), imported_hash, 3600*6)
+            cache.set(self.imported_cache_key.format(id=site_product.id), imported_hash, 3600*24*5)
             site_product.save()
             self._update_vendor_product(item, site_product)
             self._update_product_options(item, site_product)
