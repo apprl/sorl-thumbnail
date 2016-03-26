@@ -142,7 +142,7 @@ class DatabaseHandler:
                 product.save()
 
         if bool(created or updated):
-            cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600*24*5)
+            cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600*24*90)
             self.parser.parse(product)
         else:
             # Todo: Set some date to acknowledge scraping has taken place

@@ -89,7 +89,7 @@ class Parser(object):
 
         # Only save the new data if it has changed. Saves time.
         if not previous_hash == final_hash:
-            cache.set(self.final_cache_key.format(id=product.id), final_hash, 3600*24*5)
+            cache.set(self.final_cache_key.format(id=product.id), final_hash, 3600*24*90)
             product.json = json.dumps(item.data)
             product.save()
         else:
