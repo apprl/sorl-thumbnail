@@ -188,7 +188,7 @@ def product_save(instance, **kwargs):
 
     # If this post save signal is a result of only a date update we do not have to update the search index either
     #if kwargs and "imported_date" in kwargs.keys():
-    if 'update_fields' in kwargs and len(kwargs['update_fields']) == 1 and 'modified' in kwargs['update_fields']:
+    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'modified' in kwargs['update_fields']:
         logger.info(kwargs.get('update_fields', None))
         return
 
