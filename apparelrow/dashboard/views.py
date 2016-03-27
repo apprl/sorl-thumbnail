@@ -281,6 +281,12 @@ def commissions(request):
         except get_model('dashboard', 'StoreCommission').DoesNotExist:
             log.warning("StoreCommission for vendor %s does not exist" % vendor)
     stores = [x for x in sorted(stores.values(), key=lambda x: (x['type_code'], -x['amount_float'], x['vendor_name']))]
+
+    sort_index = 0
+    for row in stores:
+        row['sort_index'] = sort_index
+        sort_index += 1
+
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):
