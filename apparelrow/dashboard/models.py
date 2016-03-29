@@ -1,5 +1,4 @@
 import datetime
-import json
 import decimal
 
 from django.conf import settings
@@ -13,6 +12,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.contrib.auth import get_user_model
 from jsonfield import JSONField
 from django.utils.functional import cached_property
+from django.core.mail import mail_admins
 
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import dehydrate
@@ -432,8 +432,12 @@ def create_earnings(instance):
             create_referral_earning(instance)
     else:
         user = get_model('profile', 'User').objects.get(id=instance.user_id)
-        get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
-            sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
+        get_model('dashboard', 'UserEarning').objects.\
+            create(user=user, user_earning_type='referral_signup_commission', sale=instance,
+                   amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date,
+                   status=instance.status)
+        mail_admins('Referral Signup bonus created',
+                    'A referral Signup bonus has been created for user %s (%s)' % (user.display_name, user.id))
 
 def create_referral_earning(sale):
     total_commission = sale.converted_commission
