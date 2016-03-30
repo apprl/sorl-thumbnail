@@ -14,6 +14,7 @@ from django.core.cache import get_cache
 from theimp.models import Product, Vendor
 from theimp.parser import Parser
 from theimp.utils import get_product_hash
+from theimp.tasks import parse_theimp_product
 
 cache = get_cache("importer")
 
@@ -144,7 +145,8 @@ class DatabaseHandler:
         if bool(created or updated):
             cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600*24*90)
             spider.log('Product {key} is updated or created.'.format(**item))
-            self.parser.parse(product)
+            parse_theimp_product.delay(product.id)
+            #self.parser.parse(product)
         else:
             # Todo: Set some date to acknowledge scraping has taken place
             product.parsed_date = timezone.now()

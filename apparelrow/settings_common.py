@@ -853,7 +853,8 @@ CELERY_ROUTES = ({
                      'apparel.notifications.user_activity_daily': {'queue': 'background'},
                      'apparel.notifications.user_activity_weekly': {'queue': 'background'},
                      'apparel.notifications.earnings_daily': {'queue': 'background'},
-                     'apparel.notifications.earnings_weekly': {'queue': 'background'}},)
+                     'apparel.notifications.earnings_weekly': {'queue': 'background'},
+                     'theimp.scrape_parse': {'queue': 'background'}})
 
 # LOGGING CONFIGURATION
 LOGGING = {
