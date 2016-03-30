@@ -927,7 +927,7 @@ LOGGING = {
             'backupCount': 8,
         },
         'theimp': {
-            'level': 'NOTSET',
+            'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
             'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'theimp.log'),
@@ -1006,7 +1006,7 @@ LOGGING = {
             'handlers': ['dashboard'],
         },
         'theimp': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
             'handlers': ['theimp'],
         },
