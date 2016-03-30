@@ -12,9 +12,9 @@
             <div class="vendor_price">
                 {% with product.default_vendor as vendor %}
                 {% if vendor.locale_discount_price %}
-                <span class="discount-price price">{{ vendor.locale_discount_price|floatformat:0|apprl_intcomma }}&#160;</span>
+                <span class="discount-price price">{{ vendor.locale_discount_price|floatformat:0|apprl_intcomma }} {{ vendor.locale_currency }}</span>&#160;
                 {% endif %}
-                <span class="price"{% if vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ vendor.locale_price|floatformat:0|apprl_intcomma }}</span>&#160;<span class="currency">{{ vendor.locale_currency }}</span>
+                <span class="price"{% if vendor.locale_discount_price %} style="text-decoration:line-through;"{% endif %}>{{ vendor.locale_price|floatformat:0|apprl_intcomma }} {{ vendor.locale_currency }}</span>&#160;
                 {% endwith %}
             </div>
             {% endif %}

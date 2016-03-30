@@ -9,7 +9,10 @@
 })(document, '{{ identifier }}', '{{ object.slug }}', '{{ width }}{{ width_type }}', '{{ height }}', '{{ request.get_host }}','{{ STATIC_URL }}');</script>
 <div style="width: {{ width }}{{ width_type }}; margin: 0px auto;">
   <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;overflow:hidden;">
-    <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look" title="Follow me on APPRL" style="text-decoration:none;color:#000000;float:right;font-size:12px;">+ follow {{ object.user.display_name }} on APPRL</a>
+    <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look"
+       target="_blank" title="Follow me on APPRL" style="text-decoration:none;color:#000000;float:right;font-size:12px;">
+        + follow {{ object.user.display_name }} on APPRL
+    </a>
   </p>
 </div>
 {% endspaceless %}
