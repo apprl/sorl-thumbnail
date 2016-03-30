@@ -143,10 +143,12 @@ class DatabaseHandler:
 
         if bool(created or updated):
             cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600*24*90)
+            spider.log('Product {key} is updated or created.'.format(**item))
             self.parser.parse(product)
         else:
             # Todo: Set some date to acknowledge scraping has taken place
             product.parsed_date = timezone.now()
+            spider.log("Product {key} not updated, only setting a new parsed date.".format(**item))
             product.save(update_fields=['parsed_date'])
         return item
 
