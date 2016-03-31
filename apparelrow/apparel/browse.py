@@ -198,6 +198,7 @@ def update_query_view(request, view, is_authenticated, query_arguments, gender, 
             query_arguments['fq'].append('market_ss:%s' % get_location(request))
     return query_arguments, result
 
+
 def browse_products(request, template='apparel/browse.html', gender=None, user_gender=None, user_id=None, language=None, **kwargs):
     """
     TODO: This function needs to be broken down and separated
