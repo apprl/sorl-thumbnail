@@ -214,7 +214,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     """
     if gender is None and user_gender is None:
         gender = select_from_multi_gender(request, 'shop', None)
-        return HttpResponseRedirect(u'{shop_url}?{parameters}'.format(shop_url=get_gender_url(gender, 'shop'),
+        return HttpResponseRedirect(u'{shop_url}?{parameters}'.format(shop_url=get_gender_url(gender, 'shop', default=True),
                                                                       parameters=request.GET.urlencode()))
     elif user_gender is None:
         gender = select_from_multi_gender(request, 'shop', gender)
