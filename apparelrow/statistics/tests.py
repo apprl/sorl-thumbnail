@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 from django.core import management, mail
 from django.conf import settings
 from factories import *
+from apparelrow.statistics.models import ProductStat
 from apparelrow.statistics.utils import check_vendor_has_reached_limit
 from apparelrow.dashboard.utils import parse_date
 
@@ -317,7 +318,27 @@ class TestProductStat(TestCase):
         self.assertFalse(vendor.is_limit_reached)
         self.assertFalse(has_reached_limit)
 
+    def test_update_stats_referer(self):
+        referer_1 = "http://petra.metromode.se/page/2/"
+        short_link = "http://apprl.com/sv/redirect/3588280/Ext-Link/28554/"
+        product_stat_1 = ProductStatFactory.create(ip="5.6.7.8", referer='%s\n%s'%(referer_1, short_link))
 
+        referer_2 = "http://content.apparelrow.com/embed/look/1af23c56ca184d7994b199ece271a9d5/gina-tricot-2-5/?host=http%3A%2F%2Febbazingmark.com"
+        short_link = "http://content.apparelrow.com/sv/redirect/3614195/Ext-Look/30722/"
+        product_stat_2 = ProductStatFactory.create(ip="5.6.7.8", referer='%s\n%s'%(referer_2, short_link))
 
+        product_stat_3 = ProductStatFactory.create(ip="5.6.7.8", referer="")
 
+        management.call_command('update_stats_referer', verbosity=0, interactive=False)
 
+        # Referer link
+        updated_product_stat_1 = ProductStat.objects.get(id=product_stat_1.id)
+        self.assertEqual(updated_product_stat_1.referer, referer_1)
+
+        # Longer referer link
+        updated_product_stat_2 = ProductStat.objects.get(id=product_stat_2.id)
+        self.assertEqual(updated_product_stat_2.referer, referer_2)
+
+        # Blank referer link
+        updated_product_stat_3 = ProductStat.objects.get(id=product_stat_3.id)
+        self.assertEqual(updated_product_stat_3.referer, "")
