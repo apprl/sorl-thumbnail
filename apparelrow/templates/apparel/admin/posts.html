@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load i18n l10n cache dashboard_extras %}
+{% load static from staticfiles %}
+
+{% block extra-title %}{% trans "Blog posts" %} | {% endblock %}
+{% block extra-scripts %}
+<script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
+<script>
+  $(document).ready(function() {
+    $('.month-select').change(function() {
+        var month = $('.month-select').find(':selected').data('month');
+        var year = $('.year-select').find(':selected').data('year');
+        window.location.href = '{% url "admin-posts" %}' + year + '/' + month + '/';
+
+    });
+    $('.year-select').change(function() {
+        var month = $('.month-select').find(':selected').data('month');
+        var year = $('.year-select').find(':selected').data('year');
+        window.location.href = '{% url "admin-posts" %}' + year + '/' + month + '/';
+    });
+    new Tablesort($('table#posts-table').get(0));
+    /* new Tablesort($('table#all-earnings').get(0));
+    new Tablesort($('table#top-products').get(0));
+    new Tablesort($('table#top-products-more').get(0));
+    new Tablesort($('table#top-publishers').get(0));
+    new Tablesort($('table#top-publishers-more').get(0));
+    new Tablesort($('table#detail-clicks-more').get(0)); */
+  });
+</script>
+{% endblock extra-scripts %}
+{% block body-classes %}dashboard{% endblock body-classes %}
+{% block body %}
+    <h1>{% trans "Posts" %}</h1>
+    <br>
+    <br>
+    <br>
+    <section class="container">
+        <ul class="list-horizontal center">
+                <li>Show statistics for: </li>
+                <li>
+                    <div class="select">
+                        <span><i class="fa fa-caret-down"></i></span>
+                        <select class="month-select">
+                            {% for item_month in month_choices %}
+                            <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <div class="select">
+                        <span><i class="fa fa-caret-down"></i></span>
+                        <select class="year-select">
+                            {% for item_year in year_choices %}
+                            <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </li>
+            </ul>
+    </section>
+
+    <section class="container">
+        <div class="col-lg-12 table-responsive">
+            <h2>{% trans "Referer Links from Clicks" %}</h2>
+            <table id="posts-table" class="sortable table">
+                <thead>
+                    <tr>
+                        <th class="col-md-2 center">{% trans "User ID" %}</th>
+                        <th class="col-md-5 text-left">{% trans "URL" %}</th>
+                        <th class="col-md-3 center">{% trans "Date/time" %}</th>
+                        <th class="col-md-2 center">{% trans "Number of clicks" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in posts_dict %}
+                        <tr>
+                            <td data-sort="{{ row.user_id }}">{{ row.user_id }}</td>
+                            <td class="text-left" data-sort="{{ row.referer }}">{{ row.referer }}</td>
+                            <td data-sort="{{ row.created }}">{{ row.created }}</td>
+                            <td data-sort="{{ row.posts }}">{{ row.posts }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">{% trans "No clicks registered for this period." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock body %}
+

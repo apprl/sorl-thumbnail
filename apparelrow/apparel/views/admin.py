@@ -3,15 +3,17 @@ import datetime
 import decimal
 import calendar
 
-from django.conf import settings
 from django.shortcuts import render
-from django.db.models import Sum, Q
-from django.db.models.loading import get_model
-from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
-from django.http import Http404
-
+from django.db.models import Sum, Count, Q
+from django.http import Http404, HttpResponseNotFound
+from apparelrow.apparel.models import Vendor
+from apparelrow.dashboard.models import Sale
+from apparelrow.dashboard.views import parse_date
+from apparelrow.dashboard.utils import enumerate_months
+from apparelrow.importer.models import VendorFeed
+from apparelrow.statistics.models import ProductStat
 from dateutil.relativedelta import relativedelta
+from django.views.generic import TemplateView
 
 
 ZERO_DECIMAL = decimal.Decimal('0.00')
@@ -77,10 +79,6 @@ def get_date_interval(date, is_month=False, is_year=False, previous=False):
 def kpi_dashboard(request):
     if request.user.is_authenticated() and request.user.is_superuser:
         decimal.setcontext(decimal.ExtendedContext)
-
-        # Models
-        ProductStat = get_model('statistics', 'ProductStat')
-        Sale = get_model('dashboard', 'Sale')
 
         # Date
         is_month = bool(request.GET.get('is_month', None))
@@ -180,12 +178,6 @@ def stores(request, user_id=None):
     if request.user.is_authenticated() and (request.user.is_superuser or request.user.pk == user_id):
         decimal.setcontext(decimal.ExtendedContext)
 
-        # Models
-        ProductStat = get_model('statistics', 'ProductStat')
-        Sale = get_model('dashboard', 'Sale')
-        Vendor = get_model('apparel', 'Vendor')
-        VendorFeed = get_model('importer', 'VendorFeed')
-
         # Date
         is_month = bool(request.GET.get('is_month', None))
         is_year = bool(request.GET.get('is_year', None))
@@ -268,3 +260,51 @@ def stores(request, user_id=None):
 
 def ad_stores(request):
     return stores(request, user_id=24981)
+
+class AdminPostsView(TemplateView):
+    template_name = 'apparel/admin/posts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminPostsView, self).get_context_data(**kwargs)
+        month = None if not 'month' in kwargs else kwargs['month']
+        year = None if not 'year' in kwargs else kwargs['year']
+
+        start_date, end_date = parse_date(month, year)
+
+        year = start_date.year
+        if month != "0":
+            month = start_date.month
+
+        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+        month_display, month_choices, year_choices = enumerate_months(self.request.user, month)
+
+        posts_dict = []
+        product_stats = ProductStat.objects.filter(created__range=(start_date_query, end_date_query)).\
+            exclude(user_id=0).values('referer', 'user_id').annotate(posts=Count('referer')).order_by('-posts')
+
+        for row in product_stats:
+            temp = {}
+            temp['referer'] = row['referer']
+            temp['posts'] = row['posts']
+            temp['user_id'] = row['user_id']
+
+            oldest_clicks = ProductStat.objects.filter(referer=row['referer']).order_by('created')
+            temp['created'] = oldest_clicks[0].created
+            posts_dict.append(temp)
+
+        context.update({
+            'posts_dict': posts_dict,
+            'month': month,
+            'year': year,
+            'month_display': month_display,
+            'month_choices': month_choices,
+            'year_choices': year_choices,
+        })
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated() and request.user.is_superuser:
+            context = self.get_context_data(**kwargs)
+            return render(request, self.template_name, context)
+        return HttpResponseNotFound()

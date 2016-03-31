@@ -22,6 +22,7 @@ from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.apparel.utils import shuffle_user_list
+from apparelrow.apparel.views.admin import AdminPostsView
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
@@ -552,7 +553,7 @@ class TestProfileLikes(TestCase):
 
     def test_product_like_group_partner_group_is_subscriber(self):
         """
-            Tests if an user likes a product and belongs to a partner group and it's not the owner, also the group has
+            Test if a user likes a product and belongs to a partner group and it's not the owner, also the group has
             set is_subscriber to True, which means the owner of that partner group will automatically like that
             product too
         """
@@ -587,7 +588,7 @@ class TestProfileLikes(TestCase):
 
     def test_product_unlike_group_partner_group_is_subscriber(self):
         """
-            Tests if an user unlikes a product and belongs to a partner group and it's not the owner, also the group has
+            Test if a user unlikes a product and belongs to a partner group and it's not the owner, also the group has
             set is_subscriber to True, which means the owner of that partner group will automatically unlike that
             product
         """
@@ -613,7 +614,7 @@ class TestProfileLikes(TestCase):
 
     def test_product_like_no_group_partner(self):
         """
-            Tests if an user likes a product and doesn't belong to a partner group and it's not the owner,
+            Test if a user likes a product and doesn't belong to a partner group and it's not the owner,
             the owner of that partner group will automatically like the product also
         """
         product = Product.objects.create(slug="product_test", static_brand="testbrand", sku="testsku")
@@ -646,7 +647,7 @@ class TestProfileLikes(TestCase):
 
     def test_product_like_group_partner_group_is_not_subscriber(self):
         """
-            Tests if an user likes a product and belongs to a partner group and it's not the owner, also the group has
+            Test if a user likes a product and belongs to a partner group and it's not the owner, also the group has
             set is_subscriber to False, which means the owner of that partner group won't automatically like the product
         """
         product = Product.objects.create(slug="product_test", static_brand="testbrand", sku="testsku")
@@ -1229,6 +1230,53 @@ class TestUtilsLocationWarning(TestCase):
         vendor_markets = ['SE', 'NO', 'US']
         warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "")
+
+
+class TestAdminPostsView(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.is_superuser = True
+        self.user.save()
+
+    def test_post_admin_view(self):
+        """
+        AdminPostsView.get() is valid and returns 200 http request code when user is superuser
+        """
+        self.client.login(username='normal_user', password='normal')
+        response = self.client.get(reverse('admin-posts'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_admin_view_context_data(self):
+        """
+        AdminPostsView.get() sets 'month' and 'year' in response context
+        """
+        # Set user as not superuser
+        request = RequestFactory().get(reverse('admin-posts'))
+        request.user = self.user
+        view = AdminPostsView(template_name='hello.html')
+        view.request = request
+
+        context_data = view.get_context_data(month=03, year=2015)
+
+        # Check response
+        self.assertEqual(context_data['month'], 3)
+        self.assertEqual(context_data['year'], 2015)
+
+    def test_post_admin_view_user_is_not_admin(self):
+        """
+        AdminPostsView.get() returns 404 error if user is not a superuser
+        """
+        # Set user as not superuser
+        self.user.is_superuser = False
+        self.user.save()
+
+        # Setup and run request
+        self.client.login(username='normal_user', password='normal')
+        response = self.client.get(reverse('admin-posts'))
+
+        # Check response
+        self.assertEqual(response.status_code, 404)
 
 
 @override_settings(VENDOR_LOCATION_MAPPING={"Vendor SE":["SE"], "Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
