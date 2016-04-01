@@ -132,7 +132,7 @@ class DatabaseHandler:
         product_hash = get_product_hash(item)
 
         product_scraped_and_in_stock = cache.get(self.semaphore_cache_key.format(product.id))
-        if product_scraped_and_in_stock:
+        if product_scraped_and_in_stock is True:
             # if the product has been scraped recently (20 s) and is in stock.
             return item
         elif item['in_stock'] is True:
