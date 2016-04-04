@@ -131,7 +131,7 @@ class DatabaseHandler:
         product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
         product_hash = get_product_hash(item)
 
-        product_scraped_and_in_stock = cache.get(self.semaphore_cache_key.format(id=product.id))
+        """product_scraped_and_in_stock = cache.get(self.semaphore_cache_key.format(id=product.id))
         if product_scraped_and_in_stock == 1:
             # if the product has been scraped recently (20 s) and is in stock.
             return item
@@ -142,6 +142,7 @@ class DatabaseHandler:
         else:
             # if the product has not been scraped recently and is not in stock do parse it normally.
             pass
+        """
 
         updated = False
         if product.is_released:
