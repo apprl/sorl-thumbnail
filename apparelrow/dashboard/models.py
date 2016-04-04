@@ -142,6 +142,11 @@ class Group(models.Model):
     owner_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
                                     help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
     is_subscriber = models.BooleanField(default=False)
+    has_cpc_all_stores = models.BooleanField(default=False,
+                                             help_text='If checked, all publishers that belong to the Commission Group '
+                                                       'will earn per click for all Stores. Next step is to set '
+                                                       'cpc_amount and cpc_currency for Cuts for every vendor, and cut '
+                                                       'percentage must be 0 to avoid double earnings.')
 
     class Meta:
         verbose_name = 'Commission Group'
@@ -154,9 +159,22 @@ class Cut(models.Model):
     group = models.ForeignKey('dashboard.Group', on_delete=models.PROTECT, related_name='cuts')
     vendor = models.ForeignKey('apparel.Vendor', on_delete=models.CASCADE)
     cut = models.DecimalField(default=str(settings.APPAREL_DASHBOARD_CUT_DEFAULT), max_digits=10, decimal_places=3,
-                              help_text='Between 1 and 0, default %s. Determines the percentage that goes to the Publisher (and possible Publisher Network owner, if applies)' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
-    referral_cut = models.DecimalField(default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
-                                       help_text='Between 1 and 0, default %s. Determines the percentage that goes to the referral partner parent.' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
+                              help_text='Between 1 and 0, default %s. Determines the percentage that goes to the '
+                                        'Publisher (and possible Publisher Network owner, if applies). Make sure this '
+                                        'value is 0 if Commission Groups that earn per click for all stores and vendor '
+                                        'pays per click.' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
+    referral_cut = models.DecimalField(default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10,
+                                       decimal_places=3,
+                                       help_text='Between 1 and 0, default %s. Determines the percentage that goes to '
+                                                 'the referral partner parent.'
+                                                 % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
+    cpc_amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2,
+                                     help_text=_('Pay per click amount only for those publishers that earn per click '
+                                                 'for all stores. Set this amount if all publishers in Commission Group'
+                                                 'earn per click for ALL stores.'))
+    cpc_currency = models.CharField(default='EUR', max_length=3, help_text=_('Pay per click currency only for those '
+                                                                             'publishers that earn per click for all '
+                                                                             'stores'))
     rules_exceptions = JSONField(null=True, blank=True,
                                  help_text='Creates exceptions for Cuts using the following format: [{"sid": 1, "cut": '
                                            '0.90, "tribute":0.50, "click_cost":"10 SEK"}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
@@ -311,7 +329,6 @@ AGGREGATED_DATA_TYPES = (
     ('aggregated_from_total', 'Total Aggregation'),
     ('aggregated_from_product', 'Aggregated From Product'),
     ('aggregated_from_publisher', 'Aggregated From Publisher'),
-    ('simple_earning', 'Simple User Earning'),
 )
 
 
@@ -354,6 +371,9 @@ USER_EARNING_TYPES = (
 
     ('publisher_network_click_tribute', 'Network Earnings per Clicks'),
     ('publisher_sale_click_commission', 'Earnings per Clicks'),
+
+    ('publisher_network_click_tribute_all_stores', 'Network Earnings per Clicks'),
+    ('publisher_sale_click_commission_all_stores', 'Earnings per Clicks'),
 )
 
 @receiver(pre_save, sender=AggregatedData, dispatch_uid='aggregated_data_pre_save')
@@ -465,6 +485,7 @@ def create_referral_earning(sale):
 def create_user_earnings(sale):
     total_commission = sale.converted_commission
     product = None
+    is_general_click_earning = False
 
     sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
     if not len(sale_product) == 0:
@@ -499,14 +520,21 @@ def create_user_earnings(sale):
             except:
                 logger.info("No exceptions for cuts defined for commission group %s and store %s"%(commission_group,
                                                                                                     sale.vendor))
-            if cut:
+
+            if sale.affiliate == "cpc_all_stores":
+                cut = 1
+                earning_type = "publisher_sale_click_commission_all_stores"
+                is_general_click_earning = True
+
+            if cut is not None:
                 try:
                     publisher_commission = total_commission * cut
                     apprl_commission = total_commission - publisher_commission
 
                     if user.owner_network and not user.owner_network.id == user.id:
                         publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale,
-                                                                                 product, MAX_NETWORK_LEVELS)
+                                                                                 product,MAX_NETWORK_LEVELS,
+                                                                                 is_general_click_earning)
 
                     get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
                                                                          from_product=product, from_user=user,
@@ -530,7 +558,7 @@ def create_user_earnings(sale):
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
 
-def create_earnings_publisher_network(user, publisher_commission, sale, product, counter):
+def create_earnings_publisher_network(user, publisher_commission, sale, product, counter, is_general_click_earning=False):
     owner = user.owner_network
     counter -= 1
     if owner and not user.id == owner.id and not counter == 0:
@@ -560,9 +588,11 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product,
         publisher_commission -= owner_earning
 
         if owner.owner_network:
-            owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product, counter)
+            owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product, counter, is_general_click_earning)
 
         earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER else 'publisher_network_click_tribute'
+        if is_general_click_earning:
+            earning_type = "publisher_network_click_tribute_all_stores"
 
         get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type=earning_type, sale=sale,
                                                               from_product=product, from_user=user, amount=owner_earning,

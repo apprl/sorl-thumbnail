@@ -14,7 +14,7 @@ from django.core import management
 
 from localeurl.utils import locale_url
 from apparelrow.apparel.models import Vendor
-from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale
+from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserEarning
 
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
@@ -1532,6 +1532,148 @@ class TestSalesPerClick(TransactionTestCase):
         self.assertEqual(user_earning.user_earning_type, 'apprl_commission')
         self.assertAlmostEqual(user_earning.amount, sale_amount)
 
+
+class TestSalesPerClickAllStores(TransactionTestCase):
+
+    def setUp(self):
+        group = GroupFactory.create(name='Metro Mode', has_cpc_all_stores=True)
+        self.user = UserFactory.create(username="normal_user", email="normal@xvid.se", name="normal", is_partner=True,
+                                       partner_group=group)
+        self.vendor = VendorFactory.create(name="Vendor CPC", is_cpc=True)
+        CutFactory.create(vendor=self.vendor, group=group, cpc_amount=3.00, cpc_currency="EUR", cut=0)
+        ClickCostFactory.create(vendor=self.vendor, amount=10, currency="EUR")
+
+        self.product = ProductFactory.create(slug="product")
+        VendorProductFactory.create(vendor=self.vendor, product=self.product)
+
+    def test_sales_per_click_all_stores(self):
+        """ Test user earnings and sales are creating correctly when a user belongs to a Commission Group that pays
+        all its publishers per click for all stores.
+        """
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+
+        clicks = 4
+        for i in range(clicks):
+            product_stat = ProductStatFactory.create(ip="1.2.3.4", vendor=self.vendor.name, product=self.product.slug,
+                                                     user_id=self.user.id, created=yesterday)
+            self.assertTrue(product_stat.is_valid)
+
+        # Run job that generates sales from the summarized clicks from yesterday for user and vendor
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+
+        # It must have generated 2 sales, one regular click sale where APPRL gets 100% of the commission according to
+        # Click cost defined, and another sale where Publisher gets 100% of commission according to the cost defined in
+        # the Cut object.
+        self.assertEqual(Sale.objects.count(), 2)
+
+        # It must have generated 4 earnings, 2 of them would have the 100% of the commission for APPRL and the
+        # publisher, respectively. The other two it must have commission equals to 0 for both mentioned sides.
+        self.assertEqual(UserEarning.objects.count(), 4)
+
+        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_sale_click_commission").count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type="apprl_commission").count(), 2)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_sale_click_commission_all_stores").count(), 1)
+
+        sale_cpc = Sale.objects.get(affiliate="cost_per_click")
+        sale_cpc_all = Sale.objects.get(affiliate="cpc_all_stores")
+
+        # All User earnings might have been created with the right user earning type and amount
+        for row in UserEarning.objects.all():
+            if row.user_earning_type == "publisher_sale_click_commission":
+                self.assertEqual(row.amount, 0.00)
+                self.assertEqual(row.user, self.user)
+            elif row.user_earning_type == "publisher_sale_click_commission_all_stores":
+                self.assertEqual(row.amount, 12.00)
+                self.assertEqual(row.user, self.user)
+            elif row.user_earning_type == "apprl_commission":
+                if row.sale == sale_cpc:
+                    self.assertEqual(row.amount, 40.00)
+                elif row.sale == sale_cpc_all:
+                    self.assertEqual(row.amount, 0.00)
+
+    def test_sales_per_click_all_stores_with_network_owner(self):
+        """ Test user earnings and sales are creating correctly when a user belongs to a Commission Group that pays
+        all its publishers per click for all stores and has assigned a Publisher network owner with its respective
+        owner cut
+        """
+        owner_user = get_user_model().objects.create_user('owner', 'owner@xvid.se', 'owner')
+        owner_user.owner_network_cut = 0.1
+        owner_user.save()
+
+        self.user.owner_network = owner_user
+        self.user.save()
+
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+
+        clicks = 4
+        for i in range(clicks):
+            product_stat = ProductStatFactory.create(ip="1.2.3.4", vendor=self.vendor.name, product=self.product.slug,
+                                                     user_id=self.user.id, created=yesterday)
+            self.assertTrue(product_stat.is_valid)
+
+        # Run job that generates sales from the summarized clicks from yesterday for user and vendor
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+
+        # It must have generated 2 sales, one regular click sale where APPRL gets 100% of the commission according to
+        # Click cost defined, and another sale where Publisher gets 100% of commission according to the cost defined in
+        # the Cut object.
+        self.assertEqual(Sale.objects.count(), 2)
+
+        # It must have generated 4 earnings, 2 of them would have the 100% of the commission for APPRL and the
+        # publisher, respectively. The other two it must have commission equals to 0 for both mentioned sides.
+        self.assertEqual(UserEarning.objects.count(), 6)
+
+        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_sale_click_commission").count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_network_click_tribute").count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type="apprl_commission").count(), 2)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_sale_click_commission_all_stores").count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_network_click_tribute_all_stores").count(), 1)
+
+        sale_cpc = Sale.objects.get(affiliate="cost_per_click")
+        sale_cpc_all = Sale.objects.get(affiliate="cpc_all_stores")
+
+        # All User earnings might have been created with the right user earning type and amount
+        for row in UserEarning.objects.all():
+            if row.user_earning_type == "publisher_sale_click_commission":
+                self.assertEqual(row.amount, 0.00)
+                self.assertEqual(row.user, self.user)
+            elif row.user_earning_type == "publisher_sale_click_commission_all_stores":
+                self.assertEqual(row.amount, decimal.Decimal("10.80"))
+                self.assertEqual(row.user, self.user)
+            elif row.user_earning_type == "publisher_network_click_tribute":
+                self.assertEqual(row.amount, 0.00)
+                self.assertEqual(row.user, self.user.owner_network)
+            elif row.user_earning_type == "publisher_network_click_tribute_all_stores":
+                self.assertEqual(row.amount, decimal.Decimal("1.20"))
+                self.assertEqual(row.user, self.user.owner_network)
+            elif row.user_earning_type == "apprl_commission":
+                if row.sale == sale_cpc:
+                    self.assertEqual(row.amount, 40.00)
+                elif row.sale == sale_cpc_all:
+                    self.assertEqual(row.amount, 0.00)
+
+    def test_sales_per_click_all_stores_no_cut(self):
+        """ Test user earnings and sales are not correctly created when a user belongs to a Commission Group that pays
+        all its publishers per click for all stores but there is not a cut created for this commission group and vendor.
+        """
+        group = GroupFactory.create(name='Group', has_cpc_all_stores=True)
+        self.user.partner_group = group
+        self.user.save()
+
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+
+        clicks = 4
+        for i in range(clicks):
+            product_stat = ProductStatFactory.create(ip="1.2.3.4", vendor=self.vendor.name, product=self.product.slug,
+                                                     user_id=self.user.id, created=yesterday)
+            self.assertTrue(product_stat.is_valid)
+
+        # Run job that generates sales from the summarized clicks from yesterday for user and vendor
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+
+        self.assertEqual(Sale.objects.count(), 0)
+        self.assertEqual(UserEarning.objects.count(), 0)
+
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestPayments(TransactionTestCase):
 
@@ -2531,6 +2673,7 @@ class TestReferralBonus(TransactionTestCase):
         sale_admin_form = SaleAdminFormCustom(data=self.referral_bonus_dict)
         self.assertTrue(sale_admin_form.is_valid())
         self.assertEqual(Sale.objects.filter(is_promo=False, user_id=self.user.pk).count(), 1)
+
 
 class TestStoreCommission(TransactionTestCase):
 
