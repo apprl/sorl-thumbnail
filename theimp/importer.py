@@ -90,7 +90,7 @@ class Importer(object):
         if is_valid:
             if site_product:
                 updated = self.update_product(product, item, site_product)
-                logger.info("Product {name} {id} update was written to disk: {update_completed}".
+                logger.info(u"Product {name} {id} update was written to disk: {update_completed}".
                                                                                 format(name=site_product.product_name,
                                                                                     id=site_product.id,
                                                                                     update_completed=updated))
