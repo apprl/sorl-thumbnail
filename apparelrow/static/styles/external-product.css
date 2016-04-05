@@ -45,7 +45,7 @@
 }
 .apprl-product h4 {
   font-size: 15px;
-  margin: 0 auto 3px auto;
+  margin: 0auto;
 }
 .apprl-product .slidecontainer {
   overflow: hidden;
@@ -100,6 +100,16 @@
 }
 .apprl-product .navigation-el.next i {
   padding-left: 2px;
+}
+@media (min-width: 992px) {
+  .apprl-product .navigation-el {
+    width: 36px;
+    height: 36px;
+  }
+  .apprl-product .navigation-el i {
+    font-size: 26px;
+    line-height: 36px;
+  }
 }
 .apprl-product .caption {
   text-align: center;
