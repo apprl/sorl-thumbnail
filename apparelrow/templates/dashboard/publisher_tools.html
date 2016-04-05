@@ -26,7 +26,7 @@
                 <!-- Shop -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'create-shop' %}"><img src="{% static 'images/tools/PublisherToolShop_thumb.jpg' %}" /></a>
+                        <a href="{% url 'create-shop' %}"><img src="{% static 'images/tools/shop.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Shop" %}</h2>
                             <p>{% trans "Create a shop for your site in just a few minutes." %}</p>
@@ -43,7 +43,7 @@
                 <!-- Collage -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'look-editor' 'collage' %}"><img src="{% static 'images/tools/ApprlCollage_icon.jpg' %}" /></a>
+                        <a href="{% url 'look-editor' 'collage' %}"><img src="{% static 'images/tools/collage.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Collage" %}</h2>
                             <p>{% trans "Share interactive mood boards with your audience." %}</p>
@@ -60,7 +60,7 @@
                 <!-- Tagged Photos -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static 'images/tools/ApprlTaggedPhoto_icon.jpg' %}" /></a>
+                        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static 'images/tools/tagged-photo.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Tagged Photos" %}</h2>
                             <p>{% trans "Let your audience shop your curated photos." %}</p>
@@ -77,7 +77,7 @@
                 <!-- Product Links -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/ApprlProductlink_Icon2.jpg' %}" /></a>
+                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/product-link.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Product Links" %}</h2>
                             <p>{% trans "Get short links for products with just a click." %}</p>
@@ -91,14 +91,48 @@
                     </div>
                 </li>
 
-                <!-- APPRL for Chrome -->
+                <!-- Product List Widget -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a target="_blank" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm"><img src="{% static 'images/tools/ApprlChromeExtension_Icon.jpg' %}" /></a>
+                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/product-list.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Product List" %}</h2>
+                            <p>{% trans "List products next to your posts, images and videos." %}</p>
+                            <a class="btn btn-primary" href="{% url 'create-product-widget-multiple' %}">
+                                {% trans "Create Product List" %}
+                            </a>
+                            <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_text_link">
+                                {% trans "Info" %}
+                            </a>-->
+                        </article>
+                    </div>
+                </li>
+
+                <!-- Single Product Widget -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/single-product.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Single Product" %}</h2>
+                            <p>{% trans "Let your fans scroll through a selection of products." %}</p>
+                            <a class="btn btn-primary" href="{% url 'create-product-widget-single' %}">
+                                {% trans "Create Single Product" %}
+                            </a>
+                            <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_single_widget">
+                                {% trans "Info" %}
+                            </a>-->
+                        </article>
+                    </div>
+                </li>
+
+                <!-- Chrome Extension -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a target="_blank" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm"><img src="{% static 'images/tools/chrome-extension.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "APPRL for Chrome" %}</h2>
                             <p>{% trans "Get links and like products directly from retailers' sites." %}</p>
-                            <a target="_blank" class="btn btn-primary" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm">
+                            <a class="btn btn-primary" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm">
                                 {% trans "Download" %}
                             </a>
                             <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_chrome_ext">

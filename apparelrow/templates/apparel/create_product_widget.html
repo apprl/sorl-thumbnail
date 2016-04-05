@@ -2,6 +2,8 @@
 {% load static from staticfiles %}
 {% load i18n compressed %}
 
+{% block extra-title %}{% if external_shop_id %}{% trans "Edit" %} {{ object.title }}{% else %}{% trans "Create single product widget" %}{% endif %} | {% endblock %}
+
 {% block body-classes %}create-product product-list create-product-widget-page shop widget-page{% endblock %}
 {% block full-body %}
 

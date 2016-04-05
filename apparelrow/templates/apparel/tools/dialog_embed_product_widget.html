@@ -20,8 +20,8 @@
                     <div class="form-group">
                         <label class="control-label" for="id_height">{% trans "Height" %}</label>
                         <a href="#" class="info-toggler" data-target="info-height"><i class="fa fa-question-circle"></i></a>
-                        <span class="info-box" id="info-height">{% trans "Depends on for example your site's layout and how many products you have in your shop, but 400-800 pixels is usually good. You can always edit your shop height later." %}</span>
-                        <input id="id_height" type="text" name="height" placeholder="600">
+                        <span class="info-box" id="info-height">{% trans "This is the height of the product list. 200 pixels is usually a good starting point, you can always come back and change the height if you want." %}</span>
+                        <input id="id_height" type="text" name="height" placeholder="200">
                         <span class="help-block">{% trans "( pixels )" %}</span>
                     </div>
                     <div class="form-group">
@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-group">
                         <!--<label>{% trans "Advanced options" %}</label>-->
-                        <label><input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked><span><i class="fa fa-check"></i></span>{% trans "Show prices and brands" %}</label>
+                        <label><input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show prices and brands" %}</label>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block center">{% trans "Get embed code" %}</button>
@@ -76,7 +76,7 @@
             $('#' + $(this).data('target')).toggleClass('active');
             return false;
         });
-        
+
         $('#modal_embed_product_widget').on('show.bs.modal', function () {
             $('#id_embed_code').parent().hide();
         });
