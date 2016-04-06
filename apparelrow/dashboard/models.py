@@ -15,7 +15,6 @@ from django.utils.functional import cached_property
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import dehydrate
-from apparelrow.dashboard.models import UserEarning
 from apparelrow.profile.models import User
 
 import logging
