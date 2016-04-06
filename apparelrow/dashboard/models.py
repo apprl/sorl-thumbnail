@@ -1,11 +1,9 @@
 import datetime
-import json
 import decimal
 
 from django.conf import settings
 from django.core.cache import cache
 from django.db import models, transaction
-from django.db.models import get_model
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -14,8 +12,12 @@ from django.contrib.auth import get_user_model
 from jsonfield import JSONField
 from django.utils.functional import cached_property
 
+from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import dehydrate
+from apparelrow.dashboard.models import UserEarning
+from apparelrow.profile.models import User
+
 import logging
 
 logger = logging.getLogger( __name__ )
@@ -431,16 +433,16 @@ def sale_post_save(sender, instance, created, **kwargs):
             create_earnings(instance)
         else:
             # Update if UserEarning instances for the respective sale exists, otherwise create them
-            if get_model('dashboard', 'UserEarning').objects.filter(sale=instance).exists():
+            if UserEarning.objects.filter(sale=instance).exists():
                 # Update earnings if sale has been updated.
-                earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=instance)
+                earnings = UserEarning.objects.filter(sale=instance)
                 if instance.status >= Sale.CONFIRMED:
                     for earning in earnings:
                         earning.status = instance.status
                         earning.save()
                 else:
                     # Remove earnings if sale has been removed.
-                    get_model('dashboard', 'UserEarning').objects.filter(sale=instance).delete()
+                    UserEarning.objects.filter(sale=instance).delete()
                     create_earnings(instance)
                 str_date = instance.sale_date.strftime('%Y-%m-%d')
 
@@ -465,8 +467,8 @@ def create_earnings(instance):
         if instance.is_referral_sale:
             create_referral_earning(instance)
     else:
-        user = get_model('profile', 'User').objects.get(id=instance.user_id)
-        get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
+        user = User.objects.get(id=instance.user_id)
+        UserEarning.objects.create(user=user, user_earning_type='referral_signup_commission',
             sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
 
 def create_referral_earning(sale):
@@ -476,11 +478,11 @@ def create_referral_earning(sale):
     """
     total_commission = sale.converted_commission
     referral_user = sale.referral_user
-    user = get_model('profile', 'User').objects.get(id=sale.user_id)
+    user = User.objects.get(id=sale.user_id)
     commission_group = referral_user.partner_group
     product = None
 
-    sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+    sale_product = Product.objects.filter(id=sale.product_id)
 
     if not len(sale_product) == 0:
         product = sale_product[0]
@@ -490,7 +492,7 @@ def create_referral_earning(sale):
         referral_cut = commission_group_cut.referral_cut
         if referral_cut:
             referral_commission = total_commission * referral_cut
-            get_model('dashboard', 'UserEarning').objects.create(user=referral_user,
+            UserEarning.objects.create(user=referral_user,
                                                                  user_earning_type='referral_sale_commission',
                                                                  sale=sale, from_product=product, from_user=user,
                                                                  amount=referral_commission, date=sale.sale_date,
@@ -512,7 +514,7 @@ def create_user_earnings(sale):
     product = None
     is_general_click_earning = False
 
-    sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+    sale_product = Product.objects.filter(id=sale.product_id)
     if not len(sale_product) == 0:
         product = sale_product[0]
 
@@ -521,8 +523,8 @@ def create_user_earnings(sale):
 
     if sale.user_id:
         try:
-            user = get_model('profile', 'User').objects.get(id=sale.user_id)
-        except get_model('profile', 'User').DoesNotExist:
+            user = User.objects.get(id=sale.user_id)
+        except User.DoesNotExist:
             logger.warning('Sale %s is connected to a User %s that does not exist.' % (sale.id,sale.user_id))
             return
 
@@ -564,13 +566,13 @@ def create_user_earnings(sale):
                                                                                  is_general_click_earning)
 
                     # Create apprl commission
-                    get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                    UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
                                                                          from_product=product, from_user=user,
                                                                          amount=apprl_commission, date=sale.sale_date,
                                                                          status=sale.status)
 
                     # Create user earning for the publisher associated to the sale
-                    get_model('dashboard', 'UserEarning').objects.create( user=user,
+                    UserEarning.objects.create( user=user,
                                                                           user_earning_type=earning_type, sale=sale,
                                                                           from_product=product,
                                                                           amount=publisher_commission,
@@ -583,7 +585,7 @@ def create_user_earnings(sale):
             logger.warning('User %s should have assigned a comission group' % user)
     else:
         # Sale was generated from APPRL.com, so in this case only an earning for APPRL is created
-        get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+        UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
 
@@ -633,7 +635,7 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product,
         if cpc_all_stores:
             earning_type = "publisher_network_click_tribute_all_stores"
 
-        get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type=earning_type, sale=sale,
+        UserEarning.objects.create( user=owner, user_earning_type=earning_type, sale=sale,
                                                               from_product=product, from_user=user, amount=owner_earning,
                                                               date=sale.sale_date, status=sale.status)
     return publisher_commission
