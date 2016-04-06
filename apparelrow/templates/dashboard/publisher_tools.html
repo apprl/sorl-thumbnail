@@ -23,6 +23,58 @@
         <div class="col-lg-12">
             <ul class="discover-list list-unstyled row">
 
+                <!-- Invite & Earn -->
+                {% if request.user.is_partner and request.user.referral_partner %}
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        {# need url function for referral page here #}
+                        <a href="{% url 'dashboard-referral' %}"><img src="{% static 'images/tools/referral.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Invite & Earn" %}</h2>
+                            <p>{% trans "Earn money by inviting publishers and bloggers." %}</p>
+                            <a class="btn btn-primary" href="{% url 'dashboard-referral' %}">
+                                {% trans "Get Started" %}
+                            </a>
+                            <span class="empty"></span>
+                        </article>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Product List Widget -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a href="{% url 'create-product-widget-multiple' %}"><img src="{% static 'images/tools/product-list.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Product List" %}</h2>
+                            <p>{% trans "List products next to your posts, images and videos." %}</p>
+                            <a class="btn btn-primary" href="{% url 'create-product-widget-multiple' %}">
+                                {% trans "Create Product List" %}
+                            </a>
+                            <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_text_link">
+                                {% trans "Info" %}
+                            </a>-->
+                        </article>
+                    </div>
+                </li>
+
+                <!-- Single Product Widget -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a href="{% url 'create-product-widget-single' %}"><img src="{% static 'images/tools/single-product.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "Single Product" %}</h2>
+                            <p>{% trans "Let your fans scroll through a selection of products." %}</p>
+                            <a class="btn btn-primary" href="{% url 'create-product-widget-single' %}">
+                                {% trans "Create Single Product" %}
+                            </a>
+                            <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_single_widget">
+                                {% trans "Info" %}
+                            </a>-->
+                        </article>
+                    </div>
+                </li>
+
                 <!-- Shop -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
@@ -91,40 +143,6 @@
                     </div>
                 </li>
 
-                <!-- Product List Widget -->
-                <li class="col-discover-item">
-                    <div class="panel publisher-panel">
-                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/product-list.jpg' %}" /></a>
-                        <article>
-                            <h2>{% trans "Product List" %}</h2>
-                            <p>{% trans "List products next to your posts, images and videos." %}</p>
-                            <a class="btn btn-primary" href="{% url 'create-product-widget-multiple' %}">
-                                {% trans "Create Product List" %}
-                            </a>
-                            <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_text_link">
-                                {% trans "Info" %}
-                            </a>-->
-                        </article>
-                    </div>
-                </li>
-
-                <!-- Single Product Widget -->
-                <li class="col-discover-item">
-                    <div class="panel publisher-panel">
-                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/single-product.jpg' %}" /></a>
-                        <article>
-                            <h2>{% trans "Single Product" %}</h2>
-                            <p>{% trans "Let your fans scroll through a selection of products." %}</p>
-                            <a class="btn btn-primary" href="{% url 'create-product-widget-single' %}">
-                                {% trans "Create Single Product" %}
-                            </a>
-                            <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_single_widget">
-                                {% trans "Info" %}
-                            </a>-->
-                        </article>
-                    </div>
-                </li>
-
                 <!-- Chrome Extension -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
@@ -141,24 +159,6 @@
                         </article>
                     </div>
                 </li>
-
-                <!-- Invite & Earn -->
-                {% if request.user.is_partner and request.user.referral_partner %}
-                <li class="col-discover-item">
-                    <div class="panel publisher-panel">
-                        {# need url function for referral page here #}
-                        <a href="{% url 'dashboard-referral' %}"><img src="{% static 'images/tools/referral.jpg' %}" /></a>
-                        <article>
-                            <h2>{% trans "Invite & Earn" %}</h2>
-                            <p>{% trans "Earn money by inviting publishers and bloggers." %}</p>
-                            <a class="btn btn-primary" href="{% url 'dashboard-referral' %}">
-                                {% trans "Get Started" %}
-                            </a>
-                            <span class="empty"></span>
-                        </article>
-                    </div>
-                </li>
-                {% endif %}
 
             </ul>
         </div>

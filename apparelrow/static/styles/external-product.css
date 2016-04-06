@@ -44,8 +44,10 @@
   list-style: none;
 }
 .apprl-product h4 {
-  font-size: 15px;
+  font-size: 14px;
   margin: 0 auto;
+  font-family: "Neuzeit Bold", sans-serif;
+  font-weight: normal;
 }
 .apprl-product .slidecontainer {
   overflow: hidden;
