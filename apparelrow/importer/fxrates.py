@@ -10,6 +10,9 @@ from apparelrow.importer.models import FXRate
 logger = logging.getLogger('apparel.importer.fxrates')
 
 class FXRateImporter():
+    """
+    Handling fx rates from imported xml file. Does not work presently
+    """
     def __init__(self, file=None, url=None, base_currency=None):
         self.file = file
         self.url  = url
