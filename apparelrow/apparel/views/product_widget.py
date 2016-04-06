@@ -65,7 +65,7 @@ def editor(request, template='apparel/create_product_widget.html', product_widge
         return HttpResponse('Unauthorized', status=401)
     product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
 
-    if request.user.pk is not product_widget.user.pk:
+    if not request.user.pk == product_widget.user.pk:
         return HttpResponse('Unauthorized', status=401)
 
     return render(request, template, {
@@ -164,6 +164,7 @@ def delete_productwidget(request, product_widget_id):
 
 
 class ProductWidgetView(View):
+
     def get(self, request, pk, *args, **kwargs):
         if pk is not None:
             product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=pk)
@@ -177,8 +178,6 @@ class ProductWidgetView(View):
             return JSONResponse(status=204)
 
         return JSONResponse({ 'message': 'Not authenticated'}, status=401)
-
-
 
     def put(self, request, pk=None, *args, **kwargs):
         if pk is not None and pk is not 0:
@@ -308,7 +307,7 @@ def product_widget_widget(request, product_widget_id=None):
     product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
 
     if not request.user.pk == product_widget.user.pk:
-        return HttpResponseNotAllowed("Owner of widget is not the same as logged in user.")
+        return HttpResponseNotAllowed("Unauthorized")
 
 
     content = {}
