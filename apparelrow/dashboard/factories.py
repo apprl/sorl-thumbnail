@@ -1,15 +1,18 @@
 import decimal
 import factory
 from factory import lazy_attribute
-from django.db.models import get_model
 from faker import Faker
 import datetime as dt
 from random import randint
+from advertiser.models import Store
+from apparelrow.apparel.models import Vendor, ShortDomainLink
+from apparelrow.dashboard.models import ClickCost, Sale, Group, Cut, AggregatedData
+from apparelrow.profile.models import User
 
 
 class GroupFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = get_model('dashboard', 'Group')
+        model = Group
 
     name = "Regular"
 
@@ -17,7 +20,7 @@ class GroupFactory(factory.django.DjangoModelFactory):
 class UserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = get_model('profile', 'User')
+        model = User
     first_name = Faker().name().split(" ")[0]
     last_name = Faker().name().split(" ")[1]
     username = factory.Sequence(lambda n: 'username%s' % n)
@@ -34,29 +37,36 @@ class UserFactory(factory.django.DjangoModelFactory):
 class VendorFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = get_model('apparel', 'Vendor')
+        model = Vendor
     name = factory.Sequence(lambda n: 'Vendor %s' % n)
 
 
 class CutFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = get_model('dashboard', 'Cut')
+        model = Cut
     group = factory.SubFactory(GroupFactory)
     vendor = factory.SubFactory(VendorFactory)
     cut = decimal.Decimal(0.67)
     referral_cut = decimal.Decimal(0.15)
 
 
+class ClickCostFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = ClickCost
+    vendor = factory.SubFactory(VendorFactory)
+
+
 class SaleFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = get_model('dashboard', 'Sale')
+        model = Sale
     id = factory.Sequence(lambda n: '%s' % (n + 1))
     converted_amount = 500
     converted_commission = 50
-    status = get_model('dashboard', 'Sale').CONFIRMED
-    paid = get_model('dashboard', 'Sale').PAID_PENDING
+    status = Sale.CONFIRMED
+    paid = Sale.PAID_PENDING
 
 
 class AggregatedDataFactory(factory.django.DjangoModelFactory):
@@ -67,18 +77,18 @@ class AggregatedDataFactory(factory.django.DjangoModelFactory):
     aggregated_from_image = factory.Sequence(lambda n: 'Image %s' % (n + 1))
 
     class Meta:
-        model = get_model('dashboard', 'AggregatedData')
+        model = AggregatedData
 
 
 class ShortLinkFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = get_model('apparel','ShortDomainLink')
+        model = ShortDomainLink
     vendor = factory.SubFactory(VendorFactory)
 
 class StoreFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = get_model('advertiser','Store')
+        model = Store
     identifier = factory.Sequence(lambda n: 'Store %s' % n)
     user = factory.SubFactory(UserFactory)
