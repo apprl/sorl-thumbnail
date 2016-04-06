@@ -1,6 +1,7 @@
 import re
 import urllib
 import os
+import logging
 from django.contrib.admin import AdminSite
 from apparelrow.dashboard.factories import *
 
@@ -24,6 +25,8 @@ from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
 from apparelrow.statistics.factories import *
+
+from mock import patch
 
 
 def reverse(*args, **kwargs):
@@ -1533,21 +1536,24 @@ class TestSalesPerClick(TransactionTestCase):
         self.assertAlmostEqual(user_earning.amount, sale_amount)
 
 
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestSalesPerClickAllStores(TransactionTestCase):
 
     def setUp(self):
         group = GroupFactory.create(name='Metro Mode', has_cpc_all_stores=True)
         self.user = UserFactory.create(username="normal_user", email="normal@xvid.se", name="normal", is_partner=True,
                                        partner_group=group)
-        self.vendor = VendorFactory.create(name="Vendor CPC", is_cpc=True)
+        self.vendor = VendorFactory.create(name="Vendor CPC", is_cpc=True, is_cpo=False)
         CutFactory.create(vendor=self.vendor, group=group, cpc_amount=3.00, cpc_currency="EUR", cut=0)
         ClickCostFactory.create(vendor=self.vendor, amount=10, currency="EUR")
 
         self.product = ProductFactory.create(slug="product")
+        self.product_cpo = ProductFactory.create(slug="product_cpo")
         VendorProductFactory.create(vendor=self.vendor, product=self.product)
 
     def test_sales_per_click_all_stores(self):
-        """ Test user earnings and sales are creating correctly when a user belongs to a Commission Group that pays
+        """
+        Test user earnings and sales are creating correctly when a user belongs to a Commission Group that pays
         all its publishers per click for all stores.
         """
         yesterday = (datetime.date.today() - datetime.timedelta(1))
@@ -1591,8 +1597,49 @@ class TestSalesPerClickAllStores(TransactionTestCase):
                 elif row.sale == sale_cpc_all:
                     self.assertEqual(row.amount, 0.00)
 
+        # Run job that aggregates data
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+
+        # Check right amount of AggregatedData instances have been created
+        self.assertEqual(AggregatedData.objects.count(), 3)
+
+        for row in AggregatedData.objects.all():
+            if row.data_type == "aggregated_from_total":
+                if row.user_id == self.user.id:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 12.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, 12.00)
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 4)
+                elif row.user_id == 0:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 40.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, 40.00)
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 4)
+            elif row.data_type == "aggregated_from_product":
+                if row.user_id == self.user.id:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 12.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, 12.00)
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 4)
+
     def test_sales_per_click_all_stores_with_network_owner(self):
-        """ Test user earnings and sales are creating correctly when a user belongs to a Commission Group that pays
+        """
+        Test user earnings and sales are creating correctly when a user belongs to a Commission Group that pays
         all its publishers per click for all stores and has assigned a Publisher network owner with its respective
         owner cut
         """
@@ -1652,8 +1699,82 @@ class TestSalesPerClickAllStores(TransactionTestCase):
                 elif row.sale == sale_cpc_all:
                     self.assertEqual(row.amount, 0.00)
 
-    def test_sales_per_click_all_stores_no_cut(self):
-        """ Test user earnings and sales are not correctly created when a user belongs to a Commission Group that pays
+        # Run job that aggregates data
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+
+        # Check right amount of AggregatedData instances have been created
+        self.assertEqual(AggregatedData.objects.count(), 6)
+
+        for row in AggregatedData.objects.all():
+            if row.data_type == "aggregated_from_total":
+                if row.user_id == self.user.id:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, decimal.Decimal("10.80"))
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, decimal.Decimal("10.80"))
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 4)
+                elif row.user_id == owner_user.id:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 0.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, decimal.Decimal("1.20"))
+                    self.assertEqual(row.sale_plus_click_earnings, 0.00)
+                    self.assertEqual(row.total_network_earnings, decimal.Decimal("1.20"))
+                    self.assertEqual(row.total_clicks, 0)
+                    self.assertEqual(row.paid_clicks, 0)
+                elif row.user_id == 0:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 40.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, 40.00)
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 4)
+            elif row.data_type == "aggregated_from_product":
+                if row.user_id == self.user.id:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, decimal.Decimal("10.80"))
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, decimal.Decimal("10.80"))
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 4)
+                elif row.user_id == owner_user.id:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 0.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, decimal.Decimal("1.20"))
+                    self.assertEqual(row.sale_plus_click_earnings, 0.00)
+                    self.assertEqual(row.total_network_earnings, decimal.Decimal("1.20"))
+                    self.assertEqual(row.total_clicks, 0)
+                    self.assertEqual(row.paid_clicks, 0)
+            elif row.data_type == "aggregated_from_publisher":
+                self.assertEqual(row.user_id, owner_user.id)
+                self.assertEqual(row.aggregated_from_id, self.user.id)
+                self.assertEqual(row.sale_earnings, 0.00)
+                self.assertEqual(row.click_earnings, decimal.Decimal("10.80"))
+                self.assertEqual(row.referral_earnings, 0.00)
+                self.assertEqual(row.network_sale_earnings, 0.00)
+                self.assertEqual(row.network_click_earnings, decimal.Decimal("1.20"))
+                self.assertEqual(row.sale_plus_click_earnings, decimal.Decimal("10.80"))
+                self.assertEqual(row.total_network_earnings, decimal.Decimal("1.20"))
+                self.assertEqual(row.total_clicks, 4)
+                self.assertEqual(row.paid_clicks, 4)
+
+    @patch('apparelrow.dashboard.tests.TestSalesPerClickAllStores.test_sales_per_click_all_stores_no_cut')
+    def test_sales_per_click_all_stores_no_cut(self, mock_logger):
+        """
+        Test user earnings and sales are not correctly created when a user belongs to a Commission Group that pays
         all its publishers per click for all stores but there is not a cut created for this commission group and vendor.
         """
         group = GroupFactory.create(name='Group', has_cpc_all_stores=True)
@@ -1670,9 +1791,112 @@ class TestSalesPerClickAllStores(TransactionTestCase):
 
         # Run job that generates sales from the summarized clicks from yesterday for user and vendor
         management.call_command('clicks_summary', verbosity=0, interactive=False)
-
         self.assertEqual(Sale.objects.count(), 0)
         self.assertEqual(UserEarning.objects.count(), 0)
+
+        # Error will be log, so the error must be fixed. It will create user earnings once error is fixed but it is
+        # recommended to run clicks_summary for the regarding date again
+        mock_logger.warning('Cut for vendor %s and commission group for user %s does not exist' % (self.vendor.id, self.user.id))
+
+        # Run job that aggregates data
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+
+        # Check no AggregatedData instances have been created
+        self.assertEqual(AggregatedData.objects.count(), 2)
+
+        for row in AggregatedData.objects.all():
+            if row.data_type == "aggregated_from_total":
+                if row.user_id == self.user.id:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 0.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, 0.00)
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 0)
+            elif row.data_type == "aggregated_from_product":
+                self.assertEqual(row.user_id, row.user_id)
+                self.assertEqual(row.sale_earnings, 0.00)
+                self.assertEqual(row.click_earnings, 0.00)
+                self.assertEqual(row.referral_earnings, 0.00)
+                self.assertEqual(row.network_sale_earnings, 0.00)
+                self.assertEqual(row.network_click_earnings, 0.00)
+                self.assertEqual(row.sale_plus_click_earnings, 0.00)
+                self.assertEqual(row.total_network_earnings, 0.00)
+                self.assertEqual(row.total_clicks, 4)
+                self.assertEqual(row.paid_clicks, 0)
+
+    def test_sales_per_click_all_stores_vendor_is_cpo(self):
+        """
+        Test user earnings and sales are creating correctly when a user belongs to a Commission Group that pays
+        all its publishers per click for all stores and has assigned a Publisher network owner with its respective
+        owner cut
+        """
+        group = Group.objects.get(name='Metro Mode')
+        cpo_vendor = VendorFactory.create(name="Vendor CPO", is_cpc=False, is_cpo=True)
+        CutFactory.create(vendor=cpo_vendor, group=group, cpc_amount=20.00, cpc_currency="EUR", cut=0.6)
+        yesterday = (datetime.date.today() - datetime.timedelta(1))
+        VendorProductFactory.create(vendor=cpo_vendor, product=self.product_cpo)
+
+        clicks = 4
+        for i in range(clicks):
+            product_stat = ProductStatFactory.create(ip="1.2.3.4", vendor=cpo_vendor.name, product=self.product_cpo.slug,
+                                                     user_id=self.user.id, created=yesterday)
+            self.assertTrue(product_stat.is_valid)
+
+        # Run job that generates sales from the summarized clicks from yesterday for user and vendor
+        management.call_command('clicks_summary', verbosity=0, interactive=False)
+
+        self.assertEqual(Sale.objects.count(), 1)
+        self.assertEqual(UserEarning.objects.count(), 2)
+
+        # All User earnings might have been created with the right user earning type and amount
+        for row in UserEarning.objects.all():
+            if row.user_earning_type == "publisher_sale_click_commission_all_stores":
+                self.assertEqual(row.amount, 80.00)
+                self.assertEqual(row.user, self.user)
+
+        # Run job that aggregates data
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+
+        # Check right amount of AggregatedData instances have been created
+        self.assertEqual(AggregatedData.objects.count(), 3)
+
+        for row in AggregatedData.objects.all():
+            if row.data_type == "aggregated_from_total":
+                if row.user_id == self.user.id:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 80.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, 80.00)
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 4)
+                elif row.user_id == 0:
+                    self.assertEqual(row.sale_earnings, 0.00)
+                    self.assertEqual(row.click_earnings, 0.00)
+                    self.assertEqual(row.referral_earnings, 0.00)
+                    self.assertEqual(row.network_sale_earnings, 0.00)
+                    self.assertEqual(row.network_click_earnings, 0.00)
+                    self.assertEqual(row.sale_plus_click_earnings, 0.00)
+                    self.assertEqual(row.total_network_earnings, 0.00)
+                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.paid_clicks, 4)
+            elif row.data_type == "aggregated_from_product":
+                self.assertEqual(row.user_id, row.user_id)
+                self.assertEqual(row.sale_earnings, 0.00)
+                self.assertEqual(row.click_earnings, 80.00)
+                self.assertEqual(row.referral_earnings, 0.00)
+                self.assertEqual(row.network_sale_earnings, 0.00)
+                self.assertEqual(row.network_click_earnings, 0.00)
+                self.assertEqual(row.sale_plus_click_earnings, 80.00)
+                self.assertEqual(row.total_network_earnings, 0.00)
+                self.assertEqual(row.total_clicks, 4)
+                self.assertEqual(row.paid_clicks, 4)
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestPayments(TransactionTestCase):
@@ -2152,7 +2376,6 @@ class TestAggregatedData(TransactionTestCase):
         aggregated_data = get_model('dashboard', 'AggregatedData').objects.latest("created")
         self.assertEqual(len(aggregated_data.aggregated_from_name), 99)
 
-
     def test_fields_none_or_too_long(self):
         long_string = ""
         for i in range(0,205):
@@ -2171,6 +2394,110 @@ class TestAggregatedData(TransactionTestCase):
         self.assertEqual(len(aggregated_data.aggregated_from_slug), 99)
         self.assertEqual(len(aggregated_data.aggregated_from_link), 199)
         self.assertEqual(len(aggregated_data.aggregated_from_image), 199)
+
+
+class TestAggregatedDataModules(TransactionTestCase):
+    def setUp(self):
+        self.group = get_model('dashboard', 'Group').objects.create(name='group_name')
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.is_partner = True
+        self.user.date_joined = datetime.datetime.strptime("2013-05-07", "%Y-%m-%d")
+        self.user.partner_group = self.group
+        self.user.save()
+
+    def test_get_aggregated_products_and_publishers(self):
+        year = 2015
+        month = 1
+        order_day = datetime.date(year, month ,15)
+        click_day = order_day+relativedelta(days=-1)
+
+        # Generate Earnings and click data with product information
+        vendor = VendorFactory.create(name="Vendor Aggregated CPO")
+        product = ProductFactory.create(slug="product-number-1", product_name="Product 1")
+        VendorProductFactory.create(vendor=vendor, product=product)
+        get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
+                                                     vendor=vendor)
+
+        vendor_cpc = VendorFactory.create(name="Vendor Aggregated CPC", is_cpo=False, is_cpc=True)
+        product_cpc = ProductFactory.create(slug="product-number-2", product_name="Product 2")
+        VendorProductFactory.create(vendor=vendor_cpc, product=product_cpc)
+        cut_obj = get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
+                                                     vendor=vendor_cpc)
+        click_cost = get_model('dashboard', 'ClickCost').objects.create(vendor=vendor_cpc, amount=1.00, currency="EUR")
+
+        # Generate clicks for CPO
+        for index in range(200):
+            ProductStatFactory.create(vendor=vendor.name, is_valid=True, ip= "1.22.3.4", product=product.slug,
+                                      created=click_day, user_id=self.user.id)
+
+        # Generate clicks for CPC
+        for index in range(100):
+            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.22.3.4", product=product_cpc.slug,
+                                      created=click_day, user_id=self.user.id)
+
+        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(user_id=self.user.id).count(), 300)
+
+        # Generate earnings CPC,
+        management.call_command('clicks_summary', verbosity=0, date="2015-01-14")
+        # Management call creates a Sale object based on all clicks previous day (click_day)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 1)
+
+        # Generate earnings CPO
+        for index in range(1, 11):
+            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=click_day,
+                               sale_date=click_day, pk=index+2)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 11)
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=self.user).count(), 11)
+
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False, date="2015-01-14")
+
+        start_date, end_date = parse_date(year=str(year), month=str(month), first_to_first=True)
+        # Check data from get_aggregated_products is correct
+        top_products = get_aggregated_products(None, start_date, end_date)
+        self.assertEqual(len(top_products), 2)
+        cpo_commission = 50 * 10 * decimal.Decimal(cut_obj.cut) # EUR
+        cpc_commission = 100 * 1 * decimal.Decimal(cut_obj.cut) # EUR
+
+        products_checked = 0
+        for row in top_products:
+            if row['aggregated_from_id'] == product.id:
+                products_checked += 1
+                self.assertEqual(row['total_earnings'], cpo_commission)
+                self.assertEqual(row['total_network_earnings'], 0)
+                self.assertEqual(row['total_clicks'], 200)
+            elif row['aggregated_from_id'] == product_cpc.id:
+                products_checked += 1
+                self.assertEqual(row['total_earnings'], cpc_commission)
+                self.assertEqual(row['total_network_earnings'], 0)
+                self.assertEqual(row['total_clicks'], 100)
+
+        self.assertEqual(products_checked, 2)
+
+        # Check data from get_aggregated_publishers is correct
+        top_publishers = get_aggregated_publishers(None, start_date, end_date, True)
+        publisher_commission = (cpo_commission  + cpc_commission)
+        self.assertEqual(len(top_publishers), 1)
+        self.assertEqual(top_publishers[0]['user_id'], self.user.id)
+        self.assertEqual(top_publishers[0]['total_earnings'], publisher_commission)
+        self.assertEqual(top_publishers[0]['total_clicks'], 300)
+        self.assertEqual(top_publishers[0]['total_network_earnings'], 0)
+
+    def test_get_aggregated_products_no_data(self):
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 0)
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+        start_date, end_date = get_current_month_range()
+
+        top_products = get_aggregated_products(None, start_date, end_date)
+        self.assertEqual(len(top_products), 0)
+
+    def test_get_aggregated_publisher_no_data(self):
+        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 0)
+        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
+        start_date, end_date = get_current_month_range()
+
+        top_publishers = get_aggregated_publishers(None, start_date, end_date)
+        self.assertEqual(len(top_publishers), 0)
 
 
 class TestPaymentHistory(TestCase):
@@ -2489,110 +2816,6 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(invalid_clicks[0], 400)
         self.assertEqual(invalid_clicks[1], 152)
         self.assertEqual(invalid_clicks[2], 248)
-
-
-class TestAggregatedData_2(TransactionTestCase):
-    def setUp(self):
-        self.group = get_model('dashboard', 'Group').objects.create(name='group_name')
-        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
-        self.user.is_partner = True
-        self.user.date_joined = datetime.datetime.strptime("2013-05-07", "%Y-%m-%d")
-        self.user.partner_group = self.group
-        self.user.save()
-
-    def test_get_aggregated_products_and_publishers(self):
-        year = 2015
-        month = 1
-        order_day = datetime.date(year, month ,15)
-        click_day = order_day+relativedelta(days=-1)
-
-        # Generate Earnings and click data with product information
-        vendor = VendorFactory.create(name="Vendor Aggregated CPO")
-        product = ProductFactory.create(slug="product-number-1", product_name="Product 1")
-        VendorProductFactory.create(vendor=vendor, product=product)
-        get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
-                                                     vendor=vendor)
-
-        vendor_cpc = VendorFactory.create(name="Vendor Aggregated CPC", is_cpo=False, is_cpc=True)
-        product_cpc = ProductFactory.create(slug="product-number-2", product_name="Product 2")
-        VendorProductFactory.create(vendor=vendor_cpc, product=product_cpc)
-        cut_obj = get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
-                                                     vendor=vendor_cpc)
-        click_cost = get_model('dashboard', 'ClickCost').objects.create(vendor=vendor_cpc, amount=1.00, currency="EUR")
-
-        # Generate clicks for CPO
-        for index in range(200):
-            ProductStatFactory.create(vendor=vendor.name, is_valid=True, ip= "1.22.3.4", product=product.slug,
-                                      created=click_day, user_id=self.user.id)
-
-        # Generate clicks for CPC
-        for index in range(100):
-            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.22.3.4", product=product_cpc.slug,
-                                      created=click_day, user_id=self.user.id)
-
-        self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(user_id=self.user.id).count(), 300)
-
-        # Generate earnings CPC,
-        management.call_command('clicks_summary', verbosity=0, date="2015-01-14")
-        # Management call creates a Sale object based on all clicks previous day (click_day)
-        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 1)
-
-        # Generate earnings CPO
-        for index in range(1, 11):
-            SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=click_day,
-                               sale_date=click_day, pk=index+2)
-        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 11)
-        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
-        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=self.user).count(), 11)
-
-        management.call_command('collect_aggregated_data', verbosity=0, interactive=False, date="2015-01-14")
-
-        start_date, end_date = parse_date(year=str(year), month=str(month), first_to_first=True)
-        # Check data from get_aggregated_products is correct
-        top_products = get_aggregated_products(None, start_date, end_date)
-        self.assertEqual(len(top_products), 2)
-        cpo_commission = 50 * 10 * decimal.Decimal(cut_obj.cut) # EUR
-        cpc_commission = 100 * 1 * decimal.Decimal(cut_obj.cut) # EUR
-
-        products_checked = 0
-        for row in top_products:
-            if row['aggregated_from_id'] == product.id:
-                products_checked += 1
-                self.assertEqual(row['total_earnings'], cpo_commission)
-                self.assertEqual(row['total_network_earnings'], 0)
-                self.assertEqual(row['total_clicks'], 200)
-            elif row['aggregated_from_id'] == product_cpc.id:
-                products_checked += 1
-                self.assertEqual(row['total_earnings'], cpc_commission)
-                self.assertEqual(row['total_network_earnings'], 0)
-                self.assertEqual(row['total_clicks'], 100)
-
-        self.assertEqual(products_checked, 2)
-
-        # Check data from get_aggregated_publishers is correct
-        top_publishers = get_aggregated_publishers(None, start_date, end_date, True)
-        publisher_commission = (cpo_commission  + cpc_commission)
-        self.assertEqual(len(top_publishers), 1)
-        self.assertEqual(top_publishers[0]['user_id'], self.user.id)
-        self.assertEqual(top_publishers[0]['total_earnings'], publisher_commission)
-        self.assertEqual(top_publishers[0]['total_clicks'], 300)
-        self.assertEqual(top_publishers[0]['total_network_earnings'], 0)
-
-    def test_get_aggregated_products_no_data(self):
-        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 0)
-        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
-        start_date, end_date = get_current_month_range()
-
-        top_products = get_aggregated_products(None, start_date, end_date)
-        self.assertEqual(len(top_products), 0)
-
-    def test_get_aggregated_publisher_no_data(self):
-        self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 0)
-        management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
-        start_date, end_date = get_current_month_range()
-
-        top_publishers = get_aggregated_publishers(None, start_date, end_date)
-        self.assertEqual(len(top_publishers), 0)
 
 
 class MockRequest(object):
