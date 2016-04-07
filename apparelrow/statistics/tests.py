@@ -14,7 +14,6 @@ from apparelrow.statistics.utils import check_vendor_has_reached_limit
 from apparelrow.dashboard.utils import parse_date
 
 
-
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestProductStat(TestCase):
     fixtures = ['test-statistics.yaml']
