@@ -20,6 +20,7 @@ class Command(BaseCommand):
             default= None,
         ),
     )
+    affiliates = ['costperclick', 'allstorescpc']
 
     def update(self, row):
         instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
@@ -56,8 +57,11 @@ class Command(BaseCommand):
         if not date:
             date = (datetime.date.today() - datetime.timedelta(1)).strftime('%Y-%m-%d')
         query_date = datetime.datetime.strptime(date, '%Y-%m-%d')
-        module = __import__('apparelrow.dashboard.importer.costperclick', fromlist = ['Importer'])
-        instance = module.Importer()
-        logger.info('Importing %s' % (instance.name,))
-        for row in instance.get_data(query_date, None):
-            sale_instance = self.update(row)
+
+        for argument in self.affiliates:
+            if argument in self.affiliates:
+                module = __import__('apparelrow.dashboard.importer.%s' % argument, fromlist = ['Importer'])
+                instance = module.Importer()
+                logger.info('Importing %s' % (instance.name,))
+                for row in instance.get_data(query_date, None):
+                    sale_instance = self.update(row)
