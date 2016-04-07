@@ -188,6 +188,30 @@ class Cut(models.Model):
     class Meta:
         ordering = ('group', 'vendor')
 
+    def _calculate_exchange_price(self):
+        """
+        Return price and currency based on the selected currency. If no
+        currency is selected currency language is converted to a currency if
+        possible else APPAREL_BASE_CURRENCY is used.
+        """
+        if not hasattr(self, '_calculated_locale_cost'):
+            to_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
+            rate = currency_exchange(to_currency, self.cpc_currency)
+
+            self._calculated_locale_cost = (rate * self.cpc_amount, to_currency)
+
+        return self._calculated_locale_cost
+
+    @cached_property
+    def locale_cpc_amount(self):
+        cpc_amount, _ = self._calculate_exchange_price()
+        return cpc_amount
+
+    @cached_property
+    def locale_cpc_currency(self):
+        _, cpc_currency = self._calculate_exchange_price()
+        return cpc_currency
+
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
 

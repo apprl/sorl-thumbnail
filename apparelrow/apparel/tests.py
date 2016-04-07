@@ -512,6 +512,17 @@ class TestProductDetails(TestCase):
         self.assertIsNone(earning_product)
         self.assertIsNone(currency)
 
+    def test_product_details_user_has_cpc_earning_all_stores(self):
+        cpc_group = get_model('dashboard', 'Group').objects.create(name='metro mode', has_cpc_all_stores=True)
+        get_model('dashboard', 'Cut').objects.create(vendor=self.vendor, group=cpc_group, cpc_amount=11.00, cpc_currency="SEK", cut=0.6)
+        self.user.partner_group = cpc_group
+        self.user.is_partner = True
+        self.user.save()
+
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
+        self.assertEqual(earning_product, 11.00)
+        self.assertEqual(currency, "SEK")
+
     def test_extracting_suffix(self):
         from apparelrow.apparel.views import extract_domain_with_suffix
         domain = "https://account.manning.com/support/index?someparameter=1"

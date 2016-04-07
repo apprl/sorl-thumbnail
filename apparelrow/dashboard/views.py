@@ -1,7 +1,9 @@
 import operator
 import re
+import decimal
 import json
 
+from decimal import ROUND_HALF_UP
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
 from django.forms import ModelForm
@@ -225,21 +227,33 @@ def referral_mail(request):
 #
 # Commissions
 #
-def get_store_earnings(vendor_obj, publisher_cut, normal_cut, standard_from, store):
+def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_from, store):
     currency = ''
     amount_float = decimal.Decimal(0)
     amount = "%.2f" % amount_float
     earning_type = "is_cpo"  # Default is_cpo = True for vendors
-    if vendor_obj.is_cpc:
-        click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
-        amount = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
-        amount_float = click_cost.locale_price * publisher_cut * normal_cut
-        currency = click_cost.locale_currency
+    if user.partner_group.has_cpc_all_stores:
+        type_code = 1
         earning_type = "is_cpc"
-    elif vendor_obj.is_cpo:
-        amount = store.commission
-        amount_float = standard_from
-    type_code = 0 if earning_type == "is_cpc" else 1
+        try:
+            cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor_obj)
+            amount_float = decimal.Decimal(cut.locale_cpc_amount.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
+            amount = "%.2f" % amount_float
+            currency = cut.locale_cpc_currency
+        except get_model('dashboard', 'Cut').DoesNotExist:
+            log.warning("Cut for commission group %s and vendor %s does not exist." %
+                           (user.partner_group, vendor_obj.name))
+    else:
+        if vendor_obj.is_cpc:
+            click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
+            amount = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
+            amount_float = click_cost.locale_price * publisher_cut * normal_cut
+            currency = click_cost.locale_currency
+            earning_type = "is_cpc"
+        elif vendor_obj.is_cpo:
+            amount = store.commission
+            amount_float = standard_from
+        type_code = 0 if earning_type == "is_cpc" else 1
 
     return amount, amount_float, currency, earning_type, type_code
 
@@ -274,7 +288,7 @@ def commissions(request):
             # Get different cuts
             _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
             temp['amount'], temp['amount_float'], temp['currency'], temp['earning_type'], temp['type_code'] = \
-                get_store_earnings(vendor_obj, publisher_cut, normal_cut, standard_from, store)
+                get_store_earnings(request.user, vendor_obj, publisher_cut, normal_cut, standard_from, store)
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
