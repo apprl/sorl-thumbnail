@@ -512,6 +512,7 @@ class TestProductDetails(TestCase):
         self.assertIsNone(earning_product)
         self.assertIsNone(currency)
 
+    @override_settings(GEOIP_DEBUG=True, GEOIP_RETURN_LOCATION="SE", VENDOR_LOCATION_MAPPING={"mystore":["SE"], "default":["ALL","SE","NO","US"],})
     def test_product_details_user_has_cpc_earning_all_stores(self):
         cpc_group = get_model('dashboard', 'Group').objects.create(name='Metro Mode', has_cpc_all_stores=True)
         get_model('dashboard', 'Cut').objects.create(vendor=self.vendor, group=cpc_group, cpc_amount=11.00, cpc_currency="SEK", cut=0.6)
@@ -521,8 +522,8 @@ class TestProductDetails(TestCase):
         self.user.save()
 
         earning_product, currency = self.vendor_product.get_product_earning(self.user)
-        self.assertEqual(earning_product, 11.00)
         self.assertEqual(currency, "SEK")
+        self.assertEqual(earning_product, 11.00)
 
     def test_extracting_suffix(self):
         from apparelrow.apparel.views import extract_domain_with_suffix
