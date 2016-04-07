@@ -754,7 +754,7 @@ class TestEmbeddingShops(TestCase):
         print "Checking cache key for: %s" % nginx_key
         self.assertIsNotNone(cache.get(nginx_key,None))
 
-
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestShortLinks(TestCase):
     def setUp(self):
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='My Store 12')
