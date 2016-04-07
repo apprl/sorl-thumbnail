@@ -19,9 +19,8 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserE
 
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
-from apparelrow.dashboard.views import publisher_contact, get_store_earnings
-from apparelrow.apparel.utils import generate_sid, parse_sid
-from apparelrow.apparel.utils import currency_exchange
+from apparelrow.dashboard.views import get_store_earnings
+from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
 from apparelrow.statistics.factories import *
