@@ -143,7 +143,8 @@ class Group(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='owner_group', help_text='Assign a group owner if publishers of this group will belong to an owner, for example a blog network.')
     owner_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
                                     help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
-    is_subscriber = models.BooleanField(default=False)    has_cpc_all_stores = models.BooleanField(default=False,
+    is_subscriber = models.BooleanField(default=False)
+    has_cpc_all_stores = models.BooleanField(default=False,
                                              help_text='If checked, all publishers that belong to the Commission Group '
                                                        'will earn per click for all Stores. Next step is to set '
                                                        'cpc_amount and cpc_currency for Cuts for every vendor, and cut '
