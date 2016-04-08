@@ -326,49 +326,54 @@
         table.html("");
         if (response.length > 0) {
             $.each(response, function() {
-                var row = $('<tr/>');
-                // Date
-                row.append('<td data-sort="' + this.date_timestamp + '">' + this.date_string + '</td>');
-                row.append('<td data-sort="' + this.sale_id + '">' + this.sale_id + '</td>');
-                row.append('<td data-sort="' + this.product_name + '"><a src="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
-                row.append('<td data-sort="' + this.product_name + '">' + this.product_name + '</td>');
+                if (this.amount > 0) {
+                    var row = $('<tr/>');
+                    // Date
+                    row.append('<td data-sort="' + this.date_timestamp + '">' + this.date_string + '</td>');
+                    row.append('<td data-sort="' + this.sale_id + '">' + this.sale_id + '</td>');
+                    row.append('<td data-sort="' + this.product_name + '"><a src="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
+                    row.append('<td data-sort="' + this.product_name + '">' + this.product_name + '</td>');
 
-                // Description
-                if (this.description_image != '') {
-                    if (this.description_link == '') {
-                        row.append('<td><img src="' + this.description_image + '"></td>');
+                    // Description
+                    if (this.description_image != '') {
+                        if (this.description_link == '') {
+                            row.append('<td><img src="' + this.description_image + '"></td>');
+                        } else {
+                            row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
+                        }
+                        row.append('<td>' + this.description_text + '</td>');
                     } else {
-                        row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
+                        if (this.description_link == '') {
+                            row.append('<td colspan="2">' + this.description_text + '</td>');
+                        } else {
+                            row.append('<td colspan="2"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
+                        }
                     }
-                    row.append('<td>' + this.description_text + '</td>');
-                } else {
-                    if (this.description_link == '') {
-                        row.append('<td colspan="2">' + this.description_text + '</td>');
-                    } else {
-                        row.append('<td colspan="2"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
-                    }
-                }
-                // Details
-                row.append('<td>' + this.details + '</td>');
+                    // Details
+                    row.append('<td>' + this.details + '</td>');
 
-                // Sale value if CPO, Show clicks details button if CPC
-                if (this.user_earning_type == "publisher_sale_click_commission"
-                        || this.user_earning_type == "publisher_sale_click_tribute") {
-                    row.append('<td>' +
-                            '<a class="btn btn-default click-detail" ' +
-                            'data-user="' + this.user_id + '" ' +
-                            'data-vendor="' + this.sale_vendor + '" ' +
-                            'data-date="' + this.date_timestamp + '" ' +
-                            'data-date_display="' + this.date_string + '" ' +
-                            'data-amount="' + this.amount + '" ' +
-                            'data-clicks="' + this.clicks + '">' +
-                            'See details</a></td>');
-                } else {
-                    row.append('<td data-sort="' + this.sale_amount + '">' + currency +"  " + this.sale_amount + '</td>');
+                    // Sale value if CPO, Show clicks details button if CPC
+                    if (this.user_earning_type == "publisher_sale_click_commission" ||
+                            this.user_earning_type == "publisher_sale_click_tribute" ||
+                            this.user_earning_type == "publisher_network_click_tribute_all_stores" ||
+                            this.user_earning_type == "publisher_sale_click_commission_all_stores"
+                    ) {
+                        row.append('<td>' +
+                                '<a class="btn btn-default click-detail" ' +
+                                'data-user="' + this.user_id + '" ' +
+                                'data-vendor="' + this.sale_vendor + '" ' +
+                                'data-date="' + this.date_timestamp + '" ' +
+                                'data-date_display="' + this.date_string + '" ' +
+                                'data-amount="' + this.amount + '" ' +
+                                'data-clicks="' + this.clicks + '">' +
+                                'See details</a></td>');
+                    } else {
+                        row.append('<td data-sort="' + this.sale_amount + '">' + currency +"  " + this.sale_amount + '</td>');
+                    }
+                    // Earning
+                    row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
+                    table.append(row);
                 }
-                // Earning
-                row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
-                table.append(row);
             });
         } else {
             var row = $('<tr/>');
