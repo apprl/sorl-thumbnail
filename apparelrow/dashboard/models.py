@@ -197,7 +197,6 @@ class Cut(models.Model):
         if not hasattr(self, '_calculated_locale_cost'):
             to_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
             rate = currency_exchange(to_currency, self.cpc_currency)
-
             self._calculated_locale_cost = (rate * self.cpc_amount, to_currency)
 
         return self._calculated_locale_cost

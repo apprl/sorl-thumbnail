@@ -10,7 +10,7 @@ from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_b
 
 from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from django.conf import settings
 
 from django.core.urlresolvers import reverse
@@ -513,15 +513,17 @@ class TestProductDetails(TestCase):
         self.assertIsNone(currency)
 
     def test_product_details_user_has_cpc_earning_all_stores(self):
-        cpc_group = get_model('dashboard', 'Group').objects.create(name='metro mode', has_cpc_all_stores=True)
-        get_model('dashboard', 'Cut').objects.create(vendor=self.vendor, group=cpc_group, cpc_amount=11.00, cpc_currency="SEK", cut=0.6)
+        cpc_group = get_model('dashboard', 'Group').objects.create(name='Metro Mode', has_cpc_all_stores=True)
+        cpc_cut = get_model('dashboard', 'Cut').objects.create(vendor=self.vendor, group=cpc_group,
+                                                               cpc_amount=Decimal(3.00), cpc_currency="EUR", cut=0.6)
         self.user.partner_group = cpc_group
         self.user.is_partner = True
+        self.user.location = "SE"
         self.user.save()
 
         earning_product, currency = self.vendor_product.get_product_earning(self.user)
-        self.assertEqual(earning_product, 11.00)
-        self.assertEqual(currency, "SEK")
+        self.assertEqual(currency, cpc_cut.locale_cpc_currency)
+        self.assertEqual(earning_product, Decimal(cpc_cut.locale_cpc_amount.quantize(Decimal('.01'), rounding=ROUND_HALF_UP)))
 
     def test_extracting_suffix(self):
         from apparelrow.apparel.views import extract_domain_with_suffix
