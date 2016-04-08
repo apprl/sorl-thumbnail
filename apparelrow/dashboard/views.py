@@ -164,7 +164,7 @@ class ReferralView(TemplateView):
     def get(self,request, *args, **kwargs):
 
         if request.user.is_authenticated() and all([request.user.is_partner, request.user.referral_partner]):
-            context = self.get_context_data()
+            context = self.get_context_data(**kwargs)
             return render(request, self.template_name, context)
         else:
             return HttpResponseRedirect(reverse('index-publisher'))
@@ -238,7 +238,7 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
         try:
             cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor_obj)
             amount_float = decimal.Decimal(cut.locale_cpc_amount.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
-            amount = "%.2f" % amount_float
+            amount = "%.2f" % (amount_float * publisher_cut)
             currency = cut.locale_cpc_currency
         except get_model('dashboard', 'Cut').DoesNotExist:
             log.warning("Cut for commission group %s and vendor %s does not exist." %
@@ -289,6 +289,7 @@ def commissions(request):
             _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
             temp['amount'], temp['amount_float'], temp['currency'], temp['earning_type'], temp['type_code'] = \
                 get_store_earnings(request.user, vendor_obj, publisher_cut, normal_cut, standard_from, store)
+
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
