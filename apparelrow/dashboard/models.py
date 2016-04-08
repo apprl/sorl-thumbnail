@@ -11,6 +11,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.contrib.auth import get_user_model
 from jsonfield import JSONField
 from django.utils.functional import cached_property
+from django.core.mail import mail_admins
 
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
@@ -149,6 +150,7 @@ class Group(models.Model):
                                                        'cpc_amount and cpc_currency for Cuts for every vendor, and cut '
                                                        'percentage must be 0 to avoid double earnings.')
 
+
     class Meta:
         verbose_name = 'Commission Group'
 
@@ -185,6 +187,29 @@ class Cut(models.Model):
 
     class Meta:
         ordering = ('group', 'vendor')
+
+    def _calculate_exchange_price(self):
+        """
+        Return price and currency based on the selected currency. If no
+        currency is selected currency language is converted to a currency if
+        possible else APPAREL_BASE_CURRENCY is used.
+        """
+        if not hasattr(self, '_calculated_locale_cost'):
+            to_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
+            rate = currency_exchange(to_currency, self.cpc_currency)
+            self._calculated_locale_cost = (rate * self.cpc_amount, to_currency)
+
+        return self._calculated_locale_cost
+
+    @cached_property
+    def locale_cpc_amount(self):
+        cpc_amount, _ = self._calculate_exchange_price()
+        return cpc_amount
+
+    @cached_property
+    def locale_cpc_currency(self):
+        _, cpc_currency = self._calculate_exchange_price()
+        return cpc_currency
 
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
@@ -330,6 +355,7 @@ AGGREGATED_DATA_TYPES = (
     ('aggregated_from_total', 'Total Aggregation'),
     ('aggregated_from_product', 'Aggregated From Product'),
     ('aggregated_from_publisher', 'Aggregated From Publisher'),
+    ('simple_earning', 'Simple User Earning'),
 )
 
 
@@ -467,8 +493,12 @@ def create_earnings(instance):
             create_referral_earning(instance)
     else:
         user = User.objects.get(id=instance.user_id)
-        UserEarning.objects.create(user=user, user_earning_type='referral_signup_commission',
-            sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
+        UserEarning.objects.\
+            create(user=user, user_earning_type='referral_signup_commission', sale=instance,
+                   amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date,
+                   status=instance.status)
+        mail_admins('Referral Signup bonus created',
+                    'A referral Signup bonus has been created for user %s (%s)' % (user.display_name, user.id))
 
 def create_referral_earning(sale):
     """

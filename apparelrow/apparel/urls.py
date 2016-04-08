@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import TemplateView, RedirectView
 from apparelrow.apparel.search import SearchBaseTemplate
 
+from apparelrow.apparel.views.admin import AdminPostsView
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
@@ -225,6 +226,8 @@ urlpatterns = patterns('',
     url(r'^admin/dashboard/kpi/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard'),
     url(r'^admin/dashboard/stores/$', 'apparelrow.apparel.views.admin.stores', name='admin-stores'),
     url(r'^admin/dashboard/adstores/$', 'apparelrow.apparel.views.admin.ad_stores', name='admin-ad-stores'),
+    url(r'^admin/dashboard/posts/$', AdminPostsView.as_view(), name='admin-posts'),
+    url(r'^admin/dashboard/posts/(?P<year>\d{4})/(?P<month>\d{1,2})/$', AdminPostsView.as_view(), name='admin-posts'),
     url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard_'),
 )
 

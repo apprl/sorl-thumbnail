@@ -787,8 +787,17 @@ class VendorProduct(models.Model):
         currency = None
 
         earning_cut = self.get_earning_cut_for_product(user)
-        if earning_cut:
-            earning_total = decimal.Decimal(0)
+
+        earning_total = decimal.Decimal(0)
+        if user.partner_group and user.partner_group.has_cpc_all_stores:
+            try:
+                cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=self.vendor)
+                product_earning = Decimal(cut.locale_cpc_amount.quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
+                currency = cut.locale_cpc_currency
+            except get_model('dashboard', 'Cut').DoesNotExist:
+                logger.warning("Cut for commission group %s and vendor %s does not exist." %
+                               (user.partner_group, self.vendor.name))
+        elif earning_cut:
             if self.vendor.is_cpc:
                 try:
                     cost_per_click = get_vendor_cost_per_click(self.vendor)

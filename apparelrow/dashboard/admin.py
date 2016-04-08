@@ -61,10 +61,18 @@ class PaymentAdmin(admin.ModelAdmin):
 
 admin.site.register(Payment, PaymentAdmin)
 
+from django.contrib import messages
 class CutAdmin(admin.ModelAdmin):
     form = CutAdminForm
     list_display = ('group', 'vendor', 'cut')
     list_filter = ('group',)
+
+    def save_model(self, request, obj, form, change):
+        if obj.group.has_cpc_all_stores and obj.vendor.is_cpc and obj.cut != 0.0:
+            messages.warning(request, "Vendor is already set as pay per click and publishers are being paid "
+                                      "per click for all stores separately. If cut is not 0.00, it may imply the "
+                                      "creation of double earnings for these publishers.")
+        obj.save()
 
 admin.site.register(Cut, CutAdmin)
 

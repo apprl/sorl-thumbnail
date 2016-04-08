@@ -19,9 +19,8 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserE
 
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
-from apparelrow.dashboard.views import publisher_contact, get_store_earnings
-from apparelrow.apparel.utils import generate_sid, parse_sid
-from apparelrow.apparel.utils import currency_exchange
+from apparelrow.dashboard.views import get_store_earnings
+from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
 from apparelrow.statistics.factories import *
@@ -2918,7 +2917,7 @@ class TestStoreCommission(TransactionTestCase):
         _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
 
         get_model('dashboard', 'ClickCost').objects.create(vendor=vendor, amount=1.5, currency="SEK")
-        amount, amount_float, currency, earning_type, type_code = get_store_earnings(vendor, publisher_cut, normal_cut, standard_from, store)
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
 
         self.assertAlmostEqual(amount, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
         self.assertAlmostEqual(amount_float, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)

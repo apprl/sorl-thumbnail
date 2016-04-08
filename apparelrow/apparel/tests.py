@@ -10,7 +10,7 @@ from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_b
 
 from django.contrib.auth import get_user_model
 from django.test.utils import override_settings
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from django.conf import settings
 
 from django.core.urlresolvers import reverse
@@ -22,6 +22,7 @@ from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
 from apparelrow.apparel.utils import shuffle_user_list
+from apparelrow.apparel.views.admin import AdminPostsView
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
@@ -511,6 +512,19 @@ class TestProductDetails(TestCase):
         self.assertIsNone(earning_product)
         self.assertIsNone(currency)
 
+    def test_product_details_user_has_cpc_earning_all_stores(self):
+        cpc_group = get_model('dashboard', 'Group').objects.create(name='Metro Mode', has_cpc_all_stores=True)
+        cpc_cut = get_model('dashboard', 'Cut').objects.create(vendor=self.vendor, group=cpc_group,
+                                                               cpc_amount=Decimal(3.00), cpc_currency="EUR", cut=0.6)
+        self.user.partner_group = cpc_group
+        self.user.is_partner = True
+        self.user.location = "SE"
+        self.user.save()
+
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
+        self.assertEqual(currency, cpc_cut.locale_cpc_currency)
+        self.assertEqual(earning_product, Decimal(cpc_cut.locale_cpc_amount.quantize(Decimal('.01'), rounding=ROUND_HALF_UP)))
+
     def test_extracting_suffix(self):
         from apparelrow.apparel.views import extract_domain_with_suffix
         domain = "https://account.manning.com/support/index?someparameter=1"
@@ -552,7 +566,7 @@ class TestProfileLikes(TestCase):
 
     def test_product_like_group_partner_group_is_subscriber(self):
         """
-            Tests if an user likes a product and belongs to a partner group and it's not the owner, also the group has
+            Test if a user likes a product and belongs to a partner group and it's not the owner, also the group has
             set is_subscriber to True, which means the owner of that partner group will automatically like that
             product too
         """
@@ -587,7 +601,7 @@ class TestProfileLikes(TestCase):
 
     def test_product_unlike_group_partner_group_is_subscriber(self):
         """
-            Tests if an user unlikes a product and belongs to a partner group and it's not the owner, also the group has
+            Test if a user unlikes a product and belongs to a partner group and it's not the owner, also the group has
             set is_subscriber to True, which means the owner of that partner group will automatically unlike that
             product
         """
@@ -613,7 +627,7 @@ class TestProfileLikes(TestCase):
 
     def test_product_like_no_group_partner(self):
         """
-            Tests if an user likes a product and doesn't belong to a partner group and it's not the owner,
+            Test if a user likes a product and doesn't belong to a partner group and it's not the owner,
             the owner of that partner group will automatically like the product also
         """
         product = Product.objects.create(slug="product_test", static_brand="testbrand", sku="testsku")
@@ -646,7 +660,7 @@ class TestProfileLikes(TestCase):
 
     def test_product_like_group_partner_group_is_not_subscriber(self):
         """
-            Tests if an user likes a product and belongs to a partner group and it's not the owner, also the group has
+            Test if a user likes a product and belongs to a partner group and it's not the owner, also the group has
             set is_subscriber to False, which means the owner of that partner group won't automatically like the product
         """
         product = Product.objects.create(slug="product_test", static_brand="testbrand", sku="testsku")
@@ -742,7 +756,7 @@ class TestEmbeddingShops(TestCase):
         print "Checking cache key for: %s" % nginx_key
         self.assertIsNotNone(cache.get(nginx_key,None))
 
-
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestShortLinks(TestCase):
     def setUp(self):
         self.vendor = get_model('apparel', 'Vendor').objects.create(name='My Store 12')
@@ -1229,6 +1243,53 @@ class TestUtilsLocationWarning(TestCase):
         vendor_markets = ['SE', 'NO', 'US']
         warning_text = get_location_warning_text(vendor_markets, self.user)
         self.assertEqual(warning_text, "")
+
+
+class TestAdminPostsView(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
+        self.user.is_superuser = True
+        self.user.save()
+
+    def test_post_admin_view(self):
+        """
+        AdminPostsView.get() is valid and returns 200 http request code when user is superuser
+        """
+        self.client.login(username='normal_user', password='normal')
+        response = self.client.get(reverse('admin-posts'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_admin_view_context_data(self):
+        """
+        AdminPostsView.get() sets 'month' and 'year' in response context
+        """
+        # Set user as not superuser
+        request = RequestFactory().get(reverse('admin-posts'))
+        request.user = self.user
+        view = AdminPostsView(template_name='hello.html')
+        view.request = request
+
+        context_data = view.get_context_data(month=03, year=2015)
+
+        # Check response
+        self.assertEqual(context_data['month'], 3)
+        self.assertEqual(context_data['year'], 2015)
+
+    def test_post_admin_view_user_is_not_admin(self):
+        """
+        AdminPostsView.get() returns 404 error if user is not a superuser
+        """
+        # Set user as not superuser
+        self.user.is_superuser = False
+        self.user.save()
+
+        # Setup and run request
+        self.client.login(username='normal_user', password='normal')
+        response = self.client.get(reverse('admin-posts'))
+
+        # Check response
+        self.assertEqual(response.status_code, 404)
 
 
 @override_settings(VENDOR_LOCATION_MAPPING={"Vendor SE":["SE"], "Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})

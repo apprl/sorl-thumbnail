@@ -627,6 +627,7 @@ function updateSelected(products) {
             jQuery('<li>').append(
                 jQuery('<a>').attr({id: 'manufacturer-' + id, href: data['href']}).text(data['name'])
             ).prependTo('#selected-manufacturers');
+            jQuery('#manufacturer-' + id).addClass('selected');
         });
         $('#product-manufacturers').closest('.panel').addClass('active');
     }
