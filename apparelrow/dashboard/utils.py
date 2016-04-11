@@ -387,6 +387,10 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
                 temp_dict['details'] = "Clicks to %s" % vendor.name
             else:
                 temp_dict['details'] = map_placement(earning.sale.placement)
+
+        if earning.sale.affiliate in ('cost_per_click', 'cpc_all_stores'):
+            temp_dict['description_text'] = "Clicks to %s" % vendor.name
+
         # General info
         temp_dict['user_earning_type'] = earning.user_earning_type
         temp_dict['user_earning_type_display'] = earning.get_user_earning_type_display()

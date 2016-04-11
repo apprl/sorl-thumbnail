@@ -481,6 +481,11 @@ class DashboardView(TemplateView):
             # Aggregate products per month
             top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query)
 
+            month_commission = sum_data['sale_earnings__sum']
+            show_cpo_earning = True
+            if request.user.partner_group.has_cpc_all_stores and not month_commission or not month_commission > 0 :
+                show_cpo_earning = False
+
             network_earning = 0
             if sum_data['network_sale_earnings__sum'] is not None:
                 network_earning = sum_data['network_sale_earnings__sum'] + sum_data['network_click_earnings__sum']
@@ -488,7 +493,7 @@ class DashboardView(TemplateView):
                             'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
                             'pending_payment': pending_payment, 'total_earned': total_earned,
                             'data_per_day': data_per_day, 'currency': currency,
-                            'month_commission': sum_data['sale_earnings__sum'],
+                            'month_commission': month_commission,
                             'month_sales': sum_data['sales__sum'], 'total_earnings': total_earnings, 'year': year,
                             'month': month, 'month_display': month_display,
                             'total_commission': ('%.2f' % total_aggregated_earnings),
@@ -500,6 +505,7 @@ class DashboardView(TemplateView):
                             'month_clicks': non_paid_clicks,
                             'referral_commission': referral_earnings,
                             'ppc_earnings': ppc_earnings,
+                            'show_cpo_earning': show_cpo_earning
                             }
             return render(request, 'dashboard/new_dashboard.html', context_data)
         return HttpResponseRedirect(reverse('dashboard'))

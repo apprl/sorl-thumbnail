@@ -35,7 +35,7 @@
             var columns_list = [0,];
 
             // User does not earn per click for all stores
-            {% if not request.user.partner_group.has_cpc_all_stores %}
+            {% if show_cpo_earning %}
                 columns_list.push(1);
             {% endif %}
 
@@ -169,7 +169,7 @@
     <section class="container center">
         <p>{% blocktrans %}Earnings: <strong>{{ currency }} {{ total_commission }}{% endblocktrans %}</strong></p>
         </ul>
-        {% if not request.user.partner_group.has_cpc_all_stores %}
+        {% if show_cpo_earning %}
         <ul class="list-horizontal">
             <li>{% blocktrans %}Commission earnings:{% endblocktrans %} <strong>{{ currency }} {% if month_commission %}{{ month_commission }}{% else %}0.00{% endif %}</strong></li>
             <li>{% blocktrans %}Sales:<strong>{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0{% endif %}</strong></li>

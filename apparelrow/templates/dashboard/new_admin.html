@@ -335,13 +335,13 @@
 
                     extra_style = ""
                     if (this.product_image != '')
-                        row.append('<td data-sort="' + this.product_name + '"><a href="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
+                        row.append('<td data-sort="' + this.description_text + '"><a href="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
                     else
                         extra_style = "colspan=2"
-                    row.append('<td ' + extra_style + ' data-sort="' + this.product_name + '">' + this.product_name + '</td>');
-                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.from_user_link +'"><img src="' + this.from_user_avatar + '"></a></td>');
-                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.from_user_link +'">' + this.from_user_name + '</a></td>');
-    
+                    row.append('<td ' + extra_style + ' data-sort="' + this.description_text + '">' + this.description_text + '</td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link +'"><img src="' + this.from_user_avatar + '"></a></td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link +'">' + this.from_user_name + '</a></td>');
+
                     // Details
                     row.append('<td>' + this.details + '</td>');
 
