@@ -182,7 +182,8 @@
                             </td>
                             <td class="col-md-3 hidden-xs">
                                 <a href="{{ publisher.user_link }}">{{ publisher.user_name }} </a>
-                                <a href="{% url 'dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
+                                {% comment %}TODO add month and year if applies{% endcomment %}
+                                <a href="{% url 'dashboard-date' year month %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
                                 {{ publisher.total_clicks }}
@@ -254,7 +255,7 @@
         <section class="row">
             <div class="col-lg-12">
                 <h2>{% trans "Latest earnings" %} {{ month_display }} {{ year }}</h2>
-                <table class="sortable table" id="all-earnings">
+                <table class="sortable table text-left" id="all-earnings">
                     <thead>
                         <tr>
                             <th>{% trans "Date" %}</th>
@@ -331,24 +332,16 @@
                     // Date
                     row.append('<td data-sort="' + this.date_timestamp + '">' + this.date_string + '</td>');
                     row.append('<td data-sort="' + this.sale_id + '">' + this.sale_id + '</td>');
-                    row.append('<td data-sort="' + this.product_name + '"><a src="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
-                    row.append('<td data-sort="' + this.product_name + '">' + this.product_name + '</td>');
 
-                    // Description
-                    if (this.description_image != '') {
-                        if (this.description_link == '') {
-                            row.append('<td><img src="' + this.description_image + '"></td>');
-                        } else {
-                            row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
-                        }
-                        row.append('<td>' + this.description_text + '</td>');
-                    } else {
-                        if (this.description_link == '') {
-                            row.append('<td colspan="2">' + this.description_text + '</td>');
-                        } else {
-                            row.append('<td colspan="2"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
-                        }
-                    }
+                    extra_style = ""
+                    if (this.product_image != '')
+                        row.append('<td data-sort="' + this.product_name + '"><a href="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
+                    else
+                        extra_style = "colspan=2"
+                    row.append('<td ' + extra_style + ' data-sort="' + this.product_name + '">' + this.product_name + '</td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.from_user_link +'"><img src="' + this.from_user_avatar + '"></a></td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.from_user_link +'">' + this.from_user_name + '</a></td>');
+    
                     // Details
                     row.append('<td>' + this.details + '</td>');
 

@@ -379,10 +379,14 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
             temp_dict['description_text'] = product_name
             temp_dict['description_link'] = product_link
             temp_dict['description_image'] = product_image
-        elif earning.user_earning_type in ('publisher_network_tribute', 'publisher_network_click_tribute') :
+        elif earning.user_earning_type in ('publisher_network_tribute', 'publisher_network_click_tribute',
+                                           'publisher_network_click_tribute_all_stores') :
             temp_dict['description_image'] = earning.from_user.avatar
             temp_dict['description_text'] = earning.from_user.name if earning.from_user.name else earning.from_user.slug
-
+            if vendor.is_cpc or (earning.from_user and earning.from_user.partner_group.has_cpc_all_stores):
+                temp_dict['details'] = "Clicks to %s" % vendor.name
+            else:
+                temp_dict['details'] = map_placement(earning.sale.placement)
         # General info
         temp_dict['user_earning_type'] = earning.user_earning_type
         temp_dict['user_earning_type_display'] = earning.get_user_earning_type_display()
