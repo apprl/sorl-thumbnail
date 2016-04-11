@@ -255,13 +255,13 @@ def get_clicks_amount(vendor, start_date_query, end_date_query):
     Return total amount in EUR for a Vendor in given date range
     """
     total_amount = 0
-    currency = None
-    for item in get_model('dashboard', 'Sale').objects.filter(vendor=vendor,
-                                                              sale_date__range=[start_date_query, end_date_query],
-                                                              type=get_model('dashboard', 'Sale').COST_PER_CLICK):
-        total_amount = item.original_amount
-        if not currency and item.original_currency:
-            currency = item.original_currency
+    currency = "EUR"
+    sales = get_model('dashboard', 'Sale').objects.filter(vendor=vendor,
+                                                          sale_date__range=[start_date_query, end_date_query],
+                                                          type=get_model('dashboard', 'Sale').COST_PER_CLICK,
+                                                          affiliate="cost_per_click")
+    for item in sales:
+        total_amount += item.converted_amount
     return total_amount, currency
 
 def get_number_clicks(vendor, start_date_query, end_date_query):

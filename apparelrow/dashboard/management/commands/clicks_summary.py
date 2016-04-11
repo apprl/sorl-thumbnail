@@ -29,7 +29,9 @@ class Command(BaseCommand):
             store_id = store.identifier
         except get_model('advertiser', 'Store').DoesNotExist:
             store_id = None
-        if store_id:
+
+        # Creates transaction only for those sales who are CPC, but not for those who are not CPC for all vendors
+        if store_id and row['affiliate'] == "cost_per_click":
             defaults = {
                 'ip_address': '127.0.0.1',
                 'status': Transaction.ACCEPTED,
