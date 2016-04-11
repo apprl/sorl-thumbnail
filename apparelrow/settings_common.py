@@ -119,7 +119,7 @@ VENDOR_LOCATION_MAPPING = {
     "Soft Goat": ["FI", "SE", "NO", "DK"],
     "Eleven": ["SE"],
     "Happy Socks": ["SE"],
-    "Hedvigs Showroom": ["SE"],
+    "Hedvig Showroom": ["SE"],
     "Heelow": ["SE"],
     "Henry Kole": ["SE", "DK", "NO", "FI"],
     "Elevenfiftynine": ["SE"],
