@@ -382,10 +382,11 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
             temp_dict['vendor'] = vendor.id
             temp_dict['sale_id'] = sale.id
             temp_dict['sale_vendor'] = vendor.name
-            if vendor.is_cpc or (earning.user and earning.user.partner_group.has_cpc_all_stores):
+            if earning.sale.affiliate in ('cost_per_click', 'cpc_all_stores'):
                 temp_dict['details'] = "Clicks to %s" % vendor.name
             else:
                 temp_dict['details'] = map_placement(earning.sale.placement)
+
         if earning.user_earning_type == "referral_sale_commission":
             temp_dict['details'] = "Referral sale by %s" % earning.from_user
             temp_dict['description_text'] = product_name
@@ -401,7 +402,7 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
                                            'publisher_network_click_tribute_all_stores') :
             temp_dict['description_image'] = earning.from_user.avatar
             temp_dict['description_text'] = earning.from_user.name if earning.from_user.name else earning.from_user.slug
-            if vendor.is_cpc or (earning.from_user and earning.from_user.partner_group.has_cpc_all_stores):
+            if earning.sale.affiliate in ('cost_per_click', 'cpc_all_stores'):
                 temp_dict['details'] = "Clicks to %s" % vendor.name
             else:
                 temp_dict['details'] = map_placement(earning.sale.placement)
