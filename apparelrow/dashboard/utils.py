@@ -168,16 +168,26 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
         try:
             user = get_user_model().objects.get(id=user_id)
             values.append(user_id)
+            values.extend([user_id, vendor_name, start_date_query, end_date_query])
             cursor.execute(
-                """SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
+                """(SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
                    FROM statistics_productstat PS, profile_user U, apparel_vendor V
                    WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
                    AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s AND U.id = %s
-                   GROUP BY PS.user_id, PS.vendor, PS.product ORDER BY count(PS.id) DESC""", values)
+                   GROUP BY PS.user_id, PS.vendor, PS.product)
+                   UNION
+                   (SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
+                   FROM statistics_productstat PS, apparel_vendor V, profile_user U, dashboard_group G
+                   WHERE PS.user_id = U.id AND U.partner_group_id = G.id AND G.has_cpc_all_stores = True
+                   AND U.id = %s AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
+                   AND PS.created BETWEEN %s AND %s
+                   GROUP BY PS.user_id, PS.vendor, PS.product)
+                   ORDER BY clicks DESC
+                   """, values)
         except get_user_model().DoesNotExist:
             log.warn("User %s does not exist" % user)
     else:
-        values.extend([vendor_name, start_date_query, end_date_query])
+        values.extend([vendor_name, start_date_query, end_date_query, vendor_name, start_date_query, end_date_query])
         cursor.execute(
             """(SELECT PS.vendor, PS.product, count(PS.id) as clicks
                FROM statistics_productstat PS, profile_user U, apparel_vendor V
@@ -189,6 +199,13 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
                FROM statistics_productstat PS, apparel_vendor V
                WHERE V.name = %s AND PS.vendor = V.name
                AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               UNION
+               (SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V, profile_user U, dashboard_group G
+               WHERE PS.user_id = U.id AND U.partner_group = G.id AND G.has_cpc_all_stores = True
+               AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
+               AND PS.created BETWEEN %s AND %s
                GROUP BY PS.vendor, PS.product)
                ORDER BY clicks DESC
                """, values)
@@ -347,7 +364,7 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
             temp_dict['vendor'] = vendor.id
             temp_dict['sale_id'] = sale.id
             temp_dict['sale_vendor'] = vendor.name
-            if vendor.is_cpc:
+            if vendor.is_cpc or (earning.user and earning.user.partner_group.has_cpc_all_stores):
                 temp_dict['details'] = "Clicks to %s" % vendor.name
             else:
                 temp_dict['details'] = map_placement(earning.sale.placement)
