@@ -403,6 +403,7 @@ def clicks_detail(request):
         user_id = request.GET.get('user_id', None)
         vendor = request.GET.get('vendor', None)
         currency = request.GET.get('currency', 'EUR')
+        is_store = request.GET.get('is_store', False)
         num_clicks = request.GET.get('clicks', 0)
         try:
             amount_for_clicks = request.GET.get('amount', "0").replace(',', '.')
@@ -412,7 +413,7 @@ def clicks_detail(request):
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
-            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
+            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id, is_store)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
 

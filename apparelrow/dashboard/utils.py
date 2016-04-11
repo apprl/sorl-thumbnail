@@ -152,7 +152,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
 
     return user, normal_cut, referral_cut, publisher_cut
 
-def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
+def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None, is_store=False):
     """
     Return a sorted list with detailed information from click earnings per product
     for a given user, vendor and day
@@ -186,6 +186,22 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
                    """, values)
         except get_user_model().DoesNotExist:
             log.warn("User %s does not exist" % user)
+    elif is_store:
+        values.extend([vendor_name, start_date_query, end_date_query, ])
+        cursor.execute(
+            """(SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, profile_user U, apparel_vendor V
+               WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
+               AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               UNION
+               (SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V
+               WHERE V.name = %s AND PS.vendor = V.name
+               AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               ORDER BY clicks DESC
+               """, values)
     else:
         values.extend([vendor_name, start_date_query, end_date_query, vendor_name, start_date_query, end_date_query])
         cursor.execute(
