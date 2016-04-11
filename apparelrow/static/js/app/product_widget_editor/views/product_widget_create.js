@@ -151,11 +151,11 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
                 $('.previous, .next').toggle(false);
             }
         } else {
-            if (this.model.components.length > this.num_multi) {
+            if (this.model.components.length > 0) {
                 var childwidth = $ul.parent().width()/this.num_multi;
                 this.allownext = Math.round(($ul.width()+$ul.position().left)/childwidth) > this.num_multi;
                 this.allowprev = Math.round($ul.position().left) != 0;
-                 $('.previous, .next').toggle(true);
+                $('.previous, .next').toggle(true);
             } else {
                 $('.previous, .next').toggle(false);
             }
