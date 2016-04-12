@@ -10,8 +10,9 @@ class Command(BaseCommand):
         product_stats = ProductStat.objects.all()
 
         for row in product_stats:
-            referer_array = row.referer.split('\n')
+            if row.referer:
+                referer_array = row.referer.split('\n')
 
-            if len(referer_array) > 0:
-                row.referer = referer_array[0]
-                row.save()
+                if len(referer_array) > 0:
+                    row.referer = referer_array[0]
+                    row.save()

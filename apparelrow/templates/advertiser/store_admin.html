@@ -273,11 +273,12 @@
         var date_display = $(this).data("date_display");
         var amount = $(this).data("amount");
         var clicks = $(this).data("clicks");
+        var is_store = true;
         var currency = 'original';
         $.ajax({
             type: "get",
             url: "{% url 'clicks-detail' %}",
-            data: { user_id: user_id, vendor : vendor, date : date, currency: currency, amount: amount, clicks: clicks},
+            data: { user_id: user_id, vendor : vendor, date : date, currency: currency, amount: amount, clicks: clicks, is_store: is_store,},
             success: function (response) {
                 var json = jQuery.parseJSON(response);
                 load_detailed_data_clicks(json, date_display, vendor, "{{ currency }}", true);

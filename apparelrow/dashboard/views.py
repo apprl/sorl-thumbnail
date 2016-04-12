@@ -164,7 +164,7 @@ class ReferralView(TemplateView):
     def get(self,request, *args, **kwargs):
 
         if request.user.is_authenticated() and all([request.user.is_partner, request.user.referral_partner]):
-            context = self.get_context_data()
+            context = self.get_context_data(**kwargs)
             return render(request, self.template_name, context)
         else:
             return HttpResponseRedirect(reverse('index-publisher'))
@@ -238,7 +238,7 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
         try:
             cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor_obj)
             amount_float = decimal.Decimal(cut.locale_cpc_amount.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
-            amount = "%.2f" % amount_float
+            amount = "%.2f" % (amount_float * publisher_cut)
             currency = cut.locale_cpc_currency
         except get_model('dashboard', 'Cut').DoesNotExist:
             log.warning("Cut for commission group %s and vendor %s does not exist." %
@@ -289,6 +289,7 @@ def commissions(request):
             _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
             temp['amount'], temp['amount_float'], temp['currency'], temp['earning_type'], temp['type_code'] = \
                 get_store_earnings(request.user, vendor_obj, publisher_cut, normal_cut, standard_from, store)
+
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
@@ -402,6 +403,7 @@ def clicks_detail(request):
         user_id = request.GET.get('user_id', None)
         vendor = request.GET.get('vendor', None)
         currency = request.GET.get('currency', 'EUR')
+        is_store = request.GET.get('is_store', False)
         num_clicks = request.GET.get('clicks', 0)
         try:
             amount_for_clicks = request.GET.get('amount', "0").replace(',', '.')
@@ -411,7 +413,7 @@ def clicks_detail(request):
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
-            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
+            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id, is_store)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
 
@@ -480,6 +482,11 @@ class DashboardView(TemplateView):
             # Aggregate products per month
             top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query)
 
+            month_commission = sum_data['sale_earnings__sum']
+            show_cpo_earning = True
+            if request.user.partner_group.has_cpc_all_stores and not month_commission or not month_commission > 0 :
+                show_cpo_earning = False
+
             network_earning = 0
             if sum_data['network_sale_earnings__sum'] is not None:
                 network_earning = sum_data['network_sale_earnings__sum'] + sum_data['network_click_earnings__sum']
@@ -487,7 +494,7 @@ class DashboardView(TemplateView):
                             'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
                             'pending_payment': pending_payment, 'total_earned': total_earned,
                             'data_per_day': data_per_day, 'currency': currency,
-                            'month_commission': sum_data['sale_earnings__sum'],
+                            'month_commission': month_commission,
                             'month_sales': sum_data['sales__sum'], 'total_earnings': total_earnings, 'year': year,
                             'month': month, 'month_display': month_display,
                             'total_commission': ('%.2f' % total_aggregated_earnings),
@@ -499,6 +506,7 @@ class DashboardView(TemplateView):
                             'month_clicks': non_paid_clicks,
                             'referral_commission': referral_earnings,
                             'ppc_earnings': ppc_earnings,
+                            'show_cpo_earning': show_cpo_earning
                             }
             return render(request, 'dashboard/new_dashboard.html', context_data)
         return HttpResponseRedirect(reverse('dashboard'))
