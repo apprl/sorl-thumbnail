@@ -31,48 +31,40 @@
             var right = data.getColumnRange(2);
             var view = new google.visualization.DataView(data);
 
-            /* TODO Maybe this could be written better */
-            {% if request.user.referral_partner %}
-                {% if is_owner %}
-                var series = {
-                    0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#ff9900'},
-                    2: {targetAxisIndex: 0, color: '#ababab'},
-                    3: {targetAxisIndex: 1, color: '#dc3912'},
-                    4: {targetAxisIndex: 0, color: '#2c2c2c'}
-                };
-                {% else %}
-                var series = {
-                    0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#ff9900'},
-                    2: {targetAxisIndex: 0, color: '#ababab'},
-                    3: {targetAxisIndex: 1, color: '#dc3912'}
-                };
-                view.setColumns([0, 1, 2, 3, 4]);
-                {% endif %}
-            {% else %}
-                {% if is_owner %}
-                var series = {
-                    0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#ababab'},
-                    2: {targetAxisIndex: 1, color: '#dc3912'},
-                    3: {targetAxisIndex: 0, color: '#2c2c2c'}
-                };
-                view.setColumns([0, 1, 3, 4, 5]);
-                {% else %}
-                var series = {
-                    0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#ababab'},
-                    2: {targetAxisIndex: 1, color: '#dc3912'}
-                };
-                view.setColumns([0, 1, 3, 4]);
-                {% endif %}
+            // Append date
+            var columns_list = [0,];
+
+            // User does not earn per click for all stores
+            {% if show_cpo_earning %}
+                columns_list.push(1);
             {% endif %}
+
+            // User earns referral earnings
+            {% if request.user.referral_partner %}
+                columns_list.push(2);
+            {% endif %}
+
+            // Earnings per clicks and clicks
+            columns_list.push(3, 4);
+
+            // User is owner of a publisher network so it has network earnings
+            {% if is_owner %}
+                columns_list.push(5);
+            {% endif %}
+            var series = {
+                0: {targetAxisIndex: 0},
+                1: {targetAxisIndex: 0, color: '#ff9900'},
+                2: {targetAxisIndex: 0, color: '#ababab'},
+                3: {targetAxisIndex: 1, color: '#dc3912'},
+                4: {targetAxisIndex: 0, color: '#2c2c2c'}
+            };
+            view.setColumns(columns_list);
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
                 containerId: 'graph',
                 dataTable: view,
                 options: {
+                    legend:'top',
                     vAxes: {
                         0: {
                             minValue: 0,
@@ -177,11 +169,13 @@
     <section class="container center">
         <p>{% blocktrans %}Earnings: <strong>{{ currency }} {{ total_commission }}{% endblocktrans %}</strong></p>
         </ul>
+        {% if show_cpo_earning %}
         <ul class="list-horizontal">
             <li>{% blocktrans %}Commission earnings:{% endblocktrans %} <strong>{{ currency }} {% if month_commission %}{{ month_commission }}{% else %}0.00{% endif %}</strong></li>
             <li>{% blocktrans %}Sales:<strong>{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0{% endif %}</strong></li>
             <li>{% blocktrans %}Clicks: <strong>{{ month_clicks }}{% endblocktrans %}</strong></li>
         </ul>
+        {% endif %}
         {% if request.user.referral_partner %}
         <ul class="list-horizontal">
             <li>{% blocktrans %}Referral earnings: <strong>{{ currency }} {{ referral_commission }}{% endblocktrans %}</strong></li>
@@ -353,46 +347,51 @@
         table.html("");
         if (response.length > 0) {
             $.each(response, function() {
-                var row = $('<tr/>');
-                // Date
-                row.append('<td>' + this.date_string + '</td>');
+                if (this.amount > 0) {
+                    var row = $('<tr/>');
+                    // Date
+                    row.append('<td>' + this.date_string + '</td>');
 
-                // Description
-                if (this.description_image != '') {
-                    if (this.description_link == '') {
-                        row.append('<td><img src="' + this.description_image + '"></td>');
+                    // Description
+                    if (this.description_image != '') {
+                        if (this.description_link == '') {
+                            row.append('<td><img src="' + this.description_image + '"></td>');
+                        } else {
+                            row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
+                        }
+                        row.append('<td style="text-align:left;">' + this.description_text + '</td>');
                     } else {
-                        row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
+                        if (this.description_link == '') {
+                            row.append('<td colspan="2" style="text-align:left;">' + this.description_text + '</td>');
+                        } else {
+                            row.append('<td colspan="2" style="text-align:left;"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
+                        }
                     }
-                    row.append('<td style="text-align:left;">' + this.description_text + '</td>');
-                } else {
-                    if (this.description_link == '') {
-                        row.append('<td colspan="2" style="text-align:left;">' + this.description_text + '</td>');
-                    } else {
-                        row.append('<td colspan="2" style="text-align:left;"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
-                    }
-                }
-                // Details
-                row.append('<td>' + this.details + '</td>');
+                    // Details
+                    row.append('<td>' + this.details + '</td>');
 
-                // Sale value if CPO, Show clicks details button if CPC
-                if (this.user_earning_type == "publisher_sale_click_commission"
-                        || this.user_earning_type == "publisher_sale_click_tribute") {
-                    row.append('<td>' +
-                            '<a class="btn btn-default click-detail" ' +
-                            'data-user="' + this.user_id + '" ' +
-                            'data-vendor="' + this.sale_vendor + '" ' +
-                            'data-date="' + this.date_timestamp + '" ' +
-                            'data-date_display="' + this.date_string + '" ' +
-                            'data-amount="' + this.amount + '" ' +
-                            'data-clicks="' + this.clicks + '">' +
-                            'See details</a></td>');
-                } else {
-                    row.append('<td data-sort="' + this.sale_amount + '" >' + currency +"  " + this.sale_amount + '</td>');
+                    // Sale value if CPO, Show clicks details button if CPC
+                    if (this.user_earning_type == "publisher_sale_click_commission" ||
+                            this.user_earning_type == "publisher_sale_click_tribute" ||
+                            this.user_earning_type == "publisher_network_click_tribute_all_stores" ||
+                            this.user_earning_type == "publisher_sale_click_commission_all_stores"
+                    ) {
+                        row.append('<td>' +
+                                '<a class="btn btn-default click-detail" ' +
+                                'data-user="' + this.user_id + '" ' +
+                                'data-vendor="' + this.sale_vendor + '" ' +
+                                'data-date="' + this.date_timestamp + '" ' +
+                                'data-date_display="' + this.date_string + '" ' +
+                                'data-amount="' + this.amount + '" ' +
+                                'data-clicks="' + this.clicks + '">' +
+                                'See details</a></td>');
+                    } else {
+                        row.append('<td data-sort="' + this.sale_amount + '" >' + currency +"  " + this.sale_amount + '</td>');
+                    }
+                    // Earning
+                    row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
+                    table.append(row);
                 }
-                // Earning
-                row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
-                table.append(row);
             });
         } else {
             var row = $('<tr/>');

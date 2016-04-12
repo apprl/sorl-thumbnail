@@ -344,12 +344,16 @@ class ProductDetailView(DetailView):
         if product.manufacturer and product.manufacturer.user:
             product_brand_full_url = request.build_absolute_uri(product.manufacturer.user.get_absolute_url())
 
+        # More like this body
         mlt_body = u'{product_name} {manufacturer_name} {colors} {categories}'.format(product_name=product.product_name,
                                                                                      manufacturer_name=product.manufacturer.name,
                                                                                      colors=u", ".join(product.colors),
                                                                                      categories=u", ".join([x.name for x in product.categories]))
+        # More alternatives
+        # alternative = get_product_alternative(product)
         alternative, alternative_url = more_alternatives(product, get_location(request), 9)
 
+        # Referral SID
         referral_sid = request.GET.get('sid', 0)
         try:
             sid = int(referral_sid)
@@ -359,27 +363,13 @@ class ProductDetailView(DetailView):
         # Cost per click
         default_vendor = product.default_vendor
 
-        # Get the store commission
-        earning_cut = default_vendor.get_product_earning(request.user)
-        cost_per_click = 0
-        if default_vendor and default_vendor.vendor.is_cpc:
-            user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, default_vendor.vendor)
-            click_cut = cut * publisher_cut
-            earning_cut = click_cut
-            try:
-                cost_per_click = get_model('dashboard', 'ClickCost').objects.get(vendor=default_vendor.vendor)
-            except get_model('dashboard', 'ClickCost').DoesNotExist:
-                logger.warning("ClickCost not defined for default vendor %s of the product %s" % (
-                    product.default_vendor, product.product_name))
-
         # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
         vendor_markets = None
         if default_vendor:
             vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
 
             # Calculate cost per click and earning cut
-            cost_per_click = get_vendor_cost_per_click(default_vendor.vendor)
-            earning_cut = default_vendor.get_earning_cut_for_product(request.user)
+            product_earning, currency = product.default_vendor.get_product_earning(request.user)
 
         availability_text = get_availability_text(vendor_markets)
         warning_text = get_location_warning_text(vendor_markets, request.user, "product")
@@ -399,8 +389,8 @@ class ProductDetailView(DetailView):
             'referral_sid': referral_sid,
             'alternative': alternative,
             'alternative_url': alternative_url,
-            'earning_cut': earning_cut,
-            'cost_per_click': cost_per_click,
+            'product_earning': product_earning,
+            'currency': currency,
             'has_share_image': True,
             'availability_text': availability_text,
             'warning_text': warning_text

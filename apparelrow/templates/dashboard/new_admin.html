@@ -182,7 +182,8 @@
                             </td>
                             <td class="col-md-3 hidden-xs">
                                 <a href="{{ publisher.user_link }}">{{ publisher.user_name }} </a>
-                                <a href="{% url 'dashboard' %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
+                                {% comment %}TODO add month and year if applies{% endcomment %}
+                                <a href="{% url 'dashboard-date' year month %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
                                 {{ publisher.total_clicks }}
@@ -254,7 +255,7 @@
         <section class="row">
             <div class="col-lg-12">
                 <h2>{% trans "Latest earnings" %} {{ month_display }} {{ year }}</h2>
-                <table class="sortable table" id="all-earnings">
+                <table class="sortable table text-left" id="all-earnings">
                     <thead>
                         <tr>
                             <th>{% trans "Date" %}</th>
@@ -275,7 +276,7 @@
                     </tfoot>
                     <tbody id="body-earnings">
                         <tr>
-                            <td colspan="6">
+                            <td class="center" colspan="9">
                                 Loading earnings <img align=center id="loading-img" src="{% static "images/loading_white.gif" %}"/>
                             </td>
                         </tr>
@@ -285,7 +286,7 @@
         </section>
     </div>
 <script>
-    $(".click-detail").click(function() {
+     $("#all-earnings").on("click", "a", function() {
         var user_id = $(this).data("user");
         var vendor = $(this).data("vendor");
         var date = $(this).data("date");
@@ -326,49 +327,46 @@
         table.html("");
         if (response.length > 0) {
             $.each(response, function() {
-                var row = $('<tr/>');
-                // Date
-                row.append('<td data-sort="' + this.date_timestamp + '">' + this.date_string + '</td>');
-                row.append('<td data-sort="' + this.sale_id + '">' + this.sale_id + '</td>');
-                row.append('<td data-sort="' + this.product_name + '"><a src="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
-                row.append('<td data-sort="' + this.product_name + '">' + this.product_name + '</td>');
+                if (this.amount > 0) {
+                    var row = $('<tr/>');
+                    // Date
+                    row.append('<td data-sort="' + this.date_timestamp + '">' + this.date_string + '</td>');
+                    row.append('<td data-sort="' + this.sale_id + '">' + this.sale_id + '</td>');
 
-                // Description
-                if (this.description_image != '') {
-                    if (this.description_link == '') {
-                        row.append('<td><img src="' + this.description_image + '"></td>');
-                    } else {
-                        row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
-                    }
-                    row.append('<td>' + this.description_text + '</td>');
-                } else {
-                    if (this.description_link == '') {
-                        row.append('<td colspan="2">' + this.description_text + '</td>');
-                    } else {
-                        row.append('<td colspan="2"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
-                    }
-                }
-                // Details
-                row.append('<td>' + this.details + '</td>');
+                    extra_style = ""
+                    if (this.product_image != '')
+                        row.append('<td data-sort="' + this.description_text + '"><a href="' + this.product_link +'"><img src="' + this.product_image + '"></a></td>');
+                    else
+                        extra_style = "colspan=2"
+                    row.append('<td ' + extra_style + ' data-sort="' + this.description_text + '">' + this.description_text + '</td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link +'"><img src="' + this.from_user_avatar + '"></a></td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link +'">' + this.from_user_name + '</a></td>');
 
-                // Sale value if CPO, Show clicks details button if CPC
-                if (this.user_earning_type == "publisher_sale_click_commission"
-                        || this.user_earning_type == "publisher_sale_click_tribute") {
-                    row.append('<td>' +
-                            '<a class="btn btn-default click-detail" ' +
-                            'data-user="' + this.user_id + '" ' +
-                            'data-vendor="' + this.sale_vendor + '" ' +
-                            'data-date="' + this.date_timestamp + '" ' +
-                            'data-date_display="' + this.date_string + '" ' +
-                            'data-amount="' + this.amount + '" ' +
-                            'data-clicks="' + this.clicks + '">' +
-                            'See details</a></td>');
-                } else {
-                    row.append('<td data-sort="' + this.sale_amount + '">' + currency +"  " + this.sale_amount + '</td>');
+                    // Details
+                    row.append('<td>' + this.details + '</td>');
+
+                    // Sale value if CPO, Show clicks details button if CPC
+                    if (this.user_earning_type == "publisher_sale_click_commission" ||
+                            this.user_earning_type == "publisher_sale_click_tribute" ||
+                            this.user_earning_type == "publisher_network_click_tribute_all_stores" ||
+                            this.user_earning_type == "publisher_sale_click_commission_all_stores"
+                    ) {
+                        row.append('<td>' +
+                                '<a class="btn btn-default click-detail" ' +
+                                'data-user="' + this.user_id + '" ' +
+                                'data-vendor="' + this.sale_vendor + '" ' +
+                                'data-date="' + this.date_timestamp + '" ' +
+                                'data-date_display="' + this.date_string + '" ' +
+                                'data-amount="' + this.amount + '" ' +
+                                'data-clicks="' + this.clicks + '">' +
+                                'See details</a></td>');
+                    } else {
+                        row.append('<td data-sort="' + this.sale_amount + '">' + currency +"  " + this.sale_amount + '</td>');
+                    }
+                    // Earning
+                    row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
+                    table.append(row);
                 }
-                // Earning
-                row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
-                table.append(row);
             });
         } else {
             var row = $('<tr/>');
@@ -377,6 +375,7 @@
         }
         $('#loading-img').hide();
     });
+
 </script>
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
 {% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products month=month_display year=year is_admin=True currency=currency only %}

@@ -152,7 +152,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
 
     return user, normal_cut, referral_cut, publisher_cut
 
-def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
+def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None, is_store=False):
     """
     Return a sorted list with detailed information from click earnings per product
     for a given user, vendor and day
@@ -168,16 +168,26 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
         try:
             user = get_user_model().objects.get(id=user_id)
             values.append(user_id)
+            values.extend([user_id, vendor_name, start_date_query, end_date_query])
             cursor.execute(
-                """SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
+                """(SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
                    FROM statistics_productstat PS, profile_user U, apparel_vendor V
                    WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
                    AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s AND U.id = %s
-                   GROUP BY PS.user_id, PS.vendor, PS.product ORDER BY count(PS.id) DESC""", values)
+                   GROUP BY PS.user_id, PS.vendor, PS.product)
+                   UNION
+                   (SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
+                   FROM statistics_productstat PS, apparel_vendor V, profile_user U, dashboard_group G
+                   WHERE PS.user_id = U.id AND U.partner_group_id = G.id AND G.has_cpc_all_stores = True
+                   AND U.id = %s AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
+                   AND PS.created BETWEEN %s AND %s
+                   GROUP BY PS.user_id, PS.vendor, PS.product)
+                   ORDER BY clicks DESC
+                   """, values)
         except get_user_model().DoesNotExist:
             log.warn("User %s does not exist" % user)
-    else:
-        values.extend([vendor_name, start_date_query, end_date_query])
+    elif is_store:
+        values.extend([vendor_name, start_date_query, end_date_query, ])
         cursor.execute(
             """(SELECT PS.vendor, PS.product, count(PS.id) as clicks
                FROM statistics_productstat PS, profile_user U, apparel_vendor V
@@ -189,6 +199,29 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None):
                FROM statistics_productstat PS, apparel_vendor V
                WHERE V.name = %s AND PS.vendor = V.name
                AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               ORDER BY clicks DESC
+               """, values)
+    else:
+        values.extend([vendor_name, start_date_query, end_date_query, vendor_name, start_date_query, end_date_query])
+        cursor.execute(
+            """(SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, profile_user U, apparel_vendor V
+               WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
+               AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               UNION
+               (SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V
+               WHERE V.name = %s AND PS.vendor = V.name
+               AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.product)
+               UNION
+               (SELECT PS.vendor, PS.product, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V, profile_user U, dashboard_group G
+               WHERE PS.user_id = U.id AND U.partner_group = G.id AND G.has_cpc_all_stores = True
+               AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
+               AND PS.created BETWEEN %s AND %s
                GROUP BY PS.vendor, PS.product)
                ORDER BY clicks DESC
                """, values)
@@ -238,11 +271,13 @@ def get_clicks_amount(vendor, start_date_query, end_date_query):
     Return total amount in EUR for a Vendor in given date range
     """
     total_amount = 0
+
     currency = None
     for item in get_model('dashboard', 'Sale').objects.filter(vendor=vendor,
                                                               sale_date__range=[start_date_query, end_date_query],
-                                                              type=get_model('dashboard', 'Sale').COST_PER_CLICK):
-        total_amount = item.original_amount
+                                                              type=get_model('dashboard', 'Sale').COST_PER_CLICK,
+                                                              affiliate="cost_per_click"):
+        total_amount += item.original_amount
         if not currency and item.original_currency:
             currency = item.original_currency
     return total_amount, currency
@@ -347,10 +382,11 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
             temp_dict['vendor'] = vendor.id
             temp_dict['sale_id'] = sale.id
             temp_dict['sale_vendor'] = vendor.name
-            if vendor.is_cpc:
+            if earning.sale.affiliate in ('cost_per_click', 'cpc_all_stores'):
                 temp_dict['details'] = "Clicks to %s" % vendor.name
             else:
                 temp_dict['details'] = map_placement(earning.sale.placement)
+
         if earning.user_earning_type == "referral_sale_commission":
             temp_dict['details'] = "Referral sale by %s" % earning.from_user
             temp_dict['description_text'] = product_name
@@ -362,9 +398,17 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
             temp_dict['description_text'] = product_name
             temp_dict['description_link'] = product_link
             temp_dict['description_image'] = product_image
-        elif earning.user_earning_type in ('publisher_network_tribute', 'publisher_network_click_tribute') :
+        elif earning.user_earning_type in ('publisher_network_tribute', 'publisher_network_click_tribute',
+                                           'publisher_network_click_tribute_all_stores') :
             temp_dict['description_image'] = earning.from_user.avatar
             temp_dict['description_text'] = earning.from_user.name if earning.from_user.name else earning.from_user.slug
+            if earning.sale.affiliate in ('cost_per_click', 'cpc_all_stores'):
+                temp_dict['details'] = "Clicks to %s" % vendor.name
+            else:
+                temp_dict['details'] = map_placement(earning.sale.placement)
+
+        if earning.sale.affiliate in ('cost_per_click', 'cpc_all_stores'):
+            temp_dict['description_text'] = "Clicks to %s" % vendor.name
 
         # General info
         temp_dict['user_earning_type'] = earning.user_earning_type
