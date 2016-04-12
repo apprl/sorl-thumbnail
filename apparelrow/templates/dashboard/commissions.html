@@ -53,6 +53,10 @@
     </tbody>
 </table>
 
+{% if not request.user.partner_group.has_cpc_all_stores %}
+    <p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
+{% endif %}
+
 <div class="modal fade" id="modal_store_link" tabindex="-1"></div>
 <script type="text/javascript">
     $(document).ready(function() {
