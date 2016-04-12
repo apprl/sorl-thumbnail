@@ -1265,6 +1265,20 @@ class TestUserEarnings(TransactionTestCase):
         for earning in earnings:
             self.assertEqual(earning.status, get_model('dashboard', 'Sale').CONFIRMED)
 
+    def get_cut_exception(self):
+        cut_user = UserFactory.create()
+        rules = [{"sid": cut_user.id, "cut": 0.97, "tribute": 0}]
+        cut_exception, publisher_cut_exception = parse_rules_exception(rules, cut_user.id)
+        self.assertEqual(cut_exception, 0.97)
+        self.assertEqual(publisher_cut_exception, 1)
+
+    def get_cut_exception_no_rules_exception(self):
+        cut_user = UserFactory.create()
+        rules = []
+        cut_exception, publisher_cut_exception = parse_rules_exception(rules, cut_user.id)
+        self.assertIsNone(cut_exception)
+        self.assertIsNone(publisher_cut_exception)
+
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestAffiliateNetworks(TransactionTestCase):
@@ -2898,10 +2912,12 @@ class TestReferralBonus(TransactionTestCase):
 
 
 class TestStoreCommission(TransactionTestCase):
+    fixtures = ['test-fxrates.yaml']
 
     def setUp(self):
         self.user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
         self.user.is_partner = True
+        self.user.location = "SE"
         self.user.save()
         self.group = GroupFactory.create(name='group_name')
 
@@ -2922,5 +2938,94 @@ class TestStoreCommission(TransactionTestCase):
         self.assertAlmostEqual(amount, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
         self.assertAlmostEqual(amount_float, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
         self.assertEqual(currency, "SEK")
+        self.assertEqual(earning_type, "is_cpc")
+        self.assertEqual(type_code, 0)
+
+    def get_store_earnings_cpc_all_stores_rules_exceptions(self):
+        rules = [{"sid": self.user.id, "cut": 0.5, "tribute": 0.5}]
+        vendor = VendorFactory.create(is_cpc=True)
+        cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="SEK", cut=0.6, rules_exceptions=rules)
+        self.group.has_cpc_all_stores = True
+        self.group.save()
+
+        store = StoreFactory.create(vendor=vendor)
+        standard_from = 0
+        _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
+
+        get_model('dashboard', 'ClickCost').objects.create(vendor=vendor, amount=1.5, currency="SEK")
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+
+        self.assertAlmostEqual(decimal.Decimal(amount), cut.locale_cpc_amount * decimal.Decimal(0.5), 2)
+        self.assertAlmostEqual(amount_float, cut.locale_cpc_amount * decimal.Decimal(0.5), 2)
+        self.assertEqual(currency, cut.locale_cpc_currency)
+        self.assertEqual(earning_type, "is_cpc")
+        self.assertEqual(type_code, 0)
+
+    def get_store_earnings_cpc_all_stores_rules_exceptions_with_owner(self):
+        rules = [{"sid": self.user.id, "cut": 0.5, "tribute": 0.5}]
+        vendor = VendorFactory.create(is_cpc=True)
+        cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="EUR",
+                          cut=0.6, rules_exceptions=rules)
+        self.group.has_cpc_all_stores = True
+        self.group.save()
+
+        owner_user = UserFactory.create(owner_network_cut=0.1)
+        self.user.owner_network = owner_user
+        self.user.save()
+
+        store = StoreFactory.create(vendor=vendor)
+        standard_from = 0
+        _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
+
+        get_model('dashboard', 'ClickCost').objects.create(vendor=vendor, amount=1.5, currency="SEK")
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+
+        self.assertAlmostEqual(decimal.Decimal(amount), cut.locale_cpc_amount * decimal.Decimal(0.5) * decimal.Decimal(0.5), 2)
+        self.assertAlmostEqual(amount_float, cut.locale_cpc_amount * decimal.Decimal(0.5) * decimal.Decimal(0.5), 2)
+        self.assertEqual(currency, cut.locale_cpc_currency)
+        self.assertEqual(earning_type, "is_cpc")
+        self.assertEqual(type_code, 0)
+
+    def get_store_earnings_cpc_all_stores_with_owner(self):
+        vendor = VendorFactory.create(is_cpc=True)
+        cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="EUR",
+                          cut=0.6)
+        self.group.has_cpc_all_stores = True
+        self.group.save()
+
+        owner_user = UserFactory.create(owner_network_cut=0.1)
+        self.user.owner_network = owner_user
+        self.user.save()
+
+        store = StoreFactory.create(vendor=vendor)
+        standard_from = 0
+        _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
+
+        get_model('dashboard', 'ClickCost').objects.create(vendor=vendor, amount=1.5, currency="SEK")
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+
+        self.assertAlmostEqual(decimal.Decimal(amount), cut.locale_cpc_amount * decimal.Decimal(0.9), 2)
+        self.assertAlmostEqual(amount_float, cut.locale_cpc_amount * decimal.Decimal(0.9), 2)
+        self.assertEqual(currency, cut.locale_cpc_currency)
+        self.assertEqual(earning_type, "is_cpc")
+        self.assertEqual(type_code, 0)
+
+    def get_store_earnings_cpc_all_stores(self):
+        vendor = VendorFactory.create(is_cpc=True)
+        cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="EUR",
+                          cut=0.6)
+        self.group.has_cpc_all_stores = True
+        self.group.save()
+
+        store = StoreFactory.create(vendor=vendor)
+        standard_from = 0
+        _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
+
+        get_model('dashboard', 'ClickCost').objects.create(vendor=vendor, amount=1.5, currency="SEK")
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+
+        self.assertAlmostEqual(decimal.Decimal(amount), cut.locale_cpc_amount, 2)
+        self.assertAlmostEqual(amount_float, cut.locale_cpc_amount, 2)
+        self.assertEqual(currency, cut.locale_cpc_currency)
         self.assertEqual(earning_type, "is_cpc")
         self.assertEqual(type_code, 0)

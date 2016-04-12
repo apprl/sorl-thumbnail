@@ -1306,7 +1306,11 @@ def product_lookup(request):
     product_name = None
     product_earning = None
 
-    approx_text = "" if request.user.partner_group.has_cpc_all_stores else "approx. "
+    # Only adds approx to earning text when user does not earn CPC for all stores
+    approx_text = "approx. "
+    if request.user and request.user.partner_group and request.user.partner_group.has_cpc_all_stores:
+        approx_text = ""
+
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
