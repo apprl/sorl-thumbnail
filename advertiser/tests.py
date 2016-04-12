@@ -220,7 +220,6 @@ class AdvertiserConversionPixelTest(TransactionTestCase, AdvertiserMixin):
         #self.assertEqual(mail.outbox[3].subject, 'Advertiser Pixel Error: could not convert price or quantity') # It's currenty logging this info, not sending it through email
         #self.assertEqual(mail.outbox[4].subject, 'Advertiser Pixel Error: could not convert price or quantity') # It's currenty logging this info, not sending it through email
 
-
     def test_optional_parameters_trailing_caret(self):
         self.visit_link('mystore')
         self.checkout(store_id='mystore', order_id='1234', order_value='1234', currency='SEK', sku='ProductABC^ProductXYZ^', quantity='1^1^', price='1000^234^')
