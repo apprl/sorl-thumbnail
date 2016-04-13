@@ -30,10 +30,7 @@
 {% endblock extra-scripts %}
 {% block body-classes %}dashboard{% endblock body-classes %}
 {% block body %}
-    <h1>{% trans "Posts" %}</h1>
-    <br>
-    <br>
-    <br>
+    {% include "apparel/admin/header.html" with title="Admin Posts" %}
     <section class="container">
         <ul class="list-horizontal center">
                 <li>Show statistics for: </li>

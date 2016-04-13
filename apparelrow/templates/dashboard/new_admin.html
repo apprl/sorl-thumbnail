@@ -83,14 +83,7 @@
 {% block body-classes %}publisher dashboard{% endblock body-classes %}
 {% block body %}
 
-    <div class="body-header">
-        <h1>{% trans "Admin Dashboard" %}</h1>
-        <ul class="sub-menu">
-            <li><a{% if 'publisher' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-admin' %}">{% trans "Publisher" %}</a></li>
-            <li><a{% if 'kpi' in request.path %} class="selected"{% endif %} href="{% url 'admin-kpi-dashboard' %}">{% trans "KPI" %}</a></li>
-            <li><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'admin-stores' %}">{% trans "Stores" %}</a></li>
-        </ul>
-    </div>
+    {% include "apparel/admin/header.html" with title="Admin Dashboard" %}
 
     <div class="publisher-admin">
         <ul class="list-horizontal center">
