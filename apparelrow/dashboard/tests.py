@@ -1267,15 +1267,17 @@ class TestUserEarnings(TransactionTestCase):
 
     def get_cut_exception(self):
         cut_user = UserFactory.create()
-        rules = [{"sid": cut_user.id, "cut": 0.97, "tribute": 0}]
-        cut_exception, publisher_cut_exception = parse_rules_exception(rules, cut_user.id)
+        rules = [{"sid": cut_user.id, "cut": 0.97, "tribute": 0, click_cost:"10 SEK"}]
+        cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(rules, cut_user.id)
+        self.assertEqual(click_cost, "10 SEK")
         self.assertEqual(cut_exception, 0.97)
         self.assertEqual(publisher_cut_exception, 1)
 
     def get_cut_exception_no_rules_exception(self):
         cut_user = UserFactory.create()
         rules = []
-        cut_exception, publisher_cut_exception = parse_rules_exception(rules, cut_user.id)
+        cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(rules, cut_user.id)
+        self.assertIsNone(click_cost)
         self.assertIsNone(cut_exception)
         self.assertIsNone(publisher_cut_exception)
 

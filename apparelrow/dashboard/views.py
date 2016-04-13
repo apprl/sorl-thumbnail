@@ -239,32 +239,57 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
 
     CPC_CODE = 0
     CPO_CODE = 1
+    cut = None
 
-    if user.partner_group.has_cpc_all_stores:
-        type_code = CPC_CODE
-
-        earning_type = "is_cpc"
-        try:
-            cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor_obj)
-
-            publisher_earning = cut.locale_cpc_amount * (normal_cut * publisher_cut)
-            amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
-            amount = "%.2f" % (amount_float)
-            currency = cut.locale_cpc_currency
-        except get_model('dashboard', 'Cut').DoesNotExist:
+    # Retrieve cut object
+    try:
+        cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor_obj)
+    except get_model('dashboard', 'Cut').DoesNotExist:
             log.warning("Cut for commission group %s and vendor %s does not exist." %
                            (user.partner_group, vendor_obj.name))
-    else:
-        if vendor_obj.is_cpc:
-            click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
-            amount = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
-            amount_float = click_cost.locale_price * publisher_cut * normal_cut
-            currency = click_cost.locale_currency
+
+    if cut:
+        if user.partner_group.has_cpc_all_stores:
+            # For Publishers who earns CPC for all stores, cut is 100% unless exceptions are defined
+            normal_cut = 1
+            type_code = CPC_CODE
             earning_type = "is_cpc"
-        elif vendor_obj.is_cpo:
-            amount = store.commission
-            amount_float = standard_from
-        type_code = CPC_CODE if earning_type == "is_cpc" else CPO_CODE
+            earning_amount = cut.locale_cpc_amount
+            currency = cut.locale_cpc_currency
+            # Get exceptions and if they are defined, replace current cuts
+            if cut.rules_exceptions:
+                cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
+                if cut_exception:
+                    normal_cut = cut_exception
+                if publisher_cut_exception:
+                    publisher_cut = publisher_cut_exception
+                exception_amount, exception_currency = parse_cost_amount(click_cost)
+                if exception_amount and exception_currency:
+                    earning_amount = exception_amount
+                    currency = exception_currency
+            publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
+            amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
+            amount = "%.2f" % (amount_float)
+        else:
+            if vendor_obj.is_cpc:
+                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
+                earning_amount = click_cost.locale_price
+                currency = click_cost.locale_currency
+                earning_type = "is_cpc"
+
+                # Get click cost from exceptions if defined
+                _, _, click_cost_exception = parse_rules_exception(cut.rules_exceptions, user.id)
+                exception_amount, exception_currency = parse_cost_amount(click_cost_exception)
+                if exception_amount and exception_currency:
+                    earning_amount = exception_amount
+                    currency = exception_currency
+
+                amount = "%.2f" % (earning_amount * publisher_cut * normal_cut)
+                amount_float = earning_amount * publisher_cut * normal_cut
+            elif vendor_obj.is_cpo:
+                amount = store.commission
+                amount_float = standard_from
+            type_code = CPC_CODE if earning_type == "is_cpc" else CPO_CODE
 
     return amount, amount_float, currency, earning_type, type_code
 
