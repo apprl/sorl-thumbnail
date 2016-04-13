@@ -146,7 +146,9 @@
 
                                  <p class="earning-box">
                                     {% if request.user.is_partner and object.default_vendor and product_earning %}
-                                        You will earn approx. <span class="currency">{{ currency }}</span> {{ product_earning }}
+                                        You will earn
+                                        {% if not request.user.partner_group.has_cpc_all_stores %}approx. {% endif %}
+                                        <span class="currency">{{ currency }}</span> {{ product_earning }}
                                         {% if object.default_vendor.vendor.is_cpo %}
                                             per generated sale of this item.
                                         {% elif object.default_vendor.vendor.is_cpc %}

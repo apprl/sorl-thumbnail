@@ -1305,6 +1305,12 @@ def product_lookup(request):
     product_liked = False
     product_name = None
     product_earning = None
+
+    # Only adds approx to earning text when user does not earn CPC for all stores
+    approx_text = "approx. "
+    if request.user and request.user.partner_group and request.user.partner_group.has_cpc_all_stores:
+        approx_text = ""
+
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
@@ -1319,7 +1325,7 @@ def product_lookup(request):
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
             help_text = "sale" if vendor.is_cpo else "click"
-            product_earning = "You will earn approx. %s %s per generated %s of this item." % (currency, earning, help_text)
+            product_earning = "You will earn %s%s %s per generated %s of this item." % (approx_text, currency, earning, help_text)
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
         logger.info(u"No product found for key, falling back to domain deep linking.")
@@ -1338,14 +1344,14 @@ def product_lookup(request):
                     store_commission = get_vendor_commission(vendor)
                     if store_commission:
                         earning_cut = earning_cut * store_commission
-                        product_earning = u"You will earn approx. %.2f %% per generated sale of this item." % \
-                                          (earning_cut * 100)
+                        product_earning = u"You will earn %s%.2f %% per generated sale of this item." % \
+                                          (approx_text, earning_cut * 100)
                 elif vendor.is_cpc:
                     cost_per_click = get_vendor_cost_per_click(vendor)
                     if cost_per_click:
-                        product_earning = u"You will earn approx. %s %.2f per generated click when linking to " \
+                        product_earning = u"You will earn %s%s %.2f per generated click when linking to " \
                                           "this retailer" % \
-                                          (cost_per_click.currency, (earning_cut * cost_per_click.amount))
+                                          (approx_text, cost_per_click.currency, (earning_cut * cost_per_click.amount))
     vendor_markets = None
     if vendor:
         vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)

@@ -3,9 +3,11 @@
     {% for html, product in current_page.html %}
         <li class="col-product-item">
             {{ html|safe }}
-            {% if not is_embed_shop and user.is_partner%}
+            {% comment %}
+            {% if not is_embed_shop and user.is_partner %}
                 <div class="product-medium-earning" id="product-medium-earning-{{ product }}"></div>
             {% endif %}
+            {% endcomment %}
         </li>
     {% endfor %}
 </ul>

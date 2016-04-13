@@ -525,6 +525,40 @@ class TestProductDetails(TestCase):
         self.assertEqual(currency, cpc_cut.locale_cpc_currency)
         self.assertEqual(earning_product, Decimal(cpc_cut.locale_cpc_amount.quantize(Decimal('.01'), rounding=ROUND_HALF_UP)))
 
+    def test_product_details_user_has_cpc_all_stores_with_exceptions(self):
+        rules = [{"sid": self.user.id, "cut": 0.5, "tribute": 0.5}]
+        cpc_group = get_model('dashboard', 'Group').objects.create(name='Metro Mode', has_cpc_all_stores=True)
+        cpc_cut = get_model('dashboard', 'Cut').objects.create(vendor=self.vendor, group=cpc_group,
+                                                               cpc_amount=Decimal(3.00), cpc_currency="EUR", cut=0.6,
+                                                               rules_exceptions=rules)
+
+        self.user.partner_group = cpc_group
+        self.user.is_partner = True
+        self.user.location = "SE"
+        self.user.save()
+
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
+        self.assertAlmostEqual(earning_product, Decimal("%.2f" % (cpc_cut.locale_cpc_amount * Decimal(0.5))))
+        self.assertEqual(currency, cpc_cut.locale_cpc_currency)
+
+    def test_product_details_user_has_cpc_all_stores_with_exceptions_and_owner(self):
+        owner_user = UserFactory.create(owner_network_cut=0.1)
+        rules = [{"sid": self.user.id, "cut": 0.5, "tribute": 0.5}]
+        cpc_group = get_model('dashboard', 'Group').objects.create(name='Metro Mode', has_cpc_all_stores=True)
+        cpc_cut = get_model('dashboard', 'Cut').objects.create(vendor=self.vendor, group=cpc_group,
+                                                               cpc_amount=Decimal(3.00), cpc_currency="EUR", cut=0.6,
+                                                               rules_exceptions=rules)
+
+        self.user.owner_network = owner_user
+        self.user.partner_group = cpc_group
+        self.user.is_partner = True
+        self.user.location = "SE"
+        self.user.save()
+
+        earning_product, currency = self.vendor_product.get_product_earning(self.user)
+        self.assertEqual(earning_product, Decimal("%.2f" % (cpc_cut.locale_cpc_amount * Decimal(0.5) * Decimal(0.5))))
+        self.assertEqual(currency, cpc_cut.locale_cpc_currency)
+
     def test_extracting_suffix(self):
         from apparelrow.apparel.views import extract_domain_with_suffix
         domain = "https://account.manning.com/support/index?someparameter=1"
