@@ -39,7 +39,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 from parse import *
 
-from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
+from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor, parse_rules_exception
 from decimal import Decimal, ROUND_HALF_UP
 
 PRODUCT_GENDERS = (
@@ -792,9 +792,22 @@ class VendorProduct(models.Model):
         if user.partner_group and user.partner_group.has_cpc_all_stores:
             try:
                 cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=self.vendor)
-                publisher_earning = cut.locale_cpc_amount
+                total_publisher_cut = 1
+                publisher_cut = 1
+
                 if user.owner_network:
-                    publisher_earning = publisher_earning * (1 - user.owner_network.owner_network_cut)
+                    publisher_cut = 1 - user.owner_network.owner_network_cut
+
+                # Look for exceptions
+                if cut.rules_exceptions:
+                    cut_exception, publisher_cut_exception = parse_rules_exception(cut.rules_exceptions, user.id)
+                    if cut_exception:
+                        total_publisher_cut = cut_exception
+                    if publisher_cut_exception and user.owner_network:
+                        publisher_cut = publisher_cut_exception
+
+                publisher_earning = cut.locale_cpc_amount * (total_publisher_cut * publisher_cut)
+
                 product_earning = Decimal(publisher_earning.quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
                 currency = cut.locale_cpc_currency
             except get_model('dashboard', 'Cut').DoesNotExist:

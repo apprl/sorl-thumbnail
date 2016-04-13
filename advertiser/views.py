@@ -343,8 +343,6 @@ def store_admin(request, year=None, month=None):
     if end_date >= datetime.date.today():
         end_date_clicks_query = datetime.datetime.combine(
             datetime.date.today() - datetime.timedelta(1), datetime.time(23, 59, 59, 999999))
-
-
     currency = "EUR"
 
     # Get top summary
@@ -352,7 +350,7 @@ def store_admin(request, year=None, month=None):
 
     # Get clicks delivered under the given period for the store
     clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_clicks_query) \
-                                                           .filter(vendor=store.vendor) \
+                                                           .filter(vendor=store.vendor, is_valid=True) \
                                                            .order_by('created')
 
     # Initialize variables for CPC stores

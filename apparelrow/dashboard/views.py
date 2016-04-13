@@ -228,17 +228,28 @@ def referral_mail(request):
 # Commissions
 #
 def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_from, store):
+    """
+    Return earnings for given store and user, and any other additional information. This is mainly used in Stores
+    commissions page.
+    """
     currency = ''
     amount_float = decimal.Decimal(0)
     amount = "%.2f" % amount_float
     earning_type = "is_cpo"  # Default is_cpo = True for vendors
+
+    CPC_CODE = 0
+    CPO_CODE = 1
+
     if user.partner_group.has_cpc_all_stores:
-        type_code = 1
+        type_code = CPC_CODE
+
         earning_type = "is_cpc"
         try:
             cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor_obj)
-            amount_float = decimal.Decimal(cut.locale_cpc_amount.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
-            amount = "%.2f" % (amount_float * publisher_cut)
+
+            publisher_earning = cut.locale_cpc_amount * (normal_cut * publisher_cut)
+            amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
+            amount = "%.2f" % (amount_float)
             currency = cut.locale_cpc_currency
         except get_model('dashboard', 'Cut').DoesNotExist:
             log.warning("Cut for commission group %s and vendor %s does not exist." %
@@ -253,7 +264,7 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
         elif vendor_obj.is_cpo:
             amount = store.commission
             amount_float = standard_from
-        type_code = 0 if earning_type == "is_cpc" else 1
+        type_code = CPC_CODE if earning_type == "is_cpc" else CPO_CODE
 
     return amount, amount_float, currency, earning_type, type_code
 
@@ -484,7 +495,7 @@ class DashboardView(TemplateView):
 
             month_commission = sum_data['sale_earnings__sum']
             show_cpo_earning = True
-            if request.user.partner_group.has_cpc_all_stores and not month_commission or not month_commission > 0 :
+            if request.user.partner_group.has_cpc_all_stores and not month_commission or not month_commission > 0:
                 show_cpo_earning = False
 
             network_earning = 0

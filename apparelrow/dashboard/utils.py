@@ -106,6 +106,20 @@ def get_referral_user_from_cookie(request):
             pass
     return user
 
+def parse_rules_exception(data_exceptions, user_id):
+    """
+    Return cut for publisher network and total publisher cut after removing owner network tribute from exception if
+    there is an exception for given user id
+    """
+    cut_exception = None
+    publisher_cut = None
+    for data in data_exceptions:
+        if data['sid'] == user_id:
+            cut_exception = decimal.Decimal(data['cut'])
+            publisher_cut = 1 - decimal.Decimal(data['tribute'])
+    return cut_exception, publisher_cut
+
+
 def get_cuts_for_user_and_vendor(user_id, vendor):
     """
     Return a tuple that contains user instance, commission group cut, referral cut, publisher cut considering if the
@@ -120,31 +134,26 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
         user = get_user_model().objects.get(pk=user_id)
         if user.partner_group:
             try:
+                # Publisher network total cut
                 cuts = user.partner_group.cuts.get(vendor=vendor)
                 normal_cut = cuts.cut
                 referral_cut = cuts.referral_cut
                 data_exceptions = None
 
-                # Handle exceptions for publisher cuts
-                try:
-                    data_exceptions = cuts.rules_exceptions
-                    for data in data_exceptions:
-                        if data['sid'] == user.id:
-                            normal_cut = decimal.Decimal(data['cut'])
-                except:
-                    pass
+                # Owner network cut
                 if user.owner_network:
                     owner = user.owner_network
                     if owner.owner_network_cut > 1:
                         owner.owner_network_cut = 1
                     publisher_cut -= owner.owner_network_cut
 
-                    # Handle exceptions for Publisher Network owner
-                    if data_exceptions:
-                        data_exceptions = cuts.rules_exceptions
-                        for data in data_exceptions:
-                            if data['sid'] == user.id:
-                                publisher_cut = 1 - decimal.Decimal(data['tribute'])
+                # Handle exceptions for publisher cuts and owner cuts
+                if cuts.rules_exceptions:
+                    cut_exception, publisher_cut_exception = parse_rules_exception(cuts.rules_exceptions, user_id)
+                    if cut_exception:
+                        normal_cut = cut_exception
+                    if publisher_cut_exception:
+                        publisher_cut = publisher_cut_exception
             except:
                 log.warn("No cut exists for %s and vendor %s, please do correct this." % (user.partner_group,vendor))
     except get_user_model().DoesNotExist:
