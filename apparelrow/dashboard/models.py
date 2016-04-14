@@ -180,7 +180,7 @@ class Cut(models.Model):
                                                                              'stores'))
     rules_exceptions = JSONField(null=True, blank=True,
                                  help_text='Creates exceptions for Cuts using the following format: [{"sid": 1, "cut": '
-                                           '0.90, "tribute":0.50, "click_cost":"10 SEK"}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
+                                           '0.90, "tribute":0.50}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
                                            'is the User id. Cut replaces the cut value for the user and the current cut'
                                            ' and Tribute replaces the tribute value the user has to pay to the network '
                                            'owner')

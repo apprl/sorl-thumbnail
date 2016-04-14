@@ -169,7 +169,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                     cut_exception, publisher_cut_exception, _ = parse_rules_exception(cuts.rules_exceptions, user_id)
                     if cut_exception:
                         normal_cut = cut_exception
-                    if publisher_cut_exception:
+                    if publisher_cut_exception and user.owner_network:
                         publisher_cut = publisher_cut_exception
             except:
                 log.warn("No cut exists for %s and vendor %s, please do correct this." % (user.partner_group,vendor))

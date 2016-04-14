@@ -261,12 +261,8 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
                 cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
                 if cut_exception:
                     normal_cut = cut_exception
-                if publisher_cut_exception:
+                if publisher_cut_exception and user.owner_network:
                     publisher_cut = publisher_cut_exception
-                exception_amount, exception_currency = parse_cost_amount(click_cost)
-                if exception_amount and exception_currency:
-                    earning_amount = exception_amount
-                    currency = exception_currency
             publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
             amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
             amount = "%.2f" % (amount_float)
