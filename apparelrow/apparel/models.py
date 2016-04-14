@@ -39,7 +39,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 from parse import *
 
-from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor, parse_rules_exception
+from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor, parse_rules_exception, parse_cost_amount
 from decimal import Decimal, ROUND_HALF_UP
 
 PRODUCT_GENDERS = (
@@ -798,15 +798,20 @@ class VendorProduct(models.Model):
                 if user.owner_network:
                     publisher_cut = 1 - user.owner_network.owner_network_cut
 
+                earning_amount = cut.locale_cpc_amount
                 # Look for exceptions
                 if cut.rules_exceptions:
-                    cut_exception, publisher_cut_exception = parse_rules_exception(cut.rules_exceptions, user.id)
+                    cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
                     if cut_exception:
                         total_publisher_cut = cut_exception
                     if publisher_cut_exception and user.owner_network:
                         publisher_cut = publisher_cut_exception
+                    exception_amount, exception_currency = parse_cost_amount(click_cost)
+                    if exception_amount and exception_currency:
+                        earning_amount = exception_amount
+                        currency = exception_currency
 
-                publisher_earning = cut.locale_cpc_amount * (total_publisher_cut * publisher_cut)
+                publisher_earning = earning_amount * (total_publisher_cut * publisher_cut)
 
                 product_earning = Decimal(publisher_earning.quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
                 currency = cut.locale_cpc_currency

@@ -106,6 +106,18 @@ def get_referral_user_from_cookie(request):
             pass
     return user
 
+def parse_cost_amount(click_cost):
+    """
+    Parse string with cost information and returns amount as Decimal and currency
+    """
+    amount = None
+    currency = None
+    if click_cost:
+        array_click = click_cost.split(" ")
+        amount = decimal.Decimal(array_click[0])
+        currency = array_click[1]
+    return amount, currency
+
 def parse_rules_exception(data_exceptions, user_id):
     """
     Return cut for publisher network and total publisher cut after removing owner network tribute from exception if
@@ -113,11 +125,16 @@ def parse_rules_exception(data_exceptions, user_id):
     """
     cut_exception = None
     publisher_cut = None
+    click_cost = None
     for data in data_exceptions:
         if data['sid'] == user_id:
-            cut_exception = decimal.Decimal(data['cut'])
-            publisher_cut = 1 - decimal.Decimal(data['tribute'])
-    return cut_exception, publisher_cut
+            if 'cut' in data:
+                cut_exception = decimal.Decimal(data['cut'])
+            if 'tribute' in data:
+                publisher_cut = 1 - decimal.Decimal(data['tribute'])
+            if 'click_cost' in data:
+                click_cost = data['click_cost']
+    return cut_exception, publisher_cut, click_cost
 
 
 def get_cuts_for_user_and_vendor(user_id, vendor):
@@ -149,10 +166,10 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
 
                 # Handle exceptions for publisher cuts and owner cuts
                 if cuts.rules_exceptions:
-                    cut_exception, publisher_cut_exception = parse_rules_exception(cuts.rules_exceptions, user_id)
+                    cut_exception, publisher_cut_exception, _ = parse_rules_exception(cuts.rules_exceptions, user_id)
                     if cut_exception:
                         normal_cut = cut_exception
-                    if publisher_cut_exception:
+                    if publisher_cut_exception and user.owner_network:
                         publisher_cut = publisher_cut_exception
             except:
                 log.warn("No cut exists for %s and vendor %s, please do correct this." % (user.partner_group,vendor))

@@ -2,7 +2,8 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.conf import settings
 
-from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning, ClickCost, AggregatedData
+from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning, ClickCost, \
+    AggregatedData
 from apparelrow.dashboard.forms import CutAdminForm, SaleAdminFormCustom
 
 
