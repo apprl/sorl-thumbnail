@@ -142,7 +142,7 @@ def generate_aggregated_from_total(row, user_dict, earning_amount):
     elif row.user_earning_type in ('publisher_sale_click_commission', 'publisher_sale_click_commission_all_stores'):
         instance.click_earnings += earning_amount
         instance.sale_plus_click_earnings += earning_amount
-        if row.sale.affiliate == "cpc_all_stores":
+        if not row.sale.affiliate == "cpc_all_stores":
             instance.paid_clicks += get_clicks_from_sale(row.sale)
 
     # If earning is from APPRL
