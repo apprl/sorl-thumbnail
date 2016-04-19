@@ -102,7 +102,6 @@ jQuery(document).ready(function() {
             } else {
                 $this.css({height: $window.height() - captionheight, width: Math.round($(this).attr('width')/$(this).attr('height')*($window.height()-captionheight))});
             }
-
             maxheight = Math.max(maxheight, $this.height());
             childwidth = Math.max(childwidth, $this.width());
         });
@@ -136,6 +135,7 @@ jQuery(document).ready(function() {
                 disableslide()
             }
         }
+        $ul.children('li').css('width', itemwidth);
         index = 0;
         $ul.css('left', 0);
         var containermargin = parseInt($container.css('marginLeft').substr(0, $container.css('marginLeft').length -2));

@@ -8,13 +8,25 @@
 {% block full-body %}
 
     {% if external_product_widget_id %}
-        {% with 'Edit '|add:type|add:' widget' as title %}
-        {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
-        {% endwith %}
+        {% if type == 'multiple' %}
+            {% with 'Edit Product List' as title %}
+            {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+            {% endwith %}
+        {% else %}
+            {% with 'Edit Single Product List' as title %}
+            {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+            {% endwith %}
+        {% endif %}
     {% else %}
-        {% with 'Create '|add:type|add:' widget' as title %}
-        {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
-        {% endwith %}
+        {% if type == 'multiple' %}
+            {% with 'Create Product List' as title %}
+            {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+            {% endwith %}
+        {% else %}
+            {% with 'Create Single Product List' as title %}
+            {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
+            {% endwith %}
+        {% endif %}
     {% endif %}
 
     <div id="content">

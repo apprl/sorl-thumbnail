@@ -44,7 +44,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             }
         });
 
-        this.num_multi = 3;
+        this.num_multi = external_product_widget_type == 'single' ? 1 : 3;
         this.list_width_factor = 0.8;
 
         // ProductWidget editor popup
@@ -142,20 +142,18 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     toggle_navigation: function() {
         $ul = this.$productlist.find('ul.product-list');
         if (external_product_widget_type == 'single') {
-            if (this.model.components.length > 0) {
-                var index = this.indexes.indexOf(this.current_index);
-                this.allownext = index < this.indexes.length-1;
-                this.allowprev = index > 0;
-                $('.previous, .next').toggle(true);
-            } else {
+            if (this.model.components.length == 0) {
                 $('.previous, .next').toggle(false);
+            } else {
+                $('.previous, .next').toggle(true);
+                var index = this.indexes.indexOf(this.current_index);
+                this.allownext = this.allowprev = this.model.components.length > 1;
             }
         } else {
             if (this.model.components.length > 0) {
-                var childwidth = $ul.parent().width()/this.num_multi;
-                this.allownext = Math.round(($ul.width()+$ul.position().left)/childwidth) > this.num_multi;
-                this.allowprev = Math.round($ul.position().left) != 0;
                 $('.previous, .next').toggle(true);
+                this.allownext = this.allowprev = this.model.components.length > this.num_multi;
+
             } else {
                 $('.previous, .next').toggle(false);
             }
@@ -182,7 +180,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             container_width = this.$container.width(),
             controlpos;
 
-        this.num_multi = container_width <= 480 ? (container_width <= 375 ? 1 : 2) : 3;
+        this.num_multi = external_product_widget_type == 'single' ? 1 : (container_width <= 480 ? (container_width <= 375 ? 1 : 2) : 3);
         this.$container.css('height', new_height);
 
         var $col = $ul.find('.col-product-item'),
@@ -269,14 +267,31 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         if (external_product_widget_type == 'multiple') {
             childwidth = childwidth/this.num_multi;
         }
+        if (this.current_index == 0 && this.num_multi > 1) {
+            this.current_index = this.num_multi - 1;
+        }
+
         this.running = true;
-        var newleft = $ul.position().left + direction*childwidth;
-        var i = this.indexes.indexOf(this.current_index) - direction;
-
+        var num_slide = this.model.components.length >= this.num_multi*2 ? this.num_multi : this.model.components.length - this.num_multi;;
+        if (direction == 1 && this.current_index + 1 - this.num_multi - num_slide < 0) {
+            var num_diff = -1*(this.current_index + 1 - this.num_multi - num_slide);
+            for (var j=0;j<num_diff;j++) {
+                $ul.children('li').last().detach().prependTo($ul);
+            }
+            $ul.css('left', $ul.position().left - num_diff*childwidth);
+            this.current_index += num_diff;
+        } else if (direction == -1 && this.current_index + 1 + num_slide > this.model.components.length) {
+            var num_diff = (this.current_index + 1 + num_slide) - this.model.components.length;
+            for (var j=0;j<num_diff;j++) {
+                $ul.children('li').first().detach().appendTo($ul);
+            }
+            $ul.css('left', $ul.position().left + num_diff*childwidth);
+            this.current_index -= num_diff;
+        }
+        var i = this.indexes.indexOf(this.current_index) - num_slide*direction;
         this.current_index = this.indexes[i];
-
         var self = this;
-        $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() {self.toggle_navigation(); self.running = false; }});
+        $ul.animate({'left': '+=' + num_slide*direction*childwidth}, {'complete': function() {self.toggle_navigation(); self.running = false; }});
     },
     delete_product_widget: function() {
         this.model._dirty = false;
