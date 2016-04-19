@@ -522,10 +522,10 @@ def create_referral_earning(sale):
         if referral_cut:
             referral_commission = total_commission * referral_cut
             UserEarning.objects.create(user=referral_user,
-                                                                 user_earning_type='referral_sale_commission',
-                                                                 sale=sale, from_product=product, from_user=user,
-                                                                 amount=referral_commission, date=sale.sale_date,
-                                                                 status=sale.status)
+                                                             user_earning_type='referral_sale_commission',
+                                                             sale=sale, from_product=product, from_user=user,
+                                                             amount=referral_commission, date=sale.sale_date,
+                                                             status=sale.status)
         else:
             logger.warning('Cut matching query does not exist %s - %s' % (commission_group, sale.vendor))
     else:
