@@ -76,7 +76,6 @@ urlpatterns = patterns('',
     url(r'^contact/$', 'apparelrow.apparel.views.contact', name='contact'),
     url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
     url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
-    url(r'^accounts/register/username/$', 'apparelrow.apparel.views.setusername', name='setusername'),
 
     # Temporary url for new home page (work in progress)
     #url(r'^community/$', 'apparelrow.apparel.views.community', name='index-community'),

@@ -546,6 +546,10 @@ def confirm_email(request):
     return HttpResponseRedirect(reverse('settings-account'))
 
 
+class UserSettingsUsernameView(TemplateView):
+    template_name = "profile/username.html"
+
+
 class UserSettingsEmailView(FormView):
     """
     View method for account settings in the profile/settings.
