@@ -898,7 +898,7 @@ def register(request):
 
 class RegisterEmailFormView(FormView):
     # work in progress
-    template_name = 'registration/registration_email-2.html'
+    template_name = 'registration/registration_email.html'
     #template_name = 'registration/registration_email-2.html'
     form_class = RegisterForm
 
