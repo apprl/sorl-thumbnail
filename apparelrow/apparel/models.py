@@ -538,7 +538,7 @@ class ShortDomainLinkManager(models.Manager):
 
 
 class ShortDomainLink(models.Model):
-    url = models.CharField(max_length=512, blank=False, null=False)
+    url = models.CharField(max_length=1024, blank=False, null=False)
     vendor = models.ForeignKey(Vendor)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='short_domain_links')
     created = models.DateTimeField(default=timezone.now)
