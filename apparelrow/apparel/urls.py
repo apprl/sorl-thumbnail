@@ -76,6 +76,7 @@ urlpatterns = patterns('',
     url(r'^contact/$', 'apparelrow.apparel.views.contact', name='contact'),
     url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
     url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
+    url(r'^accounts/register/username/$', 'apparelrow.apparel.views.setusername', name='setusername'),
 
     # Temporary url for new home page (work in progress)
     #url(r'^community/$', 'apparelrow.apparel.views.community', name='index-community'),
@@ -227,5 +228,3 @@ urlpatterns = patterns('',
     url(r'^admin/dashboard/adstores/$', 'apparelrow.apparel.views.admin.ad_stores', name='admin-ad-stores'),
     url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard_'),
 )
-
-

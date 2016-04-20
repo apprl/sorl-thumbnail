@@ -392,14 +392,14 @@ def shops(request, profile, form, page=0):
 @avatar_change
 def widgets(request, profile, form, page=0):
     """
-    
-    :param request: 
-    :param profile: 
-    :param form: 
-    :param page: 
+
+    :param request:
+    :param profile:
+    :param form:
+    :param page:
     :return:
     """
-    
+
     from itertools import chain
     if profile == request.user:
         queryset = sorted(chain(profile.shop.all(), profile.product_widget.all()),
@@ -791,7 +791,7 @@ class PublisherSettingsNotificationView(TemplateView):
         context["location_warning_form"] = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
         if context["location_warning_form"].is_valid():
             context["location_warning_form"].save()
-        
+
         if context["form"].is_valid():
             context["form"].save()
         else:
@@ -876,7 +876,6 @@ def follow_featured_auto(request):
         if facebook_user:
             facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
 
-
 def send_confirmation_email(request, instance):
     subject = ugettext('Nearly created your membership...')
     body = render_to_string('registration/registration_activation_email.html', {
@@ -893,9 +892,10 @@ class RegisterView(TemplateView):
 def register(request):
     return render(request, 'registration/registration.html')
 
-
 class RegisterEmailFormView(FormView):
-    template_name = 'registration/registration_email.html'
+    # work in progress
+    template_name = 'registration/registration_email-2.html'
+    #template_name = 'registration/registration_email-2.html'
     form_class = RegisterForm
 
     def get_success_url(self):
