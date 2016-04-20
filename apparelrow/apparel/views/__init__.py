@@ -119,7 +119,7 @@ def backend_product_earnings(request):
     user = request.user
     dict['code'] = "fail"
     dict['user_earning'] = ""
-    product_id = int(request.GET.get("id", None))
+    product_id = int(request.GET.get("id", 0))
     if product_id:
         try:
             product_obj = get_model('apparel', 'Product').objects.get(id=product_id)
