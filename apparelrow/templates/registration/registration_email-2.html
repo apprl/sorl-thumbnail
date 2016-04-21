@@ -37,10 +37,13 @@ function updateUsername(){
                     </div>
                 </div>
                 <div class="col-is-6">
-                    <div class="form-group{% if form.username.errors %} error{% endif %}">
-                        <label for="id_{{ form.username.html_name }}">{% trans "Username" %}</label>
-                        <input name="{{ form.username.html_name }}" type="text" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
-                        {% if form.username.errors %}<span class="help-block">{{ form.username.errors.as_text }}</span>{% endif %}
+                    <div class="form-group {% if form.gender.errors %} has-error{% endif %}">
+                        <label>{% trans "Gender" %}</label>
+                        <ul>
+                            <li><label><input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M"><span></span>{% trans "Man" %}</label></li>
+                            <li><label><input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W" checked><span></span>{% trans "Woman" %}</label></li>
+                        </ul>
+                        {% if form.gender.errors %}<span class="help-block">{{ form.gender.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
             </div>
@@ -80,16 +83,14 @@ function updateUsername(){
             </div>
             <div class="row">
                 <div class="col-is-6">
-                    <div class="form-group {% if form.gender.errors %} has-error{% endif %}">
-                        <label>{% trans "Gender" %}</label>
-                        <ul>
-                            <li><label><input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M"><span></span>{% trans "Man" %}</label></li>
-                            <li><label><input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W" checked><span></span>{% trans "Woman" %}</label></li>
-                        </ul>
-                        {% if form.gender.errors %}<span class="help-block">{{ form.gender.errors.as_text }}</span>{% endif %}
+                    <div class="form-group{% if form.username.errors %} error{% endif %}">
+                        <label for="id_{{ form.username.html_name }}">{% trans "Set your username" %}</label>
+                        <div class="input-username">
+                            <input name="{{ form.username.html_name }}" type="text" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
+                        </div>
+                        {% if form.username.errors %}<span class="help-block">{{ form.username.errors.as_text }}</span>{% endif %}
                     </div>
                 </div>
-
             </div>
 
             {% comment %}

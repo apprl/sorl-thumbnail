@@ -127,6 +127,20 @@ input[type="text"], input[type="url"], input[type="email"], input[type="password
 textarea:focus {
     background-position: center bottom, center calc(100% - 1px);
 }
+.input-username {
+    position: relative;
+    &:before {
+        content: '@';
+        color: @grey;
+        position: absolute;
+        display: inline-block;
+        top: 0;
+        left: -29px;
+        font-size: 24px;
+        height: 42px;
+        line-height: 46px;
+    }
+}
 .select {
     position: relative;
     display: block;

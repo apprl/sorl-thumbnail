@@ -1,6 +1,20 @@
-{% extends 'profile/base_settings.html' %}
+{% extends "base.html" %}
 {% load i18n %}
 
-{% block content %}
+{% block body-classes %}username-page{% endblock body-classes %}
+{% block body %}
+
+<h1 class="center">{% trans "Choose your username" %}</h1>
+
+<div class="form-container">
+    <form method="post">
+        <div class="input-username">
+            <input type="text" name="username">
+        </div>
+        <span class="help-block">Someone already has that username.</span>
+        <button class="btn btn-primary">{% trans 'Confirm' %}</button>
+        <a class="btn btn-grey">{% trans 'Not now' %}</a>
+    </form>
+</div>
 
 {% endblock %}
