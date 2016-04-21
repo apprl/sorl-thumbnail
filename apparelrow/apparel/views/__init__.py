@@ -125,7 +125,7 @@ def backend_product_earnings(request):
             product_obj = get_model('apparel', 'Product').objects.get(id=product_id)
             vendor_product = product_obj.default_vendor
             product_earning, currency = vendor_product.get_product_earning(user)
-            if product_earning:
+            if product_earning is not None:
                 dict['user_earning'] = "%s %s" % (currency, product_earning)
                 dict['code'] = "success"
 
