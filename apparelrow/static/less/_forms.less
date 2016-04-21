@@ -140,6 +140,29 @@ textarea:focus {
         height: 42px;
         line-height: 46px;
     }
+    &.error {
+        input {
+            background-color: #ffcdd2;
+        }
+        .hint {
+            color: #f64747;
+        }
+    }
+    &.success {
+        input {
+            background-color: #DFF2BF;
+        }
+        .hint {
+            color: #4F8A10;
+        }
+    }
+    .hint {
+    	display: block;
+    	text-align: center;
+    	color: @grey;
+    	margin-top: 10px;
+    	font-size: 13px;
+    }
 }
 .select {
     position: relative;

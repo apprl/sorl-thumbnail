@@ -81,29 +81,13 @@ function updateUsername(){
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-is-6">
-                    <div class="form-group{% if form.username.errors %} error{% endif %}">
-                        <label for="id_{{ form.username.html_name }}">{% trans "Set your username" %}</label>
-                        <div class="input-username">
-                            <input name="{{ form.username.html_name }}" type="text" id="id_{{ form.username.html_name }}" value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
-                        </div>
-                        {% if form.username.errors %}<span class="help-block">{{ form.username.errors.as_text }}</span>{% endif %}
-                    </div>
-                </div>
-            </div>
 
-            {% comment %}
-            <div class="row">
-                <div class="col-is-6">
-                    <div class="form-group{% if form.password2.errors %} error{% endif %}">
-                        <label for="id_{{ form.password2.html_name }}">{% trans "Confirm password" %}</label>
-                        <input name="{{ form.password2.html_name }}" type="password" id="id_{{ form.password2.html_name }}">
-                        {% if form.password2.errors %}<span class="help-block">{{ form.password2.errors.as_text }}</span>{% endif %}
-                    </div>
-                </div>
+            <h2>{% trans "Set your username" %}</h2>
+            <div class="input-username success">
+                <input type="text" name="username" value="orjangran1337">
+                <!--<span class="hint">Someone already has that username.</span>-->
+                <span class="hint">This username is available.</span>
             </div>
-            {% endcomment %}
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-email-signup">{% trans "Sign up" %}</button>
