@@ -747,7 +747,7 @@ class VendorProduct(models.Model):
         product = self.product
         earning_cut = None
         if vendor:
-            if hasattr(user, "is_partner") and user.is_partner: # User must be partner
+            if hasattr(user, "is_partner") and user.is_partner:  # User must be partner
                 has_cut = get_model('dashboard', 'Cut').objects.\
                             filter(group=user.partner_group, vendor=vendor).exists()
                 if user.partner_group and has_cut:
@@ -818,6 +818,8 @@ class VendorProduct(models.Model):
             except get_model('dashboard', 'Cut').DoesNotExist:
                 logger.warning("Cut for commission group %s and vendor %s does not exist." %
                                (user.partner_group, self.vendor.name))
+            except get_model('dashboard', 'Cut').MultipleObjectsReturned:
+                logger.warning("Multiple cuts for commission group %s and vendor %s exist. Please make sure there is only one instance of this Cut." % (user.partner_group, self.vendor.name))
         elif earning_cut:
             if self.vendor.is_cpc:
                 try:
