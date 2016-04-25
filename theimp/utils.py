@@ -68,7 +68,7 @@ def get_product_hash(item_subset):
                "discount_price", "currency", "in_stock", "stock")
     attributes = []
     for key in include:
-        attributes.append(repr(item_subset.get(key)))
+        attributes.append(repr(u"{}".format(item_subset.get(key))))
     return hashlib.sha1("".join(attributes)).hexdigest()
 
 def compare_scraped_and_saved(item_scraped, product_scraped):
