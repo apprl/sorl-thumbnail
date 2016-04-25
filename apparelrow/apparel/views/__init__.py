@@ -1323,7 +1323,7 @@ def product_lookup(request):
                                                                            active=True).exists()
         product_name = product.get_product_name_to_display
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
-        product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
+        _, vendor = product_lookup_by_domain(request, domain, original_key)
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
             help_text = "sale" if vendor.is_cpo else "click"
