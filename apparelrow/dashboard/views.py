@@ -195,7 +195,6 @@ class ReferralView(TemplateView):
         messages.add_message(request, messages.SUCCESS, u'Sent mail to %s' % (', '.join(emails),))
         return render(request, self.template_name)
 
-
 @DeprecationWarning
 def referral(request):
     if request.user.is_authenticated() and request.user.is_partner and request.user.referral_partner:
