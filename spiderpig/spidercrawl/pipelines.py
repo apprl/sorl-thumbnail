@@ -13,11 +13,13 @@ from django.utils import timezone
 from django.core.cache import get_cache
 from theimp.models import Product, Vendor
 from theimp.parser import Parser
-from theimp.utils import get_product_hash
+from theimp.utils import get_product_hash, compare_scraped_and_saved
 from theimp.tasks import parse_theimp_product
-
+import logging
 
 ASYNC_PARSING = False
+
+log = logging.getLogger("theimp")
 
 cache = get_cache("importer")
 
@@ -69,7 +71,8 @@ class DatabaseHandler:
     Handles scraped and dropped product updates in database
     """
     scraped_cache_key = "scraped_{id}"
-    semaphore_cache_key = "semaphore_{id}"
+    #semaphore_cache_key = "semaphore_{id}"
+
     @classmethod
     def from_crawler(cls, crawler):
         ext = cls()
@@ -131,22 +134,9 @@ class DatabaseHandler:
         product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
         product_hash = get_product_hash(item)
 
-        """product_scraped_and_in_stock = cache.get(self.semaphore_cache_key.format(id=product.id))
-        if product_scraped_and_in_stock == 1:
-            # if the product has been scraped recently (20 s) and is in stock.
-            return item
-        elif item['in_stock'] is True:
-            # if it has not been scraped recently and are in stock, continue parsing and set semaphore so the next
-            # product with the same signature which is in stock will be scraped
-            cache.set(self.semaphore_cache_key.format(id=product.id), True, 20)
-        else:
-            # if the product has not been scraped recently and is not in stock do parse it normally.
-            pass
-        """
-
         updated = False
         if product.is_released:
-            spider.log('Product %s is released and will not be parsed.' % item['key'])
+            log.debug('Product %s is released and will not be parsed.' % item['key'])
             return item
 
         if not created:
@@ -154,6 +144,7 @@ class DatabaseHandler:
             if not previous_hash == product_hash:
                 updated = True
                 json_data = json.loads(product.json)
+                log.info(compare_scraped_and_saved(dict(item), json_data['scraped']))
                 json_data['scraped'].update(dict(item))
                 product.json = json.dumps(json_data)
                 product.vendor = vendor
@@ -162,7 +153,7 @@ class DatabaseHandler:
 
         if bool(created or updated):
             cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600*24*90)
-            spider.log('Product {key} is updated or created.'.format(**item))
+            log.info('Product {key} is updated or created, parsing will ensue.'.format(**item))
             if ASYNC_PARSING:
                 parse_theimp_product.delay(product.id)
             else:
@@ -170,7 +161,7 @@ class DatabaseHandler:
         else:
             # Todo: Set some date to acknowledge scraping has taken place
             product.parsed_date = timezone.now()
-            spider.log("Product {key} not updated, only setting a new parsed date.".format(**item))
+            log.info("Product {key} not updated, only setting a new parsed date.".format(**item))
             product.save(update_fields=['parsed_date'])
         return item
 

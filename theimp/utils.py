@@ -71,6 +71,19 @@ def get_product_hash(item_subset):
         attributes.append(repr(item_subset.get(key)))
     return hashlib.sha1("".join(attributes)).hexdigest()
 
+def compare_scraped_and_saved(item_scraped, product_scraped):
+    include = ("sku", "name", "url", "category", "description", "brand", "gender", "colors", "regular_price",
+               "discount_price", "currency", "in_stock", "stock")
+
+    attributes = []
+    for key in include:
+        if not repr(item_scraped.get(key)) == repr(product_scraped.get(key)):
+            if key == "description":
+                attributes.append((key, "Description changed", "Description changed"))
+            else:
+                attributes.append((key, item_scraped.get(key), product_scraped.get(key)))
+            logger.info(u"{} not equals {}".format(item_scraped.get(key), product_scraped.get(key)))
+    return attributes
 
 def get_site_product_hash(site_product, **kwargs):
     """
