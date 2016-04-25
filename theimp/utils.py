@@ -1,6 +1,8 @@
 import hashlib
 import json
 import logging
+from django.utils.encoding import force_text
+from django.utils.html import strip_tags
 
 
 logger = logging.getLogger(__name__)
@@ -68,8 +70,50 @@ def get_product_hash(item_subset):
                "discount_price", "currency", "in_stock", "stock")
     attributes = []
     for key in include:
-        attributes.append(repr(u"{}".format(item_subset.get(key))))
+        field = stringify( item_subset.get(key) )
+
+        """if key in ["regular_price", "discount_price"]:
+            try:
+                field = str(int(field))
+            except:
+                pass
+        else:
+            try:
+                field = decode(field)
+            except:
+                pass
+        """
+        attributes.append(field)
+    #logger.info(attributes)
     return hashlib.sha1("".join(attributes)).hexdigest()
+
+def stringify(field, cleantags=False):
+    """
+    Prepares the field to get serialized for hashing.
+    :param field:
+    :return:
+    """
+    try:
+        field = field.decode("utf8")
+    except:
+        pass
+
+    try:
+        field = str(field.encode("utf8"))
+    except:
+        pass
+
+    if not field or isinstance(field, bool) or isinstance(field, int):
+        field = str(field)
+        return field
+
+    elif isinstance(field, list) or isinstance(field, tuple):
+        field = [stringify(unit) for unit in field]
+        return ",".join(field)
+    else:
+        if cleantags:
+            field = strip_tags(field).strip()
+        return field
 
 def compare_scraped_and_saved(item_scraped, product_scraped):
     include = ("sku", "name", "url", "category", "description", "brand", "gender", "colors", "regular_price",
@@ -77,12 +121,15 @@ def compare_scraped_and_saved(item_scraped, product_scraped):
 
     attributes = []
     for key in include:
-        if not repr(item_scraped.get(key)) == repr(product_scraped.get(key)):
+        scraped_field = stringify( item_scraped.get(key) )
+        product_field = stringify( product_scraped.get(key) )
+
+        if not scraped_field == product_field:
             if key == "description":
                 attributes.append((key, "Description changed", "Description changed"))
             else:
-                attributes.append((key, item_scraped.get(key), product_scraped.get(key)))
-            logger.info(u"{} not equals {}".format(item_scraped.get(key), product_scraped.get(key)))
+                attributes.append((key, scraped_field, product_field))
+            logger.info("{} not equals {}".format(scraped_field, product_field))
     return attributes
 
 def get_site_product_hash(site_product, **kwargs):
@@ -95,10 +142,10 @@ def get_site_product_hash(site_product, **kwargs):
     kwarg_keys = ("regular_price", "discount_price", "currency", "in_stock", "colors")
     attributes = []
     for key in include:
-        attributes.append(repr(getattr(site_product, key)))
+        attributes.append(stringify(getattr(site_product, key)))
 
     # Kwargs contain data from ProductItem.Final
     if kwargs:
         for key in kwarg_keys:
-            attributes.append(repr(kwargs.get(key)))
+            attributes.append(stringify(kwargs.get(key)))
     return hashlib.sha1("".join(attributes)).hexdigest()
