@@ -66,23 +66,11 @@ def get_product_hash(item_subset):
     :param item_subset:
     :return:
     """
-    include = ("sku", "name", "url", "category", "description", "brand", "gender", "colors", "regular_price",
-               "discount_price", "currency", "in_stock", "stock")
+    include = ("sku", "name", "url", "category", "brand", "regular_price",
+               "discount_price", "currency", "in_stock")
     attributes = []
     for key in include:
         field = stringify( item_subset.get(key) )
-
-        """if key in ["regular_price", "discount_price"]:
-            try:
-                field = str(int(field))
-            except:
-                pass
-        else:
-            try:
-                field = decode(field)
-            except:
-                pass
-        """
         attributes.append(field)
     #logger.info(attributes)
     return hashlib.sha1("".join(attributes)).hexdigest()
