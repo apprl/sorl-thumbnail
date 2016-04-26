@@ -5,10 +5,14 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+ENV.delete_if { |name| name.start_with?('AWS_') }  # Filter out rogue env vars.
+ENV['AWS_PROFILE'] = 'vagrant-s3auth'
 Vagrant.configure(2) do |config|
 
   config.vm.box = "apparel-box"
   config.vm.box_url="https://s3-eu-west-1.amazonaws.com/apprl-vagrant/boxes/apparel-dev-machine.box"
+  config.ssh.username = "vagrant"
+  config.ssh.password = "vagrant"
 
   config.vm.provider "virtualbox" do |v|
     host = RbConfig::CONFIG['host_os']
