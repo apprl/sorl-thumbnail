@@ -50,7 +50,7 @@
                 {% endthumbnail %}
                 {% if object.show_product_brand %}
                 <div class="caption">
-                    <h4><a href="{{ component.get_absolute_url|chlocale:LANGUAGE_CODE }}">{{ component.manufacturer }}</a></h4>
+                    <h4><a target="_blank" href="{% if component.default_vendor and component.default_vendor.availability != 0 %}{% buy_url component.id component.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.get_absolute_url }}{% endif %}">{{ component.manufacturer }}</a></h4>
                     <ul class="list-inline">
                         {% if component.availability and component.default_vendor and object.default_vendor.availability != 0 %}
                         {% if component.default_vendor.original_discount_price %}

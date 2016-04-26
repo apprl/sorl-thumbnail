@@ -121,6 +121,10 @@
 }
 .apprl-product .caption a {
   color: black;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .apprl-product .caption a:hover {
   color: #333;
