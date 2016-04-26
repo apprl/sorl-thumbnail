@@ -137,7 +137,7 @@ def backend_product_earnings(request):
                 else:
                     logger.warning("Vendor %s has not be defined as CPC or CPO vendor" % vendor_product.vendor.name)
             else:
-                logging.warning("Could not calculate cut for user %s and vendor %s" % (user.id, vendor_product.vendor.name))
+                logging.info("Could not calculate cut for user %s and vendor %s" % (user.id, vendor_product.vendor.name))
         except get_model('apparel', 'Product').DoesNotExist:
             logging.warning("Product with id %s does not exist" % product_id)
     return HttpResponse(json.dumps(dict), content_type='application/json')
