@@ -102,7 +102,9 @@
                 $('#embed_product_widget_form #id_name').focus()[0].scrollIntoView();
                 return false;
             }
-            App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val()});
+            App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val(), 'callback': function(id) {
+                window.location.replace(external_widget_url);
+            }});
         });
 
         $('.btn-continue').on('click', function(e) {
