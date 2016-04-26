@@ -650,10 +650,18 @@ def product_track(request, pk, page='Default', sid=0):
         cookie_already_exists = bool(request.COOKIES.get(product.slug, None))
         product_buy_click.delay(pk, '%s' % posted_referer, client_referer, get_client_ip(request),
                                 get_user_agent(request), sid, page, cookie_already_exists)
-        response.set_cookie(product.slug, '1', settings.APPAREL_PRODUCT_MAX_AGE)
+        if not cookie_already_exists:
+            response.set_cookie(product.slug, '1', settings.APPAREL_PRODUCT_MAX_AGE)
     else:
+        parsed_url = urlparse.urlparse(client_referer)
+
+        relative_path = (parsed_url.path).rstrip("/").lstrip("/").replace("/", "-")
+        cookie_already_exists = bool(request.COOKIES.get(relative_path, None))
         product_buy_click.delay(pk, '%s' % posted_referer, client_referer, get_client_ip(request),
-                                get_user_agent(request), sid, page, False)
+                                get_user_agent(request), sid, page, cookie_already_exists)
+        if not cookie_already_exists:
+            response.set_cookie(relative_path, '1', settings.APPAREL_PRODUCT_MAX_AGE)
+
     return response
 
 #
