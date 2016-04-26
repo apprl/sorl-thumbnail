@@ -127,6 +127,43 @@ input[type="text"], input[type="url"], input[type="email"], input[type="password
 textarea:focus {
     background-position: center bottom, center calc(100% - 1px);
 }
+.input-username {
+    position: relative;
+    &:before {
+        content: '@';
+        color: @grey;
+        position: absolute;
+        display: inline-block;
+        top: 0;
+        left: -29px;
+        font-size: 24px;
+        height: 42px;
+        line-height: 46px;
+    }
+    &.error {
+        input {
+            background-color: #ffcdd2;
+        }
+        .hint {
+            color: #f64747;
+        }
+    }
+    &.success {
+        input {
+            background-color: #DFF2BF;
+        }
+        .hint {
+            color: #4F8A10;
+        }
+    }
+    .hint {
+    	display: block;
+    	text-align: center;
+    	color: @grey;
+    	margin-top: 10px;
+    	font-size: 13px;
+    }
+}
 .select {
     position: relative;
     display: block;

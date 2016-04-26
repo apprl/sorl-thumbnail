@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body-classes %}account registration-email{% endblock body-classes %}
+{% block full-body %}
+<script type="text/javascript">
+function emailUsername(emailAddress)
+{
+    return emailAddress.substring(0, emailAddress.indexOf("@"));
+}
+
+function updateUsername(){
+    email = document.getElementById("id_email").value;
+    if (email.indexOf("@") > -1) {
+        username = emailUsername(email);
+    }
+    else {
+        username = email;
+    }
+    document.getElementById("id_username").value = username;
+}
+</script>
+    <div class="container center">
+        <h1>{% trans "Become a member" %}</h1>
+    </div>
+
+    <div class="form-container">
+        <form action="{% url 'auth_register_email' %}" method="post">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-is-6">
+                    <div class="form-group{% if form.email.errors %} error{% endif %}">
+                        <label for="id_{{ form.email.html_name }}">{% trans "Email address" %}</label>
+                        <input name="{{ form.email.html_name }}" type="text" id="id_{{ form.email.html_name }}" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" onkeyup="updateUsername();">
+                        {% if form.email.errors %}<span class="help-block">{{ form.email.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
+                <div class="col-is-6">
+                    <div class="form-group {% if form.gender.errors %} has-error{% endif %}">
+                        <label>{% trans "Gender" %}</label>
+                        <ul>
+                            <li><label><input type="radio" name="{{ form.gender.html_name }}" id="id_gender_0" value="M"><span></span>{% trans "Man" %}</label></li>
+                            <li><label><input type="radio" name="{{ form.gender.html_name }}" id="id_gender_1" value="W" checked><span></span>{% trans "Woman" %}</label></li>
+                        </ul>
+                        {% if form.gender.errors %}<span class="help-block">{{ form.gender.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-is-6">
+                    <div class="form-group{% if form.password1.errors %} error{% endif %}">
+                        <label for="id_{{ form.password1.html_name }}">{% trans "Password" %}</label>
+                        <input name="{{ form.password1.html_name }}" type="password" id="id_{{ form.password1.html_name }}" value="{% if form.password1.value %}{{ form.password1.value }}{% endif %}">
+                        {% if form.password1.errors %}<span class="help-block">{{ form.password1.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
+                <div class="col-is-6">
+                    <div class="form-group{% if form.password2.errors %} error{% endif %}">
+                        <label for="id_{{ form.password2.html_name }}">{% trans "Confirm Password" %}</label>
+                        <input name="{{ form.password2.html_name }}" type="password" id="id_{{ form.password2.html_name }}" value="{% if form.password2.value %}{{ form.password2.value }}{% endif %}">
+                        {% if form.password2.errors %}<span class="help-block">{{ form.password2.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-is-6">
+                    <div class="form-group{% if form.first_name.errors %} error{% endif %}">
+                        <label for="id_{{ form.first_name.html_name }}">{% trans "First name" %}</label>
+                        <input name="{{ form.first_name.html_name }}" type="text" id="id_{{ form.first_name.html_name }}" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
+                        {% if form.first_name.errors %}<span class="help-block">{{ form.first_name.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
+                <div class="col-is-6">
+                    <div class="form-group{% if form.last_name.errors %} error{% endif %}">
+                        <label for="id_{{ form.last_name.html_name }}">{% trans "Last name" %}</label>
+                        <input name="{{ form.last_name.html_name }}" type="text" id="id_{{ form.last_name.html_name }}" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                        {% if form.last_name.errors %}<span class="help-block">{{ form.last_name.errors.as_text }}</span>{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <h2>{% trans "Set your username" %}</h2>
+            <div class="input-username success">
+                <input type="text" name="username" value="orjangran1337">
+                <!--<span class="hint">Someone already has that username.</span>-->
+                <span class="hint">This username is available.</span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-email-signup">{% trans "Sign up" %}</button>
+            </div>
+
+            <div class="form-group">
+                {% url 'django.contrib.flatpages.views.flatpage' url='about/terms-of-use/' as tou %}
+                <p>{% blocktrans with tou=tou %}By signing up you are agreeing to our <a class="underline" target="_blank" href="{{tou}}">Privacy Policy & Terms of use</a>.{% endblocktrans %}</p>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+{% block footer %}
+{% endblock footer %}

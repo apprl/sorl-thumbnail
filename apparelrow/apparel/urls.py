@@ -227,5 +227,3 @@ urlpatterns = patterns('',
     url(r'^admin/dashboard/adstores/$', 'apparelrow.apparel.views.admin.ad_stores', name='admin-ad-stores'),
     url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard_'),
 )
-
-
