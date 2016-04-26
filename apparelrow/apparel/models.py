@@ -538,7 +538,7 @@ class ShortDomainLinkManager(models.Manager):
 
 
 class ShortDomainLink(models.Model):
-    url = models.CharField(max_length=512, blank=False, null=False)
+    url = models.CharField(max_length=1024, blank=False, null=False)
     vendor = models.ForeignKey(Vendor)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='short_domain_links')
     created = models.DateTimeField(default=timezone.now)
@@ -746,8 +746,9 @@ class VendorProduct(models.Model):
         vendor = self.vendor
         product = self.product
         earning_cut = None
-        if vendor:
-            if hasattr(user, "is_partner") and user.is_partner: # User must be partner
+        if hasattr(user, "is_partner") and user.is_partner:
+            if vendor:
+             # User must be partner
                 has_cut = get_model('dashboard', 'Cut').objects.\
                             filter(group=user.partner_group, vendor=vendor).exists()
                 if user.partner_group and has_cut:
@@ -774,9 +775,8 @@ class VendorProduct(models.Model):
                     logger.warning("Could not calculate earning cut for user %s because user does not have a cut"
                                    % user.id)
             else:
-                logger.warning("Could not calculate earning cut for user %s because user is not partner" % user.id)
-        else:
-            logger.warning("No default vendor for product %s %s" % (product.product_name, product.id))
+                logger.warning("No default vendor for product %s %s" % (product.product_name, product.id))
+
         return earning_cut
 
     def get_product_earning(self, user):
@@ -786,51 +786,54 @@ class VendorProduct(models.Model):
         product_earning = None
         currency = None
 
-        earning_cut = self.get_earning_cut_for_product(user)
-
         earning_total = decimal.Decimal(0)
-        if user.partner_group and user.partner_group.has_cpc_all_stores:
-            try:
-                cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=self.vendor)
-                total_publisher_cut = 1
-                publisher_cut = 1
 
-                if user.owner_network:
-                    publisher_cut = 1 - user.owner_network.owner_network_cut
-
-                earning_amount = cut.locale_cpc_amount
-                # Look for exceptions
-                if cut.rules_exceptions:
-                    cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
-                    if cut_exception:
-                        total_publisher_cut = cut_exception
-                    if publisher_cut_exception and user.owner_network:
-                        publisher_cut = publisher_cut_exception
-                    exception_amount, exception_currency = parse_cost_amount(click_cost)
-                    if exception_amount and exception_currency:
-                        earning_amount = exception_amount
-                        currency = exception_currency
-
-                publisher_earning = earning_amount * (total_publisher_cut * publisher_cut)
-
-                product_earning = Decimal(publisher_earning.quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
-                currency = cut.locale_cpc_currency
-            except get_model('dashboard', 'Cut').DoesNotExist:
-                logger.warning("Cut for commission group %s and vendor %s does not exist." %
-                               (user.partner_group, self.vendor.name))
-        elif earning_cut:
-            if self.vendor.is_cpc:
+        if user.is_partner:
+            earning_cut = self.get_earning_cut_for_product(user)
+            if user.partner_group and user.partner_group.has_cpc_all_stores:
                 try:
-                    cost_per_click = get_vendor_cost_per_click(self.vendor)
-                    earning_total = cost_per_click.locale_price
-                    currency = cost_per_click.locale_currency
-                except:
-                    logger.warn("Not able to calculate earning for {}".format(self.product.product_name))
-                    earning_total = 0
-            elif self.vendor.is_cpo:
-                earning_total = self.locale_price if not self.locale_discount_price else self.locale_discount_price
-                currency = self.locale_currency
-            product_earning = Decimal((earning_total * earning_cut).quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
+                    cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=self.vendor)
+                    total_publisher_cut = 1
+                    publisher_cut = 1
+
+                    if user.owner_network:
+                        publisher_cut = 1 - user.owner_network.owner_network_cut
+
+                    earning_amount = cut.locale_cpc_amount
+                    # Look for exceptions
+                    if cut.rules_exceptions:
+                        cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
+                        if cut_exception:
+                            total_publisher_cut = cut_exception
+                        if publisher_cut_exception and user.owner_network:
+                            publisher_cut = publisher_cut_exception
+                        exception_amount, exception_currency = parse_cost_amount(click_cost)
+                        if exception_amount and exception_currency:
+                            earning_amount = exception_amount
+                            currency = exception_currency
+
+                    publisher_earning = earning_amount * (total_publisher_cut * publisher_cut)
+
+                    product_earning = Decimal(publisher_earning.quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
+                    currency = cut.locale_cpc_currency
+                except get_model('dashboard', 'Cut').DoesNotExist:
+                    logger.warning("Cut for commission group %s and vendor %s does not exist." %
+                                   (user.partner_group, self.vendor.name))
+                except get_model('dashboard', 'Cut').MultipleObjectsReturned:
+                    logger.warning("Multiple cuts for commission group %s and vendor %s exist. Please make sure there is only one instance of this Cut." % (user.partner_group, self.vendor.name))
+            elif earning_cut:
+                if self.vendor.is_cpc:
+                    try:
+                        cost_per_click = get_vendor_cost_per_click(self.vendor)
+                        earning_total = cost_per_click.locale_price
+                        currency = cost_per_click.locale_currency
+                    except:
+                        logger.warn("Not able to calculate earning for {}".format(self.product.product_name))
+                        earning_total = 0
+                elif self.vendor.is_cpo:
+                    earning_total = self.locale_price if not self.locale_discount_price else self.locale_discount_price
+                    currency = self.locale_currency
+                product_earning = Decimal((earning_total * earning_cut).quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
         return product_earning, currency
 
     def __unicode__(self):

@@ -120,6 +120,7 @@ def generate_aggregated_from_total(row, user_dict, earning_amount):
         get_or_create(user_id=user_dict['user_id'], created=row.date.date(), data_type='aggregated_from_total',
                       user_name=user_dict['user_name'], user_username=user_dict['user_username'])
 
+    # If instance has been created, add more information about the user
     if created:
         instance.user_image, instance.user_link = get_user_thumbnail_and_link(row.user)
 
@@ -142,7 +143,8 @@ def generate_aggregated_from_total(row, user_dict, earning_amount):
     elif row.user_earning_type in ('publisher_sale_click_commission', 'publisher_sale_click_commission_all_stores'):
         instance.click_earnings += earning_amount
         instance.sale_plus_click_earnings += earning_amount
-        if row.sale.affiliate == "cpc_all_stores":
+        if not row.sale.affiliate == "cpc_all_stores" or \
+                (row.sale.affiliate == "cpc_all_stores" and row.sale.vendor.is_cpo):
             instance.paid_clicks += get_clicks_from_sale(row.sale)
 
     # If earning is from APPRL
@@ -211,7 +213,7 @@ def generate_aggregated_from_product(row, user_dict, earning_amount, start_date,
         instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(row.from_product)
     instance.save()
 
-def generate_aggregated_from_links(self, row, user_dict, earning_amount, start_date, end_date):
+def generate_aggregated_from_links(row, user_dict, earning_amount, start_date, end_date):
     """
     Aggregated data per publisher per link that originated the sale from total earnings.
     """
@@ -393,14 +395,16 @@ def generate_aggregated_clicks_from_product(start_date, end_date):
                 instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(product)
 
                 # Aggregate click data (earnings and amount of clicks) for product
-                if vendor.is_cpc or user.partner_group.has_cpc_all_stores:
+                is_cpc_all_stores = hasattr(user, 'partner_group') and hasattr(user.partner_group, 'has_cpc_all_stores') \
+                                    and user.partner_group.has_cpc_all_stores
+                if vendor.is_cpc or is_cpc_all_stores:
                     try:
-                        sale_type = "cpc_all_stores" if user.partner_group.has_cpc_all_stores else "cost_per_click"
+                        sale_type = "cpc_all_stores" if is_cpc_all_stores else "cost_per_click"
                         sale = Sale.objects.get(user_id=row['user_id'], sale_date__range=(start_date, end_date),
                                                 vendor=vendor, affiliate=sale_type)
 
                         earning_type = 'publisher_sale_click_commission_all_stores' \
-                            if user.partner_group.has_cpc_all_stores else 'publisher_sale_click_commission'
+                            if user and user.partner_group.has_cpc_all_stores else 'publisher_sale_click_commission'
                         earning = UserEarning.objects.get(user_id=row['user_id'], date=row['day'], sale=sale,
                                                       user_earning_type=earning_type)
                         clicks_amount = get_clicks_from_sale(earning.sale)
@@ -423,6 +427,7 @@ def generate_aggregated_clicks_from_product(start_date, end_date):
                 if user and user.owner_network:
                     generate_aggregated_data_network_owner(user.owner_network, product, vendor, row['day'],
                                                                 row['clicks'], user)
+
 
 def generate_aggregated_clicks_from_links(start_date, end_date):
     """

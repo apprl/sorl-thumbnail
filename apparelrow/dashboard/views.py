@@ -18,6 +18,7 @@ from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import get_location
 from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
+from apparelrow.profile.notifications import retrieve_url
 from django.views.generic import TemplateView
 
 import logging
@@ -182,14 +183,17 @@ class ReferralView(TemplateView):
         # TODO: fix when we have swedish email
         #if referral_language == 'sv':
             #template = 'dashboard/referral_mail_sv.html'
-        body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
+
+        # Get user avatar
+        if request.user.image or request.user.facebook_user_id:
+            profile_photo_url = request.user.avatar_circular_large
+        else:
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
 
         for email in emails:
-            send_email_task.delay(u'Invitation from {referral_name}'.format(referral_name=referral_name), body, email,
-                                  u'{} <{}>'.format(referral_name, referral_email))
+            send_email_task.delay(email, referral_name, referral_code, profile_photo_url)
         messages.add_message(request, messages.SUCCESS, u'Sent mail to %s' % (', '.join(emails),))
         return render(request, self.template_name)
-
 
 @DeprecationWarning
 def referral(request):
