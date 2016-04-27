@@ -104,8 +104,8 @@ def stringify(field, cleantags=False):
         return field
 
 def compare_scraped_and_saved(item_scraped, product_scraped):
-    include = ("sku", "name", "url", "category", "description", "brand", "gender", "colors", "regular_price",
-               "discount_price", "currency", "in_stock", "stock")
+    include = ("sku", "name", "url", "category", "brand", "regular_price",
+               "discount_price", "currency", "in_stock")
 
     attributes = []
     for key in include:
@@ -126,8 +126,8 @@ def get_site_product_hash(site_product, **kwargs):
     :param site_product:
     :return:
     """
-    include = ("product_name", "product_key", "description", "category_id", "manufacturer_id", "sku", "static_brand", "gender", "availability",)
-    kwarg_keys = ("regular_price", "discount_price", "currency", "in_stock", "colors")
+    include = ("product_name", "product_key", "category_id", "manufacturer_id", "sku", "static_brand", "availability",)
+    kwarg_keys = ("regular_price", "discount_price", "currency", "in_stock",)
     attributes = []
     for key in include:
         attributes.append(stringify(getattr(site_product, key)))
