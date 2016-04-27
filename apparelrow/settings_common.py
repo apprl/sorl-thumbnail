@@ -119,7 +119,7 @@ VENDOR_LOCATION_MAPPING = {
     "Soft Goat": ["FI", "SE", "NO", "DK"],
     "Eleven": ["SE"],
     "Happy Socks": ["SE"],
-    "Hedvigs Showroom": ["SE"],
+    "Hedvig Showroom": ["SE"],
     "Heelow": ["SE"],
     "Henry Kole": ["SE", "DK", "NO", "FI"],
     "Elevenfiftynine": ["SE"],
@@ -1041,5 +1041,5 @@ GEOIP_DEBUG = False
 GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"
 
 # Variable for temporary tracking string for tailsweep campaign.
-GINA_TRACKING = {"user_ids": [24,30714,30716,30733,30717,24257,30164,30719,30720,30721,30722,30724,30725,24312,30732,30738,30744],
+GINA_TRACKING = {"user_ids": [30714,30716,30733,30717,24257,30164,30719,30720,30721,30722,30724,30725,24312,30732,30738,30744],
                  "tracking_string": "&utm_source=tailsweep_apprl&utm_medium=social&utm_campaign=conversions_2016_se"}

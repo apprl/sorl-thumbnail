@@ -21,6 +21,10 @@ from django.core.management.base import BaseCommand
 
 logger = logging.getLogger('dashboard')
 
+def check_user_has_cpc_all_stores(user):
+    return hasattr(user, 'partner_group') and hasattr(user.partner_group, 'has_cpc_all_stores') \
+           and user.partner_group.has_cpc_all_stores
+
 def get_date_range(q_date):
     """
     Parse the given date q_date and return an interval of datetime that consists on the given date range (day or month)
@@ -78,10 +82,11 @@ def generate_aggregated_data_network_owner(owner, product, vendor, day, clicks, 
         _, owner_instance.user_name, owner_instance.user_username = get_user_attrs(owner)
 
     # If vendor is CPC or user belongs to a Commission group that pays per click to its publishers for all stores
-    if vendor.is_cpc or user.partner_group.has_cpc_all_stores:
+    is_cpc_all_stores = check_user_has_cpc_all_stores(user)
+    if vendor.is_cpc or is_cpc_all_stores:
         try:
-            sale_type = "cpc_all_stores" if user.partner_group.has_cpc_all_stores else "cost_per_click"
-            earning_type = "publisher_network_click_tribute_all_stores" if user.partner_group.has_cpc_all_stores \
+            sale_type = "cpc_all_stores" if is_cpc_all_stores else "cost_per_click"
+            earning_type = "publisher_network_click_tribute_all_stores" if is_cpc_all_stores \
                 else "publisher_network_click_tribute"
 
             sale = Sale.objects.get(user_id=user.id, sale_date__range=(start_date, end_date),
@@ -152,10 +157,11 @@ def generate_aggregated_from_total(row, user_dict, earning_amount):
         # Aggregated clicks only if sale is not a sale generated for those publishers who earn per click for all
         # store, so it avoids aggregating twice those clicks and the earning for APPRL on these sales is 0.00 always
         apprl_clicks = get_clicks_from_sale(row.sale)
+        is_cpc_all_stores = check_user_has_cpc_all_stores(row.from_user)
         if row.sale.type == Sale.COST_PER_CLICK:
             instance.click_earnings += earning_amount
             if row.sale.user_id == 0 or \
-                    (row.from_user.partner_group.has_cpc_all_stores and row.sale.affiliate == "cpc_all_stores"):
+                    (is_cpc_all_stores and row.sale.affiliate == "cpc_all_stores"):
                 instance.paid_clicks += apprl_clicks
         elif row.sale.type == Sale.COST_PER_ORDER:
             instance.sale_earnings += earning_amount
@@ -202,10 +208,10 @@ def generate_aggregated_from_product(row, user_dict, earning_amount, start_date,
             clicks_count = get_model('statistics', 'ProductStat').objects.\
                 filter(is_valid=True, user_id=user_dict['user_id'], vendor=row.sale.vendor.name, product=row.from_product.slug,
                        created__range=(start_date, end_date)).count()
-            cpc_all_stores = False
+            is_cpc_all_stores = False
             if user_dict['user_id'] != 0:
-                cpc_all_stores = row.user.partner_group.has_cpc_all_stores
-            if row.sale.vendor.is_cpc or cpc_all_stores:
+                is_cpc_all_stores = check_user_has_cpc_all_stores(row.user)
+            if row.sale.vendor.is_cpc or is_cpc_all_stores:
                 instance.paid_clicks = clicks_count
             instance.total_clicks = clicks_count
         user = None if user_dict['user_id'] == 0 else get_user_model().objects.get(id=user_dict['user_id'])
@@ -247,7 +253,7 @@ def generate_aggregated_from_links(row, user_dict, earning_amount, start_date, e
                        source_link=link, created__range=(start_date, end_date)).count()
             cpc_all_stores = False
             if user_dict['user_id'] != 0:
-                cpc_all_stores = row.user.partner_group.has_cpc_all_stores
+                cpc_all_stores = check_user_has_cpc_all_stores(row.user)
             if row.sale.vendor.is_cpc or cpc_all_stores:
                 instance.paid_clicks = clicks_count
             instance.total_clicks = clicks_count
@@ -395,8 +401,7 @@ def generate_aggregated_clicks_from_product(start_date, end_date):
                 instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(product)
 
                 # Aggregate click data (earnings and amount of clicks) for product
-                is_cpc_all_stores = hasattr(user, 'partner_group') and hasattr(user.partner_group, 'has_cpc_all_stores') \
-                                    and user.partner_group.has_cpc_all_stores
+                is_cpc_all_stores = check_user_has_cpc_all_stores(user)
                 if vendor.is_cpc or is_cpc_all_stores:
                     try:
                         sale_type = "cpc_all_stores" if is_cpc_all_stores else "cost_per_click"
@@ -404,7 +409,7 @@ def generate_aggregated_clicks_from_product(start_date, end_date):
                                                 vendor=vendor, affiliate=sale_type)
 
                         earning_type = 'publisher_sale_click_commission_all_stores' \
-                            if user and user.partner_group.has_cpc_all_stores else 'publisher_sale_click_commission'
+                            if is_cpc_all_stores else 'publisher_sale_click_commission'
                         earning = UserEarning.objects.get(user_id=row['user_id'], date=row['day'], sale=sale,
                                                       user_earning_type=earning_type)
                         clicks_amount = get_clicks_from_sale(earning.sale)
@@ -427,7 +432,6 @@ def generate_aggregated_clicks_from_product(start_date, end_date):
                 if user and user.owner_network:
                     generate_aggregated_data_network_owner(user.owner_network, product, vendor, row['day'],
                                                                 row['clicks'], user)
-
 
 def generate_aggregated_clicks_from_links(start_date, end_date):
     """
@@ -469,14 +473,16 @@ def generate_aggregated_clicks_from_links(start_date, end_date):
                 instance.aggregated_from_name = "Link to %s " % row['source_link']
                 instance.aggregated_from_slug = row['source_link']
 
-                if vendor.is_cpc or user.partner_group.has_cpc_all_stores:
+                is_cpc_all_stores = check_user_has_cpc_all_stores(user)
+
+                if vendor.is_cpc or is_cpc_all_stores:
                     instance.paid_clicks += decimal.Decimal(row['clicks'])
                     try:
-                        sale_type = "cpc_all_stores" if user.partner_group.has_cpc_all_stores else "cost_per_click"
+                        sale_type = "cpc_all_stores" if is_cpc_all_stores else "cost_per_click"
                         sale = Sale.objects.get(user_id=row['user_id'], sale_date__range=(start_date, end_date),
                                                 vendor=vendor, affiliate=sale_type)
                         earning_type = 'publisher_sale_click_commission_all_stores' \
-                            if user.partner_group.has_cpc_all_stores else 'publisher_sale_click_commission'
+                            if is_cpc_all_stores else 'publisher_sale_click_commission'
                         earning = UserEarning.objects.get(user_id=row['user_id'], date=row['day'], sale=sale,
                                                           user_earning_type=earning_type)
                         clicks_amount = get_clicks_from_sale(earning.sale)

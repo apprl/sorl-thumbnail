@@ -252,6 +252,7 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
             log.warning("Cut for commission group %s and vendor %s does not exist." %
                            (user.partner_group, vendor_obj.name))
 
+    type_code = CPC_CODE
     if cut:
         if user.partner_group.has_cpc_all_stores:
             # For Publishers who earns CPC for all stores, cut is 100% unless exceptions are defined

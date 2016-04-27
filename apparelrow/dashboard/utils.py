@@ -123,6 +123,9 @@ def parse_rules_exception(data_exceptions, user_id):
     Return cut for publisher network and total publisher cut after removing owner network tribute from exception if
     there is an exception for given user id
     """
+    if not data_exceptions:
+        data_exceptions = []
+
     cut_exception = None
     publisher_cut = None
     click_cost = None

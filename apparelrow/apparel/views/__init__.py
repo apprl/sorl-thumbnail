@@ -366,11 +366,14 @@ class ProductDetailView(DetailView):
 
         # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
         vendor_markets = None
-        if default_vendor:
+        if default_vendor and request.user and request.user.is_authenticated():
             vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
 
             # Calculate cost per click and earning cut
             product_earning, currency = product.default_vendor.get_product_earning(request.user)
+        else:
+            product_earning = None
+            currency = None
 
         availability_text = get_availability_text(vendor_markets)
         warning_text = get_location_warning_text(vendor_markets, request.user, "product")
