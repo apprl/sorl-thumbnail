@@ -125,6 +125,7 @@ def generate_aggregated_from_total(row, user_dict, earning_amount):
         get_or_create(user_id=user_dict['user_id'], created=row.date.date(), data_type='aggregated_from_total',
                       user_name=user_dict['user_name'], user_username=user_dict['user_username'])
 
+    # If instance has been created, add more information about the user
     if created:
         instance.user_image, instance.user_link = get_user_thumbnail_and_link(row.user)
 

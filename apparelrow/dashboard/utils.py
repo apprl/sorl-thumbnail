@@ -710,6 +710,7 @@ def render_detail_earnings(request):
     Return a list of user earning details given a date range when an AJAX request is made
     Todo: Very heavy method, need to be fixed.
     """
+    json_data = json.dumps({})
     if request.method == 'GET':
         month = request.GET.get('month', None)
         year = request.GET.get('year', None)
@@ -734,7 +735,8 @@ def render_detail_earnings(request):
                 end_date = end_date.replace(day=calendar.monthrange(start_date.year, start_date.month)[1])
             earnings = retrieve_user_earnings(start_date, end_date, user, limit)
             json_data = json.dumps(earnings)
-            return HttpResponse(json_data)
+    return HttpResponse(json_data)
+
 
 def get_top_summary(current_user):
     """
