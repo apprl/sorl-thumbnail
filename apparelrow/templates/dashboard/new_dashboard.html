@@ -329,7 +329,7 @@
     function fetchEarnings(month, year, user_id, currency, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year)
-                + '&user_id=' + encodeURIComponent(user_id), true);
+                + '&user_id=' + encodeURIComponent(user_id) + "&limit=50", true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
               var parsed = {};
