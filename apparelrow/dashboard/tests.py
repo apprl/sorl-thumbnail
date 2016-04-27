@@ -2832,6 +2832,48 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(invalid_clicks[1], 152)
         self.assertEqual(invalid_clicks[2], 248)
 
+    def test_check_user_has_cpc_all_stores_user_is_none(self):
+        """
+        Test  if method returns False when User is None
+        """
+        is_cpc_all = check_user_has_cpc_all_stores(None)
+        self.assertFalse(is_cpc_all)
+
+    def test_check_user_has_cpc_all_stores_part_group_is_none(self):
+        """
+        Test if method returns False when User does not belong to a Partner Group
+        """
+        user = UserFactory.create()
+        is_cpc_all = check_user_has_cpc_all_stores(user)
+        self.assertFalse(is_cpc_all)
+
+    def test_check_user_has_cpc_all_stores_part_group_is_not_cpc_all_stores(self):
+        """
+        Test if method returns  false when User is not None, and belongs to a partner group but partner group has
+        has_cpc_all_stores set to False
+        """
+        user = UserFactory.create()
+        partner_group = get_model('dashboard', 'Group').objects.create(name="Group")
+        user.partner_group = partner_group
+        user.save()
+
+        self.assertFalse(partner_group.has_cpc_all_stores)
+        is_cpc_all = check_user_has_cpc_all_stores(user)
+        self.assertFalse(is_cpc_all)
+
+    def test_check_user_has_cpc_all_stores_part_group(self):
+        """
+        Test method return True when user exists, belongs to a partner group and partner group has has_cpc_all_stores
+        set to True
+        """
+        user = UserFactory.create()
+        partner_group = get_model('dashboard', 'Group').objects.create(name="Group", has_cpc_all_stores=True)
+        user.partner_group = partner_group
+        user.save()
+
+        self.assertTrue(partner_group.has_cpc_all_stores)
+        is_cpc_all = check_user_has_cpc_all_stores(user)
+        self.assertTrue(is_cpc_all)
 
 class MockRequest(object):
     pass

@@ -765,3 +765,10 @@ def get_top_summary(current_user):
         total_earned += pay.amount * rate
 
     return pending_earnings, confirmed_earnings, pending_payment, total_earned
+
+def check_user_has_cpc_all_stores(user):
+    """
+    Check if user exists, belongs to a partner group and publisher gets paid per click for all stores
+    """
+    return hasattr(user, 'partner_group') and hasattr(user.partner_group, 'has_cpc_all_stores') \
+           and user.partner_group.has_cpc_all_stores
