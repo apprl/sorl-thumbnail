@@ -153,7 +153,9 @@ class DatabaseHandler:
 
         if bool(created or updated):
             cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600*24*90)
-            log.info('Product {key} is updated or created, parsing will ensue.'.format(**item))
+            verb = "updated" if updated else "created"
+            item.update({"verb": verb})
+            log.info('Product {key} is {verb}, parsing will ensue.'.format(**item))
             if ASYNC_PARSING:
                 parse_theimp_product.delay(product.id)
             else:
