@@ -78,7 +78,7 @@ class Importer(object):
         import datetime
         item = ProductItem(product)
         site_product = self._find_site_product(item)
-        time_limit = datetime.datetime.today() + datetime.timedelta(days=-4)
+        time_limit = datetime.datetime.today() + datetime.timedelta(days=-6)
 
         if is_valid:
             if site_product:
