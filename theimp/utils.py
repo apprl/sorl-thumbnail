@@ -103,6 +103,7 @@ def stringify(field, cleantags=False):
             field = strip_tags(field).strip()
         return field
 
+
 def compare_scraped_and_saved(item_scraped, product_scraped):
     include = ("sku", "name", "url", "category", "brand", "regular_price",
                "discount_price", "currency", "in_stock")
@@ -120,6 +121,7 @@ def compare_scraped_and_saved(item_scraped, product_scraped):
             logger.info("{} not equals {}".format(scraped_field, product_field))
     return attributes
 
+
 def get_site_product_hash(site_product, **kwargs):
     """
     Creating a data sig for site product, violates DRY principle on this experimental stage. Need refactoring later.
@@ -136,4 +138,5 @@ def get_site_product_hash(site_product, **kwargs):
     if kwargs:
         for key in kwarg_keys:
             attributes.append(stringify(kwargs.get(key)))
-    return hashlib.sha1("".join(attributes)).hexdigest()
+
+    return hashlib.sha1("".join(attributes)).hexdigest(), attributes

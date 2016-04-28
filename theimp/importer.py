@@ -24,6 +24,7 @@ class SiteImportError(Exception):
 
 class Importer(object):
     imported_cache_key = "imported_{id}"
+    imported_attributes_cache_key = "imported_attributes_{id}"
 
     def __init__(self, site_queue=None):
         self.site_product_model = get_model('apparel', 'Product')
@@ -165,9 +166,12 @@ class Importer(object):
         site_product.availability = bool(item.get_final('in_stock', False))
         site_product.product_image = self._product_image(item)
 
-        imported_hash = get_site_product_hash(site_product, **item.data[ProductItem.KEY_FINAL])
+        imported_hash, attributes = get_site_product_hash(site_product, **item.data[ProductItem.KEY_FINAL])
         previous_hash = cache.get(self.imported_cache_key.format(id=site_product.id))
         if not imported_hash == previous_hash:
+            previous_attributes = cache.get(self.imported_attributes_cache_key.format(id=site_product.id))
+            logger.info("{}".format(previous_attributes))
+            logger.info("{}".format(attributes))
             cache.set(self.imported_cache_key.format(id=site_product.id), imported_hash, 3600*24*90)
             site_product.save()
             self._update_vendor_product(item, site_product)

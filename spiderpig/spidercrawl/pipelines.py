@@ -144,7 +144,7 @@ class DatabaseHandler:
             if not previous_hash == product_hash:
                 updated = True
                 json_data = json.loads(product.json)
-                log.info(compare_scraped_and_saved(dict(item), json_data['scraped']))
+                log.info("Product {} has been updated, comparing: {}".format(product.id, compare_scraped_and_saved(dict(item), json_data['scraped'])))
                 json_data['scraped'].update(dict(item))
                 product.json = json.dumps(json_data)
                 product.vendor = vendor
