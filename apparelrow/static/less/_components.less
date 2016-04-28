@@ -9,7 +9,7 @@
 	- Comments
 	- Grids (non-framework)
 	- Lists
-	- Notifications & Messages
+	- Notifications, Hints & Messages
 	- Alerts
 	- Panels & filters
 	- Miscellaneous
@@ -1407,7 +1407,7 @@ main div.message {
 }
 li.discount-price, span.discount-price {
   	width: auto;
-	color: @secondaryColor;
+	color: @secondaryColor !important;
 }
 li.price.discounted {
   	width: auto;
@@ -1426,5 +1426,29 @@ li.price.discounted {
   	@media (max-width: @screen-md) {
 		font-size: 14px;
 	 	bottom: 159px;
+	}
+}
+.ribbon {
+	position: absolute;
+	top: 0;
+	left: 15px;
+	width: 120px;
+	height: 120px;
+	overflow: hidden;
+	pointer-events: none;
+	span {
+		text-align: center;
+		background-color: #999;
+		color: white;
+		position: absolute;
+		width: 240px;
+		top: 15px;
+		left: -90px;
+		width: 240px;
+		line-height: 30px;
+		height: 30px;
+		-webkit-transform: rotate(-45deg);
+		-ms-transform: rotate(-45deg);
+		transform: rotate(-45deg);
 	}
 }

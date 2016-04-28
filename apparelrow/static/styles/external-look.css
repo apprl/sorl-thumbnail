@@ -39,6 +39,10 @@ html.look-type-C .collage {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   margin: 0;
   background-color: white;
   font-family: 'Neuzeit Regular', sans-serif;
@@ -119,8 +123,8 @@ html.look-type-C .collage {
   color: #999;
 }
 .apprl-look .product-meta {
-  float: left;
-  width: 160px;
+  float: right;
+  width: 150px;
   text-align: center;
 }
 .apprl-look .tooltip-link .tooltip-container {
@@ -185,7 +189,7 @@ html.look-type-C .collage {
   height: 12px;
   left: 50%;
   bottom: -6px;
-  margin-left: -6px;
+  margin-left: 1.5px;
   background-color: white;
   -moz-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
