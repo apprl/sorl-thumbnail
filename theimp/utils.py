@@ -66,8 +66,7 @@ def get_product_hash(item_subset):
     :param item_subset:
     :return:
     """
-    include = ("sku", "name", "url", "category", "brand", "regular_price",
-               "discount_price", "currency", "in_stock")
+    include = ("sku", "name", "url", "category", "brand", "regular_price","discount_price", "currency", "in_stock")
     attributes = []
     for key in include:
         field = stringify( item_subset.get(key) )
@@ -105,8 +104,7 @@ def stringify(field, cleantags=False):
 
 
 def compare_scraped_and_saved(item_scraped, product_scraped):
-    include = ("sku", "name", "url", "category", "brand", "regular_price",
-               "discount_price", "currency", "in_stock")
+    include = ("sku", "name", "url", "category", "brand", "regular_price","discount_price", "currency", "in_stock")
 
     attributes = []
     for key in include:

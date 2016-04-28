@@ -173,6 +173,7 @@ class Importer(object):
             logger.info("{}".format(previous_attributes))
             logger.info("{}".format(attributes))
             cache.set(self.imported_cache_key.format(id=site_product.id), imported_hash, 3600*24*90)
+            cache.set(self.imported_attributes_cache_key.format(id=site_product.id), attributes, 3600*24*90)
             site_product.save()
             self._update_vendor_product(item, site_product)
             self._update_product_options(item, site_product)
