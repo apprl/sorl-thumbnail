@@ -163,10 +163,6 @@ def generate_aggregated_from_total(row, user_dict, earning_amount):
                 instance.sales += 1
         instance.sale_plus_click_earnings += earning_amount
 
-        if row.sale.affiliate != 'cpc_all_stores' or \
-                (row.sale.affiliate == 'cpc_all_stores' and row.sale.vendor.is_cpo):
-            instance.total_clicks += apprl_clicks
-
     instance.save()
 
 def generate_aggregated_from_product(row, user_dict, earning_amount, start_date, end_date):
@@ -184,7 +180,7 @@ def generate_aggregated_from_product(row, user_dict, earning_amount, start_date,
         instance.user_username = user_dict['user_name']
         instance.aggregated_from_image, instance.aggregated_from_link = get_product_thumbnail_and_link(row.from_product)
 
-    if row.user_earning_type in ('publisher_sale_commission', 'apprl_commission'):
+    if row.user_earning_type == 'publisher_sale_commission':
         instance.sale_earnings += row.amount
         instance.sales += 1
     elif row.user_earning_type == 'referral_sale_commission':
@@ -229,7 +225,7 @@ def generate_aggregated_from_links(row, user_dict, earning_amount, start_date, e
         instance.user_username = user_dict['user_name']
         instance.aggregated_from_name = "Link to %s " % link
 
-    if row.user_earning_type in ('publisher_sale_commission', 'apprl_commission'):
+    if row.user_earning_type == 'publisher_sale_commission':
         instance.sale_earnings += row.amount
         instance.sales += 1
     elif row.user_earning_type == 'referral_sale_commission':
@@ -501,7 +497,7 @@ class Command(BaseCommand):
         optparse.make_option('--date',
             action='store',
             dest='date',
-            help='Select a custom date in the format YYYY-MM-DD or YYYY-MM',
+            help='Select a custom date in the format YYYY-MM-DD',
             default= None,
         ),
     )

@@ -145,6 +145,7 @@ VENDOR_LOCATION_MAPPING = {
     "Boozt dk": ["DK"],
     "ASOS no": ["NO"],
     "QVC": ["US"],
+    "Sportamore": ["SE"],
     "Room 21 no": ["NO"],
     "Rum 21 se": ["SE"],
     "default": ["ALL", "SE", "NO", "US", "DK", "FI"],
