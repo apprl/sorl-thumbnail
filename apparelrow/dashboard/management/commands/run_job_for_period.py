@@ -21,6 +21,12 @@ class Command(BaseCommand):
             help='Select date period YYYY-MM to run collect_aggregated_data command',
             default= None,
         ),
+        optparse.make_option('--command',
+            action='store',
+            dest='command',
+            help='Select command to run',
+            default='collect_aggregated_data',
+        ),
     )
 
     def handle(self, *args, **options):
@@ -31,11 +37,12 @@ class Command(BaseCommand):
         """
         # Initialize date period
         date_array = options.get('date').split("-")
+        command = options.get('command')
         year = int(date_array[0])
         month = int(date_array[1])
 
         start_date = date(year, month, 1)
-        logger.debug("Starting aggregation of data for month period %s-%s" % (year, month))
+        logger.debug("Running job %s for month period %s-%s" % (command, year, month))
 
         day_count = monthrange(year, month)[1]
 
@@ -44,7 +51,7 @@ class Command(BaseCommand):
 
         for single_date in (start_date + timedelta(n) for n in range(day_count)):
             pbar.update(single_date.day)
-            call_command('collect_aggregated_data', date=single_date.strftime('%Y-%m-%d'), verbosity=0,
+            call_command(command, date=single_date.strftime('%Y-%m-%d'), verbosity=0,
                          interactive=False)
         pbar.finish()
-        logger.debug("Finishing aggregation of data for month period %s-%s" % (year, month))
+        logger.debug("Finishing job %s month period %s-%s" % (command, year, month))
