@@ -28,7 +28,7 @@
             ]);
             data.sort(0);
             var left = data.getColumnRange(1);
-            var right = data.getColumnRange(2);
+            var right = data.getColumnRange(4);
             var view = new google.visualization.DataView(data);
 
             // Append date
@@ -51,13 +51,40 @@
             {% if is_owner %}
                 columns_list.push(5);
             {% endif %}
-            var series = {
-                0: {targetAxisIndex: 0},
-                1: {targetAxisIndex: 0, color: '#ff9900'},
-                2: {targetAxisIndex: 0, color: '#ababab'},
-                3: {targetAxisIndex: 1, color: '#dc3912'},
-                4: {targetAxisIndex: 0, color: '#2c2c2c'}
-            };
+
+            {% if request.user.referral_partner %}
+                {% if is_owner %}
+                    var series = {
+                        0: {targetAxisIndex: 0}, // commission earnings
+                        1: {targetAxisIndex: 0, color: '#ff9900'}, // referral earning
+                        2: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                        3: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                        4: {targetAxisIndex: 0, color: '#2c2c2c'} // network earnings
+                    };
+                {% else %}
+                    var series = {
+                        0: {targetAxisIndex: 0}, // commission earnings
+                        1: {targetAxisIndex: 0, color: '#ff9900'}, // referral earning
+                        2: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                        3: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                    };
+                {% endif %}
+            {% else %}
+                {% if is_owner %}
+                    var series = {
+                        0: {targetAxisIndex: 0}, // commission earnings
+                        1: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                        2: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                        3: {targetAxisIndex: 0, color: '#2c2c2c'} // network earnings
+                    };
+                {% else %}
+                    var series = {
+                        0: {targetAxisIndex: 0}, // commission earnings
+                        1: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                        2: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                    };
+                {% endif %}
+            {% endif %}
             view.setColumns(columns_list);
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
