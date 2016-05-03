@@ -663,7 +663,7 @@ class AdminDashboardView(TemplateView):
             temp_list = []
             heading = row[0]
             temp_list.append(heading)
-            if heading in ('PPC clicks', 'Commission clicks', 'Clicks', 'Invalid clicks'):
+            if heading in ('PPC clicks', 'Commission clicks', 'Valid Clicks', 'Invalid clicks'):
                 for value, percentage in map(None, row[1][0], row[1][1]):
                     if not percentage:
                         percentage = "-"
