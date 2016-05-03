@@ -173,6 +173,9 @@ $(document).ready(function() {
                .on('click', 'body.registration-email .btn-email-signup', trackSignup('Signup', 'ClickEmailSignupSubmit'))
                .on('click', 'body.profile-welcome .btn-login-flow-continue', trackSignup('Signup', 'FollowBrandsPageCompleted'));
 
+    // Set pointer for checkboxes and radiobuttons labels
+    $('input[type="checkbox"]').parents().css("cursor", "pointer");
+    $('input[type="radio"]').parents().css("cursor", "pointer");
 
     // Facebook button sign in
     $(document).on('click', '.btn-facebook', function(e) {
@@ -328,6 +331,12 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('mouseenter', '.product-medium-earning', function () {
+        $(this).parent().find('.product-medium > .product-image-container').trigger("mouseenter");
+    });
+    $(document).on('mouseleave', '.product-medium-earning', function () {
+        $(this).parent().find('.product-medium > .product-image-container').trigger("mouseleave");
+    });
     // Product hover, works with medium
     $(document).on('mouseenter', '.product-medium > .product-image-container', function() {
         var element = $(this),
@@ -344,13 +353,33 @@ $(document).ready(function() {
                     }
                 }
             });
+
+            if (typeof(loadEarnings) != "undefined" && loadEarnings) {
+                $.getJSON(product_earnings_url + '?id=' + product_id, function(json) {
+                    var productEarningBlock = $("#product-medium-earning-" + product_id);
+                    productEarningBlock.html("");
+                    if (json['code'] == "success") {
+                        var helpText = "/click";
+                        if (json['type'] == "is_cpo")
+                            helpText = "/sale";
+                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText);
+                        productEarningBlock.css("padding", "10px");
+                        productEarningBlock.click(function() {
+                            window.location = element.find("a").attr("href");
+                            return false;
+                        })
+                    }
+                });
+            }
         }
         element.data('load_data', true);
         element.find('.hover').show();
+        element.parentsUntil("ul").find('.product-medium-earning').css('visibility', 'visible');
         element.find('.product-image').css({opacity: 0.3});
     }).on('mouseleave', '.product-medium > .product-image-container', function() {
         $(this).find('.hover').hide();
         $('.product-image').css({opacity: 1});
+        $(this).parentsUntil("ul").find('.product-medium-earning').css('visibility', 'hidden');
     });
 
     // Look hover, works with medium
@@ -458,15 +487,16 @@ function unlikeElement($element) {
 
 function showWarning($element) {
     var slug = $element.attr('data-slug');
-    var settings_link = '/profile/settings/email/#location-notifications';
+    var settings_link = '/profile/settings/account/#location';
     jQuery.ajax({
         type: 'GET',
         url: '/products/check_location/' + slug + '/',
         success: function(response, status, request) {
-            if(response){
+            if(response && !$("body").hasClass("product-detail-page")){
                 $.notify({
                     message: response + " <a class='alert-warning' style='text-decoration: underline;' href='" + settings_link + "'>Go to location settings</a>"
                 }, { // settings
+                    allow_dismiss: true,
                     type: 'warning',
                     z_index: 10031,
                     offset: 80,
@@ -476,6 +506,7 @@ function showWarning($element) {
                         align: "center"
                     }
                 });
+                $(".alert").addClass("alert-dismissible");
             }
         }
     });
@@ -982,14 +1013,12 @@ jQuery(document).ready(function() {
         // Fetch via ajax on pagination clicks
         $pagination.on('click', '.btn-pagination', function() {
             // Keep fetching automatically after the first click
-            $('#pagination-loader').show();
             var $this = $(this);
-            $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
+            $this.addClass('disabled hover').find('.status').text($this.data('loading-text'));
 
             $(window).data('dont-scroll', false);
 
             getPage($this);
-            $('#pagination-loader').hide();
             return false;
         });
 

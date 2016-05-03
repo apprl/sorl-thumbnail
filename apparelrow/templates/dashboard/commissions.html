@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static from staticfiles %}
+
+{% block extra-scripts %}
+    <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
+{% endblock %}
 
 {% block body-classes %}publisher-commissions{% endblock body-classes %}
 {% block body %}
@@ -8,7 +13,7 @@
     <h1>{% trans "Store Commissions" %}</h1>
 </div>
 
-<table class="table table-striped">
+<table id="commissions-table" class="sortable table table-striped">
     <thead class="hidden-xs">
         <tr>
             <th>{% trans "Store" %}</th>
@@ -19,16 +24,24 @@
     <tbody>
         {% for store in stores %}
         <tr>
-            <td><a href="{% url 'shop' %}?store={{ store.vendor_pk }}">{{ store.vendor_name }}</a></td>
-            <td>
+            <td data-sort="{{ store.vendor_name }}">
+                <a href="{% url 'shop' %}?store={{ store.vendor_pk }}">{{ store.vendor_name }}</a>
+            </td>
+            <td data-sort="{{ store.sort_index }}">
                 {{ store.currency }} {{ store.amount }}
-                {% if store.type == "is_cpc" %}
+                {% if store.earning_type == "is_cpc" %}
                     {% trans " per click" %}
-                {% elif store.type == "is_cpo" %}
+                {% elif store.earning_type == "is_cpo" %}
                     {% trans " per sale" %}
                 {% endif %}
             </td>
-            <td>{% if store.link %}<a class="btn btn-outline inverted" data-store="{{ store.store_pk }}" data-target="#modal_store_link">{% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}</a>{% endif %}</td>
+            <td>
+                {% if store.link %}
+                <a class="btn btn-outline inverted" data-store="{{ store.store_pk }}" data-target="#modal_store_link">
+                    {% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}
+                </a>
+                {% endif %}
+            </td>
         </tr>
         {% empty %}
         <tr>
@@ -40,7 +53,9 @@
     </tbody>
 </table>
 
-<p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
+{% if not request.user.partner_group.has_cpc_all_stores %}
+    <p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
+{% endif %}
 
 <div class="modal fade" id="modal_store_link" tabindex="-1"></div>
 <script type="text/javascript">
@@ -58,6 +73,7 @@
             $('#modal_store_link').modal('show');
         });
     });
+    new Tablesort($('#commissions-table').get(0));
 </script>
 
 {% endblock %}

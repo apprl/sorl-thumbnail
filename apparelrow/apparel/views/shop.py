@@ -168,9 +168,6 @@ def shop_instance_to_dict(shop):
 
     return shop_dict
 
-
-
-
 def delete_shop(request, shop_id):
     shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
 
@@ -592,7 +589,7 @@ def browse_products(request, template='apparel/browse.html', shop=None, embed_sh
 
     result.update(browse_text=browse_text)
 
-    paged_result.html = [o.template for o in paged_result.object_list if o]
+    paged_result.html = [(o.template, o.product) for o in paged_result.object_list if o and hasattr(o, 'template')]
     paged_result.object_list = []
 
     if not paged_result.html:
@@ -712,7 +709,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
     """
     Set query arguments that are common for every browse page access.
     """
-    query_arguments['fl'] = 'template:{0}_template'.format(translation.get_language())
+    query_arguments['fl'] = 'template:{0}_template, product:django_id'.format(translation.get_language())
 
     query_arguments['facet'] = 'on'
     query_arguments['facet.limit'] = -1

@@ -1,7 +1,14 @@
 {% spaceless %}
-<ul class="product-list list-unstyled row {% if not show_product_brand and is_embed_shop%}hide-captions{% endif %}">
-    {% for html in current_page.html %}
-    <li class="col-product-item">{{ html|safe }}</li>
+<ul class="product-list list-unstyled row {% if not show_product_brand and is_embed_shop %}hide-captions{% endif %}">
+    {% for html, product in current_page.html %}
+        <li class="col-product-item">
+            {{ html|safe }}
+            {% comment %}
+            {% if not is_embed_shop and user.is_partner %}
+                <div class="product-medium-earning" id="product-medium-earning-{{ product }}"></div>
+            {% endif %}
+            {% endcomment %}
+        </li>
     {% endfor %}
 </ul>
 <div class="pagination">

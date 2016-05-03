@@ -31,8 +31,8 @@
     <div class="container" itemscope itemtype="http://data-vocabulary.org/Product">
         {% if warning_text %}
         <div class="alert alert-warning alert-dismissible top-alert" role="alert">
-            <button type="button" class="close" data-dismiss="modal"><span></span></button>
-            {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-email' %}#location-notifications">{% trans "Go to location settings" %}</a>
+            <button type="button" class="close" data-dismiss="alert"><span></span></button>
+            {{ warning_text }} <a class="alert-warning" style="text-decoration: underline;" href="{% url 'settings-account' %}#location">{% trans "Go to location settings" %}</a>
         </div>
         {% endif %}
 
@@ -144,31 +144,21 @@
                             </div>
                             {% endcache %}
 
-                            {% if object.default_vendor and earning_cut and request.user.is_partner %}
-                                 {% if object.default_vendor.vendor.is_cpo %}
-                                    <p class="earning-box">You will earn approx. <span class="currency">{{ object.default_vendor.locale_currency }}</span>
-                                        {% if object.default_vendor.locale_discount_price %}
-                                            {% multiply object.default_vendor.locale_discount_price earning_cut %}
-                                        {% else %}
-                                            {% multiply object.default_vendor.locale_price earning_cut %}
+                                 <p class="earning-box">
+                                    {% if request.user.is_partner and object.default_vendor and product_earning %}
+                                        You will earn
+                                        {% if not request.user.partner_group.has_cpc_all_stores %}approx. {% endif %}
+                                        <span class="currency">{{ currency }}</span> {{ product_earning }}
+                                        {% if object.default_vendor.vendor.is_cpo %}
+                                            per generated sale of this item.
+                                        {% elif object.default_vendor.vendor.is_cpc %}
+                                            per click to this item.
                                         {% endif %}
-
-                                        per generated sale of this item
-                                    </p>
-                                {% elif object.default_vendor.vendor.is_cpc %}
-                                     <p class="earning-box">
-                                         {% if cost_per_click.locale_price %}
-                                            You will earn approx.
-                                                <span class="currency">{{ cost_per_click.locale_currency }}</span>
-                                                {% multiply cost_per_click.locale_price earning_cut %}
-                                                per click to this item
-                                         {% else %}
-                                            Settings for CPC is missing.
-                                         {% endif %}
-                                    </p>
-                                {% endif %}
+                                    {% else %}
+                                        Settings for earnings are missing.
+                                    {% endif %}
+                                </p>
                                 <br>
-                            {% endif %}
 
                             {% include 'apparel/fragments/share.html' %}
                         </section>
@@ -179,7 +169,7 @@
                             {% cache CACHE_TIMEOUT product_detail_selected_by object.id LANGUAGE_CODE %}
                             {% if partner_likes or object.manufacturer.user %}
                                 <a class="helper" href="#">{% trans "See all" %}</a>
-                                    <h4>{% trans "Selected by" %} <span>({{ partner_likes|length }})</span></h4>
+                                    <h4>{% trans "Selected by" %} <span>({{ partner_likes|get_selected_by }})</span></h4>
                             <hr>
 
                             <ul class="list-selected-by center-sm">

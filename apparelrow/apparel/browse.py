@@ -22,6 +22,8 @@ from apparelrow.apparel.models import Brand
 from apparelrow.apparel.models import Option
 from apparelrow.apparel.models import Category
 from apparelrow.apparel.models import Vendor
+from apparelrow.apparel.views import backend_product_earnings
+from apparelrow.apparel.utils import get_gender_url
 from apparelrow.apparel.utils import get_pagination_page, select_from_multi_gender, get_location
 
 logger = logging.getLogger('apparel.debug')
@@ -56,7 +58,7 @@ def set_query_arguments(query_arguments, request, facet_fields=None, currency=No
     """
     Set query arguments that are common for every browse page access.
     """
-    query_arguments['fl'] = 'template:{0}_template'.format(translation.get_language())
+    query_arguments['fl'] = 'template:{0}_template, product:django_id'.format(translation.get_language())
 
     query_arguments['facet'] = 'on'
     query_arguments['facet.limit'] = -1
@@ -211,13 +213,10 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     :param kwargs:
     :return:
     """
-
     if gender is None and user_gender is None:
         gender = select_from_multi_gender(request, 'shop', None)
-        if gender == 'M':
-            return HttpResponseRedirect('%s?%s' % (reverse('shop-men'), request.GET.urlencode()))
-        else:
-            return HttpResponseRedirect('%s?%s' % (reverse('shop-women'), request.GET.urlencode()))
+        return HttpResponseRedirect(u'{shop_url}?{parameters}'.format(shop_url=get_gender_url(gender, 'shop', default=True),
+                                                                      parameters=request.GET.urlencode()))
     elif user_gender is None:
         gender = select_from_multi_gender(request, 'shop', gender)
 
@@ -331,7 +330,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
 
     result.update(browse_text=browse_text)
 
-    paged_result.html = [o.template for o in paged_result.object_list if o and hasattr(o, 'template')]
+    paged_result.html = [(o.template, o.product) for o in paged_result.object_list if o and hasattr(o, 'template')]
     paged_result.object_list = []
 
     if not paged_result.html:
@@ -360,13 +359,15 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
     selected_brands = filter(None, map(_to_int, request.GET.get('manufacturer', '').split(',')))
     selected_brands_data = {}
     for brand in Brand.objects.values('id', 'name').filter(pk__in=selected_brands):
-        brand['href'] = '%s?manufacturer=%s' % (reverse('apparelrow.apparel.browse.browse_products'), brand['id'])
+        brand['href'] = u'{shop_url}?manufacturer={brand}'.format(shop_url=get_gender_url(gender, 'shop'),
+                                                                  brand=brand['id'])
         selected_brands_data[brand['id']] = brand
 
     selected_stores = filter(None, map(_to_int, request.GET.get('store', '').split(',')))
     selected_stores_data = {}
     for store in Vendor.objects.values('id', 'name').filter(pk__in=selected_stores):
-        store['href'] = '%s?store=%s' % (reverse('apparelrow.apparel.browse.browse_products'), store['id'])
+        store['href'] = u'{shop_url}?store={store}'.format(shop_url=get_gender_url(gender, 'shop'),
+                                                           store=store['id'])
         selected_stores_data[store['id']] = store
 
     result.update(
@@ -392,7 +393,7 @@ def browse_products(request, template='apparel/browse.html', gender=None, user_g
             html = loader.render_to_string('apparel/fragments/product_list.html',
                 {
                     'current_page': paged_result,
-                    'pagination': pagination
+                    'pagination': pagination,
                 },
                 context_instance=RequestContext(request)
             ),

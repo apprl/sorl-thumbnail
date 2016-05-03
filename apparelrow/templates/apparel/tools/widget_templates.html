@@ -37,18 +37,20 @@
 </script>
 
 <script type="text/template" id="dialog_save_template" data-title="{% trans "Save" %}">
-    <div class="form-group">
-        <label for="look_title">{% trans "Your title" %} *</label>
-        <input id="look_title" type="text" value="<%= title %>" name="title">
-    </div>
+    <form class="form">
+        <div class="form-group">
+            <label for="look_title">{% trans "Your title" %} *</label>
+            <input id="look_title" type="text" class="form-control" required value="<%= title %>" name="title">
+        </div>
 
-    <div class="form-group">
-        <label for="look_description">{% trans "Description" %}</label>
-        <textarea name="description" id="look_description"><%= description %></textarea>
-    </div>
+        <div class="form-group">
+            <label for="look_description">{% trans "Description" %}</label>
+            <textarea name="description" id="look_description"><%= description %></textarea>
+        </div>
 
-    <a href="#" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
-    <a href="#" class="btn btn-primary btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></a>
+        <a href="#" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
+        <button href="#" type="submit" class="btn btn-primary btn-save"><% if(published) { %>{% trans "Save" %}<% } else { %>{% trans "Save draft" %}<% } %></button>
+    </form>
 </script>
 
 <script type="text/template" id="dialog_no_products" data-title="{% trans "No products" %}">
@@ -57,21 +59,23 @@
 </script>
 
 <script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish" %}">
-    <div class="form-group">
-        <label for="look_title">{% trans "Your title" %} *</label>
-        <input id="look_title" type="text" value="<%= title %>" name="title">
-    </div>
+    <form class="form">
+        <div class="form-group">
+            <label for="look_title">{% trans "Your title" %} *</label>
+            <input id="look_title" type="text" class="form-control" required value="<%= title %>" name="title">
+        </div>
 
-    <div class="form-group">
-        <label for="look_description">{% trans "Description" %}</label>
-        <textarea name="description" id="look_description"><%= description %></textarea>
-    </div>
+        <div class="form-group">
+            <label for="look_description">{% trans "Description" %}</label>
+            <textarea name="description" id="look_description"><%= description %></textarea>
+        </div>
 
-    <!-- Hur kan jag få denna till att endast visas på Look? -->
-    <p>{% trans "After you have published your look, you can embed it on your site." %}</p>
+        <!-- Hur kan jag få denna till att endast visas på Look? -->
+        <p>{% trans "After you have published your look, you can embed it on your site." %}</p>
 
-    <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
-    <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
+        <button type="submit" href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</button>
+        <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>
+    </form>
 </script>
 
 <script type="text/template" id="look_edit_link_info_popup_template" data-title="{% trans "Link" %}">

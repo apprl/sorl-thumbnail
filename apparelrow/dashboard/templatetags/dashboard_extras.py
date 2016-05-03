@@ -23,11 +23,15 @@ def top_five(value):
 def floatdot(value):
     return ("%.2f" % value)
 
+floatdot.is_safe = True
+
 @register.filter(name='decimal_div')
-def decimalDiv(value, arg):
+def decimal_div(value, arg):
     if arg != 0:
-        return ("%.2f" % (decimal.Decimal(value)/decimal.Decimal(arg)))
+        return "%.2f" % (decimal.Decimal(value)/decimal.Decimal(arg))
     else:
         return "-"
 
-floatdot.is_safe = True
+@register.filter(name='decimal_add')
+def decimal_add(value, arg):
+    return "%.2f" % (decimal.Decimal(value) + decimal.Decimal(arg))

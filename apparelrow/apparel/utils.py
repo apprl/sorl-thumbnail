@@ -120,17 +120,16 @@ def get_product_alternative(product, default=None):
                        'fl': 'price,discount_price',
                        'sort': 'price asc, popularity desc, created desc'}
     query_arguments['fq'] = ['availability:true', 'django_ct:apparel.product']
-    query_arguments['fq'].append('gender:(%s OR U)' % (product.gender,))
-    query_arguments['fq'].append('category:%s' % (product.category_id))
+    query_arguments['fq'].append('gender:({gender} OR U)'.format(gender=product.gender,))
+    query_arguments['fq'].append('category:{category}'.format(category=product.category_id))
     if colors_pk:
-        query_arguments['fq'].append('color:(%s)' % (' OR '.join(colors_pk),))
+        query_arguments['fq'].append('color:({colors})'.format(colors=' OR '.join(colors_pk),))
     search = ApparelSearch('*:*', **query_arguments)
     docs = search.get_docs()
     if docs:
-        shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
-        shop_url = '%s?category=%s' % (reverse(shop_reverse), product.category_id)
+        shop_url = u'{shop_url}?category={category}'.format(shop_url=get_gender_url(product.gender, 'shop'), category=product.category_id)
         if colors_pk:
-            shop_url = '%s&color=%s' % (shop_url, ','.join(colors_pk))
+            shop_url = u'{shop_url}&color={colors}'.format(shop_url=shop_url, colors=','.join(colors_pk))
 
         price, currency = docs[0].price.split(',')
         rate = currency_exchange(language_currency, currency)
@@ -335,10 +334,12 @@ def exchange_amount(to_currency, from_currency, amount, precision=None, fixed_ra
     return amount, fixed_rate
 
 
-def get_gender_url(gender, named_url):
+def get_gender_url(gender, named_url, default=False):
     if gender == 'M':
         return reverse('%s-men' % (named_url,))
     elif gender == 'W':
+        return reverse('%s-women' % (named_url,))
+    elif default:
         return reverse('%s-women' % (named_url,))
 
     return reverse(named_url)
@@ -579,13 +580,29 @@ def get_external_store_commission(stores, product=None):
     store_commission = None
     if len(stores) > 0:
         commission_array = stores[0].commission.split("/")
-        standard_from = decimal.Decimal(commission_array[0])
-        standard_to = decimal.Decimal(commission_array[1])
-        sale = decimal.Decimal(commission_array[2])
-        if sale != 0 and product and product.default_vendor.locale_discount_price:
-            store_commission = sale / 100
-        else:
-            standard_from = standard_to if not standard_from else standard_from
-            standard_to = standard_from if not standard_to else standard_to
-            store_commission = (standard_from + standard_to)/(2*100)
+        if len(commission_array) > 0:
+            if len(commission_array) == 1:
+                return decimal.Decimal(commission_array[0])/100
+            standard_from = decimal.Decimal(commission_array[0])
+            standard_to = decimal.Decimal(commission_array[1])
+            sale = decimal.Decimal(commission_array[2])
+            if sale != 0 and product and product.default_vendor.locale_discount_price:
+                store_commission = sale / 100
+            else:
+                standard_from = standard_to if not standard_from else standard_from
+                standard_to = standard_from if not standard_to else standard_to
+                store_commission = (standard_from + standard_to)/(2*100)
     return store_commission
+
+def get_vendor_cost_per_click(vendor):
+    """
+    Get cost per click for CPC vendor
+    """
+    click_cost = None
+    if vendor:
+        if vendor.is_cpc:
+            try:
+                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
+            except get_model('dashboard', 'ClickCost').DoesNotExist:
+                logger.warning("ClickCost not defined for vendor %s" % vendor)
+    return click_cost

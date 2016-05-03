@@ -1,21 +1,20 @@
 import logging
 import uuid
 import urlparse
-from django.core.cache import get_cache
 import os.path
 import decimal
 import datetime
 
 from django.db import models
-from django.db.models import Sum, Min
 from django.db.models.loading import get_model
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import get_cache
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
-from django.db.models.signals import post_save, post_delete, pre_delete, pre_save
+from django.db.models.signals import post_save, pre_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -24,7 +23,8 @@ from django.utils.functional import cached_property
 from apparelrow.apparel.signals import look_saved
 from apparelrow.apparel.manager import ProductManager, LookManager
 from apparelrow.apparel.cache import invalidate_model_handler
-from apparelrow.apparel.utils import currency_exchange, get_brand_and_category, get_external_store_commission, generate_sid, parse_sid
+from apparelrow.apparel.utils import currency_exchange, get_brand_and_category, get_external_store_commission, \
+    generate_sid, parse_sid, get_vendor_cost_per_click
 from apparelrow.apparel.base_62_converter import saturate, dehydrate
 from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache
 
@@ -39,7 +39,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 from parse import *
 
-from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor
+from apparelrow.dashboard.utils import get_cuts_for_user_and_vendor, parse_rules_exception, parse_cost_amount
 from decimal import Decimal, ROUND_HALF_UP
 
 PRODUCT_GENDERS = (
@@ -361,33 +361,6 @@ class Product(models.Model):
 
         return categories
 
-    def get_product_earning(self, user):
-        """
-        Calculates earnings percentage for the user based on the store and commission group
-        """
-        vendor = self.default_vendor.vendor if self.default_vendor else None
-        if not vendor:
-            return None
-        earning_cut = None
-        store_commission = 0
-        if hasattr(user,"is_partner") and user.is_partner:
-            has_cut = get_model('dashboard', 'Cut').objects.filter(group=user.partner_group, vendor=vendor).exists()
-            if user.partner_group and has_cut:
-                stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
-                if len(stores) > 0:
-                    store_commission = stores[0].commission_percentage
-                else:
-                    stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
-                    store_commission = get_external_store_commission(stores, self)
-                if store_commission > 0:
-                    user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
-                    earning_cut = (Decimal(store_commission*cut*publisher_cut*100)).quantize(Decimal('1'),rounding=ROUND_HALF_UP)/100
-                else:
-                    logging.warning('No commission percentage defined for the store %s'%(vendor))
-            else:
-                return None
-        return earning_cut
-
     def save(self, *args, **kwargs):
         if not self.pk:
             self.date_added = datetime.datetime.now()
@@ -565,7 +538,7 @@ class ShortDomainLinkManager(models.Manager):
 
 
 class ShortDomainLink(models.Model):
-    url = models.CharField(max_length=512, blank=False, null=False)
+    url = models.CharField(max_length=1024, blank=False, null=False)
     vendor = models.ForeignKey(Vendor)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='short_domain_links')
     created = models.DateTimeField(default=timezone.now)
@@ -765,6 +738,103 @@ class VendorProduct(models.Model):
             return rate * self.original_discount_price
 
         return rate * self.original_price
+
+    def get_earning_cut_for_product(self, user):
+        """
+        Calculate earnings percentage for the user based on the store and commission group
+        """
+        vendor = self.vendor
+        product = self.product
+        earning_cut = None
+        if hasattr(user, "is_partner") and user.is_partner:
+            if vendor:
+             # User must be partner
+                has_cut = get_model('dashboard', 'Cut').objects.\
+                            filter(group=user.partner_group, vendor=vendor).exists()
+                if user.partner_group and has_cut:
+                    user, cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
+                    total_publisher_cut = decimal.Decimal(cut * publisher_cut)
+                    if vendor.is_cpo: # Check if Store is CPC or CPO
+                            stores = get_model('advertiser', 'Store').objects.filter(vendor=vendor)
+                            store_commission = None if not len(stores) > 0 else stores[0].commission_percentage
+                            if not store_commission:
+                                stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
+                                store_commission = get_external_store_commission(stores, self)
+
+                            # Calculate earning cut including Store commission
+                            if store_commission and store_commission > 0:
+                                earning_cut = (Decimal(store_commission * total_publisher_cut * 100)).\
+                                                  quantize(Decimal('1'),rounding=ROUND_HALF_UP) / 100
+                            else:
+                                logging.warning('No commission percentage defined for the store %s' % vendor)
+                    elif vendor.is_cpc:
+                        earning_cut = total_publisher_cut
+                    else:
+                        logger.warning("Vendor %s has not being marked as CPC or CPO vendor" % vendor.name)
+                else:
+                    logger.warning("Could not calculate earning cut for user %s because user does not have a cut"
+                                   % user.id)
+            else:
+                logger.warning("No default vendor for product %s %s" % (product.product_name, product.id))
+
+        return earning_cut
+
+    def get_product_earning(self, user):
+        """
+        Calculate earnings in local currency according to Commission Group's cut and Publisher Network owner's cut
+        """
+        product_earning = None
+        currency = None
+
+        earning_total = decimal.Decimal(0)
+
+        if user.is_partner:
+            earning_cut = self.get_earning_cut_for_product(user)
+            if user.partner_group and user.partner_group.has_cpc_all_stores:
+                try:
+                    cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=self.vendor)
+                    total_publisher_cut = 1
+                    publisher_cut = 1
+
+                    if user.owner_network:
+                        publisher_cut = 1 - user.owner_network.owner_network_cut
+
+                    earning_amount = cut.locale_cpc_amount
+                    # Look for exceptions
+                    if cut.rules_exceptions:
+                        cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
+                        if cut_exception:
+                            total_publisher_cut = cut_exception
+                        if publisher_cut_exception and user.owner_network:
+                            publisher_cut = publisher_cut_exception
+                        exception_amount, exception_currency = parse_cost_amount(click_cost)
+                        if exception_amount and exception_currency:
+                            earning_amount = exception_amount
+                            currency = exception_currency
+
+                    publisher_earning = earning_amount * (total_publisher_cut * publisher_cut)
+
+                    product_earning = Decimal(publisher_earning.quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
+                    currency = cut.locale_cpc_currency
+                except get_model('dashboard', 'Cut').DoesNotExist:
+                    logger.warning("Cut for commission group %s and vendor %s does not exist." %
+                                   (user.partner_group, self.vendor.name))
+                except get_model('dashboard', 'Cut').MultipleObjectsReturned:
+                    logger.warning("Multiple cuts for commission group %s and vendor %s exist. Please make sure there is only one instance of this Cut." % (user.partner_group, self.vendor.name))
+            elif earning_cut:
+                if self.vendor.is_cpc:
+                    try:
+                        cost_per_click = get_vendor_cost_per_click(self.vendor)
+                        earning_total = cost_per_click.locale_price
+                        currency = cost_per_click.locale_currency
+                    except:
+                        logger.warn("Not able to calculate earning for {}".format(self.product.product_name))
+                        earning_total = 0
+                elif self.vendor.is_cpo:
+                    earning_total = self.locale_price if not self.locale_discount_price else self.locale_discount_price
+                    currency = self.locale_currency
+                product_earning = Decimal((earning_total * earning_cut).quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
+        return product_earning, currency
 
     def __unicode__(self):
         return u'%s (%s)' % (self.product, self.vendor)

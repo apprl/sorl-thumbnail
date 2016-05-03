@@ -31,48 +31,40 @@
             var right = data.getColumnRange(2);
             var view = new google.visualization.DataView(data);
 
-            /* TODO Maybe this could be written better */
-            {% if request.user.referral_partner %}
-                {% if is_owner %}
-                var series = {
-                    0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#ff9900'},
-                    2: {targetAxisIndex: 0, color: '#ababab'},
-                    3: {targetAxisIndex: 1, color: '#dc3912'},
-                    4: {targetAxisIndex: 0, color: '#2c2c2c'}
-                };
-                {% else %}
-                var series = {
-                    0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#ff9900'},
-                    2: {targetAxisIndex: 0, color: '#ababab'},
-                    3: {targetAxisIndex: 1, color: '#dc3912'}
-                };
-                view.setColumns([0, 1, 2, 3, 4]);
-                {% endif %}
-            {% else %}
-                {% if is_owner %}
-                var series = {
-                    0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#ababab'},
-                    2: {targetAxisIndex: 1, color: '#dc3912'},
-                    3: {targetAxisIndex: 0, color: '#2c2c2c'}
-                };
-                view.setColumns([0, 1, 3, 4, 5]);
-                {% else %}
-                var series = {
-                    0: {targetAxisIndex: 0},
-                    1: {targetAxisIndex: 0, color: '#ababab'},
-                    2: {targetAxisIndex: 1, color: '#dc3912'}
-                };
-                view.setColumns([0, 1, 3, 4]);
-                {% endif %}
+            // Append date
+            var columns_list = [0,];
+
+            // User does not earn per click for all stores
+            {% if show_cpo_earning %}
+                columns_list.push(1);
             {% endif %}
+
+            // User earns referral earnings
+            {% if request.user.referral_partner %}
+                columns_list.push(2);
+            {% endif %}
+
+            // Earnings per clicks and clicks
+            columns_list.push(3, 4);
+
+            // User is owner of a publisher network so it has network earnings
+            {% if is_owner %}
+                columns_list.push(5);
+            {% endif %}
+            var series = {
+                0: {targetAxisIndex: 0},
+                1: {targetAxisIndex: 0, color: '#ff9900'},
+                2: {targetAxisIndex: 0, color: '#ababab'},
+                3: {targetAxisIndex: 1, color: '#dc3912'},
+                4: {targetAxisIndex: 0, color: '#2c2c2c'}
+            };
+            view.setColumns(columns_list);
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
                 containerId: 'graph',
                 dataTable: view,
                 options: {
+                    legend:'top',
                     vAxes: {
                         0: {
                             minValue: 0,
@@ -117,15 +109,14 @@
             Load detail click earning details for clicks in a modal
         */
         function load_detailed_data_clicks(json_detail, date, vendor, currency){
-            var html = "<table>";
+            var html = "";
             for (i = 0; i < json_detail.length; i++){
                 html += "<tr>" +
-                        "<td><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
-                        "<td class='center'>"  + json_detail[i].clicks + "</td>" +
-                        "<td class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
+                        "<td class='pull-left-cell' data-sort=\"" + json_detail[i].product_name + "\"><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
+                        "<td data-sort=\""+ json_detail[i].clicks +"\" class='center'>"  + json_detail[i].clicks + "</td>" +
+                        "<td data-sort=\"" + json_detail[i].product_earning+ "\" class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
                         "<tr>";
             }
-            html += "</table>";
             $("#content-clicks").html(html);
             $("#modal-date").html(date);
             $("#modal-vendor").html(vendor);
@@ -178,11 +169,13 @@
     <section class="container center">
         <p>{% blocktrans %}Earnings: <strong>{{ currency }} {{ total_commission }}{% endblocktrans %}</strong></p>
         </ul>
+        {% if show_cpo_earning %}
         <ul class="list-horizontal">
             <li>{% blocktrans %}Commission earnings:{% endblocktrans %} <strong>{{ currency }} {% if month_commission %}{{ month_commission }}{% else %}0.00{% endif %}</strong></li>
             <li>{% blocktrans %}Sales:<strong>{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0{% endif %}</strong></li>
             <li>{% blocktrans %}Clicks: <strong>{{ month_clicks }}{% endblocktrans %}</strong></li>
         </ul>
+        {% endif %}
         {% if request.user.referral_partner %}
         <ul class="list-horizontal">
             <li>{% blocktrans %}Referral earnings: <strong>{{ currency }} {{ referral_commission }}{% endblocktrans %}</strong></li>
@@ -213,8 +206,8 @@
     {% if is_owner %}
         <div class="row">
             <div class="col-lg-12 table-responsive">
-                <div class="col-lg-10 col-md-6 col-sm-6 nopadding"><h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2></div>
-                <div class="col-lg-2 col-md-6 col-sm-6 text-right hidden-xs nopadding"><h2><small><a class="btn btn-primary" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a></small></h2></div>
+                <h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2>
+                <a class="center btn btn-default" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a>
                 <table id="top-publishers" class="sortable table top-publishers">
                     <thead>
                         <tr>
@@ -257,17 +250,17 @@
         </div>
     {% endif %}
 
-    <div class="row">
+    <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
-            <h2>{% trans "Top products" %} {{ month_display }} {{ year }}</h2>
+            <h2>{% trans "Top Links" %} {{ month_display }} {{ year }}</h2>
             <a class="btn btn-default center" data-toggle="modal" data-target="#modal_top_products">{% trans "See all" %}</a>
             <table id="top-products" class="sortable table top-products">
                 <thead>
                     <tr>
-                        <th class="col-md-1 product-image center">{% trans "Product" %}</th>
-                        <th class="col-md-5 hidden-xs center"></th>
+                        <th class="col-md-1">{% trans "Product" %}</th>
+                        <th class="col-md-5 hidden-xs"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        <th class="col-md-2 center">{% trans "Earnings" %}</th>
                         {% if is_owner %}<th class="col-md-2 center">{% trans "Network earnings" %}</th>{% endif %}
                     </tr>
                 </thead>
@@ -296,7 +289,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="3">{% trans "No sales yet." %}</td>
+                        <td colspan="3">{% trans "Nothing to show here yet." %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -304,18 +297,18 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
             <h2 class="sales-header">{% trans "Your earnings" %} {{ month_display }} {{ year }}</h2>
-                <table id="all-earnings" class="sortable table sortable">
+                <table id="all-earnings" class="sortable table">
                     <thead>
                         <tr>
-                            <th class="hidden-xs">{% trans "Date" %}</th>
-                            <th>{% trans "Description" %}</th>
-                            <th class="hidden-xs"></th>
-                            <th class="hidden-xs">{% trans "Details" %}</th>
-                            <th>{% trans "Sale value" %}</th>
-                            <th>{% trans "Your earnings" %}</th>
+                            <th class="col-lg-1 hidden-xs">{% trans "Date" %}</th>
+                            <th class="col-lg-2">{% trans "Description" %}</th>
+                            <th class="col-lg-3" class="hidden-xs"></th>
+                            <th class="col-lg-2 hidden-xs center">{% trans "Details" %}</th>
+                            <th class="col-lg-2 center">{% trans "Sale value" %}</th>
+                            <th class="col-lg-2 center">{% trans "Your earnings" %}</th>
                         </tr>
                     </thead>
                     <tbody id="body-earnings">
@@ -354,46 +347,51 @@
         table.html("");
         if (response.length > 0) {
             $.each(response, function() {
-                var row = $('<tr/>');
-                // Date
-                row.append('<td>' + this.date_string + '</td>');
+                if (this.amount > 0) {
+                    var row = $('<tr/>');
+                    // Date
+                    row.append('<td>' + this.date_string + '</td>');
 
-                // Description
-                if (this.description_image != '') {
-                    if (this.description_link == '') {
-                        row.append('<td><img src="' + this.description_image + '"></td>');
+                    // Description
+                    if (this.description_image != '') {
+                        if (this.description_link == '') {
+                            row.append('<td><img src="' + this.description_image + '"></td>');
+                        } else {
+                            row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
+                        }
+                        row.append('<td style="text-align:left;">' + this.description_text + '</td>');
                     } else {
-                        row.append('<td><a src="' + this.description_link +'"><img src="' + this.description_image + '"></a></td>');
+                        if (this.description_link == '') {
+                            row.append('<td colspan="2" style="text-align:left;">' + this.description_text + '</td>');
+                        } else {
+                            row.append('<td colspan="2" style="text-align:left;"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
+                        }
                     }
-                    row.append('<td>' + this.description_text + '</td>');
-                } else {
-                    if (this.description_link == '') {
-                        row.append('<td colspan="2">' + this.description_text + '</td>');
-                    } else {
-                        row.append('<td colspan="2"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
-                    }
-                }
-                // Details
-                row.append('<td>' + this.details + '</td>');
+                    // Details
+                    row.append('<td>' + this.details + '</td>');
 
-                // Sale value if CPO, Show clicks details button if CPC
-                if (this.user_earning_type == "publisher_sale_click_commission"
-                        || this.user_earning_type == "publisher_sale_click_tribute") {
-                    row.append('<td>' +
-                            '<a class="btn btn-default click-detail" ' +
-                            'data-user="' + this.user_id + '" ' +
-                            'data-vendor="' + this.sale_vendor + '" ' +
-                            'data-date="' + this.date_timestamp + '" ' +
-                            'data-date_display="' + this.date_string + '" ' +
-                            'data-amount="' + this.amount + '" ' +
-                            'data-clicks="' + this.clicks + '">' +
-                            'See details</a></td>');
-                } else {
-                    row.append('<td data-sort="' + this.sale_amount + '">' + currency +"  " + this.sale_amount + '</td>');
+                    // Sale value if CPO, Show clicks details button if CPC
+                    if (this.user_earning_type == "publisher_sale_click_commission" ||
+                            this.user_earning_type == "publisher_sale_click_tribute" ||
+                            this.user_earning_type == "publisher_network_click_tribute_all_stores" ||
+                            this.user_earning_type == "publisher_sale_click_commission_all_stores"
+                    ) {
+                        row.append('<td>' +
+                                '<a class="btn btn-default click-detail" ' +
+                                'data-user="' + this.user_id + '" ' +
+                                'data-vendor="' + this.sale_vendor + '" ' +
+                                'data-date="' + this.date_timestamp + '" ' +
+                                'data-date_display="' + this.date_string + '" ' +
+                                'data-amount="' + this.amount + '" ' +
+                                'data-clicks="' + this.clicks + '">' +
+                                'See details</a></td>');
+                    } else {
+                        row.append('<td data-sort="' + this.sale_amount + '" >' + currency +"  " + this.sale_amount + '</td>');
+                    }
+                    // Earning
+                    row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
+                    table.append(row);
                 }
-                // Earning
-                row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
-                table.append(row);
             });
         } else {
             var row = $('<tr/>');

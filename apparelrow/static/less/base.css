@@ -1789,7 +1789,7 @@ pre code {
   left: 41.66666667%;
 }
 .col-xs-push-4 {
-  left: 33.33333333%;
+  left: 33.33%;
 }
 .col-xs-push-3 {
   left: 25%;
@@ -7467,12 +7467,9 @@ a.info:hover {
 .pagination .btn-pagination {
   margin: auto;
   overflow: hidden;
-}
-.pagination .btn-pagination:focus,
-.pagination .btn-pagination:active,
-.pagination .btn-pagination:visited {
-  background-color: transparent !important;
-  color: white !important;
+  /*&:focus, &:active, &:visited {
+			background-color: transparent !important;
+		}*/
 }
 .pagination .btn-pagination.hover .loader {
   display: block;
@@ -7482,51 +7479,60 @@ a.info:hover {
   color: white !important;
 }
 .pagination .loader {
-  width: 48px;
   height: 48px;
+  top: 7px;
   position: relative;
   display: none;
-  margin-top: -6px;
   float: right;
+  margin-top: -6px;
+  background-color: inherit;
+  right: 20px;
 }
 .pagination .loader > span {
-  width: 100%;
-  height: 100%;
+  width: 10px;
+  height: 10px;
   display: inline-block;
-  border-radius: 50%;
-  opacity: 0.6;
-  position: absolute;
-  top: 0;
+  border-radius: 100%;
   left: 0;
-  background-color: white;
-  -webkit-animation: bounce 2s infinite ease-in-out both;
-  animation: bounce 2s infinite ease-in-out both;
+  background-color: white !important;
+  -webkit-animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;
+  animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;
 }
-.pagination .loader .two {
-  -webkit-animation-delay: -1s;
-  animation-delay: -1s;
+.pagination .loader .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
 }
-@-webkit-keyframes bounce {
+.pagination .loader .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+@-webkit-keyframes sk-three-bounce {
   0%,
+  80%,
   100% {
     -webkit-transform: scale(0);
     transform: scale(0);
   }
-  50% {
+  40% {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
 }
-@keyframes bounce {
+@keyframes sk-three-bounce {
   0%,
+  80%,
   100% {
     -webkit-transform: scale(0);
     transform: scale(0);
   }
-  50% {
+  40% {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
+}
+.pagination .disabled span {
+  background-color: transparent;
+  color: inherit;
 }
 .helper {
   float: right;
@@ -7962,9 +7968,6 @@ a.info:hover {
   display: inline-block;
   margin-right: 5px;
 }
-.list-alphabet li:first-child a {
-  color: black;
-}
 .list-alphabet li:first-child a:hover {
   color: #333333;
 }
@@ -7980,6 +7983,9 @@ a.info:hover {
 .list-alphabet a:hover {
   color: #666666;
 }
+.list-alphabet a.selected {
+  color: black;
+}
 .list-horizontal > li {
   margin: 0 auto 15px auto;
 }
@@ -7987,9 +7993,6 @@ a.info:hover {
   .list-horizontal > li {
     display: inline-block;
     margin-right: 15px;
-  }
-  .list-horizontal > li:last-child {
-    margin: 0;
   }
 }
 .list-filter-a li,
@@ -8237,7 +8240,7 @@ main div.message .btn {
 /* Alerts ---------- */
 .alert {
   position: relative;
-  background-color: rgba(103, 226, 184, 0.4);
+  background-color: #C2F3E3;
   border: 1px solid #67e2b8;
   border-radius: 0;
   text-align: center;
@@ -8277,6 +8280,9 @@ main div.message .btn {
 }
 .alert a.alert-warning:hover {
   border-color: black;
+}
+[data-notify="container"] {
+  width: 70%;
 }
 /* Panels & Filters ---------- */
 #reset {
@@ -8370,8 +8376,9 @@ main div.message .btn {
   display: none;
   position: absolute;
   right: 0;
-  bottom: 60px;
+  bottom: 50px;
   left: 0;
+  z-index: 3;
 }
 .embed {
   margin: 15px auto;
@@ -8491,10 +8498,37 @@ main div.message .btn {
 }
 li.discount-price,
 span.discount-price {
+  width: auto;
   color: #f64747;
 }
-li.price.discounted {
+.discounted {
+  width: auto;
   text-decoration: line-through;
+}
+li.price.discounted {
+  width: auto;
+  text-decoration: line-through;
+}
+.product-medium-earning {
+  position: relative;
+  bottom: 150px;
+  font-size: 14px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  text-align: center;
+  visibility: hidden;
+}
+@media (max-width: 992px) {
+  .product-medium-earning {
+    font-size: 12px;
+    bottom: 148px;
+  }
+}
+.product-medium-earning:hover {
+  cursor: pointer;
 }
 /*
     Attributes v1.0
@@ -8632,7 +8666,7 @@ label input[type="checkbox"] + span {
   display: inline-block;
   width: 22px;
   height: 22px;
-  border: 2px solid #ccc;
+  /*border: 2px solid #ccc;*/
   cursor: pointer;
   line-height: 16px;
   border: 2px solid #999;
@@ -8675,7 +8709,7 @@ input[type="password"],
 textarea,
 main input[type="search"] {
   padding: 10px;
-  background-image: linear-gradient(black, black), linear-gradient(#cccccc, #cccccc);
+  background-image: linear-gradient(black, #cccccc);
   background-size: 0 2px, 100% 1px;
   background-repeat: no-repeat;
   background-position: center bottom, center calc(99%);
@@ -8687,7 +8721,7 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus,
 main input[type="search"]:focus {
-  background-image: linear-gradient(black, black), linear-gradient(#cccccc, #cccccc);
+  background-image: linear-gradient(black, #cccccc);
   -webkit-animation: highlight 0.25s forwards;
   animation: highlight 0.25s forwards;
   background-size: 0 2px, 100% 1px;
@@ -8757,7 +8791,7 @@ textarea:focus {
 }
 .form-group.error input {
   background-color: #feeded;
-  background-image: linear-gradient(#f64747, #f64747), linear-gradient(#f64747, #f64747);
+  background-image: linear-gradient(#f64747, #f64747);
 }
 .input-group {
   display: block;
@@ -8795,7 +8829,7 @@ textarea:focus {
   display: inline-block;
   width: 18px;
   height: 18px;
-  border: 2px solid #ccc;
+  /*border: 2px solid #ccc;*/
   cursor: pointer;
   line-height: 14px;
   border: 2px solid #999;
@@ -8975,7 +9009,7 @@ textarea:focus {
 .publisher-page form input[type="email"],
 .retailer-page form input[type="email"] {
   margin-bottom: 15px;
-  background-image: linear-gradient(black, black), linear-gradient(#666666, #666666);
+  background-image: linear-gradient(black, #666666);
   background-size: 0 2px, 100% 1px;
   background-repeat: no-repeat;
   background-position: center bottom, center calc(99%);
@@ -8986,7 +9020,7 @@ textarea:focus {
 .retailer-page form input[type="text"]:focus,
 .publisher-page form input[type="email"]:focus,
 .retailer-page form input[type="email"]:focus {
-  background-image: linear-gradient(white, white), linear-gradient(black, black);
+  background-image: linear-gradient(white, black);
   -webkit-animation: highlight 0.25s forwards;
   animation: highlight 0.25s forwards;
   background-size: 0 2px, 100% 1px;
@@ -9492,7 +9526,7 @@ textarea:focus {
   .community-page .community-welcome input[type="text"],
   .community-page .community-welcome input[type="password"] {
     margin-bottom: 15px;
-    background-image: linear-gradient(black, black), linear-gradient(#666666, #666666);
+    background-image: linear-gradient(black, #666666);
     background-size: 0 2px, 100% 1px;
     background-repeat: no-repeat;
     background-position: center bottom, center calc(99%);
@@ -9501,7 +9535,7 @@ textarea:focus {
   }
   .community-page .community-welcome input[type="text"]:focus,
   .community-page .community-welcome input[type="password"]:focus {
-    background-image: linear-gradient(white, white), linear-gradient(black, black);
+    background-image: linear-gradient(white, black);
     -webkit-animation: highlight 0.25s forwards;
     animation: highlight 0.25s forwards;
     background-size: 0 2px, 100% 1px;
@@ -9995,7 +10029,8 @@ textarea:focus {
 .about-page main img {
   margin-bottom: 30px;
 }
-.about-page .team {
+.about-page .team,
+.about-page .about {
   max-width: 720px;
   margin: 30px auto;
   /*ul {
@@ -10003,10 +10038,12 @@ textarea:focus {
             list-style: inside;
         }*/
 }
-.about-page .team img {
+.about-page .team img,
+.about-page .about img {
   margin: 15px auto 30px auto;
 }
-.about-page .team h2 {
+.about-page .team h2,
+.about-page .about h2 {
   text-align: center;
 }
 .about-page .partners {
@@ -10055,6 +10092,13 @@ textarea:focus {
 }
 .top-publishers,
 .top-products {
+  text-align: left;
+}
+.top-buffer {
+  margin-top: 50px;
+}
+.pull-left-cell {
+  width: 100%;
   text-align: left;
 }
 /*
@@ -10241,6 +10285,7 @@ textarea:focus {
 .popover .arrow:after {
   border: 0 !important;
 }
+.popover .price,
 .popover .currency {
   color: #666;
 }
@@ -11219,7 +11264,7 @@ body.profile-likes #product-manufacturers #available-manufacturers {
   height: 200px;
   overflow-y: auto;
   margin-top: 10px;
-  padding-top: 10px;
+  margin-bottom: 10px;
   border-top: 1px solid #d9d9d9;
   border-bottom: 1px solid #d9d9d9;
 }
@@ -11364,6 +11409,7 @@ body.profile-likes #product-manufacturers #available-manufacturers {
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px;
+    width: 33.33%;
   }
 }
 @media (min-width: 992px) and (min-width: 768px) {
@@ -11426,6 +11472,7 @@ body.profile-likes #product-manufacturers #available-manufacturers {
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px;
+    width: 33.33%;
   }
 }
 @media (min-width: 1200px) and (min-width: 768px) {
@@ -11665,7 +11712,7 @@ body.store-index-page .background {
   line-height: 1.2;
 }
 .product-medium .hover {
-  bottom: 55px;
+  bottom: 50px;
   height: 44px !important;
 }
 .product-medium .hover .btn {
@@ -11717,6 +11764,9 @@ body.store-index-page .background {
 }
 .thumbnail .caption {
   padding: 10px 0 0 0;
+}
+.list-inline > li {
+  padding-bottom: 5px;
 }
 /*
     Widget v1.0
@@ -12342,7 +12392,7 @@ html.look-type-C .collage {
     margin-right: 5px;
   }
   #product-chooser .product-filter-container .hidden-filters li:last-child {
-    margin: 0;
+    /*margin: 0;*/
   }
   #product-chooser .product-filter-container .hidden-filters i {
     margin-top: 9px;
@@ -12497,6 +12547,12 @@ html.look-type-C .collage {
   html.look-type-P .container .tooltip .tooltip-container .product-meta h2 {
     margin-top: 5px;
   }
+  html.look-type-C .container .tooltip .tooltip-container .product-meta .vendor_price .price,
+  html.look-type-P .container .tooltip .tooltip-container .product-meta .vendor_price .price,
+  html.look-type-C .container .tooltip .tooltip-container .product-meta .vendor_price .currency,
+  html.look-type-P .container .tooltip .tooltip-container .product-meta .vendor_price .currency {
+    color: #666;
+  }
   html.look-type-C .container .tooltip .close,
   html.look-type-P .container .tooltip .close {
     background-image: url('../images/cross.png');
@@ -12634,7 +12690,7 @@ html.look-type-C .collage {
   text-align: center;
 }
 .profile-page .product-medium .hover {
-  bottom: 79px;
+  bottom: 50px;
 }
 .profile-looks main .btn-look-like {
   max-width: none;
@@ -13186,13 +13242,13 @@ body.publisher-index-page .inner-content {
 }
 .publisher-referral-page .referral-link-container textarea {
   background-size: 0;
-  width: 100%;
   margin-bottom: 10px;
+  width: 100%;
 }
 @media (min-width: 768px) {
   .publisher-referral-page .referral-link-container textarea {
     margin-bottom: 15px;
-    background-image: linear-gradient(black, black), linear-gradient(#666666, #666666);
+    background-image: linear-gradient(black, #666666);
     background-size: 0 2px, 100% 1px;
     background-repeat: no-repeat;
     background-position: center bottom, center calc(99%);
@@ -13200,7 +13256,7 @@ body.publisher-index-page .inner-content {
     color: white;
   }
   .publisher-referral-page .referral-link-container textarea:focus {
-    background-image: linear-gradient(white, white), linear-gradient(black, black);
+    background-image: linear-gradient(white, black);
     -webkit-animation: highlight 0.25s forwards;
     animation: highlight 0.25s forwards;
     background-size: 0 2px, 100% 1px;
@@ -13237,6 +13293,9 @@ a:active {
 u {
   text-decoration: none;
 }
+.underline-text {
+  text-decoration: underline;
+}
 ul,
 ol {
   list-style: none;
@@ -13246,6 +13305,7 @@ ol {
 li,
 td {
   color: #666666;
+  vertical-align: middle !important;
 }
 img {
   -webkit-backface-visibility: hidden;
@@ -13728,6 +13788,7 @@ header .navbar-form .btn-search {
 }
 header .notifications {
   margin-top: 10px;
+  line-height: 20px;
   display: inline-block;
 }
 header .notifications .icon {
@@ -13841,7 +13902,7 @@ header .notifications:active .icon {
 }
 .notifications-menu .message {
   float: left;
-  width: 180px;
+  width: 160px;
   height: 34px;
   margin: 0;
   line-height: 15px;

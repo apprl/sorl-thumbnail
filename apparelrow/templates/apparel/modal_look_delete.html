@@ -3,13 +3,14 @@
 
 {% block modal_id %}modal_look_delete_{{ look.id }}{% endblock %}
 {% block modal_title %}{% trans "Are you sure?" %}{% endblock %}
+{% block extra_modal_classes %}modal-sm{% endblock %}
 {% block modal_content %}
 <p>{% trans "Do you really want to delete look" %} <strong>{{ look.title }}</strong>?</p>
 {% endblock %}
 {% block modal_footer %}
 <p>
-    <a class="btn btn-success btn-delete-look" href="#">{% trans "Yes" %}</a>
-    <a class="btn btn-danger" data-dismiss="modal" href="#">{% trans "No" %}</a>
+    <a class="btn btn-success btn-delete-look center" href="#">{% trans "Yes" %}</a>
+    <a class="btn btn-danger center" data-dismiss="modal" href="#">{% trans "No" %}</a>
 </p>
 <script type="text/javascript">
     $(function() {

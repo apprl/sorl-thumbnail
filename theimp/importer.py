@@ -24,8 +24,7 @@ class SiteImportError(Exception):
 
 class Importer(object):
     imported_cache_key = "imported_{id}"
-    imported_attributes_cache_key = "imported_attributes_{id}"
-
+    
     def __init__(self, site_queue=None):
         self.site_product_model = get_model('apparel', 'Product')
         self.site_vendor_product_model = get_model('apparel', 'VendorProduct')
@@ -45,31 +44,28 @@ class Importer(object):
             imported_date = None
             product_queryset = Product.objects.filter(vendor=vendor)
             if vendor.last_imported_date and not force:
-                # Fetch all products that has been updated since the last vendor.imported date.
                 product_queryset = product_queryset.filter(parsed_date__gte=vendor.last_imported_date)
-            logger.info(u'Import {count} products for vendor {vendor}'.format(count=product_queryset.count(), vendor=vendor))
+            logger.info('Import %s products for vendor %s' % (product_queryset.count(), vendor))
             for product_id in product_queryset.values_list('pk', flat=True):
                 try:
                     product = Product.objects.get(pk=product_id)
                 except Product.DoesNotExist as e:
-                    logger.exception(u'Could not load product with id {id}'.format(id=product_id,))
+                    logger.exception('Could not load product with id %s' % (product_id,))
                     continue
 
                 if not dry:
-                    logger.debug(u'Import product {key} [valid = {valid}]'.format(key=product.key, valid=product.is_validated))
+                    logger.debug('Import product %s [valid = %s]' % (product.key, product.is_validated))
                     try:
                         with transaction.atomic():
                             imported_date = self.site_import(product, product.is_validated)
+
                     except (SiteImportError, IntegrityError) as e:
-                        logger.exception(u'Could not import product with id {id}'.format(id=product_id,))
+                        logger.exception('Could not import product with id %s' % (product_id,))
                         continue
 
-            # Run through all products and set new values. Reason I suspect we iterate through every product is to trigger save signals in django
-            # which in turn trigger other things. Todo: Look at making this more effective
             yesterday = timezone.now() - datetime.timedelta(hours=48)
             for product_id in self.site_product_model.objects.filter(vendors=vendor.vendor_id, availability=True, modified__lte=yesterday).values_list('id', flat=True):
-                logger.debug(u'Setting availability to false for product with id {id} due to the item has not been imported since {yday} or later [{vendor}]'.
-                             format(id=product_id, yday=yesterday, vendor=vendor))
+                logger.debug('Setting availability to false for product with id %s due to the item has not been imported since %s or later [%s]' % (product_id,yesterday,vendor))
                 if not dry:
                     product = self.site_product_model.objects.get(pk=product_id)
                     product.availability=False
@@ -82,8 +78,6 @@ class Importer(object):
 
     def site_import(self, product, is_valid):
         import datetime
-
-        # Convert into ProductItem = bundle of dicts
         item = ProductItem(product)
 
         # Get corresponding apparel.Product object
