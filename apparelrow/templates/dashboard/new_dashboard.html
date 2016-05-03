@@ -265,12 +265,12 @@
     {% if is_owner %}
         <div class="row">
             <div class="col-lg-12 table-responsive">
-                <h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2>
+                <h2>{% trans "Top influencers" %} {{ month_display }} {{ year }}</h2>
                 <a class="center btn btn-default" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a>
                 <table id="top-publishers" class="sortable table top-publishers">
                     <thead>
                         <tr>
-                            <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
+                            <th class="col-md-1 product-image center">{% trans "Influencer" %}</th>
                             <th class="col-md-5 hidden-xs center"></th>
                             <th class="col-md-2 center">{% trans "Clicks" %}</th>
                             <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
@@ -486,6 +486,6 @@
 
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
 {% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products is_admin=False currency=currency month=month_display year=year is_owner=is_owner only  %}
-{% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year only %}
+{% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year is_owner=is_owner only %}
 {% include 'dashboard/modal_more_info.html' %}
 {% endblock body %}
