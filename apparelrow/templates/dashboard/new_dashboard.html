@@ -425,8 +425,9 @@
                         }
                         row.append('<td style="text-align:left;">' + this.description_text + '</td>');
                     } else {
+                        row.append('<td></td>');
                         if (this.description_link == '') {
-                            row.append('<td colspan="2" style="text-align:left;">' + this.description_text + '</td>');
+                            row.append('<td style="text-align:left;">' + this.description_text + '</td>');
                         } else {
                             row.append('<td colspan="2" style="text-align:left;"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
                         }
