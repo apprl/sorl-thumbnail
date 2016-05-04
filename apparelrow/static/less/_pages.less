@@ -562,8 +562,12 @@
     box-shadow: none;
     -webkit-box-shadow: none;
     margin-bottom: 30px;
-    &.feed-verb-agg_product .panel-body .hover .btn {
-        white-space: normal;
+    &.feed-verb-agg_product .panel-body .hover {
+        bottom: 0px !important;
+        .btn {
+            max-width: inherit;
+            white-space: normal;
+        }
     }
     &.feed-verb-agg_product .panel-heading > p {
         white-space: normal;
