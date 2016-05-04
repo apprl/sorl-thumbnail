@@ -172,7 +172,7 @@ def get_cuts_for_user_and_vendor(user_id, vendor):
                     cut_exception, publisher_cut_exception, _ = parse_rules_exception(cuts.rules_exceptions, user_id)
                     if cut_exception:
                         normal_cut = cut_exception
-                    if publisher_cut_exception and user.owner_network:
+                    if publisher_cut_exception is not None and user.owner_network:
                         publisher_cut = publisher_cut_exception
             except:
                 log.warn("No cut exists for %s and vendor %s, please do correct this." % (user.partner_group,vendor))
@@ -198,37 +198,66 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None, is_st
             user = get_user_model().objects.get(id=user_id)
             values.append(user_id)
             values.extend([user_id, vendor_name, start_date_query, end_date_query])
+            values.extend([vendor_name, start_date_query, end_date_query, user_id])
+            values.extend([user_id, vendor_name, start_date_query, end_date_query])
             cursor.execute(
                 """(SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
                    FROM statistics_productstat PS, profile_user U, apparel_vendor V
-                   WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
+                   WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.product IS NOT NULL
                    AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s AND U.id = %s
                    GROUP BY PS.user_id, PS.vendor, PS.product)
                    UNION
                    (SELECT PS.vendor, PS.user_id, PS.product, count(PS.id) as clicks
                    FROM statistics_productstat PS, apparel_vendor V, profile_user U, dashboard_group G
-                   WHERE PS.user_id = U.id AND U.partner_group_id = G.id AND G.has_cpc_all_stores = True
+                   WHERE PS.user_id = U.id AND U.partner_group_id = G.id AND G.has_cpc_all_stores = True AND PS.product IS NOT NULL
                    AND U.id = %s AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
                    AND PS.created BETWEEN %s AND %s
                    GROUP BY PS.user_id, PS.vendor, PS.product)
+                   UNION
+                   (SELECT PS.vendor, PS.user_id, PS.source_link,count(PS.id) as clicks
+                   FROM statistics_productstat PS, profile_user U, apparel_vendor V
+                   WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.product IS NULL
+                   AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s AND U.id = %s
+                   GROUP BY PS.user_id, PS.vendor, PS.source_link)
+                   UNION
+                   (SELECT PS.vendor, PS.user_id, PS.source_link, count(PS.id) as clicks
+                   FROM statistics_productstat PS, apparel_vendor V, profile_user U, dashboard_group G
+                   WHERE PS.user_id = U.id AND U.partner_group_id = G.id AND G.has_cpc_all_stores = True AND PS.product IS NULL
+                   AND U.id = %s AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
+                   AND PS.created BETWEEN %s AND %s
+                   GROUP BY PS.user_id, PS.vendor, PS.source_link)
                    ORDER BY clicks DESC
                    """, values)
         except get_user_model().DoesNotExist:
             log.warn("User %s does not exist" % user)
     elif is_store:
         values.extend([vendor_name, start_date_query, end_date_query, ])
+        values.extend([vendor_name, start_date_query, end_date_query, ])
+        values.extend([vendor_name, start_date_query, end_date_query, ])
         cursor.execute(
             """(SELECT PS.vendor, PS.product, count(PS.id) as clicks
                FROM statistics_productstat PS, profile_user U, apparel_vendor V
                WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
-               AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               AND PS.product IS NOT NULL AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
                GROUP BY PS.vendor, PS.product)
                UNION
                (SELECT PS.vendor, PS.product, count(PS.id) as clicks
                FROM statistics_productstat PS, apparel_vendor V
                WHERE V.name = %s AND PS.vendor = V.name
-               AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               AND PS.product IS NOT NULL AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
                GROUP BY PS.vendor, PS.product)
+               UNION
+               (SELECT PS.vendor, PS.source_link, count(PS.id) as clicks
+               FROM statistics_productstat PS, profile_user U, apparel_vendor V
+               WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
+               AND PS.product IS NULL AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.source_link)
+               UNION
+               (SELECT PS.vendor, PS.source_link, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V
+               WHERE V.name = %s AND PS.vendor = V.name
+               AND PS.product IS NULL AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.source_link)
                ORDER BY clicks DESC
                """, values)
     else:
@@ -237,21 +266,40 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None, is_st
             """(SELECT PS.vendor, PS.product, count(PS.id) as clicks
                FROM statistics_productstat PS, profile_user U, apparel_vendor V
                WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
-               AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               AND PS.product IS NOT NULL AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
                GROUP BY PS.vendor, PS.product)
                UNION
                (SELECT PS.vendor, PS.product, count(PS.id) as clicks
                FROM statistics_productstat PS, apparel_vendor V
                WHERE V.name = %s AND PS.vendor = V.name
-               AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               AND PS.product IS NOT NULL AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
                GROUP BY PS.vendor, PS.product)
                UNION
                (SELECT PS.vendor, PS.product, count(PS.id) as clicks
                FROM statistics_productstat PS, apparel_vendor V, profile_user U, dashboard_group G
                WHERE PS.user_id = U.id AND U.partner_group = G.id AND G.has_cpc_all_stores = True
-               AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
+               AND PS.product IS NOT NULL AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
                AND PS.created BETWEEN %s AND %s
                GROUP BY PS.vendor, PS.product)
+               UNION
+               (SELECT PS.vendor, PS.source_link, count(PS.id) as clicks
+               FROM statistics_productstat PS, profile_user U, apparel_vendor V
+               WHERE PS.user_id = U.id AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True
+               AND PS.product IS NULL AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.source_link)
+               UNION
+               (SELECT PS.vendor, PS.source_link, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V
+               WHERE V.name = %s AND PS.vendor = V.name
+               AND PS.product IS NULL AND V.is_cpc = True AND PS.is_valid AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.source_link)
+               UNION
+               (SELECT PS.vendor, PS.source_link, count(PS.id) as clicks
+               FROM statistics_productstat PS, apparel_vendor V, profile_user U, dashboard_group G
+               WHERE PS.user_id = U.id AND U.partner_group = G.id AND G.has_cpc_all_stores = True
+               AND PS.product IS NULL AND V.name = %s AND PS.vendor = V.name AND U.is_partner = True AND PS.is_valid
+               AND PS.created BETWEEN %s AND %s
+               GROUP BY PS.vendor, PS.source_link)
                ORDER BY clicks DESC
                """, values)
     data = dictfetchall(cursor)
@@ -264,19 +312,18 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None, is_st
                 if product.manufacturer:
                     row['product_name'] = "%s - " % product.manufacturer.name
                 row['product_name'] = product.product_name if product.product_name else product.slug
+                row['product_url'] = reverse('product-detail', args=[row['product']])
             except get_model('apparel', 'Product').DoesNotExist:
                 row['product_name'] = row['product']
                 log.warn("Product %s does not exist" % row['product'])
-            row['product_url'] = reverse('product-detail', args=[row['product']])
+                row['product_url'] = "Clicks to %s" % row['product']
             row['product_earning'] = float(int(row['clicks']) * click_cost)
         else:
             row['product_name'] = "Other clicks to %s page" % row['vendor']
             row['product_url'] = ''
-            try:
-                vendor = get_model('apparel', 'Vendor').objects.get(name=row['vendor'])
-                row['product_url'] = '%s?store=%s' % (reverse('shop'), vendor.id)
-            except:
-                log.warn("Vendor %s does not exist" % row['vendor'])
+            if 'source_link' in row and row['source_link']:
+                row['product_name'] = "Clicks to %s" % row['source_link']
+                row['product_url'] = row['source_link']
         row['product_earning'] = float(int(row['clicks']) * click_cost)
     return data
 
@@ -435,8 +482,7 @@ def retrieve_user_earnings(start_date, end_date, user=None, limit=None):
                 temp_dict['details'] = "Clicks to %s" % vendor.name
             else:
                 temp_dict['details'] = map_placement(earning.sale.placement)
-
-        if earning.sale.affiliate in ('cost_per_click', 'cpc_all_stores'):
+        elif earning.sale.affiliate in ('cost_per_click', 'cpc_all_stores'):
             temp_dict['description_text'] = "Clicks to %s" % vendor.name
 
         # General info

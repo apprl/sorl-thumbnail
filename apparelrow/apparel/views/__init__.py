@@ -1362,7 +1362,7 @@ def product_lookup(request):
                         cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut_obj.rules_exceptions, request.user.id)
                         if cut_exception:
                             normal_cut = cut_exception
-                        if publisher_cut_exception and request.user.owner_network:
+                        if publisher_cut_exception is not None and request.user.owner_network:
                             publisher_cut = publisher_cut_exception
                     publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
                     product_earning = u"You will earn %s%s %.2f per generated click when linking to " \
