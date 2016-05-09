@@ -1,3 +1,4 @@
+from django.views.generic.base import TemplateResponseMixin
 import re
 import math
 import os.path
@@ -21,7 +22,7 @@ from django.core.urlresolvers import reverse
 from django.utils import translation
 from django.utils.translation import get_language, ugettext as _, ungettext
 from django.contrib.auth.decorators import login_required
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 
 from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS
 from apparelrow.apparel.search import ApparelSearch
@@ -54,28 +55,59 @@ def _to_int(s):
     except ValueError:
         return None
 
-def create(request, type):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
-    return render(request, 'apparel/create_product_widget.html', {'external_product_widget_id': 0, 'type': type,
-                                                                  'external_widget_url': request.user.url_widgets})
 
-def editor(request, template='apparel/create_product_widget.html', product_widget_id=None, **kwargs):
-    if not request.user.is_authenticated():
-        return HttpResponse('Unauthorized', status=401)
-    product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
+class BaseProductWidgetView(TemplateView):
 
-    if not request.user.pk == product_widget.user.pk:
-        return HttpResponse('Unauthorized', status=401)
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
+        return super(BaseProductWidgetView, self).dispatch(request, *args, **kwargs)
 
-    return render(request, template, {
-        'external_product_widget_id': product_widget_id if product_widget_id is not None else 0,
-        'type': product_widget.type,
-        'object': product_widget,
-        'external_widget_url': request.user.url_widgets
-    })
+
+class CreateProductWidgetView(BaseProductWidgetView):
+    template_name = "apparel/create_product_widget.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateProductWidgetView, self).get_context_data(**kwargs)
+        # "type" should be included
+        context.update(
+            {
+             'external_product_widget_id': 0,
+             'external_widget_url': self.request.user.url_widgets
+            }
+        )
+        return context
+
+
+class EditProductWidgetView(BaseProductWidgetView):
+    template_name = 'apparel/create_product_widget.html'
+    product_widget = None
+
+    def get_context_data(self, **kwargs):
+        context = super(EditProductWidgetView, self).get_context_data(**kwargs)
+        # product_widget_id if product_widget_id is not None else 0
+        context.update({
+            'external_product_widget_id': self.product_widget.id,
+            'type': self.product_widget.type,
+            'object': self.product_widget,
+            'external_widget_url': self.request.user.url_widgets
+        })
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        self.product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=kwargs.get("product_widget_id", None))
+        if not request.user.pk == self.product_widget.user.pk:
+            return HttpResponse('Unauthorized', status=401)
+        return super(EditProductWidgetView, self).dispatch(request, *args, **kwargs)
+
 
 def product_widget_instance_to_dict(product_widget):
+    """
+    Runs query against solr to fetch products to display.
+    :param product_widget:
+    :return:
+    """
+
     product_widget_dict = {
         'id': product_widget.id,
         'title': product_widget.title,
@@ -149,6 +181,7 @@ def product_widget_instance_to_dict(product_widget):
                 })
 
     return product_widget_dict
+
 
 def delete_productwidget(request, product_widget_id):
     productwidget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
@@ -300,9 +333,173 @@ class ProductWidgetView(View):
         return response
 
 
+class ProductWidgetDialogueView(TemplateResponseMixin, View):
+    template_name = "apparel/fragments/product_widget_widget.html"
+    http_method_not_allowed = ['get', 'put', 'patch', 'delete', 'head', 'options', 'trace']
+    product_widget = None
+
+    def get_context_data(self, **kwargs):
+        request = self.request
+        context = {}
+        context.update({'width': request.POST.get('width', 100),
+                        'width_type': request.POST.get('width_type', '%'),
+                        'height': request.POST.get('height', 600),
+                        'language': request.POST.get('language', 'sv'),
+                        })
+
+        show_product_brand = bool(int(request.POST.get('show_product_brand', 1)))
+        show_filters = bool(int(request.POST.get('show_filters', 1)))
+        show_filters_collapsed = bool(int(request.POST.get('show_filters_collapsed', 1)))
+    
+        if context['width_type'] == '%' and int(context['width']) > 100:
+            context['width'] = 100
+        elif context['width_type'] == 'px':
+            if context['width'] == '' or int(context['width']) < 400:
+                context['width'] = 400
+            elif int(context['width']) > 1200:
+                context['width'] = 1200
+            else:
+                context['width'] = int(context['width'])
+    
+        if context['height'] == '':
+            if self.product_widget.type == 'single':
+                context['height'] = 300
+            else:
+                context['height'] = 200
+        context['height'] = int(context['height'])
+        if context['height'] < 50:
+            context['height'] = 50
+    
+        product_widget_embed = ProductWidgetEmbed(
+            product_widget=self.product_widget,
+            user=self.product_widget.user,
+            width=context['width'],
+            width_type=context['width_type'],
+            height=context['height'],
+            language=context['language'],
+            show_product_brand=show_product_brand
+        )
+        product_widget_embed.save()
+        context.update({'slug': uuid.uuid4().hex, 'object': product_widget_embed})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=kwargs.get("product_widget_id", None))
+        if not request.user.pk == self.product_widget.user.pk:
+            return HttpResponse('Unauthorized', status=401)
+        return super(ProductWidgetDialogueView, self).dispatch(request, *args, **kwargs)
+
+#
+# Embed
+#
+
+class EmbedProductWidgetView(TemplateView):
+    template_name = "apparel/product_widget_embed.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(EmbedProductWidgetView, self).get_context_data(**kwargs)
+        product_widget_embed = get_model('apparel', 'ProductWidgetEmbed').objects.get(pk=context["embed_product_widget_id"])
+
+        context.update({"object": product_widget_embed,
+                        "language": product_widget_embed.language,
+                        "width": str(product_widget_embed.width),
+                        "embed_id": context["embed_product_widget_id"], # Redundant
+                        "components": product_widget_embed.product_widget.products.select_related('product')})
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        nginx_key = reverse('embed-product-widget', args=[context["embed_product_widget_id"]])
+        translation.activate(context["language"])
+        response = self.render_to_response(context)
+        translation.deactivate()
+        get_cache('nginx').set(nginx_key, response.rendered_content, 3600*24*20)
+        return response
+
+    def dispatch(self, request, *args, **kwargs):
+        if kwargs.get("embed_product_widget_id", None) is None:
+            # Todo handling for missing embed product widget, should not be possible due to url pattern matching.
+            return
+        return super(EmbedProductWidgetView, self).dispatch(request, *args, **kwargs)
+
+
+@DeprecationWarning
+def embed_product_widget(request, template='apparel/product_widget_embed.html', embed_product_widget_id=None):
+    """
+     Display look for use in embedded iframe.
+    """
+    product_widget_embed = None
+    try:
+        product_widget_embed = get_model('apparel', 'ProductWidgetEmbed').objects.get(pk=embed_product_widget_id)
+        width = product_widget_embed.width
+        language = product_widget_embed.language
+        nginx_key = reverse('embed-product-widget', args=[embed_product_widget_id])
+    except get_model('apparel', 'ProductWidgetEmbed').DoesNotExist:
+        #nginx_key = reverse('look-embed', args=[slug])
+        return
+
+    # TODO: replace alternative code with get_product_alternative from apparel.utils
+    language_currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
+    query_arguments = {'rows': 1, 'start': 0,
+                       'fl': 'price,discount_price',
+                       'sort': 'price asc, popularity desc, created desc'}
+    components = product_widget_embed.product_widget.products.select_related('product')
+
+    translation.activate(language)
+    response = render(request, 'apparel/product_widget_embed.html', {'object': product_widget_embed,
+                                                           'components': components,
+                                                           'width': str(width),
+                                                           'embed_id': embed_product_widget_id},)
+
+    translation.deactivate()
+    get_cache('nginx').set(nginx_key, response.content, 3600*24*20)
+    return response
+
+@DeprecationWarning
+def editor(request, template='apparel/create_product_widget.html', product_widget_id=None, **kwargs):
+    if not request.user.is_authenticated():
+        return HttpResponse('Unauthorized', status=401)
+    product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
+
+    if not request.user.pk == product_widget.user.pk:
+        return HttpResponse('Unauthorized', status=401)
+
+    return render(request, template, {
+        'external_product_widget_id': product_widget_id if product_widget_id is not None else 0,
+        'type': product_widget.type,
+        'object': product_widget,
+        'external_widget_url': request.user.url_widgets
+    })
+
+@DeprecationWarning
+def create(request, type):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('%s?next=%s' % (reverse('auth_login'), request.get_full_path()))
+    return render(request, 'apparel/create_product_widget.html', {'external_product_widget_id': 0, 'type': type,
+                                                                  'external_widget_url': request.user.url_widgets})
+
+# Deprecated
+@DeprecationWarning
+def dialog_embed(request, product_widget_id=None):
+    product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
+
+    max_width = 1200
+    default_width = 600
+
+    return render(request, 'apparel/dialog_product_widget_embed.html', {
+        'product_widget': product_widget,
+        'default_width': default_width,
+        'max_width': max_width,
+    })
+
+@DeprecationWarning
 def product_widget_widget(request, product_widget_id=None):
     if request.method != 'POST':
-        return HttpResponseNotAllowed("Method is now allowed")
+        return HttpResponseNotAllowed("Method is not allowed")
 
     product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
 
@@ -352,52 +549,3 @@ def product_widget_widget(request, product_widget_id=None):
     content['object'] = product_widget_embed
 
     return render(request, 'apparel/fragments/product_widget_widget.html', content)
-
-
-def dialog_embed(request, product_widget_id=None):
-    product_widget = get_object_or_404(get_model('apparel', 'ProductWidget'), pk=product_widget_id)
-
-    max_width = 1200
-    default_width = 600
-
-    return render(request, 'apparel/dialog_product_widget_embed.html', {
-        'product_widget': product_widget,
-        'default_width': default_width,
-        'max_width': max_width,
-    })
-
-#
-# Embed
-#
-def embed_product_widget(request, template='apparel/product_widget_embed.html', embed_product_widget_id=None):
-    """
-    Display look for use in embedded iframe.
-    """
-    product_widget_embed = None
-    try:
-        product_widget_embed = get_model('apparel', 'ProductWidgetEmbed').objects.get(pk=embed_product_widget_id)
-        width = product_widget_embed.width
-        language = product_widget_embed.language
-        nginx_key = reverse('embed-product-widget', args=[embed_product_widget_id])
-    except get_model('apparel', 'ProductWidgetEmbed').DoesNotExist:
-        #nginx_key = reverse('look-embed', args=[slug])
-        return
-
-    # TODO: replace alternative code with get_product_alternative from apparel.utils
-    language_currency = settings.LANGUAGE_TO_CURRENCY.get(language, settings.APPAREL_BASE_CURRENCY)
-    query_arguments = {'rows': 1, 'start': 0,
-                       'fl': 'price,discount_price',
-                       'sort': 'price asc, popularity desc, created desc'}
-    components = product_widget_embed.product_widget.products.select_related('product')
-
-    translation.activate(language)
-    response = render(request, 'apparel/product_widget_embed.html', {'object': product_widget_embed,
-                                                           'components': components,
-                                                           'width': str(width),
-                                                           'embed_id': embed_product_widget_id},)
-
-    translation.deactivate()
-
-    get_cache('nginx').set(nginx_key, response.content, 60*60*24*20)
-
-    return response
