@@ -60,7 +60,7 @@
     <section class="container">
         <div class="col-lg-12 table-responsive">
             <h2>{% trans "Referer Links from Clicks" %}</h2>
-            <table id="posts-table" class="sortable table">
+            <table id="posts-table" class="sortable table table-condensed">
                 <thead>
                     <tr>
                         <th class="col-md-2 center">{% trans "User ID" %}</th>
@@ -70,20 +70,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in posts_dict %}
-                        <tr>
-                            <td data-sort="{{ row.user_id }}">{{ row.user_id }}</td>
-                            <td class="text-left" data-sort="{{ row.referer }}">{{ row.referer }}</td>
-                            <td data-sort="{{ row.created }}">{{ row.created }}</td>
-                            <td data-sort="{{ row.posts }}">{{ row.posts }}</td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="3">{% trans "No clicks registered for this period." %}</td>
-                        </tr>
-                    {% endfor %}
+                    {% include 'apparel/admin/fragments/posts_list.html' %}
                 </tbody>
             </table>
+        </div>
+        <div class="pagination-simple">
+            <span class="step-links">
+                {% if current_page.has_previous %}
+                    <a href="?page={{ current_page.previous_page_number }}">&laquo;</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ current_page.number }} of {{ current_page.paginator.num_pages }}
+                </span>
+
+                {% if current_page.has_next %}
+                    <a href="?page={{ current_page.next_page_number }}">&raquo;</a>
+                {% endif %}
+            </span>
         </div>
     </section>
 {% endblock body %}
