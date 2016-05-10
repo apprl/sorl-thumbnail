@@ -29,6 +29,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
         this.filter_tabs = new App.Views.LookEditFilterTabs({model: this.product_filter_model});
 
         // Individual filters for products
+        this.filter_store = new App.Views.FilterProductStore({model: this.product_filter_model, collection: this.facets.store, el: '#product-filter-store'});
         this.filter_category = new App.Views.FilterProductCategory({model: this.product_filter_model, collection: this.facets.category, el: '#product-filter-category'});
         this.filter_subcategory = new App.Views.FilterProductSubCategory({model: this.product_filter_model, collection: this.facets.category, el: '#product-filter-subcategory'});
         this.filter_color = new App.Views.FilterProductColor({model: this.product_filter_model, collection: this.facets.color, el: '#product-filter-color'});
@@ -157,6 +158,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
     },
 
     render: function() {
+        this.filter_store.render();
         this.filter_category.render();
         this.filter_subcategory.render();
         this.filter_color.render();
@@ -180,6 +182,7 @@ App.Views.FilterProduct =  Backbone.View.extend({
         this.product_list.$product_list_unauthenticated.height(new_height);
 
         // Update product filters
+        this.filter_store.update_height(new_height);
         this.filter_category.update_height(new_height);
         this.filter_subcategory.update_height(new_height);
 

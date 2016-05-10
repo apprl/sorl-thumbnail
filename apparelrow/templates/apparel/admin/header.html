@@ -1,10 +1,11 @@
 {% load i18n %}
 
 <div class="body-header">
-    <h1>{% trans "Admin Dashboard" %}</h1>
+    <h1>{% blocktrans %}{{ title }}{% endblocktrans %}</h1>
     <ul class="sub-menu">
         <li><a{% if 'publisher' in request.path %} class="selected"{% endif %} href="{% url 'dashboard-admin' %}">{% trans "Publisher" %}</a></li>
         <li><a{% if 'kpi' in request.path %} class="selected"{% endif %} href="{% url 'admin-kpi-dashboard' %}">{% trans "KPI" %}</a></li>
         <li><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'admin-stores' %}">{% trans "Stores" %}</a></li>
+        <li><a{% if 'posts' in request.path %} class="selected"{% endif %} href="{% url 'admin-posts' %}">{% trans "Posts" %}</a></li>
     </ul>
 </div>

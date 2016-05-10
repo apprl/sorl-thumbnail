@@ -9,25 +9,20 @@
 
     {% include 'apparel/about_body_header.html' %}
 
-    <div class="row">
-        <div class="col-md-6 col-md-push-6">
-            <img src="{% static 'images/about-apprl.jpg' %}" alt="APPRL">
-        </div>
-        <div class="col-md-6 col-md-pull-6">
-            <article>
-                <h2>Connecting inspiration &amp; shopping</h2>
-                <p>APPRL was founded from the simple insight that online shopping is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that.</p>
-                <p>APPRL is focused on connecting top lifestyle media and digital influencers with the leading online retailers &amp; brands through a set of smart digital tools.</p>
-                <ul class="list-points">
-                    <li>We help influencers &amp; media to monetise their content by making it shoppable (<a href="{% url 'index-publisher' %}">learn more</a>)</li>
-                    <li>We help digital retailers &amp; brands to increase their reach &amp; sales through our network (<a href="{% url 'index-retailers' %}">learn more</a>)</li>
-                    <li>We also let consumers shop the style of bloggers, magazines and other style makers (<a href="{% url 'index-community' %}">join our community</a>)</li>
-                </ul>
-                <p>We’re on a mission to transform the way shopping works today through technology, mobility &amp; outstanding user experiences.</p>
-                <p>Want to <a href="{% url 'jobs' %}">join our journey</a>?</p>
-            </article>
-        </div>
-    </div>
+    <article class="team">
+        <h2>Connecting inspiration &amp; shopping</h2>
+        <img src="{% static 'images/about.jpg' %}">
+        <p>APPRL was founded from the simple insight that online shopping is so much more boring, time-consuming and difficult than it should be. Shoppers have to go back and forth between blogs, magazines, search engines and stores to get what they want. Internet can do better than that.</p>
+        <p>APPRL is focused on connecting top lifestyle media and digital influencers with the leading online retailers &amp; brands through a set of smart digital tools.</p>
+        <ul class="list-points">
+            <li>We help influencers &amp; media to monetise their content by making it shoppable (<a href="{% url 'index-publisher' %}">learn more</a>)</li>
+            <li>We help digital retailers &amp; brands to increase their reach &amp; sales through our network (<a href="{% url 'index-retailers' %}">learn more</a>)</li>
+            <li>We also let consumers shop the style of bloggers, magazines and other style makers (<a href="{% url 'index-community' %}">join our community</a>)</li>
+        </ul>
+        <p>We’re on a mission to transform the way shopping works today through technology, mobility &amp; outstanding user experiences.</p>
+        <p>Want to <a href="{% url 'jobs' %}">join our journey</a>?</p>
+    </article>
+
     <div class="partners">
         <h4>Supported by</h4>
         <ul>

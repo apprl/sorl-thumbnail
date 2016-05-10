@@ -1,7 +1,9 @@
 import operator
 import re
+import decimal
 import json
 
+from decimal import ROUND_HALF_UP
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
 from django.forms import ModelForm
@@ -16,6 +18,7 @@ from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import get_location
 from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
+from apparelrow.profile.notifications import retrieve_url
 from django.views.generic import TemplateView
 
 import logging
@@ -162,7 +165,7 @@ class ReferralView(TemplateView):
     def get(self,request, *args, **kwargs):
 
         if request.user.is_authenticated() and all([request.user.is_partner, request.user.referral_partner]):
-            context = self.get_context_data()
+            context = self.get_context_data(**kwargs)
             return render(request, self.template_name, context)
         else:
             return HttpResponseRedirect(reverse('index-publisher'))
@@ -180,14 +183,17 @@ class ReferralView(TemplateView):
         # TODO: fix when we have swedish email
         #if referral_language == 'sv':
             #template = 'dashboard/referral_mail_sv.html'
-        body = render_to_string(template, {'referral_code': referral_code, 'referral_name': referral_name})
+
+        # Get user avatar
+        if request.user.image or request.user.facebook_user_id:
+            profile_photo_url = request.user.avatar_circular_large
+        else:
+            profile_photo_url = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
 
         for email in emails:
-            send_email_task.delay(u'Invitation from {referral_name}'.format(referral_name=referral_name), body, email,
-                                  u'{} <{}>'.format(referral_name, referral_email))
+            send_email_task.delay(email, referral_name, referral_code, profile_photo_url)
         messages.add_message(request, messages.SUCCESS, u'Sent mail to %s' % (', '.join(emails),))
         return render(request, self.template_name)
-
 
 @DeprecationWarning
 def referral(request):
@@ -225,6 +231,69 @@ def referral_mail(request):
 #
 # Commissions
 #
+def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_from, store):
+    """
+    Return earnings for given store and user, and any other additional information. This is mainly used in Stores
+    commissions page.
+    """
+    currency = ''
+    amount_float = decimal.Decimal(0)
+    amount = "%.2f" % amount_float
+    earning_type = "is_cpo"  # Default is_cpo = True for vendors
+
+    CPC_CODE = 0
+    CPO_CODE = 1
+    cut = None
+
+    # Retrieve cut object
+    try:
+        cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor_obj)
+    except get_model('dashboard', 'Cut').DoesNotExist:
+            log.warning("Cut for commission group %s and vendor %s does not exist." %
+                           (user.partner_group, vendor_obj.name))
+
+    type_code = CPC_CODE
+    if cut:
+        if user.partner_group.has_cpc_all_stores:
+            # For Publishers who earns CPC for all stores, cut is 100% unless exceptions are defined
+            normal_cut = 1
+            type_code = CPC_CODE
+            earning_type = "is_cpc"
+            earning_amount = cut.locale_cpc_amount
+            currency = cut.locale_cpc_currency
+            # Get exceptions and if they are defined, replace current cuts
+            if cut.rules_exceptions:
+                cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
+                if cut_exception:
+                    normal_cut = cut_exception
+                if publisher_cut_exception and user.owner_network:
+                    publisher_cut = publisher_cut_exception
+            publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
+            amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
+            amount = "%.2f" % (amount_float)
+        else:
+            if vendor_obj.is_cpc:
+                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
+                earning_amount = click_cost.locale_price
+                currency = click_cost.locale_currency
+                earning_type = "is_cpc"
+
+                # Get click cost from exceptions if defined
+                _, _, click_cost_exception = parse_rules_exception(cut.rules_exceptions, user.id)
+                exception_amount, exception_currency = parse_cost_amount(click_cost_exception)
+                if exception_amount and exception_currency:
+                    earning_amount = exception_amount
+                    currency = exception_currency
+
+                amount = "%.2f" % (earning_amount * publisher_cut * normal_cut)
+                amount_float = earning_amount * publisher_cut * normal_cut
+            elif vendor_obj.is_cpo:
+                amount = store.commission
+                amount_float = standard_from
+            type_code = CPC_CODE if earning_type == "is_cpc" else CPO_CODE
+
+    return amount, amount_float, currency, earning_type, type_code
+
 def commissions(request):
     if not request.user.is_authenticated() or not request.user.is_partner:
         log.error('Unauthorized user trying to access store commission page. Returning 404.')
@@ -255,23 +324,21 @@ def commissions(request):
 
             # Get different cuts
             _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(user_id, vendor_obj)
+            temp['amount'], temp['amount_float'], temp['currency'], temp['earning_type'], temp['type_code'] = \
+                get_store_earnings(request.user, vendor_obj, publisher_cut, normal_cut, standard_from, store)
 
-            if vendor_obj.is_cpc:
-                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
-                temp['amount'] = "%.2f" % (click_cost.locale_price * publisher_cut * normal_cut)
-                temp['amount_float'] = click_cost.locale_price * publisher_cut * normal_cut
-                temp['currency'] = click_cost.locale_currency
-                temp['type'] = "is_cpc"
-            elif vendor_obj.is_cpo:
-                temp['amount'] = store.commission
-                temp['amount_float'] = standard_from
-                temp['type'] = "is_cpo"
             stores[vendor] = temp
         except get_model('dashboard', 'ClickCost').DoesNotExist:
             log.warning("ClickCost for vendor %s does not exist" % vendor)
         except get_model('dashboard', 'StoreCommission').DoesNotExist:
             log.warning("StoreCommission for vendor %s does not exist" % vendor)
-    stores = [x for x in sorted(stores.values(), key=lambda x: (x['amount_float'], x['vendor_name']))]
+    stores = [x for x in sorted(stores.values(), key=lambda x: (x['type_code'], -x['amount_float'], x['vendor_name']))]
+
+    sort_index = 0
+    for row in stores:
+        row['sort_index'] = sort_index
+        sort_index += 1
+
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
 def commissions_popup(request, pk):
@@ -373,6 +440,7 @@ def clicks_detail(request):
         user_id = request.GET.get('user_id', None)
         vendor = request.GET.get('vendor', None)
         currency = request.GET.get('currency', 'EUR')
+        is_store = request.GET.get('is_store', False)
         num_clicks = request.GET.get('clicks', 0)
         try:
             amount_for_clicks = request.GET.get('amount', "0").replace(',', '.')
@@ -382,7 +450,7 @@ def clicks_detail(request):
         if num_clicks > 0:
             click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
-            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id)
+            data = get_clicks_list(vendor, query_date, currency, click_cost, user_id, is_store)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
 
@@ -451,6 +519,11 @@ class DashboardView(TemplateView):
             # Aggregate products per month
             top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query)
 
+            month_commission = sum_data['sale_earnings__sum']
+            show_cpo_earning = True
+            if request.user.partner_group.has_cpc_all_stores and not month_commission or not month_commission > 0:
+                show_cpo_earning = False
+
             network_earning = 0
             if sum_data['network_sale_earnings__sum'] is not None:
                 network_earning = sum_data['network_sale_earnings__sum'] + sum_data['network_click_earnings__sum']
@@ -458,7 +531,7 @@ class DashboardView(TemplateView):
                             'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
                             'pending_payment': pending_payment, 'total_earned': total_earned,
                             'data_per_day': data_per_day, 'currency': currency,
-                            'month_commission': sum_data['sale_earnings__sum'],
+                            'month_commission': month_commission,
                             'month_sales': sum_data['sales__sum'], 'total_earnings': total_earnings, 'year': year,
                             'month': month, 'month_display': month_display,
                             'total_commission': ('%.2f' % total_aggregated_earnings),
@@ -470,6 +543,7 @@ class DashboardView(TemplateView):
                             'month_clicks': non_paid_clicks,
                             'referral_commission': referral_earnings,
                             'ppc_earnings': ppc_earnings,
+                            'show_cpo_earning': show_cpo_earning
                             }
             return render(request, 'dashboard/new_dashboard.html', context_data)
         return HttpResponseRedirect(reverse('dashboard'))
@@ -581,7 +655,7 @@ class AdminDashboardView(TemplateView):
         Returns list of lists ready for display from the given matrix with Summary data
         """
         headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
-                        'Commission CR']
+                    'Commission CR']
         if is_bottom_summary:
             headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
         top_summary_array = []
@@ -1590,7 +1664,6 @@ def products(request, year=None, month=None):
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
-
 
         # Enumerate months
         dt1 = request.user.date_joined.date()

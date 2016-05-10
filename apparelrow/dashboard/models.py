@@ -1,11 +1,9 @@
 import datetime
-import json
 import decimal
 
 from django.conf import settings
 from django.core.cache import cache
 from django.db import models, transaction
-from django.db.models import get_model
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -13,9 +11,13 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.contrib.auth import get_user_model
 from jsonfield import JSONField
 from django.utils.functional import cached_property
+from django.core.mail import mail_admins
 
+from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import dehydrate
+from apparelrow.profile.models import User
+
 import logging
 
 logger = logging.getLogger( __name__ )
@@ -142,6 +144,12 @@ class Group(models.Model):
     owner_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
                                     help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
     is_subscriber = models.BooleanField(default=False)
+    has_cpc_all_stores = models.BooleanField(default=False,
+                                             help_text='If checked, all publishers that belong to the Commission Group '
+                                                       'will earn per click for all Stores. Next step is to set '
+                                                       'cpc_amount and cpc_currency for Cuts for every vendor, and cut '
+                                                       'percentage must be 0 to avoid double earnings.')
+
 
     class Meta:
         verbose_name = 'Commission Group'
@@ -154,18 +162,54 @@ class Cut(models.Model):
     group = models.ForeignKey('dashboard.Group', on_delete=models.PROTECT, related_name='cuts')
     vendor = models.ForeignKey('apparel.Vendor', on_delete=models.CASCADE)
     cut = models.DecimalField(default=str(settings.APPAREL_DASHBOARD_CUT_DEFAULT), max_digits=10, decimal_places=3,
-                              help_text='Between 1 and 0, default %s. Determines the percentage that goes to the Publisher (and possible Publisher Network owner, if applies)' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
-    referral_cut = models.DecimalField(default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10, decimal_places=3,
-                                       help_text='Between 1 and 0, default %s. Determines the percentage that goes to the referral partner parent.' % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
+                              help_text='Between 1 and 0, default %s. Determines the percentage that goes to the '
+                                        'Publisher (and possible Publisher Network owner, if applies). Make sure this '
+                                        'value is 0 if Commission Groups that earn per click for all stores and vendor '
+                                        'pays per click.' % (settings.APPAREL_DASHBOARD_CUT_DEFAULT,))
+    referral_cut = models.DecimalField(default=str(settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT), max_digits=10,
+                                       decimal_places=3,
+                                       help_text='Between 1 and 0, default %s. Determines the percentage that goes to '
+                                                 'the referral partner parent.'
+                                                 % (settings.APPAREL_DASHBOARD_REFERRAL_CUT_DEFAULT,))
+    cpc_amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2,
+                                     help_text=_('Pay per click amount only for those publishers that earn per click '
+                                                 'for all stores. Set this amount if all publishers in Commission Group'
+                                                 'earn per click for ALL stores.'))
+    cpc_currency = models.CharField(default='EUR', max_length=3, help_text=_('Pay per click currency only for those '
+                                                                             'publishers that earn per click for all '
+                                                                             'stores'))
     rules_exceptions = JSONField(null=True, blank=True,
                                  help_text='Creates exceptions for Cuts using the following format: [{"sid": 1, "cut": '
-                                           '0.90, "tribute":0.50, "click_cost":"10 SEK"}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
+                                           '0.90, "tribute":0.50}, {"sid": 2, "cut": 0.90, "tribute":0.5}] where "sid" '
                                            'is the User id. Cut replaces the cut value for the user and the current cut'
                                            ' and Tribute replaces the tribute value the user has to pay to the network '
                                            'owner')
 
     class Meta:
         ordering = ('group', 'vendor')
+
+    def _calculate_exchange_price(self):
+        """
+        Return price and currency based on the selected currency. If no
+        currency is selected currency language is converted to a currency if
+        possible else APPAREL_BASE_CURRENCY is used.
+        """
+        if not hasattr(self, '_calculated_locale_cost'):
+            to_currency = settings.LANGUAGE_TO_CURRENCY.get(get_language(), settings.APPAREL_BASE_CURRENCY)
+            rate = currency_exchange(to_currency, self.cpc_currency)
+            self._calculated_locale_cost = (rate * self.cpc_amount, to_currency)
+
+        return self._calculated_locale_cost
+
+    @cached_property
+    def locale_cpc_amount(self):
+        cpc_amount, _ = self._calculate_exchange_price()
+        return cpc_amount
+
+    @cached_property
+    def locale_cpc_currency(self):
+        _, cpc_currency = self._calculate_exchange_price()
+        return cpc_currency
 
     def __unicode__(self):
         return u'%s - %s: %s (%s)' % (self.group, self.vendor, self.cut, self.referral_cut)
@@ -354,6 +398,9 @@ USER_EARNING_TYPES = (
 
     ('publisher_network_click_tribute', 'Network Earnings per Clicks'),
     ('publisher_sale_click_commission', 'Earnings per Clicks'),
+
+    ('publisher_network_click_tribute_all_stores', 'Network Earnings per Clicks'),
+    ('publisher_sale_click_commission_all_stores', 'Earnings per Clicks'),
 )
 
 @receiver(pre_save, sender=AggregatedData, dispatch_uid='aggregated_data_pre_save')
@@ -400,24 +447,35 @@ class UserEarning(models.Model):
 
 @receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
 def sale_post_save(sender, instance, created, **kwargs):
+    """
+    sale_post_save is triggered after a Sale has been created or updated. It creates the respective earnings for this
+    sale.
+    """
     logger.info("Sale with id %s saved with user id %s and type %s" % (instance.id, instance.user_id, instance.type))
     with transaction.atomic():
         if created:
+            # If sale is created, create the respectives earnings
             create_earnings(instance)
         else:
-            if get_model('dashboard', 'UserEarning').objects.filter(sale=instance).exists():
-                earnings = get_model('dashboard', 'UserEarning').objects.filter(sale=instance)
+            # Update if UserEarning instances for the respective sale exists, otherwise create them
+            if UserEarning.objects.filter(sale=instance).exists():
+                # Update earnings if sale has been updated.
+                earnings = UserEarning.objects.filter(sale=instance)
                 if instance.status >= Sale.CONFIRMED:
                     for earning in earnings:
                         earning.status = instance.status
                         earning.save()
                 else:
-                    get_model('dashboard', 'UserEarning').objects.filter(sale=instance).delete()
+                    # Remove earnings if sale has been removed.
+                    UserEarning.objects.filter(sale=instance).delete()
                     create_earnings(instance)
                 str_date = instance.sale_date.strftime('%Y-%m-%d')
+
+                # Add date from updated sale/earnings to a quere, so the associated aggregated data will be
+                # updated/generated later as well. (update_aggregated_data job)
                 update_list = cache.get(settings.APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA)
                 if update_list:
-                    if not str_date in update_list:
+                    if str_date not in update_list:
                         update_list = "%s,%s" % (update_list, str_date)
                         cache.set(settings.APPAREL_DASHBOARD_PENDING_AGGREGATED_DATA, update_list)
                 else:
@@ -426,57 +484,79 @@ def sale_post_save(sender, instance, created, **kwargs):
                 create_earnings(instance)
 
 def create_earnings(instance):
+    """
+    Identify and handles when the sale is a Referral Signup Bonus or when it's another type of sale.
+    """
     if not instance.is_promo:
         create_user_earnings(instance)
         if instance.is_referral_sale:
             create_referral_earning(instance)
     else:
-        user = get_model('profile', 'User').objects.get(id=instance.user_id)
-        get_model('dashboard', 'UserEarning').objects.create(user=user, user_earning_type='referral_signup_commission',
-            sale=instance, amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date, status=instance.status)
+        user = User.objects.get(id=instance.user_id)
+        UserEarning.objects.\
+            create(user=user, user_earning_type='referral_signup_commission', sale=instance,
+                   amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date,
+                   status=instance.status)
+        mail_admins('Referral Signup bonus created',
+                    'A referral Signup bonus has been created for user %s (%s)' % (user.display_name, user.id))
 
 def create_referral_earning(sale):
+    """
+    Create referral earnings when the sale is a referral sale.
+    User associated to the sale must exist and have a Cut instance (referral_cut) associated to the Vendor
+    """
     total_commission = sale.converted_commission
     referral_user = sale.referral_user
-    user = get_model('profile', 'User').objects.get(id=sale.user_id)
+    user = User.objects.get(id=sale.user_id)
     commission_group = referral_user.partner_group
     product = None
 
-    sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+    sale_product = Product.objects.filter(id=sale.product_id)
 
     if not len(sale_product) == 0:
         product = sale_product[0]
 
     if commission_group:
-        commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
-        referral_cut = commission_group_cut.referral_cut
-        if referral_cut:
-            referral_commission = total_commission * referral_cut
-            get_model('dashboard', 'UserEarning').objects.create(user=referral_user,
+        try:
+            commission_group_cut = Cut.objects.get(group=commission_group, vendor=sale.vendor)
+            referral_cut = commission_group_cut.referral_cut
+            if referral_cut:
+                referral_commission = total_commission * referral_cut
+                UserEarning.objects.create(user=referral_user,
                                                                  user_earning_type='referral_sale_commission',
                                                                  sale=sale, from_product=product, from_user=user,
                                                                  amount=referral_commission, date=sale.sale_date,
                                                                  status=sale.status)
-        else:
+            else:
+                logger.warning('Referral user %s does not have a referral cut for vendor %s' % (referral_user, sale.vendor))
+        except Cut.DoesNotExist:
             logger.warning('Cut matching query does not exist %s - %s' % (commission_group, sale.vendor))
     else:
         logger.warning('User %s should have assigned a comission group'%user)
 
 def create_user_earnings(sale):
+    """
+    Create user earnings associated excluding referral sales. More specifically, those earnings types are apprl
+    commissions, publisher sale and click commissions, and publisher network owner sale and click commissions.
+
+    If user_id is not 0 (id reserved only for APPRL), the User must exists in order to proceed. Also, the user must
+    have a Cut associated,
+    """
     total_commission = sale.converted_commission
     product = None
+    is_general_click_earning = False
 
-    sale_product = get_model('apparel', 'Product').objects.filter(id=sale.product_id)
+    sale_product = Product.objects.filter(id=sale.product_id)
     if not len(sale_product) == 0:
         product = sale_product[0]
 
-    earning_type = 'publisher_sale_commission' if sale.type == Sale.COST_PER_ORDER else 'publisher_sale_click_commission'
+    earning_type = 'publisher_sale_commission' if sale.type == Sale.COST_PER_ORDER \
+        else 'publisher_sale_click_commission'
 
-    user = None
     if sale.user_id:
         try:
-            user = get_model('profile', 'User').objects.get(id=sale.user_id)
-        except get_model('profile', 'User').DoesNotExist:
+            user = User.objects.get(id=sale.user_id)
+        except User.DoesNotExist:
             logger.warning('Sale %s is connected to a User %s that does not exist.' % (sale.id,sale.user_id))
             return
 
@@ -490,7 +570,7 @@ def create_user_earnings(sale):
                 return
             cut = commission_group_cut.cut
 
-             # Handle exceptions for publisher cuts
+            # Handle exceptions for the publisher Cut
             try:
                 data_exceptions = commission_group_cut.rules_exceptions
                 for data in data_exceptions:
@@ -499,21 +579,32 @@ def create_user_earnings(sale):
             except:
                 logger.info("No exceptions for cuts defined for commission group %s and store %s"%(commission_group,
                                                                                                     sale.vendor))
-            if cut:
+            # If the earning is for a publisher that earns per click for all stores, the publisher (and the publisher
+            # network owner, if applies) will get 100% of this earning
+            if sale.affiliate == "cpc_all_stores":
+                cut = 1
+                earning_type = "publisher_sale_click_commission_all_stores"
+                is_general_click_earning = True
+
+            if cut is not None:
                 try:
                     publisher_commission = total_commission * cut
                     apprl_commission = total_commission - publisher_commission
 
+                    # Create earning(s) for the publisher network owner(s)
                     if user.owner_network and not user.owner_network.id == user.id:
                         publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale,
-                                                                                 product, MAX_NETWORK_LEVELS)
+                                                                                 product,MAX_NETWORK_LEVELS,
+                                                                                 is_general_click_earning)
 
-                    get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+                    # Create apprl commission
+                    UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
                                                                          from_product=product, from_user=user,
                                                                          amount=apprl_commission, date=sale.sale_date,
                                                                          status=sale.status)
 
-                    get_model('dashboard', 'UserEarning').objects.create( user=user,
+                    # Create user earning for the publisher associated to the sale
+                    UserEarning.objects.create( user=user,
                                                                           user_earning_type=earning_type, sale=sale,
                                                                           from_product=product,
                                                                           amount=publisher_commission,
@@ -521,16 +612,23 @@ def create_user_earnings(sale):
                 except:
                     logger.error("Error creating earnings within the publisher network")
             else:
-                logger.warning('No Cut related to Commission group %s and Store %s'%(user, sale.vendor))
+                logger.warning('No Cut related to Commission group %s and Store %s' % (user, sale.vendor))
         else:
-            logger.warning('User %s should have assigned a comission group'%user)
+            logger.warning('User %s should have assigned a comission group' % user)
     else:
-        # The sale was generated from APPRL.com
-        get_model('dashboard', 'UserEarning').objects.create(user_earning_type='apprl_commission', sale=sale,
+        # Sale was generated from APPRL.com, so in this case only an earning for APPRL is created
+        UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
 
-def create_earnings_publisher_network(user, publisher_commission, sale, product, counter):
+def create_earnings_publisher_network(user, publisher_commission, sale, product, counter, cpc_all_stores=False):
+    """
+    Recursive method that creates user earnings for the publisher network owner(s), which means the publisher network
+    could have more than one level in hierarchy.
+
+    Owner must exist, and owner user must differ of publisher user. Also it has a counter to avoid infinite loops. It
+    takes into consideration Cuts exceptions, if owner belongs to a commission group and there is an exception.
+    """
     owner = user.owner_network
     counter -= 1
     if owner and not user.id == owner.id and not counter == 0:
@@ -547,7 +645,7 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product,
                 logger.warning('Cut matching query does not exist %s - %s' % (commission_group_user, sale.vendor))
                 return
 
-             # Handle exceptions for owner cuts
+            # Handle exceptions for owner cuts
             try:
                 data_exceptions = commission_group_cut.rules_exceptions
                 for data in data_exceptions:
@@ -556,15 +654,20 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product,
             except:
                 pass
 
+        # Calculate owner earning
         owner_earning = publisher_commission * owner_tribute
         publisher_commission -= owner_earning
 
         if owner.owner_network:
-            owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product, counter)
+            owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product, counter,
+                                                              cpc_all_stores)
 
-        earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER else 'publisher_network_click_tribute'
+        earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER\
+            else 'publisher_network_click_tribute'
+        if cpc_all_stores:
+            earning_type = "publisher_network_click_tribute_all_stores"
 
-        get_model('dashboard', 'UserEarning').objects.create( user=owner, user_earning_type=earning_type, sale=sale,
+        UserEarning.objects.create( user=owner, user_earning_type=earning_type, sale=sale,
                                                               from_product=product, from_user=user, amount=owner_earning,
                                                               date=sale.sale_date, status=sale.status)
     return publisher_commission

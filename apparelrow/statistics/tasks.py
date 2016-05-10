@@ -17,7 +17,7 @@ import logging
 log = logging.getLogger( __name__ )
 
 @task(name='statistics.tasks.product_buy_click', max_retries=5, ignore_result=True)
-def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie_already_exists):
+def product_buy_click(product_id, referer, client_referer, ip, user_agent, user_id, page, cookie_already_exists):
     """
     Buy click stats for products
     """
@@ -44,7 +44,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
     action = 'BuyReferral'
     source_link = ''
     if page == 'Ext-Store':
-        parsed_url = urlparse(referer.split("\n")[1])
+        parsed_url = urlparse(client_referer)
         log.info("External store click found, trying to fetch vendor for link: %s and user_id: %s" % (parsed_url.path, user_id))
         short_link = extract_short_link_from_url(parsed_url.path, int(user_id))
         log.info("Extracting short link: %s from url. Trying to fetch ShortStoreLink object." % short_link)
@@ -57,7 +57,7 @@ def product_buy_click(product_id, referer, ip, user_agent, user_id, page, cookie
             log.info("Failed to extract vendor and ShortStoreLink [%s] Error:[%s]." % (parsed_url.path,msg))
         action = 'StoreLinkClick'
     elif page == 'Ext-Link' and not product:
-        parsed_url = urlparse(referer.split("\n")[1])
+        parsed_url = urlparse(client_referer)
         log.info("External domain click found, trying to fetch vendor for link: %s " % parsed_url.path)
         short_link = extract_short_link_from_url(parsed_url.path)
         log.info("Extracting short link: %s from url. Trying to fetch ShortDomainLink object." % short_link)

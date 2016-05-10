@@ -3,10 +3,11 @@
 
 {% block modal_id %}modal_publisher_info{% endblock %}
 {% block modal_title %}{% trans "How payments work" %}{% endblock %}
+{% block extra_modal_classes %}text-left{% endblock %}
 {% block modal_content %}
-<p>{% trans "As soon as a sale that you have generated has been carried through, your commission is added to “Your commission”. Before the amount can be payed to you, the store needs to confirm the sale. This is normally done within 30 days to account for any returned items." %}</p>
-<p>{% trans "Once a sale has been confirmed it becomes “Confirmed commission” - this is what is being paid to you each month. The last day of each month a payment will be made to you with all the confirmed commission that you have earned the previous month." %}</p>
-<p>{% trans "The minimum payment amount is 50 EUR. If your confirmed commission is less than that, the amount will be transferred to the next month. “Pending payment” is the amount of your next payment." %}</p>
+<p><b>{% trans "Your commission" %} - </b>{% trans "As soon as a sale that you have generated has been carried through, your commission is added to “Your commission”. Before the amount can be payed to you, the store needs to confirm the sale. This is normally done within 30 days to account for any returned items." %}</p>
+<p><b>{% trans "Confirmed commission" %} - </b>{% trans "Once a sale has been confirmed it becomes “Confirmed commission” - this is what is being paid to you each month. The last day of each month a payment will be made to you with all the confirmed commission that you have earned the previous month." %}</p>
+<p><b>{% trans "Pending payment" %} - </b>{% trans "The minimum payment amount is 50 EUR. If your confirmed commission is less than that, the amount will be transferred to the next month. “Pending payment” is the amount of your next payment." %}</p>
 <p>{% trans "For a payment to be made, you have to enter your account details under your settings." %}</p>
 <p>{% trans "Let us know any questions on" %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a>.</p>
 {% endblock %}

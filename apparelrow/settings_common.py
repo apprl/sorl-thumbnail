@@ -119,6 +119,8 @@ VENDOR_LOCATION_MAPPING = {
     "Soft Goat": ["FI", "SE", "NO", "DK"],
     "Eleven": ["SE"],
     "Happy Socks": ["SE"],
+    "Hedvig Showroom": ["SE"],
+    "Heelow": ["SE"],
     "Henry Kole": ["SE", "DK", "NO", "FI"],
     "Elevenfiftynine": ["SE"],
     "Ellos SE": ["SE"],
@@ -132,6 +134,7 @@ VENDOR_LOCATION_MAPPING = {
     "Nividas": ["SE", "DK", "NO", "FI"],
     "Nelly": ["SE"],
     "Nelly NO": ["NO"],
+    "NA-KD": ["FI", "SE", "NO", "DK"],
     "Gina Tricot NO": ["NO"],
     "Gina Tricot SE": ["SE"],
     "Gina Tricot DK": ["DK"],
@@ -142,6 +145,7 @@ VENDOR_LOCATION_MAPPING = {
     "Boozt dk": ["DK"],
     "ASOS no": ["NO"],
     "QVC": ["US"],
+    "Sportamore": ["SE"],
     "Room 21 no": ["NO"],
     "Rum 21 se": ["SE"],
     "default": ["ALL", "SE", "NO", "US", "DK", "FI"],
@@ -415,7 +419,6 @@ PIPELINE_JS = {
         'source_filenames': ('js/vendor/underscore.js',
                              'js/vendor/jquery-2.1.1.js',
                              'js/vendor/jquery-ui-1.9.2.custom.js',
-                             'js/vendor/add2home.js',
                              'js/jquery/jquery.ui.touch-punch.min.js',
                              'js/jquery/jquery.cookie-1.4.1.min.js',
                              'js/vendor/detect-mobile.js',
@@ -495,6 +498,7 @@ PIPELINE_JS = {
             'js/app/base/views/header.js',
             'js/app/base/views/dialog_header_mobile.js',
             'js/app/base/views/filter_product.js',
+            'js/app/base/views/filter_product_store.js',
             'js/app/base/views/filter_product_category.js',
             'js/app/base/views/filter_product_subcategory.js',
             'js/app/base/views/filter_product_color.js',
@@ -547,6 +551,7 @@ PIPELINE_JS = {
             'js/app/base/views/header.js',
             'js/app/base/views/dialog_header_mobile.js',
             'js/app/base/views/filter_product.js',
+            'js/app/base/views/filter_product_store.js',
             'js/app/base/views/filter_product_category.js',
             'js/app/base/views/filter_product_subcategory.js',
             'js/app/base/views/filter_product_color.js',
@@ -594,6 +599,7 @@ PIPELINE_JS = {
                              'js/app/base/views/header.js',
                              'js/app/base/views/dialog_header_mobile.js',
                              'js/app/base/views/filter_product.js',
+                             'js/app/base/views/filter_product_store.js',
                              'js/app/base/views/filter_product_category.js',
                              'js/app/base/views/filter_product_subcategory.js',
                              'js/app/base/views/filter_product_color.js',
@@ -741,6 +747,9 @@ APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR = 'images/brand-avatar-large-circular.png'
 APPAREL_DEFAULT_BRAND_AVATAR = 'images/brand-avatar.png'
 APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM = 'images/brand-avatar-medium.png'
 APPAREL_DEFAULT_BRAND_AVATAR_LARGE = 'images/brand-avatar-large.png'
+APPAREL_DEFAULT_LINK_ICON = 'images/link-icon-small.jpg'
+APPAREL_DEFAULT_LINK_ICON_MEDIUM = 'images/link-icon-medium.jpg'
+APPAREL_DEFAULT_LINK_ICON_LARGE = 'images/link-icon-large.jpg'
 APPAREL_MISC_IMAGE_ROOT = 'static/images'
 APPAREL_BACKGROUND_IMAGE_ROOT = 'static/images/background'
 APPAREL_TEMPORARY_IMAGE_ROOT = 'static/images/temp'
@@ -1035,5 +1044,5 @@ GEOIP_DEBUG = False
 GEOIP_RETURN_LOCATION = "ONLYFORDEBUG"
 
 # Variable for temporary tracking string for tailsweep campaign.
-GINA_TRACKING = {"user_ids": [24,30714,30716,30733,30717,24257,30164,30719,30720,30721,30722,30724,30725,24312,30732,30738,30744],
+GINA_TRACKING = {"user_ids": [30714,30716,30733,30717,24257,30164,30719,30720,30721,30722,30724,30725,24312,30732,30738,30744],
                  "tracking_string": "&utm_source=tailsweep_apprl&utm_medium=social&utm_campaign=conversions_2016_se"}

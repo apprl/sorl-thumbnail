@@ -25,7 +25,9 @@
     {% compressed_css 'bootstrap' %}
     {% block extra-styles %}
     {% endblock %}
+    {% comment  %}
     <script type="text/javascript">var addToHomeConfig = {returningVisitor: true, touchIcon: true, expire: 20160};</script>
+    {% endcomment  %}
     <script src="//cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
@@ -149,16 +151,13 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{ request.user.url_likes }}">{% trans "Profile" %}</a></li>
                                 {% if request.user.advertiser_store %}
-                                    <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
-                                {% endif %}
-                                {% if request.user.is_partner  %}
+                                    <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Store Dashboard" %}</a></li>
+                                {% elif request.user.is_partner  %}
                                     <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
-                                    {% if not request.user.advertiser_store %}
-                                        <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
-                                    {% endif %}
+                                    <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
                                 {% endif %}
                                 <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
-                                <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
+                                <li><a href="{% url 'settings-account' %}">{% trans "Settings" %}</a></li>
                                 <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                             </ul>
                         </li>
@@ -217,19 +216,22 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{ request.user.url_likes }}">{% trans "Profile" %}</a></li>
                                 {% if request.user.advertiser_store %}
-                                    <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Your store" %}</a></li>
-                                {% endif %}
-                                {% if request.user.is_partner  %}
+                                    <li><a href="{% url 'advertiser-store-admin' %}">{% trans "Store Dashboard" %}</a></li>
+                                {% elif request.user.is_partner  %}
                                     <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
                                     <li><a href="{% url 'dashboard-commissions' %}">{% trans "Store Commissions" %}</a></li>
                                 {% endif %}
                                 <!-- li><a class="facebook-invite" href="#invite">{% trans "Invite friends" %}</a></li -->
-                                <li><a href="{% url 'settings-email' %}">{% trans "Settings" %}</a></li>
+                                <li><a href="{% url 'settings-account' %}">{% trans "Settings" %}</a></li>
                                 <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                             </ul>
                         </li>
                         <hr class="visible-xs visible-sm">
-                        <li class="visible-xs visible-sm"><a href="{% url 'settings-email' %}#location"><u>{% get_location_text request.user.location %}</u></a></li>
+                        <li class="visible-xs visible-sm">
+                            <a href="{% url 'settings-account' %}#location">
+                                <u>{% get_location_text request.user.location %}</u>
+                            </a>
+                        </li>
                         {% comment %}
                         <li class="visible-xs visible-sm dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
@@ -276,7 +278,7 @@
                             <ul>
                                 <li class="dropdown">
                                 {% if request.user.is_authenticated %}
-                                    <a class="btn btn-sm btn-grey" href="{% url 'settings-email' %}#location">{% get_location_text request.user.location %}</a>
+                                    <a class="btn btn-sm btn-grey" href="{% url 'settings-account' %}#location">{% get_location_text request.user.location %}</a>
                                 {% else %}
                                     <a class="btn btn-sm btn-grey dropdown-toggle" data-toggle="dropdown" href="{{ request.path }}"><span>{% get_location_text request.location %} <b class="caret"></b></span></a>
                                     <ul id="language-dropdown" class="dropdown-menu">

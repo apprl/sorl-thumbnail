@@ -53,6 +53,9 @@ a {
 u {
     text-decoration: none;
 }
+.underline-text {
+    text-decoration: underline;
+}
 ul, ol {
     list-style: none;
     margin: 0;
@@ -60,6 +63,7 @@ ul, ol {
 }
 li, td {
     color: @grey;
+    vertical-align: middle !important;
 }
 img {
     -webkit-backface-visibility: hidden;
@@ -537,6 +541,7 @@ header .navbar-form {
 // Notifications
 header .notifications {
     margin-top: 10px;
+    line-height: 20px;
     display: inline-block;
     .icon {
         position: relative;
@@ -638,7 +643,7 @@ header .notifications {
     }
     .message {
         float: left;
-        width: 180px;
+        width: 160px;
         height: 34px;
         margin: 0;
         line-height: 15px;

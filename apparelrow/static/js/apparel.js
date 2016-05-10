@@ -362,7 +362,12 @@ $(document).ready(function() {
                         var helpText = "/click";
                         if (json['type'] == "is_cpo")
                             helpText = "/sale";
-                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText + " on this product");
+                        productEarningBlock.html("You'll earn " + json['user_earning'] + helpText);
+                        productEarningBlock.css("padding", "10px");
+                        productEarningBlock.click(function() {
+                            window.location = element.find("a").attr("href");
+                            return false;
+                        })
                     }
                 });
             }
@@ -482,15 +487,16 @@ function unlikeElement($element) {
 
 function showWarning($element) {
     var slug = $element.attr('data-slug');
-    var settings_link = '/profile/settings/email/#location-notifications';
+    var settings_link = '/profile/settings/account/#location';
     jQuery.ajax({
         type: 'GET',
         url: '/products/check_location/' + slug + '/',
         success: function(response, status, request) {
-            if(response){
+            if(response && !$("body").hasClass("product-detail-page")){
                 $.notify({
                     message: response + " <a class='alert-warning' style='text-decoration: underline;' href='" + settings_link + "'>Go to location settings</a>"
                 }, { // settings
+                    allow_dismiss: true,
                     type: 'warning',
                     z_index: 10031,
                     offset: 80,
@@ -500,6 +506,7 @@ function showWarning($element) {
                         align: "center"
                     }
                 });
+                $(".alert").addClass("alert-dismissible");
             }
         }
     });
@@ -1006,14 +1013,12 @@ jQuery(document).ready(function() {
         // Fetch via ajax on pagination clicks
         $pagination.on('click', '.btn-pagination', function() {
             // Keep fetching automatically after the first click
-            $('#pagination-loader').show();
             var $this = $(this);
-            $this.addClass('disabled hover').find('span').text($this.data('loading-text'));
+            $this.addClass('disabled hover').find('.status').text($this.data('loading-text'));
 
             $(window).data('dont-scroll', false);
 
             getPage($this);
-            $('#pagination-loader').hide();
             return false;
         });
 

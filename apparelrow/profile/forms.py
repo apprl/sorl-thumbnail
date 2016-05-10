@@ -133,8 +133,8 @@ class EmailForm(forms.ModelForm):
 class NotificationForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('like_look_created', 'follow_user', 'facebook_friends', 'summary_mails', 'product_like_summaries', 'look_like_summaries')
-        #fields = ('comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
+        fields = ('like_look_created', 'follow_user', 'facebook_friends')
+        #fields = ('summary_mails', 'product_like_summaries', 'look_like_summaries', 'comment_product_wardrobe', 'comment_product_comment', 'comment_look_created', 'comment_look_comment', 'like_look_created', 'follow_user', 'facebook_friends')
         widgets = {
             'comment_product_wardrobe': CustomRadioSelect,
             'comment_product_comment': CustomRadioSelect,
@@ -276,10 +276,16 @@ class RegisterCompleteForm(forms.Form):
         else:
             raise forms.ValidationError(_('E-mail does not exist or account is already confirmed.'))
 
+
 class EmailValidationResetPassword(PasswordResetForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         if not get_user_model().objects.filter(email=email).exists():
             raise forms.ValidationError(_('No account found with that email address.'))
         else:
+            user = get_user_model().objects.filter(email=email)[0]
+            if user.facebook_user_id and not user.has_usable_password():
+                raise forms.ValidationError(_("It's not possible to reset your password for this email address, since "
+                                              "it's connected to a Facebook account. Try to login with your "
+                                              "Facebook account instead."))
             return email

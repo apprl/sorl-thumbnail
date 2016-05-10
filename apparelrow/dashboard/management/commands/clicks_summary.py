@@ -20,6 +20,7 @@ class Command(BaseCommand):
             default= None,
         ),
     )
+    affiliates = ['costperclick', 'allstorescpc']
 
     def update(self, row):
         instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
@@ -28,7 +29,9 @@ class Command(BaseCommand):
             store_id = store.identifier
         except get_model('advertiser', 'Store').DoesNotExist:
             store_id = None
-        if store_id:
+
+        # Creates transaction only for those sales who are CPC, but not for those who are not CPC for all vendors
+        if store_id and row['affiliate'] == "cost_per_click":
             defaults = {
                 'ip_address': '127.0.0.1',
                 'status': Transaction.ACCEPTED,
@@ -56,8 +59,11 @@ class Command(BaseCommand):
         if not date:
             date = (datetime.date.today() - datetime.timedelta(1)).strftime('%Y-%m-%d')
         query_date = datetime.datetime.strptime(date, '%Y-%m-%d')
-        module = __import__('apparelrow.dashboard.importer.costperclick', fromlist = ['Importer'])
-        instance = module.Importer()
-        logger.info('Importing %s' % (instance.name,))
-        for row in instance.get_data(query_date, None):
-            sale_instance = self.update(row)
+
+        for argument in self.affiliates:
+            if argument in self.affiliates:
+                module = __import__('apparelrow.dashboard.importer.%s' % argument, fromlist = ['Importer'])
+                instance = module.Importer()
+                logger.info('Importing %s' % (instance.name,))
+                for row in instance.get_data(query_date, None):
+                    sale_instance = self.update(row)

@@ -3,13 +3,14 @@
 
 {% block modal_id %}modal_look_unpublish_{{ look.id }}{% endblock %}
 {% block modal_title %}{% trans "Unpublish look?" %}{% endblock %}
+{% block extra_modal_classes %}modal-sm{% endblock %}
 {% block modal_content %}
 <p>{% trans "Are you sure you want to unpublish this look so that no one can see it?" %}</p>
 {% endblock %}
 {% block modal_footer %}
 <p>
-    <a class="btn btn-success btn-unpublish-look" href="#">{% trans "Yes" %}</a>
-    <a class="btn btn-danger" data-dismiss="modal" href="#">{% trans "No" %}</a>
+    <a class="btn btn-success btn-unpublish-look center" href="#">{% trans "Yes" %}</a>
+    <a class="btn btn-danger center" data-dismiss="modal" href="#">{% trans "No" %}</a>
 </p>
 <script type="text/javascript">
     $(function() {

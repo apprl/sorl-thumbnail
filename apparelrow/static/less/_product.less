@@ -62,12 +62,18 @@
 
 .product-medium {
     .hover {
-        bottom: 55px;
+        bottom: 50px;
         height: 44px !important;
         .btn {
             width: 50%;
             font-size: 12px;
             letter-spacing: 1px;
+        }
+        .btn-block {
+            width: 100% !important;
+        }
+        @media (max-width: @screen-xs-max) {
+            bottom: 60px;
         }
     }
 }
@@ -123,4 +129,10 @@
 
 .thumbnail .caption {
   padding: 10px 0 0 0;
+}
+
+.list-inline {
+  > li {
+    padding-bottom: 5px;
+  }
 }

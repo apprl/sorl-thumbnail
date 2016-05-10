@@ -75,7 +75,7 @@ label input[type="radio"] + span, label input[type="checkbox"] + span {
     display: inline-block;
     width: 22px;
     height: 22px;
-    border: 2px solid #ccc;
+    /*border: 2px solid #ccc;*/
     cursor: pointer;
     line-height: 16px;
     border: 2px solid #999;
@@ -112,13 +112,13 @@ label input[type="checkbox"]:checked + span {
 }
 input[type="text"], input[type="url"], input[type="email"], input[type="password"], textarea, main input[type="search"] {
     padding: 10px;
-    background-image: linear-gradient(black,#ccc);
+    background-image: linear-gradient(black, #ccc);
     background-size: 0 2px, 100% 1px;
     background-repeat: no-repeat;
     background-position: center bottom, center calc(100% - 1px);
     background-color: @offwhite;
     &:focus {
-        background-image: linear-gradient(black,#ccc);
+        background-image: linear-gradient(black, #ccc);
         -webkit-animation: highlight 0.25s forwards;
         animation: highlight 0.25s forwards;
         background-size: 0 2px, 100% 1px;
@@ -208,7 +208,7 @@ textarea:focus {
     }
     input {
         background-color: #feeded;
-        background-image: linear-gradient(#f64747, #f64747), linear-gradient(#f64747, #f64747);
+        background-image: linear-gradient(#f64747, #f64747);
     }
 }
 .input-group {
@@ -237,7 +237,7 @@ textarea:focus {
         display: inline-block;
         width: 18px;
         height: 18px;
-        border: 2px solid #ccc;
+        /*border: 2px solid #ccc;*/
         cursor: pointer;
         line-height: 14px;
         border: 2px solid #999;

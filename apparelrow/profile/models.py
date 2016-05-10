@@ -598,8 +598,6 @@ class NotificationEvent(models.Model):
 
     type = models.CharField(max_length=15, choices=TYPES)
 
-
-
     @cached_property
     def from_today(self):
         ref_time = timezone.now()

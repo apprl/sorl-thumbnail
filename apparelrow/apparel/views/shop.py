@@ -168,9 +168,6 @@ def shop_instance_to_dict(shop):
 
     return shop_dict
 
-
-
-
 def delete_shop(request, shop_id):
     shop = get_object_or_404(get_model('apparel', 'Shop'), pk=shop_id)
 

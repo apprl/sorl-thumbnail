@@ -27,11 +27,11 @@
             <td data-sort="{{ store.vendor_name }}">
                 <a href="{% url 'shop' %}?store={{ store.vendor_pk }}">{{ store.vendor_name }}</a>
             </td>
-            <td data-sort="{{ store.amount_float }}">
+            <td data-sort="{{ store.sort_index }}">
                 {{ store.currency }} {{ store.amount }}
-                {% if store.type == "is_cpc" %}
+                {% if store.earning_type == "is_cpc" %}
                     {% trans " per click" %}
-                {% elif store.type == "is_cpo" %}
+                {% elif store.earning_type == "is_cpo" %}
                     {% trans " per sale" %}
                 {% endif %}
             </td>
@@ -53,7 +53,9 @@
     </tbody>
 </table>
 
-<p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
+{% if not request.user.partner_group.has_cpc_all_stores %}
+    <p><small>{% trans "Note: The rates above are approximate and might depend on volumes, currency exchange rates and/or other factors." %}</small></p>
+{% endif %}
 
 <div class="modal fade" id="modal_store_link" tabindex="-1"></div>
 <script type="text/javascript">

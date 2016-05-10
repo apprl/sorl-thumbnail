@@ -256,6 +256,8 @@ $(document).ready(function() {
 
     infiniteScroll(function(callback) {
         var page = parsePage($('.pagination .btn-pagination'));
+        var $this = $(".btn-pagination");
+        $this.addClass('disabled hover').find('.status').text($this.data('loading-text'));
         if (page) {
             fetchPage(page, callback);
         } else {
@@ -273,7 +275,6 @@ $(document).ready(function() {
 
         // Set up auto-scrolling
         $(window).data('dont-scroll', false);
-
         return false;
     });
 
@@ -626,6 +627,7 @@ function updateSelected(products) {
             jQuery('<li>').append(
                 jQuery('<a>').attr({id: 'manufacturer-' + id, href: data['href']}).text(data['name'])
             ).prependTo('#selected-manufacturers');
+            jQuery('#manufacturer-' + id).addClass('selected');
         });
         $('#product-manufacturers').closest('.panel').addClass('active');
     }

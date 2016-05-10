@@ -320,11 +320,14 @@ def store_admin(request, year=None, month=None):
     Administration panel for a store.
     """
     Transaction = get_model('advertiser', 'Transaction')
+
+    # Retrieve store object if it exists
     try:
         store = request.user.advertiser_store
     except get_model('advertiser', 'Store').DoesNotExist:
         raise Http404()
 
+    # Retrieve date range
     start_date, end_date = parse_date(month, year)
 
     # Start date and end date + current month and year
@@ -340,7 +343,6 @@ def store_admin(request, year=None, month=None):
     if end_date >= datetime.date.today():
         end_date_clicks_query = datetime.datetime.combine(
             datetime.date.today() - datetime.timedelta(1), datetime.time(23, 59, 59, 999999))
-
     currency = "EUR"
 
     # Get top summary
@@ -348,7 +350,7 @@ def store_admin(request, year=None, month=None):
 
     # Get clicks delivered under the given period for the store
     clicks = get_model('statistics', 'ProductStat').objects.filter(created__gte=start_date_query, created__lte=end_date_clicks_query) \
-                                                           .filter(vendor=store.vendor) \
+                                                           .filter(vendor=store.vendor, is_valid=True) \
                                                            .order_by('created')
 
     # Initialize variables for CPC stores
@@ -362,7 +364,6 @@ def store_admin(request, year=None, month=None):
         currency = get_original_currency_from_sales(store.vendor)
         total_clicks_per_month = get_total_clicks_per_vendor(store.vendor)
         clicks_delivered_per_month = get_number_clicks(store.vendor, start_date_query, end_date_clicks_query)
-        clicks_cost_per_month, _ = get_clicks_amount(store.vendor, start_date_query, end_date_clicks_query)
         try:
             click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=store.vendor)
             for row in clicks:
@@ -458,7 +459,6 @@ def store_admin(request, year=None, month=None):
                                                             'click_cost': click_cost,
                                                             'clicks_delivered_per_month': clicks_delivered_per_month,
                                                             'monthly_click_value': monthly_click_value,
-                                                            'clicks_cost_per_month': clicks_cost_per_month,
                                                             'total_clicks_per_month': total_clicks_per_month,
                                                             'clicks_per_day': clicks_per_day,
                                                           })

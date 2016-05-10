@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
 
-from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet
+from apparelrow.apparel.search import PRODUCT_SEARCH_FIELDS, ApparelSearch, decode_manufacturer_facet, decode_store_facet
 from apparelrow.apparel.utils import JSONResponse, JSONPResponse, remove_query_parameter, set_query_parameter, select_from_multi_gender, currency_exchange, \
     get_location
 from apparelrow.apparel.utils import vendor_buy_url
@@ -135,7 +135,7 @@ class ProductList(View):
         query_arguments['facet.mincount'] = 1
         query_arguments['facet.field'] = []
 
-        for field in ['category', 'manufacturer', 'color', 'price']:
+        for field in ['category', 'manufacturer', 'color', 'price', 'store']:
             if facet_fields and field in facet_fields:
                 query_arguments['facet.field'].append('{!ex=%s}%s' % (field, field))
 
@@ -165,6 +165,10 @@ class ProductList(View):
         if 'manufacturer' in request.GET:
             query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('manufacturer', 'manufacturer_id', ' OR '.join([x for x in request.GET['manufacturer'].split(',')])))
 
+        # Store
+        if 'store' in request.GET:
+            query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('store', 'store_id', ' OR '.join([x for x in request.GET['store'].split(',')])))
+
         # Color and pattern
         color_pattern_list = request.GET.get('color', '').split(',')
         color_pattern_list.extend(request.GET.get('pattern', '').split(','))
@@ -173,7 +177,6 @@ class ProductList(View):
            query_arguments['fq'].append('{!tag=%s}%s:(%s)' % ('color', 'color', ' OR '.join(color_pattern_list)))
 
         return query_arguments
-
 
     def get(self, request, *args, **kwargs):
         language = get_language()
@@ -216,8 +219,6 @@ class ProductList(View):
             # Todo! This should be moved to all places where "user likes" are not included
             query_arguments['fq'].append('market_ss:%s' % get_location(request))
 
-
-
         # TODO: which fields, template?
         query_arguments['fl'] = ['id:django_id',
                                  'product_name:name',
@@ -240,6 +241,9 @@ class ProductList(View):
 
         if 'color_name' in request.GET:
             query_arguments['fq'].append('color_names:"%s"' % (request.GET.get('color_name'),))
+
+        if 'store_name' in request.GET:
+            query_arguments['fq'].append('store_id:"%s"' % (request.GET.get('store_name'),))
 
         # Query string
         query_string = request.GET.get('q')
@@ -308,6 +312,18 @@ class ProductList(View):
 
             result.update(manufacturer=manufacturers)
 
+        # Calculate store
+        if 'store' in facet:
+            ids = facet['store'][::2]
+            values = map(int, facet['store'][1::2])
+            stores = []
+            for key, value in zip(ids, values):
+                id, name = decode_store_facet(key)
+                stores.append({'id': id,
+                               'name': name
+                               })
+            result.update(store=stores)
+
         # Calculate colors
         if 'color' in facet:
             ids = map(int, facet['color'][::2])
@@ -348,7 +364,6 @@ class ProductList(View):
             result.update(category=category_result)
 
         return JSONResponse(result)
-
 
     def get_products(self, request, query_string, query_arguments, *args, **kwargs):
         query_arguments['facet'] = 'false'

@@ -23,7 +23,7 @@ from django.db.models.loading import get_model
 from django.utils import translation
 
 from apparelrow.apparel.models import Product, ProductLike, Look, ShopProduct
-from apparelrow.apparel.utils import select_from_multi_gender, get_location
+from apparelrow.apparel.utils import select_from_multi_gender, get_location, get_gender_url
 from apparelrow.apparel.tasks import product_popularity
 from sorl.thumbnail import get_thumbnail
 
@@ -76,8 +76,8 @@ def more_alternatives(product, location, limit):
     search = ApparelSearch('*:*', **query_arguments)
     docs = search.get_docs()
     if docs:
-        shop_reverse = 'shop-men' if product.gender == 'M' else 'shop-women'
-        shop_url = '{shop_url}?category={category}'.format(shop_url=reverse(shop_reverse), category=product.category_id)
+        shop_url = '{shop_url}?category={category}'.format(shop_url=get_gender_url(product.gender, 'shop'),
+                                                           category=product.category_id)
         if colors_pk:
             shop_url = '{full_shop_url}&color={colors}'.format(full_shop_url=shop_url, colors=','.join(colors_pk))
 
@@ -571,7 +571,7 @@ class SearchBaseTemplate(TemplateView):
 @DeprecationWarning
 def search(request, gender=None):
     """
-    Search page, DEPRECATED
+    Search page
     """
     gender = select_from_multi_gender(request, 'shop', gender)
     query = request.GET.get('q', '')

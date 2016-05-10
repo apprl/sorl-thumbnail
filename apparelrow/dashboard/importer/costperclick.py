@@ -1,11 +1,11 @@
 import dateutil
-import decimal
 import logging
 import datetime
 from django.db import connection
+from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.importer.base import BaseImporter
-from django.db.models.loading import get_model
-from django.contrib.auth import get_user_model
+from apparelrow.dashboard.models import Cut, ClickCost, Sale
+from apparelrow.profile.models import User
 
 logger = logging.getLogger('dashboard')
 
@@ -33,9 +33,9 @@ class Importer(BaseImporter):
 
     def get_click_cost(self, vendor):
         try:
-            click = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor)
+            click = ClickCost.objects.get(vendor=vendor)
             return click.amount, click.currency
-        except get_model('dashboard', 'ClickCost').DoesNotExist:
+        except ClickCost.DoesNotExist:
             logger.warn('ClickCost for vendor %s does not exist'%(vendor))
         return None, None
 
@@ -46,10 +46,15 @@ class Importer(BaseImporter):
         data = self.get_cpc_clicks_per_vendor_per_user(start_date_query, end_date_query)
         for (vendor_id, user_id, count) in data:
             try:
+                vendor = Vendor.objects.get(name=vendor_id)
                 user = None
+
                 if user_id != 0:
-                    user = get_user_model().objects.get(id=user_id)
-                vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_id)
+                    user = User.objects.get(id=user_id)
+                    # This avoids to create the sale if there is not a cut created. Log a warning, fix the error and
+                    # run clicks_summary and collect_aggregated_data jobs for the regarding date again
+                    Cut.objects.get(vendor=vendor, group=user.partner_group)
+
                 if (user and user.is_partner) or user_id == 0:
                     click_cost, currency = self.get_click_cost(vendor)
                     if click_cost and currency:
@@ -63,14 +68,16 @@ class Importer(BaseImporter):
                         sale['user_id'] = user_id
                         sale['placement'] = "Cost per click"
                         sale['sale_date'] = dateutil.parser.parse('%s' % start_date_query)
-                        sale['status'] = get_model('dashboard', 'Sale').PENDING
+                        sale['status'] = Sale.PENDING
                         sale['adjusted_date'] = dateutil.parser.parse('%s'%datetime.date.today())
-                        sale['type'] = get_model('dashboard', 'Sale').COST_PER_CLICK
+                        sale['type'] = Sale.COST_PER_CLICK
                         sale = self.validate(sale)
                         if not sale:
                             continue
                         yield sale
-            except get_user_model().DoesNotExist:
+            except User.DoesNotExist:
                 logger.warn('User %s does not exist' % user_id)
-            except get_model('apparel', 'Vendor').DoesNotExist:
+            except Vendor.DoesNotExist:
                 logger.warn('Vendor %s does not exist' % vendor_id)
+            except Cut.DoesNotExist:
+                logger.warn('Cut for vendor %s and commission group for user %s does not exist' % (vendor_id, user_id))
