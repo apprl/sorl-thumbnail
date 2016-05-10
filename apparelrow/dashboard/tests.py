@@ -1638,7 +1638,7 @@ class TestSalesPerClickAllStores(TransactionTestCase):
                     self.assertEqual(row.network_click_earnings, 0.00)
                     self.assertEqual(row.sale_plus_click_earnings, 40.00)
                     self.assertEqual(row.total_network_earnings, 0.00)
-                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.total_clicks, 0)
                     self.assertEqual(row.paid_clicks, 4)
             elif row.data_type == "aggregated_from_product":
                 if row.user_id == self.user.id:
@@ -1750,7 +1750,7 @@ class TestSalesPerClickAllStores(TransactionTestCase):
                     self.assertEqual(row.network_click_earnings, 0.00)
                     self.assertEqual(row.sale_plus_click_earnings, 40.00)
                     self.assertEqual(row.total_network_earnings, 0.00)
-                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.total_clicks, 0)
                     self.assertEqual(row.paid_clicks, 4)
             elif row.data_type == "aggregated_from_product":
                 if row.user_id == self.user.id:
@@ -1899,7 +1899,7 @@ class TestSalesPerClickAllStores(TransactionTestCase):
                     self.assertEqual(row.network_click_earnings, 0.00)
                     self.assertEqual(row.sale_plus_click_earnings, 0.00)
                     self.assertEqual(row.total_network_earnings, 0.00)
-                    self.assertEqual(row.total_clicks, 4)
+                    self.assertEqual(row.total_clicks, 0)
                     self.assertEqual(row.paid_clicks, 4)
             elif row.data_type == "aggregated_from_product":
                 self.assertEqual(row.user_id, row.user_id)
