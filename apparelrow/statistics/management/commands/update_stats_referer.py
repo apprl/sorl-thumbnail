@@ -9,20 +9,19 @@ class Command(BaseCommand):
     help = 'Update referer for ProductStat instances, so it will only include HTTP referer link and not any other'
 
     def handle(self, *args, **options):
-        product_stats = ProductStat.objects.all()
-        count = 0
+        #product_stats = ProductStat.objects.all()
+        steps = 10000
+        position = 0
+        for i in range(steps, 2000000, steps):
+            products = ProductStat.objects.all()[position:i]
+            pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=products.count()).start()
+            for index, row in enumerate(products):
+                pbar.update(index)
+                if row.referer:
+                    referer_array = row.referer.split('\n')
 
-        # Initialize progress bar
-        pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=len(product_stats)).start()
-
-        for row in product_stats:
-            if row.referer:
-                referer_array = row.referer.split('\n')
-
-                if len(referer_array) > 0:
-                    row.referer = referer_array[0]
-                    row.save()
-                pbar.update(count)
-                count += 1
-
-        pbar.finish()
+                    if len(referer_array) > 0:
+                        row.referer = referer_array[0]
+                        row.save()
+            pbar.finish()
+            position = i
