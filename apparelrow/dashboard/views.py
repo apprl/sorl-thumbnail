@@ -266,7 +266,7 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
                 cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
                 if cut_exception:
                     normal_cut = cut_exception
-                if publisher_cut_exception and user.owner_network:
+                if publisher_cut_exception is not None and user.owner_network:
                     publisher_cut = publisher_cut_exception
             publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
             amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
@@ -566,9 +566,9 @@ class AdminDashboardView(TemplateView):
         clicks_ppo = [0, 0, 0]
 
         # Get total summary
-        total_top = [0, 0, 0, 0, 0, 0, 0]
-        apprl_top = [0, 0, 0, 0, 0, 0, 0]
-        publisher_top = [0, 0, 0, 0, 0, 0, 0]
+        total_top = [0, 0, 0, 0, 0, 0, 0, 0]
+        apprl_top = [0, 0, 0, 0, 0, 0, 0, 0]
+        publisher_top = [0, 0, 0, 0, 0, 0, 0, 0]
 
         if total_query.exists():
             total_data = total_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
@@ -578,16 +578,17 @@ class AdminDashboardView(TemplateView):
                       network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
             total_earnings = total_data['sale_clicks'] + total_data['referral_earnings'] + \
                          total_data['network_sale_earnings'] + total_data['network_click_earnings']
-            total_commission = total_data['sale_earnings'] + total_data['referral_earnings'] + total_data['network_sale_earnings']
+            total_commission = total_data['sale_earnings'] + total_data['network_sale_earnings']
             total_ppc = total_data['click_earnings'] + total_data['network_click_earnings']
             total_top[0] = total_earnings
-            total_top[1] = total_commission
-            total_top[2] = total_ppc
-            total_top[3] = total_data['paid_clicks']
+            total_top[1] = total_data['referral_earnings']
+            total_top[2] = total_commission
+            total_top[3] = total_ppc
+            total_top[4] = total_data['paid_clicks']
             cpo_clicks = total_data['total_clicks'] - total_data['paid_clicks']
-            total_top[4] = cpo_clicks
-            total_top[5] = total_data['sales']
-            total_top[6] = get_raw_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
+            total_top[5] = cpo_clicks
+            total_top[6] = total_data['sales']
+            total_top[7] = get_raw_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
 
             # Calculate average earning per click
             if total_data['total_clicks'] > 0:
@@ -616,12 +617,13 @@ class AdminDashboardView(TemplateView):
                       sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
                       total_clicks=Sum('total_clicks'), sales=Sum('sales'))
             apprl_top[0] = apprl_data['sale_clicks']
-            apprl_top[1] = apprl_data['sale_earnings']
-            apprl_top[2] = apprl_data['click_earnings']
-            apprl_top[3] = apprl_data['paid_clicks']
-            apprl_top[4] = apprl_data['total_clicks'] - apprl_data['paid_clicks']
-            apprl_top[5] = apprl_data['sales']
-            apprl_top[6] = get_raw_conversion_rate(apprl_data['sales'], apprl_data['total_clicks'] - apprl_data['paid_clicks'])
+            apprl_top[1] = 0.0  # APPRL does not get cut from referral earnings
+            apprl_top[2] = apprl_data['sale_earnings']
+            apprl_top[3] = apprl_data['click_earnings']
+            apprl_top[4] = apprl_data['paid_clicks']
+            apprl_top[5] = apprl_data['total_clicks'] - apprl_data['paid_clicks']
+            apprl_top[6] = apprl_data['sales']
+            apprl_top[7] = get_raw_conversion_rate(apprl_data['sales'], apprl_data['total_clicks'] - apprl_data['paid_clicks'])
 
         # Get publisher summary
         publisher_query = AggregatedData.objects.\
@@ -638,12 +640,13 @@ class AdminDashboardView(TemplateView):
                                    + total_data['network_sale_earnings']
             publisher_ppc = publisher_data['click_earnings'] + publisher_data['network_click_earnings']
             publisher_top[0] = publisher_total
-            publisher_top[1] = publisher_commission
-            publisher_top[2] = publisher_ppc
-            publisher_top[3] = publisher_data['paid_clicks']
-            publisher_top[4] = publisher_data['total_clicks'] - publisher_data['paid_clicks']
-            publisher_top[5] = publisher_data['sales']
-            publisher_top[6] = get_raw_conversion_rate(publisher_data['sales'],
+            publisher_top[1] = publisher_data['referral_earnings']
+            publisher_top[2] = publisher_commission
+            publisher_top[3] = publisher_ppc
+            publisher_top[4] = publisher_data['paid_clicks']
+            publisher_top[5] = publisher_data['total_clicks'] - publisher_data['paid_clicks']
+            publisher_top[6] = publisher_data['sales']
+            publisher_top[7] = get_raw_conversion_rate(publisher_data['sales'],
                                                        publisher_data['total_clicks'] - publisher_data['paid_clicks'])
 
         monthly_array = zip(total_top, publisher_top, apprl_top)
@@ -654,7 +657,7 @@ class AdminDashboardView(TemplateView):
         """
         Returns list of lists ready for display from the given matrix with Summary data
         """
-        headings = ['Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
+        headings = ['Earnings', 'Referral Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
                     'Commission CR']
         if is_bottom_summary:
             headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
@@ -663,7 +666,7 @@ class AdminDashboardView(TemplateView):
             temp_list = []
             heading = row[0]
             temp_list.append(heading)
-            if heading in ('PPC clicks', 'Commission clicks', 'Clicks', 'Invalid clicks'):
+            if heading in ('PPC clicks', 'Commission clicks', 'Valid Clicks', 'Invalid clicks'):
                 for value, percentage in map(None, row[1][0], row[1][1]):
                     if not percentage:
                         percentage = "-"

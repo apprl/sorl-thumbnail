@@ -805,7 +805,7 @@ class VendorProduct(models.Model):
                         cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
                         if cut_exception:
                             total_publisher_cut = cut_exception
-                        if publisher_cut_exception and user.owner_network:
+                        if publisher_cut_exception is not None and user.owner_network:
                             publisher_cut = publisher_cut_exception
                         exception_amount, exception_currency = parse_cost_amount(click_cost)
                         if exception_amount and exception_currency:

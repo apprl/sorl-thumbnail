@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
-from progressbar import ProgressBar, Percentage, Bar
 from apparelrow.statistics.models import ProductStat
+
+from progressbar import ProgressBar, Percentage, Bar
 
 
 class Command(BaseCommand):

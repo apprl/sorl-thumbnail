@@ -7,14 +7,27 @@
 {% block modal_content %}
     <div class="row">
         <div class="col-lg-12">
-            <h2>{% trans "Top publishers in" %} {{ month }} {{ year }}</h2>
+            <h2>
+                {% if is_owner %}
+                    {% trans "Top Influencers in" %}
+                {% else %}
+                    {% trans "Top publishers in" %}
+                {% endif %}
+                {{ month }} {{ year }}
+            </h2>
             <table id="top-publishers-more" class="sortable table">
                 <thead>
                     <tr>
-                        <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
+                        <th class="col-md-1 product-image center">
+                            {% if is_owner %}
+                                {% trans "Influencer" %}
+                            {% else %}
+                                {% trans "Publisher" %}
+                            {% endif %}
+                        </th>
                         <th class="col-md-5 hidden-xs center"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                        <th class="col-md-2 center"> {% if is_owner %}{% trans "Influencer" %} {% else %}{% trans "Publisher" %} {% endif %}{% trans "earnings" %}</th>
                         {% if is_owner or is_admin %}
                         <th class="col-md-2 center">{% trans "Network earnings" %}</th>
                         {% endif %}
