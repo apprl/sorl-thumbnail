@@ -267,7 +267,7 @@ class ProductWidgetProductInline(admin.TabularInline):
 #
 
 class ProductWidgetAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'published', 'description', 'type','created')
+    list_display = ('title', 'user', 'published', 'description', 'widget_type','created')
     #raw_id_fields = ('user',)
     readonly_fields = ('user', 'created', 'modified')
 

@@ -3,14 +3,14 @@
 {% load i18n compressed %}
 
 {% block extra-title %}
-    {% if external_product_widget_id %}{% trans "Edit" %}{% else %} {% trans "Create" %}{% endif %} {% if type == 'single' %}Single{% else %}Multiple{% endif %} {% trans "Product List" %}
+    {% if external_product_widget_id %}{% trans "Edit" %}{% else %} {% trans "Create" %}{% endif %} {% if widget_type == 'single' %}Single{% else %}Multiple{% endif %} {% trans "Product List" %}
 {% endblock %}
 
 {% block body-classes %}create-product product-list create-product-widget-page shop widget-page{% endblock %}
 {% block full-body %}
 
     {% if external_product_widget_id %}
-        {% if type == 'multiple' %}
+        {% if widget_type == 'multiple' %}
             {% with 'Edit Product List' as title %}
             {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
             {% endwith %}
@@ -20,7 +20,7 @@
             {% endwith %}
         {% endif %}
     {% else %}
-        {% if type == 'multiple' %}
+        {% if widget_type == 'multiple' %}
             {% with 'Create Product List' as title %}
             {% include "apparel/tools/widget_header.html" with title=title type='create_product_widget' external_product_widget_id=external_product_widget_id %}
             {% endwith %}
@@ -34,7 +34,7 @@
     <div id="content">
         <div class="row content-row">
             <div class="col-md-6 col-widget">
-                {% include "apparel/tools/widget_product_edit.html" with title=title external_product_widget_id=external_product_widget_id type=type %}
+                {% include "apparel/tools/widget_product_edit.html" with title=title external_product_widget_id=external_product_widget_id widget_type=widget_type %}
             </div>
 
             <div class="col-md-6 visible-md visible-lg">
@@ -49,7 +49,7 @@
     <script type="text/javascript">
         var external_product_widget_id = {% if external_product_widget_id %}{{ external_product_widget_id }}{% else %}0{% endif %};
         var selected_gender = 'A';
-        var external_product_widget_type = '{{  type }}';
+        var external_product_widget_type = '{{  widget_type }}';
         var external_widget_url = '{{  external_widget_url }}'
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>

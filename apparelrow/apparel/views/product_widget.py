@@ -69,7 +69,6 @@ class CreateProductWidgetView(BaseProductWidgetView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateProductWidgetView, self).get_context_data(**kwargs)
-        # "type" should be included
         context.update(
             {
              'external_product_widget_id': 0,
@@ -88,7 +87,7 @@ class EditProductWidgetView(BaseProductWidgetView):
         # product_widget_id if product_widget_id is not None else 0
         context.update({
             'external_product_widget_id': self.product_widget.id,
-            'type': self.product_widget.type,
+            'widget_type': self.product_widget.widget_type,
             'object': self.product_widget,
             'external_widget_url': self.request.user.url_widgets
         })
@@ -115,7 +114,7 @@ def product_widget_instance_to_dict(product_widget):
         'url': product_widget.get_absolute_url(),
         'description': product_widget.description,
         'published': product_widget.published,
-        'type': product_widget.type,
+        'widget_type': product_widget.widget_type,
         'show_liked': product_widget.show_liked
     }
     product_widget_dict['products'] = []
@@ -309,7 +308,7 @@ class ProductWidgetView(View):
         if show_liked:
             components = []
             try:
-                product_widget = get_model('apparel', 'ProductWidget').objects.filter(user=request.user, show_liked=True, type=json_data['type'])[0]
+                product_widget = get_model('apparel', 'ProductWidget').objects.filter(user=request.user, show_liked=True, widget_type=json_data['widget_type'])[0]
             except:
                 product_widget = get_model('apparel', 'ProductWidget')(**json_data)
         else:
@@ -362,7 +361,7 @@ class ProductWidgetDialogueView(TemplateResponseMixin, View):
                 context['width'] = int(context['width'])
     
         if context['height'] == '':
-            if self.product_widget.type == 'single':
+            if self.product_widget.widget_type == 'single':
                 context['height'] = 300
             else:
                 context['height'] = 200

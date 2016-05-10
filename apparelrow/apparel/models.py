@@ -1183,7 +1183,8 @@ class ProductWidget(models.Model):
     show_liked  = models.BooleanField(default=False) # If true the products field will be ignored
     products    = models.ManyToManyField(Product, through='ProductWidgetProduct')
     published   = models.BooleanField(default=False)
-    type        = models.CharField(_('Type'), max_length=10, default='single')
+    #type = models.CharField(_('Type'), max_length=10, default='single')
+    widget_type = models.CharField(_('Type'), max_length=10, default='single')
 
     def __unicode__(self):
         return u'%s' % (self.title,)

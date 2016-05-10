@@ -67,7 +67,7 @@ urlpatterns = patterns('',
     # Product widget
     #url(r'^productwidget/create/single/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'single'}, name='create-product-widget-single'),
     #url(r'^productwidget/create/multiple/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'multiple'}, name='create-product-widget-multiple'),
-    url(r'^productwidget/create/(?P<type>\w+)/$', CreateProductWidgetView.as_view(), name='create-product-widget'),
+    url(r'^productwidget/create/(?P<widget_type>\w+)/$', CreateProductWidgetView.as_view(), name='create-product-widget'),
     #url(r'^productwidget/create/multiple/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'multiple'}, name='create-product-widget-multiple'),
     #url(r'^productwidget/edit/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.editor', name='edit-product-widget'),
     url(r'^productwidget/edit/(?P<product_widget_id>\d+)/$', EditProductWidgetView.as_view(), name='edit-product-widget'),
