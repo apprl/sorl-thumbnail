@@ -277,6 +277,9 @@ class ProductWidgetView(View):
     def post(self, request, *args, **kwargs):
         try:
             json_data = json.loads(request.body)
+            if "type" in json_data:
+                # Due to Klas law regarding non conflicting variable names.
+                json_data['widget_type'] = json_data.pop("type")
         except ValueError:
             return JSONResponse({'message': 'Invalid json body'}, status=400)
 
