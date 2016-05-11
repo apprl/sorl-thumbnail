@@ -3,7 +3,6 @@ import re
 import decimal
 import json
 
-from decimal import ROUND_HALF_UP
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
 from django.forms import ModelForm
@@ -18,7 +17,6 @@ from apparelrow.dashboard.utils import *
 from apparelrow.apparel.utils import get_location
 from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
-from apparelrow.profile.notifications import retrieve_url
 from django.views.generic import TemplateView
 
 import logging
@@ -46,6 +44,7 @@ def map_placement(placement):
         link = _('Product page')
     elif placement == 'Ext-Banner':
         link = _('Banner on your site')
+
 
 class SignupForm(ModelForm):
 
@@ -136,8 +135,6 @@ def dashboard_info(request):
 #
 # Referral
 #
-
-
 def referral_signup(request, code):
     user_id = None
     try:
@@ -227,7 +224,6 @@ def referral_mail(request):
 
     return HttpResponseRedirect(reverse('dashboard-referral'))
 
-
 #
 # Commissions
 #
@@ -269,7 +265,7 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
                 if publisher_cut_exception is not None and user.owner_network:
                     publisher_cut = publisher_cut_exception
             publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
-            amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=ROUND_HALF_UP))
+            amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=decimal.ROUND_HALF_UP))
             amount = "%.2f" % (amount_float)
         else:
             if vendor_obj.is_cpc:
@@ -733,6 +729,7 @@ class AdminDashboardView(TemplateView):
 #
 #   OLD DASHBOARD FUNCTIONS (TO BE DELETED WHEN NEW DASHBOARD IS IMPLEMENTED)
 #
+@DeprecationWarning
 def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
     """
     Return most clicked products for Dashboard (old Dashboard)
@@ -765,6 +762,7 @@ def get_most_clicked_products(start_date, end_date, user_id=None, limit=5):
 
     return most_clicked_products
 
+@DeprecationWarning
 def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
     """
     Return list of publishers for Dashboard (old Dashboard)
@@ -932,6 +930,7 @@ def get_publishers(start_date, end_date, user_id=None, limit=5, see_all=True):
     most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: (x['sales'], x['total_earnings']), reverse=True)[:limit] if x['sales'] > 0]
     return sorted_top_publishers, most_sold_products
 
+@DeprecationWarning
 def get_publishers_admin(start_date, end_date, limit=5, see_all=True):
     """
     Return list of publishers for Dashboard Admin (old Dashboard)
@@ -1083,6 +1082,7 @@ def get_publishers_admin(start_date, end_date, limit=5, see_all=True):
     most_sold_products = [x for x in sorted(most_sold.values(), key=lambda x: (x['sales'], x['publisher_earnings']), reverse=True)[:limit] if x['sales'] > 0]
     return sorted_top_publishers, most_sold_products
 
+@DeprecationWarning
 def get_sales(start_date, end_date, user_id=None, limit=5):
     """
     Return list of sales for Dashboard (old Dashboard)
@@ -1187,7 +1187,7 @@ def get_sales(start_date, end_date, user_id=None, limit=5):
                           if x['sales'] > 0]
     return sales, most_sold_products
 
-
+@DeprecationWarning
 def merge_top_products(most_sold_products, network_publishers, limit=5):
     network_total_publishers = {}
     temp_products = []
@@ -1223,6 +1223,7 @@ def merge_top_products(most_sold_products, network_publishers, limit=5):
                                                 reverse=True)[:limit]]
     return network_total_products
 
+@DeprecationWarning
 def get_network_clicks(publisher_list=None):
     network_clicks = 0
     if publisher_list:
@@ -1230,6 +1231,7 @@ def get_network_clicks(publisher_list=None):
             network_clicks += publisher['clicks']
     return network_clicks
 
+@DeprecationWarning
 def dashboard_admin(request, year=None, month=None):
     if request.user.is_authenticated() and request.user.is_superuser:
         start_date, end_date = parse_date(month, year)
@@ -1396,6 +1398,7 @@ def dashboard_admin(request, year=None, month=None):
                                                         'monthly_array': monthly_array})
     return HttpResponseNotFound()
 
+@DeprecationWarning
 def dashboard(request, year=None, month=None):
     """
     Display publisher data per month for logged in user.

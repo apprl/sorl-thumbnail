@@ -74,6 +74,7 @@
                 </tbody>
             </table>
         </div>
+        {% if current_page %}
         <div class="pagination-simple">
             <span class="step-links">
                 {% if current_page.has_previous %}
@@ -89,6 +90,7 @@
                 {% endif %}
             </span>
         </div>
+        {% endif %}
     </section>
-{% endblock body %}
+{% endblock body %}´
 
