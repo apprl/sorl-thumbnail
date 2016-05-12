@@ -3,7 +3,11 @@
 {% for row in current_page.object_list %}
     <tr>
         <td class="col-md-2 center" data-sort="{{ row.user_id }}">{{ row.user_id }}</td>
-        <td class="col-md-5 text-left" data-sort="{{ row.referer }}" alt="{{ row.referer }}">{{ row.referer|truncatechars:60 }}</td>
+        <td class="col-md-5 text-left" data-sort="{{ row.referer }}" alt="{{ row.referer }}">
+            <a href="{{  row.referer }}">
+                {{ row.referer|truncatechars:60 }}
+            </a>
+        </td>
         <td class="col-md-3 center" data-sort="{{ row.created }}">{{ row.created_date }}</td>
         <td class="col-md-2 center" data-sort="{{ row.posts }}">{{ row.posts }}</td>
     </tr>
