@@ -309,6 +309,7 @@
         </div>
     {% endif %}
 
+    {% if not is_owner %}
     <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
             <h2>{% trans "Top Links" %} {{ month_display }} {{ year }}</h2>
@@ -355,6 +356,7 @@
             </table>
         </div>
     </div>
+    {% endif %}
 
     <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">

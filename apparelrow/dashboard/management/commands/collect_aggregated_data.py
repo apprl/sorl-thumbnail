@@ -411,17 +411,6 @@ def generate_aggregated_clicks_from_product(start_date, end_date):
                         instance.sale_plus_click_earnings += click_cost * clicks
                         instance.paid_clicks += decimal.Decimal(row['clicks'])
 
-                        # Network earnings
-                        earning_type = 'publisher_network_click_tribute' \
-                            if is_cpc_all_stores else 'publisher_network_click_tribute_all_stores'
-                        earning = UserEarning.objects.get(date=row['day'], sale=sale,
-                                                          user_earning_type=earning_type)
-                        click_cost = 0
-                        if clicks_amount > 0:
-                            click_cost = earning.amount / clicks_amount
-                        instance.network_click_earnings += click_cost * clicks
-                        instance.total_network_earnings += click_cost * clicks
-
                     except UserEarning.DoesNotExist:
                         logger.warning("Click earning for user %s date %s does not exist" % (row['user_id'], row['day']))
                     except Sale.DoesNotExist:
@@ -494,16 +483,6 @@ def generate_aggregated_clicks_from_links(start_date, end_date):
                         instance.click_earnings += click_cost * clicks
                         instance.sale_plus_click_earnings += click_cost * clicks
 
-                        # Network earnings
-                        earning_type = 'publisher_network_click_tribute' \
-                            if is_cpc_all_stores else 'publisher_network_click_tribute_all_stores'
-                        earning = UserEarning.objects.get(date=row['day'], sale=sale,
-                                                          user_earning_type=earning_type)
-                        click_cost = 0
-                        if clicks_amount > 0:
-                            click_cost = earning.amount / clicks_amount
-                        instance.network_click_earnings += click_cost * clicks
-                        instance.total_network_earnings += click_cost * clicks
                     except UserEarning.DoesNotExist:
                         logger.warning("Click earning for user %s date %s does not exist" % (row['user_id'], row['day']))
                     except Sale.DoesNotExist:
