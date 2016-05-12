@@ -304,7 +304,7 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None, is_st
                """, values)
     data = dictfetchall(cursor)
     for row in data:
-        if row['product']:
+        if not row['product'].startswith("http://") and not row['product'].startswith("https://") :
             row['product_name'] = row['product']
             try:
                 product = get_model('apparel', 'Product').objects.get(slug=row['product'])
@@ -319,11 +319,8 @@ def get_clicks_list(vendor_name, date, currency, click_cost, user_id=None, is_st
                 row['product_url'] = "Clicks to %s" % row['product']
             row['product_earning'] = float(int(row['clicks']) * click_cost)
         else:
-            row['product_name'] = "Other clicks to %s page" % row['vendor']
-            row['product_url'] = ''
-            if 'source_link' in row and row['source_link']:
-                row['product_name'] = "Clicks to %s" % row['source_link']
-                row['product_url'] = row['source_link']
+            row['product_name'] = "Clicks to %s" % row['product']
+            row['product_url'] = row['product']
         row['product_earning'] = float(int(row['clicks']) * click_cost)
     return data
 
