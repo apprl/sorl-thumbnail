@@ -9,9 +9,19 @@ from scrapy import signals
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop
-
+from django.utils import timezone
+from django.core.cache import get_cache
 from theimp.models import Product, Vendor
 from theimp.parser import Parser
+from theimp.utils import get_product_hash, compare_scraped_and_saved
+from theimp.tasks import parse_theimp_product
+import logging
+
+ASYNC_PARSING = False
+
+log = logging.getLogger("theimp")
+
+cache = get_cache("importer")
 
 class MissingFieldDrop(DropItem):
     """
@@ -60,6 +70,9 @@ class DatabaseHandler:
     """
     Handles scraped and dropped product updates in database
     """
+    scraped_cache_key = "scraped_{id}"
+    #semaphore_cache_key = "semaphore_{id}"
+
     @classmethod
     def from_crawler(cls, crawler):
         ext = cls()
@@ -119,21 +132,39 @@ class DatabaseHandler:
 
         vendor, _ = Vendor.objects.get_or_create(name=item['vendor'])
         product, created = Product.objects.get_or_create(key=item['key'], defaults={'json': json_string, 'vendor': vendor})
+        product_hash = get_product_hash(item)
 
+        updated = False
         if product.is_released:
-            spider.log('Product %s is released and will not be parsed.' % item['key'])
+            log.debug('Product %s is released and will not be parsed.' % item['key'])
             return item
 
         if not created:
-            json_data = json.loads(product.json)
-            json_data['scraped'].update(dict(item))
-            product.json = json.dumps(json_data)
-            product.vendor = vendor
-            product.is_dropped = False
-            product.save()
+            previous_hash = cache.get(self.scraped_cache_key.format(id=product.id))
+            if not previous_hash == product_hash:
+                updated = True
+                json_data = json.loads(product.json)
+                log.info("Product {} has been {}.".format(product.id, "updated" if not created else "created"))
+                json_data['scraped'].update(dict(item))
+                product.json = json.dumps(json_data)
+                product.vendor = vendor
+                product.is_dropped = False
+                product.save()
 
-        self.parser.parse(product)
-
+        if bool(created or updated):
+            cache.set(self.scraped_cache_key.format(id=product.id), product_hash, 3600*24*90)
+            verb = "updated" if updated else "created"
+            item.update({"verb": verb})
+            log.info('Product {key} is {verb}, parsing will ensue.'.format(**item))
+            if ASYNC_PARSING:
+                parse_theimp_product.delay(product.id)
+            else:
+                self.parser.parse(product)
+        else:
+            # Todo: Set some date to acknowledge scraping has taken place
+            product.parsed_date = timezone.now()
+            log.info("Product {key} not updated, only setting a new parsed date.".format(**item))
+            product.save(update_fields=['parsed_date'])
         return item
 
 

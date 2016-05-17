@@ -1538,6 +1538,7 @@ class FacebookAction(models.Model):
 # SynonymFile
 #
 
+
 def save_synonym_file(sender, **kwargs):
     instance = kwargs['instance']
     synonym_file = open(settings.SOLR_SYNONYM_FILE, "w")
@@ -1545,6 +1546,7 @@ def save_synonym_file(sender, **kwargs):
     synonym_file.close()
 
     requests.get(settings.SOLR_RELOAD_URL)
+
 
 class SynonymFile(models.Model):
     content = models.TextField(_('Synonyms'), null=True, blank=True, help_text=_('Place all synonyms on their own line, comma-separated. Comments start with "#".'))

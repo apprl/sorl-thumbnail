@@ -862,7 +862,8 @@ CELERY_ROUTES = ({
                      'apparel.notifications.user_activity_daily': {'queue': 'background'},
                      'apparel.notifications.user_activity_weekly': {'queue': 'background'},
                      'apparel.notifications.earnings_daily': {'queue': 'background'},
-                     'apparel.notifications.earnings_weekly': {'queue': 'background'}},)
+                     'apparel.notifications.earnings_weekly': {'queue': 'background'},
+                     'theimp.scrape_parse': {'queue': 'background'}})
 
 # LOGGING CONFIGURATION
 LOGGING = {
@@ -936,7 +937,7 @@ LOGGING = {
             'backupCount': 8,
         },
         'theimp': {
-            'level': 'NOTSET',
+            'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'simple',
             'filename': os.path.join(SERVER_APP_ROOT, '..', 'logs', 'theimp.log'),
@@ -1015,7 +1016,7 @@ LOGGING = {
             'handlers': ['dashboard'],
         },
         'theimp': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
             'handlers': ['theimp'],
         },
