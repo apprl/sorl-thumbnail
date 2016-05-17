@@ -17,7 +17,7 @@ class ImportIfChangedTest(TestCase):
 
         fields = compare_scraped_and_saved(json_scraped, product_scraped)
         print fields
-        self.assertEquals(fields, [("in_stock", False, True), ("stock", "51", "50")])
+        self.assertEquals(fields, [("in_stock", 'False', 'True')])
 
     def test_stringify(self):
         self.assertEquals("f\xc3\xb6r", stringify("f\xc3\xb6r"))
