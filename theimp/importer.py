@@ -63,7 +63,7 @@ class Importer(object):
                         logger.exception('Could not import product with id %s' % (product_id,))
                         continue
 
-            yesterday = timezone.now() - datetime.timedelta(hours=48)
+            yesterday = timezone.now() - datetime.timedelta(hours=96)
             for product_id in self.site_product_model.objects.filter(vendors=vendor.vendor_id, availability=True, modified__lte=yesterday).values_list('id', flat=True):
                 logger.debug('Setting availability to false for product with id %s due to the item has not been imported since %s or later [%s]' % (product_id,yesterday,vendor))
                 if not dry:
