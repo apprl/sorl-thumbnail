@@ -10,7 +10,7 @@ from apparelrow.apparel.views.looks import LookView
 from apparelrow.apparel.views.shop import ShopCreateView
 from apparelrow.apparel.views.product_widget import ProductWidgetView
 from apparelrow.apparel.views import BrandRedirectView, PublisherView, ProductDetailView, CommunityFormView, LookDetailView, \
-    OnBoardingView
+    OnBoardingView, BackendAuthJsonView
 from apparelrow.dashboard.views import RetailerPublicFormView, RetailerFormView
 from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersView, ProfileListFollowingView, \
     ProfileView
@@ -172,6 +172,7 @@ urlpatterns = patterns('',
     url(r'^backend/categories/$', 'apparelrow.apparel.views.list_categories', name='backend-list-categories'),
     url(r'^backend/colors/$', 'apparelrow.apparel.views.list_colors', name='backend-list-colors'),
     url(r'^backend/authenticated/$', 'apparelrow.apparel.views.authenticated_backend', name='backend-authenticated'),
+    url(r'^backend/authentication/$', BackendAuthJsonView.as_view(), name='backend-authentication'),
     url(r'^backend/product/lookup/$', 'apparelrow.apparel.views.product_lookup', name='backend-product-lookup'),
     url(r'^backend/product/earning/$', 'apparelrow.apparel.views.backend_product_earnings',
         name='backend-product-earnings'),

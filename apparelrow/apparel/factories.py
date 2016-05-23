@@ -39,11 +39,13 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = get_model('profile','User')
+
     first_name = Faker().name().split(" ")[0]
     last_name = Faker().name().split(" ")[1]
     username = factory.Sequence(lambda n: 'username%s' % n)
     email = factory.LazyAttribute(lambda o: '%s@example.org' % o.username)
     last_login = lazy_attribute(lambda o: o.date_joined + dt.timedelta(days=4))
+    password = factory.PostGenerationMethodCall('set_password', "password")
 
     @lazy_attribute
     def date_joined(self):

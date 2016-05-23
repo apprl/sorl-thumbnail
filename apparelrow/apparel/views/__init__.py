@@ -9,6 +9,7 @@ import urllib
 import urlparse
 import decimal
 import re
+import simplejson
 import tldextract
 
 from django.conf import settings
@@ -20,13 +21,13 @@ from django.db.models import Q, Count, get_model
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.template.defaultfilters import floatformat
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView
-from django.views.generic.base import RedirectView, TemplateView
+from django.views.generic.base import RedirectView, TemplateView, View
 from django.utils import translation, timezone
 from django.utils.encoding import smart_unicode, smart_str
 from django.utils.translation import ugettext_lazy as _
@@ -1160,6 +1161,26 @@ def authenticated_backend(request):
         profile = request.build_absolute_uri(request.user.get_absolute_url())
     return JSONResponse({'authenticated': request.user and request.user.is_authenticated(), 'profile': profile})
 
+
+class BackendAuthJsonView(View):
+
+    def post(self, request, *args, **kwargs):
+        data = simplejson.loads(request.body)
+        if not "username" in data.keys() or not "password" in data.keys():
+            return JSONResponse({"error": "Operation not allowed"}, status=403)
+        else:
+            user = authenticate(username=data.get("username"), password=data.get("password"))
+            if user is not None and user.is_active:
+                return JSONResponse({"id": u"{}".format(user.id),
+                                     "first_name": u"{}".format(user.first_name),
+                                     "last_name": u"{}".format(user.last_name),
+                                     #"email": u"{}".format(user.email),
+                                     })
+            else:
+                return JSONResponse({"error": "Operation not allowed"}, status=403)
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(BackendAuthJsonView, self).dispatch(request, *args, **kwargs)
 
 def product_lookup_by_domain(request, domain, key):
     model = get_model('apparel', 'DomainDeepLinking')

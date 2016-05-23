@@ -2,6 +2,7 @@
 import json
 from django.http import SimpleCookie
 from pysolr import Solr
+import simplejson
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.views import get_vendor_cost_per_click, product_lookup_by_domain
 from apparelrow.apparel.search import product_save, get_available_brands
@@ -933,7 +934,6 @@ class TestShortLinks(TestCase):
         self.assertEqual(original_link, key)
 
 
-
 class TestOnBoarding(TestCase):
     def setUp(self):
         self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
@@ -1375,6 +1375,49 @@ class TestSearch(TransactionTestCase):
 
         brands_list = get_available_brands('A', 'NO')
         self.assertNotIn(self.manufacturer.id, brands_list)
+
+
+class TestBackendAuth(TestCase):
+
+    def test_backend_authentication(self):
+        user = UserFactory.create(first_name="Urban", last_name="Ahlin")
+
+        self.assertTrue(user.id)
+        self.assertEquals(user.first_name, "Urban")
+        self.assertEquals(user.last_name, "Ahlin")
+
+        url = reverse("backend-authentication")
+        self.assertTrue(url)
+        data = {"somearg": 1, "somethingelse": "notscene"}
+        response = self.client.post(url, data=json.dumps(data), content_type='application/json',)
+        self.assertEquals(response.status_code, 403)
+        resp_json = simplejson.loads(response.content)
+        print resp_json
+        self.assertTrue("error" in resp_json.keys())
+
+        data = {"username": "1", "password": "notscene"}
+        response = self.client.post(url, data=json.dumps(data), content_type='application/json',)
+        self.assertEquals(response.status_code, 403)
+        resp_json = simplejson.loads(response.content)
+        print resp_json
+        self.assertTrue("error" in resp_json.keys())
+
+        data = {"username": user.username, "password": "admin"}
+        response = self.client.post(url, data=json.dumps(data), content_type='application/json',)
+        self.assertEquals(response.status_code, 403)
+        resp_json = simplejson.loads(response.content)
+        print resp_json
+        self.assertTrue("error" in resp_json.keys())
+
+        data = {"username": user.username, "password": "password"}
+        response = self.client.post(url, data=json.dumps(data), content_type='application/json',)
+        self.assertEquals(response.status_code, 200)
+        resp_json = simplejson.loads(response.content)
+        print resp_json
+        self.assertEquals(user.id, int(resp_json.get("id")))
+        self.assertEquals(user.first_name, resp_json.get("first_name"))
+        self.assertEquals(user.last_name, resp_json.get("last_name"))
+        #self.assertEquals(user.last_name, resp_json.get("last_name"))
 
 def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
     django_image_file = _create_dummy_image()
