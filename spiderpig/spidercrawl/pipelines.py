@@ -65,6 +65,27 @@ class CustomImagesPipeline(ImagesPipeline):
                 raise NoimagesDrop('Item contains no images')
         return item
 
+class StartImporter:
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        ext = cls()
+
+        #crawler.signals.connect(ext.spider_opened, signal=signals.spider_opened)
+        crawler.signals.connect(ext.spider_closed, signal=signals.spider_closed)
+
+        return ext
+
+    #def spider_opened(self, spider):
+    #    spider.log('Opened spider: {}'.format( spider.name ))
+
+    def spider_closed(self, spider):
+        from apparelrow.scheduledjobs.tasks import run_vendor_importer
+        from theimp.models import Vendor
+        vendor = Vendor.objects.get(name=spider.name)
+        spider.log('Closed spider: {} and vendor {}'.format( spider.name, vendor.name ))
+        run_vendor_importer.delay(vendor=vendor)
+
 
 class DatabaseHandler:
     """
