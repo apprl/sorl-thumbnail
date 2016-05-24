@@ -24,13 +24,14 @@ from django.template.defaultfilters import floatformat
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView, TemplateView, View
 from django.utils import translation, timezone
 from django.utils.encoding import smart_unicode, smart_str
 from django.utils.translation import ugettext_lazy as _
+from django.utils.decorators import method_decorator
 
 
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
@@ -1179,6 +1180,7 @@ class BackendAuthJsonView(View):
             else:
                 return JSONResponse({"error": "Operation not allowed"}, status=403)
 
+    @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super(BackendAuthJsonView, self).dispatch(request, *args, **kwargs)
 
