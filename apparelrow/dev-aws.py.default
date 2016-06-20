@@ -85,6 +85,11 @@ CACHES = {
         'TIMEOUT': 60 * 60 * 24 * 20,
         'KEY_FUNCTION': lambda key, x, y: key,
     },
+    'importer': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '{{ memcached_url }}:11211',
+        'TIMEOUT': 60 * 60 * 24 * 20,
+    },
 }
 
 EMAIL_FILE_PATH = ''

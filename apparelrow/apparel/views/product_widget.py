@@ -419,7 +419,7 @@ class EmbedProductWidgetView(TemplateView):
         translation.activate(context["language"])
         response = self.render_to_response(context)
         translation.deactivate()
-        get_cache('nginx').set(nginx_key, response.rendered_content, 3600*24*20)
+        get_cache('nginx').set(nginx_key, response.content, 3600*24*20)
         return response
 
     def dispatch(self, request, *args, **kwargs):
