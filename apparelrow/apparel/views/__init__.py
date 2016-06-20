@@ -137,7 +137,7 @@ def backend_product_earnings(request):
                 else:
                     logger.warning("Vendor %s has not be defined as CPC or CPO vendor" % vendor_product.vendor.name)
             else:
-                logging.warning("Could not calculate cut for user %s and vendor %s" % (user.id, vendor_product.vendor.name))
+                logging.info("Could not calculate cut for user %s and vendor %s" % (user.id, vendor_product.vendor.name))
         except get_model('apparel', 'Product').DoesNotExist:
             logging.warning("Product with id %s does not exist" % product_id)
     return HttpResponse(json.dumps(dict), content_type='application/json')
@@ -653,10 +653,18 @@ def product_track(request, pk, page='Default', sid=0):
         cookie_already_exists = bool(request.COOKIES.get(product.slug, None))
         product_buy_click.delay(pk, '%s' % posted_referer, client_referer, get_client_ip(request),
                                 get_user_agent(request), sid, page, cookie_already_exists)
-        response.set_cookie(product.slug, '1', settings.APPAREL_PRODUCT_MAX_AGE)
+        if not cookie_already_exists:
+            response.set_cookie(product.slug, '1', settings.APPAREL_PRODUCT_MAX_AGE)
     else:
+        parsed_url = urlparse.urlparse(client_referer)
+
+        relative_path = (parsed_url.path).rstrip("/").lstrip("/").replace("/", "-")
+        cookie_already_exists = bool(request.COOKIES.get(relative_path, None))
         product_buy_click.delay(pk, '%s' % posted_referer, client_referer, get_client_ip(request),
-                                get_user_agent(request), sid, page, False)
+                                get_user_agent(request), sid, page, cookie_already_exists)
+        if not cookie_already_exists:
+            response.set_cookie(relative_path, '1', settings.APPAREL_PRODUCT_MAX_AGE)
+
     return response
 
 #
@@ -1354,7 +1362,7 @@ def product_lookup(request):
                         cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut_obj.rules_exceptions, request.user.id)
                         if cut_exception:
                             normal_cut = cut_exception
-                        if publisher_cut_exception and request.user.owner_network:
+                        if publisher_cut_exception is not None and request.user.owner_network:
                             publisher_cut = publisher_cut_exception
                     publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
                     product_earning = u"You will earn %s%s %.2f per generated click when linking to " \

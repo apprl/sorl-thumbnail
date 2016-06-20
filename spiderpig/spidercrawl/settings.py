@@ -27,15 +27,16 @@ RANDOMIZE_DOWNLOAD_DELAY = True
 SPIDER_MODULES = ['spidercrawl.spiders']
 NEWSPIDER_MODULE = 'spidercrawl.spiders'
 
-ITEM_PIPELINES = [
-    'spiderpig.spidercrawl.pipelines.CustomImagesPipeline',
-    'spiderpig.spidercrawl.pipelines.RequiredFieldsPipeline',
-    'spiderpig.spidercrawl.pipelines.PricePipeline',
-]
+ITEM_PIPELINES = {
+    'spiderpig.spidercrawl.pipelines.CustomImagesPipeline': 10,
+    'spiderpig.spidercrawl.pipelines.RequiredFieldsPipeline': 20,
+    'spiderpig.spidercrawl.pipelines.PricePipeline': 30,
+    }
 
 EXTENSIONS = {
     'scrapy_sentry.extensions.Errors':10,
     'spidercrawl.pipelines.DatabaseHandler': 500,
+    'spidercrawl.pipelines.StartImporter': 600,
 }
 
 DOWNLOADER_MIDDLEWARES = {

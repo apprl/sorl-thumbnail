@@ -76,6 +76,6 @@ class FacebookProfileBackend(ModelBackend):
                             user.gender = FB_GENDER_MAP[me['gender']]
                             user.save()
 
-            return user
+                return user
 
         return None

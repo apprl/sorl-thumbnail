@@ -10,20 +10,14 @@ from django.db.models import Count
 from apparelrow.dashboard.models import Sale, UserEarning, AggregatedData
 from apparelrow.dashboard.views import get_clicks_from_sale
 from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_dict, get_user_thumbnail_and_link, \
-    get_user_attrs, get_day_range
+    get_user_attrs, get_day_range, check_user_has_cpc_all_stores
 
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 
-from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.core.management.base import BaseCommand
 
 logger = logging.getLogger('dashboard')
-
-def check_user_has_cpc_all_stores(user):
-    return hasattr(user, 'partner_group') and hasattr(user.partner_group, 'has_cpc_all_stores') \
-           and user.partner_group.has_cpc_all_stores
 
 def get_date_range(q_date):
     """
@@ -488,6 +482,7 @@ def generate_aggregated_clicks_from_links(start_date, end_date):
                         clicks = decimal.Decimal(row['clicks'])
                         instance.click_earnings += click_cost * clicks
                         instance.sale_plus_click_earnings += click_cost * clicks
+
                     except UserEarning.DoesNotExist:
                         logger.warning("Click earning for user %s date %s does not exist" % (row['user_id'], row['day']))
                     except Sale.DoesNotExist:
