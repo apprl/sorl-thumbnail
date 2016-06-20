@@ -2,7 +2,7 @@
 <ul class="shop-list list-unstyled row">
     {% for object in current_page.object_list %}
         <li class="shop col-sm-4">
-            {% if object.type %} 
+            {% if object.widget_type %}
                <h4 class="shop-title"><a href="{% url 'edit-product-widget' object.pk %}">{{ object.title }}</a></h4>
                 <div class="description">
                 </div>
