@@ -1172,9 +1172,11 @@ class BackendAuthJsonView(View):
         else:
             user = authenticate(username=data.get("username"), password=data.get("password"))
             if user is not None and user.is_active:
+                image_url = user.avatar_circular_absolute_uri(request)
                 return JSONResponse({"id": u"{}".format(user.id),
                                      "first_name": u"{}".format(user.first_name),
                                      "last_name": u"{}".format(user.last_name),
+                                     "image": u"{}".format(image_url)
                                      #"email": u"{}".format(user.email),
                                      })
             else:

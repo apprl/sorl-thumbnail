@@ -6897,6 +6897,7 @@ button.close {
     display: none !important;
   }
 }
+/*# sourceMappingURL=bootstrap.css.map */
 /*
     Extensions v1.0
 */
@@ -9632,7 +9633,11 @@ textarea:focus {
   -webkit-box-shadow: none;
   margin-bottom: 30px;
 }
+.feed-item.feed-verb-agg_product .panel-body .hover {
+  bottom: 0px !important;
+}
 .feed-item.feed-verb-agg_product .panel-body .hover .btn {
+  max-width: inherit;
   white-space: normal;
 }
 .feed-item.feed-verb-agg_product .panel-heading > p {
@@ -11409,7 +11414,6 @@ body.profile-likes #product-manufacturers #available-manufacturers {
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px;
-    width: 33.33%;
   }
 }
 @media (min-width: 992px) and (min-width: 768px) {
@@ -11472,7 +11476,6 @@ body.profile-likes #product-manufacturers #available-manufacturers {
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px;
-    width: 33.33%;
   }
 }
 @media (min-width: 1200px) and (min-width: 768px) {
@@ -11719,6 +11722,14 @@ body.store-index-page .background {
   width: 50%;
   font-size: 12px;
   letter-spacing: 1px;
+}
+.product-medium .hover .btn-block {
+  width: 100% !important;
+}
+@media (max-width: 767px) {
+  .product-medium .hover {
+    bottom: 60px;
+  }
 }
 .product-detail-page .actions {
   position: fixed;

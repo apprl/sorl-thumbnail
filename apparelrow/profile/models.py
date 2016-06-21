@@ -368,6 +368,19 @@ class User(AbstractUser):
         default.engine = old_engine
         return image
 
+    def avatar_circular_absolute_uri(self, request):
+        """ Small size circular avatar using CustomCircularEngine """
+        old_engine = default.engine
+        default.engine = CustomCircularEngine()
+        image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_CIRCULAR)
+        if self.image:
+            image = get_thumbnail(self.image, '125x125', format="PNG").url
+        elif self.facebook_user_id:
+            image_path = 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
+            image = get_thumbnail(image_path, '125x125', format="PNG").url
+        default.engine = old_engine
+        return request.build_absolute_uri(image)
+
     @cached_property
     def url_likes(self):
         if self.is_brand:
