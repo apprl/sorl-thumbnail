@@ -17,12 +17,19 @@
                     <br/>
                     {% trans 'Last modified' %}: {{ object.modified|since }}
                     <br/>
-                    <a class="btn btn-success" href="{% url 'edit-product-widget' object.pk %}">Edit</a> <a class="btn btn-danger" href="#" data-toggle="modal" data-productwidgetid="{{ object.pk }}" data-productiwidgettitle="{{ object.title }}" data-target="#modal_productwidget_delete">Delete</a>
-                </p> 
+                    </p>
+                <div class="btn-group">
+                    <a class="btn btn-default" href="{% url 'edit-product-widget' object.pk %}"><i class="fa fa-pencil"></i> Edit</a>
+                    <a class="btn btn-secondary" href="#" data-toggle="modal" data-productwidgetid="{{ object.pk }}" data-productwidgettitle="{{ object.title }}" data-target="#modal_productwidget_delete">Delete</a>
+                </div>
+                    <!--a class="btn btn-success" href="{% url 'edit-product-widget' object.pk %}">Edit</a>
+                    <a class="btn btn-danger" href="#" data-toggle="modal" data-productwidgetid="{{ object.pk }}"
+                    data-productiwidgettitle="{{ object.title }}" data-target="#modal_productwidget_delete">Delete</a -->
                {% else %}
                 <h4><a href="{% url 'create-shop' object.pk %}">{{ object.title }}</a></h4>
                 <div class="description"></div>
                 <p>
+                    {% trans "Shop widget" %}<br/>
                     {% if object.show_liked %}
                         {% trans 'Your liked products' %}
                     {% else %}
