@@ -237,6 +237,7 @@ class ProductWidgetView(View):
             request.session['product_widget_saved'] = True
 
         product_widget.published = json_data['published']
+        product_widget.title = json_data['title']
 
         if json_data['components']:
 
