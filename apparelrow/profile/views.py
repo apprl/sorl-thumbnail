@@ -90,6 +90,11 @@ class RedirectProfileView(RedirectView):
         return reverse_lazy('profile-likes', args=(slug,))
 
 
+class RedirectWidgetView(RedirectView):
+    def get_redirect_url(self, slug):
+        return reverse_lazy('profile-shops', args=(slug,))
+
+
 class ProfileView(TemplateView):
     template_name = 'profile/default.html'
 
@@ -198,8 +203,12 @@ class ProfileListShopView(ProfileListLookView):
     template_name_ajax = 'apparel/fragments/shop_list.html'
 
     def get_queryset(self):
+        from itertools import chain
         if self.profile == self.user:
-            return self.profile.shop.order_by('-modified')
+            queryset = sorted(chain(self.profile.shop.all(), self.profile.product_widget.all()),
+            key=lambda instance: instance.modified, reverse=True)
+            return queryset
+            #return self.profile.shop.order_by('-modified')
         else:
             raise PermissionDenied("Unauthorized")
 
