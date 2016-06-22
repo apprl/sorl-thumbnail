@@ -93,7 +93,7 @@ def prod_admin_aws():
     env.internal_ip = '10.0.0.89'
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
     env.installed_apps = ['supervisor-gunicorn-admin','gunicorn-admin','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com:11211'
+    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.restart = ['gunicorn_admin','nginx']
     env.hostname = 'admin'
     env.collectstatic = False
@@ -107,7 +107,7 @@ def prod_scraper():
     env.settings = "scrapy-aws"
     env.hosts = ['%(user)s@10.0.1.165' % env]
     #env.celery_processes = '1'
-    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com:11211'
+    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.celery_processes_background = '1'
     env.installed_apps = ['']
     env.run_user = env.user
@@ -122,7 +122,7 @@ def prod_importer():
     env.collectstatic = False
     env.settings = "importer-aws"
     env.hosts = ['%(user)s@10.0.1.166' % env]
-    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com:11211'
+    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
     #env.celery_processes = '1'
     #env.celery_processes_background = '1'
     env.installed_apps = ['']

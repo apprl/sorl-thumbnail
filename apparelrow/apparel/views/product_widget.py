@@ -418,8 +418,10 @@ class EmbedProductWidgetView(TemplateView):
         nginx_key = reverse('embed-product-widget', args=[context["embed_product_widget_id"]])
         translation.activate(context["language"])
         response = self.render_to_response(context)
+        # Must render the content otherwise the html ending up in memcached gets weird django tags in the beginning and the end
+        response.render()
         translation.deactivate()
-        get_cache('nginx').set(nginx_key, response.rendered_content, 3600*24*20)
+        get_cache('nginx').set(nginx_key, response.content, 3600*24*20)
         return response
 
     def dispatch(self, request, *args, **kwargs):
