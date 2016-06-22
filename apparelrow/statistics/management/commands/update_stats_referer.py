@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
-from progressbar import ProgressBar, Percentage, Bar
 from apparelrow.statistics.models import ProductStat
+
+from progressbar import ProgressBar, Percentage, Bar
 
 
 class Command(BaseCommand):
@@ -13,6 +14,9 @@ class Command(BaseCommand):
         position = 0
         for i in range(steps, 2000000, steps):
             products = ProductStat.objects.all()[position:i]
+            if not products:
+                print "No productstats to handle"
+                return
             pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=products.count()).start()
             for index, row in enumerate(products):
                 pbar.update(index)

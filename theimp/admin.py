@@ -212,6 +212,7 @@ class BrandMappingAdmin(admin.ModelAdmin):
     list_filter = (IsMappedBrandListFilter, 'vendor')
     readonly_fields = ('vendor', 'brand', 'created', 'modified')
     search_fields = ('brand',)
+    raw_id_fields = ('vendor',)
     list_per_page = 20
 
     def queryset(self, request):
@@ -251,6 +252,7 @@ class CategoryMappingAdmin(admin.ModelAdmin):
     search_fields = ('category',)
     list_editable = ('mapped_category',)
     list_per_page = 50
+    raw_id_fields = ('mapped_category', 'vendor')
 
     def category_ancestors(self, category):
         result = []

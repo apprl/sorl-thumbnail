@@ -28,7 +28,7 @@
             ]);
             data.sort(0);
             var left = data.getColumnRange(1);
-            var right = data.getColumnRange(2);
+            var right = data.getColumnRange(4);
             var view = new google.visualization.DataView(data);
 
             // Append date
@@ -51,13 +51,72 @@
             {% if is_owner %}
                 columns_list.push(5);
             {% endif %}
-            var series = {
-                0: {targetAxisIndex: 0},
-                1: {targetAxisIndex: 0, color: '#ff9900'},
-                2: {targetAxisIndex: 0, color: '#ababab'},
-                3: {targetAxisIndex: 1, color: '#dc3912'},
-                4: {targetAxisIndex: 0, color: '#2c2c2c'}
-            };
+
+            {% if request.user.referral_partner %}
+                {% if is_owner %}
+                    {% if show_cpo_earning %}
+                        var series = {
+                            0: {targetAxisIndex: 0}, // commission earnings
+                            1: {targetAxisIndex: 0, color: '#ff9900'}, // referral earning
+                            2: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                            3: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                            4: {targetAxisIndex: 0, color: '#2c2c2c'} // network earnings
+                        };
+                    {% else %}
+                        var series = {
+                            0: {targetAxisIndex: 0, color: '#ff9900'}, // referral earning
+                            1: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                            2: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                            3: {targetAxisIndex: 0, color: '#2c2c2c'} // network earnings
+                        };
+                    {% endif %}
+                {% else %}
+                    {% if show_cpo_earning %}
+                        var series = {
+                            0: {targetAxisIndex: 0}, // commission earnings
+                            1: {targetAxisIndex: 0, color: '#ff9900'}, // referral earning
+                            2: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                            3: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                        };
+                    {% else %}
+                        var series = {
+                            0: {targetAxisIndex: 0, color: '#ff9900'}, // referral earning
+                            1: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                            2: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                        };
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                {% if is_owner %}
+                    {% if show_cpo_earning %}
+                        var series = {
+                            0: {targetAxisIndex: 0}, // commission earnings
+                            1: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                            2: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                            3: {targetAxisIndex: 0, color: '#2c2c2c'} // network earnings
+                        };
+                    {% else %}
+                        var series = {
+                            0: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                            1: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                            2: {targetAxisIndex: 0, color: '#2c2c2c'} // network earnings
+                        };
+                    {% endif %}
+                {% else %}
+                    {% if show_cpo_earning %}
+                        var series = {
+                            0: {targetAxisIndex: 0}, // commission earnings
+                            1: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                            2: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                        };
+                    {% else %}
+                        var series = {
+                            0: {targetAxisIndex: 0, color: '#ababab'}, // click earnings
+                            1: {targetAxisIndex: 1, color: '#dc3912'}, // clicks
+                        };
+                    {% endif %}
+                {% endif %}
+            {% endif %}
             view.setColumns(columns_list);
             var chart = new google.visualization.ChartWrapper({
                 chartType: 'LineChart',
@@ -206,15 +265,15 @@
     {% if is_owner %}
         <div class="row">
             <div class="col-lg-12 table-responsive">
-                <h2>{% trans "Top publishers" %} {{ month_display }} {{ year }}</h2>
+                <h2>{% trans "Top influencers" %} {{ month_display }} {{ year }}</h2>
                 <a class="center btn btn-default" data-toggle="modal" data-target="#modal_top_publishers">{% trans "See all" %}</a>
                 <table id="top-publishers" class="sortable table top-publishers">
                     <thead>
                         <tr>
-                            <th class="col-md-1 product-image center">{% trans "Publisher" %}</th>
+                            <th class="col-md-1 product-image center">{% trans "Influencer" %}</th>
                             <th class="col-md-5 hidden-xs center"></th>
                             <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                            <th class="col-md-2 center">{% trans "Publisher earnings" %}</th>
+                            <th class="col-md-2 center">{% trans "Influencer earnings" %}</th>
                             <th class="col-md-2 center">{% trans "Network earnings" %}</th>
                         </tr>
                     </thead>
@@ -250,6 +309,7 @@
         </div>
     {% endif %}
 
+    {% if not is_owner %}
     <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
             <h2>{% trans "Top Links" %} {{ month_display }} {{ year }}</h2>
@@ -257,7 +317,7 @@
             <table id="top-products" class="sortable table top-products">
                 <thead>
                     <tr>
-                        <th class="col-md-1">{% trans "Product" %}</th>
+                        <th class="col-md-1">{% trans "Link" %}</th>
                         <th class="col-md-5 hidden-xs"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
                         <th class="col-md-2 center">{% trans "Earnings" %}</th>
@@ -296,6 +356,7 @@
             </table>
         </div>
     </div>
+    {% endif %}
 
     <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
@@ -311,6 +372,11 @@
                             <th class="col-lg-2 center">{% trans "Your earnings" %}</th>
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                          <td colspan="12"><i>{% trans "Only showing last 50 earnings" %}</i></td>
+                        </tr>
+                    </tfoot>
                     <tbody id="body-earnings">
                     <tr>
                         <td colspan="6" style="text-align: center;">
@@ -329,7 +395,7 @@
     function fetchEarnings(month, year, user_id, currency, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year)
-                + '&user_id=' + encodeURIComponent(user_id), true);
+                + '&user_id=' + encodeURIComponent(user_id) + "&limit=50", true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
               var parsed = {};
@@ -361,8 +427,9 @@
                         }
                         row.append('<td style="text-align:left;">' + this.description_text + '</td>');
                     } else {
+                        row.append('<td></td>');
                         if (this.description_link == '') {
-                            row.append('<td colspan="2" style="text-align:left;">' + this.description_text + '</td>');
+                            row.append('<td style="text-align:left;">' + this.description_text + '</td>');
                         } else {
                             row.append('<td colspan="2" style="text-align:left;"><a src="' + this.description_link +'">' + this.description_text + '<a></td>');
                         }
@@ -422,6 +489,6 @@
 
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
 {% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products is_admin=False currency=currency month=month_display year=year is_owner=is_owner only  %}
-{% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year only %}
+{% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year is_owner=is_owner only %}
 {% include 'dashboard/modal_more_info.html' %}
 {% endblock body %}

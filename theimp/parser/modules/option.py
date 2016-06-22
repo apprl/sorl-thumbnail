@@ -39,14 +39,14 @@ class OptionMapper(BaseModule):
         if mapped_color:
             parsed_item['colors'] = mapped_color
         else:
-            log.warn('Color mapping failed. Color = %s vendor = %s'
+            log.debug('Color mapping failed. Color = %s vendor = %s'
                      % (scraped_item.get('colors'),vendor) )
             self.delete_value(parsed_item, 'colors')
 
         if mapped_pattern:
             parsed_item['patterns'] = mapped_pattern
         else:
-            log.info('Pattern mapping failed. Pattern = %s vendor = %s'
+            log.debug('Pattern mapping failed. Pattern = %s vendor = %s'
                      % (scraped_item.get('patterns'),vendor) )
             self.delete_value(parsed_item, 'patterns')
 

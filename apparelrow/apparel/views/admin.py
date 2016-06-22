@@ -4,9 +4,11 @@ import decimal
 import calendar
 
 from django.shortcuts import render
-from django.db.models import Sum, Count, Q
-from django.http import Http404, HttpResponseNotFound
+from django.db.models import Sum, Count, Min
+from django.http import Http404, HttpResponseNotFound, HttpResponse
 from apparelrow.apparel.models import Vendor
+from apparelrow.apparel.utils import get_pagination_page
+from apparelrow.apparel.browse import get_pagination_as_dict
 from apparelrow.dashboard.models import Sale
 from apparelrow.dashboard.views import parse_date
 from apparelrow.dashboard.utils import enumerate_months
@@ -14,10 +16,14 @@ from apparelrow.importer.models import VendorFeed
 from apparelrow.statistics.models import ProductStat
 from dateutil.relativedelta import relativedelta
 from django.views.generic import TemplateView
+from django.template import loader
+from django.template import RequestContext
+
+
 
 
 ZERO_DECIMAL = decimal.Decimal('0.00')
-
+BROWSE_PAGE_SIZE = 30
 
 def week_magic(day):
     day_of_week = day.weekday()
@@ -261,6 +267,7 @@ def stores(request, user_id=None):
 def ad_stores(request):
     return stores(request, user_id=24981)
 
+
 class AdminPostsView(TemplateView):
     template_name = 'apparel/admin/posts.html'
 
@@ -279,22 +286,14 @@ class AdminPostsView(TemplateView):
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
         month_display, month_choices, year_choices = enumerate_months(self.request.user, month)
 
-        posts_dict = []
         product_stats = ProductStat.objects.filter(created__range=(start_date_query, end_date_query)).\
-            exclude(user_id=0).values('referer', 'user_id').annotate(posts=Count('referer')).order_by('-posts')
+            exclude(user_id=0).values('referer', 'user_id').annotate(posts=Count('referer'), created_date=Min('created')).order_by('-posts')
 
-        for row in product_stats:
-            temp = {}
-            temp['referer'] = row['referer']
-            temp['posts'] = row['posts']
-            temp['user_id'] = row['user_id']
-
-            oldest_clicks = ProductStat.objects.filter(referer=row['referer']).order_by('created')
-            temp['created'] = oldest_clicks[0].created
-            posts_dict.append(temp)
+        paged_result, pagination = get_pagination_page(product_stats, BROWSE_PAGE_SIZE, self.request.GET.get('page', 1))
 
         context.update({
-            'posts_dict': posts_dict,
+            'current_page': paged_result,
+            'next': self.request.get_full_path(),
             'month': month,
             'year': year,
             'month_display': month_display,

@@ -805,7 +805,7 @@ class VendorProduct(models.Model):
                         cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
                         if cut_exception:
                             total_publisher_cut = cut_exception
-                        if publisher_cut_exception and user.owner_network:
+                        if publisher_cut_exception is not None and user.owner_network:
                             publisher_cut = publisher_cut_exception
                         exception_amount, exception_currency = parse_cost_amount(click_cost)
                         if exception_amount and exception_currency:
@@ -1545,6 +1545,7 @@ class FacebookAction(models.Model):
 # SynonymFile
 #
 
+
 def save_synonym_file(sender, **kwargs):
     instance = kwargs['instance']
     synonym_file = open(settings.SOLR_SYNONYM_FILE, "w")
@@ -1552,6 +1553,7 @@ def save_synonym_file(sender, **kwargs):
     synonym_file.close()
 
     requests.get(settings.SOLR_RELOAD_URL)
+
 
 class SynonymFile(models.Model):
     content = models.TextField(_('Synonyms'), null=True, blank=True, help_text=_('Place all synonyms on their own line, comma-separated. Comments start with "#".'))

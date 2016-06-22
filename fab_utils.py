@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from fab_servers_dev import dev_scrapy
-
 __author__ = 'klaswikblad'
 
+
 import os
+from fab_servers_dev import dev_scraper
 from contextlib import contextmanager
 from fabric.decorators import task
 from fabric.contrib.files import exists, upload_template
@@ -212,7 +212,7 @@ def collectstatic():
 
 @task
 def scrape(vendor):
-    require('hostname', provided_by=[dev_scrapy])
+    require('hostname', provided_by=[dev_scraper])
     with project():
         run("curl http://localhost:6800/schedule.json -d project=spidercrawl -d spider=%(vendor)s" % {'vendor':vendor})
 
@@ -225,7 +225,7 @@ def reload_scrapy():
 
 @task
 def scrape(vendor):
-    require('hostname', provided_by=[dev_scrapy])
+    require('hostname', provided_by=[dev_scraper])
     with project():
         run("curl http://localhost:6800/schedule.json -d project=spidercrawl -d spider=%(vendor)s" % {'vendor':vendor})
 
