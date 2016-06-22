@@ -31,10 +31,10 @@
         {% endif %}
     {% endif %}
 
-    <div id="content">
+    <div id="content">{{ title }}
         <div class="row content-row">
             <div class="col-md-6 col-widget">
-                {% include "apparel/tools/widget_product_edit.html" with title=title external_product_widget_id=external_product_widget_id widget_type=widget_type %}
+                {% include "apparel/tools/widget_product_edit.html" with title=object.title external_product_widget_id=external_product_widget_id widget_type=widget_type %}
             </div>
 
             <div class="col-md-6 visible-md visible-lg">
