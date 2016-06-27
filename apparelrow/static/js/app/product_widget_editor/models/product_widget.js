@@ -7,7 +7,7 @@ window.App.Models.ProductWidget = window.App.Models.WidgetModelBase.extend({
         'title': '',
         'description': '',
         'id': external_product_widget_id,
-        'type': external_product_widget_type
+        'widget_type': external_product_widget_type
     },
 
     initialize: function() {

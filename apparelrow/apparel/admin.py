@@ -260,13 +260,17 @@ admin.site.register(ShopEmbed, ShopEmbedAdmin)
 
 class ProductWidgetProductInline(admin.TabularInline):
     model = ProductWidgetProduct
+    readonly_fields = ('product',)
 
 #
 # SHOP
 #
 
 class ProductWidgetAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'created')
+    list_display = ('title', 'user', 'published', 'description', 'widget_type','created')
+    #raw_id_fields = ('user',)
+    readonly_fields = ('user', 'created', 'modified')
+
     inlines = [
         ProductWidgetProductInline,
     ]
@@ -278,7 +282,9 @@ admin.site.register(ProductWidget, ProductWidgetAdmin)
 #
 
 class ProductWidgetEmbedAdmin(admin.ModelAdmin):
-    list_display = ('user', )
+    list_display = ('user', 'width', 'height', 'language')
+    #raw_id_fields = ('user',)
+    readonly_fields = ('user', 'product_widget')
 
 admin.site.register(ProductWidgetEmbed, ProductWidgetEmbedAdmin)
 

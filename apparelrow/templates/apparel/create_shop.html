@@ -21,12 +21,12 @@
             </div>
 
             <div class="col-md-6 visible-md visible-lg">
-                {% include "apparel/tools/product_picker.html" with enabled=product_picker liked_info="This shop automatically includes all your liked products. If you wish to create a shop where you can manually choose what to include, create a new shop." %}
+                {% include "apparel/tools/product_picker.html" with enabled=product_picker liked_info="This shop automatically includes all your saved products. If you wish to create a shop where you can manually choose what to include, create a new shop." %}
             </div>
         </div>
     </div>
 
-    {% include "apparel/tools/widget_templates.html" %}
+    {% include "apparel/tools/widget_templates.html" with typename="shop"%}
 
     {% include "apparel/tools/widget_footer.html" %}
     <script type="text/javascript">

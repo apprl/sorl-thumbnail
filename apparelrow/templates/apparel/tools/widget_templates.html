@@ -24,11 +24,12 @@
     </div>
 </script>
 
-<script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
+<!-- Found template with duplicate id, commenting it out for now -->
+<!--script type="text/template" id="dialog_delete_template" data-title="{% trans "Delete?" %}">
     <p>{% trans "Are you sure you permanently want to delete this shop? If you have embedded the shop on a site, the shop will disappear from there, too." %}</p>
-    <a href="#" class="btn btn-secondary btn-yes">{% trans "Yes" %}</a>
-    <a href="#" class="btn btn-default btn-no">{% trans "No" %}</a>
-</script>
+    <a href="#" class="btn btn-success btn-block btn-yes">{% trans "Yes" %}</a>
+    <a href="#" class="btn btn-primary btn-block btn-no">{% trans "No" %}</a>
+</script -->
 
 <script type="text/template" id="dialog_unpublish_template" data-title="{% trans "Unpublish?" %}">
     <p>{% trans "Are you sure you want to unpublish this so that no one can see it?" %}</p>
@@ -58,6 +59,11 @@
     <a href="#" class="btn btn-primary btn-block btn-ok">{% trans "Ok" %}</a>
 </script>
 
+<script type="text/template" id="dialog_few_products" data-title="">
+    <p>{% trans "You need to add at least three product to be able to save." %}</p>
+    <a href="#" class="btn btn-primary btn-block btn-ok">{% trans "Ok" %}</a>
+</script>
+
 <script type="text/template" id="dialog_publish_template" data-title="{% trans "Publish" %}">
     <form class="form">
         <div class="form-group">
@@ -70,6 +76,9 @@
             <textarea name="description" id="look_description"><%= description %></textarea>
         </div>
 
+   <!-- <p>{% trans "After you have published your widget, you can embed it on your site." %}</p>
+    <a href="#" class="btn btn-block btn-publish">{% trans "Publish" %}</a>
+    <a href="#" class="btn btn-block btn-cancel">{% trans "Cancel" %}</a>-->
         <!-- Hur kan jag få denna till att endast visas på Look? -->
         <p>{% trans "After you have published your look, you can embed it on your site." %}</p>
 

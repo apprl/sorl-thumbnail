@@ -5,8 +5,8 @@
     <div id="product-widget-display-settings">
         <div class="buttons">
             <p>{% trans 'What products do you want to include in your widget?' %}</p>
-            <a id="show_liked" data-value="likes" href="#" class="btn btn-default btn-block">{% trans 'All my liked products' %}</a>
-            <a id="pick_products" data-value="pick" href="#" class="btn btn-default btn-block">{% trans 'Choose products' %}</a>
+            <a id="show_liked" data-value="likes" href="#" class="btn btn-default center">{% trans 'All my saved products' %}</a>
+            <a id="pick_products" data-value="pick" href="#" class="btn btn-default center">{% trans 'Choose products' %}</a>
         </div>
     </div>
     <script type="text/javascript">
@@ -19,15 +19,15 @@
         });
     </script>
     <div id="preview-header" class="preview-header">
-        {%  trans 'My widget preview' %}
+        {%  trans '0 products selected' %}
     </div>
     <div class="product-list-container">
+        <a href="#" class="navigation-el previous"><i class="fa fa-angle-left"></i></a>
+        <a href="#" class="navigation-el next"><i class="fa fa-angle-right"></i></a>
         <div id="product-widget-product-list" class="">
-            <a class="previous">Previous</a>
-            <a class="next">Next</a>
             <ul class="product-list list-unstyled"></ul>
         </div>
     </div>
 </div>
 
-{% include 'apparel/tools/dialog_embed_product_widget.html' with request=request LANGUAGES=LANGUAGES external_product_widget_id=external_product_widget_id only %}
+{% include 'apparel/tools/dialog_embed_product_widget.html' with request=request LANGUAGES=LANGUAGES title=title external_product_widget_id=external_product_widget_id only %}

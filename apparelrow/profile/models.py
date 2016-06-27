@@ -197,6 +197,10 @@ class User(AbstractUser):
         return self.look.filter(published=True).count()
 
     @cached_property
+    def widget_count(self):
+        return self.shop.all().count() + self.product_widget.all().count()
+
+    @cached_property
     def shops(self):
         """Number of shops"""
         return self.shop.all().count()
@@ -406,6 +410,10 @@ class User(AbstractUser):
     @cached_property
     def url_shops(self):
         return reverse('profile-shops', args=[self.slug])
+
+    @cached_property
+    def url_widgets(self):
+        return reverse('profile-widgets', args=[self.slug])
 
     @cached_property
     def url_followers(self):

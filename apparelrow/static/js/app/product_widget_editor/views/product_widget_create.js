@@ -1,6 +1,10 @@
 App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     el: '#product-widget-preview',
     template: _.template($('#shop_component_product').html()),
+    indexes: [],
+    current_index: 0,
+    allowprev: false,
+    allownext: false,
 
     initialize: function() {
         this.model.fetch({
@@ -11,20 +15,43 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         App.Events.on('widget:delete', this.delete_product_widget, this);
         App.Events.on('widget:reset', this.reset, this);
         App.Events.on('widget:save', this.save_product_widget, this);
-        App.Events.on('widget:publish', this.publish_product_widget, this);
-        App.Events.on('widget:unpublish', this.unpublish_product_widget, this);
         App.Events.on('widget:product_display', this.product_display, this);
-
-        App.Events.on('product:delete', this.resize, this);
+        App.Events.on('widget:touchmenu', this.alter_buttons, this);
+        App.Events.on('product:delete', function() {
+            this.indexes.splice(this.indexes.indexOf(this.current_index), 1);
+            for (var i=0; i<this.indexes.length; i++) {
+                if (this.indexes[i] > this.current_index) this.indexes[i]--;
+            }
+            if (this.current_index > 0) {
+                this.current_index--;
+            }
+            this.update_title(-1);
+            this.resize();
+        }, this);
 
         // Popup dispatcher
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
+        this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+        this.popup_dispatcher.add('dialog_few_products', new App.Views.DialogFewProducts({model: this.model, dispatcher: this.popup_dispatcher}));
+
+
+        var self = this;
+        $(window).on('show.bs.modal', function(e) {
+            if ($(e.relatedTarget).hasClass('btn-embed') && self.model.components.length < 3 && external_product_widget_type == 'multiple' && !self.model.get('show_liked')) {
+                self.popup_dispatcher.show('dialog_few_products');
+                return e.preventDefault();
+            }
+        });
+
+        this.num_multi = external_product_widget_type == 'single' ? 1 : 3;
+        this.list_width_factor = 0.8;
 
         // ProductWidget editor popup
         this.product_widget_edit_popup = new App.Views.ProductWidgetEditPopup({parent_view: this});
 
-        App.Events.on('widget:product:add', this.pending_add_component, this)
+        App.Events.on('widget:product:add', this.pending_add_component, this);
+
         this.model.components.on('add', this.add_component, this);
 
         $(window).on('resize', _.bind(this.resize, this));
@@ -40,26 +67,29 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
         var mc = new Hammer(this.$productlist[0]);
         mc.on('swipeleft swiperight', _.bind(function(e) { this.slide(e.type == 'swipeleft' ? -1 : 1); }, this));
 
-        App.Views.ProductWidgetCreate.__super__.initialize(this);
-        $(window).trigger('resize');
-        $('.body-header-col-right ul').hide();
-        if (this.model.get('id')) {
-            $('.body-header-col-right .btn-reset').parent().hide();
-        } else {
-            $('.body-header-col-right .btn-delete').parent().hide();
-        }
-        $('#product-widget-product-list').hide();
+        this.$controls = [this.$el.find('.previous'), this.$el.find('.next')];
 
-        this.init_footer();
+        App.Views.ProductWidgetCreate.__super__.initialize(this);
+
+        $('.body-header-col-right ul').hide();
+        $(window).trigger('resize');
+
+        $('#product-widget-product-list').hide();
     },
     init_products: function() {
         if (!this.model.attributes.id) {
             $('#product-widget-display-settings').show();
-            $('#product-widget-product-list').hide();
         } else {
-            $('#product-widget-product-list').show();
             this.product_display(this.model.get('show_liked'));
         }
+        $('.body-header-col-right ul').show();
+
+        if (this.model.get('show_liked')) {
+            $('#modal_embed_product_widget #id_name').parent().hide();
+            $('.body-header-col-right .btn-embed').click();
+        }
+        $('.body-header-col-right .btn-delete').parent().show();
+        $('.body-header-col-right .btn-reset').parent().hide();
         if(this.model.attributes.hasOwnProperty('products')) {
             for (var i = 0; i < this.model.attributes.products.length; i++) {
                 var product = this.model.attributes.products[i];
@@ -76,14 +106,20 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     },
     product_display: function(show_liked) {
         this.model.set('show_liked', show_liked);
-
+        this.init_footer();
         if(show_liked) {
             if (!this.model.attributes.id) {
-                this.save_product_widget({ title: "My liked products", 'callback': function() {
+                this.save_product_widget({ title: "My liked products", 'callback': function(id) {
                     $("#embed_product_widget_form #id_name").val("My liked products");
+                    external_product_widget_id = id;
                     window.product_widget_create.init_products();
-                }});
+               }});
             }
+            $('body').addClass('show-liked');
+            $('.widget-footer .btn-add-item').prop('disabled', true);
+            $('#modal_embed_product_widget .modal-footer').find('.btn.hidden').removeClass('hidden');
+            $('#modal_embed_product_widget .modal-footer').find('.btn:first').addClass('hidden');
+            $('#product-chooser .disabled .info').show();
             $('#product-widget-display-settings').find('.buttons').hide();
         } else {
             $('#product-chooser').find('.disabled').hide();
@@ -91,38 +127,100 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
             $('#product-widget-product-list').removeClass('liked-products');
             $('.body-header-col-right ul').show();
             $('.body-header-col-right .btn-delete').parent().hide();
-            this.init_footer();
         }
         $('#product-widget-product-list').show();
         $('#product-widget-preview').removeClass('splash');
         this.resize();
+    },
+    update_title: function(delta, val) {
+        var $title = this.$el.find('#preview-header');
+        var nr = parseInt(/\d+/.exec($title.html()), 10);
+        val = val == undefined ? nr + delta : val;
+
+        $title.html($title.html().replace(nr, val));
+    },
+    toggle_navigation: function() {
+        $ul = this.$productlist.find('ul.product-list');
+        if (external_product_widget_type == 'single') {
+            if (this.model.components.length == 0) {
+                $('.previous, .next').toggle(false);
+            } else {
+                $('.previous, .next').toggle(true);
+                var index = this.indexes.indexOf(this.current_index);
+                this.allownext = this.allowprev = this.model.components.length > 1;
+            }
+        } else {
+            if (this.model.components.length > 0) {
+                $('.previous, .next').toggle(true);
+                this.allownext = this.allowprev = this.model.components.length > this.num_multi;
+
+            } else {
+                $('.previous, .next').toggle(false);
+            }
+        }
     },
     reset: function() {
         this.model.components.each(_.bind(function (model) {
             this.model.components.remove(model);
             model.destroy();
         }), this);
-        this.$container.find('ul').children().remove();
+        this.indexes = [];
+        this.$container.find('ul.product-list').children().remove();
+        this.update_title(0, 0);
+        this.resize();
     },
     resize: function() {
-        var window_height = $(window).height(),
-            new_height = window_height - this.$el.offset().top - 20,
         $footer = $('.widget-footer:visible');
         $header = $('#preview-header:visible')
-        new_height -= ($header.length ? $header.height() + 16 : 0)+ ($footer.length ? $footer.height() : 0);
+        var window_height = $(window).height(),
+            new_height = window_height - this.$el.offset().top -
+                ($header.length ? $header.height() + 18 : 0) - ($footer.length ? $footer.height() : 18),
+            imageratio = 1,
+            $ul = this.$productlist.find('ul.product-list'),
+            container_width = this.$container.width(),
+            controlpos;
+
+        this.num_multi = external_product_widget_type == 'single' ? 1 : (container_width <= 480 ? (container_width <= 375 ? 1 : 2) : 3);
         this.$container.css('height', new_height);
-        var imageratio = 1.14;
-        if (this.$container.width()/this.$container.height() > imageratio) {
-            this.$productlist.height(new_height*0.9).width(new_height*0.9/imageratio);
+
+        var $col = $ul.find('.col-product-item'),
+                padding = $col.outerWidth()-$col.width();
+        if (external_product_widget_type == 'single') {
+            if (container_width/this.$container.height() > imageratio) {
+                this.$productlist.height(new_height*this.list_width_factor).width(new_height*this.list_width_factor/imageratio);
+            } else {
+                this.$productlist.width(container_width*this.list_width_factor).height(container_width*imageratio);
+            }
+            $ul.width(this.model.components.length*this.$productlist.width()).css('left', -1*this.indexes.indexOf(this.current_index)*this.$productlist.width());
+            $ul.find('img.fake-product-image').width(this.$productlist.width()-padding).height(this.$productlist.height());
+            controlpos = Math.max(5, (container_width - this.$productlist.width())/2 - this.$controls[0].width());
         } else {
-            this.$productlist.width(this.$container.width()*0.9).height(this.$container.width()*0.9*imageratio);
+            if (container_width/this.$container.height() > this.num_multi*imageratio) {
+                this.$productlist.height(new_height*this.list_width_factor).width(this.num_multi*new_height*this.list_width_factor/imageratio);
+            } else {
+                this.$productlist.width(container_width*this.list_width_factor).height(container_width*imageratio/this.num_multi);
+            }
+
+            $ul.width(this.model.components.length*this.$productlist.width()/this.num_multi);
+            $ul.find('img.fake-product-image').width(this.$productlist.width()/this.num_multi-padding).height(this.$productlist.height());
+            if (this.model.components.length > this.num_multi) {
+                $ul.css('left',  Math.max(-1*(this.indexes.length-this.num_multi)*this.$productlist.width()/this.num_multi, -1*this.indexes.indexOf(this.current_index)*this.$productlist.width()/this.num_multi));
+            } else {
+                $ul.css('left', 0);
+            }
+            controlpos = Math.max(5, (container_width - this.$productlist.width())/2 - this.$controls[0].width());
         }
-        this.$productlist.find('ul.product-list').width(this.model.components.length*this.$productlist.width()).css('left', '0px');
-        this.$productlist.find('ul.product-list > li').width(this.$productlist.width()).height(this.$productlist.height());
+        this.$controls[0].css('left', controlpos-10);
+        this.$controls[1].css('right', controlpos-10);
+        this.toggle_navigation();
+    },
+    highlight_last: function() {
+        var $ul = this.$productlist.find('ul.product-list');
+        var childwidth = $ul.parent().width();
     },
     pending_add_component: function(product) {
         this._create_product_component(product);
-        this.resize();
+        this.current_index = this.indexes.length-1;
     },
     _create_product_component: function(product) {
         var self = this;
@@ -137,7 +235,20 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     },
     add_component: function(model, collection) {
         var view = new App.Views.ProductWidgetComponentProduct({ model: model, collection: collection });
-        this.$('.product-list-container ul.product-list').append(view.render().el);
+        var i;
+        if (!this.indexes.length) {
+            this.indexes.push(0);
+            i=0;
+        } else {
+            i = this.indexes.indexOf(this.indexes.length - 1);
+            this.indexes.splice(i+1, 0, this.indexes.length);
+        }
+        if (this.indexes.length == 1) {
+            this.$('.product-list-container ul.product-list').append(view.render().el);
+        } else {
+            this.$('.product-list-container ul.product-list li.col-product-item:eq('+i+')').after(view.render().el);
+        }
+        this.update_title(1);
     },
     publish_product_widget: function(values) {
         this.model.set('published', true);
@@ -149,25 +260,43 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
     },
     slide: function(direction) {
         if (this.running) return;
+        if (direction == 1 && !this.allowprev) return;
+        if (direction == -1 && !this.allownext) return;
         var $ul = this.$productlist.find('ul.product-list');
         var childwidth = $ul.parent().width();
-        this.running = true;
-        var newleft = $ul.position().left + direction*childwidth;
-
-        if (newleft > 0) {
-            $ul.children('li.col-product-item').last().detach().prependTo($ul);
-            $ul.css('left', ($ul.position().left - childwidth) + 'px');
-        } else if(newleft <= -1*$ul.width() ) {
-            $ul.children('li.col-product-item').first().detach().appendTo($ul);
-            $ul.css('left', ($ul.position().left + childwidth) + 'px');
+        if (external_product_widget_type == 'multiple') {
+            childwidth = childwidth/this.num_multi;
         }
+        if (this.current_index == 0 && this.num_multi > 1) {
+            this.current_index = this.num_multi - 1;
+        }
+
+        this.running = true;
+        var num_slide = this.model.components.length >= this.num_multi*2 ? this.num_multi : this.model.components.length - this.num_multi;;
+        if (direction == 1 && this.current_index + 1 - this.num_multi - num_slide < 0) {
+            var num_diff = -1*(this.current_index + 1 - this.num_multi - num_slide);
+            for (var j=0;j<num_diff;j++) {
+                $ul.children('li').last().detach().prependTo($ul);
+            }
+            $ul.css('left', $ul.position().left - num_diff*childwidth);
+            this.current_index += num_diff;
+        } else if (direction == -1 && this.current_index + 1 + num_slide > this.model.components.length) {
+            var num_diff = (this.current_index + 1 + num_slide) - this.model.components.length;
+            for (var j=0;j<num_diff;j++) {
+                $ul.children('li').first().detach().appendTo($ul);
+            }
+            $ul.css('left', $ul.position().left + num_diff*childwidth);
+            this.current_index -= num_diff;
+        }
+        var i = this.indexes.indexOf(this.current_index) - num_slide*direction;
+        this.current_index = this.indexes[i];
         var self = this;
-        $ul.animate({'left': '+=' + direction*childwidth}, {'complete': function() { self.running = false; }});
+        $ul.animate({'left': '+=' + num_slide*direction*childwidth}, {'complete': function() {self.toggle_navigation(); self.running = false; }});
     },
     delete_product_widget: function() {
         this.model._dirty = false;
         this.model.destroy({success: function() {
-            window.location.replace('/productwidget/create');
+            window.location.replace(external_widget_url);
         }});
     },
     save_product_widget: function(values) {
@@ -212,6 +341,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
 
     save_success: function(callback) {
         this.model._dirty = false;
+        external_product_widget_id = this.model.get('id');
         if (callback) {
             callback(this.model.get('id'));
         } else {

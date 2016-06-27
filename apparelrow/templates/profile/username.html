@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body-classes %}username-page{% endblock body-classes %}
+{% block body %}
+
+<div class="body-header center">
+    <h1>{% trans "Choose your username" %}</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duo Reges: constructio interrete. Multa sunt dicta ab antiquis de contemnendis ac despiciendis rebus humanis; Hic ambiguo ludimur. Obsecro, inquit, Torquate, haec dicit Epicurus.</p>
+</div>
+
+<div class="form-container">
+    <form method="post">
+        <div class="input-username error">
+            <input type="text" name="username" value="hej">
+            <span class="hint">Someone already has that username.</span>
+            <!--<span class="hint">This username is available.</span>-->
+        </div>
+        <button class="btn btn-primary">{% trans 'Confirm' %}</button>
+    </form>
+</div>
+
+{% endblock %}

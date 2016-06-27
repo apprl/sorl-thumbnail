@@ -3,12 +3,14 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from apparelrow.profile.views import ProfileView, ProfileListLookView, ProfileListLikedLookView, \
     ProfileListBrandLookView, ProfileListShopView, ProfileListFollowersView, ProfileListFollowingView, \
-    UserSettingsEmailView, UserSettingsNotificationView, PublisherSettingsNotificationView, RedirectProfileView
+    UserSettingsEmailView, UserSettingsNotificationView, PublisherSettingsNotificationView, UserSettingsUsernameView, RedirectProfileView, \
+    RedirectWidgetView
 
 urlpatterns = patterns('',
     url(r'^flow/$', 'apparelrow.profile.views.flow', name='login-flow-redirect'),
     url(r'^settings/$', RedirectView.as_view(url=reverse_lazy('settings-account')), name='settings-email'),
     url(r'^settings/account/$', UserSettingsEmailView.as_view(), name='settings-account'),
+    url(r'^settings/username/$', UserSettingsUsernameView.as_view(), name='settings-username'),
     url(r'^settings/notifications/$', UserSettingsNotificationView.as_view(), name='settings-notifications'),
 
     url(r'^notifications/$', 'apparelrow.profile.views.notifications' , name='notifications-page'),
@@ -23,7 +25,7 @@ urlpatterns = patterns('',
     url(r'^(?:([^\/]+?)/)?looks/$', ProfileListLookView.as_view(), name='profile-looks'),
     url(r'^(?:([^\/]+?)/)?likedlooks/$', ProfileListLikedLookView.as_view(), name='profile-likedlooks'),
     url(r'^(?:([^\/]+?)/)?brandlooks/$', ProfileListBrandLookView.as_view(), name='profile-brandlooks'),
-
+    url(r'^(?:([^\/]+?)/)?widgets/$', RedirectWidgetView.as_view(), name='profile-widgets'),
     url(r'^(?:([^\/]+?)/)?shops/$', ProfileListShopView.as_view(), name='profile-shops'),
     url(r'^(?:([^\/]+?)/)?followers/$', ProfileListFollowersView.as_view(), name='profile-followers'),
     url(r'^(?:([^\/]+?)/)?following/$', ProfileListFollowingView.as_view(), name='profile-following'),

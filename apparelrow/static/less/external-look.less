@@ -44,6 +44,10 @@ html.look-type-C {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     margin: 0;
     background-color: white;
     font-family: 'Neuzeit Regular', sans-serif;
@@ -122,8 +126,8 @@ html.look-type-C {
         color: #999;
     }
     .product-meta {
-        float: left;
-        width: 160px;
+        float: right; // was left
+        width: 150px; // was 160
         text-align: center;
     }
     .tooltip-link {
@@ -195,7 +199,7 @@ html.look-type-C {
         height: 12px;
         left: 50%;
         bottom: -6px;
-        margin-left: -6px;
+        margin-left: 1.5px; // was -6px
         background-color: white;
         -moz-transform: rotate(45deg);
         -webkit-transform: rotate(45deg);

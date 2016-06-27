@@ -1,0 +1,134 @@
+/*
+    External product widget v1.0
+*/
+/* Fonts ---------- */
+@font-face {
+  font-family: 'Neuzeit Regular';
+  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.eot');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Regular.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Neuzeit Bold';
+  src: url('http://s.apprl.com/fonts/Neuzeit-Bold.eot');
+  src: url('http://s.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
+}
+/* Product ---------- */
+.apprl-product {
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+  font-family: 'Neuzeit Regular', sans-serif;
+  color: black;
+  letter-spacing: .01rem;
+  font-size: 12px;
+  margin: 0;
+}
+.apprl-product *,
+.apprl-product *:before,
+.apprl-product *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.apprl-product a {
+  color: black;
+  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+.apprl-product ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.apprl-product h4 {
+  font-size: 14px;
+  margin: 0 auto;
+  font-family: "Neuzeit Bold", sans-serif;
+  font-weight: normal;
+}
+.apprl-product .slidecontainer {
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+.apprl-product ul.productcontainer {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  list-style: none;
+}
+.apprl-product ul li.product {
+  float: left;
+  padding: 0px 10px;
+  box-sizing: border-box;
+}
+.apprl-product ul li img {
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+}
+.apprl-product .navigation {
+  display: block;
+}
+.apprl-product .navigation-el {
+  background-color: transparent;
+  position: absolute;
+  display: block;
+  z-index: 10;
+  height: 44px;
+  width: 44px;
+  transition: background-color 0.2s ease-in-out;
+  text-align: center;
+}
+.apprl-product .navigation-el i {
+  transition: color 0.2s ease-in-out;
+  font-size: 32px;
+  line-height: 44px;
+}
+.apprl-product .navigation-el:hover {
+  background-color: black;
+}
+.apprl-product .navigation-el:hover i {
+  color: white;
+}
+.apprl-product .navigation-el.previous i {
+  padding-right: 2px;
+}
+.apprl-product .navigation-el.next i {
+  padding-left: 2px;
+}
+@media (min-width: 992px) {
+  .apprl-product .navigation-el {
+    width: 36px;
+    height: 36px;
+  }
+  .apprl-product .navigation-el i {
+    font-size: 26px;
+    line-height: 36px;
+  }
+}
+.apprl-product .caption {
+  text-align: center;
+  color: #333;
+  height: 60px;
+  padding-top: 10px;
+}
+.apprl-product .caption a {
+  color: black;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.apprl-product .caption a:hover {
+  color: #333;
+}
+.apprl-product .caption li {
+  display: inline-block;
+}

@@ -336,6 +336,11 @@ header {
         }
     }
     .dropdown-avatar {
+        &:hover {
+            u {
+                border-color: white;
+            }
+        }
         figure {
             float: left;
             margin-right: 5px;
@@ -362,15 +367,12 @@ header {
         margin: 55px 0 15px 0;
         padding: 0 15px;
         color: white;
-        //line-height: 46px;
         height: 44px;
         color: @primaryColor;
-        //background-color: @primaryColor;
         display: block;
         border: 2px solid @primaryColor;
         &:hover, &:focus {
             color: @primaryColor !important;
-            //background-color: darken(@primaryColor, 15%) !important;
         }
         i {
             padding-bottom: 2px;
@@ -661,7 +663,7 @@ main {
 
 /* Footer ---------- */
 footer {
-    overflow: hidden;
+    //overflow: hidden;
     text-align: center;
     padding: 30px 0;
     font-size: 14px;
@@ -690,6 +692,13 @@ footer {
     h5 {
         color: @grey;
         margin: 15px 0 10px 0;
+    }
+    #language-dropdown {
+        top: initial;
+        padding-top: 0;
+        bottom: 34px;
+        -webkit-box-shadow: 0 -3px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 -3px 12px rgba(0,0,0,0.175);
     }
     .dropdown {
         margin-bottom: 10px;

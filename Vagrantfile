@@ -9,6 +9,9 @@ ENV.delete_if { |name| name.start_with?('AWS_') }  # Filter out rogue env vars.
 ENV['AWS_PROFILE'] = 'vagrant-s3auth'
 Vagrant.configure(2) do |config|
 
+  config.ssh.username = "vagrant"
+  config.ssh.password = "vagrant"
+  config.ssh.insert_key = "true"
   config.vm.box = "apparel-box"
   config.vm.box_url="https://s3-eu-west-1.amazonaws.com/apprl-vagrant/boxes/apparel-dev-machine.box"
   config.ssh.username = "vagrant"

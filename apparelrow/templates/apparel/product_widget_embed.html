@@ -1,13 +1,18 @@
 {% load static from staticfiles %}
-{% load thumbnail cache compressed buy_extras %}
+{% load l10n i18n thumbnail thumbnail_extras buy_extras cache compressed buy_extras localeurl_tags %}
 {% spaceless %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
   <head>
     <title>{{ object.title }} by {{ object.user.display_name }} | APPRL - The Social Commerce Platform</title>
-    <link rel="stylesheet" href="{% static 'styles/widget.css' %}">
-    <link rel="stylesheet" href="{% static 'less/widget.css' %}">
+    {% comment %}
+        <!-- This is the old system with styling for external widgets -->
+        <link rel="stylesheet" href="{% static 'styles/widget.css' %}">
+        <link rel="stylesheet" href="{% static 'less/productwidget_embed.css' %}">
+    {% endcomment %}
 
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles/external-product.css' %}">
     <script type="text/javascript">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -27,73 +32,51 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
     </script>
-    <style>
-        .slidecontainer {
-            overflow: hidden;
-            position: relative;
-            margin: 0 auto;
-        }
-        ul {
-            margin: 0px;
-            padding: 0px;
-            overflow: hidden;
-            position: relative;
-            top: 0px;
-            left: 0px;
-            list-style: none;
-        }
-        ul li {
-            float: left;
-        }
-        ul li img {
-            width: 100%;
-            height:100%;
-            vertical-align: middle;
-        }
-        .navigation {
-            display: block;
-        }
-        .previous {
-            position: absolute;
-            display: block;
-            z-index:10;
-        }
-        .previous img {
-            height: 75px;
-        }
-        .next {
-            position: absolute;
-            display: block;
-            z-index:10;
-        }
-        .next img {
-            height: 58px;
-        }
-    </style>
-  </head>
-  <body class="product-widget-embed">
-    <div class="navigation"><a href="#" class="previous"><img src="{% static "images/left_arrow.svg" %}"/></a><a href="#" class="next"><img src="{% static "images/right_arrow.svg" %}"/></a></div>
-    <div class="slidecontainer">
+</head>
+<body class="apprl-product">
+    <div class="navigation">
+        <a href="#" class="navigation-el previous"><i class="fa fa-angle-left"></i></a>
+        <a href="#" class="navigation-el next"><i class="fa fa-angle-right"></i></a>
+    </div>
 
-        <ul>
-          {% for component in components %}
-          <li>
-            {% thumbnail component.product_image "300" upscale="False" crop="noop" format="PNG" transparent=True as im %}
-            <a rel="nofollow" target="_blank" href="{% if component.default_vendor and component.default_vendor.availability != 0 %}{% buy_url component.id component.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid component.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.slug }}" data-vendor="{{ component.default_vendor.vendor }}" data-price="{{ component.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }};">
-              <img src="{{ im.url }}" title="{{ component }}" width="{{ im.width }}" height="{{ im.height }}"/>
-            </a>
-            {% endthumbnail %}
-          </li>
-          {% endfor %}
+    <div class="slidecontainer">
+        <ul class="productcontainer">
+            {% for component in components %}
+            <li class="product">
+                {% thumbnail component.product_image "280x320" keep_size=True crop=False format='PNG' transparent=True as im %}
+                <a rel="nofollow" target="_blank" href="{% if component.default_vendor and component.default_vendor.availability != 0 %}{% buy_url component.id component.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.get_absolute_url }}{% endif %}" id="product-{{ component.product.id }}" class="product collage-image btn-buy-external" data-sid="{% get_sid component.id object.user.pk 'Ext-Look' %}" data-slug="{{ component.slug }}" data-vendor="{{ component.default_vendor.vendor }}" data-price="{{ component.default_vendor.lowest_price_in_sek|floatformat:0 }}" style="{{ component.style_embed }};">
+                    <img src="{{ im.url }}" title="{{ component }}" width="{{ im.width }}" height="{{ im.height }}"/>
+                </a>
+                {% endthumbnail %}
+                {% if object.show_product_brand %}
+                <div class="caption">
+                    <h4><a target="_blank" href="{% if component.default_vendor and component.default_vendor.availability != 0 %}{% buy_url component.id component.default_vendor object.user.pk 'Ext-Look' %}{% else %}{{ component.get_absolute_url }}{% endif %}">{{ component.manufacturer }}</a></h4>
+                    <ul class="list-inline">
+                        {% if component.availability and component.default_vendor and object.default_vendor.availability != 0 %}
+                        {% if component.default_vendor.original_discount_price %}
+                        <li class="discount-price" data-price="{{ component.default_vendor.original_discount_price|unlocalize }}" data-currency="{{ component.default_vendor.original_currency }}">{{ component.default_vendor.original_discount_price|floatformat:0|custom_intcomma }} {{ component.default_vendor.original_currency }}</li>
+                        <li class="price discounted" data-price="{{ component.default_vendor.original_price|unlocalize }}" data-currency="{{ component.default_vendor.original_currency }}">{{ component.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ component.default_vendor.original_currency }}</li>
+                        {% else %}
+                        <li class="price" data-price="{{ component.default_vendor.original_price|unlocalize }}" data-currency="{{ component.default_vendor.original_currency }}">{{ component.default_vendor.original_price|floatformat:0|custom_intcomma }} {{ component.default_vendor.original_currency }}</li>
+                        {% endif %}
+                        {% else %}
+                        <li class="sold-out">{% trans "Sold out" %}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            </li>
+            {% endfor %}
         </ul>
     </div>
     <script type="text/javascript" src="{% static 'js/jquery/jquery-1.9.1.min.js' %}"></script>
     <script type="text/javascript">
-        var nrchildren = 1;
-        var embedId = '{{ embed_id }}';
-        var embed_type = '{{ object.product_widget.type }}';
+    var nrchildren = 1;
+    var embedHeight = false;
+    var embedId = '{{ embed_id }}';
+    var embed_type = '{{ object.product_widget.type }}';
     </script>
     {% compressed_js 'product_widget' %}
-  </body>
+</body>
 </html>
 {% endspaceless %}

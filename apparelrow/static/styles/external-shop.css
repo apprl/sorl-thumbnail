@@ -81,10 +81,15 @@
 .apprl-shop #reset {
   position: absolute;
   top: 0;
-  right: 30px;
+  right: 15px;
 }
 .apprl-shop #reset i {
   float: none;
+}
+@media (min-width: 768px) {
+  .apprl-shop #reset {
+    right: 30px;
+  }
 }
 .apprl-shop #discount-price {
   font-size: 13px;
@@ -552,7 +557,7 @@
   background: #ffeeb5 linear-gradient(#ae8913, #ffeeb5) no-repeat;
 }
 .apprl-shop #product-color li a.silver {
-  background: #eeeeee linear-gradient(#999999, #eeeeee) no-repeat;
+  background: #eee linear-gradient(#999, #eee) no-repeat;
 }
 .apprl-shop #product-color li a.striped {
   background: transparent url("../images/filter-icons.png") no-repeat;

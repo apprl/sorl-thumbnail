@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static from staticfiles %}
 <div class="modal fade" id="modal_embed_product_widget" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,63 +9,52 @@
             </div>
             <div class="modal-body">
 
-                <p>{% trans "Edit embed settings." %}</p>
+                <p>{% trans 'Customize your widget below, then get the embed code to put on it on your blog/site. Click "Close" to preview widget.' %}</p>
 
                 <form id="embed_product_widget_form" class="form">
                     <div class="form-group">
                         <label class="control-label" for="id_name">{% trans "Name" %}</label>
-                        <input id="id_name" type="text" class="form-control" required placeholder="Name" value="{{ title }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="id_width">{% trans "Width" %}</label>
-                        <div class="input-group">
-                            <input id="id_width" type="text" name="width" class="form-control" placeholder="100">
-                            <div class="input-group-btn">
-                                <button id="width_type" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="text">%</span> <span class="caret"></span></button>
-                                <ul id="width_dropdown" class="dropdown-menu">
-                                    <li><a href="#" data-text="%" data-value="%">%</a></li>
-                                    <li><a href="#" data-text="{% trans "pixels" %}" data-value="px">{% trans "pixels" %}</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                        <input id="id_name" type="text" class="form-control" placeholder="Name" value="{{ title }}"/>
+                        <span class="help-block">* {% trans "This field is required" %}</span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="id_height">{% trans "Height" %}</label>
-                        <div class="input-group">
-                            <input id="id_height" type="text" name="height" class="form-control" placeholder="400">
-                            <span class="input-group-addon">{% trans "pixels" %}</span>
-                        </div>
+                        <a href="#" class="info-toggler" data-target="info-height"><i class="fa fa-question-circle"></i></a>
+                        <span class="info-box" id="info-height">{% trans "This is the height of the product list. 200 pixels is usually a good starting point, you can always come back and change the height if you want." %}</span>
+                        <input id="id_height" type="text" name="height" placeholder="160">
+                        <span class="help-block">{% trans "( pixels )" %}</span>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="id_language">{% trans "Language & currency" %}</label>
-                        <select id="id_language" name="language" class="form-control">
-                            {% for language in LANGUAGES %}
-                            <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <!--<label>{% trans "Advanced options" %}</label>-->
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1" checked>
-                                {% trans "Show prices and brands" %}
-                            </label>
+                        <a href="#" class="info-toggler" data-target="info-language"><i class="fa fa-question-circle"></i></a>
+                        <span class="info-box" id="info-language">{% trans "Select the language for your shop and the currency the product prices should be showed in." %}</span>
+                        <div class="select">
+                            <span><i class="fa fa-caret-down"></i></span>
+                            <select id="id_language" name="language">
+                                {% for language in LANGUAGES %}
+                                <option{% if language.0 == LANGUAGE_CODE %} selected="selected"{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">{% trans "Get embed code" %}</button>
+                        <!--<label>{% trans "Advanced options" %}</label>-->
+                        <label><input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show prices and brands" %}</label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block center">{% trans "Get embed code" %}</button>
                     </div>
                     <div class="form-group" style="display:none;">
                         <label class="control-label" for="id_embed_code">{% trans "Copy and paste this code (in HTML-mode) into your site/blog" %}</label>
-                        <textarea id="id_embed_code" name="embed_code" rows="8" class="form-control"></textarea>
+                        <textarea id="id_embed_code" name="embed_code" rows="8"></textarea>
                     </div>
                 </form>
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Continue editing" %}</button>
-                <button type="button" class="btn btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
+                <button type="button" class="btn btn-default pull-left btn-continue" data-dismiss="modal">{% trans "Continue editing" %}</button>
+                <button type="button" class="btn btn-default pull-left hidden" data-dismiss="modal">{% trans "Close" %}</button>
+                <button type="button" class="btn btn-default pull-right btn-save-exit" data-dismiss="modal">{% trans "Save and exit" %}</button>
             </div>
         </div>
     </div>
@@ -79,7 +69,14 @@
             return uri + separator + key + "=" + value;
         }
     }
+    var widget_id = {{ external_product_widget_id }};
     $(document).ready(function() {
+        // Added on December 29
+        $('.info-toggler').click(function() {
+            $('#' + $(this).data('target')).toggleClass('active');
+            return false;
+        });
+
         $('#modal_embed_product_widget').on('show.bs.modal', function () {
             $('#id_embed_code').parent().hide();
         });
@@ -89,13 +86,38 @@
 
         var width_type = '%';
 
-        var widget_id = {{ external_product_widget_id }};
+        if (external_product_widget_type == 'single') {
+            if (width_type == 'px') {
+                 $('#id_height').parent().parent().hide();
+            }
+            $('#id_height').attr('placeholder', '300');
+        } else {
+            $('#id_height').attr('placeholder', '200');
+        }
 
         $('.btn-save-exit').on('click', function(e) {
             e.preventDefault();
-            App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val()});
+            if (!$('#embed_product_widget_form #id_name').val().length) {
+                $('#embed_product_widget_form #id_name').parent().addClass('has-error');
+                $('#embed_product_widget_form #id_name').focus()[0].scrollIntoView();
+                return false;
+            }
+            App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val(), 'callback': function(id) {
+                window.location.replace(external_widget_url);
+            }});
         });
 
+        $('.btn-continue').on('click', function(e) {
+            if (external_product_widget_id && !widget_id) {
+                window.location.replace('/productwidget/edit/' + external_product_widget_id);
+            }
+        });
+
+        $('#embed_product_widget_form #id_name').on('change', function() {
+            if($(this).parent().hasClass('has-error') && $(this).val()) {
+                $(this).parent().removeClass('has-error');
+            }
+        });
         $('#width_dropdown a').on('click', function(e) {
             e.preventDefault();
             var value = $(this).data('value');
@@ -108,8 +130,17 @@
             } else {
                 $('#id_width').attr('placeholder', '100');
             }
+
+            if (external_product_widget_type == 'single') {
+                $('#id_height').parent().parent().toggle(width_type == '%');
+            }
         });
         $('#embed_product_widget_form').on('submit', function() {
+            if (!$('#embed_product_widget_form #id_name').val().length) {
+                $('#embed_product_widget_form #id_name').parent().addClass('has-error');
+                $('#embed_product_widget_form #id_name').focus()[0].scrollIntoView();
+                return false;
+            }
             if (!widget_id) {
                 App.Events.trigger('widget:save', {title: $('#embed_product_widget_form #id_name').val(), callback: get_embed});
             } else {
@@ -117,6 +148,8 @@
             }
 
             return false;
+        }).on('change', 'input, select', function() {
+            $('#id_embed_code').parent().hide();
         });
 
         function get_embed(widget_id) {
@@ -138,9 +171,11 @@
                 }
             }
 
+            $('#id_embed_code').hide().parent().show().append('<img style="margin-top:6px;" id="loading_image" src="{% static "images/loading_white.gif" %}">');
+
             $.post("{% url 'product-widget' external_product_widget_id %}".replace('/0/', '/'+widget_id+'/'), data, function(response) {
-                $('#id_embed_code').val(response);
-                $('#id_embed_code').parents('.form-group').show();
+                $('#id_embed_code').val(response).show();
+                $('#loading_image').remove();
                 $('#modal_embed_product_widget').animate({scrollTop: 800});
             });
 

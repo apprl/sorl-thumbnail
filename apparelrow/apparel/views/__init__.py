@@ -1552,7 +1552,7 @@ def index(request, gender=None):
         # dirty fix: when you are logged in and don't specifiy a gender via url, you should get the gender of your account
         if gender == 'none':
             gender = None
-        
+
         # This is deactivated for the time being (20160310)/K
         #if request.COOKIES.get(settings.APPAREL_WELCOME_COOKIE, None):
         #    return onboarding(request)
@@ -1869,4 +1869,3 @@ def extract_apparel_product_with_url(key):
 
 def embed_wildcard_solr_query(qs_string):
     return "%s*%s*" % (qs_string[:qs_string.index(':')+1],qs_string[qs_string.index(':')+1:])
-

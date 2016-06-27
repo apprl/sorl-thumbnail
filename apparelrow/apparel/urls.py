@@ -8,7 +8,8 @@ from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
 from apparelrow.apparel.views.shop import ShopCreateView
-from apparelrow.apparel.views.product_widget import ProductWidgetView
+from apparelrow.apparel.views.product_widget import ProductWidgetView, CreateProductWidgetView, EditProductWidgetView, \
+    ProductWidgetDialogueView, EmbedProductWidgetView
 from apparelrow.apparel.views import BrandRedirectView, PublisherView, ProductDetailView, CommunityFormView, LookDetailView, \
     OnBoardingView, BackendAuthJsonView
 from apparelrow.dashboard.views import RetailerPublicFormView, RetailerFormView
@@ -64,13 +65,19 @@ urlpatterns = patterns('',
     url(r'^widget/shop/$', 'apparelrow.apparel.browse.shop_widget', name='shop-widget'),
 
     # Product widget
-    url(r'^productwidget/create/single/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'single'}, name='create-product-widget-single'),
-    url(r'^productwidget/create/multiple/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'multiple'}, name='create-product-widget-multiple'),
-    url(r'^productwidget/edit/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.editor', name='edit-product-widget'),
-    url(r'^productwidget/widget/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.product_widget_widget', name='product-widget'),
+    #url(r'^productwidget/create/single/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'single'}, name='create-product-widget-single'),
+    #url(r'^productwidget/create/multiple/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'multiple'}, name='create-product-widget-multiple'),
+    url(r'^productwidget/create/(?P<widget_type>\w+)/$', CreateProductWidgetView.as_view(), name='create-product-widget'),
+    #url(r'^productwidget/create/multiple/$', 'apparelrow.apparel.views.product_widget.create', {'type': 'multiple'}, name='create-product-widget-multiple'),
+    #url(r'^productwidget/edit/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.editor', name='edit-product-widget'),
+    url(r'^productwidget/edit/(?P<product_widget_id>\d+)/$', EditProductWidgetView.as_view(), name='edit-product-widget'),
+    url(r'^productwidget/delete/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.delete_productwidget', name='delete-product-widget'),
+    #url(r'^productwidget/widget/(?P<product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.product_widget_widget', name='product-widget'),
+    url(r'^productwidget/widget/(?P<product_widget_id>\d+)/$', ProductWidgetDialogueView.as_view(), name='product-widget'),
     url(r'^productwidget/api/$', ProductWidgetView.as_view(), name='product_widget-api'),
     url(r'^productwidget/api/(?P<pk>\d+)/?$', ProductWidgetView.as_view(), name='product_widget-api'),
-    url(r'^embed/productwidget/(?P<embed_product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.embed_product_widget', name='embed-product-widget'),
+    #url(r'^embed/productwidget/(?P<embed_product_widget_id>\d+)/$', 'apparelrow.apparel.views.product_widget.embed_product_widget', name='embed-product-widget'),
+    url(r'^embed/productwidget/(?P<embed_product_widget_id>\d+)/$', EmbedProductWidgetView.as_view(), name='embed-product-widget'),
 
     # About pages
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),
@@ -231,5 +238,3 @@ urlpatterns = patterns('',
     url(r'^admin/dashboard/posts/(?P<year>\d{4})/(?P<month>\d{1,2})/$', AdminPostsView.as_view(), name='admin-posts'),
     url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard_'),
 )
-
-

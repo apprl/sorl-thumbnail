@@ -90,6 +90,11 @@ class RedirectProfileView(RedirectView):
         return reverse_lazy('profile-likes', args=(slug,))
 
 
+class RedirectWidgetView(RedirectView):
+    def get_redirect_url(self, slug):
+        return reverse_lazy('profile-shops', args=(slug,))
+
+
 class ProfileView(TemplateView):
     template_name = 'profile/default.html'
 
@@ -198,8 +203,12 @@ class ProfileListShopView(ProfileListLookView):
     template_name_ajax = 'apparel/fragments/shop_list.html'
 
     def get_queryset(self):
+        from itertools import chain
         if self.profile == self.user:
-            return self.profile.shop.order_by('-modified')
+            queryset = sorted(chain(self.profile.shop.all(), self.profile.product_widget.all()),
+            key=lambda instance: instance.modified, reverse=True)
+            return queryset
+            #return self.profile.shop.order_by('-modified')
         else:
             raise PermissionDenied("Unauthorized")
 
@@ -393,6 +402,46 @@ def shops(request, profile, form, page=0):
 
     return render(request, 'profile/shops.html', content)
 
+
+@get_current_user
+@avatar_change
+def widgets(request, profile, form, page=0):
+    """
+
+    :param request:
+    :param profile:
+    :param form:
+    :param page:
+    :return:
+    """
+
+    from itertools import chain
+    if profile == request.user:
+        queryset = sorted(chain(profile.shop.all(), profile.product_widget.all()),
+            key=lambda instance: instance.modified, reverse=True)
+    else:
+        return HttpResponse('Unauthorized', status=401)
+
+    paged_result = get_paged_result(queryset, 12, request.GET.get('page', '1'))
+
+    if request.is_ajax():
+        return render(request, 'apparel/fragments/shop_list.html', {
+            'current_page': paged_result
+        })
+
+    content = {
+        'current_page': paged_result,
+        'next': request.get_full_path(),
+        'profile': profile,
+        'avatar_absolute_url': profile.avatar_large_absolute_uri(request)
+    }
+
+    content.update(form)
+    content.update(get_profile_sidebar_info(request, profile))
+
+    return render(request, 'profile/shops.html', content)
+
+
 @DeprecationWarning
 @get_current_user
 @avatar_change
@@ -510,6 +559,10 @@ def confirm_email(request):
         email_change.delete()
 
     return HttpResponseRedirect(reverse('settings-account'))
+
+
+class UserSettingsUsernameView(TemplateView):
+    template_name = "profile/username.html"
 
 
 class UserSettingsEmailView(FormView):
@@ -660,7 +713,6 @@ def settings_email(request):
 @DeprecationWarning
 @login_required
 def settings_password(request):
-    # Deprecated
     """
     Handles the password form on settings
     """
@@ -754,7 +806,7 @@ class PublisherSettingsNotificationView(TemplateView):
         context["location_warning_form"] = PartnerNotificationsForm(request.POST, request.FILES, instance=request.user)
         if context["location_warning_form"].is_valid():
             context["location_warning_form"].save()
-        
+
         if context["form"].is_valid():
             context["form"].save()
         else:
@@ -838,7 +890,6 @@ def follow_featured_auto(request):
         if facebook_user:
             facebook_push_graph.delay(request.user.pk, facebook_user.access_token, 'follow', 'profile', request.build_absolute_uri(friend.get_absolute_url()))
 
-
 def send_confirmation_email(request, instance):
     subject = ugettext('Nearly created your membership...')
     body = render_to_string('registration/registration_activation_email.html', {
@@ -855,9 +906,10 @@ class RegisterView(TemplateView):
 def register(request):
     return render(request, 'registration/registration.html')
 
-
 class RegisterEmailFormView(FormView):
+    # work in progress
     template_name = 'registration/registration_email.html'
+    #template_name = 'registration/registration_email-2.html'
     form_class = RegisterForm
 
     def get_success_url(self):

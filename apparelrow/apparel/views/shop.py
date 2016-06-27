@@ -126,7 +126,7 @@ def shop_instance_to_dict(shop):
 
         query_arguments['fq'].append('availability:true')
 
-        query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
+        query_arguments['sort'] = '%s_uld desc' % (user_id,)
         query_arguments['fq'].append('user_likes:%s' % (user_id,))
 
         query_string = '*:*'

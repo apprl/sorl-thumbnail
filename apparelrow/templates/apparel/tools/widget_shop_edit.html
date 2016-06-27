@@ -5,11 +5,11 @@
     <div id="shop-display-settings">
         <div class="buttons">
             <p>{% trans 'What products do you want to include in your shop?' %}</p>
-            <a id="show_liked" data-value="likes" href="#" class="btn btn-default btn-block">{% trans 'All my liked products' %}</a>
+            <a id="show_liked" data-value="likes" href="#" class="btn btn-default btn-block">{% trans 'All my saved products' %}</a>
             <a id="pick_products" data-value="pick" href="#" class="btn btn-default btn-block">{% trans 'Choose products' %}</a>
             <a href="#" class="shop-helper-toggler">{% trans "Need help?" %}</a>
             <div class="shop-display-helper" style="display:none;">
-                <p><strong>{% trans 'All my liked products' %}</strong><br>{% trans 'All current and future products that you like on APPRL are automatically included in your shop.' %}</p>
+                <p><strong>{% trans 'All my saved products' %}</strong><br>{% trans 'All current and future products that you save on APPRL are automatically included in your shop.' %}</p>
                 <p><strong>{% trans 'Choose products' %}</strong><br>{% trans 'The products you decide to add to this shop are featured. This is a good option if you want to create a shop with a specific collection of items, for example "My favourite jackets".' %}</p>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 App.Events.trigger('widget:product_display', show_liked);
             });
         });
-        var liked_title = "{% trans 'Your liked products' %}";
+        var liked_title = "{% trans 'Your saved products' %}";
     </script>
     <div id="preview-header" class="preview-header">
         0 {%  trans 'products selected' %}
