@@ -414,6 +414,7 @@ class EmbedProductWidgetView(TemplateView):
             components = Product.objects.filter(pk__in=get_liked_product_ids(product_widget_embed.product_widget))
         else:
             components = product_widget_embed.product_widget.products.select_related('product')
+
         context.update({"object": product_widget_embed,
                         "language": product_widget_embed.language,
                         "width": str(product_widget_embed.width),
@@ -431,7 +432,7 @@ class EmbedProductWidgetView(TemplateView):
         # Must render the content otherwise the html ending up in memcached gets weird django tags in the beginning and the end
         response.render()
         translation.deactivate()
-        get_cache('nginx').set(nginx_key, response.content, 3600*24*20)
+        get_cache('nginx').set(nginx_key, response.content, 600)
         return response
 
     def dispatch(self, request, *args, **kwargs):
