@@ -1267,6 +1267,7 @@ class LookEmbed(models.Model):
     language = models.CharField(max_length=3, null=False, blank=False)
     width = models.IntegerField(null=False, blank=False)
     width_type = models.CharField(max_length=2, null=False, blank=False, default='px')
+    hide_border = models.BooleanField(default=False)
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
 
     class Meta:
