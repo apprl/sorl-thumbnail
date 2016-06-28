@@ -59,7 +59,7 @@ def empty_embed_shop_cache(embed_shop_id):
 @task(name='apparelrow.apparel.tasks.empty_embed_productwidget_cache', max_retries=5, ignore_result=True)
 def empty_embed_productwidget_cache(embed_productwidget_id):
     """
-        Invalidate embedded shops 2.0 from cache
+        Invalidate embedded product widgets 2.0 from cache
     """
     nginx_key = reverse('embed-product-widget', args=[embed_productwidget_id])
     logging.info("Removing embedded productwidget %s from memcached" % nginx_key)
