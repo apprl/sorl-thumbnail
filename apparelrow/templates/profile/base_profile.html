@@ -130,7 +130,7 @@ $(document).ready(function() {
             {% if profile.shops and request.user.is_authenticated and request.user == profile%}
             <li>
                 <a{% if request.path == shops_url %} class="selected"{% endif %} href="{{ shops_url }}">
-                    {% blocktrans count profile.shops as shop_count %}Shop ({{shop_count}}){% plural %}Shops ({{shop_count}}){% endblocktrans %}
+                        Shops & lists ({{profile.widget_count}})
                 </a>
                 <!-- span>({{ profile.shops }})</span -->
             </li>

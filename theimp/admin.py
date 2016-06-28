@@ -185,7 +185,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 class VendorAdmin(admin.ModelAdmin):
     exclude = ('is_active',)
-    list_display = ('name', 'affiliate_identifier', 'comment', 'created', 'modified')
+    list_display = ('id','name', 'affiliate_identifier', 'comment', 'created', 'modified')
     list_filter = ('is_active',)
     readonly_fields = ('name', 'created', 'modified')
 
