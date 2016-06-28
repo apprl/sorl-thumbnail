@@ -100,6 +100,38 @@ class EditProductWidgetView(BaseProductWidgetView):
         return super(EditProductWidgetView, self).dispatch(request, *args, **kwargs)
 
 
+def get_liked_product_ids(product_widget):
+    user_id = product_widget.user.id
+
+    language = get_language()
+    translation.activate(language)
+
+    currency = settings.APPAREL_BASE_CURRENCY
+    if language in settings.LANGUAGE_TO_CURRENCY:
+        currency = settings.LANGUAGE_TO_CURRENCY.get(language)
+
+    query_arguments = {'rows': 10, 'start': 0}
+    class Request:
+        pass
+    request = Request()
+    request.GET = {}
+    query_arguments = set_query_arguments(query_arguments, request, facet_fields=None, currency=currency)
+
+    query_arguments['fl'] = ['id:django_id']
+
+    query_arguments['fq'].append('availability:true')
+
+    query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
+    query_arguments['fq'].append('user_likes:%s' % (user_id,))
+
+    query_string = '*:*'
+
+    search = ApparelSearch(query_string, **query_arguments)
+    paged_result, pagination = get_pagination_page(search, 10, 1)
+
+    return [product.id for product in paged_result.object_list if product]
+
+
 def product_widget_instance_to_dict(product_widget):
     """
     Runs query against solr to fetch products to display.
@@ -119,36 +151,7 @@ def product_widget_instance_to_dict(product_widget):
     }
     product_widget_dict['products'] = []
     if product_widget.show_liked:
-        user_id = product_widget.user.id
-
-        language = get_language()
-        translation.activate(language)
-
-        currency = settings.APPAREL_BASE_CURRENCY
-        if language in settings.LANGUAGE_TO_CURRENCY:
-            currency = settings.LANGUAGE_TO_CURRENCY.get(language)
-
-        query_arguments = {'rows': 10, 'start': 0}
-        class Request:
-            pass
-        request = Request()
-        request.GET = {}
-        query_arguments = set_query_arguments(query_arguments, request, facet_fields=None, currency=currency)
-
-        query_arguments['fl'] = ['id:django_id']
-
-        query_arguments['fq'].append('availability:true')
-
-        query_arguments['sort'] = 'availability desc, %s_uld desc, popularity desc, created desc' % (user_id,)
-        query_arguments['fq'].append('user_likes:%s' % (user_id,))
-
-        query_string = '*:*'
-
-        search = ApparelSearch(query_string, **query_arguments)
-        paged_result, pagination = get_pagination_page(search, 10, 1)
-
-        product_ids = [product.id for product in paged_result.object_list if product]
-
+        product_ids = get_liked_product_ids(product_widget)
         for product in Product.objects.filter(pk__in=product_ids):
             if product.default_vendor:
                 manufacturer_name = product.manufacturer.name if product.manufacturer else None
@@ -237,8 +240,9 @@ class ProductWidgetView(View):
             request.session['product_widget_saved'] = True
 
         product_widget.published = json_data['published']
+        product_widget.title = json_data['title']
 
-        if json_data['components']:
+        if json_data['components'] and not json_data['show_liked']:
 
             # Remove components
             product_widget_components = get_model('apparel', 'ProductWidgetProduct').objects.filter(product_widget_embed_id=pk)
@@ -405,23 +409,30 @@ class EmbedProductWidgetView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(EmbedProductWidgetView, self).get_context_data(**kwargs)
         product_widget_embed = get_model('apparel', 'ProductWidgetEmbed').objects.get(pk=context["embed_product_widget_id"])
+        components = []
+        if product_widget_embed.product_widget.show_liked:
+            components = Product.objects.filter(pk__in=get_liked_product_ids(product_widget_embed.product_widget))
+        else:
+            components = product_widget_embed.product_widget.products.select_related('product')
 
         context.update({"object": product_widget_embed,
                         "language": product_widget_embed.language,
                         "width": str(product_widget_embed.width),
                         "embed_id": context["embed_product_widget_id"], # Redundant
-                        "components": product_widget_embed.product_widget.products.select_related('product')})
+                        "components": components})
         return context
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
+
         nginx_key = reverse('embed-product-widget', args=[context["embed_product_widget_id"]])
         translation.activate(context["language"])
         response = self.render_to_response(context)
+
         # Must render the content otherwise the html ending up in memcached gets weird django tags in the beginning and the end
         response.render()
         translation.deactivate()
-        get_cache('nginx').set(nginx_key, response.content, 3600*24*20)
+        get_cache('nginx').set(nginx_key, response.content, 600)
         return response
 
     def dispatch(self, request, *args, **kwargs):

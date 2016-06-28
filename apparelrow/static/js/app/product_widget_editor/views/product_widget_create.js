@@ -116,6 +116,7 @@ App.Views.ProductWidgetCreate = App.Views.WidgetBase.extend({
                }});
             }
             $('body').addClass('show-liked');
+            this.$el.find('#preview-header').html(liked_title);
             $('.widget-footer .btn-add-item').prop('disabled', true);
             $('#modal_embed_product_widget .modal-footer').find('.btn.hidden').removeClass('hidden');
             $('#modal_embed_product_widget .modal-footer').find('.btn:first').addClass('hidden');
