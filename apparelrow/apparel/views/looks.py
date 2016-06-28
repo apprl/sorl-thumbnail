@@ -109,6 +109,7 @@ def embed(request, slug, identifier=None):
                                                            'components': components,
                                                            'width': str(width),
                                                            'height': str(height),
+                                                           'hide_border': look_embed.hide_border if look_embed is not None else False,
                                                            'embed_width': str(width) or settings.APPAREL_LOOK_SIZE[0],
                                                            'embed_height': str(height) or settings.APPAREL_LOOK_SIZE[1],
                                                            'embed_id': look_embed.identifier if look_embed else ''},)
@@ -163,6 +164,9 @@ def widget(request, slug):
         content['height'] = min(thumbnail.height, content['height'])
         content['width'] = min(thumbnail.width, content['width'])
 
+    # Border
+    content['hide_border'] = request.POST.get('hide_border', False)
+
     # User
     embed_user = look.user
     if request.user.is_authenticated():
@@ -170,9 +174,14 @@ def widget(request, slug):
 
     LookEmbed = get_model('apparel', 'LookEmbed')
     identifier = uuid.uuid4().hex
+
     look_embed, created = LookEmbed.objects.get_or_create(look=look, user=embed_user, language=content['language'],
                                                           width=content['width'], width_type=content['width_type'],
+                                                          hide_border=(True if content['hide_border'] == '1' else False),
                                                           defaults={'identifier': identifier})
+
+    print look_embed
+
     content['identifier'] = look_embed.identifier
     content['STATIC_URL'] = settings.STATIC_URL.replace('http://','')
     return render(request, 'apparel/fragments/look_widget.html', content)

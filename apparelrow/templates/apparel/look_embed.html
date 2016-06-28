@@ -35,7 +35,7 @@
     </script>
 </head>
 <body class="apprl-look">
-    <div class="container">
+    <div class="container {% if hide_border %}noborder{% endif %}">
         {% if object.display_with_component == 'C' %}
         <div id="collage" class="look collage">
             {% for component in components %}
