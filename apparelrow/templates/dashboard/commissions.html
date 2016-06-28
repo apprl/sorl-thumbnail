@@ -38,7 +38,7 @@
             <td>
                 {% if store.link %}
                 <a class="btn btn-outline inverted" data-store="{{ store.store_pk }}" data-target="#modal_store_link">
-                    {% blocktrans with vendor_name=store.vendor_name %}Get Link to {{vendor_name}}{% endblocktrans %}
+                    {{store.vendor_name}}
                 </a>
                 {% endif %}
             </td>
