@@ -180,7 +180,6 @@ def widget(request, slug):
                                                           hide_border=(True if content['hide_border'] == '1' else False),
                                                           defaults={'identifier': identifier})
 
-    print look_embed
 
     content['identifier'] = look_embed.identifier
     content['STATIC_URL'] = settings.STATIC_URL.replace('http://','')
