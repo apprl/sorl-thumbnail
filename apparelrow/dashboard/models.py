@@ -356,6 +356,7 @@ AGGREGATED_DATA_TYPES = (
     ('aggregated_from_product', 'Aggregated From Product'),
     ('aggregated_from_publisher', 'Aggregated From Publisher'),
     ('simple_earning', 'Simple User Earning'),
+    ('aggregated_turnover', 'Total Turnover'),# Total turnover minus CPC sales connected to CPO vendors.
 )
 
 
