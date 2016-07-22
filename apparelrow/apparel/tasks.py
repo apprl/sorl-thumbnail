@@ -403,3 +403,9 @@ def build_static_look_image(look_id):
         logger.warning('No thumbnail found for %s '%look.static_image)
 
     look.save(update_fields=['static_image', 'width', 'height', 'modified'])
+
+
+@task(name='apparelrow.apparel.tasks.delete_product', max_retries=5, ignore_result=True)
+def delete_apparel_product(product):
+    product.delete()
+    return True
