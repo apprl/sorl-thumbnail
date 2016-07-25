@@ -1334,6 +1334,12 @@ def product_lookup(request):
                                                                            active=True).exists()
         product_name = product.get_product_name_to_display
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
+
+        # Todo: Not sure why this is done, we lookup a vendor through the domain submitted by the chrome extension. A vendor is
+        # already available since we have a product object but a product object could potentially have multiple vendors, so
+        # it may be a reason for it. However, if unable to match the domain in the DomainDeepLinking templates then we have
+        # vendor = None. The link we extract is not used in any case, so definitely not sure about the whole process.
+        # Suggestion would be to drop this lookup entirely and just use the product.default_vendor below. /Klas
         _, vendor = product_lookup_by_domain(request, domain, original_key)
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
