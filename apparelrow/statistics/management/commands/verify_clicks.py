@@ -22,6 +22,12 @@ class Command(BaseCommand):
             help='All clicks not just those non verified',
             default=False,
         ),
+        optparse.make_option('--dry',
+            action='store_true',
+            dest='dry',
+            default=False,
+            help='Dry run, do not updated any clicks',
+        ),
         optparse.make_option('--vendor',
             action='store',
             dest='vendor',
@@ -54,6 +60,7 @@ class Command(BaseCommand):
 
         filters = {}
         distinct_fields = ['ip', 'page', 'product']
+        dry_run = options.get("dry")
 
         if not options.get("date", None):
             date_created = date.today()
@@ -87,8 +94,9 @@ class Command(BaseCommand):
                     vendor_markets = settings.VENDOR_LOCATION_MAPPING.get("default")
 
                 if country in vendor_markets:
-                    click.is_valid=True
-                    click.save()
+                    if not dry_run:
+                        click.is_valid=True
+                        click.save()
                     updated += 1
                 #print get_country_by_ip_string(click.ip)
             pbar.finish()
