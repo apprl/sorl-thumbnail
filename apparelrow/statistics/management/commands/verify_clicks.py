@@ -22,7 +22,7 @@ class Command(BaseCommand):
             help='All clicks not just those non verified',
             default=False,
         ),
-        optparse.make_option('--dry',
+        optparse.make_option('--dry-run',
             action='store_true',
             dest='dry',
             default=False,
@@ -94,6 +94,7 @@ class Command(BaseCommand):
                     vendor_markets = settings.VENDOR_LOCATION_MAPPING.get("default")
 
                 if country in vendor_markets:
+                    # This runs pretty smoothly now but if the set increases its better to do batch updates on id.
                     if not dry_run:
                         click.is_valid=True
                         click.save()
