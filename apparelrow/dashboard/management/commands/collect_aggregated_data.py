@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 import decimal
 import calendar
 from django.db.models import Count
+from progressbar import ProgressBar, Percentage, Bar
 
 from apparelrow.dashboard.models import Sale, UserEarning, AggregatedData
 from apparelrow.dashboard.views import get_clicks_from_sale
@@ -496,7 +497,7 @@ def generate_aggregated_clicks_from_links(start_date, end_date, **kwargs):
 
 class Command(BaseCommand):
     args = ''
-    help = 'Import dashboard data'
+    help = 'Aggregate clicks into '
     option_list = BaseCommand.option_list + (
         optparse.make_option('--date',
             action='store',
@@ -509,6 +510,12 @@ class Command(BaseCommand):
             dest='user_id',
             help='Select a user id to aggregate',
             default= None,
+        ),
+        optparse.make_option('--verbose',
+            action='store_true',
+            dest='verbose',
+            help='Creating verbose progressbar output.',
+            default= False,
         ),
     )
 
@@ -540,7 +547,14 @@ class Command(BaseCommand):
 
         # Loop over all earnings for the given period
         logger.debug("Generating aggregated data with %s earnings... " % earnings.count())
-        for row in earnings:
+        pbar = None
+        maxval = earnings.count()
+        if options.get('verbose') and maxval:
+            pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=maxval).start()
+
+        for index, row in enumerate(earnings.iterator()):
+            if pbar:
+                pbar.update(index)
             user_dict = get_user_dict(row.user)
             earning_amount = decimal.Decimal(row.amount)
 
@@ -552,7 +566,10 @@ class Command(BaseCommand):
                 generate_aggregated_from_links(row, user_dict, earning_amount, start_date, end_date)
             generate_aggregated_from_publisher(row, user_dict, start_date, end_date)
 
+        if pbar:
+            pbar.finish()
 
+        print "Generating aggregated clicks... "
         logger.debug("Generating aggregated clicks... ")
         generate_aggregated_clicks_from_publisher(start_date, end_date, **kwargs)
         generate_aggregated_clicks_from_product(start_date, end_date, **kwargs)
