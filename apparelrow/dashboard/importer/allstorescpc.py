@@ -7,6 +7,7 @@ from apparelrow.dashboard.importer.base import BaseImporter
 from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Cut, Sale
 from apparelrow.profile.models import User
+from progressbar import ProgressBar, Percentage, Bar
 
 logger = logging.getLogger('dashboard')
 
@@ -32,7 +33,14 @@ class Importer(BaseImporter):
         end_date_query = datetime.datetime.combine(start_date, datetime.time(23, 59, 59, 999999))
         logger.info("Importing Cost per Click data from %s until %s" % (start_date_query, end_date_query))
         data = self.get_cpc_clicks_per_vendor_per_user(start_date_query, end_date_query)
-        for (vendor_id, user_id, count) in data:
+        pbar = None
+        maxval = len(data)
+        if kwargs.get('verbose', None) and maxval:
+            pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=maxval).start()
+
+        for index, (vendor_id, user_id, count) in enumerate(data):
+            if pbar:
+                pbar.update(index)
             try:
                 user = None
                 if user_id != 0:
@@ -65,3 +73,5 @@ class Importer(BaseImporter):
                 logger.warn('Vendor %s does not exist' % vendor_id)
             except Cut.DoesNotExist:
                 logger.warn('Cut for vendor %s and commission group for user %s does not exist' % (vendor_id, user_id))
+        if pbar:
+            pbar.finish()

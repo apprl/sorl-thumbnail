@@ -2,6 +2,7 @@ import dateutil
 import logging
 import datetime
 from django.db import connection
+from progressbar import ProgressBar, Percentage, Bar
 from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.importer.base import BaseImporter
 from apparelrow.dashboard.models import Cut, ClickCost, Sale
@@ -44,7 +45,14 @@ class Importer(BaseImporter):
         end_date_query = datetime.datetime.combine(start_date, datetime.time(23, 59, 59, 999999))
         logger.info("Importing Cost per Click data from %s until %s" % (start_date_query, end_date_query))
         data = self.get_cpc_clicks_per_vendor_per_user(start_date_query, end_date_query)
-        for (vendor_id, user_id, count) in data:
+        maxval = len(data)
+        pbar = None
+        if kwargs.get('verbose', None) and maxval:
+            pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=maxval).start()
+
+        for index, (vendor_id, user_id, count) in enumerate(data):
+            if pbar:
+                pbar.update(index)
             try:
                 vendor = Vendor.objects.get(name=vendor_id)
                 user = None
@@ -52,7 +60,7 @@ class Importer(BaseImporter):
                 if user_id != 0:
                     user = User.objects.get(id=user_id)
                     # This avoids to create the sale if there is not a cut created. Log a warning, fix the error and
-                    # run clicks_summary and collect_aggregated_data jobs for the regarding date again
+                    # run clicks_summary and collect_aggregated_data jobs for the remaining date again
                     Cut.objects.get(vendor=vendor, group=user.partner_group)
 
                 if (user and user.is_partner) or user_id == 0:
@@ -81,3 +89,5 @@ class Importer(BaseImporter):
                 logger.warn('Vendor %s does not exist' % vendor_id)
             except Cut.DoesNotExist:
                 logger.warn('Cut for vendor %s and commission group for user %s does not exist' % (vendor_id, user_id))
+        if pbar:
+            pbar.finish()
