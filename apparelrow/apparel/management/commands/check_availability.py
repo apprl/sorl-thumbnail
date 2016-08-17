@@ -12,6 +12,7 @@ from apparelrow.apparel.search import ApparelSearch
 
 class Command(BaseCommand):
     args = ''
+    # This is probably not correct, it seems to check inconsistencies between the database and solr index rather than checking for missing images..
     help = 'Finds all product with a missing image (takes awhile)'
     option_list = BaseCommand.option_list + (
             make_option('--email',
