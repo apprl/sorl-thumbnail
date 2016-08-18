@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db.models.signals import post_save
 from django.core.mail import mail_admins
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 
 from apparelrow.apparel.models import Product as SiteProduct, Vendor as SiteVendor
 from apparelrow.apparel.search import ApparelSearch
@@ -54,6 +54,7 @@ class Command(BaseCommand):
         bad_counter = 0
         cache = get_cache("default")
         cache_time = 7*24*60*60
+        modified_since = date.today() - timedelta(days=7)
         solr_connection = pysolr.Solr(settings.SOLR_URL)
         #verbose = options.get("verbose")
 
@@ -74,7 +75,8 @@ class Command(BaseCommand):
                     "production_products_available": 0, "production_products_solr_published": 0}
             vendor_filter = {"vendor_id": vendor.id}
             total_products = ImpProduct.objects.filter(**vendor_filter) # add date filter also
-            data.update({"products_total": total_products.count(), "products_valid": total_products.filter(is_validated=True).count()})
+            data.update({"products_not_valid_updated_last_week": total_products.filter(is_validated=False, modified__gt=modified_since).count(),
+                         "products_valid_updated_last_week": total_products.filter(is_validated=True, modified__gt=modified_since).count()})
             total_categories = CategoryMapping.objects.filter(**vendor_filter)
             data.update({"categories_total": total_categories.count(),
                          "categories_mapped": total_categories.filter(mapped_category__isnull=False).count()})
@@ -88,7 +90,7 @@ class Command(BaseCommand):
             self.log("\n\n################# {} #################".format(vendor.name))
             if previous_data:
                 for key in keys:
-                    self.log("{}: {}/{} [{}]".format(key, data.get(key), previous_data.get(key), abs(previous_data.get(key) - data.get(key))))
+                    self.log("{}: {}/{} [{}]".format(key, data.get(key), previous_data.get(key, 0), abs(previous_data.get(key, 0) - data.get(key))))
             else:
                 for key in keys:
                     self.log("{}: {}/{} [{}]".format(key, data.get(key), "-", "-"))
