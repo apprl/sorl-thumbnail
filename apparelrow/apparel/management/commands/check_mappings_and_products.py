@@ -27,7 +27,7 @@ class Command(BaseCommand):
                 action='store',
                 dest='vendor_id',
                 default=None,
-                help='Run job only for this vendor'),
+                help='Run job only for this theimp vendor'),
             make_option('--verbose',
                 action='store_true',
                 dest='verbose',
@@ -87,7 +87,7 @@ class Command(BaseCommand):
             cache.set(self.cache_key.format(vendor.id), data, cache_time)
             keys = data.keys()
             # Minor infraction of DRY principle, non critical
-            self.log("\n\n################# {} #################".format(vendor.name))
+            self.log("\n\n################# {} {}/{} #################".format(vendor.name, vendor.vendor_id))
             if previous_data:
                 for key in keys:
                     self.log("{}: {}/{} [{}]".format(key, data.get(key), previous_data.get(key, 0), abs(previous_data.get(key, 0) - data.get(key))))
