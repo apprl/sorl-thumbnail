@@ -87,7 +87,7 @@ class Command(BaseCommand):
             cache.set(self.cache_key.format(vendor.id), data, cache_time)
             keys = data.keys()
             # Minor infraction of DRY principle, non critical
-            self.log("\n\n################# {} {}/{} #################".format(vendor.name, vendor.vendor_id))
+            self.log("\n\n################# {} {}/{} #################".format(vendor.name, vendor.vendor_id, vendor.id))
             if previous_data:
                 for key in keys:
                     self.log("{}: {}/{} [{}]".format(key, data.get(key), previous_data.get(key, 0), abs(previous_data.get(key, 0) - data.get(key))))
