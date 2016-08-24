@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 import decimal
 import calendar
 from django.db.models import Count
+from progressbar import ProgressBar, Percentage, Bar
 
 from apparelrow.dashboard.models import Sale, UserEarning, AggregatedData
 from apparelrow.dashboard.views import get_clicks_from_sale
@@ -313,12 +314,14 @@ def generate_aggregated_from_publisher(row, user_dict, start_date, end_date):
         instance.aggregated_from_image, instance.aggregated_from_link = get_user_thumbnail_and_link(row.from_user)
         instance.save()
 
-def generate_aggregated_clicks_from_publisher(start_date, end_date):
+def generate_aggregated_clicks_from_publisher(start_date, end_date, **kwargs):
     """
     Aggregate clicks that were not including in earnings like CPO earnings that were not paid in general
     """
-    clicks_query = get_model('statistics', 'ProductStat').objects.\
-        filter(created__range=(start_date, end_date), is_valid=True).\
+
+    clicks_query = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date, end_date),
+                                                                         is_valid=True).\
+        filter(**kwargs).\
         extra(select={'day': 'date( created )'}).\
         values('user_id', 'day').\
         annotate(clicks=Count('user_id')).\
@@ -340,12 +343,13 @@ def generate_aggregated_clicks_from_publisher(start_date, end_date):
         instance.total_clicks += row['clicks']
         instance.save()
 
-def generate_aggregated_clicks_from_product(start_date, end_date):
+def generate_aggregated_clicks_from_product(start_date, end_date, **kwargs):
     """
     Aggregated clicks per product that originated the sale for the given period passed as parameter.
     """
-    aggregated_product_stat = get_model('statistics', 'ProductStat').objects.\
-        filter(created__range=(start_date, end_date), is_valid=True).\
+    aggregated_product_stat = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date, end_date),
+                                                                                    is_valid=True).\
+        filter(**kwargs).\
         extra(select={'day': 'date( created )'}).\
         values('user_id', 'product', 'vendor', 'day').\
         annotate(clicks=Count('product')).\
@@ -423,12 +427,12 @@ def generate_aggregated_clicks_from_product(start_date, end_date):
                     generate_aggregated_data_network_owner(user.owner_network, product, vendor, row['day'],
                                                                 row['clicks'], user)
 
-def generate_aggregated_clicks_from_links(start_date, end_date):
+def generate_aggregated_clicks_from_links(start_date, end_date, **kwargs):
     """
     Aggregated clicks per links that originated the sale for the given period passed as parameter.
     """
     aggregated_product_stat = get_model('statistics', 'ProductStat').objects.\
-        filter(created__range=(start_date, end_date), is_valid=True, page__in=('Ext-Store', 'Ext-Link')).\
+        filter(created__range=(start_date, end_date), is_valid=True, page__in=('Ext-Store', 'Ext-Link')).filter(**kwargs).\
         exclude(source_link__isnull=True).\
         extra(select={'day': 'date( created )'}).\
         values('user_id', 'source_link', 'vendor', 'day').\
@@ -493,13 +497,25 @@ def generate_aggregated_clicks_from_links(start_date, end_date):
 
 class Command(BaseCommand):
     args = ''
-    help = 'Import dashboard data'
+    help = 'Aggregate clicks into '
     option_list = BaseCommand.option_list + (
         optparse.make_option('--date',
             action='store',
             dest='date',
             help='Select a custom date in the format YYYY-MM-DD',
             default= None,
+        ),
+        optparse.make_option('--userid',
+            action='store',
+            dest='user_id',
+            help='Select a user id to aggregate',
+            default= None,
+        ),
+        optparse.make_option('--verbose',
+            action='store_true',
+            dest='verbose',
+            help='Creating verbose progressbar output.',
+            default= False,
         ),
     )
 
@@ -511,16 +527,34 @@ class Command(BaseCommand):
         """
         start_date, end_date = get_date_range(options.get('date'))
         logger.debug("Start collect agreggated data between %s and %s" % (start_date, end_date))
+        user_id = options.get('user_id')
+        kwargs = {}
+        if user_id:
+            logger.debug("Filtering everything on userdata on user {}".format(user_id))
+            kwargs.update({"user_id": user_id})
+
+        aggregated_filter = {"created__range": (start_date, end_date)}
+        aggregated_filter.update(kwargs)
 
         # Remove all existent data for the given period
-        AggregatedData.objects.filter(created__range=(start_date, end_date)).delete()
+        AggregatedData.objects.filter(**aggregated_filter).delete()
 
         # Get all earnings for the given period
-        earnings = UserEarning.objects.filter(date__range=(start_date, end_date), status__gte=Sale.PENDING)
+        earnings_filter = {"date__range": (start_date, end_date), "status__gte": Sale.PENDING}
+        if user_id:
+            earnings_filter.update(kwargs)
+        earnings = UserEarning.objects.filter().filter(**earnings_filter)
 
         # Loop over all earnings for the given period
         logger.debug("Generating aggregated data with %s earnings... " % earnings.count())
-        for row in earnings:
+        pbar = None
+        maxval = earnings.count()
+        if options.get('verbose') and maxval:
+            pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=maxval).start()
+
+        for index, row in enumerate(earnings.iterator()):
+            if pbar:
+                pbar.update(index)
             user_dict = get_user_dict(row.user)
             earning_amount = decimal.Decimal(row.amount)
 
@@ -532,10 +566,14 @@ class Command(BaseCommand):
                 generate_aggregated_from_links(row, user_dict, earning_amount, start_date, end_date)
             generate_aggregated_from_publisher(row, user_dict, start_date, end_date)
 
-        logger.debug("Generating aggregated clicks... ")
-        generate_aggregated_clicks_from_publisher(start_date, end_date)
-        generate_aggregated_clicks_from_product(start_date, end_date)
-        generate_aggregated_clicks_from_links(start_date, end_date)
+        if pbar:
+            pbar.finish()
 
-        logger.debug("Finishing collect agreggated data successfully")
+        print "Generating aggregated clicks... "
+        logger.debug("Generating aggregated clicks... ")
+        generate_aggregated_clicks_from_publisher(start_date, end_date, **kwargs)
+        generate_aggregated_clicks_from_product(start_date, end_date, **kwargs)
+        generate_aggregated_clicks_from_links(start_date, end_date, **kwargs)
+
+        logger.debug("Finishing collect aggregated data successfully")
         return

@@ -48,6 +48,11 @@
                         <span class="help-block">{% trans "( pixels )" %}</span>
                     </div>
                 </div>
+                {% if look.component == 'C' %}
+                <div class="form-group">
+                    <label><input type="checkbox" name="hide_border" id="id_hide_border" value="1"><span><i class="fa fa-check"></i></span>{% trans "Hide border" %}</label>
+                </div>
+                {% endif %}
                 <div class="form-group">
                     <button class="btn btn-primary btn-block center">{% trans "Get embed code" %}</button>
                 </div>
@@ -127,6 +132,9 @@
                 } else {
                     data['width'] = '600';
                     $('#id_look_width').val(data['width']);
+                }
+                if (jQuery('#id_hide_border').length) {
+                    data['hide_border'] = jQuery('#id_hide_border').prop('checked') ? 1 : 0;
                 }
             }
 

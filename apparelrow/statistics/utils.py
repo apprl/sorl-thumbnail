@@ -31,7 +31,7 @@ def get_user_agent(request):
 def get_country_by_ip(request):
     return get_country_by_ip_string(get_client_ip(request))
 
-def get_country_by_ip_string(ip_string):
+def get_country_by_ip_string(ip_string, timeout=1.0):
     """
     Takes ip and does a lookup against the ip-service.
     If the Country code returned is not defined as a specific country for which we have a market specified, the function
@@ -45,19 +45,19 @@ def get_country_by_ip_string(ip_string):
     json_obj = None
 
     try:
-        resp = requests.get(settings.GEOIP_URL % ip_string,timeout=1.0)
+        resp = requests.get(settings.GEOIP_URL % ip_string.strip(), timeout=timeout)
         json_obj = resp.json()
     except Timeout, msg:
-        log.warning('Timeout occurred in geoip lookup function. > 1000ms response time. Service down? [%s]' % msg)
+        log.warning(u'Timeout occurred in geoip lookup function. > {}ms response time. Service down? [{}]'.format(timeout*1000, msg))
     except Exception, msg:
-        log.warning('Reply from geoip service not complient with json? [%s]' % msg)
+        log.warning(u'Reply from geoip service not complient with json? [{}]'.format(msg))
 
     if json_obj and json_obj.get("iso_code",None):
-        code = json_obj.get("iso_code","ALL")
+        code = json_obj.get("iso_code", "ALL")
         code = code if code in ["SE", "NO", "US", "DK", "FI"] else "ALL"
         return code
     else:
-        log.info('No country found for ip %s.' % ip_string)
+        log.info(u'No country found for ip {}.'.format(ip_string))
         return "ALL"
 
 def extract_short_link_from_url(parsed_url, user_id=None):

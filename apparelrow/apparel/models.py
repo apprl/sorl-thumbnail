@@ -1220,7 +1220,7 @@ def productwidget_product_save(instance, **kwargs):
     for productwidget_embed in ProductWidgetEmbed.objects.filter(product_widget=instance.product_widget_embed):
         key = settings.NGINX_PRODUCTWIDGET_RESET_KEY % productwidget_embed.id
         if not get_cache("nginx").get(key,None):
-            get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every ten minutes
+            get_cache('nginx').set(key, "True", 60*10) # Preventing the widget to be reset more often than every ten minutes
             empty_embed_productwidget_cache.apply_async(args=[productwidget_embed.id], countdown=120)
         else:
             logger.debug("Key: %s still active, will wait for productwidget reset." % key)
@@ -1267,6 +1267,7 @@ class LookEmbed(models.Model):
     language = models.CharField(max_length=3, null=False, blank=False)
     width = models.IntegerField(null=False, blank=False)
     width_type = models.CharField(max_length=2, null=False, blank=False, default='px')
+    hide_border = models.BooleanField(default=False)
     created = models.DateTimeField(_("Time created"), auto_now_add=True, null=True, blank=True)
 
     class Meta:

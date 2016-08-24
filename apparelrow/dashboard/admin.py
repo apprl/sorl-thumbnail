@@ -114,5 +114,5 @@ class AggregatedDataAdmin(admin.ModelAdmin):
                     'aggregated_from_image', 'aggregated_from_link',
                     'sales', 'network_sales', 'referral_sales', 'paid_clicks', 'total_clicks')
     search_fields = ('id', 'user_id', 'user_name', 'user_username')
-    list_filter = ('data_type', )
+    list_filter = ('data_type', 'created')
 admin.site.register(AggregatedData, AggregatedDataAdmin)

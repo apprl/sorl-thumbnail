@@ -59,7 +59,7 @@ def empty_embed_shop_cache(embed_shop_id):
 @task(name='apparelrow.apparel.tasks.empty_embed_productwidget_cache', max_retries=5, ignore_result=True)
 def empty_embed_productwidget_cache(embed_productwidget_id):
     """
-        Invalidate embedded shops 2.0 from cache
+        Invalidate embedded product widgets 2.0 from cache
     """
     nginx_key = reverse('embed-product-widget', args=[embed_productwidget_id])
     logging.info("Removing embedded productwidget %s from memcached" % nginx_key)
@@ -403,3 +403,9 @@ def build_static_look_image(look_id):
         logger.warning('No thumbnail found for %s '%look.static_image)
 
     look.save(update_fields=['static_image', 'width', 'height', 'modified'])
+
+
+@task(name='apparelrow.apparel.tasks.delete_product', max_retries=5, ignore_result=True)
+def delete_apparel_product(product):
+    product.delete()
+    return True

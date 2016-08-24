@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-group">
                         <!--<label>{% trans "Advanced options" %}</label>-->
-                        <label><input type="checkbox" name="show_brand_price" id="id_show_brand_price" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show prices and brands" %}</label>
+                        <label><input type="checkbox" checked="checked" name="show_brand_price" id="id_show_brand_price" value="1"><span><i class="fa fa-check"></i></span>{% trans "Show prices and brands" %}</label>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block center">{% trans "Get embed code" %}</button>
@@ -79,7 +79,7 @@
 
         $('#modal_embed_product_widget').on('show.bs.modal', function () {
             $('#id_embed_code').parent().hide();
-        });
+        }).on('hide.bs.modal', check_reload);
         $('#id_embed_code')
             .focus(function(e) { this.select(); })
             .mouseup(function(e) { e.preventDefault() });
@@ -107,11 +107,7 @@
             }});
         });
 
-        $('.btn-continue').on('click', function(e) {
-            if (external_product_widget_id && !widget_id) {
-                window.location.replace('/productwidget/edit/' + external_product_widget_id);
-            }
-        });
+        $('.btn-continue').on('click', check_reload);
 
         $('#embed_product_widget_form #id_name').on('change', function() {
             if($(this).parent().hasClass('has-error') && $(this).val()) {
@@ -180,6 +176,12 @@
             });
 
             return false;
+        }
+
+        function check_reload() {
+            if (external_product_widget_id && !widget_id) {
+                window.location.replace('/productwidget/edit/' + external_product_widget_id);
+            }
         }
     });
 </script>

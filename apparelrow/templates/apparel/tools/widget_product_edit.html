@@ -17,6 +17,7 @@
                 App.Events.trigger('widget:product_display', show_liked);
             });
         });
+        var liked_title = "{% trans 'Your liked products' %}";
     </script>
     <div id="preview-header" class="preview-header">
         {%  trans '0 products selected' %}
@@ -24,7 +25,7 @@
     <div class="product-list-container">
         <a href="#" class="navigation-el previous"><i class="fa fa-angle-left"></i></a>
         <a href="#" class="navigation-el next"><i class="fa fa-angle-right"></i></a>
-        <div id="product-widget-product-list" class="">
+        <div id="product-widget-product-list" class="liked-products">
             <ul class="product-list list-unstyled"></ul>
         </div>
     </div>

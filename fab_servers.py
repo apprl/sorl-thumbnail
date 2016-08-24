@@ -90,7 +90,7 @@ def prod_admin_aws():
     common_aws()
     prod_settings()
     env.settings = 'production-admin'
-    env.internal_ip = '10.0.0.89'
+    env.internal_ip = '10.0.0.161'
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
     env.installed_apps = ['supervisor-gunicorn-admin','gunicorn-admin','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'

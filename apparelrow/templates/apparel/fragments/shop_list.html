@@ -8,7 +8,7 @@
                 </div>
 
                 <p>
-                    {% trans "Product widget" %}<br/>
+                    {% trans "Product list" %}<br/>
                     {% if object.show_liked %}
                         {% trans 'Your saved products' %}
                     {% else %}
@@ -29,7 +29,7 @@
                 <h4><a href="{% url 'create-shop' object.pk %}">{{ object.title }}</a></h4>
                 <div class="description"></div>
                 <p>
-                    {% trans "Shop widget" %}<br/>
+                    {% trans "Shop" %}<br/>
                     {% if object.show_liked %}
                         {% trans 'Your saved products' %}
                     {% else %}

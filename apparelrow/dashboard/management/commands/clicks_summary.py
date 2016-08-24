@@ -19,6 +19,12 @@ class Command(BaseCommand):
             help='Select a custom date in the format YYYY-MM-DD',
             default= None,
         ),
+        optparse.make_option('--verbose',
+            action='store_true',
+            dest='verbose',
+            help='Creating verbose progressbar output.',
+            default= False,
+        ),
     )
     affiliates = ['costperclick', 'allstorescpc']
 
@@ -65,5 +71,5 @@ class Command(BaseCommand):
                 module = __import__('apparelrow.dashboard.importer.%s' % argument, fromlist = ['Importer'])
                 instance = module.Importer()
                 logger.info('Importing %s' % (instance.name,))
-                for row in instance.get_data(query_date, None):
+                for row in instance.get_data(query_date, None, **options):
                     sale_instance = self.update(row)
