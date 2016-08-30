@@ -2514,6 +2514,9 @@ class TestAggregatedDataModules(TransactionTestCase):
         top_publishers = get_aggregated_publishers(None, start_date, end_date)
         self.assertEqual(len(top_publishers), 0)
 
+        all_publishers = get_aggregated_publishers(None, start_date, end_date, include_all_network_influencers=True)
+        self.assertEqual(len(all_publishers), 1)
+
 
 class TestPaymentHistory(TestCase):
 

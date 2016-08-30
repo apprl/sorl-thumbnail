@@ -571,7 +571,7 @@ def enumerate_months(user, month, is_admin=False):
 
     return month_display, month_choices, year_choices
 
-def get_aggregated_publishers(user_id, start_date, end_date, is_admin=False):
+def get_aggregated_publishers(user_id, start_date, end_date, is_admin=False, include_all_network_influencers=False):
     """
     Return AggregatedData summary per publisher for the given period
     """
@@ -594,9 +594,9 @@ def get_aggregated_publishers(user_id, start_date, end_date, is_admin=False):
                                        total_network_earnings=Sum('total_network_earnings'),
                                        total_clicks=Sum('total_clicks')).order_by(*order_by_tuple)
 
-    # If we're looking at the dashboard for a network owner, we want to include all related influencers, even those
-    # that haven't generated any earnings
-    if not is_admin:
+    if not is_admin and include_all_network_influencers:
+        # If we're looking at the dashboard for a network owner, we want to include all related influencers, even those
+        # that haven't generated any earnings
         top_publishers = list(top_publishers)
         earning_influencer_ids = set(p['aggregated_from_id'] for p in top_publishers)
         non_earning_influencers = get_user_model().objects.filter(owner_network__id=user_id).exclude(id__in=earning_influencer_ids).order_by('name')
