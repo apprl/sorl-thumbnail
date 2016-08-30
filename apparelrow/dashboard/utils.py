@@ -593,6 +593,26 @@ def get_aggregated_publishers(user_id, start_date, end_date, is_admin=False):
         values(*values_tuple).annotate(total_earnings=Sum('sale_plus_click_earnings'),
                                        total_network_earnings=Sum('total_network_earnings'),
                                        total_clicks=Sum('total_clicks')).order_by(*order_by_tuple)
+
+    # If we're looking at the dashboard for a network owner, we want to include all related influencers, even those
+    # that haven't generated any earnings
+    if not is_admin:
+        top_publishers = list(top_publishers)
+        earning_influencer_ids = set(p['aggregated_from_id'] for p in top_publishers)
+        non_earning_influencers = get_user_model().objects.filter(owner_network__id=user_id).exclude(id__in=earning_influencer_ids).order_by('name')
+        for influencer in non_earning_influencers:
+            image, link = get_user_thumbnail_and_link(influencer)
+            top_publishers.append({
+                'user_id': user_id,
+                'aggregated_from_id': influencer.id,
+                'aggregated_from_name': influencer.name,
+                'aggregated_from_slug': influencer.slug,
+                'aggregated_from_image': image,
+                'aggregated_from_link': link,
+                'total_clicks': 0,
+                'total_network_earnings': 0,
+                'total_earnings': 0
+            })
     return top_publishers
 
 def get_aggregated_products(user_id, start_date, end_date):
