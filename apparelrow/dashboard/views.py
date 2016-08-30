@@ -4,7 +4,7 @@ import decimal
 import json
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
+from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404, HttpResponseForbidden
 from django.forms import ModelForm
 from django.utils import timezone
 from django.contrib.sites.models import Site
@@ -449,7 +449,8 @@ def clicks_detail(request):
             data = get_clicks_list(vendor, query_date, currency, click_cost, user_id, is_store)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
-
+    else:
+        return HttpResponseForbidden()
 #
 # PUBLISHER DASHBOARD
 #
