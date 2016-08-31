@@ -446,7 +446,6 @@ def store_admin(request, year=None, month=None):
                                                             'vendor': store.vendor,
                                                             'currency': currency,
                                                             'accepted_commission': accepted_commission,
-                                                            'commission_to_be_invoiced': commission_to_be_invoiced,
                                                             'data_per_month': data_per_month,
                                                             'year_choices': year_choices,
                                                             'month_choices': month_choices,
