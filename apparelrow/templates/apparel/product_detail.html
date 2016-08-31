@@ -108,7 +108,7 @@
                                 <p class="seller" itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">
                                     {% if object.default_vendor %}
                                         {% if object.default_vendor.availability == 0 %}
-                                        <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span></a>
+                                        <a rel="nofollow" target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span></a>
                                         {% else %}
                                         <a rel="nofollow" target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
                                         {% endif %}
