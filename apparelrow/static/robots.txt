@@ -1,0 +1,55 @@
+User-agent: googlebot
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: msnbot
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: yahoo-slurp
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: teoma
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: gigabot
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: scrubby
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: robozilla
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: nutch
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: ia_archiver
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: baiduspider
+Disallow: /track/
+Disallow: /dialog/
+Disallow: /products/*/short/
+
+User-agent: Yandex
+Disallow: /
+
+User-agent: *
+Disallow: /
