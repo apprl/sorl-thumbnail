@@ -511,7 +511,7 @@ class DashboardView(TemplateView):
                                             sum_data['network_click_earnings__sum']
 
             # Aggregate publishers per month
-            top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query)
+            top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query, include_all_network_influencers=True)
 
             # Aggregate products per month
             top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query)
