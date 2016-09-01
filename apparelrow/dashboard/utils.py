@@ -624,7 +624,11 @@ def get_aggregated_products(user_id, start_date, end_date):
     filter_dict['created__range'] = (start_date, end_date)
     filter_dict['data_type'] = 'aggregated_from_product'
     if user_id:
-        filter_dict['user_id'] = user_id
+        network_influencers = get_user_model().objects.filter(owner_network__id=user_id).values_list('id', flat=True)
+        if network_influencers:
+            filter_dict['user_id__in'] = list(network_influencers) + [user_id]
+        else:
+            filter_dict['user_id'] = user_id
 
     top_products = get_model('dashboard', 'AggregatedData').objects.filter(**filter_dict).\
         values('aggregated_from_id', 'aggregated_from_name', 'aggregated_from_slug', 'aggregated_from_image',
@@ -632,6 +636,7 @@ def get_aggregated_products(user_id, start_date, end_date):
         annotate(total_earnings=Sum('sale_plus_click_earnings'),
                  total_network_earnings=Sum('total_network_earnings'),
                  total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings', '-total_clicks')
+
     return top_products
 
 def get_user_earnings_dashboard(user, start_date, end_date):
