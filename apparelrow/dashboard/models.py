@@ -110,7 +110,7 @@ class Sale(models.Model):
         if self.vendor:
             vendor_name = self.vendor.name
 
-        return u'%s - %s: %s %s %s' % (self.affiliate, vendor_name, self.commission, self.currency, self.status)
+        return u'%s - %s: commission %s %s, status %s' % (self.affiliate, vendor_name, self.commission, self.currency, self.status)
 
     class Meta:
         ordering = ['-sale_date']
@@ -445,6 +445,9 @@ class UserEarning(models.Model):
     date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, db_index=True)
     paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES)
+
+    def __unicode__(self):
+        return u'%s %s %s' % (self.user, self.user_earning_type, self.amount)
 
 @receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
 def sale_post_save(sender, instance, created, **kwargs):
