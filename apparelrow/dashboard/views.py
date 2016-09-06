@@ -663,7 +663,7 @@ class AdminDashboardView(TemplateView):
             temp_list = []
             heading = row[0]
             temp_list.append(heading)
-            if heading in ('PPC clicks', 'Commission clicks', 'Valid Clicks', 'Invalid clicks'):
+            if heading in ('PPC clicks', 'Commission clicks', 'Valid Clicks', 'Invalid clicks', 'Commission sales'):
                 for value, percentage in map(None, row[1][0], row[1][1]):
                     if not percentage:
                         percentage = "-"
@@ -700,9 +700,9 @@ class AdminDashboardView(TemplateView):
             query_args = {'created__range': (start_date_query, end_date_query), 'data_type' : 'aggregated_from_total'}
             data_per_day = aggregated_data_per_day(start_date, end_date, 'admin', values, query_args)
 
-            # Top Publishers
+            # Top Publishers (influencers)
             top_publishers = get_aggregated_publishers(None, start_date_query, end_date_query, is_admin=True)
-            # Top Products
+            # Top Products (links)
             top_products = get_aggregated_products(None, start_date_query, end_date_query)
 
             # Get summary for current period
