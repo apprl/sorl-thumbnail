@@ -652,7 +652,7 @@ def get_aggregated_publishers(user_id, start_date, end_date, include_all_network
             })
     return top_publishers
 
-def get_aggregated_products(user_id, start_date, end_date):
+def get_aggregated_products(user_id, start_date, end_date, limit=9999):
     """
     Return AggregatedData summary per product for the given period.
     Note that this method uses __range funcion which is non inclusive when using Date.
@@ -672,7 +672,7 @@ def get_aggregated_products(user_id, start_date, end_date):
                'aggregated_from_link').exclude(user_id=0).\
         annotate(total_earnings=Sum('sale_plus_click_earnings'),
                  total_network_earnings=Sum('total_network_earnings'),
-                 total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings', '-total_clicks')
+                 total_clicks=Sum('total_clicks')).order_by('-total_network_earnings', '-total_earnings', '-total_clicks')[:limit]
 
     return top_products
 

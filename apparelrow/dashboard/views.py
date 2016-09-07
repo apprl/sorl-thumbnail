@@ -22,6 +22,8 @@ from django.views.generic import TemplateView
 import logging
 log = logging.getLogger(__name__)
 
+TOP_PRODUCTS_LIMIT = 100
+
 def map_placement(placement):
     link = _('Unknown')
     if placement == 'Ext-Shop':
@@ -514,7 +516,7 @@ class DashboardView(TemplateView):
             top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query, include_all_network_influencers=True)
 
             # Aggregate products per month
-            top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query)
+            top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
             month_commission = sum_data['sale_earnings__sum']
             show_cpo_earning = True
@@ -536,6 +538,7 @@ class DashboardView(TemplateView):
                             'network_commission': network_earning,
                             'top_publishers': top_publishers,
                             'top_products': top_products,
+                            'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT,
                             'ppc_clicks': paid_clicks,
                             'month_clicks': non_paid_clicks,
                             'referral_commission': referral_earnings,
@@ -703,7 +706,7 @@ class AdminDashboardView(TemplateView):
             # Top Publishers (influencers)
             top_publishers = get_admin_aggregated_publishers(start_date_query, end_date_query)
             # Top Products (links)
-            top_products = get_aggregated_products(None, start_date_query, end_date_query)
+            top_products = get_aggregated_products(None, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
             # Get summary for current period
             monthly_array, clicks_array = self.get_admin_top_summary(start_date_query, end_date_query)
@@ -721,7 +724,7 @@ class AdminDashboardView(TemplateView):
 
             context_data = {'year_choices': year_choices, 'month_choices': month_choices, 'year': year, 'month': month,
                             'month_display': month_display, 'data_per_day': data_per_day, 'currency': currency,
-                            'top_publishers': top_publishers, 'top_products': top_products,
+                            'top_publishers': top_publishers, 'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT, 'top_products': top_products,
                             'monthly_array': monthly_array, 'clicks_array': clicks_array }
             return render(request, 'dashboard/new_admin.html', context_data)
         return HttpResponseNotFound()
