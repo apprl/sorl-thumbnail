@@ -2282,6 +2282,7 @@ class TestAggregatedData(TransactionTestCase):
         # Import the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 1)
+        # publisher_sale_commission, publisher_network_tribute & apprl_commission: 400,
         self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 3)
 
         str_date = datetime.date.today().strftime('%Y-%m-%d')
@@ -2463,34 +2464,42 @@ class TestAggregatedDataModules(TransactionTestCase):
                                sale_date=click_day, pk=index+2)
         self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id).count(), 11)
         self.assertEqual(get_model('dashboard', 'Sale').objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
-        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=self.user).count(), 11)
+
+        # We should have 22 user earnings from 11 sales (10 cpo + 1 cpc), half to user and half to apprl
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=self.user).count(), 11) # to user
+        self.assertEqual(get_model('dashboard', 'UserEarning').objects.filter(user=None).count(), 11)   # to apprl
+
+        # 67 % of 10 x 50 commission sales to user to user based on cut, rest to apprl
+        self.assertEqual([33.5] * 10, [u.amount for u in get_model('dashboard', 'UserEarning').objects.filter(from_product=product, user=self.user)])
+        self.assertEqual([16.5] * 10, [u.amount for u in get_model('dashboard', 'UserEarning').objects.filter(from_product=product, user=None)])
 
         management.call_command('collect_aggregated_data', verbosity=0, interactive=False, date="2015-01-14")
-
+        
         start_date, end_date = parse_date(year=str(year), month=str(month), first_to_first=True)
         # Check data from get_aggregated_products is correct
         top_products = get_aggregated_products(None, start_date, end_date)
         self.assertEqual(len(top_products), 2)
-        cpo_commission = 50 * 10 * decimal.Decimal(cut_obj.cut) # EUR
+
+        cpo_commission = 50 * 10 * decimal.Decimal(cut_obj.cut) # EUR - the 50 comes from Sales factory defaults
+        self.assertEqual(top_products[0]['total_earnings'], cpo_commission)
+        self.assertEqual(top_products[0]['total_network_earnings'], 0)
+        self.assertEqual(top_products[0]['total_clicks'], 200)
+
         cpc_commission = 100 * 1 * decimal.Decimal(cut_obj.cut) # EUR
-
-        products_checked = 0
-        for row in top_products:
-            if row['aggregated_from_id'] == product.id:
-                products_checked += 1
-                self.assertEqual(row['total_earnings'], cpo_commission)
-                self.assertEqual(row['total_network_earnings'], 0)
-                self.assertEqual(row['total_clicks'], 200)
-            elif row['aggregated_from_id'] == product_cpc.id:
-                products_checked += 1
-                self.assertEqual(row['total_earnings'], cpc_commission)
-                self.assertEqual(row['total_network_earnings'], 0)
-                self.assertEqual(row['total_clicks'], 100)
-
-        self.assertEqual(products_checked, 2)
+        self.assertEqual(top_products[1]['total_earnings'], cpc_commission)
+        self.assertEqual(top_products[1]['total_network_earnings'], 0)
+        self.assertEqual(top_products[1]['total_clicks'], 100)
 
         # Check data from get_aggregated_publishers is correct
-        top_publishers = get_aggregated_publishers(None, start_date, end_date, True)
+        top_publishers = get_admin_aggregated_publishers(start_date, end_date)
+        publisher_commission = (cpo_commission  + cpc_commission)
+        self.assertEqual(len(top_publishers), 1)
+        self.assertEqual(top_publishers[0]['user_id'], self.user.id)
+        self.assertEqual(top_publishers[0]['total_earnings'], publisher_commission)
+        self.assertEqual(top_publishers[0]['total_clicks'], 300)
+        self.assertEqual(top_publishers[0]['total_network_earnings'], 0)
+
+        top_publishers = get_admin_aggregated_publishers(start_date, end_date)
         publisher_commission = (cpo_commission  + cpc_commission)
         self.assertEqual(len(top_publishers), 1)
         self.assertEqual(top_publishers[0]['user_id'], self.user.id)
@@ -2511,11 +2520,8 @@ class TestAggregatedDataModules(TransactionTestCase):
         management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
         start_date, end_date = get_current_month_range()
 
-        top_publishers = get_aggregated_publishers(None, start_date, end_date)
+        top_publishers = get_admin_aggregated_publishers(start_date, end_date)
         self.assertEqual(len(top_publishers), 0)
-
-        all_publishers = get_aggregated_publishers(None, start_date, end_date, include_all_network_influencers=True)
-        self.assertEqual(len(all_publishers), 1)
 
 
 class TestPaymentHistory(TestCase):
