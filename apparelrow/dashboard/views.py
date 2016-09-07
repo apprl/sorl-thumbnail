@@ -700,7 +700,7 @@ class AdminDashboardView(TemplateView):
             data_per_day = aggregated_data_per_day(start_date, end_date, 'admin', values, query_args)
 
             # Top Publishers (influencers)
-            top_publishers = get_aggregated_publishers(None, start_date_query, end_date_query, is_admin=True)
+            top_publishers = get_admin_aggregated_publishers(start_date_query, end_date_query)
             # Top Products (links)
             top_products = get_aggregated_products(None, start_date_query, end_date_query)
 

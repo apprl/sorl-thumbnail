@@ -174,15 +174,15 @@
                                 </a>
                             </td>
                             <td class="col-md-3 hidden-xs">
-                                <a href="{{ publisher.user_link }}">{{ publisher.user_name }} </a>
-                                {% comment %}TODO add month and year if applies{% endcomment %}
-                                <a href="{% url 'dashboard-date' year month %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
+                                <a href="{% url 'dashboard-date' year month %}?__imitera={{ publisher.user_id }}" target="_blank">
+                                    {{ publisher.user_name }}
+                                </a>
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
                                 {{ publisher.total_clicks }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
-                                {{ currency }} {{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }}
+                                {{ currency }} {{ publisher.total_earnings_inc_network }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
                                 {{ currency }} {{ publisher.total_network_earnings }}
@@ -332,8 +332,8 @@
                     else
                         extra_style = "colspan=2"
                     row.append('<td ' + extra_style + ' data-sort="' + this.description_text + '">' + this.description_text + '</td>');
-                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link +'"><img src="' + this.from_user_avatar + '"></a></td>');
-                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link +'">' + this.from_user_name + '</a></td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link + '"><img src="' + this.from_user_avatar + '"></a></td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.admin_description_link + '" target="_new">' + this.from_user_name + '</a></td>');
 
                     // Details
                     row.append('<td>' + this.details + '</td>');

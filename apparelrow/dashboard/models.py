@@ -362,12 +362,15 @@ AGGREGATED_DATA_TYPES = (
 
 class AggregatedData(models.Model):
     created = models.DateTimeField(default=timezone.now)
+
+    # who the aggregation relates to
     user_id = models.PositiveIntegerField(default=0, db_index=True)
     user_name = models.CharField(max_length=100)
     user_username = models.CharField(max_length=100)
     user_link = models.CharField(max_length=200)
     user_image = models.CharField(max_length=200)
 
+    # totals
     sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     referral_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
@@ -376,6 +379,7 @@ class AggregatedData(models.Model):
     sale_plus_click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     total_network_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
 
+    # counters
     sales = models.PositiveIntegerField(default=0)
     network_sales = models.PositiveIntegerField(default=0)
     referral_sales = models.PositiveIntegerField(default=0)
@@ -384,11 +388,19 @@ class AggregatedData(models.Model):
 
     data_type = models.CharField(max_length=100, choices=AGGREGATED_DATA_TYPES)
 
+    # mostly products but can also ble user when referalls
     aggregated_from_id = models.PositiveIntegerField(default=0)
     aggregated_from_name = models.CharField(max_length=100)
     aggregated_from_slug = models.CharField(max_length=100)
     aggregated_from_link = models.CharField(max_length=200)
     aggregated_from_image = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return """
+        type: {data_type}, from: {aggregated_from_slug}, user: {user_username}, created: {created},
+        sale earn: {sale_earnings}, click_earn: {click_earnings}, sale plus click: {sale_plus_click_earnings},
+        network sale: {network_sales}, network click: {network_click_earnings}, total_network
+        """.format(**vars(self))
 
 USER_EARNING_TYPES = (
     ('apprl_commission', 'APPRL Earnings'),
