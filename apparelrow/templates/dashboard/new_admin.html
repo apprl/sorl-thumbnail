@@ -371,6 +371,6 @@
 
 </script>
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
-{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products month=month_display year=year is_admin=True currency=currency only %}
+{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products TOP_PRODUCTS_LIMIT=TOP_PRODUCTS_LIMIT month=month_display year=year is_admin=True currency=currency only %}
 {% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers month=month_display year=year is_admin=True currency=currency only %}
 {% endblock body %}

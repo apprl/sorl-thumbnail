@@ -486,7 +486,7 @@
 </script>
 
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
-{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products is_admin=False currency=currency month=month_display year=year is_owner=is_owner only  %}
+{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products TOP_PRODUCTS_LIMIT=TOP_PRODUCTS_LIMIT is_admin=False currency=currency month=month_display year=year is_owner=is_owner only  %}
 {% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year is_owner=is_owner only %}
 {% include 'dashboard/modal_more_info.html' %}
 {% endblock body %}
