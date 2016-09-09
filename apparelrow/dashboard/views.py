@@ -519,7 +519,7 @@ class DashboardView(TemplateView):
 
             month_commission = sum_data['sale_earnings__sum']
             show_cpo_earning = True
-            if request.user.partner_group.has_cpc_all_stores and not month_commission or not month_commission > 0:
+            if request.user.partner_group.has_cpc_all_stores and not month_commission:
                 show_cpo_earning = False
 
             network_earning = 0
