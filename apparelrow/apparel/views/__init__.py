@@ -1343,7 +1343,7 @@ def product_lookup(request):
 
         # Removed this 20160912 and are taking the vendor from product instead. /Klas
         #_, vendor = product_lookup_by_domain(request, domain, original_key)
-        vendor = product.default_vendor()
+        vendor = product.default_vendor.vendor
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
             help_text = "sale" if vendor.is_cpo else "click"
