@@ -1340,7 +1340,10 @@ def product_lookup(request):
         # it may be a reason for it. However, if unable to match the domain in the DomainDeepLinking templates then we have
         # vendor = None. The link we extract is not used in any case, so definitely not sure about the whole process.
         # Suggestion would be to drop this lookup entirely and just use the product.default_vendor below. /Klas
-        _, vendor = product_lookup_by_domain(request, domain, original_key)
+
+        # Removed this 20160912 and are taking the vendor from product instead. /Klas
+        #_, vendor = product_lookup_by_domain(request, domain, original_key)
+        vendor = product.default_vendor()
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
             help_text = "sale" if vendor.is_cpo else "click"
