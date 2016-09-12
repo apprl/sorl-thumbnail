@@ -111,6 +111,7 @@ VENDOR_LOCATION_MAPPING = {
     "Ted & Teresa": ["SE"],
     "Cubus": ["SE"],
     u"Björn Borg": ["SE"],
+    "Best of Brands": ["SE"],
     "ConfidentLiving": ["SE"],
     "MQ": ["SE"],
     "Care of Carl": ["SE", "NO"],
