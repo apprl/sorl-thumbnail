@@ -20,7 +20,8 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserE
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
 from apparelrow.dashboard.views import get_store_earnings
-from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange
+from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange,\
+    SOURCE_LINK_MAX_LEN, compress_source_link_if_needed, links_redis_connection, links_redis_key
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
 from apparelrow.statistics.factories import *
@@ -2598,6 +2599,7 @@ class TestUtils(TransactionTestCase):
         get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
                                                      vendor=self.vendor_cpc)
         self.short_link = ShortLinkFactory(user=self.user)
+        self.long_source_link = 'http://' + 'x'*(SOURCE_LINK_MAX_LEN+10)
 
     def test_generate_sid_no_data(self):
         product_id = None
@@ -2627,6 +2629,20 @@ class TestUtils(TransactionTestCase):
         sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=source_link)
         self.assertEqual(sid, "%s-%s-%s/%s" % (target_user_id, product_id, page, source_link))
 
+
+    def test_generate_sid_with_long_source_link(self):
+        product_id = 20
+        target_user_id = self.user.id
+        page = "Ext-Store"
+        sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=self.long_source_link)
+        compressed_link = compress_source_link_if_needed(self.long_source_link)
+        self.assertEqual(sid, "%s-%s-%s/%s" % (target_user_id, product_id, page, compressed_link))
+
+        redis_key = links_redis_key(self.long_source_link)
+        redis_conn = links_redis_connection()
+        self.assertIsNotNone(redis_conn.get(redis_key))
+        self.assertGreater(redis_conn.ttl(redis_key), 24*60*60*30*2, 'Redis compressed link TTL should be at least two months')
+
     def test_parse_sid(self):
         sid = "12-21-Ext-Store/http://apprl.com/p/AJSJ"
         user_id, product_id, placement, source_link = parse_sid(sid)
@@ -2650,6 +2666,14 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(product_id, 21)
         self.assertEqual(placement, "Ext-Store")
         self.assertEqual(source_link, "")
+
+    def test_parse_sid_long_source_link(self):
+        sid = generate_sid(123, 456, "Ext-Store", source_link=self.long_source_link)
+        user_id, product_id, placement, source_link = parse_sid(sid)
+        self.assertEqual(product_id, 123)
+        self.assertEqual(user_id, 456)
+        self.assertEqual(placement, "Ext-Store")
+        self.assertEqual(source_link, self.long_source_link)
 
     def test_map_placement(self):
         self.assertEqual(map_placement('Unknown'), 'Unknown')
