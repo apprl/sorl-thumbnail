@@ -1,3 +1,4 @@
+import hashlib
 from urlparse import parse_qs, urlsplit, urlunsplit
 import json
 import datetime
@@ -8,6 +9,7 @@ import uuid
 import logging
 import decimal
 import random
+import redis
 
 from django.conf import settings
 from django.core.cache import cache
@@ -209,7 +211,7 @@ def generate_sid(product_id, target_user_id=0, page='Default', source_link=None)
 
     sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
     if source_link:
-        sid += "/%s" % source_link
+        sid += "/%s" % compress_source_link_if_needed(source_link)
     return sid
 
 
@@ -243,7 +245,50 @@ def parse_sid(sid):
                 product_id = int(sid)
             except ValueError:
                 pass
-    return target_user_id, product_id, page, source_link
+    return target_user_id, product_id, page, decompress_source_link_if_needed(source_link)
+
+
+# Some affiliate (Tradedoubler) networks don't allow very long sids as parameters. To make sure we can fit
+# long urls into their sids, we store the urls in Redis and replace the url with a shorter digest of the link
+
+SOURCE_LINK_MAX_LEN = 30
+SOURCE_LINK_COMPRESSION_PREFIX = 'compressed-link-'
+# We only keep for a few months, shouldn't be needed longer than that because we don't query the affiliate networks
+# for older data than 90 days.
+SOURCE_LINK_REDIS_TTL_SECS = 60*60*24*30*6
+
+
+def links_redis_connection():
+    return redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
+                             port=settings.CELERY_REDIS_PORT,
+                             db=settings.COMPRESSED_LINKS_REDIS_DB)
+
+
+def links_redis_key(source_link):
+    return hashlib.md5(source_link).hexdigest()
+
+
+def compress_source_link_if_needed(source_link, max_len=SOURCE_LINK_MAX_LEN):
+    if len(source_link) <= max_len:
+        return source_link
+    else:
+        key = links_redis_key(source_link)
+        redis_conn = links_redis_connection()
+        redis_conn.set(key, source_link, SOURCE_LINK_REDIS_TTL_SECS)
+        return SOURCE_LINK_COMPRESSION_PREFIX + key
+
+
+def decompress_source_link_if_needed(source_link):
+    if not source_link.startswith(SOURCE_LINK_COMPRESSION_PREFIX):
+        return source_link
+    else:
+        key = source_link.replace(SOURCE_LINK_COMPRESSION_PREFIX, '')
+        redis_conn = links_redis_connection()
+        link = redis_conn.get(key)
+        if not link:
+            logging.warn("Tried to decompress a long source link but didn't get a hit from Redis. Key: %s" % key)
+        return link
+
 
 def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default', source_link=''):
     """
