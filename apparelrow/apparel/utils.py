@@ -211,7 +211,7 @@ def generate_sid(product_id, target_user_id=0, page='Default', source_link=None)
 
     sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
     if source_link:
-        sid += "/%s" % compress_source_link_if_needed(source_link)
+        sid += u"/%s" % compress_source_link_if_needed(source_link)
     return sid
 
 
@@ -252,7 +252,7 @@ def parse_sid(sid):
 # long urls into their sids, we store the urls in Redis and replace the url with a shorter digest of the link
 
 SOURCE_LINK_MAX_LEN = 30
-SOURCE_LINK_COMPRESSION_PREFIX = 'compressed-link-'
+SOURCE_LINK_COMPRESSION_PREFIX = u'compressed-link-'
 # We only keep for a few months, shouldn't be needed longer than that because we don't query the affiliate networks
 # for older data than 90 days.
 SOURCE_LINK_REDIS_TTL_SECS = 60*60*24*30*6
@@ -286,7 +286,7 @@ def decompress_source_link_if_needed(source_link):
         redis_conn = links_redis_connection()
         link = redis_conn.get(key)
         if not link:
-            logging.warn("Tried to decompress a long source link but didn't get a hit from Redis. Key: %s" % key)
+            logging.warn(u"Tried to decompress a long source link but didn't get a hit from Redis. Key: %s" % key)
         return link
 
 
