@@ -211,7 +211,7 @@ def generate_sid(product_id, target_user_id=0, page='Default', source_link=None)
 
     sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
     if source_link:
-        sid += u"/%s" % compress_source_link_if_needed(source_link)
+        sid += u"/%s" % urllib.quote(compress_source_link_if_needed(source_link))
     return sid
 
 
