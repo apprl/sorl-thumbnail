@@ -235,6 +235,8 @@ def parse_sid(sid):
                 page = sid_array[1]
                 if len(page.split('/', 1)) > 1:
                     page, source_link = page.split('/', 1)
+                    source_link = decompress_source_link_if_needed(source_link)
+                    source_link = urllib.unquote(source_link)
             else:
                 try:
                     product_id = int(rest)
@@ -245,7 +247,7 @@ def parse_sid(sid):
                 product_id = int(sid)
             except ValueError:
                 pass
-    return target_user_id, product_id, page, decompress_source_link_if_needed(source_link)
+    return target_user_id, product_id, page, source_link
 
 
 # Some affiliate (Tradedoubler) networks don't allow very long sids as parameters. To make sure we can fit
