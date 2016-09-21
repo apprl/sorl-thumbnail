@@ -1,29 +1,107 @@
 import datetime
 from optparse import make_option
-
+from django.contrib.comments import Comment
 from django.core.management.base import BaseCommand
-
-from apparelrow.apparel.models import Product, ProductLike, LookComponent
+from sorl.thumbnail import default
+from apparelrow.apparel.models import Product, ProductLike, LookComponent, ShopProduct, ProductWidgetProduct, \
+    ShortProductLink, VendorProduct
+from progressbar import ProgressBar, Percentage, Bar
+from apparelrow.dashboard.models import Sale
+from apparelrow.statistics.models import ProductClick, ProductStat
 
 
 class Command(BaseCommand):
     args = ''
     help = ''
 
+    option_list = BaseCommand.option_list + (
+            make_option('--clean',
+                action='store_true',
+                dest='clean',
+                default=False,
+                help='Cleans out the Products from the database.',
+            ),
+            make_option('--verbose',
+                action='store_true',
+                dest='verbose',
+                default=False,
+                help='Shows a progress bar.',
+            ),
+              make_option('--batch-size',
+                action='store',
+                dest='batch',
+                default=10000,
+                help='The amount of products to check in this batch',
+            ),
+              make_option('--offset',
+                action='store',
+                dest='offset',
+                default=0,
+                help='Product offset',
+            ),
+            make_option('--desc',
+                action='store_true',
+                dest='desc',
+                default=False,
+                help='Sorting ',
+            ),
+    )
     def handle(self, *args, **options):
         deleted_count = 0
+        pbar = None
+        from decimal import Decimal
+        six_months_ago = datetime.datetime.today() - datetime.timedelta(days=30*6)
+        print "Running job for date {}".format(six_months_ago)
+        offset = int(options["offset"])
+        batch = int(options["batch"])
+        sort = "-id" if options["desc"] else "id"
+        products = Product.objects.filter(availability=False, modified__lte=six_months_ago).order_by(sort)[offset:offset+batch]
+        product_count = products.count()
+        if not product_count > 0:
+            print "No products to clean out."
+            return
 
-        seven_days_ago = datetime.datetime.today() - datetime.timedelta(days=7)
+        if options["verbose"]:
+            pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=products.count()).start()
 
-        product_count = Product.objects.filter(published=False, date_published__isnull=True, modified__lte=seven_days_ago).count()
         print 'About to check {} products'.format(product_count)
+        checks = [("ProductLike", lambda x: ProductLike.objects.filter(product=x).exists()),
+                  ("LookComponent", lambda x: LookComponent.objects.filter(product=x).exists()),
+                  ("ShopProduct", lambda x: ShopProduct.objects.filter(product=x).exists()),
+                  ("ProductWidgetProduct", lambda x: ProductWidgetProduct.objects.filter(product=x).exists()),
+                  ("ShortProductLink", lambda x: ShortProductLink.objects.filter(product=x).exists()),
+                  ("ProductClick", lambda x: ProductClick.objects.filter(product=x).exists()),
+                  ("Sale", lambda x: Sale.objects.filter(product_id=x.id).exists()),
+                  ("Comment", lambda x: Comment.objects.filter(content_type__name="product", object_pk=x.id).exists()),
+                  ("ProductStat", lambda x: ProductStat.objects.filter(vendor=x.default_vendor.vendor.name, product=x.slug).exists()),
+                  ]
 
-        for product_id in Product.objects.filter(published=False, date_published__isnull=True, modified__lte=seven_days_ago).values_list('pk', flat=True):
-            if ProductLike.objects.filter(product=product_id).count() == 0 and LookComponent.objects.filter(product=product_id).count() == 0:
-                product = Product.objects.get(pk=product_id)
-                product.delete()
-                deleted_count += 1
+        for index, product in enumerate(products.iterator()):
+            if pbar:
+                pbar.update(index)
+
+            delete = True
+            vendor_exists = VendorProduct.objects.filter(product=product).exists()
+            if vendor_exists:
+                for name, check in checks:
+                    if check(product):
+                        print "Product: {} has more than one entry in {}".format(product, name)
+                        delete = False
+                        break
+            if not delete:
+                continue
             else:
-                print 'Could not delete {}'.format(product_id)
+                deleted_count += 1
+                if options["clean"]:
+                    product.delete()
 
-        print 'Deleted {0} products'.format(deleted_count)
+        """if ProductLike.objects.filter(product=product.id).count() == 0 and LookComponent.objects.filter(product=product_id).count() == 0:
+            if options["clean"]:
+                product.delete()
+            deleted_count += 1
+        else:
+            print 'Could not delete {}'.format(product)
+        """
+        if pbar:
+            pbar.finish()
+        print 'Deleted {}/{} products'.format(deleted_count, product_count)
