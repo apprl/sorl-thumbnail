@@ -44,6 +44,12 @@ class ProductAdmin(admin.ModelAdmin):
     publish.short_description = "Publish selected products"
 
     def hide(self, request, queryset):
+        """
+        This method does not trigger post save method of product which syncs the information to solr. Has to be handled separately.
+        :param request:
+        :param queryset:
+        :return:
+        """
         queryset.update(published=False)
     hide.short_description = "Hide selected products"
 
