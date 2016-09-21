@@ -1384,7 +1384,8 @@ class TestThumbnailClean(TestCase):
         from sorl.thumbnail.images import ImageFile, deserialize_image_file
         from sorl.thumbnail import default
         from sorl.thumbnail.models import KVStore
-
+        from theimp.factories import ProductFactory as ImpProductFactory
+        from theimp.models import Product as ImpProduct
         django_image_file = _create_dummy_image()
         pk_key = lambda x: "||".join(["sorl-thumbnail","image", x])
         thumbnails_key = lambda x: "||".join(["sorl-thumbnail","thumbnails", x])
@@ -1455,9 +1456,9 @@ class TestThumbnailClean(TestCase):
 
         self.assertTrue(sorl_image.exists())
         self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
-        default.kvstore.delete(sorl_image)
         filename = sorl_image.name
         base_location = thumbnail.storage.base_location
+        default.kvstore.delete(sorl_image)
         sorl_image.delete()
         self.assertFalse(sorl_image.exists())
         self.assertFalse(os.path.isfile(os.path.join(base_location, filename)))
@@ -1468,6 +1469,65 @@ class TestThumbnailClean(TestCase):
         #file_exists = os.path.isfile(product_image.file.name)
         #unison_exists = bool(sorl_image.exists() and file_exists)
         #print "File unison exists: {}".format(unison_exists)
+        django_image_file_2 = _create_dummy_image()
+        args_vendor = {}
+        args_vendor['name'] = "Jerkstore"
+        vendor = VendorFactory.create(**args_vendor)
+        category = CategoryFactory.create()
+        manufacturer = BrandFactory.create()
+        product_name = 'Product2'
+        product_key = "http://someurlother.com/brand/product1"
+        product_2 = ProductFactory.create(
+            product_name=product_name,
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            product_key=product_key,
+            availability=True,
+            product_image=django_image_file_2
+        )
+
+        imp_product = ImpProductFactory.create(
+            key = product_key
+        )
+
+        self.assertTrue(ImpProduct.objects.filter(key=product_key).exists())
+        self.assertTrue(ImpProduct.objects.filter(pk=imp_product.id).exists())
+        # Check if files exists, thumbs exists
+        self.assertTrue(os.path.isfile( product_2.product_image.file.name ))
+        sorl_image = ImageFile(product_2.product_image)
+        self.assertTrue(sorl_image.exists())
+        self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
+
+        key = sorl_image.key
+        full_filename = os.path.join(sorl_image.storage.base_location, sorl_image.name)
+
+        save_entries = []
+        for image_file in _get_all_thumbnail_objects(key):
+            # Verify that files exists
+            save_entries.append(image_file)
+            print "This thumbnail file name: {}".format(image_file.name)
+            self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
+
+        print "Deleting {}.".format(product_2)
+        product_2.delete()
+        self.assertFalse(ImpProduct.objects.filter(key=product_key).exists())
+        self.assertFalse(ImpProduct.objects.filter(pk=imp_product.id).exists())
+        # Check if file exists through other interface, should be gone
+        self.assertFalse(os.path.isfile(full_filename))
+        # Check if file exists, should be gone
+        self.assertFalse(sorl_image.exists())
+
+        for thumb_file in save_entries:
+            # Verify that files are gone exists
+            file_path = os.path.join(thumb_file.storage.base_location, thumb_file.name )
+            print "Verify file is gone {}".format(file_path)
+            self.assertFalse(thumb_file.exists())
+            self.assertFalse(os.path.isfile(file_path))
+        # Proceed to remove theimp.Product
+
+
 
 
 def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
