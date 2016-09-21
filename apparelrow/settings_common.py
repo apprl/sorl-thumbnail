@@ -118,6 +118,7 @@ VENDOR_LOCATION_MAPPING = {
     "ALDO": ["US"],
     "ASOS": ["FI", "SE", "NO", "DK","US", "ALL"],
     "Lexington": ["FI", "SE", "NO", "DK"],
+    "Thomas Sabo": ["FI", "SE", "NO", "DK"],
     "Zalando": ["SE"],
     "Soft Goat": ["FI", "SE", "NO", "DK"],
     "Eleven": ["SE"],
