@@ -110,7 +110,7 @@ class Sale(models.Model):
         if self.vendor:
             vendor_name = self.vendor.name
 
-        return u'%s - %s: commission %s %s, status %s' % (self.affiliate, vendor_name, self.commission, self.currency, self.status)
+        return u'%s - %s: commission %s, status %s' % (self.affiliate, vendor_name, self.converted_commission, self.status)
 
     class Meta:
         ordering = ['-sale_date']
@@ -140,9 +140,13 @@ class Payment(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=30)
+
+    # DEPRECTATED - this is directly on User model nowdays
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='owner_group', help_text='Assign a group owner if publishers of this group will belong to an owner, for example a blog network.')
+    # DEPRECTATED - this is directly on User model nowdays
     owner_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
                                     help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
+    # DEPRECTATED
     is_subscriber = models.BooleanField(default=False)
     has_cpc_all_stores = models.BooleanField(default=False,
                                              help_text='If checked, all publishers that belong to the Commission Group '

@@ -89,6 +89,8 @@ class BaseImporter:
 
             data['cut'] = cut
             data['commission'] = cut * decimal.Decimal(data['commission'])
+            # exchange rate hedge.
+            # not sure if this is a good way to do it
             if data['currency'] != data['original_currency']:
                 data['commission'] = data['commission'] * decimal.Decimal('0.95')
 
