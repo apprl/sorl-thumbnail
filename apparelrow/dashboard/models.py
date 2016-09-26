@@ -481,14 +481,14 @@ def sale_post_save(sender, instance, created, **kwargs):
             if UserEarning.objects.filter(sale=instance).exists():
                 # Update earnings if sale has been updated.
                 earnings = UserEarning.objects.filter(sale=instance)
-                if instance.status >= Sale.CONFIRMED:
+
+                if instance.status < Sale.CONFIRMED or not earnings:
+                    earnings.delete()
+                    create_earnings(instance)
+                else:
                     for earning in earnings:
                         earning.status = instance.status
                         earning.save()
-                else:
-                    # Remove earnings if sale has been removed.
-                    UserEarning.objects.filter(sale=instance).delete()
-                    create_earnings(instance)
                 str_date = instance.sale_date.strftime('%Y-%m-%d')
 
                 # Add date from updated sale/earnings to a quere, so the associated aggregated data will be
