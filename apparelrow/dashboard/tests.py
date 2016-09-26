@@ -1179,11 +1179,10 @@ class TestUserEarnings(TransactionTestCase):
         self.assertEqual(Sale.objects.count(), 1)
 
         sale = Sale.objects.get(user_id=temp_user.id, vendor=vendor)
-        self.assertEqual(sale.original_commission, 100)
-
-        self.assertEqual(UserEarning.objects.count(), 2)
+        self.assertEqual(sale.converted_commission, 100)
 
         earnings = UserEarning.objects.all()
+        self.assertEqual(len(earnings), 2)
 
         for earning in earnings:
             if earning.user_earning_type == 'apprl_commission':
@@ -1191,18 +1190,44 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == 'publisher_sale_commission':
                 self.assertEqual(earning.amount, 60.000)
 
-        #Update a sales transaction
         for earning in earnings:
             self.assertEqual(earning.status, Sale.PENDING)
 
+
+        # If we update the Sale transaction when it is still pending, we should get new
+        # UserEarnings
         sale = Sale.objects.get(user_id=temp_user.id, vendor=vendor)
         self.assertEqual(sale.status, Sale.PENDING)
+        sale.converted_commission = 200
+        sale.save()
+
+
+        # the new user earnings should have new amounts since the Sale commision changed
+        for earning in sale.userearning_set.all():
+            if earning.user_earning_type == 'apprl_commission':
+                self.assertEqual(earning.amount, 80.000)
+            elif earning.user_earning_type == 'publisher_sale_commission':
+                self.assertEqual(earning.amount, 120.000)
+
+
         sale.status = Sale.CONFIRMED
         sale.save()
 
-        earnings = UserEarning.objects.all()
-        for earning in earnings:
+
+        # If we update the Sale transaction when it is confirmed, we should not get new earnings
+        sale = Sale.objects.get(user_id=temp_user.id, vendor=vendor)
+        sale.converted_commission = 100
+        sale.save()
+
+        # the user earnings should stay the same
+        for earning in sale.userearning_set.all():
+            if earning.user_earning_type == 'apprl_commission':
+                self.assertEqual(earning.amount, 80.000)
+            elif earning.user_earning_type == 'publisher_sale_commission':
+                self.assertEqual(earning.amount, 120.000)
+
             self.assertEqual(earning.status, Sale.CONFIRMED)
+
 
     def test_user_earnings_same_owner_hierarchy(self):
         """ Tests UserEarnings that are generated when the user belongs to a Publisher Network and the Publisher Network
