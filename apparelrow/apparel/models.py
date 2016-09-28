@@ -184,6 +184,14 @@ class Vendor(models.Model):
     def __unicode__(self):
         return u"%s" % self.name
 
+    def clean(self):
+        if self.is_cpc and self.is_cpo:
+            raise ValidationError("Vendor can't be both cpo and cpc")
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.full_clean()
+        super(Vendor, self).save(force_insert, force_update, using, update_fields)
+
 
 #
 # Category
@@ -1597,4 +1605,3 @@ django.contrib.comments.signals.comment_was_posted.connect(invalidate_model_hand
 # Search
 #
 
-import apparelrow.apparel.search
