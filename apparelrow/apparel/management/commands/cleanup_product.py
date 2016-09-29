@@ -45,6 +45,12 @@ class Command(BaseCommand):
                 default=False,
                 help='Sorting ',
             ),
+            make_option('--product_id',
+                        action='store',
+                        dest='product_id',
+                        default=0,
+                        help='Targeting one product for evaluation purposes',
+                        ),
     )
     def handle(self, *args, **options):
         deleted_count = 0
@@ -55,7 +61,13 @@ class Command(BaseCommand):
         offset = int(options["offset"])
         batch = int(options["batch"])
         sort = "-id" if options["desc"] else "id"
-        products = Product.objects.filter(availability=False, modified__lte=six_months_ago).order_by(sort)[offset:offset+batch]
+        product_id = int(options.get("product_id", 0))
+        if not product_id:
+            filters = {"availability":False, "modified__lte": six_months_ago}
+        else:
+            filters = {"id__in": [product_id]}
+
+        products = Product.objects.filter(**filters).order_by(sort)[offset:offset+batch]
         product_count = products.count()
         if not product_count > 0:
             print "No products to clean out."

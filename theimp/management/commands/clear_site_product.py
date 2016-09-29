@@ -6,7 +6,8 @@ from django.db.models.loading import get_model
 
 from theimp.utils import ProductItem
 
-
+# Not sure why this method would be needed at all. Command resets the site_product key which is needed
+# to connect the imp Product with the corresponding apparel Product
 class Command(BaseCommand):
     args = ''
     help = 'Clear site product'
