@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from sorl.thumbnail import default
 from apparelrow.apparel.models import Product, ProductLike, LookComponent, ShopProduct, ProductWidgetProduct, \
     ShortProductLink, VendorProduct
-from progressbar import ProgressBar, Percentage, Bar
+from progressbar import ProgressBar, Percentage, Bar, ETA, Counter
 from apparelrow.dashboard.models import Sale
 from apparelrow.statistics.models import ProductClick, ProductStat
 
@@ -62,7 +62,7 @@ class Command(BaseCommand):
             return
 
         if options["verbose"]:
-            pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=products.count()).start()
+            pbar = ProgressBar(widgets=[Counter(), Bar('>'), ETA()], maxval=products.count()).start()
 
         print 'About to check {} products'.format(product_count)
         checks = [("ProductLike", lambda x: ProductLike.objects.filter(product=x).exists()),
