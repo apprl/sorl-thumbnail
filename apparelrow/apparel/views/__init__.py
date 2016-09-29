@@ -12,7 +12,7 @@ import re
 import tldextract
 
 from django.conf import settings
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.http.response import HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
@@ -317,6 +317,14 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'apparel/product_detail.html'
 
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object(**kwargs)
+        except Http404:
+            return redirect(reverse("shop"))
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         product = self.object
@@ -404,7 +412,8 @@ class ProductDetailView(DetailView):
     def get_object(self, **kwargs):
         local_kwargs = {'published': True, 'gender__isnull': False}
         slug = self.kwargs.get("slug")
-        return get_product_from_slug(slug, **local_kwargs)
+        product = get_product_from_slug(slug, **local_kwargs)
+        return product
 
 @DeprecationWarning
 def product_detail(request, slug):
