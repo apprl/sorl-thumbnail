@@ -42,7 +42,7 @@ class Command(BaseCommand):
             make_option('--desc',
                 action='store_true',
                 dest='desc',
-                default=False,
+                default=None,
                 help='Sorting ',
             ),
             make_option('--product_id',
