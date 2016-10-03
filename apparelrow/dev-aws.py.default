@@ -75,8 +75,8 @@ LOCALE_PATHS = (
 # CACHE CONFIGURATION AWS
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{ memcached_url }}:11211',
+        'BACKEND': 'django_elasticache.memcached.ElastiCache',
+        'LOCATION': '{{ memcached_url_conf }}:11211',
         'TIMEOUT': 60 * 60 * 12,
     },
     'nginx': {
@@ -86,8 +86,8 @@ CACHES = {
         'KEY_FUNCTION': lambda key, x, y: key,
     },
     'importer': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{ memcached_url }}:11211',
+        'BACKEND': 'django_elasticache.memcached.ElastiCache',
+        'LOCATION': '{{ memcached_url_conf }}:11211',
         'TIMEOUT': 60 * 60 * 24 * 20,
     },
 }
