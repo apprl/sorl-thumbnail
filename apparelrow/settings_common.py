@@ -109,6 +109,8 @@ VENDOR_LOCATION_MAPPING = {
     "Axel Arigato": ["SE", "DK", "NO", "FI"],
     "Shirtonomy": ["DK", "SE"],
     "Ted & Teresa": ["SE"],
+    "Tiger SE": ["SE"],
+    "Tiger DK": ["DK"],
     "Cubus": ["SE"],
     u"Björn Borg": ["SE"],
     "Best of Brands": ["SE"],
