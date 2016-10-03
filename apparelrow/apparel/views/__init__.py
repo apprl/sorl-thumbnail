@@ -412,8 +412,7 @@ class ProductDetailView(DetailView):
     def get_object(self, **kwargs):
         local_kwargs = {'published': True, 'gender__isnull': False}
         slug = self.kwargs.get("slug")
-        product = get_product_from_slug(slug, **local_kwargs)
-        return product
+        return get_product_from_slug(slug, **local_kwargs)
 
 @DeprecationWarning
 def product_detail(request, slug):

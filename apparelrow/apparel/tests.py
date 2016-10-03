@@ -1511,6 +1511,7 @@ class TestThumbnailClean(TestCase):
             self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
 
         print "Deleting {}.".format(product_2)
+        # This also deletes the corresponding theimp product
         product_2.delete()
         self.assertFalse(ImpProduct.objects.filter(key=product_key).exists())
         self.assertFalse(ImpProduct.objects.filter(pk=imp_product.id).exists())
@@ -1525,8 +1526,6 @@ class TestThumbnailClean(TestCase):
             print "Verify file is gone {}".format(file_path)
             self.assertFalse(thumb_file.exists())
             self.assertFalse(os.path.isfile(file_path))
-        # Proceed to remove theimp.Product
-
 
 
 
