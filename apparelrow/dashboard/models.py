@@ -110,7 +110,7 @@ class Sale(models.Model):
         if self.vendor:
             vendor_name = self.vendor.name
 
-        return u'%s - %s: commission %s, status %s' % (self.affiliate, vendor_name, self.converted_commission, self.status)
+        return u'%s - %s: commission %s, status %s, date: %s' % (self.affiliate, vendor_name, self.converted_commission, self.status, str(self.sale_date))
 
     class Meta:
         ordering = ['-sale_date']
@@ -333,6 +333,11 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
         instance.referral_partner_code = None
 
     if instance.referral_partner_parent and instance.is_partner and not instance.referral_partner_parent_date:
+        if not instance.pk:
+            # NOTE: This is a pre_save signal so you can't add a referral_partner_parent at the same time as you create
+            # user. Shouldn't be an issue except for when writing tests.
+            raise Exception('User needs to be saved once before you can add a referral_partner_parent')
+
         instance.referral_partner_parent_date = timezone.now() + datetime.timedelta(days=180)
 
         data = {
@@ -624,6 +629,8 @@ def create_user_earnings(sale):
                                                                          status=sale.status)
 
                     # Create user earning for the publisher associated to the sale
+                    # We create the earning even if publisher_commission i 0 (because the cut is 0) such as with
+                    # cpc_all_stores because we think this makes the system more understandable
                     UserEarning.objects.create( user=user,
                                                                           user_earning_type=earning_type, sale=sale,
                                                                           from_product=product,

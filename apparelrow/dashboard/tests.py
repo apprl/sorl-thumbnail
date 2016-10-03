@@ -2,6 +2,7 @@ import re
 import urllib
 import os
 import logging
+from decimal import Decimal as D
 from django.contrib.admin import AdminSite
 
 from advertiser.models import Transaction
@@ -22,6 +23,7 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserE
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
 from apparelrow.dashboard.views import get_store_earnings
+from apparelrow.dashboard import admin_dashboard_stats
 from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange,\
     SOURCE_LINK_MAX_LEN, compress_source_link_if_needed, links_redis_connection, links_redis_key
 from apparelrow.dashboard.forms import SaleAdminFormCustom
@@ -32,6 +34,8 @@ from apparelrow.profile.models import PaymentDetail
 from apparelrow.statistics.factories import *
 
 from mock import patch
+from model_mommy.mommy import make
+from freezegun import freeze_time
 
 from apparelrow.statistics.models import ProductStat
 
@@ -3131,3 +3135,140 @@ class TestStoreCommission(TransactionTestCase):
         self.assertEqual(currency, cut.locale_cpc_currency)
         self.assertEqual(earning_type, "is_cpc")
         self.assertEqual(type_code, 0)
+
+
+
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
+class TestAdminDashboardCalculations(TransactionTestCase):
+
+    def setUp(self):
+        admin_dashboard_stats.flush_stats_cache()
+        self.order_id = 10000
+
+
+    def click(self, store, click_date, publisher=None, order_value=0, invalidate_click=False):
+        """
+        Simulates a user click on a link created by publisher
+        """
+
+        if order_value and not store.vendor.is_cpo:
+            raise Exception("Don't pass an order value with a non-cpo vendor")
+
+        with freeze_time(click_date):
+            make(ProductStat, vendor=store.vendor.name, user_id=publisher.id if publisher else 0, is_valid=(not invalidate_click))
+
+            page = '%s-Shop' % ((publisher.pk,) if publisher else 0)
+            response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'),
+                                                                            store.identifier,
+                                                                            'http://www.mystore.com/myproduct/',
+                                                                            page))
+            self.assertEqual(response.status_code, 302)
+            if order_value and store.vendor.is_cpo:
+                payload = dict(store_id=store.identifier, order_id=str(self.order_id), order_value=order_value, currency='EUR')
+                response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(payload)))
+                self.assertEqual(response.status_code, 200)
+                self.order_id += 1
+                return self.order_id - 1
+
+
+    def test_calculations_ppc_as(self):
+
+        # Create users
+
+        # PPC all stores publisher
+        ppc_as_publisher = make(get_user_model(),
+                                is_partner=True,
+                                partner_group__has_cpc_all_stores=True
+                                )
+
+        # Referral user - should get kickbacks on whatever ppc_as_publisher is making
+        with freeze_time(datetime.date(2016, 8, 1)):
+            ppc_as_publisher.referral_partner_parent = make(get_user_model(),
+                                                            is_partner=True,
+                                                            referral_partner=True,
+                                                            partner_group=ppc_as_publisher.partner_group)
+            ppc_as_publisher.save()
+
+
+        # Create stores / vendors. We only create AAN vendors because it allows us to control commission_percentage
+
+        cpo_store = make(Store, vendor__is_cpo=True, vendor__is_cpc=False, vendor__name='cpo_v', commission_percentage='0.2')
+        cpc_store = make(Store, vendor__is_cpc=True, vendor__is_cpo=False, vendor__name='cpc_v', commission_percentage='0.4')
+        make(ClickCost, vendor=cpc_store.vendor, amount=5)
+        make(Cut, vendor=cpc_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1) # ppc_as click cost = 3 for ppc stores
+        make(Cut, vendor=cpo_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1) # same for ppo stores
+
+
+        # Create clicks, both valid and invalid
+
+        self.click(cpo_store, datetime.date(2016, 8, 1), publisher=ppc_as_publisher, order_value=500)   # with 20% commission = 100. Only 3 to ppc_as publisher
+        self.click(cpo_store, datetime.date(2016, 8, 1), publisher=None, order_value=600)   # with 20% commission = 120 - all goes to Apprl
+        self.click(cpo_store, datetime.date(2016, 8, 2), publisher=ppc_as_publisher, invalidate_click=True)   # click shouldn't count
+        self.click(cpo_store, datetime.date(2016, 8, 2), publisher=ppc_as_publisher)    # no cpo conversion, but ppc_as publisher still gets 3
+
+        self.click(cpc_store, datetime.date(2016, 8, 1), publisher=ppc_as_publisher)    # 3 to ppc_as publisher. vendor pays 5
+        self.click(cpc_store, datetime.date(2016, 8, 2), publisher=ppc_as_publisher, invalidate_click=True)   # shouldn't count
+
+        self.click(cpc_store, datetime.date(2016, 9, 1), publisher=ppc_as_publisher)   # this one shouldn't count in stats since it's out of range
+
+        # Collect clicks, import sales & generate user earnings.
+        # If you change clicks above, remember to run clicks_summary for all days that you have made clicks
+
+        management.call_command('clicks_summary', verbosity=0, date="2016-08-01")
+        management.call_command('clicks_summary', verbosity=0, date="2016-08-02")
+        management.call_command('clicks_summary', verbosity=0, date="2016-09-01")
+        management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+
+
+        print 'zz'
+
+        # Test it!
+
+        self.assertEqual(admin_dashboard_stats.earnings_total(2016, 8), 225)    # 100 + 120 commission from cpo sales + 5 cpc click cost
+        self.assertEqual(admin_dashboard_stats.earnings_publisher(2016, 8), 9)  # 3 valid ppc_as clicks x 3 = 9
+        self.assertEqual(admin_dashboard_stats.earnings_apprl(2016, 8), 225-9)  # defined as total - publisher
+
+        self.assertEqual(admin_dashboard_stats.referral_earnings_total(2016, 8), 0)         # by definition
+        self.assertEqual(admin_dashboard_stats.referral_earnings_publisher(2016, 8), D('50.90'))  # 50 (default signup bonus) + 10% (defined in Cuts) of 9 (publisher earnings)
+        self.assertEqual(admin_dashboard_stats.referral_earnings_apprl(2016, 8), D('-50.9'))     # -publisher earnings by definition
+
+        self.assertEqual(admin_dashboard_stats.ppo_commission_total(2016, 8), 220)
+        self.assertEqual(admin_dashboard_stats.ppo_commission_publisher(2016, 8), 0)    # by definition
+        self.assertEqual(admin_dashboard_stats.ppo_commission_apprl(2016, 8), 0)        # by definition
+
+        self.assertEqual(admin_dashboard_stats.ppc_commission_total(2016, 8), 5)        # 1 click to ppc store
+        self.assertEqual(admin_dashboard_stats.ppc_commission_publisher(2016, 8), 0)    # by defintion
+        self.assertEqual(admin_dashboard_stats.ppc_commission_apprl(2016, 8), 0)        # by definition
+
+        self.assertEqual(admin_dashboard_stats.ppc_clicks_total(2016, 8), 2)            # by definition
+        self.assertEqual(admin_dashboard_stats.ppc_clicks_publisher(2016, 8), 2)        # incl. invalid
+        self.assertEqual(admin_dashboard_stats.ppc_clicks_apprl(2016, 8), 0)
+
+        self.assertEqual(admin_dashboard_stats.ppo_clicks_total(2016, 8), 4)            # by definition
+        self.assertEqual(admin_dashboard_stats.ppo_clicks_publisher(2016, 8), 3)        # incl. invalid
+        self.assertEqual(admin_dashboard_stats.ppo_clicks_apprl(2016, 8), 1)
+
+        self.assertEqual(admin_dashboard_stats.ppo_sales_total(2016, 8), 2)
+        self.assertEqual(admin_dashboard_stats.ppo_sales_publisher(2016, 8), 1)
+        self.assertEqual(admin_dashboard_stats.ppo_sales_apprl(2016, 8), 1)
+
+        self.assertEqual(admin_dashboard_stats.commission_cr_total(2016, 8), D(2)/D(4))         # 2/4 (ppo sales tot / ppo clicks tot)
+        self.assertEqual(admin_dashboard_stats.commission_cr_publisher(2016, 8), D(1)/D(3))     # 1/3 (ppo sales pub / ppo clicks pub)
+        self.assertEqual(admin_dashboard_stats.commission_cr_apprl(2016, 8), D(1)/D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
+
+        self.assertEqual(admin_dashboard_stats.average_epc_total(2016, 8), D(225)/6)         # 5+100+120 (ppx commission) / 2+4 (ppx clicks incl. invalid)
+        self.assertEqual(admin_dashboard_stats.average_epc_ppc(2016, 8), 2.5)               # 5/2 (ppc commission / ppc clicks)
+        self.assertEqual(admin_dashboard_stats.average_epc_ppo(2016, 8), D(220)/4)           # 100+120/3 (ppo commission / ppo clicks)
+
+        self.assertEqual(admin_dashboard_stats.valid_clicks_total(2016, 8), 4)
+        self.assertEqual(admin_dashboard_stats.valid_clicks_ppc(2016, 8), 1)
+        self.assertEqual(admin_dashboard_stats.valid_clicks_ppo(2016, 8), 3)
+
+        self.assertEqual(admin_dashboard_stats.invalid_clicks_total(2016, 8), 2)
+        self.assertEqual(admin_dashboard_stats.invalid_clicks_ppc(2016, 8), 1)
+        self.assertEqual(admin_dashboard_stats.invalid_clicks_ppo(2016, 8), 1)
+
+        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_income(2016, 8), 100)  # ppo income generated by ppc_as publishers
+        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_cost(2016, 8), 6)      # earnings paid out to ppc_as publishers for clicks to ppo publishers
+        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_result(2016, 8), 94)    # by definition
+
