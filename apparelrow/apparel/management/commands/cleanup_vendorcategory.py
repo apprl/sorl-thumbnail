@@ -48,4 +48,4 @@ class Command(BaseCommand):
                 deleted_count += 1
         if pbar:
             pbar.finish()
-        print 'Deleted [{}] {} vendor categories'.format(options['clen'], deleted_count)
+        print 'Deleted [{}] {} vendor categories'.format(options['clean'], deleted_count)
