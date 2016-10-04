@@ -2,6 +2,7 @@
 import redis
 from decimal import Decimal
 from django.conf import settings
+from progressbar import ProgressBar, Percentage, Bar
 
 
 STATS_TTL = 365 * 25 * 60 * 60
@@ -54,9 +55,26 @@ def flush_stats_cache_by_one_month(year, month):
         redis_conn.delete(*keys)
 
 
+# This can take forever.
+def warm_cache():
+    from apparelrow.dashboard.models import Sale
+    years = [d.year for d in Sale.objects.dates('sale_date', 'year')]
+    # pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=len(years)*12).start()
+    for i, year in enumerate(years):
+        for month in range(1, 13):
+            # pbar.update(i*12+month)
+            warm_cache_by_one_month(year, month)
+
+
+def warm_cache_by_one_year(year):
+    for month in range(1, 13):
+        warm_cache_by_one_month(year, month)
+
+
 def warm_cache_by_one_month(year, month):
     import stats_admin # we need to import it locally to handle circular dependency
-    stats_admin.admin_top_stats(year, month)
+    print 'Warming cache', year, month
+    print stats_admin.admin_top_stats(year, month)
     stats_admin.admin_clicks(year, month)
     stats_admin.ppc_all_stores_stats(year, month)
 
