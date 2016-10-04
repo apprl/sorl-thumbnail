@@ -16,6 +16,7 @@ from django.core.mail import mail_admins
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import dehydrate
+from apparelrow.dashboard import stats_cache
 from apparelrow.profile.models import User
 
 import logging
@@ -495,6 +496,8 @@ def sale_post_save(sender, instance, created, **kwargs):
                         earning.status = instance.status
                         earning.save()
                 str_date = instance.sale_date.strftime('%Y-%m-%d')
+
+                stats_cache.flush_stats_cache_by_one_month(instance.sale_date.year, instance.sale_date.month)
 
                 # Add date from updated sale/earnings to a quere, so the associated aggregated data will be
                 # updated/generated later as well. (update_aggregated_data job)

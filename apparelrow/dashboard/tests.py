@@ -15,6 +15,7 @@ from django.test import TransactionTestCase, TestCase
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
 from django.core import management
+from django.conf import settings
 
 from localeurl.utils import locale_url
 from apparelrow.apparel.models import Vendor, Product, Brand, Category, VendorProduct
@@ -23,7 +24,7 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserE
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
 from apparelrow.dashboard.views import get_store_earnings
-from apparelrow.dashboard import stats_admin
+from apparelrow.dashboard import stats_admin, stats_cache
 from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange,\
     SOURCE_LINK_MAX_LEN, compress_source_link_if_needed, links_redis_connection, links_redis_key
 from apparelrow.dashboard.forms import SaleAdminFormCustom
@@ -3139,10 +3140,10 @@ class TestStoreCommission(TransactionTestCase):
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
-class TestAdminDashboardCalculations(TransactionTestCase):
+class TestStatsAdmin(TransactionTestCase):
 
     def setUp(self):
-        stats_admin.flush_stats_cache()
+        stats_cache.flush_stats_cache()
         self.click_dates = set()
         self.order_id = 10000
         self.test_month = 2
@@ -3211,7 +3212,7 @@ class TestAdminDashboardCalculations(TransactionTestCase):
         return publisher
 
 
-    def test_calculations_ppc_as_publisher(self):
+    def test_stats_ppc_as_publisher(self):
 
         # Create users
 
@@ -3297,7 +3298,7 @@ class TestAdminDashboardCalculations(TransactionTestCase):
         self.assertEqual(stats_admin.ppc_all_stores_publishers_result(*d), 94)    # by definition
 
 
-    def test_calculations_normal_publisher(self):
+    def test_stats_normal_publisher(self):
 
         # Create users
 
@@ -3386,12 +3387,15 @@ class TestAdminDashboardCalculations(TransactionTestCase):
         self.assertEqual(stats_admin.ppc_all_stores_publishers_result(*d), 0)
 
 
+
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
+class TestStatsCache(TransactionTestCase):
+
     def test_month_stats_caching(self):
-        redis_conn = stats_admin.redis_connection()
+        redis_conn = stats_cache.redis_connection()
         redis_conn.flushall()
 
-
-        @stats_admin.month_stats_calc
+        @stats_cache.stats_month_cache
         def foo(year, month):
             return testval
 
@@ -3401,23 +3405,40 @@ class TestAdminDashboardCalculations(TransactionTestCase):
         testval = 2
         self.assertEqual(foo(2016, 8), 1)
 
-        stats_admin.flush_stats_cache()
+        stats_cache.flush_stats_cache()
         testval = 3
         self.assertEqual(foo(2016, 8), 3)
 
-        stats_admin.flush_stats_cache_by_one_year(2016)
+        stats_cache.flush_stats_cache_by_one_year(2016)
         testval = 4
         self.assertEqual(foo(2016, 8), 4)
 
-        stats_admin.flush_stats_cache_by_one_year(2017)
+        stats_cache.flush_stats_cache_by_one_year(2017)
         testval = 5
         self.assertEqual(foo(2016, 8), 4)
 
-        stats_admin.flush_stats_cache_by_one_month(2016, 8)
+        stats_cache.flush_stats_cache_by_one_month(2016, 8)
         testval = 7
         self.assertEqual(foo(2016, 8), 7)
 
-        stats_admin.flush_stats_cache_by_one_month(2016, 9)
+        stats_cache.flush_stats_cache_by_one_month(2016, 9)
         testval = 8
         self.assertEqual(foo(2016, 8), 7)
+
+
+    def test_sales_changes_should_flush_cache(self):
+        publisher = make(get_user_model(), is_partner=True, partner_group__has_cpc_all_stores=False)
+        cpo_store = make(Store, vendor__is_cpo=True, vendor__is_cpc=False, vendor__name='cpo_v')
+        make(Cut, vendor=cpo_store.vendor, group=publisher.partner_group)
+
+        redis_conn = stats_cache.redis_connection()
+        redis_conn.flushall()
+
+        sale = make(Sale, sale_date=datetime.date(2016, 8, 1), user_id=publisher.pk, vendor=cpo_store.vendor, converted_commission=100, status=Sale.PENDING)
+        self.assertEqual(stats_admin.ppo_commission_total(2016, 8), 100)
+
+        sale.converted_commission = 200
+        sale.save()
+        self.assertEqual(stats_admin.ppo_commission_total(2016, 8), 200)
+
 
