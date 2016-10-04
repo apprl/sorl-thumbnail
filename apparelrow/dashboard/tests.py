@@ -23,7 +23,7 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserE
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
 from apparelrow.dashboard.views import get_store_earnings
-from apparelrow.dashboard import admin_dashboard_stats
+from apparelrow.dashboard import stats_admin
 from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange,\
     SOURCE_LINK_MAX_LEN, compress_source_link_if_needed, links_redis_connection, links_redis_key
 from apparelrow.dashboard.forms import SaleAdminFormCustom
@@ -3142,7 +3142,7 @@ class TestStoreCommission(TransactionTestCase):
 class TestAdminDashboardCalculations(TransactionTestCase):
 
     def setUp(self):
-        admin_dashboard_stats.flush_stats_cache()
+        stats_admin.flush_stats_cache()
         self.click_dates = set()
         self.order_id = 10000
         self.test_month = 2
@@ -3248,53 +3248,53 @@ class TestAdminDashboardCalculations(TransactionTestCase):
 
         d = (self.test_year, self.test_month)
 
-        self.assertEqual(admin_dashboard_stats.earnings_total(*d), 225)    # 100 + 120 commission from cpo sales + 5 cpc click cost
-        self.assertEqual(admin_dashboard_stats.earnings_publisher(*d), 9)  # 3 valid ppc_as clicks x 3 = 9
-        self.assertEqual(admin_dashboard_stats.earnings_apprl(*d), 225-9)  # defined as total - publisher
+        self.assertEqual(stats_admin.earnings_total(*d), 225)    # 100 + 120 commission from cpo sales + 5 cpc click cost
+        self.assertEqual(stats_admin.earnings_publisher(*d), 9)  # 3 valid ppc_as clicks x 3 = 9
+        self.assertEqual(stats_admin.earnings_apprl(*d), 225 - 9)  # defined as total - publisher
 
-        self.assertEqual(admin_dashboard_stats.referral_earnings_total(*d), 0)         # by definition
-        self.assertEqual(admin_dashboard_stats.referral_earnings_publisher(*d), D('50.90'))  # 50 (default signup bonus) + 10% (defined in Cuts) of 9 (publisher earnings)
-        self.assertEqual(admin_dashboard_stats.referral_earnings_apprl(*d), D('-50.9'))     # -publisher earnings by definition
+        self.assertEqual(stats_admin.referral_earnings_total(*d), 0)         # by definition
+        self.assertEqual(stats_admin.referral_earnings_publisher(*d), D('50.90'))  # 50 (default signup bonus) + 10% (defined in Cuts) of 9 (publisher earnings)
+        self.assertEqual(stats_admin.referral_earnings_apprl(*d), D('-50.9'))     # -publisher earnings by definition
 
-        self.assertEqual(admin_dashboard_stats.ppo_commission_total(*d), 220)
-        self.assertEqual(admin_dashboard_stats.ppo_commission_publisher(*d), 0)    # by definition
-        self.assertEqual(admin_dashboard_stats.ppo_commission_apprl(*d), 0)        # by definition
+        self.assertEqual(stats_admin.ppo_commission_total(*d), 220)
+        self.assertEqual(stats_admin.ppo_commission_publisher(*d), 0)    # by definition
+        self.assertEqual(stats_admin.ppo_commission_apprl(*d), 0)        # by definition
 
-        self.assertEqual(admin_dashboard_stats.ppc_commission_total(*d), 5)        # 1 click to ppc store
-        self.assertEqual(admin_dashboard_stats.ppc_commission_publisher(*d), 0)    # by defintion
-        self.assertEqual(admin_dashboard_stats.ppc_commission_apprl(*d), 0)        # by definition
+        self.assertEqual(stats_admin.ppc_commission_total(*d), 5)        # 1 click to ppc store
+        self.assertEqual(stats_admin.ppc_commission_publisher(*d), 0)    # by defintion
+        self.assertEqual(stats_admin.ppc_commission_apprl(*d), 0)        # by definition
 
-        self.assertEqual(admin_dashboard_stats.ppc_clicks_total(*d), 2)            # by definition
-        self.assertEqual(admin_dashboard_stats.ppc_clicks_publisher(*d), 2)        # incl. invalid
-        self.assertEqual(admin_dashboard_stats.ppc_clicks_apprl(*d), 0)
+        self.assertEqual(stats_admin.ppc_clicks_total(*d), 2)            # by definition
+        self.assertEqual(stats_admin.ppc_clicks_publisher(*d), 2)        # incl. invalid
+        self.assertEqual(stats_admin.ppc_clicks_apprl(*d), 0)
 
-        self.assertEqual(admin_dashboard_stats.ppo_clicks_total(*d), 4)            # by definition
-        self.assertEqual(admin_dashboard_stats.ppo_clicks_publisher(*d), 3)        # incl. invalid
-        self.assertEqual(admin_dashboard_stats.ppo_clicks_apprl(*d), 1)
+        self.assertEqual(stats_admin.ppo_clicks_total(*d), 4)            # by definition
+        self.assertEqual(stats_admin.ppo_clicks_publisher(*d), 3)        # incl. invalid
+        self.assertEqual(stats_admin.ppo_clicks_apprl(*d), 1)
 
-        self.assertEqual(admin_dashboard_stats.ppo_sales_total(*d), 2)
-        self.assertEqual(admin_dashboard_stats.ppo_sales_publisher(*d), 1)
-        self.assertEqual(admin_dashboard_stats.ppo_sales_apprl(*d), 1)
+        self.assertEqual(stats_admin.ppo_sales_total(*d), 2)
+        self.assertEqual(stats_admin.ppo_sales_publisher(*d), 1)
+        self.assertEqual(stats_admin.ppo_sales_apprl(*d), 1)
 
-        self.assertEqual(admin_dashboard_stats.commission_cr_total(*d), D(2)/D(4))         # 2/4 (ppo sales tot / ppo clicks tot)
-        self.assertEqual(admin_dashboard_stats.commission_cr_publisher(*d), D(1)/D(3))     # 1/3 (ppo sales pub / ppo clicks pub)
-        self.assertEqual(admin_dashboard_stats.commission_cr_apprl(*d), D(1)/D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
+        self.assertEqual(stats_admin.commission_cr_total(*d), D(2) / D(4))         # 2/4 (ppo sales tot / ppo clicks tot)
+        self.assertEqual(stats_admin.commission_cr_publisher(*d), D(1) / D(3))     # 1/3 (ppo sales pub / ppo clicks pub)
+        self.assertEqual(stats_admin.commission_cr_apprl(*d), D(1) / D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
 
-        self.assertEqual(admin_dashboard_stats.average_epc_total(*d), D(225)/6)         # 5+100+120 (ppx commission) / 2+4 (ppx clicks incl. invalid)
-        self.assertEqual(admin_dashboard_stats.average_epc_ppc(*d), 2.5)               # 5/2 (ppc commission / ppc clicks)
-        self.assertEqual(admin_dashboard_stats.average_epc_ppo(*d), D(220)/4)           # 100+120/3 (ppo commission / ppo clicks)
+        self.assertEqual(stats_admin.average_epc_total(*d), D(225) / 6)         # 5+100+120 (ppx commission) / 2+4 (ppx clicks incl. invalid)
+        self.assertEqual(stats_admin.average_epc_ppc(*d), 2.5)               # 5/2 (ppc commission / ppc clicks)
+        self.assertEqual(stats_admin.average_epc_ppo(*d), D(220) / 4)           # 100+120/3 (ppo commission / ppo clicks)
 
-        self.assertEqual(admin_dashboard_stats.valid_clicks_total(*d), 4)
-        self.assertEqual(admin_dashboard_stats.valid_clicks_ppc(*d), 1)
-        self.assertEqual(admin_dashboard_stats.valid_clicks_ppo(*d), 3)
+        self.assertEqual(stats_admin.valid_clicks_total(*d), 4)
+        self.assertEqual(stats_admin.valid_clicks_ppc(*d), 1)
+        self.assertEqual(stats_admin.valid_clicks_ppo(*d), 3)
 
-        self.assertEqual(admin_dashboard_stats.invalid_clicks_total(*d), 2)
-        self.assertEqual(admin_dashboard_stats.invalid_clicks_ppc(*d), 1)
-        self.assertEqual(admin_dashboard_stats.invalid_clicks_ppo(*d), 1)
+        self.assertEqual(stats_admin.invalid_clicks_total(*d), 2)
+        self.assertEqual(stats_admin.invalid_clicks_ppc(*d), 1)
+        self.assertEqual(stats_admin.invalid_clicks_ppo(*d), 1)
 
-        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_income(*d), 100)  # ppo income generated by ppc_as publishers
-        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_cost(*d), 6)      # earnings paid out to ppc_as publishers for clicks to ppo publishers
-        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_result(*d), 94)    # by definition
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_income(*d), 100)  # ppo income generated by ppc_as publishers
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_cost(*d), 6)      # earnings paid out to ppc_as publishers for clicks to ppo publishers
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_result(*d), 94)    # by definition
 
 
     def test_calculations_normal_publisher(self):
@@ -3335,63 +3335,63 @@ class TestAdminDashboardCalculations(TransactionTestCase):
 
         d = (self.test_year, self.test_month)
 
-        self.assertEqual(admin_dashboard_stats.earnings_total(*d), 310)    # 200 + 60 + 40 commission from cpo sales + 5 + 5 cpc
-        self.assertEqual(admin_dashboard_stats.earnings_publisher(*d), 72 + 0.5)  # (200 + 40)*0.3 + 5*0.1
-        self.assertEqual(admin_dashboard_stats.earnings_apprl(*d), 310-72.5)  # defined as total - publisher
+        self.assertEqual(stats_admin.earnings_total(*d), 310)    # 200 + 60 + 40 commission from cpo sales + 5 + 5 cpc
+        self.assertEqual(stats_admin.earnings_publisher(*d), 72 + 0.5)  # (200 + 40)*0.3 + 5*0.1
+        self.assertEqual(stats_admin.earnings_apprl(*d), 310 - 72.5)  # defined as total - publisher
 
         # Referral cuts are wrongly calculated on sale commission, should be based on publisher
         # earnings. https://www.pivotaltracker.com/n/projects/243709
-        self.assertEqual(admin_dashboard_stats.referral_earnings_total(*d), 0)         # by definition
-        self.assertEqual(admin_dashboard_stats.referral_earnings_publisher(*d), 74.5)  # 50 (default signup bonus) + 10% (defined in Cuts) of 200+40+5.
-        self.assertEqual(admin_dashboard_stats.referral_earnings_apprl(*d), -74.5)     # -publisher earnings by definition
+        self.assertEqual(stats_admin.referral_earnings_total(*d), 0)         # by definition
+        self.assertEqual(stats_admin.referral_earnings_publisher(*d), 74.5)  # 50 (default signup bonus) + 10% (defined in Cuts) of 200+40+5.
+        self.assertEqual(stats_admin.referral_earnings_apprl(*d), -74.5)     # -publisher earnings by definition
 
-        self.assertEqual(admin_dashboard_stats.ppo_commission_total(*d), 300)       # 200 + 60 + 40
-        self.assertEqual(admin_dashboard_stats.ppo_commission_publisher(*d), 0)    # by definition
-        self.assertEqual(admin_dashboard_stats.ppo_commission_apprl(*d), 0)        # by definition
+        self.assertEqual(stats_admin.ppo_commission_total(*d), 300)       # 200 + 60 + 40
+        self.assertEqual(stats_admin.ppo_commission_publisher(*d), 0)    # by definition
+        self.assertEqual(stats_admin.ppo_commission_apprl(*d), 0)        # by definition
 
-        self.assertEqual(admin_dashboard_stats.ppc_commission_total(*d), 10)        # 1 click to ppc store
-        self.assertEqual(admin_dashboard_stats.ppc_commission_publisher(*d), 0)    # by defintion
-        self.assertEqual(admin_dashboard_stats.ppc_commission_apprl(*d), 0)        # by definition
+        self.assertEqual(stats_admin.ppc_commission_total(*d), 10)        # 1 click to ppc store
+        self.assertEqual(stats_admin.ppc_commission_publisher(*d), 0)    # by defintion
+        self.assertEqual(stats_admin.ppc_commission_apprl(*d), 0)        # by definition
 
-        self.assertEqual(admin_dashboard_stats.ppc_clicks_total(*d), 3)            # by definition
-        self.assertEqual(admin_dashboard_stats.ppc_clicks_publisher(*d), 2)        # incl. invalid
-        self.assertEqual(admin_dashboard_stats.ppc_clicks_apprl(*d), 1)
+        self.assertEqual(stats_admin.ppc_clicks_total(*d), 3)            # by definition
+        self.assertEqual(stats_admin.ppc_clicks_publisher(*d), 2)        # incl. invalid
+        self.assertEqual(stats_admin.ppc_clicks_apprl(*d), 1)
 
-        self.assertEqual(admin_dashboard_stats.ppo_clicks_total(*d), 4)            # by definition
-        self.assertEqual(admin_dashboard_stats.ppo_clicks_publisher(*d), 3)        # incl. invalid
-        self.assertEqual(admin_dashboard_stats.ppo_clicks_apprl(*d), 1)
+        self.assertEqual(stats_admin.ppo_clicks_total(*d), 4)            # by definition
+        self.assertEqual(stats_admin.ppo_clicks_publisher(*d), 3)        # incl. invalid
+        self.assertEqual(stats_admin.ppo_clicks_apprl(*d), 1)
 
-        self.assertEqual(admin_dashboard_stats.ppo_sales_total(*d), 3)
-        self.assertEqual(admin_dashboard_stats.ppo_sales_publisher(*d), 2)
-        self.assertEqual(admin_dashboard_stats.ppo_sales_apprl(*d), 1)
+        self.assertEqual(stats_admin.ppo_sales_total(*d), 3)
+        self.assertEqual(stats_admin.ppo_sales_publisher(*d), 2)
+        self.assertEqual(stats_admin.ppo_sales_apprl(*d), 1)
 
-        self.assertEqual(admin_dashboard_stats.commission_cr_total(*d), D(3)/D(4))         # 3/4 (ppo sales tot / ppo clicks tot)
-        self.assertEqual(admin_dashboard_stats.commission_cr_publisher(*d), D(2)/D(3))     # 2/3 (ppo sales pub / ppo clicks pub)
-        self.assertEqual(admin_dashboard_stats.commission_cr_apprl(*d), D(1)/D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
+        self.assertEqual(stats_admin.commission_cr_total(*d), D(3) / D(4))         # 3/4 (ppo sales tot / ppo clicks tot)
+        self.assertEqual(stats_admin.commission_cr_publisher(*d), D(2) / D(3))     # 2/3 (ppo sales pub / ppo clicks pub)
+        self.assertEqual(stats_admin.commission_cr_apprl(*d), D(1) / D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
 
-        self.assertEqual(admin_dashboard_stats.average_epc_total(*d), D(310)/7)         # (ppx commission) / (ppx clicks incl. invalid)
-        self.assertEqual(admin_dashboard_stats.average_epc_ppc(*d), D(10)/3)               # (ppc commission / ppc clicks)
-        self.assertEqual(admin_dashboard_stats.average_epc_ppo(*d), D(300)/4)           # (ppo commission / ppo clicks)
+        self.assertEqual(stats_admin.average_epc_total(*d), D(310) / 7)         # (ppx commission) / (ppx clicks incl. invalid)
+        self.assertEqual(stats_admin.average_epc_ppc(*d), D(10) / 3)               # (ppc commission / ppc clicks)
+        self.assertEqual(stats_admin.average_epc_ppo(*d), D(300) / 4)           # (ppo commission / ppo clicks)
 
-        self.assertEqual(admin_dashboard_stats.valid_clicks_total(*d), 5)
-        self.assertEqual(admin_dashboard_stats.valid_clicks_ppc(*d), 2)
-        self.assertEqual(admin_dashboard_stats.valid_clicks_ppo(*d), 3)
+        self.assertEqual(stats_admin.valid_clicks_total(*d), 5)
+        self.assertEqual(stats_admin.valid_clicks_ppc(*d), 2)
+        self.assertEqual(stats_admin.valid_clicks_ppo(*d), 3)
 
-        self.assertEqual(admin_dashboard_stats.invalid_clicks_total(*d), 2)
-        self.assertEqual(admin_dashboard_stats.invalid_clicks_ppc(*d), 1)
-        self.assertEqual(admin_dashboard_stats.invalid_clicks_ppo(*d), 1)
+        self.assertEqual(stats_admin.invalid_clicks_total(*d), 2)
+        self.assertEqual(stats_admin.invalid_clicks_ppc(*d), 1)
+        self.assertEqual(stats_admin.invalid_clicks_ppo(*d), 1)
 
-        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_income(*d), 0)
-        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_cost(*d), 0)
-        self.assertEqual(admin_dashboard_stats.ppc_all_stores_publishers_result(*d), 0)
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_income(*d), 0)
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_cost(*d), 0)
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_result(*d), 0)
 
 
     def test_month_stats_caching(self):
-        redis_conn = admin_dashboard_stats.redis_connection()
+        redis_conn = stats_admin.redis_connection()
         redis_conn.flushall()
 
 
-        @admin_dashboard_stats.month_stats_calc
+        @stats_admin.month_stats_calc
         def foo(year, month):
             return testval
 
@@ -3401,23 +3401,23 @@ class TestAdminDashboardCalculations(TransactionTestCase):
         testval = 2
         self.assertEqual(foo(2016, 8), 1)
 
-        admin_dashboard_stats.flush_stats_cache()
+        stats_admin.flush_stats_cache()
         testval = 3
         self.assertEqual(foo(2016, 8), 3)
 
-        admin_dashboard_stats.flush_stats_cache_by_one_year(2016)
+        stats_admin.flush_stats_cache_by_one_year(2016)
         testval = 4
         self.assertEqual(foo(2016, 8), 4)
 
-        admin_dashboard_stats.flush_stats_cache_by_one_year(2017)
+        stats_admin.flush_stats_cache_by_one_year(2017)
         testval = 5
         self.assertEqual(foo(2016, 8), 4)
 
-        admin_dashboard_stats.flush_stats_cache_by_one_month(2016, 8)
+        stats_admin.flush_stats_cache_by_one_month(2016, 8)
         testval = 7
         self.assertEqual(foo(2016, 8), 7)
 
-        admin_dashboard_stats.flush_stats_cache_by_one_month(2016, 9)
+        stats_admin.flush_stats_cache_by_one_month(2016, 9)
         testval = 8
         self.assertEqual(foo(2016, 8), 7)
 

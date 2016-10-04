@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
-from apparelrow.dashboard.admin_dashboard_stats import admin_top_stats, admin_clicks
+from apparelrow.dashboard.stats_admin import admin_top_stats, admin_clicks
 from apparelrow.apparel.utils import get_location
 from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
