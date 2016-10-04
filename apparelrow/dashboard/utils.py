@@ -72,7 +72,10 @@ def parse_date(month, year, first_to_first=False):
 
 def get_clicks_from_sale(sale):
     """
-    Return number of clicks generated from the given sale
+    Return number of clicks generated from the given sale.
+    This works because of the way we aggregate clicks. We collect them once per day per user & vendor and put them
+    in a single Sale
+    This is Depracted. Nowadays we use Sale.num_clicks instead
     """
     user_id = sale.user_id
     start_date_query = datetime.datetime.combine(sale.sale_date, datetime.time(0, 0, 0, 0))
