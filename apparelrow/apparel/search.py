@@ -237,7 +237,8 @@ def product_delete(instance, **kwargs):
     except:
         logger.warn("Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
     finally:
-        if sorl_image and sorl_image.exists():
+        image_name = instance.product_image.name
+        if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
            sorl_image.delete()
 
     logger.info("Trying to clean up theimp.Product: {}".format(instance.product_key))
