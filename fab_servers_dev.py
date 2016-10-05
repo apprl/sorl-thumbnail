@@ -17,8 +17,7 @@ def dev_settings():
     env.db_user = 'apparel'
     env.db_pass = '0p1a7IUmE6NU'
     env.db_url = 'apprldbinstance.cirbmil58ncc.us-east-1.rds.amazonaws.com'
-    env.memcached_url_conf =  "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
-    env.memcached_url_nginx = "importer.naojmu.cfg.use1.cache.amazonaws.com"
+    env.memcached_url = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
     #env.memcached_url_conf = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
     env.redis_url = "ip-10-0-1-249.ec2.internal"
     env.solr_url = "ip-10-0-1-247.ec2.internal"
@@ -114,7 +113,7 @@ def dev_scraper():
     env.hosts = ['%(user)s@ip-10-0-1-248.ec2.internal' % env]
     env.celery_processes = '1'
     env.celery_processes_background = '1'
-    env.memcached_url_nginx = "importer.naojmu.cfg.use1.cache.amazonaws.com"
+    #env.memcached_url = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
     env.installed_apps = ['']
     env.run_user = env.user
     env.restart = ['scrapyd']
@@ -128,7 +127,7 @@ def dev_importer():
     dev_settings()
     env.settings = "dev-importer-aws"
     env.hosts = ['%(user)s@ip-10-0-1-249.ec2.internal' % env]
-    env.memcached_url_nginx = "importer.naojmu.cfg.use1.cache.amazonaws.com"
+    #env.memcached_url_nginx = "importer.naojmu.cfg.use1.cache.amazonaws.com"
     env.celery_processes = '0'
     env.celery_processes_background = '0'
     env.installed_apps = ['']
