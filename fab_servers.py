@@ -94,7 +94,7 @@ def prod_admin_aws():
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
     env.installed_apps = ['supervisor-gunicorn-admin','gunicorn-admin','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
-    env.restart = ['gunicorn_admin','nginx']
+    env.restart = ['gunicorn_admin']
     env.hostname = 'admin'
     env.collectstatic = False
     env.sentry_url = 'https://2288cb94cf934fcdae0c14a483c3316f:1d37dd4c7153493e828b1e546e656c77@sentry.apprl.com/2'
