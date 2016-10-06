@@ -801,7 +801,7 @@ THUMBNAIL_ENGINE = 'apparelrow.apparel.sorl_extension.Engine'
 THUMBNAIL_BACKEND = 'apparelrow.apparel.sorl_extension.NamedThumbnailBackend'
 THUMBNAIL_PREFIX = 'cache/'
 THUMBNAIL_DEBUG = False
-THUMBNAIL_DUMMY = True
+THUMBNAIL_DUMMY = False
 THUMBNAIL_DUMMY_SOURCE = "http://dummyimage.com/%(width)sx%(height)s"
 
 # FEED
