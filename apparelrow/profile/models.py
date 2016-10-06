@@ -280,8 +280,8 @@ class User(AbstractUser):
             if format:
                 extras.update({"format": format})
             return get_thumbnail(self.image, size, **extras).url
-        except IOError:
-            log.warn(u"User {} has a missing profile picture {}.".format(self.id, self.image.name))
+        except IOError, msg:
+            log.warn(u"User {} has a missing profile picture {} [{}].".format(self.id, self.image.name, msg))
             return None
 
     def _get_default_profile(self, brand_avatar, default_avatar):
