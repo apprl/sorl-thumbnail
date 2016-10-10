@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load cache i18n humanize thumbnail apparel_extras buy_extras %}
+{% load cache i18n humanize thumbnail apparel_extras buy_extras static %}
 
 {% block extra-title %}{% cache CACHE_TIMEOUT product_detail_title object.id LANGUAGE_CODE %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {% if object.color_list_locale %}{% for color in object.color_list_locale %}{{ color }}{% if not forloop.last %}{% if forloop.revcounter == 2 %} & {% else %}, {% endif %}{% endif %}{% endfor %} |{% endif %} {{ object.categories|join:' | ' }} | {% trans object.get_gender_display %} | {% endcache %}{% endblock %}
 
@@ -86,9 +86,13 @@
                     <hr>
 
                     <div class="product-image">
-                        {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
-                        <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}">
-                        {% endthumbnail %}
+                        {% if object.product_image %}
+                            {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
+                                <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}">
+                            {% endthumbnail %}
+                        {% else %}
+                            <img itemprop="image" src="{% static "images/image_not_available.jpg" %}" width="328" height="432" title="{{ object }}">
+                        {% endif %}
                     </div>
                 </section>
             </div>
