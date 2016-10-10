@@ -17,8 +17,8 @@ def prod_settings():
     env.db_user = 'apparel'
     env.db_pass = 'gUp8Swub'
     env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
-    #env.memcached_url_nginx = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.memcached_url = 'apparel-cache.uhyk4j.cfg.euw1.cache.amazonaws.com'
+    env.memcached_url_nginx = 'nginx.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.redis_url = "ip-10-0-1-166.eu-west-1.compute.internal"
     env.solr_url =  "ip-10-0-1-38.eu-west-1.compute.internal"
     env.s3_url = "s.apprl.com"
