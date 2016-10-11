@@ -27,6 +27,7 @@ from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
 from factories import *
+import os
 
 """ CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -1376,6 +1377,158 @@ class TestSearch(TransactionTestCase):
         brands_list = get_available_brands('A', 'NO')
         self.assertNotIn(self.manufacturer.id, brands_list)
 
+
+class TestThumbnailClean(TestCase):
+
+    def test_cleaning_thumbnails(self):
+        from sorl.thumbnail.images import ImageFile, deserialize_image_file
+        from sorl.thumbnail import default
+        from sorl.thumbnail.models import KVStore
+        from theimp.factories import ProductFactory as ImpProductFactory
+        from theimp.models import Product as ImpProduct
+        django_image_file = _create_dummy_image()
+        pk_key = lambda x: "||".join(["sorl-thumbnail","image", x])
+        thumbnails_key = lambda x: "||".join(["sorl-thumbnail","thumbnails", x])
+
+        args_vendor = {}
+        args_vendor['name'] = "Jerkstore"
+        vendor = VendorFactory.create(**args_vendor)
+        category = CategoryFactory.create()
+        manufacturer = BrandFactory.create()
+        product_name = 'Product'
+        product = ProductFactory.create(
+            product_name=product_name,
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            product_key="http://someurl.com/brand/product1",
+            availability=True,
+            product_image=django_image_file
+        )
+
+        # Must enter a FieldFile object to ImageFile, not Image or it will not work.
+        file_exists = os.path.isfile( product.product_image.file.name )
+        self.assertTrue(file_exists)
+        # Created the image itself, thumbnail connection object and then entries for the thumbnails themselves 1 + 1 + 3
+        # Every time a product is created, three thumbnails are created.
+        self.assertTrue(KVStore.objects.all().count(), 1 + 1 + 3)
+        sorl_image = ImageFile(product.product_image)
+        print "Sorl image: {}".format(sorl_image.name)
+        key = sorl_image.key
+
+        thumbnail_keys = _get_all_thumbnail_keys(key)
+        self.assertEquals(len(thumbnail_keys), 3)
+        thumbnail_list = _get_all_thumbnail_objects(key)
+        self.assertEquals(len(thumbnail_list), 3)
+
+        save_entries = []
+        for thumb in thumbnail_keys:
+            # Verify that files exists
+            kvstore = KVStore.objects.get(key=pk_key(thumb))
+            save_entries.append(kvstore)
+            #print "{}/{}".format(kvstore.key, kvstore.value)
+            image_file = deserialize_image_file(kvstore.value)
+            print "This thumbnail file name: {}".format(image_file.name)
+            self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
+
+        default.kvstore.delete_thumbnails(sorl_image)
+
+        for kvstore in save_entries:
+            # Verify that files are gone exists
+            self.assertFalse(KVStore.objects.filter(key=pk_key(kvstore.key)).exists())
+            image_file = deserialize_image_file(kvstore.value)
+            self.assertFalse(os.path.isfile(os.path.join(image_file.storage.base_location, image_file.name )))
+
+        self.assertEquals(len(_get_all_thumbnail_keys(key)), 0)
+
+        thumbnail = get_thumbnail(product.product_image, "10x10")
+        print "Thumbnail: {}".format(thumbnail.name)
+        self.assertEquals(len(_get_all_thumbnail_keys(key)), 1)
+        print "Finished this round of testing thumbnails"
+
+        self.assertTrue(thumbnail.exists())
+        self.assertTrue(os.path.isfile(os.path.join(thumbnail.storage.base_location, thumbnail.name)))
+        filename = thumbnail.name
+        base_location = thumbnail.storage.base_location
+        thumbnail.delete()
+        self.assertFalse(os.path.isfile(os.path.join(base_location, filename)))
+
+        self.assertTrue(sorl_image.exists())
+        self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
+        filename = sorl_image.name
+        base_location = thumbnail.storage.base_location
+        default.kvstore.delete(sorl_image)
+        sorl_image.delete()
+        self.assertFalse(sorl_image.exists())
+        self.assertFalse(os.path.isfile(os.path.join(base_location, filename)))
+
+        #image_field = Image.open(product_image.file)
+        #print "Key found for {} is {}".format(image.filename, sorl_image.key)
+        #print "Sorl image exists: {}".format(sorl_image.exists())
+        #file_exists = os.path.isfile(product_image.file.name)
+        #unison_exists = bool(sorl_image.exists() and file_exists)
+        #print "File unison exists: {}".format(unison_exists)
+        django_image_file_2 = _create_dummy_image()
+        args_vendor = {}
+        args_vendor['name'] = "Jerkstore"
+        vendor = VendorFactory.create(**args_vendor)
+        category = CategoryFactory.create()
+        manufacturer = BrandFactory.create()
+        product_name = 'Product2'
+        product_key = "http://someurlother.com/brand/product1"
+        product_2 = ProductFactory.create(
+            product_name=product_name,
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            product_key=product_key,
+            availability=True,
+            product_image=django_image_file_2
+        )
+
+        imp_product = ImpProductFactory.create(
+            key = product_key
+        )
+
+        self.assertTrue(ImpProduct.objects.filter(key=product_key).exists())
+        self.assertTrue(ImpProduct.objects.filter(pk=imp_product.id).exists())
+        # Check if files exists, thumbs exists
+        self.assertTrue(os.path.isfile( product_2.product_image.file.name ))
+        sorl_image = ImageFile(product_2.product_image)
+        self.assertTrue(sorl_image.exists())
+        self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
+
+        key = sorl_image.key
+        full_filename = os.path.join(sorl_image.storage.base_location, sorl_image.name)
+
+        save_entries = []
+        for image_file in _get_all_thumbnail_objects(key):
+            # Verify that files exists
+            save_entries.append(image_file)
+            print "This thumbnail file name: {}".format(image_file.name)
+            self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
+
+        print "Deleting {}.".format(product_2)
+        # This also deletes the corresponding theimp product
+        product_2.delete()
+        self.assertFalse(ImpProduct.objects.filter(key=product_key).exists())
+        self.assertFalse(ImpProduct.objects.filter(pk=imp_product.id).exists())
+        # Check if file exists through other interface, should be gone
+        self.assertFalse(os.path.isfile(full_filename))
+        # Check if file exists, should be gone
+        self.assertFalse(sorl_image.exists())
+
+        for thumb_file in save_entries:
+            # Verify that files are gone exists
+            file_path = os.path.join(thumb_file.storage.base_location, thumb_file.name )
+            print "Verify file is gone {}".format(file_path)
+            self.assertFalse(thumb_file.exists())
+            self.assertFalse(os.path.isfile(file_path))
+
+
+
 def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
     django_image_file = _create_dummy_image()
     _cleanout_product(product_key)
@@ -1431,3 +1584,28 @@ def _create_dummy_image():
     image_file.seek(0)
 
     return ContentFile(image_file.read(), 'test.png')
+
+def _get_all_thumbnail_keys(key):
+    """
+    Returns the keys to the
+    :param key:
+    :return:
+    """
+    from sorl.thumbnail import default
+    thumbnail_keys = default.kvstore._get(key, identity='thumbnails')
+    return thumbnail_keys or []
+    #if thumbnail_keys:
+        # Delete all thumbnail keys from store and delete the
+        # thumbnail ImageFiles.
+    #    for key in thumbnail_keys:
+    #        thumbnail = default.kvstore._get(key)
+    #        if thumbnail:
+    #            print "Deleting entry & file: {}".format(thumbnail.name)
+                #default.kvstore.delete(thumbnail)
+                #thumbnail.delete() # delete the actual file
+        # Delete the thumbnails key from store
+        #default.kvstore._delete(image_file.key, identity='thumbnails')
+
+def _get_all_thumbnail_objects(key):
+    from sorl.thumbnail import default
+    return [ default.kvstore._get(thumb_key) for thumb_key in _get_all_thumbnail_keys(key)]

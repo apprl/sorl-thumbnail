@@ -216,6 +216,41 @@ def product_save(instance, **kwargs):
 
 @receiver(post_delete, sender=Product, dispatch_uid='product_delete')
 def product_delete(instance, **kwargs):
+    """
+    Removes the product from the SOLR index and also deletes any lingering thumbnails
+    :param instance:
+    :param kwargs:
+    :return:
+    """
+    from sorl.thumbnail.images import ImageFile as SorlImageFile, deserialize_image_file
+    from sorl.thumbnail import default
+    from theimp.models import Product as ImpProduct
+    sorl_image = None
+    try:
+        logger.info(u"Trying to remove image and thumbnails for {}".format(instance))
+        sorl_image = SorlImageFile(instance.product_image)
+        try:
+            default.kvstore.delete_thumbnails(sorl_image)
+            default.kvstore.delete(sorl_image)
+        except:
+            logger.warn("Failed to remove thumbnails for product {}.".format(instance.pk))
+    except:
+        logger.warn("Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
+    finally:
+        image_name = instance.product_image.name
+        if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
+           sorl_image.delete()
+
+    logger.info("Trying to clean up theimp.Product: {}".format(instance.product_key))
+    try:
+        if ImpProduct.objects.filter(key=instance.product_key).exists():
+            product = ImpProduct.objects.get(key=instance.product_key)
+            logger.info("Cleaning out Imp product: {}".format(product.id))
+            product.delete()
+    except:
+        logger.warn("Unable to clean out Imp product corresponding to: {}".format(instance.product_key))
+
+
     connection = Solr(settings.SOLR_URL)
     connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 

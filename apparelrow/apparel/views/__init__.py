@@ -12,7 +12,7 @@ import re
 import tldextract
 
 from django.conf import settings
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.http.response import HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
@@ -317,6 +317,14 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'apparel/product_detail.html'
 
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object(**kwargs)
+        except Http404:
+            return redirect(reverse("shop"))
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         product = self.object
@@ -333,13 +341,17 @@ class ProductDetailView(DetailView):
         likes = product.likes.filter(active=True, user__is_hidden=False).order_by('modified').select_related('user')
         regular_likes = likes.filter(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
         partner_likes = likes.exclude(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
-        # Full image url
+
+        # Full image url. Todo: Not used anymore so should be removed /Klas.
+        missing_image = False
         try:
             product_full_image = request.build_absolute_uri(
                 get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
         except IOError:
             logging.error('Product id %s does not have a valid image on disk' % (product.pk,))
-            raise Http404
+            product.product_image = None
+            #raise Http404
+
         # Full brand url
         product_brand_full_url = ''
         if product.manufacturer and product.manufacturer.user:
@@ -386,7 +398,7 @@ class ProductDetailView(DetailView):
             'object_url': request.build_absolute_uri(),
             'more_like_this': more_like_this_product(mlt_body, product.gender, get_location(request), 9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
-            'product_full_image': product_full_image,
+            #'product_full_image': product_full_image,
             'product_brand_full_url': product_brand_full_url,
             'likes': regular_likes,
             'partner_likes': partner_likes,
@@ -1340,7 +1352,10 @@ def product_lookup(request):
         # it may be a reason for it. However, if unable to match the domain in the DomainDeepLinking templates then we have
         # vendor = None. The link we extract is not used in any case, so definitely not sure about the whole process.
         # Suggestion would be to drop this lookup entirely and just use the product.default_vendor below. /Klas
-        _, vendor = product_lookup_by_domain(request, domain, original_key)
+
+        # Removed this 20160912 and are taking the vendor from product instead. /Klas
+        #_, vendor = product_lookup_by_domain(request, domain, original_key)
+        vendor = product.default_vendor.vendor
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
             help_text = "sale" if vendor.is_cpo else "click"

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from advertiser.models import Cookie
+
 __author__ = 'klaswikblad'
 
 from theimp.models import Product as ImpProduct
@@ -10,18 +12,13 @@ from datetime import timedelta
 
 class Command(BaseCommand):
     args = ''
-    help = 'Update referer for ProductStat instances, so it will only include HTTP referer link and not any other'
+    help = 'Remove older cookies from table'
     option_list = BaseCommand.option_list + (
-            make_option('--vendor',
-            action='store',
-            dest='vendor',
-            default=None,
-        ),
         make_option('--offset',
             action='store',
             dest='offset',
             help='Select the amount of days to go back',
-            default=540,
+            default=180,
         ),
         make_option('--y',
             action='store_true',
@@ -35,19 +32,18 @@ class Command(BaseCommand):
         offset = int(options.get('offset'))
 
         purge_date = datetime.date.today() - timedelta(days=offset)
-        total_products = ImpProduct.objects.filter(modified__lt=purge_date).count()
-
-        if not total_products > 0:
-            print "No products to purge!"
-            return
-
+        total_cookies = Cookie.objects.filter(created__lt=purge_date).count()
         input_verified = options.get("input")
 
+        if not total_cookies > 0:
+            print "No cookies to purge!"
+            return
+
         if not input_verified:
-            prompt = "Will remove all scraped products not modified since {}: {} units. Are you sure? [Y/n]".format(purge_date, total_products)
+            prompt = "Will remove all cookies +{} : {} units. Are you sure? [Y/n]".format(purge_date, total_cookies)
             input_verified = bool(raw_input(prompt) == "Y")
 
         if input_verified:
-            print ImpProduct.objects.filter(modified__lt=purge_date).delete()
+            Cookie.objects.filter(created__lt=purge_date).delete()
         else:
-            print "Canceling purge"
+            print "Canceling cookie purge"
