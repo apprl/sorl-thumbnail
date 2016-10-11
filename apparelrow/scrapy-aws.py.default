@@ -89,7 +89,7 @@ CACHES = {
     },
     'importer': {
         'BACKEND': 'django_elasticache.memcached.ElastiCache',
-        'LOCATION': '{{ memcached_url }}:11211',
+        'LOCATION': '{{ memcached_url_importer }}:11211',
         'TIMEOUT': 60 * 60 * 24 * 20,
     },
 }
