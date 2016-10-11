@@ -361,6 +361,7 @@ class User(AbstractUser):
         if self.image:
             image = self._get_avatar_image(size="50x50", format="PNG")
             if image:
+                default.engine = old_engine
                 return image
             else:
                 image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_CIRCULAR)
@@ -381,6 +382,7 @@ class User(AbstractUser):
         if self.image:
             image = self._get_avatar_image(size='125x125', format="PNG")
             if image:
+                default.engine = old_engine
                 return image
             else:
                 image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_MEDIUM_CIRCULAR)
@@ -401,6 +403,7 @@ class User(AbstractUser):
         if self.image:
             image = self._get_avatar_image(size='208x208', format="PNG")
             if image:
+                default.engine = old_engine
                 return image
             else:
                 image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
