@@ -960,8 +960,20 @@ class Look(models.Model):
         """
         look = Look.objects.get(pk=look_id)
 
-        # Build temporary static look image
-        look.static_image = 'static/images/white.png'
+        # Build temporary static look image (Surrounding try/catch is a Hotfix)
+        try:
+            from PIL import Image
+            from StringIO import StringIO
+            from django.core.files.base import ContentFile
+            from django.contrib.staticfiles import finders
+            image = Image.open(finders.find('images/white.png'))
+            look.static_image = ContentFile(image)
+        except Exception, msg:
+            # Todo: This should be removed once the solution above can be verified. This will always crash due to IOError
+            # if checked
+            log.warn("Effort trying to fix code crashing thumbnail code when image does not exist failed:{}".format(msg))
+            look.static_image = "static/images/white.png"
+
         look.save(update_fields=['static_image', 'modified'])
 
         # Build static look image in background
