@@ -93,6 +93,8 @@ jQuery(document).ready(function() {
         $('.navigation').width($window.width());
         var captionheight = $('.caption').length ? $('.caption').first().height() + 10 : 0;
 
+        $('.slidecontainer, .productcontainer').css({height: 'auto', width: $window.width() + (padding * 2)});
+
         $images.each(function(item, i) {
             $this = $(this);
             imgratio = $this.attr('width')/$this.attr('height');
