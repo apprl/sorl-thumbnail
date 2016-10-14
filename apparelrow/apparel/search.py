@@ -233,22 +233,22 @@ def product_delete(instance, **kwargs):
             default.kvstore.delete_thumbnails(sorl_image)
             default.kvstore.delete(sorl_image)
         except:
-            logger.warn("Failed to remove thumbnails for product {}.".format(instance.pk))
+            logger.warn(u"Failed to remove thumbnails for product {}.".format(instance.pk))
     except:
-        logger.warn("Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
+        logger.warn(u"Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
     finally:
         image_name = instance.product_image.name
         if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
            sorl_image.delete()
 
-    logger.info("Trying to clean up theimp.Product: {}".format(instance.product_key))
+    logger.info(u"Trying to clean up theimp.Product: {}".format(instance.product_key))
     try:
         if ImpProduct.objects.filter(key=instance.product_key).exists():
             product = ImpProduct.objects.get(key=instance.product_key)
-            logger.info("Cleaning out Imp product: {}".format(product.id))
+            logger.info(u"Cleaning out Imp product: {}".format(product.id))
             product.delete()
     except:
-        logger.warn("Unable to clean out Imp product corresponding to: {}".format(instance.product_key))
+        logger.warn(u"Unable to clean out Imp product corresponding to: {}".format(instance.product_key))
 
 
     connection = Solr(settings.SOLR_URL)
