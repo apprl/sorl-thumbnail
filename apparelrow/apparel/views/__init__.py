@@ -348,7 +348,8 @@ class ProductDetailView(DetailView):
             product_full_image = request.build_absolute_uri(
                 get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
         except IOError:
-            logging.error('Product id %s does not have a valid image on disk' % (product.pk,))
+            logging.warn('Product id %s does not have a valid image on disk' % (product.pk,))
+            # If the image is missing then the template handles this and shows an "Image not available" instead.
             product.product_image = None
             #raise Http404
 
