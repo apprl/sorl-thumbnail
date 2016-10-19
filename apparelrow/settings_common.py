@@ -109,13 +109,18 @@ VENDOR_LOCATION_MAPPING = {
     "Axel Arigato": ["SE", "DK", "NO", "FI"],
     "Shirtonomy": ["DK", "SE"],
     "Ted & Teresa": ["SE"],
+    "Tiger SE": ["SE"],
+    "Tiger DK": ["DK"],
+    "Cubus": ["SE"],
     u"Björn Borg": ["SE"],
+    "Best of Brands": ["SE"],
     "ConfidentLiving": ["SE"],
     "MQ": ["SE"],
     "Care of Carl": ["SE", "NO"],
     "ALDO": ["US"],
     "ASOS": ["FI", "SE", "NO", "DK","US", "ALL"],
     "Lexington": ["FI", "SE", "NO", "DK"],
+    "Thomas Sabo": ["FI", "SE", "NO", "DK"],
     "Zalando": ["SE"],
     "Soft Goat": ["FI", "SE", "NO", "DK"],
     "Eleven": ["SE"],
@@ -669,7 +674,7 @@ MAILCHIMP_MEMBER_LIST = '18083c690f'
 MAILCHIMP_NEWSLETTER_LIST = '6fa805a815'
 MAILCHIMP_PUBLISHER_LIST = '9497b26019'
 
-# CACHE CONFIGURATION
+# CACHE CONFIGURATION (The default one is never used.)
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -795,6 +800,9 @@ APPAREL_DECOMPRESS_SUFFIX = {
 THUMBNAIL_ENGINE = 'apparelrow.apparel.sorl_extension.Engine'
 THUMBNAIL_BACKEND = 'apparelrow.apparel.sorl_extension.NamedThumbnailBackend'
 THUMBNAIL_PREFIX = 'cache/'
+THUMBNAIL_DEBUG = False
+THUMBNAIL_DUMMY = False
+THUMBNAIL_DUMMY_SOURCE = "http://dummyimage.com/%(width)sx%(height)s"
 
 # FEED
 FEED_REDIS_DB = 1

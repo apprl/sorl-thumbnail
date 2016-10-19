@@ -389,6 +389,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         self.client.login(username='user1', password='user1')
 
         # Display list
+        print reverse('advertiser-store-admin')
         response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('transactions', response.context)
@@ -398,7 +399,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         """
         """
         self.client.login(username='user2', password='user2')
-
+        print reverse('advertiser-store-admin')
         response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 404)
 
@@ -406,21 +407,26 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
     def test_admin_view_no_user(self):
         """
         """
+        print reverse('advertiser-store-admin')
         response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 302)
 
     def test_non_existent_transaction(self):
         self.client.login(username='user1', password='user1')
 
+        print reverse('advertiser-admin-accept')
         response = self.client.get(reverse('advertiser-admin-accept', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
+        print reverse('advertiser-admin-accept')
         response = self.client.post(reverse('advertiser-admin-accept', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
+        print reverse('advertiser-admin-accept')
         response = self.client.get(reverse('advertiser-admin-reject', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
+        print reverse('advertiser-admin-accept')
         response = self.client.post(reverse('advertiser-admin-reject', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
