@@ -1,9 +1,13 @@
 
 import redis
-from decimal import Decimal
+import simplejson as json
+import time
+import datetime
+from decimal import Decimal, InvalidOperation
 from django.conf import settings
-from progressbar import ProgressBar, Percentage, Bar
 
+import logging
+log = logging.getLogger(__name__)
 
 STATS_TTL = 365 * 25 * 60 * 60
 
@@ -16,24 +20,69 @@ def redis_connection():
 
 def stats_month_cache(func):
     def wrapper(year, month, *args, **kwargs):
-        if not settings.DISABLE_DASHBOARD_STATS_CACHING:
-            key = '{}_{}_{}'.format(year, month, func.__name__)
-            redis_conn = redis_connection()
-            rval = redis_conn.get(key)
-            if rval:
-                return Decimal(rval)
-            fval = func(year, month, *args, **kwargs)
-            if fval:
-                fval = Decimal(fval)
-            else:
-                fval = 0
-            redis_conn.set(key, fval, STATS_TTL)
-            return fval
-        else:
+        if settings.DISABLE_DASHBOARD_STATS_CACHING:
             return func(year, month, *args, **kwargs)
 
+        key = cache_key(year, month, None, func, *args, **kwargs)
+        redis_conn = redis_connection()
+        rval = redis_conn.get(key)
+        if rval:
+            return try_to_cast_to_decimal(json.loads(rval)['val'])
 
+        start = time.time()
+        fval = func(year, month, *args, **kwargs)
+        end = time.time()
+
+        data = json.dumps({'val': fval, 'when': str(datetime.datetime.now()), 'exec_time_secs': end-start})
+        redis_conn.set(key, data, STATS_TTL)
+        return fval
     return wrapper
+
+
+def stats_day_cache(func):
+    def wrapper(year, month, day, *args, **kwargs):
+        if settings.DISABLE_DASHBOARD_STATS_CACHING:
+            return func(year, month, day, *args, **kwargs)
+
+        key = cache_key(year, month, day, func, *args, **kwargs)
+        redis_conn = redis_connection()
+        rval = redis_conn.get(key)
+        if rval:
+            return try_to_cast_to_decimal(json.loads(rval)['val'])
+
+        start = time.time()
+        fval = func(year, month, day, *args, **kwargs)
+        end = time.time()
+
+        data = json.dumps({'val': fval, 'when': str(datetime.datetime.now()), 'exec_time_secs': end-start})
+        redis_conn.set(key, data, STATS_TTL)
+        return fval
+    return wrapper
+
+
+def try_to_cast_to_decimal(val):
+    if not val:
+        return Decimal(0)
+    try:
+        return Decimal(val)
+    except TypeError:
+        print 'aaaaaaaaa'
+        print val
+        return val
+
+def cache_key(year, month, day, func, *args, **kwargs):
+
+    key = '{}_{}_{}_{}_'.format(year, month, day or 'X', func.__name__)
+    try:
+        key += '{}_'.format(str(args))
+    except:
+        raise Exception("Don't pass any args that can't be turned into strings")
+    try:
+        key += '{}_'.format(str(kwargs))
+    except:
+        raise Exception("Don't pass any kwargs that can't be turned into strings")
+    return key
+
 
 
 def flush_stats_cache():
@@ -42,15 +91,20 @@ def flush_stats_cache():
 
 
 def flush_stats_cache_by_one_year(year):
-    redis_conn = redis_connection()
-    keys = redis_conn.keys('{}_*'.format(year))
-    if keys:
-        redis_conn.delete(*keys)
+    flush_stats_cache_by_matching_keys('{}_*'.format(year))
 
 
 def flush_stats_cache_by_one_month(year, month):
+    flush_stats_cache_by_matching_keys('{}_{}_*'.format(year, month))
+
+
+def flush_stats_cache_by_one_day(year, month, day):
+    flush_stats_cache_by_matching_keys('{}_{}_{}_*'.format(year, month, day))
+
+
+def flush_stats_cache_by_matching_keys(keys_expr):
     redis_conn = redis_connection()
-    keys = redis_conn.keys('{}_{}_*'.format(year, month))
+    keys = redis_conn.keys(keys_expr)
     if keys:
         redis_conn.delete(*keys)
 

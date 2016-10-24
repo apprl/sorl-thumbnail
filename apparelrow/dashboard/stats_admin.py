@@ -82,7 +82,7 @@ def referral_earnings_publisher(year, month):
     ).aggregate(
         total=Sum('amount')
     )
-    return result['total']
+    return result['total'] or 0
 
 
 @stats_month_cache
@@ -105,7 +105,7 @@ def ppo_commission_total(year, month):
     ).aggregate(
         total=Sum('converted_commission')
     )
-    return result['total']
+    return result['total'] or 0
 
 
 @stats_month_cache
@@ -136,7 +136,7 @@ def ppc_commission_total(year, month):
     ).aggregate(
         total=Sum('converted_commission')
     )
-    return result['total']
+    return result['total'] or 0
 
 
 @stats_month_cache
@@ -291,6 +291,8 @@ def average_epc_total(year, month):
     clicks = ppc_clicks_total(year, month) + ppo_clicks_total(year, month)
     if clicks:
         return Decimal(ppo_commission_total(year, month) + ppc_commission_total(year, month)) / clicks
+    else:
+        return 0
 
 
 @stats_month_cache
@@ -387,7 +389,7 @@ def ppc_all_stores_publishers_income(year, month):
     ).aggregate(
         total=Sum('converted_commission')
     )
-    return result['total']
+    return result['total'] or 0
 
 
 @stats_month_cache
@@ -404,7 +406,7 @@ def ppc_all_stores_publishers_cost(year, month):
     ).aggregate(
         total=Sum('converted_commission')
     )
-    return result['total']
+    return result['total'] or 0
 
 
 @stats_month_cache
@@ -412,6 +414,24 @@ def ppc_all_stores_publishers_result(year, month):
     income = ppc_all_stores_publishers_income(year, month)
     cost = ppc_all_stores_publishers_cost(year, month)
     return income - cost
+
+
+@stats_month_cache
+def ppc_all_stores_publishers_by_vendor(year, month):
+    ppc_as_users = ppc_all_stores_users()
+    stats = {}
+    for vendor in Vendor.objects.filter(is_cpc=False, is_cpo=True):
+        params = dict(
+            vendor_id=vendor.id,
+            sale_date__range=month_range(year, month),
+            status__gte=Sale.PENDING,
+            user_id__in=ppc_as_users,
+            is_promo=False,
+        )
+        income = Sale.objects.filter(type=Sale.COST_PER_ORDER, **params).aggregate(t=Sum('converted_commission'))['t'] or 0
+        cost = Sale.objects.filter(type=Sale.COST_PER_CLICK, **params).aggregate(t=Sum('converted_commission'))['t'] or 0
+        stats[vendor.name] = {'income': income, 'cost': cost, 'result': income - cost}
+    return stats
 
 
 ####################################################
@@ -511,11 +531,14 @@ def ppc_all_stores_stats(year, month, flush_cache=False):
     if flush_cache:
         flush_stats_cache_by_one_month(year, month)
 
-    return (
-        ppc_all_stores_publishers_result(year, month),
-        ppc_all_stores_publishers_income(year, month),
-        ppc_all_stores_publishers_cost(year, month),
-    )
+    return {
+        'total': {
+            'result': ppc_all_stores_publishers_result(year, month),
+            'income': ppc_all_stores_publishers_income(year, month),
+            'cost': ppc_all_stores_publishers_cost(year, month),
+        },
+        'by_vendor': ppc_all_stores_publishers_by_vendor(year, month)
+    }
 
 
 ####################################################
