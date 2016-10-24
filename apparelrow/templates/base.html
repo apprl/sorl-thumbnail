@@ -55,9 +55,14 @@
             'create_look': {% if user.is_authenticated and user.fb_share_create_look %}true{% else %}false{% endif %}
         };
         var facebook_scope = '{{ FACEBOOK_SCOPE }}';
-        var facebook_login_uri = 'https://m.facebook.com/dialog/oauth?client_id={{ FACEBOOK_APP_ID }}&response_type=code&redirect_uri={{ FACEBOOK_REDIRECT_URI }}&scope={{ FACEBOOK_SCOPE }}';
         window.fbAsyncInit = function() {
-            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, xfbml: true, channelUrl: '//{{ CURRENT_DOMAIN }}/channel.html'});
+            FB.init({
+                appId: {{ FACEBOOK_APP_ID }},
+                version: 'v2.8',  // Available until at least October 2018 - https://developers.facebook.com/docs/apps/changelog
+                status: true,
+                cookie: true,
+                xfbml: true,
+            });
             FB.getLoginStatus(function(response) {
                 if(!response.authResponse) {
                     $('.facepile-container').html('').addClass('ar-facepile');
@@ -65,7 +70,7 @@
                     {% block facebook_code %}{% endblock %}
                 }
             });
-        }
+        };
         window.login_function = function(callback) {
             FB.login(function(response) {
                 if(response.authResponse) {
@@ -115,13 +120,13 @@
 
     <div id="fb-root"></div>
     <script type="text/javascript">
-        (function(d){
-        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-        if (d.getElementById(id)) {return;}
-            js = d.createElement('script'); js.id = id; js.async = true;
-            js.src = "//connect.facebook.net/en_US/all.js";
-            ref.parentNode.insertBefore(js, ref);
-        }(document));
+        (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
     </script>
     {% block header-navigation %}
     {# Header #}
