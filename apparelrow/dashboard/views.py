@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
-from apparelrow.dashboard.stats_admin import admin_top_stats, admin_clicks
+from apparelrow.dashboard import stats_admin
 from apparelrow.apparel.utils import get_location
 from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
@@ -556,11 +556,11 @@ class DashboardView(TemplateView):
 class AdminDashboardView(TemplateView):
     template_name = "dashboard/new_admin.html"
 
-    def get_admin_top_summary(self, month, year):
-        top_stats = admin_top_stats(month, year, self.flush_cache)
+    def get_admin_top_summary(self, year, month):
+        top_stats = stats_admin.admin_top_stats(year, month, self.flush_cache)
         top_stats = [r[1:] for r in top_stats] # get rid of headers
 
-        clicks_stats = admin_clicks(month, year, self.flush_cache)
+        clicks_stats = stats_admin.admin_clicks(year, month, self.flush_cache)
         clicks_stats = [r[1:] for r in clicks_stats] # get rid of headers
         return top_stats, clicks_stats
 
@@ -729,7 +729,7 @@ class AdminDashboardView(TemplateView):
             if self.use_old_stats:
                 monthly_array, clicks_array = self.get_admin_top_summary_old(start_date_query, end_date_query)
             else:
-                monthly_array, clicks_array = self.get_admin_top_summary(start_date.month, start_date.year)
+                monthly_array, clicks_array = self.get_admin_top_summary(start_date.year, start_date.month)
 
             previous_start_date, previous_end_date = get_previous_period(start_date_query, end_date_query)
 
@@ -740,7 +740,7 @@ class AdminDashboardView(TemplateView):
                     self.get_admin_top_summary_old(previous_start_date, previous_end_date)
             else:
                 previous_monthly_array, previous_clicks_array = \
-                    self.get_admin_top_summary(previous_start_date.month, previous_end_date.year)
+                    self.get_admin_top_summary(previous_start_date.year, previous_end_date.month)
 
             # Get difference between current period and previous previous
             relative_summary = get_relative_change_summary(previous_monthly_array, monthly_array)
@@ -754,11 +754,12 @@ class AdminDashboardView(TemplateView):
             elif self.use_old_stats:
                 admin_title += ' (old)'
 
-
             context_data = {'year_choices': year_choices, 'month_choices': month_choices, 'year': year, 'month': month,
                             'month_display': month_display, 'data_per_day': data_per_day, 'currency': currency,
-                            'top_publishers': top_publishers, 'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT, 'top_products': top_products,
-                            'monthly_array': monthly_array, 'clicks_array': clicks_array, 'admin_title': admin_title }
+                            'top_publishers': top_publishers, 'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT,
+                            'top_products': top_products,
+                            'monthly_array': monthly_array, 'clicks_array': clicks_array,
+                            'admin_title': admin_title}
             return render(request, 'dashboard/new_admin.html', context_data)
         return HttpResponseNotFound()
 

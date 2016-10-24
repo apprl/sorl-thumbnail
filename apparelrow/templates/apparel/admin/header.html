@@ -7,5 +7,6 @@
         <li><a{% if 'kpi' in request.path %} class="selected"{% endif %} href="{% url 'admin-kpi-dashboard' %}">{% trans "KPI" %}</a></li>
         <li><a{% if 'stores' in request.path %} class="selected"{% endif %} href="{% url 'admin-stores' %}">{% trans "Stores" %}</a></li>
         <li><a{% if 'posts' in request.path %} class="selected"{% endif %} href="{% url 'admin-posts' %}">{% trans "Posts" %}</a></li>
+        <li><a{% if 'ppc_as' in request.path %} class="selected"{% endif %} href="{% url 'admin-ppc-as' %}">{% trans "PPC All Stores" %}</a></li>
     </ul>
 </div>
