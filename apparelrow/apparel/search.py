@@ -241,6 +241,8 @@ def product_delete(instance, **kwargs):
         # Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
         # using this image is already removed.
         uses = Product.objects.filter(product_image=image_name).count()
+        if uses > 0:
+            logger.info(u"Product {} shared image with other products [{}], will not remove {}.".format(instance.pk, uses, image_name))
         if uses == 0 and sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
            sorl_image.delete()
 
