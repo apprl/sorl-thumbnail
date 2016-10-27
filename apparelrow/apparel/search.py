@@ -226,25 +226,26 @@ def product_delete(instance, **kwargs):
     from sorl.thumbnail import default
     from theimp.models import Product as ImpProduct
     sorl_image = None
-    try:
-        logger.info(u"Trying to remove image and thumbnails for {}".format(instance))
-        sorl_image = SorlImageFile(instance.product_image)
+    image_name = instance.product_image.name
+    # Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
+    # using this image is already removed.
+    uses = Product.objects.filter(product_image=image_name).count()
+    if uses > 0:
+        logger.info(u"Product {} shared image with other products [{}], will not remove {}.".format(instance.pk, uses,image_name))
+    else:
         try:
-            default.kvstore.delete_thumbnails(sorl_image)
-            default.kvstore.delete(sorl_image)
+            logger.info(u"Trying to remove image and thumbnails for {}".format(instance))
+            sorl_image = SorlImageFile(instance.product_image)
+            try:
+                default.kvstore.delete_thumbnails(sorl_image)
+                default.kvstore.delete(sorl_image)
+            except:
+                logger.warn(u"Failed to remove thumbnails for product {}.".format(instance.pk))
         except:
-            logger.warn(u"Failed to remove thumbnails for product {}.".format(instance.pk))
-    except:
-        logger.warn(u"Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
-    finally:
-        image_name = instance.product_image.name
-        # Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
-        # using this image is already removed.
-        uses = Product.objects.filter(product_image=image_name).count()
-        if uses > 0:
-            logger.info(u"Product {} shared image with other products [{}], will not remove {}.".format(instance.pk, uses, image_name))
-        if uses == 0 and sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
-           sorl_image.delete()
+            logger.warn(u"Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
+        finally:
+            if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
+               sorl_image.delete()
 
     logger.info(u"Trying to clean up theimp.Product: {}".format(instance.product_key))
     try:
