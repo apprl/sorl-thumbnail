@@ -238,7 +238,7 @@ def product_delete(instance, **kwargs):
         logger.warn(u"Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
     finally:
         image_name = instance.product_image.name
-        # Todo: Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
+        # Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
         # using this image is already removed.
         uses = Product.objects.filter(product_image=image_name).count()
         if uses == 0 and sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
