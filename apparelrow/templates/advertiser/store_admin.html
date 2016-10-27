@@ -163,7 +163,7 @@
 
         <br>
         {% if vendor.is_cpc %}
-        <p>{% trans "Clicks to your store this month:" %} <strong>{{ clicks_delivered_per_month }}</strong><br>{% trans "Value:" %} {{ currency }} <strong>{{ monthly_click_value }}</strong></p>
+        <p>{% trans "Clicks to your store this month:" %} <strong>{{ clicks_delivered_per_month }}</strong><br>{% trans "Cost so far this month:" %} {{ currency }} <strong>{{ monthly_click_value }}</strong></p>
         {% endif %}
         {% if vendor.is_cpo %}
         <p>{% trans "Sales generated this month:" %} <strong>{{ currency }} {{ monthly_sales|floatdot|intcomma }}</strong></p>
