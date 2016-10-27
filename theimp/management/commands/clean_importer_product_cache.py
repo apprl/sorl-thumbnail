@@ -53,7 +53,7 @@ class Command(BaseCommand):
         try:
             if impvendor_id:
                 pbar = ProgressBar(widgets=[Percentage(), Bar()],
-                                   maxval=ImpProduct.objects.filter(vendor_id__in=impvendor_id).count()).start()
+                                   maxval=ImpProduct.objects.filter(vendor_id__in=[impvendor_id]).count()).start()
                 for index, p in enumerate(
                         ImpProduct.objects.filter(vendor_id__in=[impvendor_id]).values_list("id", flat=True).iterator()):
                     # print "Remove scrapecache for imp product {id}.".format(id=p)
