@@ -1499,6 +1499,9 @@ class TestThumbnailClean(TestCase):
         sorl_image = ImageFile(product_2.product_image)
         self.assertTrue(sorl_image.exists())
         self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
+        print "This is an image: {}".format(product_2.product_image)
+        print "This is an filename image: {}".format(product_2.product_image.name)
+        self.assertEquals(Product.objects.filter(product_image=product_2.product_image.name).count(), 1)
 
         key = sorl_image.key
         full_filename = os.path.join(sorl_image.storage.base_location, sorl_image.name)
@@ -1574,7 +1577,7 @@ def _cleanout_product(product_key):
         print "No previous products found"
 
 
-def _create_dummy_image():
+def _create_dummy_image(filename=None):
     from PIL import Image
     from StringIO import StringIO
     from django.core.files.base import ContentFile
