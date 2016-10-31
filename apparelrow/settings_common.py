@@ -112,6 +112,7 @@ VENDOR_LOCATION_MAPPING = {
     "Tiger SE": ["SE"],
     "Tiger DK": ["DK"],
     "Cubus": ["SE"],
+    "Bangerhead SE": ["SE"],
     u"Björn Borg": ["SE"],
     "Best of Brands": ["SE"],
     "ConfidentLiving": ["SE"],
