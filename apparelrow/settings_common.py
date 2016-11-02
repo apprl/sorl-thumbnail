@@ -114,6 +114,7 @@ VENDOR_LOCATION_MAPPING = {
     "Cubus": ["SE"],
     u"Björn Borg": ["SE"],
     "Best of Brands": ["SE"],
+    "Bonshop": ["SE"],
     "ConfidentLiving": ["SE"],
     "MQ": ["SE"],
     "Care of Carl": ["SE", "NO"],
