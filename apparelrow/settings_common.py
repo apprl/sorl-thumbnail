@@ -145,6 +145,7 @@ VENDOR_LOCATION_MAPPING = {
     "Nelly NO": ["NO"],
     "NA-KD": ["FI", "SE", "NO", "DK"],
     "Royal Design": ["FI", "SE", "NO", "DK"],
+    "Odd Molly": ["FI", "SE", "NO", "DK"],
     "Gina Tricot NO": ["NO"],
     "Gina Tricot SE": ["SE"],
     "Gina Tricot DK": ["DK"],
