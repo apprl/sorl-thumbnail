@@ -105,6 +105,8 @@ MAX_MIN_CURRENCY = {
     'fi': 1000,
 }
 
+# Deprecated - remove this once apparel.Location is fully in use
+
 VENDOR_LOCATION_MAPPING = {
     "Axel Arigato": ["SE", "DK", "NO", "FI"],
     "Shirtonomy": ["DK", "SE"],
@@ -161,6 +163,8 @@ VENDOR_LOCATION_MAPPING = {
     "default": ["ALL", "SE", "NO", "US", "DK", "FI"],
 }
 
+DEFAULT_VENDOR_LOCATION = ["ALL", "SE", "NO", "US", "DK", "FI"]
+
 LOCATION_MAPPING = (
     ('SE', gettext('Sweden (SEK)')),
     ('DK', gettext('Denmark (DKK)')),
@@ -183,6 +187,7 @@ LOCATION_MAPPING_SIMPLE_TEXT = (
     ('SE', gettext('Sweden')),
     ('DK', gettext('Denmark')),
     ('NO', gettext('Norway')),
+    ('FI', gettext('Finland')),
     ('US', gettext('USA')),
     ('ALL', gettext('International')),
 )

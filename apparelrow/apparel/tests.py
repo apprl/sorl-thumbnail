@@ -1327,19 +1327,21 @@ class TestAdminPostsView(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-@override_settings(VENDOR_LOCATION_MAPPING={"Vendor SE":["SE"], "Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+@override_settings(DEFAULT_VENDOR_LOCATION=["ALL","SE","NO","US"])
 class TestSearch(TransactionTestCase):
 
     def setUp(self):
         vendor_se = VendorFactory.create(name="Vendor SE")
+        vendor_se.locations.create(code='SE')
         vendor_dk = VendorFactory.create(name="Vendor DK")
+        vendor_dk.locations.create(code='DK')
         self.manufacturer = BrandFactory.create(name="007", pk=999999999)
         self.product_key = 'http://example.com/example?someproduct=12345'
-        product_id = _send_product_to_solr(product_key=self.product_key, vendor_name=vendor_se,
+        product_id = _send_product_to_solr(product_key=self.product_key, vendor=vendor_se,
                                            product_name="ProductName12345", brand=self.manufacturer)
 
         self.product_dk_key = 'http://example.dk/example?someproduct=123453'
-        product_id = _send_product_to_solr(product_key=self.product_dk_key, vendor_name=vendor_dk,
+        product_id = _send_product_to_solr(product_key=self.product_dk_key, vendor=vendor_dk,
                                            product_name="ProductName6789", brand=self.manufacturer)
 
     def tearDown(self):
@@ -1532,13 +1534,16 @@ class TestThumbnailClean(TestCase):
 
 
 
-def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
+def _send_product_to_solr(product_key, vendor=None, vendor_name=None, product_name=None, brand=None):
     django_image_file = _create_dummy_image()
     _cleanout_product(product_key)
     args_vendor = {}
-    if vendor_name:
-        args_vendor['name'] = vendor_name
-    vendor = VendorFactory.create(**args_vendor)
+    # if vendor has been supplied, use that
+    # otherwise create a default vendor with vendor_name if that has been supplied
+    if not vendor:
+        if vendor_name:
+            args_vendor['name'] = vendor_name
+        vendor = VendorFactory.create(**args_vendor)
     category = CategoryFactory.create()
     manufacturer = BrandFactory.create() if not brand else brand
     product_name = 'Product' if not product_name else product_name
