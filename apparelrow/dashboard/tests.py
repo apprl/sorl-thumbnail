@@ -3214,7 +3214,7 @@ class TestStatsAdmin(TransactionTestCase):
         return publisher
 
 
-    def test_stats_ppc_as_publisher(self):
+    def test_top_stats_ppc_as_publisher(self):
 
         # Create users
 
@@ -3226,13 +3226,13 @@ class TestStatsAdmin(TransactionTestCase):
         cpo_store = make(Store, vendor__is_cpo=True, vendor__is_cpc=False, vendor__name='cpo_v', commission_percentage='0.2')
         cpc_store = make(Store, vendor__is_cpc=True, vendor__is_cpo=False, vendor__name='cpc_v')
         make(ClickCost, vendor=cpc_store.vendor, amount=5)
-        make(Cut, vendor=cpo_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1) # same for ppo stores
-        make(Cut, vendor=cpc_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1) # ppc_as click cost = 3 for ppc stores
+        make(Cut, vendor=cpo_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1)
+        make(Cut, vendor=cpc_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1)
 
 
         # Create clicks, both valid and invalid
 
-        self.click(cpo_store, ppc_as_publisher, order_value=500)   # with 20% commission = 100. Only 3 to ppc_as publisher
+        self.click(cpo_store, ppc_as_publisher, order_value=500)   # with 20% commission = 100. 3 to ppc_as publisher
         self.click(cpo_store, None, order_value=600)   # with 20% commission = 120 - all goes to Apprl
         self.click(cpo_store, ppc_as_publisher, invalidate_click=True)   # click shouldn't count
         self.click(cpo_store, ppc_as_publisher)    # no cpo conversion, but ppc_as publisher still gets 3
@@ -3300,7 +3300,7 @@ class TestStatsAdmin(TransactionTestCase):
         self.assertEqual(stats_admin.ppc_all_stores_publishers_result(tr), 94)    # by definition
 
 
-    def test_stats_normal_publisher(self):
+    def test_top_stats_normal_publisher(self):
 
         # Create users
 
@@ -3388,6 +3388,57 @@ class TestStatsAdmin(TransactionTestCase):
         self.assertEqual(stats_admin.ppc_all_stores_publishers_cost(tr), 0)
         self.assertEqual(stats_admin.ppc_all_stores_publishers_result(tr), 0)
 
+
+    def test_all_stores_stats(self):
+
+        # Create users
+
+        ppc_as_publisher = self.create_users(ppc_as=True, create_referral_partner=True)
+
+
+        # Create stores / vendors. We only create AAN vendors because it allows us to control commission_percentage
+
+        cpo_store = make(Store, vendor__is_cpo=True, vendor__is_cpc=False, vendor__name='cpo_v', commission_percentage='0.2')
+        cpo_store_2 = make(Store, vendor__is_cpo=True, vendor__is_cpc=False, vendor__name='cpo_v_2', commission_percentage='0.2')
+        cpc_store = make(Store, vendor__is_cpc=True, vendor__is_cpo=False, vendor__name='cpc_v')
+        make(ClickCost, vendor=cpc_store.vendor, amount=5)
+        make(Cut, vendor=cpo_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1)
+        make(Cut, vendor=cpo_store_2.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=5, referral_cut=0.1)
+        make(Cut, vendor=cpc_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1)
+
+
+        # Create clicks, both valid and invalid
+
+        self.click(cpo_store, ppc_as_publisher, order_value=500)   # with 20% commission = 100. 3 to ppc_as publisher
+        self.click(cpo_store, None, order_value=600)   # with 20% commission = 120 - all goes to Apprl
+        self.click(cpo_store, ppc_as_publisher, invalidate_click=True)   # click shouldn't count
+        self.click(cpo_store, ppc_as_publisher)    # no cpo conversion, but ppc_as publisher still gets 3
+
+        self.click(cpo_store_2, ppc_as_publisher, order_value=1000)   # with 20% commission = 200. 5 to ppc_as publisher
+
+        self.click(cpc_store, ppc_as_publisher)    # 3 to ppc_as publisher. vendor pays 5
+        self.click(cpc_store, ppc_as_publisher, invalidate_click=True)   # shouldn't count
+        self.click(cpc_store, ppc_as_publisher, date_out_of_range=True)   # this one shouldn't count in stats since it's out of range
+
+
+        # Collect clicks, generate sales & user earnings.
+
+        self.collect_clicks()
+
+
+        # Test it!
+
+        tr = mrange(self.test_year, self.test_month)
+
+        vendor_stats = stats_admin.ppc_all_stores_publishers_by_vendor(tr)
+        self.assertEqual(set(vendor_stats.keys()), set(['cpo_v', 'cpo_v_2']))       # we only care about the cpo vendors
+        self.assertEqual(vendor_stats['cpo_v']['income'], 100)          # the vendor pays us 100 commission
+        self.assertEqual(vendor_stats['cpo_v']['cost'], 3+3)            # two payouts with 3
+        self.assertEqual(vendor_stats['cpo_v']['result'], 94)           # income - cost
+
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_income(tr), 100+200)
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_cost(tr), 3+3+5)
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_result(tr), 300-11)
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
