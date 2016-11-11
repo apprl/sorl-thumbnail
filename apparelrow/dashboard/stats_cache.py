@@ -1,9 +1,10 @@
 
-import redis
-import simplejson as json
+from redis import StrictRedis
+import pickle
 import time
-import datetime
-from decimal import Decimal, InvalidOperation
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 
 import logging
@@ -11,102 +12,170 @@ log = logging.getLogger(__name__)
 
 STATS_TTL = 365 * 25 * 60 * 60
 
+redis = StrictRedis(host=settings.CELERY_REDIS_HOST, port=settings.CELERY_REDIS_PORT, db=settings.DASHBOARD_STATS_REDIS_DB)
 
-def redis_connection():
-    return redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
-                             port=settings.CELERY_REDIS_PORT,
-                             db=settings.DASHBOARD_STATS_REDIS_DB)
+# Utility range functions
+# Djangos range filter maps to BETWEEN which is inclusive so we need to subract a small amount so we stay within the month
+
+def yrange(year):
+    start = datetime(year, 1, 1)
+    end = start + relativedelta(years=1) - relativedelta(microseconds=1)
+    return [start, end]
 
 
-def stats_month_cache(func):
-    def wrapper(year, month, *args, **kwargs):
-        if settings.DISABLE_DASHBOARD_STATS_CACHING:
-            return func(year, month, *args, **kwargs)
+def mrange(year, month):
+    start = datetime(year, month, 1)
+    end = start + relativedelta(months=1) - relativedelta(microseconds=1)
+    return [start, end]
 
-        key = cache_key(year, month, None, func, *args, **kwargs)
-        redis_conn = redis_connection()
-        rval = redis_conn.get(key)
-        if rval:
-            return try_to_cast_to_decimal(json.loads(rval)['val'])
 
+def drange(year, month, day):
+    start = datetime(year, month, day)
+    end = start + relativedelta(days=1) - relativedelta(microseconds=1)
+    return [start, end]
+
+
+# Function wrapper that caches time range functions. It uses args & kwargs in cache key.
+
+def stats_cache(func):
+    def wrapper(time_range, *args, **kwargs):
+        # this gives us the option to bypass the cache completely
+        if not settings.ENABLE_DASHBOARD_STATS_CACHING:
+            return func(time_range, *args, **kwargs)
+
+        key = cache_key(time_range, func.__name__, *args, **kwargs)
+
+        # try to get it from the cache
+        hit = redis.get(key)
+        if hit:
+            data = pickle.loads(hit)
+            return data['val']
+
+        # otherwise, execute function and set cache
         start = time.time()
-        fval = func(year, month, *args, **kwargs)
+        val = func(time_range, *args, **kwargs)
         end = time.time()
 
-        data = json.dumps({'val': fval, 'when': str(datetime.datetime.now()), 'exec_time_secs': end-start})
-        redis_conn.set(key, data, STATS_TTL)
-        return fval
-    return wrapper
-
-
-def stats_day_cache(func):
-    def wrapper(year, month, day, *args, **kwargs):
-        if settings.DISABLE_DASHBOARD_STATS_CACHING:
-            return func(year, month, day, *args, **kwargs)
-
-        key = cache_key(year, month, day, func, *args, **kwargs)
-        redis_conn = redis_connection()
-        rval = redis_conn.get(key)
-        if rval:
-            return try_to_cast_to_decimal(json.loads(rval)['val'])
-
-        start = time.time()
-        fval = func(year, month, day, *args, **kwargs)
-        end = time.time()
-
-        data = json.dumps({'val': fval, 'when': str(datetime.datetime.now()), 'exec_time_secs': end-start})
-        redis_conn.set(key, data, STATS_TTL)
-        return fval
-    return wrapper
-
-
-def try_to_cast_to_decimal(val):
-    if not val:
-        return Decimal(0)
-    try:
-        return Decimal(val)
-    except TypeError:
-        print 'aaaaaaaaa'
-        print val
+        add_to_stats_cache(time_range, key, pickle.dumps(dict(
+            val=val,
+            when=datetime.now(),
+            exec_time_secs=end-start
+        )))
         return val
+    return wrapper
 
-def cache_key(year, month, day, func, *args, **kwargs):
 
-    key = '{}_{}_{}_{}_'.format(year, month, day or 'X', func.__name__)
+def cache_key(time_range, func_name, *args, **kwargs):
+    key = 'stats_{}__{}'.format(str(time_range[0]) + '::' + str(time_range[1]), func_name)
     try:
-        key += '{}_'.format(str(args))
+        key += '__{}'.format(str(args))
     except:
         raise Exception("Don't pass any args that can't be turned into strings")
     try:
-        key += '{}_'.format(str(kwargs))
+        key += '__{}'.format(str(kwargs))
     except:
         raise Exception("Don't pass any kwargs that can't be turned into strings")
     return key
 
 
+"""
+To make this work we to store three things:
+    1) The value itself. Key is what cache_key function returns
+    2) time_range[0] - start of the time range. Score is unix timestamp. Value is cache_key
+    3) time_range[1] - end of the time range. Score is unix timestamp. Value is cache_key
+
+We do this so that we can invalidate parts of the cache based on arbitrary time ranges. To do that
+we need to calculate the intersection of the ranges. It's a little tricky because we couldn't express
+the logic using standards redis ops so we had to write a little custom lua.
+
+If zrevrangebyscore ever gets a store option we might be able to get rid of the lua:
+https://github.com/antirez/redis/issues/678
+"""
+def add_to_stats_cache(time_range, key, val):
+    pipe = redis.pipeline()
+    # delete before we add just to make sure we don't get inconsistencies
+    pipe.delete(key)
+    pipe.zrem('stats_ranges_left', key)
+    pipe.zrem('stats_ranges_right', key)
+    pipe.set(key, val)
+    pipe.zadd('stats_ranges_left', time_range[0].strftime("%s"), key)
+    pipe.zadd('stats_ranges_right', time_range[1].strftime("%s"), key)
+    pipe.execute()
+
 
 def flush_stats_cache():
-    redis_conn = redis_connection()
-    redis_conn.flushall()
+    long_time_range = [datetime(1990, 1, 1), datetime(2999, 1, 1)]
+    flush_stats_cache_by_range(long_time_range)
+    # just to be sure we don't have any outliers:
+    for key in redis.keys('stats_*'):
+        redis.delete(key)
 
 
-def flush_stats_cache_by_one_year(year):
-    flush_stats_cache_by_matching_keys('{}_*'.format(year))
+def flush_stats_cache_by_year(year):
+    flush_stats_cache_by_range(yrange(year))
 
 
-def flush_stats_cache_by_one_month(year, month):
-    flush_stats_cache_by_matching_keys('{}_{}_*'.format(year, month))
+def flush_stats_cache_by_month(year, month):
+    flush_stats_cache_by_range(mrange(year, month))
 
 
-def flush_stats_cache_by_one_day(year, month, day):
-    flush_stats_cache_by_matching_keys('{}_{}_{}_*'.format(year, month, day))
+def flush_stats_cache_by_day(year, month, day):
+    flush_stats_cache_by_range(drange(year, month, day))
 
 
-def flush_stats_cache_by_matching_keys(keys_expr):
-    redis_conn = redis_connection()
-    keys = redis_conn.keys(keys_expr)
-    if keys:
-        redis_conn.delete(*keys)
+lua_invalidate = redis.register_script(
+    """
+    local function create_zrange_subset(from_set, to_set, from_i, to_i)
+        local t = redis.call('zrangebyscore', from_set, from_i, to_i, 'withscores')
+        local i=1
+        while(i<=#t) do
+            redis.call('zadd', to_set, t[i+1], t[i])
+            i=i+2
+        end
+        return to_set
+    end
+
+    local function perform_set_op_and_delete_elements(op, left_from, left_to, right_from, right_to)
+        redis.call('del', 'stats_left_subset', 'stats_right_subset', 'stats_keys_to_be_removed')
+
+        -- select subsets from ranges and store them
+        create_zrange_subset('stats_ranges_left', 'stats_left_subset', left_from, left_to)
+        create_zrange_subset('stats_ranges_right', 'stats_right_subset', right_from, right_to)
+
+        -- perform union / intersection between the subsets
+        redis.call(op, 'stats_keys_to_be_removed', 2, 'stats_left_subset', 'stats_right_subset')
+
+        -- remove keys
+        local t = redis.call('zrangebyscore', 'stats_keys_to_be_removed', 0, 'inf')
+        local i=1
+        while(i<=#t) do
+            redis.call('del', t[i])
+            redis.call('zrem', 'stats_ranges_left', t[i])
+            redis.call('zrem', 'stats_ranges_right', t[i])
+            i=i+1
+        end
+    end
+
+    -- this will find any cached ranges within or intersecting this
+    local function invalidate_intersecting(range_start, range_end)
+        perform_set_op_and_delete_elements('zunionstore', range_start, range_end, range_start, range_end)
+    end
+
+    -- this will find any ranges that contain this
+    local function invalidate_wrapping(range_start, range_end)
+        perform_set_op_and_delete_elements('zinterstore', 0, range_start, range_end, 'inf')
+    end
+
+    -- take keys parameters from lua_invalidate()
+    invalidate_intersecting(KEYS[1], KEYS[2])
+    invalidate_wrapping(KEYS[1], KEYS[2])
+    """
+)
+
+
+def flush_stats_cache_by_range(time_range):
+    lua_invalidate(keys=[time_range[0].strftime("%s"), time_range[1].strftime("%s")])
+
 
 
 # This can take forever.
@@ -127,8 +196,6 @@ def warm_cache_by_one_year(year):
 
 def warm_cache_by_one_month(year, month):
     import stats_admin # we need to import it locally to handle circular dependency
-    print 'Warming cache', year, month
-    print stats_admin.admin_top_stats(year, month)
     stats_admin.admin_clicks(year, month)
     stats_admin.ppc_all_stores_stats(year, month)
 

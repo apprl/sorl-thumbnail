@@ -8,7 +8,7 @@ from django.db.models import Sum
 
 from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Sale, UserEarning
-from apparelrow.dashboard.stats_cache import stats_month_cache, flush_stats_cache_by_one_month
+from apparelrow.dashboard.stats_cache import flush_stats_cache_by_month, stats_cache, mrange
 from apparelrow.statistics.models import ProductStat
 
 import logging
@@ -21,13 +21,13 @@ log = logging.getLogger(__name__)
 ####################################################
 
 
-@stats_month_cache
-def earnings_total(year, month):
-    return ppo_commission_total(year, month) + ppc_commission_total(year, month)
+@stats_cache
+def earnings_total(time_range):
+    return ppo_commission_total(time_range) + ppc_commission_total(time_range)
 
     # This can also be calculated this way. I keep it here for reference:
     # result = Sale.objects.filter(
-    #     sale_date__range=month_range(year, month),
+    #     sale_date__range=mrange(year, month),
     #     status__gte=Sale.PENDING,
     #     is_promo=False,                 # Promotions aren't Apprl incomes
     # ).exclude(
@@ -38,10 +38,10 @@ def earnings_total(year, month):
     # return result['total'] or 0
 
 
-@stats_month_cache
-def earnings_publisher(year, month):
+@stats_cache
+def earnings_publisher(time_range):
     result = UserEarning.objects.filter(
-        date__range=month_range(year, month),
+        date__range=time_range,
         status__gte=Sale.PENDING,
         user_id__gt=0,
     ).exclude(
@@ -55,9 +55,9 @@ def earnings_publisher(year, month):
     return result['total'] or 0
 
 
-@stats_month_cache
-def earnings_apprl(year, month):
-    return earnings_total(year, month) - earnings_publisher(year, month)
+@stats_cache
+def earnings_apprl(time_range):
+    return earnings_total(time_range) - earnings_publisher(time_range)
 
 
 ####################################################
@@ -65,15 +65,15 @@ def earnings_apprl(year, month):
 ####################################################
 
 
-@stats_month_cache
-def referral_earnings_total(year, month):
+@stats_cache
+def referral_earnings_total(time_range):
     return 0
 
 
-@stats_month_cache
-def referral_earnings_publisher(year, month):
+@stats_cache
+def referral_earnings_publisher(time_range):
     result = UserEarning.objects.filter(
-        date__range=month_range(year, month),
+        date__range=time_range,
         status__gte=Sale.PENDING,
         user_earning_type__in=(
             'referral_signup_commission',
@@ -85,9 +85,9 @@ def referral_earnings_publisher(year, month):
     return result['total'] or 0
 
 
-@stats_month_cache
-def referral_earnings_apprl(year, month):
-    return -1 * referral_earnings_publisher(year, month)
+@stats_cache
+def referral_earnings_apprl(time_range):
+    return -1 * referral_earnings_publisher(time_range)
 
 
 ####################################################
@@ -95,10 +95,10 @@ def referral_earnings_apprl(year, month):
 ####################################################
 
 
-@stats_month_cache
-def ppo_commission_total(year, month):
+@stats_cache
+def ppo_commission_total(time_range):
     result = Sale.objects.filter(
-        sale_date__range=month_range(year, month),
+        sale_date__range=time_range,
         status__gte=Sale.PENDING,
         type=Sale.COST_PER_ORDER,
         is_promo=False,
@@ -108,13 +108,13 @@ def ppo_commission_total(year, month):
     return result['total'] or 0
 
 
-@stats_month_cache
-def ppo_commission_publisher(year, month):
+@stats_cache
+def ppo_commission_publisher(time_range):
     return 0
 
 
-@stats_month_cache
-def ppo_commission_apprl(year, month):
+@stats_cache
+def ppo_commission_apprl(time_range):
     return 0
 
 
@@ -123,10 +123,10 @@ def ppo_commission_apprl(year, month):
 ####################################################
 
 
-@stats_month_cache
-def ppc_commission_total(year, month):
+@stats_cache
+def ppc_commission_total(time_range):
     result = Sale.objects.filter(
-        sale_date__range=month_range(year, month),
+        sale_date__range=time_range,
         status__gte=Sale.PENDING,
         type=Sale.COST_PER_CLICK,
         is_promo=False,
@@ -139,13 +139,13 @@ def ppc_commission_total(year, month):
     return result['total'] or 0
 
 
-@stats_month_cache
-def ppc_commission_publisher(year, month):
+@stats_cache
+def ppc_commission_publisher(time_range):
     return 0
 
 
-@stats_month_cache
-def ppc_commission_apprl(year, month):
+@stats_cache
+def ppc_commission_apprl(time_range):
     return 0
 
 
@@ -154,37 +154,28 @@ def ppc_commission_apprl(year, month):
 ####################################################
 
 
-@stats_month_cache
-def ppc_clicks_total(year, month):
-    return ppc_clicks_publisher(year, month) + ppc_clicks_apprl(year, month)
+@stats_cache
+def ppc_clicks_total(time_range):
+    return ppc_clicks_publisher(time_range) + ppc_clicks_apprl(time_range)
 
 
-@stats_month_cache
-def ppc_clicks_publisher(year, month):
-    # print 'aaaaaaaaa'
-    # print ppc_vendors()
-    # print str(ProductStat.objects.filter(
-    #     created__range=month_range(year, month),
-    #     vendor__in=ppc_vendors()
-    # ).query)
-
+@stats_cache
+def ppc_clicks_publisher(time_range):
     return ProductStat.objects.filter(
-        created__range=month_range(year, month),
+        created__range=time_range,
         vendor__in=ppc_vendors()
     ).exclude(
         user_id=0
     ).count()
 
 
-@stats_month_cache
-def ppc_clicks_apprl(year, month):
+@stats_cache
+def ppc_clicks_apprl(time_range):
     return ProductStat.objects.filter(
-        created__range=month_range(year, month),
+        created__range=time_range,
         vendor__in=ppc_vendors(),
         user_id=0
     ).count()
-
-
 
 
 ####################################################
@@ -192,29 +183,27 @@ def ppc_clicks_apprl(year, month):
 ####################################################
 
 
-@stats_month_cache
-def ppo_clicks_total(year, month):
-    return ppo_clicks_publisher(year, month) + ppo_clicks_apprl(year, month)
+@stats_cache
+def ppo_clicks_total(time_range):
+    return ppo_clicks_publisher(time_range) + ppo_clicks_apprl(time_range)
 
 
-@stats_month_cache
-def ppo_clicks_publisher(year, month):
+@stats_cache
+def ppo_clicks_publisher(time_range):
     return ProductStat.objects.filter(
-        created__range=month_range(year, month),
+        created__range=time_range,
         vendor__in=ppo_vendors(),
         user_id__gt=0
     ).count()
 
 
-@stats_month_cache
-def ppo_clicks_apprl(year, month):
+@stats_cache
+def ppo_clicks_apprl(time_range):
     return ProductStat.objects.filter(
-        created__range=month_range(year, month),
+        created__range=time_range,
         vendor__in=ppo_vendors(),
         user_id=0
     ).count()
-
-
 
 
 ####################################################
@@ -222,15 +211,15 @@ def ppo_clicks_apprl(year, month):
 ####################################################
 
 
-@stats_month_cache
-def ppo_sales_total(year, month):
-    return ppo_sales_publisher(year, month) + ppo_sales_apprl(year, month)
+@stats_cache
+def ppo_sales_total(time_range):
+    return ppo_sales_publisher(time_range) + ppo_sales_apprl(time_range)
 
 
-@stats_month_cache
-def ppo_sales_publisher(year, month):
+@stats_cache
+def ppo_sales_publisher(time_range):
     return Sale.objects.filter(
-        sale_date__range=month_range(year, month),
+        sale_date__range=time_range,
         status__gte=Sale.PENDING,
         vendor__in=ppo_vendors('id'),
         type=Sale.COST_PER_ORDER,
@@ -239,10 +228,10 @@ def ppo_sales_publisher(year, month):
     ).count()
 
 
-@stats_month_cache
-def ppo_sales_apprl(year, month):
+@stats_cache
+def ppo_sales_apprl(time_range):
     return Sale.objects.filter(
-        sale_date__range=month_range(year, month),
+        sale_date__range=time_range,
         vendor__in=ppo_vendors('id'),
         status__gte=Sale.PENDING,
         type=Sale.COST_PER_ORDER,
@@ -255,29 +244,29 @@ def ppo_sales_apprl(year, month):
 ####################################################
 
 
-@stats_month_cache
-def commission_cr_total(year, month):
-    clicks = ppo_clicks_total(year, month)
+@stats_cache
+def commission_cr_total(time_range):
+    clicks = ppo_clicks_total(time_range)
     if clicks:
-        return Decimal(ppo_sales_total(year, month)) / clicks
+        return Decimal(ppo_sales_total(time_range)) / clicks
     else:
         return 0
 
 
-@stats_month_cache
-def commission_cr_publisher(year, month):
-    clicks = ppo_clicks_publisher(year, month)
+@stats_cache
+def commission_cr_publisher(time_range):
+    clicks = ppo_clicks_publisher(time_range)
     if clicks:
-        return Decimal(ppo_sales_publisher(year, month)) / clicks
+        return Decimal(ppo_sales_publisher(time_range)) / clicks
     else:
         return 0
 
 
-@stats_month_cache
-def commission_cr_apprl(year, month):
-    clicks = ppo_clicks_apprl(year, month)
+@stats_cache
+def commission_cr_apprl(time_range):
+    clicks = ppo_clicks_apprl(time_range)
     if clicks:
-        return Decimal(ppo_sales_apprl(year, month)) / clicks
+        return Decimal(ppo_sales_apprl(time_range)) / clicks
     else:
         return 0
 
@@ -286,29 +275,30 @@ def commission_cr_apprl(year, month):
 # Average EPC
 ####################################################
 
-@stats_month_cache
-def average_epc_total(year, month):
-    clicks = ppc_clicks_total(year, month) + ppo_clicks_total(year, month)
+
+@stats_cache
+def average_epc_total(time_range):
+    clicks = ppc_clicks_total(time_range) + ppo_clicks_total(time_range)
     if clicks:
-        return Decimal(ppo_commission_total(year, month) + ppc_commission_total(year, month)) / clicks
+        return Decimal(ppo_commission_total(time_range) + ppc_commission_total(time_range)) / clicks
     else:
         return 0
 
 
-@stats_month_cache
-def average_epc_ppc(year, month):
-    clicks = ppc_clicks_total(year, month)
+@stats_cache
+def average_epc_ppc(time_range):
+    clicks = ppc_clicks_total(time_range)
     if clicks:
-        return Decimal(ppc_commission_total(year, month)) / clicks
+        return Decimal(ppc_commission_total(time_range)) / clicks
     else:
         return 0
 
 
-@stats_month_cache
-def average_epc_ppo(year, month):
-    clicks = ppo_clicks_total(year, month)
+@stats_cache
+def average_epc_ppo(time_range):
+    clicks = ppo_clicks_total(time_range)
     if clicks:
-        return Decimal(ppo_commission_total(year, month)) / clicks
+        return Decimal(ppo_commission_total(time_range)) / clicks
     else:
         return 0
 
@@ -318,24 +308,24 @@ def average_epc_ppo(year, month):
 ####################################################
 
 
-@stats_month_cache
-def valid_clicks_total(year, month):
-    return valid_clicks_ppc(year, month) + valid_clicks_ppo(year, month)
+@stats_cache
+def valid_clicks_total(time_range):
+    return valid_clicks_ppc(time_range) + valid_clicks_ppo(time_range)
 
 
-@stats_month_cache
-def valid_clicks_ppc(year, month):
+@stats_cache
+def valid_clicks_ppc(time_range):
     return ProductStat.objects.filter(
-        created__range=month_range(year, month),
+        created__range=time_range,
         vendor__in=ppc_vendors(),
         is_valid=True
     ).count()
 
 
-@stats_month_cache
-def valid_clicks_ppo(year, month):
+@stats_cache
+def valid_clicks_ppo(time_range):
     return ProductStat.objects.filter(
-        created__range=month_range(year, month),
+        created__range=time_range,
         vendor__in=ppo_vendors(),
         is_valid=True
     ).count()
@@ -346,24 +336,24 @@ def valid_clicks_ppo(year, month):
 ####################################################
 
 
-@stats_month_cache
-def invalid_clicks_total(year, month):
-    return invalid_clicks_ppc(year, month) + invalid_clicks_ppo(year, month)
+@stats_cache
+def invalid_clicks_total(time_range):
+    return invalid_clicks_ppc(time_range) + invalid_clicks_ppo(time_range)
 
 
-@stats_month_cache
-def invalid_clicks_ppc(year, month):
+@stats_cache
+def invalid_clicks_ppc(time_range):
     return ProductStat.objects.filter(
-        created__range=month_range(year, month),
+        created__range=time_range,
         vendor__in=ppc_vendors(),
         is_valid=False
     ).count()
 
 
-@stats_month_cache
-def invalid_clicks_ppo(year, month):
+@stats_cache
+def invalid_clicks_ppo(time_range):
     return ProductStat.objects.filter(
-        created__range=month_range(year, month),
+        created__range=time_range,
         vendor__in=ppo_vendors(),
         is_valid=False
     ).count()
@@ -374,13 +364,12 @@ def invalid_clicks_ppo(year, month):
 ####################################################
 
 
-
-@stats_month_cache
-def ppc_all_stores_publishers_income(year, month):
+@stats_cache
+def ppc_all_stores_publishers_income(time_range):
     # We define this to be what we receive from PPO vendors from traffic driven by PPC-AS-publishers. They don't get
     # a cut from this incomes.
     result = Sale.objects.filter(
-        sale_date__range=month_range(year, month),
+        sale_date__range=time_range,
         status__gte=Sale.PENDING,
         vendor_id__in=ppo_vendors('id'),
         user_id__in=ppc_all_stores_users(),
@@ -392,12 +381,12 @@ def ppc_all_stores_publishers_income(year, month):
     return result['total'] or 0
 
 
-@stats_month_cache
-def ppc_all_stores_publishers_cost(year, month):
+@stats_cache
+def ppc_all_stores_publishers_cost(time_range):
     # We define this to be what we pay to PPC-AS-publishers because of clicks to PPO vendors. No income to Apprl
     # on these Sales, only costs
     result = Sale.objects.filter(
-        sale_date__range=month_range(year, month),
+        sale_date__range=time_range,
         status__gte=Sale.PENDING,
         vendor_id__in=ppo_vendors('id'),
         user_id__in=ppc_all_stores_users(),
@@ -409,21 +398,21 @@ def ppc_all_stores_publishers_cost(year, month):
     return result['total'] or 0
 
 
-@stats_month_cache
-def ppc_all_stores_publishers_result(year, month):
-    income = ppc_all_stores_publishers_income(year, month)
-    cost = ppc_all_stores_publishers_cost(year, month)
+@stats_cache
+def ppc_all_stores_publishers_result(time_range):
+    income = ppc_all_stores_publishers_income(time_range)
+    cost = ppc_all_stores_publishers_cost(time_range)
     return income - cost
 
 
-@stats_month_cache
-def ppc_all_stores_publishers_by_vendor(year, month):
+@stats_cache
+def ppc_all_stores_publishers_by_vendor(time_range):
     ppc_as_users = ppc_all_stores_users()
     stats = {}
     for vendor in Vendor.objects.filter(is_cpc=False, is_cpo=True):
         params = dict(
             vendor_id=vendor.id,
-            sale_date__range=month_range(year, month),
+            sale_date__range=time_range,
             status__gte=Sale.PENDING,
             user_id__in=ppc_as_users,
             is_promo=False,
@@ -437,13 +426,6 @@ def ppc_all_stores_publishers_by_vendor(year, month):
 ####################################################
 # Misc internal utils
 ####################################################
-
-
-def month_range(year, month):
-    start = datetime(year, month, 1)
-    # Djangos range filter maps to BETWEEN which is inclusive so we need to subract a small amount so we stay within the month
-    end = start + relativedelta(months=1) - relativedelta(microseconds=1)
-    return start, end
 
 
 def ppc_all_stores_users():
@@ -468,40 +450,41 @@ def ppo_vendors(key='name'):
 def admin_top_stats(year, month, flush_cache=False):
 
     if flush_cache:
-        flush_stats_cache_by_one_month(year, month)
+        flush_stats_cache_by_month(year, month)
 
+    tr = mrange(year, month)
     return [
         [
             "Earnings",
-            earnings_total(year, month), earnings_publisher(year, month), earnings_apprl(year, month)
+            earnings_total(tr), earnings_publisher(tr), earnings_apprl(tr)
         ],
         [
             "Referral earnings",
-            referral_earnings_total(year, month), referral_earnings_publisher(year, month), referral_earnings_apprl(year, month)
+            referral_earnings_total(tr), referral_earnings_publisher(tr), referral_earnings_apprl(tr)
         ],
         [
             "PPO commission",
-            ppo_commission_total(year, month), ppo_commission_publisher(year, month), ppo_commission_apprl(year, month)
+            ppo_commission_total(tr), ppo_commission_publisher(tr), ppo_commission_apprl(tr)
         ],
         [
             "PPC commission",
-            ppc_commission_total(year, month), ppc_commission_publisher(year, month), ppc_commission_apprl(year, month)
+            ppc_commission_total(tr), ppc_commission_publisher(tr), ppc_commission_apprl(tr)
         ],
         [
             "PPC clicks",
-            ppc_clicks_total(year, month), ppc_clicks_publisher(year, month), ppc_clicks_apprl(year, month)
+            ppc_clicks_total(tr), ppc_clicks_publisher(tr), ppc_clicks_apprl(tr)
         ],
         [
             "PPO clicks",
-            ppo_clicks_total(year, month), ppo_clicks_publisher(year, month), ppo_clicks_apprl(year, month)
+            ppo_clicks_total(tr), ppo_clicks_publisher(tr), ppo_clicks_apprl(tr)
         ],
         [
             "PPO sales",
-            ppo_sales_total(year, month), ppo_sales_publisher(year, month), ppo_sales_apprl(year, month)
+            ppo_sales_total(tr), ppo_sales_publisher(tr), ppo_sales_apprl(tr)
         ],
         [
             "Commission CR",
-            commission_cr_total(year, month), commission_cr_publisher(year, month), commission_cr_apprl(year, month)
+            commission_cr_total(tr), commission_cr_publisher(tr), commission_cr_apprl(tr)
         ]
     ]
 
@@ -509,35 +492,37 @@ def admin_top_stats(year, month, flush_cache=False):
 def admin_clicks(year, month, flush_cache=False):
 
     if flush_cache:
-        flush_stats_cache_by_one_month(year, month)
+        flush_stats_cache_by_month(year, month)
 
+    tr = mrange(year, month)
     return [
         [
             "Average EPC",
-            average_epc_total(year, month), average_epc_ppc(year, month), average_epc_ppo(year, month)
+            average_epc_total(tr), average_epc_ppc(tr), average_epc_ppo(tr)
         ],
         [
             "Valid clicks",
-            valid_clicks_total(year, month), valid_clicks_ppc(year, month), valid_clicks_ppo(year, month)
+            valid_clicks_total(tr), valid_clicks_ppc(tr), valid_clicks_ppo(tr)
         ],
         [
             "Invalid clicks",
-            invalid_clicks_total(year, month), invalid_clicks_ppc(year, month), invalid_clicks_ppo(year, month)
+            invalid_clicks_total(tr), invalid_clicks_ppc(tr), invalid_clicks_ppo(tr)
         ]
     ]
 
 
 def ppc_all_stores_stats(year, month, flush_cache=False):
     if flush_cache:
-        flush_stats_cache_by_one_month(year, month)
+        flush_stats_cache_by_month(year, month)
 
+    tr = mrange(year, month)
     return {
         'total': {
-            'result': ppc_all_stores_publishers_result(year, month),
-            'income': ppc_all_stores_publishers_income(year, month),
-            'cost': ppc_all_stores_publishers_cost(year, month),
+            'result': ppc_all_stores_publishers_result(tr),
+            'income': ppc_all_stores_publishers_income(tr),
+            'cost': ppc_all_stores_publishers_cost(tr),
         },
-        'by_vendor': ppc_all_stores_publishers_by_vendor(year, month)
+        'by_vendor': ppc_all_stores_publishers_by_vendor(tr)
     }
 
 
