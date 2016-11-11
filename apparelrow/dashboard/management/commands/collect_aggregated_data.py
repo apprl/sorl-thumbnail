@@ -573,7 +573,6 @@ class Command(BaseCommand):
         if pbar:
             pbar.finish()
 
-        print "Generating aggregated clicks... "
         logger.debug("Generating aggregated clicks... ")
         generate_aggregated_clicks_from_publisher(start_date, end_date, **kwargs)
         generate_aggregated_clicks_from_product(start_date, end_date, **kwargs)

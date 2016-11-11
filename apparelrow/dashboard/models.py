@@ -497,7 +497,8 @@ def sale_post_save(sender, instance, created, **kwargs):
                         earning.save()
                 str_date = instance.sale_date.strftime('%Y-%m-%d')
 
-                stats_cache.flush_stats_cache_by_one_month(instance.sale_date.year, instance.sale_date.month)
+                # increase this if we aggregate Sales stats over longer periods than 1 month
+                stats_cache.flush_stats_cache_by_month(instance.sale_date.year, instance.sale_date.month)
 
                 # Add date from updated sale/earnings to a quere, so the associated aggregated data will be
                 # updated/generated later as well. (update_aggregated_data job)

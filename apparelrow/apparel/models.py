@@ -188,10 +188,6 @@ class Vendor(models.Model):
         if self.is_cpc and self.is_cpo:
             raise ValidationError("Vendor can't be both cpo and cpc")
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.full_clean()
-        super(Vendor, self).save(force_insert, force_update, using, update_fields)
-
 
 #
 # Category
