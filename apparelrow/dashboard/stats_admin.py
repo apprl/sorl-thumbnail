@@ -551,7 +551,7 @@ def print_admin_dashboard(year, month, flush_cache=True):
 def print_sanity_check(year, month):
     total_sales = 0
     total_earnings = 0
-    for s in Sale.objects.filter(created__range=month_range(year, month)):
+    for s in Sale.objects.filter(created__range=mrange(year, month)):
         total_sales += s.converted_commission
         for u in s.userearning_set.all():
             total_earnings += u.amount

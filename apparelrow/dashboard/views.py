@@ -713,16 +713,13 @@ class AdminDashboardView(TemplateView):
             values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
                        'paid_clicks', 'network_sale_earnings', 'network_click_earnings', 'user_id')
             query_args = {'created__range': (start_date_query, end_date_query), 'data_type' : 'aggregated_from_total'}
-            # data_per_day = aggregated_data_per_day(start_date, end_date, 'admin', values, query_args)
-            data_per_day = None
+            data_per_day = aggregated_data_per_day(start_date, end_date, 'admin', values, query_args)
 
             # Top Publishers (influencers)
-            # top_publishers = get_admin_aggregated_publishers(start_date_query, end_date_query)
-            top_publishers = None
+            top_publishers = get_admin_aggregated_publishers(start_date_query, end_date_query)
 
             # Top Products (links)
-            # top_products = get_aggregated_products(None, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
-            top_products = None
+            top_products = get_aggregated_products(None, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
             # Get summary for current period
             if self.use_old_stats:
