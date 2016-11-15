@@ -145,6 +145,19 @@
             {% endfor %}
         </section>
 
+
+        <section>
+        <div>
+            <p>
+                Append these query params to affect stats above:
+                <strong>?use_old_stats</strong> to use old AggregatedData
+                <strong>?flush_cache</strong> to flush redis and force a refresh
+            </p>
+        </div>
+        </section>
+
+
+
         <section>
             <div id="chart_div" style="width: 100%; height: 300px"></div>
             <div id="clicks_chart" style="width: 100%; height: 300px;"></div>
