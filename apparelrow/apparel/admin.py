@@ -22,7 +22,6 @@ from mptt.admin import MPTTModelAdmin
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('image', 'product_name', 'category', 'gender', 'manufacturer', 'sku', 'published',)
     list_filter = ['category', 'gender', 'vendors', 'published']
-    list_editable = ['category', 'gender', 'published']
     list_display_links = ['product_name']
     actions = ['publish', 'hide', 'change_category', 'change_options']
     search_fields = ['product_name']
