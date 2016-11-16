@@ -176,13 +176,40 @@ class Vendor(models.Model):
     is_limit_reached = models.BooleanField(default=False, help_text=_('Limit has been exceeded for the current month '
                                                       'and email has been sent to the admin group'), db_index=True)
 
+    locations = models.ManyToManyField('apparel.Location')
+
     class Meta:
         ordering = ['name']
         verbose_name = 'Vendor'
         verbose_name_plural = 'Vendors'
 
+    def location_codes_list(self, use_default_location_if_none=False):
+        codes = [location.code for location in self.locations.all()]
+        if not codes and use_default_location_if_none:
+            codes = settings.DEFAULT_VENDOR_LOCATION
+        return codes
+
     def __unicode__(self):
         return u"%s" % self.name
+
+
+#
+# Location
+#
+# This model defines different markets that Vendors can belong to
+# It used to be hardcoded in the setting - VENDOR_LOCATION_MAPPING but we wanted to make it user configurable
+
+location_choices = ((l[0], '%s - %s' % l) for l in settings.LOCATION_MAPPING_SIMPLE_TEXT)
+
+
+class Location(models.Model):
+    code = models.CharField(primary_key=True, max_length=3, choices=location_choices)
+
+    class Meta:
+        ordering = ['code']
+
+    def __unicode__(self):
+        return u"%s" % self.code
 
 
 #

@@ -455,11 +455,22 @@ admin.site.register(Option, OptionAdmin)
 #
 
 class VendorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'provider')
+    def locations(vendor):
+        return u', '.join(vendor.location_codes_list())
+
+    list_display = ('name', 'provider', locations)
     raw_id_fields = ['user']
     readonly_fields = ('is_limit_reached',)
 
+    list_filter = ['locations__code']
+
 admin.site.register(Vendor, VendorAdmin)
+
+#
+# LOCATION
+#
+
+admin.site.register(Location)
 
 #
 # VENDOR PRODUCT
