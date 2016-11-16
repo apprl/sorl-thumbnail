@@ -14,7 +14,7 @@ from django.test.utils import override_settings
 from django.core import management
 
 from localeurl.utils import locale_url
-from apparelrow.apparel.models import Vendor
+from apparelrow.apparel.models import Vendor, Location
 from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserEarning
 
 from apparelrow.dashboard.utils import *
@@ -2811,11 +2811,14 @@ class TestUtils(TransactionTestCase):
         percentage_delta = get_relative_change(previous_value, current_value)
         self.assertEqual(percentage_delta, None)
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "CPO Vendor":["SE"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
     def test_invalid_clicks(self):
 
+        se = Location.objects.create(code='SE')
         vendor_cpc = get_model('apparel', 'Vendor').objects.get(name="Vendor CPC")
+        vendor_cpc.locations.add(se)
         vendor_cpo = get_model('apparel', 'Vendor').objects.get(name="Vendor CPO")
+        vendor_cpo.locations.add(se)
 
         for index in range(152):
             ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=False, ip= "1.2.3.4")

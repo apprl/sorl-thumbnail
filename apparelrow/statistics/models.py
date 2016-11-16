@@ -103,11 +103,11 @@ def productstat_post_save(sender, instance, created, **kwargs):
                 country = get_country_by_ip_string(instance.ip)
 
                 vendor_name = product.default_vendor.vendor.name
-                vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor_name, [])
+                vendor_markets = product.default_vendor.vendor.location_codes_list()
 
                 logger.info("Click verification: %s belongs to market for vendor %s" % (country, vendor_name))
                 if not vendor_markets or len(vendor_markets) == 0:
-                    vendor_markets = settings.VENDOR_LOCATION_MAPPING.get("default")
+                    vendor_markets = settings.DEFAULT_VENDOR_LOCATION
                     logger.info("Click verification: No vendor market entry for vendor %s, falling back on default." % (vendor_name))
                 if country not in vendor_markets:
                     logger.info("%s does not belong to market for vendor %s, %s" % (country, vendor_name,vendor_markets))
