@@ -21,7 +21,12 @@ jQuery(document).ready(function() {
     // Hide hotspots and only show them on mouseenter if !mobile
     if (!is_mobile()) {
         var active = false;
-        jQuery(document).on('click touchstart', '.photo-hotspots', function() {
+        jQuery(document).on('click touchstart', '.photo-hotspots', function(evt) {
+            // Don't follow links on hotspot clicks in desktop
+            if($(evt.target).hasClass('hotspot')) {
+                evt.preventDefault();
+            }
+
             if (active === false) {
               jQuery('.hotspot', this).stop(true, true).fadeIn(300);
               setTimeout(function(){active=true}, 400);

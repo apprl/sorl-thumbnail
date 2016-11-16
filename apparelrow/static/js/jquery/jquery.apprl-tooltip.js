@@ -95,7 +95,7 @@
         if(!component.hasClass('tooltip') && last_id != component_id) {
             tooltip.stop().animate({opacity: 1}, 300);
         } else {
-            //tooltip.css({opacity: 1});
+            tooltip.css({opacity: 1});
         }
         last_id = component_id;
     }
