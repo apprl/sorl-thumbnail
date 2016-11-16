@@ -3,27 +3,88 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+
 from django.conf import settings
+
+VENDOR_LOCATION_MAPPING = {
+    "Axel Arigato": ["SE", "DK", "NO", "FI"],
+    "Shirtonomy": ["DK", "SE"],
+    "Ted & Teresa": ["SE"],
+    "Tiger SE": ["SE"],
+    "Tiger DK": ["DK"],
+    "Cubus": ["SE"],
+    u"Björn Borg": ["SE"],
+    "Best of Brands": ["SE"],
+    "Bonshop": ["SE"],
+    "ConfidentLiving": ["SE"],
+    "MQ": ["SE"],
+    "Care of Carl": ["SE", "NO"],
+    "ALDO": ["US"],
+    "ASOS": ["FI", "SE", "NO", "DK","US", "ALL"],
+    "Lexington": ["FI", "SE", "NO", "DK"],
+    "& Other Stories": ["FI", "SE", "NO", "DK"],
+    "Cheap Monday": ["FI", "SE", "NO", "DK"],
+    "Thomas Sabo": ["FI", "SE", "NO", "DK"],
+    "Zalando": ["SE"],
+    "Soft Goat": ["FI", "SE", "NO", "DK"],
+    "Eleven": ["SE"],
+    "Happy Socks": ["SE"],
+    "Hedvig Showroom": ["SE"],
+    "Heelow": ["SE"],
+    "Henry Kole": ["SE", "DK", "NO", "FI"],
+    "Elevenfiftynine": ["SE"],
+    "Ellos SE": ["SE"],
+    "Ellos NO": ["NO"],
+    "Flattered": ["SE", "DK", "NO", "FI"],
+    "Frontmen": ["SE", "NO", "DK", "FI"],
+    "Filippa K": ["SE"],
+    "Filippa K DK": ["DK"],
+    "Filippa K NO": ["NO"],
+    "JC": ["SE"],
+    "Nividas": ["SE", "DK", "NO", "FI"],
+    "Nelly": ["SE"],
+    "Nelly NO": ["NO"],
+    "NA-KD": ["FI", "SE", "NO", "DK"],
+    "Royal Design": ["FI", "SE", "NO", "DK"],
+    "Gina Tricot NO": ["NO"],
+    "Gina Tricot SE": ["SE"],
+    "Gina Tricot DK": ["DK"],
+    "Gina Tricot FI": ["FI"],
+    "Panos Emporio": ["SE"],
+    "Boozt se": ["SE"],
+    "Boozt no": ["NO"],
+    "Boozt dk": ["DK"],
+    "ASOS no": ["NO"],
+    "QVC": ["US"],
+    "Sportamore": ["SE"],
+    "Room 21 no": ["NO"],
+    "Rum 21 se": ["SE"],
+}
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        # create locations
-        orm.Location.objects.all().delete()
-        for l in settings.LOCATION_MAPPING_SIMPLE_TEXT:
-            orm.Location.objects.create(code=l[0])
+        Location = orm['apparel.Location']
+        Vendor = orm['apparel.Vendor']
 
-        # attach locations to vendors
-        for vendor_name, locations in settings.VENDOR_LOCATION_MAPPING.iteritems():
+        # Create locations based on LOCATION_MAPPING_SIMPLE_TEXT keys
+        Location.objects.all().delete()
+        for l in settings.LOCATION_MAPPING_SIMPLE_TEXT:
+            Location.objects.create(code=l[0])
+
+        # Attach locations to vendors
+        for vendor_name, locations in VENDOR_LOCATION_MAPPING.iteritems():
             try:
-                vendor = orm.Vendor.objects.get(name=vendor_name)
-            except orm.Vendor.DoesNotExist:
+                vendor = Vendor.objects.get(name=vendor_name)
+            except Vendor.DoesNotExist:
                 print "Vendor %s doesn't exist, skipping locations for it" % vendor_name
+                continue
             for l in locations:
-                vendor.locations.add(orm.Location.objects.get(code=l))
+                vendor.locations.add(Location.objects.get(code=l))
 
     def backwards(self, orm):
-        orm.Location.objects.all().delete()
+        Location = orm['apparel.Location']
+        Location.objects.all().delete()
 
     models = {
         u'apparel.backgroundimage': {
