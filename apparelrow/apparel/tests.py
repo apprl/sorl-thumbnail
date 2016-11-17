@@ -120,6 +120,10 @@ class TestChromeExtension(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
+        url = '/backend/product/lookup/?key=http%3A%2F%2Fnelly.com%2Fse%2Fklader-for-kvinnor%2Fklader%2Ffestklanningar%2F%23hits%3D144%26sort%3DLastArrival%26priceTo%3D299&domain=nelly.com%2Fse%2Fklader-for-kvinnor%2Fklader%2Ffestklanningar%2F&is_product=0'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
     """def test_product_lookups(self):
         product0 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/white-twill")
         product1 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/sky-twill")

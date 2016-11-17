@@ -267,7 +267,7 @@ def links_redis_connection():
 
 
 def links_redis_key(source_link):
-    return hashlib.md5(source_link).hexdigest()
+    return hashlib.md5(source_link.encode("utf-8")).hexdigest()
 
 
 def compress_source_link_if_needed(source_link, max_len=SOURCE_LINK_MAX_LEN):
