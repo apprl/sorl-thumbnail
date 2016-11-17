@@ -32,12 +32,13 @@ class TestProductStat(TestCase):
         normal_user.save()
 
         cpc_vendor = get_model('apparel', 'Vendor').objects.get(pk=2)
+        cpc_vendor.locations.create(code='SE')
 
         get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=group,
                                                      vendor=cpc_vendor)
         self._login()
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="NO",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="NO")
     def test_click_is_not_valid(self):
         """
         Tests that when a click ip does not match the market of the cpc store, the click is not valid
@@ -49,6 +50,8 @@ class TestProductStat(TestCase):
         response = self.client.post(reverse('product-track', args=[product.pk, 'Ext-Link', user.pk]), follow=True,
                                     REMOTE_ADDR="190.104.96.3")
 
+        total_clicks = get_model('statistics', 'ProductStat').objects.count()
+        self.assertEqual(total_clicks, 1)
         valid_clicks = get_model('statistics', 'ProductStat').objects.filter(is_valid=True).count()
         self.assertEqual(valid_clicks, 0)
         str_date = datetime.date.today().strftime('%Y-%m-%d')
@@ -56,25 +59,8 @@ class TestProductStat(TestCase):
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 0)
         self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 0)
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="NO",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "default":["ALL","SE","NO","US"],})
-    def test_locality_clicks_are_valid(self):
-        """
-        Tests that when a click ip does  match the market of the cpc store, the click is valid and it will be included
-        in earnings
-        """
-        user = get_user_model().objects.get(username='normal_user')
-        product = get_model('apparel', 'Product').objects.get(slug='brand-cpc-product')
-        clickcost = get_model('dashboard', 'ClickCost').objects.get(pk=1)
-        for i in range(10):
-            response = self.client.post(reverse('product-track', args=[product.pk, 'Ext-Link', user.pk]), follow=True,
-                                    REMOTE_ADDR="192.1.1.1.")
 
-        valid_clicks = get_model('statistics', 'ProductStat').objects.filter(is_valid=True).count()
-        self.assertEqual(valid_clicks, 0)
-        total_clicks = get_model('statistics', 'ProductStat').objects.count()
-        self.assertEqual(total_clicks, 10)
-
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
     def test_click_is_valid(self):
         """
         Tests that when a click ip does  match the market of the cpc store, the click is valid and it will be included
@@ -104,7 +90,7 @@ class TestProductStat(TestCase):
         earning_apprl = get_model('dashboard', 'UserEarning').objects.get(user=None)
         self.assertEqual(earning_apprl.amount, clickcost.amount * (1 - decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)))
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
     def test_unique_clicks_per_day(self):
         """
         Tests that only one click could be made to the same product from the same browser, once a day
@@ -232,11 +218,12 @@ class TestProductStat(TestCase):
         short_url_locale_5 = u'http://staging.apprl.com/sv/s/4C96/'
         self.assertEquals("4C96", extract_short_link_from_url(short_url_locale_5))
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="DK",VENDOR_LOCATION_MAPPING={"PPC Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="DK",DEFAULT_VENDOR_LOCATION=["ALL","SE","NO","US"])
     def test_valid_clicks_location(self):
 
-        # Vendor Market: ["SE"]
+        # Vendor Market: ["DK"]
         vendor = VendorFactory.create(name="PPC Vendor DK", is_cpc=True, is_cpo=False)
+        vendor.locations.create(code='DK')
         product = ProductFactory.create(slug="product")
         VendorProductFactory.create(vendor=vendor, product=product)
 
@@ -259,11 +246,12 @@ class TestProductStat(TestCase):
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), 0)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=False).count(), clicks)
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="ALL",VENDOR_LOCATION_MAPPING={"PPC Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="ALL",DEFAULT_VENDOR_LOCATION=["ALL","SE","NO","US"])
     def test_clicks_from_unmapped_location(self):
 
-        # Vendor Market: ["SE"]
+        # Vendor Market: ["DK"]
         vendor = VendorFactory.create(name="PPC Vendor DK", is_cpc=True, is_cpo=False)
+        vendor.locations.create(code='DK')
         product = ProductFactory.create(slug="product")
         VendorProductFactory.create(vendor=vendor, product=product)
 

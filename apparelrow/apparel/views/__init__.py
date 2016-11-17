@@ -377,10 +377,9 @@ class ProductDetailView(DetailView):
         # Cost per click
         default_vendor = product.default_vendor
 
-        # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
         vendor_markets = None
         if default_vendor and request.user and request.user.is_authenticated():
-            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
+            vendor_markets = default_vendor.vendor.location_codes_list()
 
             # Calculate cost per click and earning cut
             product_earning, currency = product.default_vendor.get_product_earning(request.user)
@@ -470,10 +469,10 @@ def product_detail(request, slug):
 
     default_vendor = product.default_vendor
 
-    # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
+    # Vendor market if locations exists, otherwise the vendor is available for every location by default
     vendor_markets = None
     if default_vendor:
-        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
+        vendor_markets = default_vendor.vendor.location_codes_list()
 
         # Calculate cost per click and earning cut
         product_earning, currency = product.default_vendor.get_product_earning(request.user)
@@ -514,7 +513,7 @@ def get_warnings_for_location(request, slug):
         # Vendor market
         vendor_markets = None
         if product.default_vendor:
-            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
+            vendor_markets = product.default_vendor.vendor.location_codes_list()
 
         warning_text = get_location_warning_text(vendor_markets, request.user, "product")
         return HttpResponse(warning_text)
@@ -535,7 +534,7 @@ def product_generate_short_link(request, slug):
     # Vendor market
     vendor_markets = None
     if product.default_vendor:
-        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
+        vendor_markets = product.default_vendor.vendor.location_codes_list()
 
     warning_text = get_location_warning_text(vendor_markets, request.user, "product")
 
@@ -1336,6 +1335,7 @@ def product_lookup(request):
     if request.user and request.user.partner_group and request.user.partner_group.has_cpc_all_stores:
         approx_text = ""
 
+    vendor = None
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
@@ -1413,7 +1413,7 @@ def product_lookup(request):
                                               (approx_text, cost_per_click.currency, (earning_cut * cost_per_click.amount))
     vendor_markets = None
     if vendor:
-        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
+        vendor_markets = vendor.location_codes_list()
     warning_text = get_location_warning_text(vendor_markets, request.user, "chrome-ext")
 
     return JSONResponse({

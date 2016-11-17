@@ -807,7 +807,7 @@ def get_available_stores(current_location):
     for store in get_model('dashboard', 'StoreCommission').objects.all():
         store_name = store.vendor.name
         try:
-            if current_location in settings.VENDOR_LOCATION_MAPPING[store_name]:
+            if current_location in store.vendor.location_codes_list():
                 vendors.append(store_name)
         except KeyError:
             vendors.append(store_name)
