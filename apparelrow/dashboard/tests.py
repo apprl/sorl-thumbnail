@@ -6,6 +6,7 @@ from decimal import Decimal as D
 from django.contrib.admin import AdminSite
 
 from advertiser.models import Transaction
+from apparelrow.apparel.tests import _create_dummy_image
 from apparelrow.dashboard.factories import *
 
 from django.core import mail
@@ -1432,7 +1433,7 @@ class TestSalesPerClick(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True
         )
         self.product2 = Product.objects.create(
@@ -1440,7 +1441,7 @@ class TestSalesPerClick(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True,
             sku=123
         )
@@ -1449,7 +1450,7 @@ class TestSalesPerClick(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True,
             sku=456
         )
@@ -2296,7 +2297,7 @@ class TestAggregatedData(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True
         )
         VendorProduct.objects.create(product=self.product, vendor=self.vendor_cpc)
@@ -2413,7 +2414,7 @@ class TestAggregatedData(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True,
             sku='wk-11111111'
         )
