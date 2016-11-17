@@ -3,6 +3,8 @@ import urllib
 import os
 import logging
 from django.contrib.admin import AdminSite
+
+from apparelrow.apparel.tests import _create_dummy_image
 from apparelrow.dashboard.factories import *
 
 from django.core import mail
@@ -1395,7 +1397,7 @@ class TestSalesPerClick(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True
         )
         self.product2 = get_model('apparel', 'Product').objects.create(
@@ -1403,7 +1405,7 @@ class TestSalesPerClick(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True,
             sku=123
         )
@@ -1412,7 +1414,7 @@ class TestSalesPerClick(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True,
             sku=456
         )
@@ -2263,7 +2265,7 @@ class TestAggregatedData(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True
         )
         get_model('apparel', 'VendorProduct').objects.create(product=self.product, vendor=self.vendor_cpc)
@@ -2379,7 +2381,7 @@ class TestAggregatedData(TransactionTestCase):
             category=category,
             manufacturer=manufacturer,
             gender='M',
-            product_image='no real image',
+            product_image=_create_dummy_image(),
             published=True,
             sku='wk-11111111'
         )
