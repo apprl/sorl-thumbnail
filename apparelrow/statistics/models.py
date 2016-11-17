@@ -84,6 +84,11 @@ class ProductStat(models.Model):
     class Meta:
         ordering = ['-created']
 
+
+    def __unicode__(self):
+        return u'action: %s product: %s vendor: %s user_id: %s' % (self.action, self.product, self.vendor, self.user_id)
+
+
 @receiver(post_save, sender=ProductStat, dispatch_uid='productstat_post_save')
 def productstat_post_save(sender, instance, created, **kwargs):
     """

@@ -83,7 +83,7 @@
 {% block body-classes %}publisher dashboard{% endblock body-classes %}
 {% block body %}
 
-    {% include "apparel/admin/header.html" with title="Admin Dashboard" %}
+    {% include "apparel/admin/header.html" with title=admin_title %}
 
     <div class="publisher-admin">
         <ul class="list-horizontal center">
@@ -145,6 +145,19 @@
             {% endfor %}
         </section>
 
+
+        <section>
+        <div>
+            <p>
+                Append these query params to affect stats above:
+                <strong>?use_old_stats</strong> to use old AggregatedData
+                <strong>?flush_cache</strong> to flush redis and force a refresh
+            </p>
+        </div>
+        </section>
+
+
+
         <section>
             <div id="chart_div" style="width: 100%; height: 300px"></div>
             <div id="clicks_chart" style="width: 100%; height: 300px;"></div>
@@ -174,15 +187,15 @@
                                 </a>
                             </td>
                             <td class="col-md-3 hidden-xs">
-                                <a href="{{ publisher.user_link }}">{{ publisher.user_name }} </a>
-                                {% comment %}TODO add month and year if applies{% endcomment %}
-                                <a href="{% url 'dashboard-date' year month %}?__imitera={{ publisher.user_id }}" target="_blank">({% trans "See dashboard" %})</a>
+                                <a href="{% url 'dashboard-date' year month %}?__imitera={{ publisher.user_id }}" target="_blank">
+                                    {{ publisher.user_name }}
+                                </a>
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
                                 {{ publisher.total_clicks }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
-                                {{ currency }} {{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }}
+                                {{ currency }} {{ publisher.total_earnings_inc_network }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
                                 {{ currency }} {{ publisher.total_network_earnings }}
@@ -332,8 +345,8 @@
                     else
                         extra_style = "colspan=2"
                     row.append('<td ' + extra_style + ' data-sort="' + this.description_text + '">' + this.description_text + '</td>');
-                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link +'"><img src="' + this.from_user_avatar + '"></a></td>');
-                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link +'">' + this.from_user_name + '</a></td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.description_link + '"><img src="' + this.from_user_avatar + '"></a></td>');
+                    row.append('<td data-sort="' + this.from_user_name + '"><a href="' + this.admin_description_link + '" target="_new">' + this.from_user_name + '</a></td>');
 
                     // Details
                     row.append('<td>' + this.details + '</td>');
@@ -371,6 +384,6 @@
 
 </script>
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
-{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products month=month_display year=year is_admin=True currency=currency only %}
+{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products TOP_PRODUCTS_LIMIT=TOP_PRODUCTS_LIMIT month=month_display year=year is_admin=True currency=currency only %}
 {% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers month=month_display year=year is_admin=True currency=currency only %}
 {% endblock body %}
