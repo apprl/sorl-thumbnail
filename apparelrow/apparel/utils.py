@@ -253,43 +253,33 @@ def parse_sid(sid):
 # Some affiliate (Tradedoubler) networks don't allow very long sids as parameters. To make sure we can fit
 # long urls into their sids, we store the urls in Redis and replace the url with a shorter digest of the link
 
-SOURCE_LINK_MAX_LEN = 30
-SOURCE_LINK_COMPRESSION_PREFIX = u'compressed-link-'
-# We only keep for a few months, shouldn't be needed longer than that because we don't query the affiliate networks
-# for older data than 90 days.
-SOURCE_LINK_REDIS_TTL_SECS = 60*60*24*30*6
-
-
-def links_redis_connection():
-    return redis.StrictRedis(host=settings.CELERY_REDIS_HOST,
-                             port=settings.CELERY_REDIS_PORT,
-                             db=settings.COMPRESSED_LINKS_REDIS_DB)
+links_redis_connection = redis.StrictRedis(host=settings.LINKS_COMPRESSION_REDIS_HOST,
+                                           port=settings.LINKS_COMPRESSION_REDIS_PORT,
+                                           db=settings.LINKS_COMPRESSION_REDIS_DB)
 
 
 def links_redis_key(source_link):
-    return hashlib.md5(source_link).hexdigest()
+    return hashlib.md5(source_link.encode("utf-8")).hexdigest()
 
 
-def compress_source_link_if_needed(source_link, max_len=SOURCE_LINK_MAX_LEN):
-    if len(source_link) <= max_len:
+def compress_source_link_if_needed(source_link, max_len=settings.LINKS_COMPRESSION_MAX_LEN):
+    if len(source_link) <= max_len or not settings.ENABLE_LINKS_COMPRESSION:
         return source_link
     else:
         key = links_redis_key(source_link)
-        redis_conn = links_redis_connection()
-        redis_conn.set(key, source_link, SOURCE_LINK_REDIS_TTL_SECS)
-        return SOURCE_LINK_COMPRESSION_PREFIX + key
+        links_redis_connection.set(key, source_link.encode('utf-8'), settings.LINKS_COMPRESSION_TTL)
+        return settings.LINKS_COMPRESSION_PREFIX + key
 
 
 def decompress_source_link_if_needed(source_link):
-    if not source_link.startswith(SOURCE_LINK_COMPRESSION_PREFIX):
+    if not source_link.startswith(settings.LINKS_COMPRESSION_PREFIX) or not settings.ENABLE_LINKS_COMPRESSION:
         return source_link
     else:
-        key = source_link.replace(SOURCE_LINK_COMPRESSION_PREFIX, '')
-        redis_conn = links_redis_connection()
-        link = redis_conn.get(key)
+        key = source_link.replace(settings.LINKS_COMPRESSION_PREFIX, '')
+        link = links_redis_connection.get(key)
         if not link:
-            logging.warn(u"Tried to decompress a long source link but didn't get a hit from Redis. Key: %s" % key)
-        return link
+            logging.error(u"Tried to decompress a long source link but didn't get a hit from Redis. Key: %s" % key)
+        return link.decode('utf-8')
 
 
 def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default', source_link=''):

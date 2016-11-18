@@ -20,7 +20,7 @@ from django.test import TestCase, RequestFactory
 from apparelrow.apparel.models import Shop, ShopEmbed
 from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.apparel.models import Product, ProductLike
-from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
+from apparelrow.apparel.utils import get_availability_text, get_location_warning_text, compress_source_link_if_needed
 from apparelrow.apparel.utils import shuffle_user_list
 from apparelrow.apparel.views.admin import AdminPostsView
 from apparelrow.profile.models import User
@@ -845,7 +845,7 @@ class TestShortLinks(TestCase):
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.henrykole.se/", key)
-        sid = "%s-0-Ext-Link/http://www.henrykole.se/shoes.html" % self.user.id
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.henrykole.se/shoes.html"))
         self.assertEqual(link, "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, key))
         self.assertEqual(vendor, link_vendor)
 
@@ -857,7 +857,7 @@ class TestShortLinks(TestCase):
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.oki-ni.com", key)
-        sid = "%s-0-Ext-Link/http://www.oki-ni.com/en/outerwear/coats" % self.user.id
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.oki-ni.com/en/outerwear/coats"))
         self.assertEqual(link, "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref=%s&p=%s" % (sid, key))
         self.assertEqual(vendor, link_vendor)
 
@@ -870,7 +870,7 @@ class TestShortLinks(TestCase):
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.aldoshoes.com", key)
-        sid = "%s-0-Ext-Link/http://www.aldoshoes.com/ca/en/women/c/100" % self.user.id
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.aldoshoes.com/ca/en/women/c/100"))
         self.assertEqual(link, "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1&"
                                "type=10&tmpid=12919&u1=%s&RD_PARM1=%s" % (sid,key))
         self.assertEqual(vendor, link_vendor)
@@ -883,7 +883,7 @@ class TestShortLinks(TestCase):
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "nelly.com", key)
-        sid = "%s-0-Ext-Link/http://nelly.com/se/skor-kvinna/" % self.user.id
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://nelly.com/se/skor-kvinna/"))
 
         self.assertEqual(link, "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi=%s&url=%s" % (sid, key))
         self.assertEqual(vendor, link_vendor)
@@ -897,7 +897,7 @@ class TestShortLinks(TestCase):
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.houseofdagmar.se", key)
         ulp = "/product-category/sweaters/"
-        sid = "%s-0-Ext-Link/http://www.houseofdagmar.se/product-category/sweaters/" % self.user.id
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.houseofdagmar.se/product-category/sweaters/"))
         self.assertEqual(link, "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[%s]]&zpar0=[[%s]]" % (ulp, sid))
         self.assertEqual(vendor, link_vendor)
 

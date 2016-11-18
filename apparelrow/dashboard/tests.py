@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 import urllib
 import os
@@ -28,8 +30,8 @@ from apparelrow.dashboard.views import get_store_earnings
 from apparelrow.dashboard import stats_admin
 from apparelrow.dashboard.stats_cache import stats_cache, mrange, flush_stats_cache, \
     flush_stats_cache_by_month, flush_stats_cache_by_year, redis as stats_redis, cache_key
-from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange,\
-    SOURCE_LINK_MAX_LEN, compress_source_link_if_needed, links_redis_connection, links_redis_key
+from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange, compress_source_link_if_needed,\
+    links_redis_connection, links_redis_key
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
 
@@ -2632,7 +2634,8 @@ class TestUtils(TransactionTestCase):
         Cut.objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
                                                      vendor=self.vendor_cpc)
         self.short_link = ShortLinkFactory(user=self.user)
-        self.long_source_link = 'http://' + 'x'*(SOURCE_LINK_MAX_LEN+10)
+        # this is used to test the link compression. We add a few unicode chars to make it can handle those too
+        self.long_source_link = u'http://' + u'x'*(settings.LINKS_COMPRESSION_MAX_LEN+10) + u'/öäå'
 
     def test_generate_sid_no_data(self):
         product_id = None
@@ -2669,7 +2672,7 @@ class TestUtils(TransactionTestCase):
         page = "Ext-Store"
         sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=self.long_source_link)
         compressed_link = compress_source_link_if_needed(self.long_source_link)
-        self.assertEqual(sid, "%s-%s-%s/%s" % (target_user_id, product_id, page, compressed_link))
+        self.assertEqual(sid, u"%s-%s-%s/%s" % (target_user_id, product_id, page, compressed_link))
 
         redis_key = links_redis_key(self.long_source_link)
         redis_conn = links_redis_connection()
