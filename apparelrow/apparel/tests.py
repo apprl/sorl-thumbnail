@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
 from django.http import SimpleCookie
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
@@ -28,6 +29,8 @@ from apparelrow.dashboard.models import Group
 from django.test import Client
 from factories import *
 import os
+
+log = logging.getLogger(__name__)
 
 """ CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -163,11 +166,11 @@ class TestChromeExtension(TestCase):
         product_key = 'http://example.com/example?someproduct=12345'
         product_id = product_lookup_by_solr(None, product_key)
         if product_id:
-            print "Found already existing product in SOLR database, removing."
+            log.info("Found already existing product in SOLR database, removing.")
             connection = Solr(settings.SOLR_URL)
             product_solr_id = "apparel.product.%s" % product_id
             connection.delete(id=product_solr_id, commit=True, waitFlush=True)
-            print "%s has been removed from index." % product_solr_id
+            log.info("%s has been removed from index." % product_solr_id)
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         category = get_model('apparel', 'Category').objects.create(name='Category')
         manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
@@ -199,8 +202,8 @@ class TestChromeExtension(TestCase):
             product_key=product_key
         )"""
 
-        print "Creating product %s,%s" % (product.id,product)
-        print "Product key is %s" % (product.product_key)
+        log.info("Creating product %s,%s" % (product.id,product))
+        log.info("Product key is %s" % (product.product_key))
         #print "Creating Domain Deeplinking %s, domain %s" % (ddl,ddl.domain)
         self.assertIsNotNone( product.id )
         response = self.client.get('/backend/product/lookup/?key=%s' % product_key)
@@ -762,9 +765,9 @@ class TestEmbeddingShops(TestCase):
         data.get("components")[1]["product"]["id"] = self.product2.id
         self.assertTrue(data.get("components")[0]["product"]["id"])
         self.assertTrue(data.get("components")[1]["product"]["id"])
-        print "Trying to call url %s " % reverse('create_shop')
+        log.info("Trying to call url %s " % reverse('create_shop'))
         response = self.client.post(reverse('create_shop'),data=json.dumps(data),content_type='application/json',)
-        print response.status_code
+        log.info(response.status_code)
         self.assertTrue(response.status_code in [201])
         content = json.loads(response.content)
         self.assertEqual(content.get("published"), True)
@@ -778,17 +781,17 @@ class TestEmbeddingShops(TestCase):
         self.assertEqual(content.get("user"), "normal_user")
         self.assertEqual(content.get("url"), "/shop/create/api/1")
         self.assertEqual(content.get("id"), 1)
-        print "Calling shop widget %s" % reverse('shop-widget',args=(content.get("id"),))
+        log.info("Calling shop widget %s" % reverse('shop-widget',args=(content.get("id"),)))
         response = self.client.post(reverse('shop-widget',args=(content.get("id"),)))
-        print response.status_code
+        log.info(response.status_code)
         self.assertTrue(response.status_code in [200])
         url = reverse('embed-shop',args=(content.get("id"),))
-        print "Calling %s to be embedded into the cache." % url
+        log.info("Calling %s to be embedded into the cache." % url)
         self.client.get(url)
         from django.core.cache import get_cache
         cache = get_cache('nginx')
         nginx_key = reverse('embed-shop', args=[1])
-        print "Checking cache key for: %s" % nginx_key
+        log.info("Checking cache key for: %s" % nginx_key)
         self.assertIsNotNone(cache.get(nginx_key,None))
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -814,7 +817,7 @@ class TestShortLinks(TestCase):
         # Make the call directly to product-track, since the client doesn't follow the redirect made
         # from template in jQuery
         url = reverse('product-track', kwargs={'pk': 0, 'page': 'Ext-Store', 'sid': self.user.id})
-        print "requesting url: %s" % url
+        log.info("requesting url: %s" % url)
         response = self.client.post(url, {'referer': referer}, **{'HTTP_REFERER': referer})
         self.assertEqual(response.status_code, 200)
 
@@ -1416,7 +1419,7 @@ class TestThumbnailClean(TestCase):
         # Every time a product is created, three thumbnails are created.
         self.assertTrue(KVStore.objects.all().count(), 1 + 1 + 3)
         sorl_image = ImageFile(product.product_image)
-        print "Sorl image: {}".format(sorl_image.name)
+        log.info("Sorl image: {}".format(sorl_image.name))
         key = sorl_image.key
 
         thumbnail_keys = _get_all_thumbnail_keys(key)
@@ -1431,7 +1434,7 @@ class TestThumbnailClean(TestCase):
             save_entries.append(kvstore)
             #print "{}/{}".format(kvstore.key, kvstore.value)
             image_file = deserialize_image_file(kvstore.value)
-            print "This thumbnail file name: {}".format(image_file.name)
+            log.info("This thumbnail file name: {}".format(image_file.name))
             self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
 
         default.kvstore.delete_thumbnails(sorl_image)
@@ -1445,9 +1448,9 @@ class TestThumbnailClean(TestCase):
         self.assertEquals(len(_get_all_thumbnail_keys(key)), 0)
 
         thumbnail = get_thumbnail(product.product_image, "10x10")
-        print "Thumbnail: {}".format(thumbnail.name)
+        log.info("Thumbnail: {}".format(thumbnail.name))
         self.assertEquals(len(_get_all_thumbnail_keys(key)), 1)
-        print "Finished this round of testing thumbnails"
+        log.info("Finished this round of testing thumbnails")
 
         self.assertTrue(thumbnail.exists())
         self.assertTrue(os.path.isfile(os.path.join(thumbnail.storage.base_location, thumbnail.name)))
@@ -1501,8 +1504,8 @@ class TestThumbnailClean(TestCase):
         sorl_image = ImageFile(product_2.product_image)
         self.assertTrue(sorl_image.exists())
         self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
-        print "This is an image: {}".format(product_2.product_image)
-        print "This is an filename image: {}".format(product_2.product_image.name)
+        log.info("This is an image: {}".format(product_2.product_image))
+        log.info("This is an filename image: {}".format(product_2.product_image.name))
         self.assertEquals(Product.objects.filter(product_image=product_2.product_image.name).count(), 1)
 
         key = sorl_image.key
@@ -1512,10 +1515,10 @@ class TestThumbnailClean(TestCase):
         for image_file in _get_all_thumbnail_objects(key):
             # Verify that files exists
             save_entries.append(image_file)
-            print "This thumbnail file name: {}".format(image_file.name)
+            log.info("This thumbnail file name: {}".format(image_file.name))
             self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
 
-        print "Deleting {}.".format(product_2)
+        log.info("Deleting {}.".format(product_2))
         # This also deletes the corresponding theimp product
         product_2.delete()
         self.assertFalse(ImpProduct.objects.filter(key=product_key).exists())
@@ -1528,7 +1531,7 @@ class TestThumbnailClean(TestCase):
         for thumb_file in save_entries:
             # Verify that files are gone exists
             file_path = os.path.join(thumb_file.storage.base_location, thumb_file.name )
-            print "Verify file is gone {}".format(file_path)
+            log.info("Verify file is gone {}".format(file_path))
             self.assertFalse(thumb_file.exists())
             self.assertFalse(os.path.isfile(file_path))
 
@@ -1573,13 +1576,13 @@ def _cleanout_products(product_keys):
 def _cleanout_product(product_key):
     product_id = product_lookup_by_solr(None, product_key)
     if product_id:
-        print "Found already existing product in SOLR database, removing."
+        log.info("Found already existing product in SOLR database, removing.")
         connection = Solr(settings.SOLR_URL)
         product_solr_id = "apparel.product.%s" % product_id
         connection.delete(id=product_solr_id, commit=True, waitFlush=True)
-        print "%s has been removed from index." % product_solr_id
+        log.info("%s has been removed from index." % product_solr_id)
     else:
-        print "No previous products found"
+        log.info("No previous products found")
 
 
 def _create_dummy_image(filename=None):

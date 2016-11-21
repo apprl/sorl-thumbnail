@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import re
 import urllib
 import os
@@ -44,6 +45,8 @@ from model_mommy.mommy import make
 from freezegun import freeze_time
 
 from apparelrow.statistics.models import ProductStat
+
+log = logging.getLogger(__name__)
 
 
 def reverse(*args, **kwargs):
@@ -204,13 +207,13 @@ class TestDashboard(TransactionTestCase):
         # Sometimes a trailing \r is caugt
         activation_url = activation_url.strip()
         self.assertTrue("\r" not in activation_url)
-        print "Activation URL found in email: %s" % activation_url
+        log.info("Activation URLz found in email: %s" % activation_url)
         response = self.client.get(activation_url, follow=True)
-        print "Requesting url, status code: %s" % response.status_code
+        log.info("Requesting url, status code: %s" % response.status_code)
         if response.status_code == 404:
-            print "Available activation codes in database:"
+            log.info("Available activation codes in database:")
             for user in get_user_model().objects.all():
-                print "Code: %s" % user.confirmation_key
+                log.info("Code: %s" % user.confirmation_key)
         self.assertTrue(response.status_code in [200,201],"User activation for %s has failed, responsecode: %s" % (registered_user,response.status_code))
         # We should now be marked with a parent user (from referral URL)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
@@ -2760,7 +2763,7 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(end_date.strftime("%Y-%m-%d"), "2013-05-31")
 
     def test_parse_date_first_to_first(self):
-        print "Testing extra option for parse date function, first to first"
+        log.info("Testing extra option for parse date function, first to first")
         today = datetime.date(2015, 04, 01)
 
         start_date, stop_date = parse_date(today.month, today.year)
@@ -2772,7 +2775,7 @@ class TestUtils(TransactionTestCase):
         self.assertEquals(start_date, datetime.date(2015, 04, 01))
         self.assertEquals(stop_date, datetime.date(2015, 05, 01))
 
-        print "Testing first to first option done!"
+        log.info("Testing first to first option done!")
 
     def test_enumerate_months(self):
         """ Test months choices, year choices and display text for month passed as input are correct.
