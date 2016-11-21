@@ -2675,9 +2675,8 @@ class TestUtils(TransactionTestCase):
         self.assertEqual(sid, u"%s-%s-%s/%s" % (target_user_id, product_id, page, compressed_link))
 
         redis_key = links_redis_key(self.long_source_link)
-        redis_conn = links_redis_connection()
-        self.assertIsNotNone(redis_conn.get(redis_key))
-        self.assertGreater(redis_conn.ttl(redis_key), 24*60*60*30*2, 'Redis compressed link TTL should be at least two months')
+        self.assertIsNotNone(links_redis_connection.get(redis_key))
+        self.assertGreater(links_redis_connection.ttl(redis_key), 24*60*60*30*2, 'Redis compressed link TTL should be at least two months')
 
     def test_parse_sid(self):
         sid = "12-21-Ext-Store/http://apprl.com/p/AJSJ"
