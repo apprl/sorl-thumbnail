@@ -176,7 +176,7 @@ class Vendor(models.Model):
     is_limit_reached = models.BooleanField(default=False, help_text=_('Limit has been exceeded for the current month '
                                                       'and email has been sent to the admin group'), db_index=True)
 
-    locations = models.ManyToManyField('apparel.Location')
+    locations = models.ManyToManyField('apparel.Location', help_text="If you change this for a vendor, tell engineers about it - search index needs to be rebuilt.")
 
     class Meta:
         ordering = ['name']
