@@ -69,10 +69,10 @@
 
             var tooltip_arrow = tooltip.find('.tooltip-arrow').css({left: 135});
             if(tooltip_h + padding < tooltip_top) {
-                tooltip_arrow.addClass('tooltip-arrow-bottom');
+                tooltip_arrow.addClass('tooltip-arrow-bottom').removeClass('tooltip-arrow-top');
                 tooltip_top -= tooltip_h + padding;
             } else {
-                tooltip_arrow.addClass('tooltip-arrow-top');
+                tooltip_arrow.addClass('tooltip-arrow-top').removeClass('tooltip-arrow-bottom');
                 tooltip_top += padding;
             }
 
@@ -95,7 +95,7 @@
         if(!component.hasClass('tooltip') && last_id != component_id) {
             tooltip.stop().animate({opacity: 1}, 300);
         } else {
-            //tooltip.css({opacity: 1});
+            tooltip.css({opacity: 1});
         }
         last_id = component_id;
     }
