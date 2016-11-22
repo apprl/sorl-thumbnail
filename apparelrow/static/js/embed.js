@@ -39,6 +39,13 @@ jQuery(document).ready(function() {
         });
     } else {
         jQuery('body').addClass('is-mobile');
+
+        jQuery(document).on('click touchstart', '.photo-hotspots', function(evt) {
+            // Don't follow links on hotspot clicks in mobile
+            if($(evt.target).hasClass('hotspot')) {
+                evt.preventDefault();
+            }
+        });
     }
 
     var parentHost = getParameterByName('host');
