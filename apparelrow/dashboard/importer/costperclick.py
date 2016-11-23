@@ -67,7 +67,7 @@ class Importer(BaseImporter):
                     click_cost, currency = self.get_click_cost(vendor)
                     if click_cost and currency:
                         sale = {}
-                        sale['original_sale_id'] = "cpc_"+str(start_date)+"_"+str(user_id)+"_"+str(vendor_id)
+                        sale['original_sale_id'] = u"cpc_{}_{}_{}".format(start_date, user_id, vendor_id)
                         sale['affiliate'] = "cost_per_click"
                         sale['vendor'] = vendor
                         sale['original_commission'] = click_cost * count

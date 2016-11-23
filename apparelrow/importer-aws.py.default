@@ -54,6 +54,9 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 CELERY_ALWAYS_EAGER=False
 CELERY_TIMEZONE = 'Europe/Stockholm'
 
+LINKS_COMPRESSION_REDIS_HOST = "{{ redis_url }}"
+LINKS_COMPRESSION_REDIS_PORT = CELERY_REDIS_PORT
+
 import djcelery
 djcelery.setup_loader()
 
