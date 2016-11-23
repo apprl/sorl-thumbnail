@@ -76,7 +76,8 @@ html.look-type-C .collage {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-@media (max-width: 640px) {
+
+@media (max-device-width: 640px) {
   .apprl-look .close {
     width: 44px;
     height: 44px;

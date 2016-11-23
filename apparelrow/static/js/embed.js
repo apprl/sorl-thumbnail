@@ -19,27 +19,22 @@ jQuery(document).ready(function() {
     var isPhoto = ($('#photo-markers').length) ? true : false;
 
     // Hide hotspots and only show them on mouseenter if !mobile
-    if (!is_mobile()) {
+    if (is_mobile()) {
         var active = false;
+        jQuery('body').addClass('is-mobile');
         jQuery(document).on('click touchstart', '.photo-hotspots', function(evt) {
             // Don't follow links on hotspot clicks in desktop
             if($(evt.target).hasClass('hotspot')) {
                 evt.preventDefault();
-            }
-
-            if (active === false) {
-              jQuery('.hotspot', this).stop(true, true).fadeIn(300);
-              setTimeout(function(){active=true}, 400);
-            }
-        }).on('click touchstart', '.photo-hotspots', function() {
-            if (active === true) {
+            } else if(active === false) {
+                jQuery('.hotspot', this).stop(true, true).fadeIn(300);
+                setTimeout(function(){active=true}, 400);
+            } else if(active === true) {
                 setTimeout(function(){active=false}, 400);
                 jQuery('.hotspot', this).stop(true, true).fadeOut(300);
             }
         });
     } else {
-        jQuery('body').addClass('is-mobile');
-
         jQuery(document).on('click touchstart', '.photo-hotspots', function(evt) {
             // Don't follow links on hotspot clicks in mobile
             if($(evt.target).hasClass('hotspot')) {
