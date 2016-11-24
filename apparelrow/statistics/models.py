@@ -9,6 +9,7 @@ from django.conf import settings
 
 from apparelrow.apparel.tasks import product_popularity
 from apparelrow.apparel.models import Product
+from apparelrow.apparel.utils import decompress_source_link_if_needed
 from apparelrow.statistics.utils import get_country_by_ip_string
 
 
@@ -84,6 +85,9 @@ class ProductStat(models.Model):
     class Meta:
         ordering = ['-created']
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.source_link = decompress_source_link_if_needed(self.source_link)
+        super(ProductStat, self).save(force_insert, force_update, using, update_fields)
 
     def __unicode__(self):
         return u'action: %s product: %s vendor: %s user_id: %s' % (self.action, self.product, self.vendor, self.user_id)

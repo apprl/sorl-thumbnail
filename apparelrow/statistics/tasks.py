@@ -12,7 +12,6 @@ from celery.schedules import crontab
 from urlparse import urlparse
 import redis
 
-from apparelrow.apparel.utils import decompress_source_link_if_needed
 from apparelrow.statistics.utils import extract_short_link_from_url
 import logging
 
@@ -76,7 +75,7 @@ def product_buy_click(product_id, referer, client_referer, ip, user_agent, user_
         referer=referer,
         ip=ip,
         user_agent=user_agent,
-        source_link=decompress_source_link_if_needed(source_link),
+        source_link=source_link,
         is_valid=bool(not cookie_already_exists))
 
 
