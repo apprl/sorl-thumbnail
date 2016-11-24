@@ -68,6 +68,8 @@ class ProductClick(models.Model):
         ordering = ['-click_count']
 
 
+logger.info('IN MODELS')
+
 class ProductStat(models.Model):
     action = models.CharField(max_length=50)
     product = models.CharField(max_length=100, null=True, blank=True)
@@ -86,6 +88,7 @@ class ProductStat(models.Model):
         ordering = ['-created']
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        logger.info('SAVING LINK')
         self.source_link = decompress_source_link_if_needed(self.source_link)
         super(ProductStat, self).save(force_insert, force_update, using, update_fields)
 
