@@ -148,7 +148,9 @@
                         {% if not request.user.is_authenticated %}
                         <li class="visible-xs visible-sm"><a href="{% url 'auth_register' %}">{% trans "Get started" %}</a></li>
                         <li class="visible-xs visible-sm"><a href="{% url 'auth_login' %}">{% trans "Log In" %}</a></li>
-                        <li class="visible-xs visible-sm"><a class="link-create" href="{% if request.user.is_partner %}{% url 'publisher-tools' %}">{% trans "Create & Earn" %}{% else %}{% url 'look-create' %}">{% trans "Create" %}{% endif %} <i class="fa fa-caret-right"></i></a></li>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                        <li class="visible-xs visible-sm"><a class="link-create" href="{% url 'publisher-tools' %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %} <i class="fa fa-caret-right"></i></a></li>
                         <li class="visible-xs visible-sm dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
                             <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="profile-icon" src="{{ request.user.avatar_small }}"><u>{% trans 'You' %} <b class="caret"></b> </u></a>
                             <ul class="dropdown-menu">
