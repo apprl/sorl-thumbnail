@@ -252,6 +252,7 @@ def parse_sid(sid):
 
 # Some affiliate (Tradedoubler) networks don't allow very long sids as parameters. To make sure we can fit
 # long urls into their sids, we store the urls in Redis and replace the url with a shorter digest of the link
+# We don't set the a TTL on these values, we want to keep them around
 
 links_redis_connection = redis.StrictRedis(host=settings.LINKS_COMPRESSION_REDIS_HOST,
                                            port=settings.LINKS_COMPRESSION_REDIS_PORT,
@@ -263,16 +264,16 @@ def links_redis_key(source_link):
 
 
 def compress_source_link_if_needed(source_link, max_len=settings.LINKS_COMPRESSION_MAX_LEN):
-    if len(source_link) <= max_len or not settings.ENABLE_LINKS_COMPRESSION:
+    if not source_link or len(source_link) <= max_len or not settings.ENABLE_LINKS_COMPRESSION:
         return source_link
     else:
         key = links_redis_key(source_link)
-        links_redis_connection.set(key, source_link.encode('utf-8'), settings.LINKS_COMPRESSION_TTL)
+        links_redis_connection.set(key, source_link.encode('utf-8'))
         return settings.LINKS_COMPRESSION_PREFIX + key
 
 
 def decompress_source_link_if_needed(source_link):
-    if not source_link.startswith(settings.LINKS_COMPRESSION_PREFIX) or not settings.ENABLE_LINKS_COMPRESSION:
+    if not source_link or not source_link.startswith(settings.LINKS_COMPRESSION_PREFIX) or not settings.ENABLE_LINKS_COMPRESSION:
         return source_link
     else:
         key = source_link.replace(settings.LINKS_COMPRESSION_PREFIX, '')

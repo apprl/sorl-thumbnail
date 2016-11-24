@@ -2679,7 +2679,7 @@ class TestUtils(TransactionTestCase):
 
         redis_key = links_redis_key(self.long_source_link)
         self.assertIsNotNone(links_redis_connection.get(redis_key))
-        self.assertGreater(links_redis_connection.ttl(redis_key), 24*60*60*30*2, 'Redis compressed link TTL should be at least two months')
+        self.assertEqual(links_redis_connection.ttl(redis_key), -1, 'Redis compressed link TTL should not be set')
 
     def test_parse_sid(self):
         sid = "12-21-Ext-Store/http://apprl.com/p/AJSJ"
