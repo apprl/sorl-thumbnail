@@ -52,9 +52,6 @@ window.App.Models.Shop = window.App.Models.WidgetModelBase.extend({
                 cloned_response.components = [];
             }
 
-            this.components.reset(cloned_response.components, { silent: true});
-            delete cloned_response.components;
-
             return cloned_response;
         }
     },
