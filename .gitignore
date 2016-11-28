@@ -59,3 +59,5 @@ bootstrap/bootstrap-3.0.0-rc1/less/bootstrap.css
 /etc/v2
 .DS_Store
 config.codekit
+
+/static
