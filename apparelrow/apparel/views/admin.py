@@ -285,11 +285,6 @@ def stores(request, user_id=None):
     raise Http404
 
 
-def ppc_all_stores(request):
-    context = {}
-    return render(request, 'apparel/admin/ppc_all_stores.html', context)
-
-
 class AdminPostsView(TemplateView):
     template_name = 'apparel/admin/posts.html'
 

@@ -573,7 +573,7 @@ def create_user_earnings(sale):
     """
     total_commission = sale.converted_commission
     product = None
-    is_general_click_earning = False
+    is_cpc_all_stores = False
 
     sale_product = Product.objects.filter(id=sale.product_id)
     if not len(sale_product) == 0:
@@ -613,7 +613,7 @@ def create_user_earnings(sale):
             if sale.affiliate == "cpc_all_stores":
                 cut = 1
                 earning_type = "publisher_sale_click_commission_all_stores"
-                is_general_click_earning = True
+                is_cpc_all_stores = True
 
             if cut is not None:
                 try:
@@ -624,7 +624,7 @@ def create_user_earnings(sale):
                     if user.owner_network and not user.owner_network.id == user.id:
                         publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale,
                                                                                  product,MAX_NETWORK_LEVELS,
-                                                                                 is_general_click_earning)
+                                                                                 is_cpc_all_stores)
 
                     # Create apprl commission
                     UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,

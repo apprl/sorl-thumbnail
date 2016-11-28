@@ -366,15 +366,13 @@ def invalid_clicks_ppo(time_range):
 
 @stats_cache
 def ppc_all_stores_publishers_income(time_range):
-    # We define this to be what we receive from PPO vendors from traffic driven by PPC-AS-publishers. They don't get
-    # a cut from this incomes.
     result = Sale.objects.filter(
         sale_date__range=time_range,
         status__gte=Sale.PENDING,
-        vendor_id__in=ppo_vendors('id'),
         user_id__in=ppc_all_stores_users(),
         is_promo=False,
-        type=Sale.COST_PER_ORDER
+    ).exclude(
+        affiliate='cpc_all_stores',
     ).aggregate(
         total=Sum('converted_commission')
     )
@@ -383,15 +381,12 @@ def ppc_all_stores_publishers_income(time_range):
 
 @stats_cache
 def ppc_all_stores_publishers_cost(time_range):
-    # We define this to be what we pay to PPC-AS-publishers because of clicks to PPO vendors. No income to Apprl
-    # on these Sales, only costs
     result = Sale.objects.filter(
         sale_date__range=time_range,
         status__gte=Sale.PENDING,
-        vendor_id__in=ppo_vendors('id'),
         user_id__in=ppc_all_stores_users(),
         is_promo=False,
-        type=Sale.COST_PER_CLICK
+        affiliate='cpc_all_stores',
     ).aggregate(
         total=Sum('converted_commission')
     )
@@ -409,19 +404,33 @@ def ppc_all_stores_publishers_result(time_range):
 def ppc_all_stores_publishers_by_vendor(time_range):
     ppc_as_users = ppc_all_stores_users()
     stats = {}
-    for vendor in Vendor.objects.filter(is_cpc=False, is_cpo=True):
-        params = dict(
-            vendor_id=vendor.id,
+    for vendor in Vendor.objects.all():
+        res = Sale.objects.filter(
+            vendor=vendor,
             sale_date__range=time_range,
             status__gte=Sale.PENDING,
-            user_id__in=ppc_as_users,
             is_promo=False,
+            user_id__in=ppc_as_users
+        ).exclude(
+            affiliate='cpc_all_stores'
+        ).aggregate(
+            total=Sum('converted_commission')
         )
-        income = Sale.objects.filter(type=Sale.COST_PER_ORDER, **params).aggregate(t=Sum('converted_commission'))['t'] or 0
-        cost = Sale.objects.filter(type=Sale.COST_PER_CLICK, **params).aggregate(t=Sum('converted_commission'))['t'] or 0
-        stats[vendor.name] = {'income': income, 'cost': cost, 'result': income - cost}
-    return stats
+        income = res['total'] or 0
 
+        res = Sale.objects.filter(
+            vendor=vendor,
+            sale_date__range=time_range,
+            status__gte=Sale.PENDING,
+            is_promo=False,
+            user_id__in=ppc_as_users,
+            affiliate='cpc_all_stores'
+        ).aggregate(
+            total=Sum('converted_commission')
+        )
+        cost = res['total'] or 0
+        stats[vendor.name] = {'income': income, 'cost': cost, 'result': income - cost, 'ppo': vendor.is_cpo, 'ppc': vendor.is_cpc}
+    return stats
 
 ####################################################
 # Misc internal utils

@@ -3400,6 +3400,7 @@ class TestStatsAdmin(TransactionTestCase):
         # Create users
 
         ppc_as_publisher = self.create_users(ppc_as=True, create_referral_partner=True)
+        normal_publisher = self.create_users(ppc_as=False, create_referral_partner=True)
 
 
         # Create stores / vendors. We only create AAN vendors because it allows us to control commission_percentage
@@ -3426,6 +3427,8 @@ class TestStatsAdmin(TransactionTestCase):
         self.click(cpc_store, ppc_as_publisher, invalidate_click=True)   # shouldn't count
         self.click(cpc_store, ppc_as_publisher, date_out_of_range=True)   # this one shouldn't count in stats since it's out of range
 
+        self.click(cpo_store, normal_publisher, order_value=300)   # this shouldn't count for these stats
+
 
         # Collect clicks, generate sales & user earnings.
 
@@ -3437,14 +3440,18 @@ class TestStatsAdmin(TransactionTestCase):
         tr = mrange(self.test_year, self.test_month)
 
         vendor_stats = stats_admin.ppc_all_stores_publishers_by_vendor(tr)
-        self.assertEqual(set(vendor_stats.keys()), set(['cpo_v', 'cpo_v_2']))       # we only care about the cpo vendors
+        self.assertEqual(set(vendor_stats.keys()), set(['cpo_v', 'cpo_v_2', 'cpc_v']))
         self.assertEqual(vendor_stats['cpo_v']['income'], 100)          # the vendor pays us 100 commission
         self.assertEqual(vendor_stats['cpo_v']['cost'], 3+3)            # two payouts with 3
         self.assertEqual(vendor_stats['cpo_v']['result'], 94)           # income - cost
 
-        self.assertEqual(stats_admin.ppc_all_stores_publishers_income(tr), 100+200)
-        self.assertEqual(stats_admin.ppc_all_stores_publishers_cost(tr), 3+3+5)
-        self.assertEqual(stats_admin.ppc_all_stores_publishers_result(tr), 300-11)
+        self.assertEqual(vendor_stats['cpc_v']['income'], 5)            # the vendor pays us 5 for the click
+        self.assertEqual(vendor_stats['cpc_v']['cost'], 3)              # we pay ppc as publisher 3
+        self.assertEqual(vendor_stats['cpc_v']['result'], 2)            # income - cost
+
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_income(tr), 100+200+5)
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_cost(tr), 3+3+5+3)
+        self.assertEqual(stats_admin.ppc_all_stores_publishers_result(tr), 305-14)
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body-classes %}admin-dashboard-ppc-as{% endblock body-classes %}
+{% block body %}
+
+    {% include 'apparel/admin/header.html' with title="PPC All Stores" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <dl class="dl-horizontal">
+                <dt>Total income</dt>
+                <dd>€ {{ stats.total.income }}</dd>
+                <dt>Total cost</dt>
+                <dd>€ {{ stats.total.cost }}</dd>
+                <dt>Total result</dt>
+                <dd>€ {{ stats.total.cost }}</dd>
+            </dl>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Vendor</th>
+                        <th>PPO / PPC</th>
+                        <th>Income</th>
+                        <th>Cost</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vendor, vendor_stats in stats.by_vendor.iteritems %}
+                        {% if vendor_stats.result %}
+                            <tr>
+                                <td>{{ vendor }}</td>
+                                <td>
+                                    {% if vendor_stats.ppo %}PPO{% endif %}
+                                    {% if vendor_stats.ppc %}PPC{% endif %}
+                                </td>
+                                <td>€ {{ vendor_stats.income }}</td>
+                                <td>€ {{ vendor_stats.cost }}</td>
+                                <td>€ {{ vendor_stats.result }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}
