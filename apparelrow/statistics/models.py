@@ -75,7 +75,7 @@ class ProductStat(models.Model):
     price = models.IntegerField(null=True, blank=True)
     user_id = models.IntegerField(default=0, null=True, blank=True)
     page = models.CharField(max_length=50, null=True, blank=True)
-    created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False)
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False, db_index=True)
     referer = models.TextField(null=True, blank=True)
     source_link = models.CharField(max_length=512, null=True, blank=True)
     user_agent = models.TextField(null=True, blank=True)

@@ -67,7 +67,7 @@ class Sale(models.Model):
     vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(null=True, blank=True, default=None)
 
-    user_id = models.PositiveIntegerField(null=True, blank=True)
+    user_id = models.PositiveIntegerField(null=True, blank=True, db_index=True)
     product_id = models.PositiveIntegerField(null=True, blank=True)
     placement = models.CharField(max_length=32, null=True, blank=True)
 
@@ -95,7 +95,7 @@ class Sale(models.Model):
 
     is_promo = models.BooleanField(default=False)
 
-    sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True)
+    sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True, db_index=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     log_info = JSONField(_('Log info'), null=True, blank=True,
@@ -464,7 +464,7 @@ class UserEarning(models.Model):
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT)
     amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2)
-    date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True)
+    date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True, db_index=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, db_index=True)
     paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES)
 
