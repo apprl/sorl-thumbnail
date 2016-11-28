@@ -773,11 +773,6 @@ THEIMP_QUEUE_SITE = 'theimp.site'
 # LINKS COMPRESSION
 
 ENABLE_LINKS_COMPRESSION = True
-# Overriden in specific settings files for server type
-LINKS_COMPRESSION_REDIS_HOST = "localhost"
-# Overriden in specific settings files for server type
-LINKS_COMPRESSION_REDIS_PORT = 6379
-LINKS_COMPRESSION_REDIS_DB = 0
 LINKS_COMPRESSION_MAX_LEN = 30
 LINKS_COMPRESSION_PREFIX = u'compressed-link-'
 

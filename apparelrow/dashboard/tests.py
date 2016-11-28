@@ -22,7 +22,7 @@ from django.core import management
 from django.conf import settings
 
 from localeurl.utils import locale_url
-from apparelrow.apparel.models import Vendor, Product, Brand, Category, VendorProduct, Location
+from apparelrow.apparel.models import Vendor, Product, Brand, Category, VendorProduct, Location, CompressedLink
 from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserEarning, Payment, Signup
 
 from apparelrow.dashboard.utils import *
@@ -31,8 +31,8 @@ from apparelrow.dashboard.views import get_store_earnings
 from apparelrow.dashboard import stats_admin
 from apparelrow.dashboard.stats_cache import stats_cache, mrange, flush_stats_cache, \
     flush_stats_cache_by_month, flush_stats_cache_by_year, redis as stats_redis, cache_key
-from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange, compress_source_link_if_needed,\
-    links_redis_connection, links_redis_key
+from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange, compress_source_link_if_needed, compressed_link_key
+
 from apparelrow.dashboard.forms import SaleAdminFormCustom
 from django.core.cache import cache
 
@@ -2676,10 +2676,7 @@ class TestUtils(TransactionTestCase):
         sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=self.long_source_link)
         compressed_link = compress_source_link_if_needed(self.long_source_link)
         self.assertEqual(sid, u"%s-%s-%s/%s" % (target_user_id, product_id, page, compressed_link))
-
-        redis_key = links_redis_key(self.long_source_link)
-        self.assertIsNotNone(links_redis_connection.get(redis_key))
-        self.assertEqual(links_redis_connection.ttl(redis_key), -1, 'Redis compressed link TTL should not be set')
+        self.assertEqual(self.long_source_link, CompressedLink.objects.get(key=compressed_link_key(self.long_source_link)).link)
 
     def test_parse_sid(self):
         sid = "12-21-Ext-Store/http://apprl.com/p/AJSJ"

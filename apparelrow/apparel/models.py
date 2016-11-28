@@ -542,6 +542,17 @@ class ShortStoreLink(models.Model):
         return dehydrate(self.pk + SHORT_CONSTANT)
 
 
+class CompressedLink(models.Model):
+
+    key = models.CharField(primary_key=True, max_length=32)
+    link = models.CharField(max_length=1024, blank=False, null=False)
+    created = models.DateField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.key, self.link)
+
+
+
 class DomainDeepLinking(models.Model):
     vendor = models.ForeignKey(Vendor)
     domain = models.CharField(max_length=100, blank=False, null=False, help_text='Should not contain http:// or https:// but can contain path, example: "nelly.com/se"')

@@ -251,36 +251,33 @@ def parse_sid(sid):
 
 
 # Some affiliate (Tradedoubler) networks don't allow very long sids as parameters. To make sure we can fit
-# long urls into their sids, we store the urls in Redis and replace the url with a shorter digest of the link
-# We don't set the a TTL on these values, we want to keep them around
+# long urls into their sids, we store the urls and replace the url with a shorter digest of the link
 
-links_redis_connection = redis.StrictRedis(host=settings.LINKS_COMPRESSION_REDIS_HOST,
-                                           port=settings.LINKS_COMPRESSION_REDIS_PORT,
-                                           db=settings.LINKS_COMPRESSION_REDIS_DB)
+def compressed_link_key(link):
+    return hashlib.md5(link.encode("utf-8")).hexdigest()
 
 
-def links_redis_key(source_link):
-    return hashlib.md5(source_link.encode("utf-8")).hexdigest()
-
-
-def compress_source_link_if_needed(source_link, max_len=settings.LINKS_COMPRESSION_MAX_LEN):
-    if not source_link or len(source_link) <= max_len or not settings.ENABLE_LINKS_COMPRESSION:
-        return source_link
+def compress_source_link_if_needed(link, max_len=settings.LINKS_COMPRESSION_MAX_LEN):
+    if not link or len(link) <= max_len or not settings.ENABLE_LINKS_COMPRESSION:
+        return link
     else:
-        key = links_redis_key(source_link)
-        links_redis_connection.set(key, source_link.encode('utf-8'))
-        return settings.LINKS_COMPRESSION_PREFIX + key
+        from apparelrow.apparel.models import CompressedLink
+        cl, _ = CompressedLink.objects.get_or_create(key=compressed_link_key(link), link=link)
+        return settings.LINKS_COMPRESSION_PREFIX + cl.key
 
 
-def decompress_source_link_if_needed(source_link):
-    if not source_link or not source_link.startswith(settings.LINKS_COMPRESSION_PREFIX) or not settings.ENABLE_LINKS_COMPRESSION:
-        return source_link
+def decompress_source_link_if_needed(link):
+    from apparelrow.apparel.models import CompressedLink
+    if not link or not link.startswith(settings.LINKS_COMPRESSION_PREFIX) or not settings.ENABLE_LINKS_COMPRESSION:
+        return link
     else:
-        key = source_link.replace(settings.LINKS_COMPRESSION_PREFIX, '')
-        link = links_redis_connection.get(key)
-        if not link:
-            logging.error(u"Tried to decompress a long source link but didn't get a hit from Redis. Key: %s" % key)
-        return link.decode('utf-8')
+        key = link.replace(settings.LINKS_COMPRESSION_PREFIX, '')
+        try:
+            cl = CompressedLink.objects.get(key=key)
+            return cl.link
+        except CompressedLink.DoesNotExist:
+            logging.error(u"Tried to decompress a long source link but didn't find it. Key: %s" % key)
+            return None
 
 
 def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default', source_link=''):
