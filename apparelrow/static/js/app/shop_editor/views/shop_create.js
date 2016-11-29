@@ -18,10 +18,7 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
         this.popup_dispatcher = new App.Views.PopupDispatcher();
         this.popup_dispatcher.add('dialog_login', new App.Views.DialogLogin({model: this.model, dispatcher: this.popup_dispatcher}));
         this.popup_dispatcher.add('dialog_no_products', new App.Views.DialogNoProducts({model: this.model, dispatcher: this.popup_dispatcher}));
-
-
-        // Shop editor popup
-        this.shop_edit_popup = new App.Views.ShopEditPopup({parent_view: this});
+        this.popup_dispatcher.add('dialog_saving', new App.Views.DialogSaving({model: this.model, dispatcher: this.popup_dispatcher}));
 
         App.Events.on('widget:product:add', this.pending_add_component, this)
         App.Events.on('product:delete', function() { this.update_title(-1); }, this);
@@ -177,6 +174,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     },
 
     _shop_save: function(callback) {
+        this.popup_dispatcher.show('dialog_saving');
+
         // Remove components without products before saving
         this.model.components.each(_.bind(function(model) {
             if(!model.has('product') || !model.get('product')) {
@@ -199,6 +198,8 @@ App.Views.ShopCreate = App.Views.WidgetBase.extend({
     },
 
     save_success: function(callback) {
+        this.popup_dispatcher.hide('dialog_saving');
+
         this.model._dirty = false;
         // Update title
         $('.body-header h1 span').html('Edit ' + this.model.get('title'));
