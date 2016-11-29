@@ -25,7 +25,11 @@
 {% block body-classes %}admin-dashboard-ppc-as{% endblock body-classes %}
 {% block body %}
 
-    {% include 'apparel/admin/header.html' with title="PPC All Stores" %}
+    {% if flush_cache %}
+        {% include 'apparel/admin/header.html' with title="PPC All Stores (flush cache)" %}
+    {% else %}
+        {% include 'apparel/admin/header.html' with title="PPC All Stores" %}
+    {% endif %}
 
 
     <section class="container">

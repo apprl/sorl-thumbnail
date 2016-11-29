@@ -83,8 +83,10 @@ class PPCAllStoresView(TemplateView):
         if month != "0":
             month = start_date.month
 
+        flush_cache = 'flush_cache' in self.request.GET
+
         month_display, month_choices, year_choices = enumerate_months(self.request.user, month)
-        stats = ppc_all_stores_stats(year, month)
+        stats = ppc_all_stores_stats(year, month, flush_cache)
 
         context.update({
             'stats': stats,
@@ -93,6 +95,7 @@ class PPCAllStoresView(TemplateView):
             'month_display': month_display,
             'month_choices': month_choices,
             'year_choices': year_choices,
+            'flush_cache': flush_cache
         })
         return context
 
