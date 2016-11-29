@@ -384,7 +384,6 @@ def ppc_all_stores_publishers_cost(time_range):
     result = Sale.objects.filter(
         sale_date__range=time_range,
         status__gte=Sale.PENDING,
-        user_id__in=ppc_all_stores_users(),
         is_promo=False,
         affiliate='cpc_all_stores',
     ).aggregate(
@@ -423,7 +422,6 @@ def ppc_all_stores_publishers_by_vendor(time_range):
             sale_date__range=time_range,
             status__gte=Sale.PENDING,
             is_promo=False,
-            user_id__in=ppc_as_users,
             affiliate='cpc_all_stores'
         ).aggregate(
             total=Sum('converted_commission')
