@@ -10,6 +10,7 @@ from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page
 from apparelrow.apparel.browse import get_pagination_as_dict
 from apparelrow.dashboard.models import Sale
+from apparelrow.dashboard.stats_admin import ppc_all_stores_stats
 from apparelrow.dashboard.views import parse_date
 from apparelrow.dashboard.utils import enumerate_months
 from apparelrow.importer.models import VendorFeed
@@ -69,17 +70,37 @@ def get_date_interval(date, is_month=False, is_year=False, previous=False):
 
 
 
-#def get_date_interval(is_month, date, last=False):
-    #if not is_month:
-        #if last:
-            #return week_magic(date - datetime.timedelta(days=7))
+class PPCAllStoresView(TemplateView):
 
-        #return week_magic(date)
+    template_name = 'apparel/admin/ppc_as.html'
 
-    #if last:
-        #return month_magic(date - relativedelta(months=1))
+    def get_context_data(self, **kwargs):
+        context = super(PPCAllStoresView, self).get_context_data(**kwargs)
+        month = None if not 'month' in kwargs else kwargs['month']
+        year = None if not 'year' in kwargs else kwargs['year']
+        start_date, end_date = parse_date(month, year)
+        year = start_date.year
+        if month != "0":
+            month = start_date.month
 
-    #return month_magic(date)
+        month_display, month_choices, year_choices = enumerate_months(self.request.user, month)
+        stats = ppc_all_stores_stats(year, month)
+
+        context.update({
+            'stats': stats,
+            'month': month,
+            'year': year,
+            'month_display': month_display,
+            'month_choices': month_choices,
+            'year_choices': year_choices,
+        })
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated() and request.user.is_superuser:
+            context = self.get_context_data(**kwargs)
+            return render(request, self.template_name, context)
+        return HttpResponseNotFound()
 
 
 def kpi_dashboard(request):
@@ -262,10 +283,6 @@ def stores(request, user_id=None):
         return render(request, 'apparel/admin/stores.html', context)
 
     raise Http404
-
-
-def ad_stores(request):
-    return stores(request, user_id=24981)
 
 
 class AdminPostsView(TemplateView):

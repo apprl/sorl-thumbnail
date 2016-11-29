@@ -16,6 +16,7 @@ from django.core.mail import mail_admins
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import dehydrate
+from apparelrow.dashboard import stats_cache
 from apparelrow.profile.models import User
 
 import logging
@@ -66,7 +67,7 @@ class Sale(models.Model):
     vendor = models.ForeignKey('apparel.Vendor', null=True, blank=True, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(null=True, blank=True, default=None)
 
-    user_id = models.PositiveIntegerField(null=True, blank=True)
+    user_id = models.PositiveIntegerField(null=True, blank=True, db_index=True)
     product_id = models.PositiveIntegerField(null=True, blank=True)
     placement = models.CharField(max_length=32, null=True, blank=True)
 
@@ -94,7 +95,7 @@ class Sale(models.Model):
 
     is_promo = models.BooleanField(default=False)
 
-    sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True)
+    sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True, db_index=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
     log_info = JSONField(_('Log info'), null=True, blank=True,
@@ -110,7 +111,7 @@ class Sale(models.Model):
         if self.vendor:
             vendor_name = self.vendor.name
 
-        return u'%s - %s: %s %s %s' % (self.affiliate, vendor_name, self.commission, self.currency, self.status)
+        return u'%s - %s: commission %s, status %s, date: %s' % (self.affiliate, vendor_name, self.converted_commission, self.status, str(self.sale_date))
 
     class Meta:
         ordering = ['-sale_date']
@@ -140,9 +141,13 @@ class Payment(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=30)
+
+    # DEPRECTATED - this is directly on User model nowdays
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='owner_group', help_text='Assign a group owner if publishers of this group will belong to an owner, for example a blog network.')
+    # DEPRECTATED - this is directly on User model nowdays
     owner_cut = models.DecimalField(null=True, blank=True, default='1.00', max_digits=10, decimal_places=3,
                                     help_text='Between 0 and 2, how big % of the blogger\'s earned commission should go to the network. (1 equals 100%, which is the same amount going to the blogger goes to the network)')
+    # DEPRECTATED
     is_subscriber = models.BooleanField(default=False)
     has_cpc_all_stores = models.BooleanField(default=False,
                                              help_text='If checked, all publishers that belong to the Commission Group '
@@ -329,6 +334,11 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
         instance.referral_partner_code = None
 
     if instance.referral_partner_parent and instance.is_partner and not instance.referral_partner_parent_date:
+        if not instance.pk:
+            # NOTE: This is a pre_save signal so you can't add a referral_partner_parent at the same time as you create
+            # user. Shouldn't be an issue except for when writing tests.
+            raise Exception('User needs to be saved once before you can add a referral_partner_parent')
+
         instance.referral_partner_parent_date = timezone.now() + datetime.timedelta(days=180)
 
         data = {
@@ -362,12 +372,15 @@ AGGREGATED_DATA_TYPES = (
 
 class AggregatedData(models.Model):
     created = models.DateTimeField(default=timezone.now)
+
+    # who the aggregation relates to
     user_id = models.PositiveIntegerField(default=0, db_index=True)
     user_name = models.CharField(max_length=100)
     user_username = models.CharField(max_length=100)
     user_link = models.CharField(max_length=200)
     user_image = models.CharField(max_length=200)
 
+    # totals
     sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     referral_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
@@ -376,6 +389,7 @@ class AggregatedData(models.Model):
     sale_plus_click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     total_network_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
 
+    # counters
     sales = models.PositiveIntegerField(default=0)
     network_sales = models.PositiveIntegerField(default=0)
     referral_sales = models.PositiveIntegerField(default=0)
@@ -384,11 +398,19 @@ class AggregatedData(models.Model):
 
     data_type = models.CharField(max_length=100, choices=AGGREGATED_DATA_TYPES)
 
+    # mostly products but can also ble user when referalls
     aggregated_from_id = models.PositiveIntegerField(default=0)
     aggregated_from_name = models.CharField(max_length=100)
     aggregated_from_slug = models.CharField(max_length=100)
     aggregated_from_link = models.CharField(max_length=200)
     aggregated_from_image = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return """
+        type: {data_type}, from: {aggregated_from_slug}, user: {user_username}, created: {created},
+        sale earn: {sale_earnings}, click_earn: {click_earnings}, sale plus click: {sale_plus_click_earnings},
+        network sale: {network_sales}, network click: {network_click_earnings}, total_network
+        """.format(**vars(self))
 
 USER_EARNING_TYPES = (
     ('apprl_commission', 'APPRL Earnings'),
@@ -442,9 +464,12 @@ class UserEarning(models.Model):
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT)
     amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2)
-    date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True)
+    date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True, db_index=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, db_index=True)
     paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES)
+
+    def __unicode__(self):
+        return u'%s %s %s' % (self.user, self.user_earning_type, self.amount)
 
 @receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
 def sale_post_save(sender, instance, created, **kwargs):
@@ -462,15 +487,18 @@ def sale_post_save(sender, instance, created, **kwargs):
             if UserEarning.objects.filter(sale=instance).exists():
                 # Update earnings if sale has been updated.
                 earnings = UserEarning.objects.filter(sale=instance)
-                if instance.status >= Sale.CONFIRMED:
+
+                if instance.status < Sale.CONFIRMED or not earnings:
+                    earnings.delete()
+                    create_earnings(instance)
+                else:
                     for earning in earnings:
                         earning.status = instance.status
                         earning.save()
-                else:
-                    # Remove earnings if sale has been removed.
-                    UserEarning.objects.filter(sale=instance).delete()
-                    create_earnings(instance)
                 str_date = instance.sale_date.strftime('%Y-%m-%d')
+
+                # increase this if we aggregate Sales stats over longer periods than 1 month
+                stats_cache.flush_stats_cache_by_month(instance.sale_date.year, instance.sale_date.month)
 
                 # Add date from updated sale/earnings to a quere, so the associated aggregated data will be
                 # updated/generated later as well. (update_aggregated_data job)
@@ -545,7 +573,7 @@ def create_user_earnings(sale):
     """
     total_commission = sale.converted_commission
     product = None
-    is_general_click_earning = False
+    is_cpc_all_stores = False
 
     sale_product = Product.objects.filter(id=sale.product_id)
     if not len(sale_product) == 0:
@@ -585,7 +613,7 @@ def create_user_earnings(sale):
             if sale.affiliate == "cpc_all_stores":
                 cut = 1
                 earning_type = "publisher_sale_click_commission_all_stores"
-                is_general_click_earning = True
+                is_cpc_all_stores = True
 
             if cut is not None:
                 try:
@@ -596,7 +624,7 @@ def create_user_earnings(sale):
                     if user.owner_network and not user.owner_network.id == user.id:
                         publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale,
                                                                                  product,MAX_NETWORK_LEVELS,
-                                                                                 is_general_click_earning)
+                                                                                 is_cpc_all_stores)
 
                     # Create apprl commission
                     UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
@@ -605,6 +633,8 @@ def create_user_earnings(sale):
                                                                          status=sale.status)
 
                     # Create user earning for the publisher associated to the sale
+                    # We create the earning even if publisher_commission i 0 (because the cut is 0) such as with
+                    # cpc_all_stores because we think this makes the system more understandable
                     UserEarning.objects.create( user=user,
                                                                           user_earning_type=earning_type, sale=sale,
                                                                           from_product=product,

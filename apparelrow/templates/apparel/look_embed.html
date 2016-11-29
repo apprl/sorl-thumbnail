@@ -55,7 +55,7 @@
             {% thumbnail object.image "1000" upscale=False as im %}
             style="background-image: url('{{ im.url }}'); padding-right: 100%; padding-bottom: {% widthratio im.height im.width 100  %}%; background-size: 100% auto; background-repeat: no-repeat"
             {% endthumbnail %}
-            {% endif %}
+            {% endif %}>
         </div>
         <div id="photo-markers" class="photo-hotspots">
             {% for component in components %}

@@ -9,6 +9,7 @@ from django.conf import settings
 
 from apparelrow.apparel.tasks import product_popularity
 from apparelrow.apparel.models import Product
+from apparelrow.apparel.utils import decompress_source_link_if_needed
 from apparelrow.statistics.utils import get_country_by_ip_string
 
 
@@ -74,7 +75,7 @@ class ProductStat(models.Model):
     price = models.IntegerField(null=True, blank=True)
     user_id = models.IntegerField(default=0, null=True, blank=True)
     page = models.CharField(max_length=50, null=True, blank=True)
-    created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False)
+    created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False, db_index=True)
     referer = models.TextField(null=True, blank=True)
     source_link = models.CharField(max_length=512, null=True, blank=True)
     user_agent = models.TextField(null=True, blank=True)
@@ -83,6 +84,14 @@ class ProductStat(models.Model):
 
     class Meta:
         ordering = ['-created']
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.source_link = decompress_source_link_if_needed(self.source_link)
+        super(ProductStat, self).save(force_insert, force_update, using, update_fields)
+
+    def __unicode__(self):
+        return u'action: %s product: %s vendor: %s user_id: %s' % (self.action, self.product, self.vendor, self.user_id)
+
 
 @receiver(post_save, sender=ProductStat, dispatch_uid='productstat_post_save')
 def productstat_post_save(sender, instance, created, **kwargs):
@@ -103,11 +112,11 @@ def productstat_post_save(sender, instance, created, **kwargs):
                 country = get_country_by_ip_string(instance.ip)
 
                 vendor_name = product.default_vendor.vendor.name
-                vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor_name, [])
+                vendor_markets = product.default_vendor.vendor.location_codes_list()
 
                 logger.info("Click verification: %s belongs to market for vendor %s" % (country, vendor_name))
                 if not vendor_markets or len(vendor_markets) == 0:
-                    vendor_markets = settings.VENDOR_LOCATION_MAPPING.get("default")
+                    vendor_markets = settings.DEFAULT_VENDOR_LOCATION
                     logger.info("Click verification: No vendor market entry for vendor %s, falling back on default." % (vendor_name))
                 if country not in vendor_markets:
                     logger.info("%s does not belong to market for vendor %s, %s" % (country, vendor_name,vendor_markets))

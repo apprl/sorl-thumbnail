@@ -41,12 +41,22 @@
                             {{ currency }} {{ product.total_network_earnings }}
                         </td>{% endif %}
                     </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3">{% trans "No sales yet." %}</td>
-                    </tr>
                     {% endfor %}
                 </tbody>
+                {% if top_products|length == TOP_PRODUCTS_LIMIT %}
+                <tfoot>
+                    <tr>
+                        <td colspan="4">{% blocktrans %}Only showing top {{ TOP_PRODUCTS_LIMIT }} links.{% endblocktrans %}</td>
+                    </tr>
+                </tfoot>
+                {% endif %}
+                {% if not top_products %}
+                <tfoot>
+                    <tr>
+                        <td colspan="4">{% trans "No sales yet." %}</td>
+                    </tr>
+                </tfoot>
+                {% endif %}
             </table>
         </div>
     </div>

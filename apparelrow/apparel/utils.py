@@ -1,3 +1,4 @@
+import hashlib
 from urlparse import parse_qs, urlsplit, urlunsplit
 import json
 import datetime
@@ -8,6 +9,7 @@ import uuid
 import logging
 import decimal
 import random
+import redis
 
 from django.conf import settings
 from django.core.cache import cache
@@ -209,7 +211,7 @@ def generate_sid(product_id, target_user_id=0, page='Default', source_link=None)
 
     sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
     if source_link:
-        sid += "/%s" % source_link
+        sid += u"/%s" % urllib.quote(compress_source_link_if_needed(source_link))
     return sid
 
 
@@ -233,6 +235,8 @@ def parse_sid(sid):
                 page = sid_array[1]
                 if len(page.split('/', 1)) > 1:
                     page, source_link = page.split('/', 1)
+                    source_link = decompress_source_link_if_needed(source_link)
+                    source_link = urllib.unquote(source_link)
             else:
                 try:
                     product_id = int(rest)
@@ -244,6 +248,37 @@ def parse_sid(sid):
             except ValueError:
                 pass
     return target_user_id, product_id, page, source_link
+
+
+# Some affiliate (Tradedoubler) networks don't allow very long sids as parameters. To make sure we can fit
+# long urls into their sids, we store the urls and replace the url with a shorter digest of the link
+
+def compressed_link_key(link):
+    return hashlib.md5(link.encode("utf-8")).hexdigest()
+
+
+def compress_source_link_if_needed(link, max_len=settings.LINKS_COMPRESSION_MAX_LEN):
+    if not link or len(link) <= max_len or not settings.ENABLE_LINKS_COMPRESSION:
+        return link
+    else:
+        from apparelrow.apparel.models import CompressedLink
+        cl, _ = CompressedLink.objects.get_or_create(key=compressed_link_key(link), link=link)
+        return settings.LINKS_COMPRESSION_PREFIX + cl.key
+
+
+def decompress_source_link_if_needed(link):
+    from apparelrow.apparel.models import CompressedLink
+    if not link or not link.startswith(settings.LINKS_COMPRESSION_PREFIX) or not settings.ENABLE_LINKS_COMPRESSION:
+        return link
+    else:
+        key = link.replace(settings.LINKS_COMPRESSION_PREFIX, '')
+        try:
+            cl = CompressedLink.objects.get(key=key)
+            return cl.link
+        except CompressedLink.DoesNotExist:
+            logging.error(u"Tried to decompress a long source link but didn't find it. Key: %s" % key)
+            return None
+
 
 def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default', source_link=''):
     """

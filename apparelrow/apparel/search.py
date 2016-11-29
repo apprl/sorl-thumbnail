@@ -381,9 +381,9 @@ def get_product_document(instance, rebuild=False):
         # Facets
         vendor_markets = None
         if instance.default_vendor:
-            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(instance.default_vendor.vendor.name,None)
+            vendor_markets = instance.default_vendor.vendor.location_codes_list()
         document['color'] = color_ids
-        document['market'] =  vendor_markets if vendor_markets else settings.VENDOR_LOCATION_MAPPING.get("default")
+        document['market'] = vendor_markets if vendor_markets else settings.DEFAULT_VENDOR_LOCATION
         document['price'] = '%s,%s' % (price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['category'] = category_ids
         document['manufacturer_id'] = instance.manufacturer_id

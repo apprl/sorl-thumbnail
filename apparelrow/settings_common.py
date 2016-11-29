@@ -105,59 +105,7 @@ MAX_MIN_CURRENCY = {
     'fi': 1000,
 }
 
-VENDOR_LOCATION_MAPPING = {
-    "Axel Arigato": ["SE", "DK", "NO", "FI"],
-    "Shirtonomy": ["DK", "SE"],
-    "Ted & Teresa": ["SE"],
-    "Tiger SE": ["SE"],
-    "Tiger DK": ["DK"],
-    "Cubus": ["SE"],
-    "Bangerhead SE": ["SE"],
-    u"Björn Borg": ["SE"],
-    "Best of Brands": ["SE"],
-    "ConfidentLiving": ["SE"],
-    "MQ": ["SE"],
-    "Care of Carl": ["SE", "NO"],
-    "ALDO": ["US"],
-    "ASOS": ["FI", "SE", "NO", "DK","US", "ALL"],
-    "Lexington": ["FI", "SE", "NO", "DK"],
-    "Thomas Sabo": ["FI", "SE", "NO", "DK"],
-    "Zalando": ["SE"],
-    "Soft Goat": ["FI", "SE", "NO", "DK"],
-    "Eleven": ["SE"],
-    "Happy Socks": ["SE"],
-    "Hedvig Showroom": ["SE"],
-    "Heelow": ["SE"],
-    "Henry Kole": ["SE", "DK", "NO", "FI"],
-    "Elevenfiftynine": ["SE"],
-    "Ellos SE": ["SE"],
-    "Ellos NO": ["NO"],
-    "Flattered": ["SE", "DK", "NO", "FI"],
-    "Frontmen": ["SE", "NO", "DK", "FI"],
-    "Filippa K": ["SE"],
-    "Filippa K DK": ["DK"],
-    "Filippa K NO": ["NO"],
-    "JC": ["SE"],
-    "Nividas": ["SE", "DK", "NO", "FI"],
-    "Nelly": ["SE"],
-    "Nelly NO": ["NO"],
-    "NA-KD": ["FI", "SE", "NO", "DK"],
-    "Royal Design": ["FI", "SE", "NO", "DK"],
-    "Gina Tricot NO": ["NO"],
-    "Gina Tricot SE": ["SE"],
-    "Gina Tricot DK": ["DK"],
-    "Gina Tricot FI": ["FI"],
-    "Panos Emporio": ["SE"],
-    "Boozt se": ["SE"],
-    "Boozt no": ["NO"],
-    "Boozt dk": ["DK"],
-    "ASOS no": ["NO"],
-    "QVC": ["US"],
-    "Sportamore": ["SE"],
-    "Room 21 no": ["NO"],
-    "Rum 21 se": ["SE"],
-    "default": ["ALL", "SE", "NO", "US", "DK", "FI"],
-}
+DEFAULT_VENDOR_LOCATION = ["ALL", "SE", "NO", "US", "DK", "FI"]
 
 LOCATION_MAPPING = (
     ('SE', gettext('Sweden (SEK)')),
@@ -181,6 +129,7 @@ LOCATION_MAPPING_SIMPLE_TEXT = (
     ('SE', gettext('Sweden')),
     ('DK', gettext('Denmark')),
     ('NO', gettext('Norway')),
+    ('FI', gettext('Finland')),
     ('US', gettext('USA')),
     ('ALL', gettext('International')),
 )
@@ -808,12 +757,25 @@ THUMBNAIL_DUMMY_SOURCE = "http://dummyimage.com/%(width)sx%(height)s"
 # FEED
 FEED_REDIS_DB = 1
 
-# SPIDERPIG / THEIMP
+# COMPRESSED LINKS
+COMPRESSED_LINKS_REDIS_DB = 2
+
+DASHBOARD_STATS_REDIS_DB = 3
+ENABLE_DASHBOARD_STATS_CACHING = True
+
+# SPIDERPIG / THEIMP DEPRECATED AND NOT USED ANYMORE
 THEIMP_REDIS_HOST = 'localhost'
 THEIMP_REDIS_PORT = 6380
 THEIMP_REDIS_DB = 10
 THEIMP_QUEUE_PARSE = 'theimp.parse'
 THEIMP_QUEUE_SITE = 'theimp.site'
+
+# LINKS COMPRESSION
+
+ENABLE_LINKS_COMPRESSION = True
+LINKS_COMPRESSION_MAX_LEN = 30
+LINKS_COMPRESSION_PREFIX = u'compressed-link-'
+
 
 # CELERY CONFIGURATION
 CELERY_DEFAULT_QUEUE = 'standard'

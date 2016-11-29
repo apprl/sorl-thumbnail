@@ -906,6 +906,7 @@ class RegisterView(TemplateView):
 def register(request):
     return render(request, 'registration/registration.html')
 
+
 class RegisterEmailFormView(FormView):
     # work in progress
     template_name = 'registration/registration_email.html'
@@ -915,12 +916,14 @@ class RegisterEmailFormView(FormView):
     def get_success_url(self):
         return reverse('auth_register_complete')
 
-    def get_initial(self):
+    def get_form_kwargs(self):
+        kwargs = super(RegisterEmailFormView, self).get_form_kwargs()
         if "register_email" in self.request.session:
-            self.initial.update({"email": self.request.session.pop("register_email"),
-                    "password1": self.request.session.get("register_password"),
-                    "password2": self.request.session.pop("register_password")})
-        return self.initial.copy()
+            kwargs["initial"].update({"email": self.request.session.pop("register_email"),
+             "password1": self.request.session.get("register_password"),
+             "password2": self.request.session.pop("register_password")})
+
+        return kwargs
 
     def form_valid(self, form):
         instance = form.save(commit=False)

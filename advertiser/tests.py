@@ -414,19 +414,15 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
     def test_non_existent_transaction(self):
         self.client.login(username='user1', password='user1')
 
-        print reverse('advertiser-admin-accept')
         response = self.client.get(reverse('advertiser-admin-accept', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        print reverse('advertiser-admin-accept')
         response = self.client.post(reverse('advertiser-admin-accept', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        print reverse('advertiser-admin-accept')
         response = self.client.get(reverse('advertiser-admin-reject', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
-        print reverse('advertiser-admin-accept')
         response = self.client.post(reverse('advertiser-admin-reject', args=[1000]))
         self.assertEqual(response.status_code, 404)
 
