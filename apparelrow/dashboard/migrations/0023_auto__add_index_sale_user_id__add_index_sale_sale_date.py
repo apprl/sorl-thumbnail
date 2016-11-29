@@ -14,14 +14,8 @@ class Migration(SchemaMigration):
         # Adding index on 'Sale', fields ['sale_date']
         db.create_index(u'dashboard_sale', ['sale_date'])
 
-        # Adding index on 'UserEarning', fields ['date']
-        db.create_index(u'dashboard_userearning', ['date'])
-
 
     def backwards(self, orm):
-        # Removing index on 'UserEarning', fields ['date']
-        db.delete_index(u'dashboard_userearning', ['date'])
-
         # Removing index on 'Sale', fields ['sale_date']
         db.delete_index(u'dashboard_sale', ['sale_date'])
 
@@ -102,7 +96,7 @@ class Migration(SchemaMigration):
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'options': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apparel.Option']", 'symmetrical': 'False', 'blank': 'True'}),
             'popularity': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '20', 'decimal_places': '8', 'db_index': 'True'}),
-            'product_image': ('sorl.thumbnail.fields.ImageField', [], {'max_length': '255'}),
+            'product_image': (u'sorl.thumbnail.fields.ImageField', [], {'max_length': '255'}),
             'product_key': ('django.db.models.fields.CharField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
             'product_name': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'published': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
@@ -306,7 +300,7 @@ class Migration(SchemaMigration):
         u'dashboard.userearning': {
             'Meta': {'object_name': 'UserEarning'},
             'amount': ('django.db.models.fields.DecimalField', [], {'default': "'0.0'", 'max_digits': '10', 'decimal_places': '2'}),
-            'date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'from_product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['apparel.Product']", 'null': 'True', 'on_delete': 'models.PROTECT', 'blank': 'True'}),
             'from_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['profile.User']", 'null': 'True', 'on_delete': 'models.PROTECT'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

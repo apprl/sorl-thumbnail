@@ -464,7 +464,7 @@ class UserEarning(models.Model):
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT)
     amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2)
-    date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True, db_index=True)
+    date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, db_index=True)
     paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES)
 
