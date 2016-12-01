@@ -573,7 +573,10 @@ class ShortDomainLinkManager(models.Manager):
         if len(domain_deep_link) > 0:
             template = domain_deep_link[0].template
             result = parse(template, url)
-            _, _, _, source_link = parse_sid(result['sid'])
+            if result:
+                _, _, _, source_link = parse_sid(result['sid'])
+            else:
+                logger.warning("We weren't able to parse ShortDomainLinkManager template. template: {}, url: {}".format(template, url))
         else:
             logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
         return source_link
