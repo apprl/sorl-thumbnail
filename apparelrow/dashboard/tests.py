@@ -23,7 +23,7 @@ from django.conf import settings
 
 from localeurl.utils import locale_url
 from apparelrow.apparel.models import Vendor, Product, Brand, Category, VendorProduct, Location, CompressedLink
-from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserEarning, Payment, Signup
+from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserEarning, Payment, Signup, UE
 
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
@@ -575,9 +575,9 @@ class TestDashboardCuts(TransactionTestCase):
         #self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         for earning in sale.userearning_set.all():
             self.assertEqual(earning.status, Sale.CONFIRMED)
-            if earning.user_earning_type == "publisher_sale_commission":
+            if earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.paid, Sale.PAID_READY)
-            if earning.user_earning_type == "apprl_commission":
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.paid, Sale.PAID_PENDING)
 
     def test_parse_and_calculate_store_commissions(self):
@@ -689,11 +689,11 @@ class TestUserEarnings(TransactionTestCase):
         earnings = UserEarning.objects.all()
 
         for earning in earnings:
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 40.000)
-            elif earning.user_earning_type == 'publisher_network_tribute':
+            elif earning.user_earning_type == UE.PUBLISHER_NETWORK_TRIBUTE:
                 self.assertEqual(earning.amount, 6.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 54.000)
 
         #Update a sales transaction
@@ -748,9 +748,9 @@ class TestUserEarnings(TransactionTestCase):
         earnings = UserEarning.objects.all()
 
         for earning in earnings:
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 40.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 60.000)
 
         #Update a sales transaction
@@ -823,15 +823,15 @@ class TestUserEarnings(TransactionTestCase):
         earnings = UserEarning.objects.all()
 
         for earning in earnings:
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 40.000)
-            elif earning.user_earning_type == 'publisher_sale_tribute' and earning.user == owner_user:
+            elif earning.user_earning_type == UE.PUBLISHER_NETWORK_TRIBUTE and earning.user == owner_user:
                 self.assertEqual(earning.amount, 24.000)
-            elif earning.user_earning_type == 'publisher_sale_tribute' and earning.user == master_owner:
+            elif earning.user_earning_type == UE.PUBLISHER_NETWORK_TRIBUTE and earning.user == master_owner:
                 self.assertEqual(earning.amount, 3.000)
-            elif earning.user_earning_type == 'publisher_sale_tribute' and earning.user == super_master_owner:
+            elif earning.user_earning_type == UE.PUBLISHER_NETWORK_TRIBUTE and earning.user == super_master_owner:
                 self.assertEqual(earning.amount, 3.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 30.000)
 
         #Update a sales transaction
@@ -899,9 +899,9 @@ class TestUserEarnings(TransactionTestCase):
 
         for earning in earnings:
             self.assertEqual(earning.status, Sale.CONFIRMED)
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 40.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 60.000)
 
     def test_user_earnings_referral_sale(self):
@@ -961,11 +961,11 @@ class TestUserEarnings(TransactionTestCase):
         earnings = UserEarning.objects.all()
 
         for earning in earnings:
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 40.000)
-            elif earning.user_earning_type == 'referral_sale_commission':
+            elif earning.user_earning_type == UE.REFERRAL_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 15.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 60.000)
 
         #Update sales status
@@ -1009,7 +1009,7 @@ class TestUserEarnings(TransactionTestCase):
 
         earning = UserEarning.objects.all()[0]
 
-        self.assertEqual(earning.user_earning_type, 'apprl_commission')
+        self.assertEqual(earning.user_earning_type, UE.APPRL_COMMISSION)
         self.assertEqual(earning.amount, 100)
 
     def test_commissions_publisher_network_with_exceptions(self):
@@ -1060,11 +1060,11 @@ class TestUserEarnings(TransactionTestCase):
         earnings = UserEarning.objects.all()
 
         for earning in earnings:
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 0.000)
-            elif earning.user_earning_type == 'publisher_network_tribute':
+            elif earning.user_earning_type == UE.PUBLISHER_NETWORK_TRIBUTE:
                 self.assertEqual(earning.amount, 0.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 100.000)
 
         #Update a sales transaction
@@ -1134,13 +1134,13 @@ class TestUserEarnings(TransactionTestCase):
         earnings = UserEarning.objects.all()
 
         for earning in earnings:
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 10.000)
-            elif earning.user_earning_type == 'publisher_sale_tribute' and earning.user == owner_user:
-                self.assertEqual(earning.amount, 0.000)
-            elif earning.user_earning_type == 'publisher_sale_tribute' and earning.user == master_owner:
-                self.assertEqual(earning.amount, 45.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_NETWORK_TRIBUTE and earning.user == owner_user:
+                self.assertEqual(earning.amount, 22.5)
+            elif earning.user_earning_type == UE.PUBLISHER_NETWORK_TRIBUTE and earning.user == master_owner:
+                self.assertEqual(earning.amount, 22.5)
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION and earning.user == temp_user:
                 self.assertEqual(earning.amount, 45.000)
 
         #Update a sales transaction
@@ -1198,9 +1198,9 @@ class TestUserEarnings(TransactionTestCase):
         self.assertEqual(len(earnings), 2)
 
         for earning in earnings:
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 40.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 60.000)
 
         for earning in earnings:
@@ -1217,9 +1217,9 @@ class TestUserEarnings(TransactionTestCase):
 
         # the new user earnings should have new amounts since the Sale commision changed
         for earning in sale.userearning_set.all():
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 80.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 120.000)
 
 
@@ -1234,9 +1234,9 @@ class TestUserEarnings(TransactionTestCase):
 
         # the user earnings should stay the same
         for earning in sale.userearning_set.all():
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 80.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 120.000)
 
             self.assertEqual(earning.status, Sale.CONFIRMED)
@@ -1289,11 +1289,11 @@ class TestUserEarnings(TransactionTestCase):
         earnings = UserEarning.objects.all()
 
         for earning in earnings:
-            if earning.user_earning_type == 'apprl_commission':
+            if earning.user_earning_type == UE.APPRL_COMMISSION:
                 self.assertEqual(earning.amount, 40.000)
             elif earning.user_earning_type == 'publisher_network_tribute':
                 self.assertEqual(earning.amount, 6.000)
-            elif earning.user_earning_type == 'publisher_sale_commission':
+            elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 54.000)
 
         #Update a sales transaction
@@ -1590,7 +1590,7 @@ class TestSalesPerClick(TransactionTestCase):
 
         self.assertEqual(UserEarning.objects.count(), 1)
         user_earning = UserEarning.objects.get()
-        self.assertEqual(user_earning.user_earning_type, 'apprl_commission')
+        self.assertEqual(user_earning.user_earning_type, UE.APPRL_COMMISSION)
         self.assertAlmostEqual(user_earning.amount, sale_amount)
 
 
@@ -1634,22 +1634,22 @@ class TestSalesPerClickAllStores(TransactionTestCase):
         # publisher, respectively. The other two it must have commission equals to 0 for both mentioned sides.
         self.assertEqual(UserEarning.objects.count(), 4)
 
-        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_sale_click_commission").count(), 1)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type="apprl_commission").count(), 2)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_sale_click_commission_all_stores").count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION).count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.APPRL_COMMISSION).count(), 2)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES).count(), 1)
 
         sale_cpc = Sale.objects.get(affiliate="cost_per_click")
         sale_cpc_all = Sale.objects.get(affiliate="cpc_all_stores")
 
         # All User earnings might have been created with the right user earning type and amount
         for row in UserEarning.objects.all():
-            if row.user_earning_type == "publisher_sale_click_commission":
+            if row.user_earning_type == UE.PUBLISHER_SALE_CLICK_COMMISSION:
                 self.assertEqual(row.amount, 0.00)
                 self.assertEqual(row.user, self.user)
-            elif row.user_earning_type == "publisher_sale_click_commission_all_stores":
+            elif row.user_earning_type == UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES:
                 self.assertEqual(row.amount, 12.00)
                 self.assertEqual(row.user, self.user)
-            elif row.user_earning_type == "apprl_commission":
+            elif row.user_earning_type == UE.APPRL_COMMISSION:
                 if row.sale == sale_cpc:
                     self.assertEqual(row.amount, 40.00)
                 elif row.sale == sale_cpc_all:
@@ -1728,30 +1728,30 @@ class TestSalesPerClickAllStores(TransactionTestCase):
         # publisher, respectively. The other two it must have commission equals to 0 for both mentioned sides.
         self.assertEqual(UserEarning.objects.count(), 6)
 
-        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_sale_click_commission").count(), 1)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_network_click_tribute").count(), 1)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type="apprl_commission").count(), 2)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_sale_click_commission_all_stores").count(), 1)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type="publisher_network_click_tribute_all_stores").count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION).count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_NETWORK_CLICK_TRIBUTE).count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.APPRL_COMMISSION).count(), 2)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES).count(), 1)
+        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES).count(), 1)
 
         sale_cpc = Sale.objects.get(affiliate="cost_per_click")
         sale_cpc_all = Sale.objects.get(affiliate="cpc_all_stores")
 
         # All User earnings might have been created with the right user earning type and amount
         for row in UserEarning.objects.all():
-            if row.user_earning_type == "publisher_sale_click_commission":
+            if row.user_earning_type == UE.PUBLISHER_SALE_CLICK_COMMISSION:
                 self.assertEqual(row.amount, 0.00)
                 self.assertEqual(row.user, self.user)
-            elif row.user_earning_type == "publisher_sale_click_commission_all_stores":
+            elif row.user_earning_type == UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES:
                 self.assertEqual(row.amount, decimal.Decimal("10.80"))
                 self.assertEqual(row.user, self.user)
-            elif row.user_earning_type == "publisher_network_click_tribute":
+            elif row.user_earning_type == UE.PUBLISHER_NETWORK_CLICK_TRIBUTE:
                 self.assertEqual(row.amount, 0.00)
                 self.assertEqual(row.user, self.user.owner_network)
-            elif row.user_earning_type == "publisher_network_click_tribute_all_stores":
+            elif row.user_earning_type == UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES:
                 self.assertEqual(row.amount, decimal.Decimal("1.20"))
                 self.assertEqual(row.user, self.user.owner_network)
-            elif row.user_earning_type == "apprl_commission":
+            elif row.user_earning_type == UE.APPRL_COMMISSION:
                 if row.sale == sale_cpc:
                     self.assertEqual(row.amount, 40.00)
                 elif row.sale == sale_cpc_all:
@@ -1912,7 +1912,7 @@ class TestSalesPerClickAllStores(TransactionTestCase):
 
         # All User earnings might have been created with the right user earning type and amount
         for row in UserEarning.objects.all():
-            if row.user_earning_type == "publisher_sale_click_commission_all_stores":
+            if row.user_earning_type == UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES:
                 self.assertEqual(row.amount, 80.00)
                 self.assertEqual(row.user, self.user)
 
@@ -2018,7 +2018,7 @@ class TestPayments(TransactionTestCase):
         owner_payment = Payment.objects.get(user=owner_user)
         self.assertEqual(owner_payment.amount, 600)
 
-        for earning in UserEarning.objects.exclude(user_earning_type='apprl_commission'):
+        for earning in UserEarning.objects.exclude(user_earning_type=UE.APPRL_COMMISSION):
             self.assertEqual(earning.paid, Sale.PAID_READY)
 
         owner_set = Payment.objects.filter(user=owner_user)
@@ -2064,7 +2064,7 @@ class TestPayments(TransactionTestCase):
         sale.save()
         self.assertEqual(UserEarning.objects.count(), 2)
 
-        user_earning = UserEarning.objects.exclude(user_earning_type='apprl_commission')[0]
+        user_earning = UserEarning.objects.exclude(user_earning_type=UE.APPRL_COMMISSION)[0]
         self.assertEqual(user_earning.amount, 70)
 
         # Ready payments
@@ -2574,7 +2574,7 @@ class TestPaymentHistory(TestCase):
             SaleFactory.create(user_id=user.id, vendor=vendor)
 
         self.assertEqual(UserEarning.objects.filter(
-            user_earning_type='publisher_sale_commission').count(), 10)
+            user_earning_type=UE.PUBLISHER_SALE_COMMISSION).count(), 10)
 
         # Ready payments
         management.call_command('dashboard_payment', verbosity=0, interactive=False)
@@ -2584,7 +2584,7 @@ class TestPaymentHistory(TestCase):
         payment = Payment.objects.all()[0]
         earnings_dict = json.loads(payment.earnings)
 
-        earnings = UserEarning.objects.filter(user_earning_type='publisher_sale_commission')
+        earnings = UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_COMMISSION)
         for item in earnings:
             self.assertIn(item.id, earnings_dict)
 
@@ -2597,7 +2597,7 @@ class TestPaymentHistory(TestCase):
             SaleFactory.create(user_id=user.id, vendor=vendor)
 
         self.assertEqual(UserEarning.objects.filter(
-            user_earning_type='publisher_sale_commission').count(), 100)
+            user_earning_type=UE.PUBLISHER_SALE_COMMISSION).count(), 100)
 
         # Ready payments
         management.call_command('dashboard_payment', verbosity=0, interactive=False)

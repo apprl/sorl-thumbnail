@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Sum
 
 from apparelrow.apparel.models import Vendor
-from apparelrow.dashboard.models import Sale, UserEarning
+from apparelrow.dashboard.models import Sale, UserEarning, UE
 from apparelrow.dashboard.stats_cache import flush_stats_cache_by_month, stats_cache, mrange
 from apparelrow.statistics.models import ProductStat
 
@@ -46,8 +46,8 @@ def earnings_publisher(time_range):
         user_id__gt=0,
     ).exclude(
         user_earning_type__in=(
-            'referral_signup_commission',   # we don't count them here, we calculated them separately in referral earnings
-            'referral_sale_commission'
+            UE.REFERRAL_SIGNUP_COMMISSION,
+            UE.REFERRAL_SALE_COMMISSION
         ),
     ).aggregate(
         total=Sum('amount')
@@ -76,8 +76,8 @@ def referral_earnings_publisher(time_range):
         date__range=time_range,
         status__gte=Sale.PENDING,
         user_earning_type__in=(
-            'referral_signup_commission',
-            'referral_sale_commission'
+            UE.REFERRAL_SIGNUP_COMMISSION,
+            UE.REFERRAL_SALE_COMMISSION
         )
     ).aggregate(
         total=Sum('amount')

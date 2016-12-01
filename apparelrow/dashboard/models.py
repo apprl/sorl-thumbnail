@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.contrib.auth import get_user_model
+from enum import Enum
 from jsonfield import JSONField
 from django.utils.functional import cached_property
 from django.core.mail import mail_admins
@@ -412,18 +413,35 @@ class AggregatedData(models.Model):
         network sale: {network_sales}, network click: {network_click_earnings}, total_network
         """.format(**vars(self))
 
+
+class UE:
+    APPRL_COMMISSION = 'apprl_commission'
+
+    REFERRAL_SALE_COMMISSION = 'referral_sale_commission'
+    REFERRAL_SIGNUP_COMMISSION = 'referral_signup_commission'
+
+    PUBLISHER_SALE_COMMISSION = 'publisher_sale_commission'
+    PUBLISHER_NETWORK_TRIBUTE = 'publisher_network_tribute'
+
+    PUBLISHER_SALE_CLICK_COMMISSION = 'publisher_sale_click_commission'
+    PUBLISHER_NETWORK_CLICK_TRIBUTE = 'publisher_network_click_tribute'
+
+    PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES = 'publisher_network_click_tribute_all_stores'
+    PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES = 'publisher_sale_click_commission_all_stores'
+
+
 USER_EARNING_TYPES = (
-    ('apprl_commission', 'APPRL Earnings'),
-    ('referral_sale_commission', 'Referral Sale Earnings'),
-    ('referral_signup_commission', 'Referral Signup Earnings'),
-    ('publisher_sale_commission', 'Publisher Sale Earnings'),
-    ('publisher_network_tribute', 'Network Earnings'),
+    (UE.APPRL_COMMISSION, 'APPRL Earnings'),
+    (UE.REFERRAL_SALE_COMMISSION, 'Referral Sale Earnings'),
+    (UE.REFERRAL_SIGNUP_COMMISSION, 'Referral Signup Earnings'),
+    (UE.PUBLISHER_SALE_COMMISSION, 'Publisher Sale Earnings'),
+    (UE.PUBLISHER_NETWORK_TRIBUTE, 'Network Earnings'),
 
-    ('publisher_network_click_tribute', 'Network Earnings per Clicks'),
-    ('publisher_sale_click_commission', 'Earnings per Clicks'),
+    (UE.PUBLISHER_NETWORK_CLICK_TRIBUTE, 'Network Earnings per Clicks'),
+    (UE.PUBLISHER_SALE_CLICK_COMMISSION, 'Earnings per Clicks'),
 
-    ('publisher_network_click_tribute_all_stores', 'Network Earnings per Clicks'),
-    ('publisher_sale_click_commission_all_stores', 'Earnings per Clicks'),
+    (UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES, 'Network Earnings per Clicks'),
+    (UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES, 'Earnings per Clicks'),
 )
 
 @receiver(pre_save, sender=AggregatedData, dispatch_uid='aggregated_data_pre_save')
@@ -563,6 +581,7 @@ def create_referral_earning(sale):
     else:
         logger.warning('User %s should have assigned a comission group'%user)
 
+
 def create_user_earnings(sale):
     """
     Create user earnings associated excluding referral sales. More specifically, those earnings types are apprl
@@ -612,7 +631,7 @@ def create_user_earnings(sale):
             # network owner, if applies) will get 100% of this earning
             if sale.affiliate == "cpc_all_stores":
                 cut = 1
-                earning_type = "publisher_sale_click_commission_all_stores"
+                earning_type = UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES
                 is_cpc_all_stores = True
 
             if cut is not None:
@@ -623,11 +642,11 @@ def create_user_earnings(sale):
                     # Create earning(s) for the publisher network owner(s)
                     if user.owner_network and not user.owner_network.id == user.id:
                         publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale,
-                                                                                 product,MAX_NETWORK_LEVELS,
+                                                                                 product, MAX_NETWORK_LEVELS,
                                                                                  is_cpc_all_stores)
 
                     # Create apprl commission
-                    UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
+                    UserEarning.objects.create(user_earning_type=UE.APPRL_COMMISSION, sale=sale,
                                                                          from_product=product, from_user=user,
                                                                          amount=apprl_commission, date=sale.sale_date,
                                                                          status=sale.status)
@@ -635,7 +654,7 @@ def create_user_earnings(sale):
                     # Create user earning for the publisher associated to the sale
                     # We create the earning even if publisher_commission i 0 (because the cut is 0) such as with
                     # cpc_all_stores because we think this makes the system more understandable
-                    UserEarning.objects.create( user=user,
+                    UserEarning.objects.create(user=user,
                                                                           user_earning_type=earning_type, sale=sale,
                                                                           from_product=product,
                                                                           amount=publisher_commission,
@@ -648,7 +667,7 @@ def create_user_earnings(sale):
             logger.warning('User %s should have assigned a comission group' % user)
     else:
         # Sale was generated from APPRL.com, so in this case only an earning for APPRL is created
-        UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
+        UserEarning.objects.create(user_earning_type=UE.APPRL_COMMISSION, sale=sale,
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
 
@@ -693,10 +712,10 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product,
             owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product, counter,
                                                               cpc_all_stores)
 
-        earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER\
-            else 'publisher_network_click_tribute'
+        earning_type = UE.PUBLISHER_NETWORK_TRIBUTE if sale.type == Sale.COST_PER_ORDER\
+            else UE.PUBLISHER_NETWORK_CLICK_TRIBUTE
         if cpc_all_stores:
-            earning_type = "publisher_network_click_tribute_all_stores"
+            earning_type = UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES
 
         UserEarning.objects.create( user=owner, user_earning_type=earning_type, sale=sale,
                                                               from_product=product, from_user=user, amount=owner_earning,
