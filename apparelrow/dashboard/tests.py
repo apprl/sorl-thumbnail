@@ -3565,3 +3565,21 @@ class TestStatsCache(TransactionTestCase):
         sale.save()
         self.assertEqual(stats_admin.ppo_commission_total(mrange(2016, 8)), 200)
 
+
+    def test_time_range_validatione(self):
+        @stats_cache
+        def foo(time_range, param):
+            pass
+
+        with self.assertRaises(ValueError):
+            foo(666)
+
+        with self.assertRaises(ValueError):
+            foo([datetime.datetime(2012, 11, 11)], 666)     # only one val
+
+        with self.assertRaises(ValueError):
+            foo([datetime.datetime(1888, 11, 11), datetime.datetime(2011, 11, 12)], 666)    # too low
+
+        with self.assertRaises(ValueError):
+            foo([datetime.datetime(3111, 11, 11), datetime.datetime(3111, 11, 12)], 666)    # too high
+

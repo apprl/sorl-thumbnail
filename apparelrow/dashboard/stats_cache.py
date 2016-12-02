@@ -17,6 +17,8 @@ redis = StrictRedis(host=settings.CELERY_REDIS_HOST, port=settings.CELERY_REDIS_
 # Utility range functions
 # Djangos range filter maps to BETWEEN which is inclusive so we need to subract a small amount so we stay within the month
 
+all_time = [datetime(1990, 1, 1), datetime(2999, 1, 1)]
+
 def yrange(year):
     start = datetime(year, 1, 1)
     end = start + relativedelta(years=1) - relativedelta(microseconds=1)
@@ -38,11 +40,17 @@ def drange(year, month, day):
 # Function wrapper that caches time range functions. It uses args & kwargs in cache key.
 
 def stats_cache(func):
+    def check_time_range(time_range):
+        if not isinstance(time_range, (tuple, list)) or len(time_range) != 2 \
+                or time_range[0] < all_time[0] or time_range[1] > all_time[1]:
+            raise ValueError("time_range outside bounds: %s" % all_time)
+
     def wrapper(time_range, *args, **kwargs):
         # this gives us the option to bypass the cache completely
         if not settings.ENABLE_DASHBOARD_STATS_CACHING:
             return func(time_range, *args, **kwargs)
 
+        check_time_range(time_range)
         key = cache_key(time_range, func.__name__, *args, **kwargs)
 
         # try to get it from the cache
@@ -104,11 +112,7 @@ def add_to_stats_cache(time_range, key, val):
 
 
 def flush_stats_cache():
-    long_time_range = [datetime(1990, 1, 1), datetime(2999, 1, 1)]
-    flush_stats_cache_by_range(long_time_range)
-    # just to be sure we don't have any outliers:
-    for key in redis.keys('stats_*'):
-        redis.delete(key)
+    flush_stats_cache_by_range(all_time)
 
 
 def flush_stats_cache_by_year(year):
