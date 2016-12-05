@@ -561,21 +561,30 @@ class DomainDeepLinking(models.Model):
 
 class ShortDomainLinkManager(models.Manager):
     def get_short_domain_for_link(self, short_link):
-        instance = ShortDomainLink.objects.get(pk=(saturate(short_link) - SHORT_CONSTANT))
+        instance = ShortDomainLink.objects.get(pk=self.decode_id(short_link))
 
         return instance.url, instance.vendor.name, instance.user.pk
+
+    @staticmethod
+    def decode_id(short_link):
+        return saturate(short_link) - SHORT_CONSTANT
 
     def get_original_url_for_link(self, short_link):
         url, vendor_name, _ = self.get_short_domain_for_link(short_link)
         vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_name)
         domain_deep_link = get_model('apparel', 'DomainDeepLinking').objects.filter(vendor=vendor)
         source_link = ''
-        if len(domain_deep_link) > 0:
-            template = domain_deep_link[0].template
-            result = parse(template, url)
-            _, _, _, source_link = parse_sid(result['sid'])
-        else:
-            logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
+        try:
+            if len(domain_deep_link) > 0:
+                template = domain_deep_link[0].template
+                result = parse(template, url)
+                _, _, _, source_link = parse_sid(result['sid'])
+            else:
+                logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
+        except TypeError, msg:
+            logger.warn("Unable to match shortlink {} -> {} and vendor {}, decompressed id {}. [{}]".
+                     format(short_link, url, vendor_name, self.decode_id(short_link), msg))
+            source_link = "LINK-NOT-FOUND"
         return source_link
 
 
