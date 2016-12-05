@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from apparelrow.dashboard.models import Group
+
 __author__ = 'klaswikblad'
 
 import factory
@@ -35,6 +37,12 @@ class ProductFactory(factory.django.DjangoModelFactory):
     manufacturer = factory.SubFactory(BrandFactory)
     #product_image = factory.django.ImageField(from_path="static/products/",from_file=u'full/21/210ad55035c97924a7186312a4def89bd5e5884a.jpg',color='blue')
 
+class GroupFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Group
+
+    name = "Regular"
+
 class UserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
@@ -44,6 +52,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     username = factory.Sequence(lambda n: 'username%s' % n)
     email = factory.LazyAttribute(lambda o: '%s@example.org' % o.username)
     last_login = lazy_attribute(lambda o: o.date_joined + dt.timedelta(days=4))
+    partner_group = factory.SubFactory(GroupFactory)
 
     @lazy_attribute
     def date_joined(self):

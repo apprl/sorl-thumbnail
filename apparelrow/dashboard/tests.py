@@ -8,9 +8,8 @@ import logging
 from decimal import Decimal as D
 from django.contrib.admin import AdminSite
 
-from advertiser.models import Transaction
+from advertiser.models import Transaction, Store
 from apparelrow.apparel.tests import _create_dummy_image
-from apparelrow.dashboard.factories import *
 
 from django.core import mail
 from django.core import signing
@@ -22,8 +21,8 @@ from django.core import management
 from django.conf import settings
 
 from localeurl.utils import locale_url
-from apparelrow.apparel.models import Vendor, Product, Brand, Category, VendorProduct, Location, CompressedLink
-from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserEarning, Payment, Signup
+from apparelrow.apparel.models import Product, Brand, Category, VendorProduct, Location, CompressedLink
+from apparelrow.dashboard.models import StoreCommission, Cut, Sale, UserEarning, Payment, Signup, AggregatedData
 
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
@@ -38,8 +37,9 @@ from django.core.cache import cache
 
 from apparelrow.importer.models import FXRate
 from apparelrow.profile.models import PaymentDetail
-from apparelrow.statistics.factories import *
 
+from apparelrow.dashboard.factories import *
+from apparelrow.statistics.factories import *
 from mock import patch
 from model_mommy.mommy import make
 from freezegun import freeze_time
@@ -1311,7 +1311,7 @@ class TestUserEarnings(TransactionTestCase):
 
     def get_cut_exception(self):
         cut_user = UserFactory.create()
-        rules = [{"sid": cut_user.id, "cut": 0.97, "tribute": 0, click_cost:"10 SEK"}]
+        rules = [{"sid": cut_user.id, "cut": 0.97, "tribute": 0, "click_cost": "10 SEK"}]
         cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(rules, cut_user.id)
         self.assertEqual(click_cost, "10 SEK")
         self.assertEqual(cut_exception, 0.97)
@@ -2566,7 +2566,8 @@ class TestAggregatedDataModules(TransactionTestCase):
 class TestPaymentHistory(TestCase):
 
     def test_few_earnings_payments_history(self):
-        user = UserFactory.create()
+        group = GroupFactory.create()
+        user = UserFactory.create(partner_group=group)
         vendor = VendorFactory.create()
         CutFactory.create(vendor=vendor, group=user.partner_group, cut=0.67)
 
@@ -2589,7 +2590,9 @@ class TestPaymentHistory(TestCase):
             self.assertIn(item.id, earnings_dict)
 
     def test_multiple_earnings_payments_history(self):
-        user = UserFactory.create()
+
+        group = GroupFactory.create()
+        user = UserFactory.create(partner_group=group)
         vendor = VendorFactory.create()
         CutFactory.create(vendor=vendor, group=user.partner_group, cut=0.67)
 

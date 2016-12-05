@@ -4,7 +4,7 @@ import logging
 from django.http import SimpleCookie
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.views import get_vendor_cost_per_click, product_lookup_by_domain
+from apparelrow.apparel.views import get_vendor_cost_per_click, product_lookup_by_domain, extract_encoded_url_string
 from apparelrow.apparel.search import product_save, get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
     extract_asos_nelly_product_url, on_boarding_follow_users, get_most_popular_user_list
@@ -145,6 +145,25 @@ class TestChromeExtension(TestCase):
             print product
         #print product.default_vendor
     """
+
+    def test_product_lookup_unicode(self):
+        self._login()
+
+        vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
+        get_model('apparel', 'DomainDeepLinking').objects.create(
+            vendor=vendor,
+            domain='stayhard.se',
+            template='http://stayhard.se/my-template'
+        )
+        url = "https://stayhard.se/06421636/tiger-of-sweden/guerin-01z-silver?ReturnPath=/manchettknappar-slipsn\xe5lar&utm_source=adtraction&utm_medium=affiliate&utm_campaign=gen&utm_term=1119456860"
+        encoded_str = extract_encoded_url_string(url)
+        self.assertTrue(u"slipsnålar" in encoded_str)
+
+        response = self.client.get(
+            '/backend/product/lookup/?key=https%3A%2F%2Fstayhard.se%2F06421636%2Ftiger-of-sweden%2Fguerin-01z-silver%3FReturnPath%3D%2Fmanchettknappar-slipsn%25E5lar%26utm_source%3Dadtraction%26utm_medium%3Daffiliate%26utm_campaign%3Dgen%26utm_term%3D1119456860&domain=stayhard.se')
+        self.assertEquals(response.status_code, 200)
+        #"".decode("iso-8859-1")
+
 
     def test_product_lookup_by_domain(self):
         self._login()
