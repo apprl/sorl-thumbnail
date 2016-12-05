@@ -28,7 +28,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView, TemplateView
 from django.utils import translation, timezone
-from django.utils.encoding import smart_unicode, smart_str
+from django.utils.encoding import smart_unicode, smart_str, DjangoUnicodeDecodeError
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -470,6 +470,7 @@ def product_detail(request, slug):
     default_vendor = product.default_vendor
 
     # Vendor market if locations exists, otherwise the vendor is available for every location by default
+    product_earning = currency = ""
     vendor_markets = None
     if default_vendor:
         vendor_markets = default_vendor.vendor.location_codes_list()
@@ -1290,10 +1291,13 @@ def product_lookup_asos_nelly(url, is_nelly_product=False):
 def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
-    key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
+
+    url = urllib.unquote(request.GET.get('key', ''))
+    key = extract_encoded_url_string(url)
+
     logger.info("Request to lookup product for %s sent, trying to extract PK from request." % key)
     try:
-        product_pk = long(smart_unicode(urllib.unquote(smart_str(request.GET.get('pk', '')))))
+        product_pk = long(extract_encoded_url_string(request.GET.get('pk', '')))
     except ValueError:
         product_pk = None
         logger.info("No clean Product pk extracted.")
@@ -1864,5 +1868,15 @@ def extract_domain_with_suffix(domain):
 def extract_apparel_product_with_url(key):
     return get_model('apparel', 'Product').objects.filter(published=True, product_key__icontains=key)
 
+
 def embed_wildcard_solr_query(qs_string):
     return "%s*%s*" % (qs_string[:qs_string.index(':')+1],qs_string[qs_string.index(':')+1:])
+
+
+def extract_encoded_url_string(url):
+    try:
+        key = smart_unicode(smart_str(url))
+    except DjangoUnicodeDecodeError:
+        key_string = url.decode("iso-8859-1")
+        key = smart_unicode(smart_str(key_string))
+    return key
