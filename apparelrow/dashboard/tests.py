@@ -3288,9 +3288,9 @@ class TestStatsAdmin(TransactionTestCase):
         self.assertEqual(stats_admin.ppo_sales_publisher(tr), 1)
         self.assertEqual(stats_admin.ppo_sales_apprl(tr), 1)
 
-        self.assertEqual(stats_admin.commission_cr_total(tr), D(2) / D(4))         # 2/4 (ppo sales tot / ppo clicks tot)
-        self.assertEqual(stats_admin.commission_cr_publisher(tr), D(1) / D(3))     # 1/3 (ppo sales pub / ppo clicks pub)
-        self.assertEqual(stats_admin.commission_cr_apprl(tr), D(1) / D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
+        self.assertEqual(stats_admin.commission_cr_total(tr), D(100) * D(2) / D(4))         # 2/4 (ppo sales tot / ppo clicks tot)
+        self.assertEqual(stats_admin.commission_cr_publisher(tr), D(100) * D(1) / D(3))     # 1/3 (ppo sales pub / ppo clicks pub)
+        self.assertEqual(stats_admin.commission_cr_apprl(tr), D(100) * D(1) / D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
 
         self.assertEqual(stats_admin.average_epc_total(tr), D(225) / 6)         # 5+100+120 (ppx commission) / 2+4 (ppx clicks incl. invalid)
         self.assertEqual(stats_admin.average_epc_ppc(tr), 2.5)               # 5/2 (ppc commission / ppc clicks)
@@ -3377,9 +3377,9 @@ class TestStatsAdmin(TransactionTestCase):
         self.assertEqual(stats_admin.ppo_sales_publisher(tr), 2)
         self.assertEqual(stats_admin.ppo_sales_apprl(tr), 1)
 
-        self.assertEqual(stats_admin.commission_cr_total(tr), D(3) / D(4))         # 3/4 (ppo sales tot / ppo clicks tot)
-        self.assertEqual(stats_admin.commission_cr_publisher(tr), D(2) / D(3))     # 2/3 (ppo sales pub / ppo clicks pub)
-        self.assertEqual(stats_admin.commission_cr_apprl(tr), D(1) / D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
+        self.assertEqual(stats_admin.commission_cr_total(tr), D(100) * D(3) / D(4))         # 3/4 (ppo sales tot / ppo clicks tot)
+        self.assertEqual(stats_admin.commission_cr_publisher(tr), D(100) * D(2) / D(3))     # 2/3 (ppo sales pub / ppo clicks pub)
+        self.assertEqual(stats_admin.commission_cr_apprl(tr), D(100) * D(1) / D(1))         # 1/3 (ppo sales apprl / ppo clicks apprl)
 
         self.assertEqual(stats_admin.average_epc_total(tr), D(310) / 7)         # (ppx commission) / (ppx clicks incl. invalid)
         self.assertEqual(stats_admin.average_epc_ppc(tr), D(10) / 3)               # (ppc commission / ppc clicks)

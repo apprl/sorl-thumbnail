@@ -248,7 +248,7 @@ def ppo_sales_apprl(time_range):
 def commission_cr_total(time_range):
     clicks = ppo_clicks_total(time_range)
     if clicks:
-        return Decimal(ppo_sales_total(time_range)) / clicks
+        return Decimal(100) * Decimal(ppo_sales_total(time_range)) / clicks
     else:
         return 0
 
@@ -257,7 +257,7 @@ def commission_cr_total(time_range):
 def commission_cr_publisher(time_range):
     clicks = ppo_clicks_publisher(time_range)
     if clicks:
-        return Decimal(ppo_sales_publisher(time_range)) / clicks
+        return Decimal(100) * Decimal(ppo_sales_publisher(time_range)) / clicks
     else:
         return 0
 
@@ -266,7 +266,7 @@ def commission_cr_publisher(time_range):
 def commission_cr_apprl(time_range):
     clicks = ppo_clicks_apprl(time_range)
     if clicks:
-        return Decimal(ppo_sales_apprl(time_range)) / clicks
+        return Decimal(100) * Decimal(ppo_sales_apprl(time_range)) / clicks
     else:
         return 0
 
