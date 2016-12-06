@@ -28,7 +28,7 @@ from apparelrow.dashboard.models import Group, StoreCommission, Cut, Sale, UserE
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard.admin import SaleAdmin
 from apparelrow.dashboard.views import get_store_earnings
-from apparelrow.dashboard import stats_admin
+from apparelrow.dashboard import stats_admin, stats_publisher
 from apparelrow.dashboard.stats_cache import stats_cache, mrange, flush_stats_cache, \
     flush_stats_cache_by_month, flush_stats_cache_by_year, redis as stats_redis, cache_key
 from apparelrow.apparel.utils import generate_sid, parse_sid, currency_exchange, compress_source_link_if_needed, compressed_link_key
@@ -3146,9 +3146,8 @@ class TestStoreCommission(TransactionTestCase):
         self.assertEqual(type_code, 0)
 
 
-
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
-class TestStatsAdmin(TransactionTestCase):
+class TestStats(TransactionTestCase):
 
     def setUp(self):
         flush_stats_cache()
@@ -3177,12 +3176,6 @@ class TestStatsAdmin(TransactionTestCase):
             self.click_dates.add(click_date)
             make(ProductStat, vendor=store.vendor.name, user_id=publisher.id if publisher else 0, is_valid=(not invalidate_click))
 
-            page = '%s-Shop' % ((publisher.pk,) if publisher else 0)
-            response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'),
-                                                                            store.identifier,
-                                                                            'http://www.mystore.com/myproduct/',
-                                                                            page))
-            self.assertEqual(response.status_code, 302)
             if order_value and store.vendor.is_cpo:
                 payload = dict(store_id=store.identifier, order_id=str(self.order_id), order_value=order_value, currency='EUR')
                 response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(payload)))
@@ -3204,7 +3197,7 @@ class TestStatsAdmin(TransactionTestCase):
             management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
 
 
-    def create_users(self, ppc_as=False, create_referral_partner=True):
+    def create_users(self, ppc_as=False, create_referral_partner=False):
         publisher = make(get_user_model(),
                                 is_partner=True,
                                 partner_group__has_cpc_all_stores=ppc_as
@@ -3219,6 +3212,8 @@ class TestStatsAdmin(TransactionTestCase):
                 publisher.save()
         return publisher
 
+
+class TestStatsAdmin(TestStats):
 
     def test_top_stats_ppc_as_publisher(self):
 
@@ -3382,7 +3377,7 @@ class TestStatsAdmin(TransactionTestCase):
         self.assertEqual(stats_admin.average_epc_ppc(tr), D(10) / 3)               # (ppc commission / ppc clicks)
         self.assertEqual(stats_admin.average_epc_ppo(tr), D(300) / 4)           # (ppo commission / ppo clicks)
 
-        self.assertEqual(stats_admin.valid_clicks_total(tr), 5)
+
         self.assertEqual(stats_admin.valid_clicks_ppc(tr), 2)
         self.assertEqual(stats_admin.valid_clicks_ppo(tr), 3)
 
@@ -3452,6 +3447,81 @@ class TestStatsAdmin(TransactionTestCase):
         self.assertEqual(stats_admin.ppc_all_stores_publishers_income(tr), 100+200+5)
         self.assertEqual(stats_admin.ppc_all_stores_publishers_cost(tr), 3+3+5+3)
         self.assertEqual(stats_admin.ppc_all_stores_publishers_result(tr), 305-14)
+
+
+class TestStatsPublisher(TestStats):
+
+    def test_top_stats_ppc_as_publisher(self):
+
+        # Create users
+
+        publisher = self.create_users(ppc_as=True)
+
+        # Create stores / vendors. We only create AAN vendors because it allows us to control commission_percentage
+
+        cpo_store = make(Store, vendor__is_cpo=True, vendor__is_cpc=False, vendor__name='cpo_v', commission_percentage='0.2')
+        cpc_store = make(Store, vendor__is_cpc=True, vendor__is_cpo=False, vendor__name='cpc_v')
+        make(ClickCost, vendor=cpc_store.vendor, amount=5)
+        # Note the high cpc_amount, we want to get up to APPAREL_DASHBOARD_MINIMUM_PAYOUT with just a few clicks
+        make(Cut, vendor=cpo_store.vendor, group=publisher.partner_group, cut=0, cpc_amount=40, referral_cut=0.1)
+        make(Cut, vendor=cpc_store.vendor, group=publisher.partner_group, cut=0, cpc_amount=40, referral_cut=0.1)
+
+        # Create clicks, both valid and invalid
+
+        self.click(cpc_store, publisher)    # 40 to ppc_as publisher. vendor pays 5
+        self.click(cpc_store, publisher)    # 40 to ppc_as publisher. vendor pays 5
+        self.click(cpo_store, publisher)    # 40 to ppc_as publisher. vendor pays 5
+
+        self.collect_clicks()
+
+        # Test it!
+
+        tr = mrange(self.test_year, self.test_month)
+        self.assertEqual(stats_publisher.ppc_earnings(tr, publisher.id), 120)
+        self.assertEqual(stats_publisher.ppo_earnings(tr, publisher.id), 0)
+        self.assertEqual(stats_publisher.total_earnings(tr, publisher.id), 120)
+
+        self.assertEqual(stats_publisher.pending_earnings(publisher.id), 120)
+        # At this point, we don't have any confirmed earnings
+        self.assertEqual(stats_publisher.confirmed_earnings(publisher.id), 0)
+
+        # We won't creat any payments for this publisher at this point because the clicks
+        # haven't been confirmed. This happens automatically by update_clicks_earnings_status at a later point
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+        self.assertEqual(stats_publisher.total_paid(publisher.id), 0)
+
+        two_months_later = datetime.date(self.test_year, self.test_month, 1) + relativedelta(months=2)
+        with freeze_time(two_months_later):
+            management.call_command('update_clicks_earnings_status', verbosity=0, interactive=False)
+
+            # now that sufficiently long time has passed, the earnings should be confirmed
+            self.assertEqual(stats_publisher.confirmed_earnings(publisher.id), 120)
+
+            # but we haven't paid the publisher yet
+            self.assertEqual(stats_publisher.total_paid(publisher.id), 0)
+
+            # we generate a payment for the user
+            management.call_command('dashboard_payment', verbosity=0, interactive=False)
+
+            self.assertEqual(stats_publisher.pending_payments(publisher.id), 120)
+
+            # since the earnings have payment status PAID_PENDING, this should be 0
+            self.assertEqual(stats_publisher.pending_earnings(publisher.id), 0)
+            self.assertEqual(stats_publisher.confirmed_earnings(publisher.id), 0)
+
+            # this will be 0 until somebody marks it as paid
+            self.assertEqual(stats_publisher.total_paid(publisher.id), 0)
+
+            # pay the publisher
+            payment = Payment.objects.get(user_id=publisher.id)
+            self.assertFalse(payment.paid)
+            self.assertFalse(payment.cancelled)
+            payment.mark_as_paid()
+
+            # this should cause user to be paid, confirmed earnings & pending earnings should be back to 0
+            self.assertEqual(stats_publisher.total_paid(publisher.id), 120)
+            self.assertEqual(stats_publisher.pending_payments(publisher.id), 0)
+
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')

@@ -133,6 +133,12 @@ class Payment(models.Model):
         self.modified = timezone.now()
         super(Payment, self).save(*args, **kwargs)
 
+    def mark_as_paid(self):
+        # TODO - connect Earnings to Payment
+        UserEarning.objects.filter(user=self.user, paid=Sale.PAID_READY).update(paid=Sale.PAID_COMPLETE)
+        self.paid = True
+        self.save()
+
     def __unicode__(self):
         return u'%s %s' % (self.user, self.amount)
 
@@ -342,6 +348,7 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
 
         instance.referral_partner_parent_date = timezone.now() + datetime.timedelta(days=180)
 
+        # Create a promo Sale which gives the new publisher a boost so it is easier to reach settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT.
         data = {
             'affiliate': 'referral_promo',
             'original_sale_id': 'referral_promo_%s' % (instance.pk,),
@@ -359,7 +366,6 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
             'original_currency': 'EUR',
             'status': Sale.CONFIRMED,
         }
-
         sale, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
 
 AGGREGATED_DATA_TYPES = (
@@ -541,7 +547,7 @@ def create_earnings(instance):
     else:
         user = User.objects.get(id=instance.user_id)
         UserEarning.objects.\
-            create(user=user, user_earning_type='referral_signup_commission', sale=instance,
+            create(user=user, user_earning_type=UE.REFERRAL_SIGNUP_COMMISSION, sale=instance,
                    amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date,
                    status=instance.status)
         mail_admins('Referral Signup bonus created',
@@ -598,8 +604,7 @@ def create_user_earnings(sale):
     if not len(sale_product) == 0:
         product = sale_product[0]
 
-    earning_type = 'publisher_sale_commission' if sale.type == Sale.COST_PER_ORDER \
-        else 'publisher_sale_click_commission'
+    earning_type = UE.PUBLISHER_SALE_COMMISSION if sale.type == Sale.COST_PER_ORDER else UE.PUBLISHER_SALE_CLICK_COMMISSION
 
     if sale.user_id:
         try:

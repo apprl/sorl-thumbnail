@@ -49,9 +49,7 @@ class PaymentAdmin(admin.ModelAdmin):
 
     def mark_as_paid(self, request, queryset):
         for payment in queryset.filter(cancelled=False):
-            UserEarning.objects.filter(user=payment.user, paid=Sale.PAID_READY).update(paid=Sale.PAID_COMPLETE)
-            payment.paid = True
-            payment.save()
+            payment.mark_as_paid()
 
         return HttpResponseRedirect(request.get_full_path())
 
