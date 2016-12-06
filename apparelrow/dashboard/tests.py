@@ -3166,7 +3166,6 @@ class TestStats(TransactionTestCase):
         if order_value and not store.vendor.is_cpo:
             raise Exception("Don't pass an order value with a non-cpo vendor")
 
-
         month = self.test_month
         if date_out_of_range:
             month += 1
@@ -3175,18 +3174,22 @@ class TestStats(TransactionTestCase):
         with freeze_time(click_date):
             self.click_dates.add(click_date)
             make(ProductStat, vendor=store.vendor.name, user_id=publisher.id if publisher else 0, is_valid=(not invalidate_click))
-
             if order_value and store.vendor.is_cpo:
+                page = '%s-Shop' % ((publisher.pk,) if publisher else 0)
+                response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'),
+                                                                                store.identifier,
+                                                                                'http://www.mystore.com/myproduct/',
+                                                                                page))
+                self.assertEqual(response.status_code, 302)
+
                 payload = dict(store_id=store.identifier, order_id=str(self.order_id), order_value=order_value, currency='EUR')
                 response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(payload)))
                 self.assertEqual(response.status_code, 200)
                 self.order_id += 1
                 return self.order_id - 1
 
-
     def get_click_dates(self):
         return [d.strftime('%Y-%m-%d') for d in self.click_dates]
-
 
     def collect_clicks(self):
         # we run the import on the first of the month after our test month
@@ -3195,7 +3198,6 @@ class TestStats(TransactionTestCase):
             for day in self.get_click_dates():
                 management.call_command('clicks_summary', verbosity=0, date=day)
             management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
-
 
     def create_users(self, ppc_as=False, create_referral_partner=False):
         publisher = make(get_user_model(),
