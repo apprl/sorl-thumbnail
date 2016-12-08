@@ -3,6 +3,7 @@ import re
 import decimal
 import json
 
+import simplejson
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404, HttpResponseForbidden
 from django.forms import ModelForm
@@ -454,6 +455,8 @@ def clicks_detail(request):
             return HttpResponse(json_data)
     else:
         return HttpResponseForbidden()
+    # If therese nothing just return empty list
+    return HttpResponse(simplejson.dumps([]))
 #
 # PUBLISHER DASHBOARD
 #
