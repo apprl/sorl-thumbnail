@@ -142,18 +142,23 @@ def total_paid(user_id):
 # CLI
 ####################################################
 
-def print_publisher_dashboard(year, month, user_id, flush_cache=True, months_back=3):
-    from tabulate import tabulate       # install it if you want to run this function
+def print_publisher_stats(user_id, flush_cache=True):
+    print publisher_stats_as_str(user_id, flush_cache)
 
-    print ""
-    print "Publisher stats for {} ({})".format(User.objects.get(id=user_id), user_id)
+def publisher_stats_as_str(user_id, flush_cache=True):
+    from tabulate import tabulate       # install it if you want to run this function
+    user = User.objects.get(id=user_id)
+
+    str = u"\n"
+    str += u"Publisher stats for {} ({})\n".format(user, user_id)
 
     if flush_cache:
         flush_stats_cache()
 
     stats = []
-    for m in range(0, months_back):
-        d = datetime(year, month, 1) - relativedelta(months=m)
+
+    d = datetime(user.date_joined.year, user.date_joined.month, 1)
+    while d < datetime.now():
         tr = mrange(d.year, d.month)
         stats.append([
             d.strftime('%Y %m'),
@@ -161,35 +166,42 @@ def print_publisher_dashboard(year, month, user_id, flush_cache=True, months_bac
             ppc_earnings(tr, user_id),
             total_earnings(tr, user_id)
         ])
+        d += relativedelta(months=1)
 
-    stats.reverse()
+    stats.append(['', '', '', '-------'])
+    stats.append(['', '', '', total_earnings(all_time, user_id)])
 
-    print ""
-    print tabulate(stats, headers=["Earnings",
+    str += u"\n"
+    str += tabulate(stats, headers=["Earnings",
                                    "PPO",
                                    "PPC",
                                    "Total",
                                    ""], numalign="right")
-    print ""
-    print "Paid or about to be paid"
-    print "------------------------"
-    print "Total paid: {}".format(total_paid(user_id))
-    print "Pending payments: {}".format(pending_payments(user_id))
-    print "Confirmed earnings: {}".format(confirmed_earnings(user_id))
-    print "Pending earnings: {}".format(pending_earnings(user_id))
 
     paid_or_about_to_be_paid = total_paid(user_id) + pending_payments(user_id) + confirmed_earnings(user_id) + pending_earnings(user_id)
+
+    str += u"\n\n"
+    str += u"Paid or about to be paid\n"
+    str += u"----------------------------------------\n"
+    str += tabulate([
+        ["Total paid", total_paid(user_id)],
+        ["Pending payments", pending_payments(user_id)],
+        ["Not yet paid confirmed earnings", confirmed_earnings(user_id)],
+        ["Not yet paid pending earnings", pending_earnings(user_id)],
+        ["", "-----------"],
+        ["", paid_or_about_to_be_paid]
+    ], numalign="right", tablefmt='plain')
+
     earnings = total_earnings(all_time, user_id)
     diff = paid_or_about_to_be_paid - earnings
+
+    str += u"\n\n"
     if diff:
-        print ""
-        print "Payments ({}) does not equal total earnings ({}). Diff: ({})".format(
+        str += u"WARNING: Payments ({}) does not equal earnings ({}). Diff: ({})\n".format(
             paid_or_about_to_be_paid, earnings, diff
         )
-        # print "WARNING. Total earnings ({}) does not add up to total paid ({}) + pending payments ({}) + confirmed earnings ({}) + pending_earnings ({}). Diff: ({})".format(
-        #     a, total_paid(user_id), pending_payments(user_id), confirmed_earnings(user_id), pending_earnings(user_id), diff
-        # )
     else:
-        print ""
-        print "OK. Payouts equal earnings."
+        str += u"OK. Payouts equal earnings.\n"
+
+    return str
 

@@ -1,7 +1,5 @@
 import operator
 import re
-import decimal
-import json
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404, HttpResponseForbidden
@@ -14,7 +12,7 @@ from django.template.loader import render_to_string
 from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
-from apparelrow.dashboard import stats_admin
+from apparelrow.dashboard import stats_admin, stats_publisher
 from apparelrow.apparel.utils import get_location
 from django.utils.translation import get_language
 from apparelrow.profile.tasks import mail_managers_task
@@ -466,6 +464,11 @@ class DashboardView(TemplateView):
         year = None if not 'year' in self.kwargs else self.kwargs['year']
 
         if request.user.is_authenticated() and request.user.is_partner:
+
+            if 'stats' in request.GET:
+                # quick hack to get the cli stats to web
+                return HttpResponse('<html><pre>%s</pre></html>' % stats_publisher.publisher_stats_as_str(request.user.id))
+
             start_date, end_date = parse_date(month, year)
             year = start_date.year
             if month != "0":
@@ -481,7 +484,10 @@ class DashboardView(TemplateView):
             is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
 
             # Total summary for user
-            pending_earnings, confirmed_earnings, pending_payment, total_earned = get_top_summary(request.user)
+            pending_earnings = stats_publisher.pending_earnings(request.user.id)
+            confirmed_earnings = stats_publisher.confirmed_earnings(request.user.id)
+            pending_payment = stats_publisher.pending_payments(request.user.id)
+            total_earned = stats_publisher.total_earnings
 
             # Get aggregated data per day
             values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',

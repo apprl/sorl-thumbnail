@@ -877,34 +877,6 @@ def render_detail_earnings(request):
     return HttpResponse(json_data)
 
 
-def get_top_summary(current_user):
-    """
-    Return Top Summary data for Store Dashboard
-    """
-    from apparelrow.dashboard.models import UserEarning, Payment, Sale
-    pending_earnings = UserEarning.objects \
-        .filter(user=current_user, status=Sale.PENDING, paid=Sale.PAID_PENDING) \
-        .aggregate(total=Sum('amount'))['total']
-
-    confirmed_earnings = UserEarning.objects \
-        .filter(user=current_user, status=Sale.CONFIRMED, paid=Sale.PAID_PENDING) \
-        .aggregate(total=Sum('amount'))['total']
-
-    pending_payment = 0
-    payments = Payment.objects.filter(cancelled=False, paid=False, user=current_user).order_by('-created')
-    if payments:
-        pending_payment = payments[0].amount
-
-    total_earned = 0
-    payments = Payment.objects.filter(paid=True, user=current_user)
-    default_currency = 'EUR'
-    for pay in payments:
-        rate = 1 if pay.currency == 'EUR' else currency_exchange(default_currency, pay.currency)
-        total_earned += pay.amount * rate
-
-    return pending_earnings, confirmed_earnings, pending_payment, total_earned
-
-
 def check_user_has_cpc_all_stores(user):
     """
     Check if user exists, belongs to a partner group and publisher gets paid per click for all stores

@@ -9,7 +9,6 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.contrib.auth import get_user_model
-from enum import Enum
 from jsonfield import JSONField
 from django.utils.functional import cached_property
 from django.core.mail import mail_admins
@@ -18,7 +17,7 @@ from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.apparel.base_62_converter import dehydrate
 from apparelrow.dashboard import stats_cache
-from apparelrow.profile.models import User
+from apparelrow.profile.models import User, PaymentDetail
 
 import logging
 
@@ -118,32 +117,68 @@ class Sale(models.Model):
         ordering = ['-sale_date']
 
 
+
 class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     details = models.ForeignKey('profile.PaymentDetail', on_delete=models.CASCADE)
     amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
+     # Currency is not used right now
     currency = models.CharField(default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
     paid = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
-    created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
-    modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
+    created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
+    modified = models.DateTimeField(_('Time modified'), auto_now=True, null=True, blank=True)
+    # Deprecated. We used to store a list of earnings as a json string but wasn't robust so now we have a
+    # FK from UserEarning to payments instead.
+    # TODO: remove when you're sure you don't need this incomplete information anymore
     earnings = models.CharField(max_length=1000, null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        self.modified = timezone.now()
-        super(Payment, self).save(*args, **kwargs)
-
     def mark_as_paid(self):
-        # TODO - connect Earnings to Payment
-        UserEarning.objects.filter(user=self.user, paid=Sale.PAID_READY).update(paid=Sale.PAID_COMPLETE)
-        self.paid = True
-        self.save()
+        logger.info('Marking payment as paid %s' % self)
+        earnings = self.userearning_set.all()
+        assert not self.cancelled
+        with transaction.atomic():
+            for earning in earnings:
+                earning.paid = Sale.PAID_COMPLETE
+                earning.save()
+            self.paid = True
+            self.save()
+        return earnings
+
+    def cancel(self):
+        logger.info('Cancelling payment %s' % self)
+        assert not self.cancelled
+        assert not self.paid
+        earnings = self.userearning_set.all()
+        with transaction.atomic():
+            for earning in earnings:
+                earning.payment = None
+                earning.paid = Sale.PAID_PENDING
+                earning.save()
+            self.cancelled = True
+            self.save()
+        return earnings
 
     def __unicode__(self):
         return u'%s %s' % (self.user, self.amount)
 
-    class Meta:
-        ordering = ('-created',)
+
+# Create a payment from a bunch of earnings, perform sanity check before doing so
+def create_payment(user, earnings):
+    with transaction.atomic():
+        amount = sum(e.amount for e in earnings)
+        assert amount >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT
+        details, created = PaymentDetail.objects.get_or_create(user=user)
+        payment = Payment.objects.create(user=user, details=details, amount=amount)
+        for earning in earnings:
+            assert not earning.payment
+            assert earning.paid == Sale.PAID_PENDING
+            assert earning.user == user
+            earning.payment = payment
+            earning.paid = Sale.PAID_READY
+            earning.save()
+        logger.info("Created payment %s that includes the following UserEarnings %s" % (payment.id, [e.id for e in earnings]))
+        return payment
 
 
 class Group(models.Model):
@@ -484,6 +519,7 @@ def aggregated_data_pre_save(sender, instance, *args, **kwargs):
 class UserEarning(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, on_delete=models.PROTECT)
     user_earning_type = models.CharField(max_length=100, choices=USER_EARNING_TYPES)
+    # TODO: should the sale really be allowed to be null?
     sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT)
@@ -491,6 +527,7 @@ class UserEarning(models.Model):
     date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, db_index=True)
     paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES)
+    payment = models.ForeignKey('Payment', null=True)
 
     def __unicode__(self):
         return u'%s %s %s' % (self.user, self.user_earning_type, self.amount)
