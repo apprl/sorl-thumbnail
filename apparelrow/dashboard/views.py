@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 
 from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
+from apparelrow.dashboard.stats_cache import all_time
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
 from apparelrow.dashboard import stats_admin, stats_publisher
@@ -487,7 +488,7 @@ class DashboardView(TemplateView):
             pending_earnings = stats_publisher.pending_earnings(request.user.id)
             confirmed_earnings = stats_publisher.confirmed_earnings(request.user.id)
             pending_payment = stats_publisher.pending_payments(request.user.id)
-            total_earned = stats_publisher.total_earnings
+            total_earned = stats_publisher.total_earnings(all_time, request.user.id)
 
             # Get aggregated data per day
             values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
@@ -498,6 +499,7 @@ class DashboardView(TemplateView):
             data_per_day = aggregated_data_per_day(start_date, end_date, 'publisher', values, query_args)
 
             # Summary earning
+            # TODO: move this to new stats intead of going through AggregatedData
             month_earnings, network_earnings, referral_earnings, ppc_earnings = summarize_earnings(data_per_day.values())
 
             total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings

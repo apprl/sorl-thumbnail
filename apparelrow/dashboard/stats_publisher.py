@@ -18,7 +18,10 @@ log = logging.getLogger(__name__)
 
 @stats_cache
 def total_earnings(time_range, user_id):
-    return ppo_earnings(time_range, user_id) + ppc_earnings(time_range, user_id)
+    return ppo_earnings(time_range, user_id) + \
+           ppc_earnings(time_range, user_id) + \
+           network_earnings(time_range, user_id) + \
+           other_earnings(time_range, user_id)
 
 ####################################################
 # PPO
@@ -92,6 +95,50 @@ def ppc_clicks(time_range, user_id):
 
 
 ####################################################
+# Network & Other
+####################################################
+
+@stats_cache
+def network_earnings(time_range, user_id):
+    result = UserEarning.objects.filter(
+        date__range=time_range,
+        user_id=user_id,
+        status__gte=Sale.PENDING,
+        user_earning_type__in=(
+            UE.PUBLISHER_NETWORK_TRIBUTE,
+            UE.PUBLISHER_NETWORK_CLICK_TRIBUTE,
+            UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES,
+        )
+    ).aggregate(
+        total=Sum('amount')
+    )
+    return result['total'] or 0
+
+
+@stats_cache
+def other_earnings(time_range, user_id):
+    result = UserEarning.objects.filter(
+        date__range=time_range,
+        user_id=user_id,
+        status__gte=Sale.PENDING,
+    ).exclude(
+        user_earning_type__in=(
+            UE.PUBLISHER_SALE_COMMISSION,
+
+            UE.PUBLISHER_SALE_CLICK_COMMISSION,
+            UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES,
+
+            UE.PUBLISHER_NETWORK_TRIBUTE,
+            UE.PUBLISHER_NETWORK_CLICK_TRIBUTE,
+            UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES,
+        )
+    ).aggregate(
+        total=Sum('amount')
+    )
+    return result['total'] or 0
+
+
+####################################################
 # Payments
 ####################################################
 
@@ -137,6 +184,30 @@ def total_paid(user_id):
     return total
 
 
+def total_paid_via_user_earnings(user_id):
+    result = UserEarning.objects.filter(
+        date__range=all_time,
+        user_id=user_id,
+        paid=Sale.PAID_COMPLETE
+    ).aggregate(
+        total=Sum('amount')
+    )
+
+    return result['total'] or 0
+
+
+# NOTE: don't cache this function, it uses current time
+def old_user_earnings_still_marked_as_paid_ready(user_id, months_back=0):
+    d = datetime.now() - relativedelta(months=months_back)
+    result = UserEarning.objects.filter(
+        date__range=[all_time[0], d],
+        user_id=user_id,
+        paid=Sale.PAID_READY
+    ).aggregate(
+        total=Sum('amount')
+    )
+
+    return result['total'] or 0
 
 ####################################################
 # CLI
@@ -164,17 +235,21 @@ def publisher_stats_as_str(user_id, flush_cache=True):
             d.strftime('%Y %m'),
             ppo_earnings(tr, user_id),
             ppc_earnings(tr, user_id),
+            network_earnings(tr, user_id),
+            other_earnings(tr, user_id),
             total_earnings(tr, user_id)
         ])
         d += relativedelta(months=1)
 
-    stats.append(['', '', '', '-------'])
-    stats.append(['', '', '', total_earnings(all_time, user_id)])
+    stats.append(['', '', '', '', '', '=============='])
+    stats.append(['', '', '', '', '', total_earnings(all_time, user_id)])
 
     str += u"\n"
     str += tabulate(stats, headers=["Earnings",
                                    "PPO",
                                    "PPC",
+                                   "Network",
+                                   "Other",
                                    "Total",
                                    ""], numalign="right")
 
@@ -188,7 +263,7 @@ def publisher_stats_as_str(user_id, flush_cache=True):
         ["Pending payments", pending_payments(user_id)],
         ["Not yet paid confirmed earnings", confirmed_earnings(user_id)],
         ["Not yet paid pending earnings", pending_earnings(user_id)],
-        ["", "-----------"],
+        ["", "============"],
         ["", paid_or_about_to_be_paid]
     ], numalign="right", tablefmt='plain')
 
