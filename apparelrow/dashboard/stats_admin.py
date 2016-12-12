@@ -2,6 +2,8 @@
 
 from decimal import Decimal
 from datetime import datetime
+
+from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
@@ -553,6 +555,26 @@ def print_admin_dashboard(year, month, flush_cache=True):
     print ""
     print "PPC all stores publishers - only looking att PPO vendors"
     print "Total {} = Income {} - Cost {}".format(ppc_stats[0], ppc_stats[1], ppc_stats[2])
+
+
+def print_non_paid_publishers():
+    d = datetime.now() - relativedelta(months=3)
+    earnings_per_user = defaultdict(int)
+    print 'All users that have earnings marked as PAID_READY earlier than %s' % d
+    total = 0
+    for earning in UserEarning.objects.filter(
+        status__gte=Sale.CONFIRMED,
+        paid=Sale.PAID_READY,
+        user__id__gt=0,
+        date__lt=d).iterator():
+        u = '%s (%d)' % (earning.user, earning.user_id)
+        earnings_per_user[u] += earning.amount
+        total += earning.amount
+    print '\n'.join('%s: %s' % u for u in sorted(earnings_per_user.items(), key=lambda v: -v[1]))
+    print '======================'
+    print 'Total: %s' % total
+
+
 
 
 def print_sanity_check(year, month):
