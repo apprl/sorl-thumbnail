@@ -139,7 +139,8 @@ class ProductAdminForm(forms.ModelForm):
 
     class Meta:
         model = get_model('theimp', 'Product')
-
+        # For some reason this times out in admin, excluding it for now.
+        exclude = ('product',)
 
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
