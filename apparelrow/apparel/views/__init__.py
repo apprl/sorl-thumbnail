@@ -655,6 +655,10 @@ def product_track(request, pk, page='Default', sid=0):
     if posted_referer == client_referer and 'redirect' in client_referer:
         return HttpResponse()
 
+    if not client_referer:
+        logger.warn("No client referer in product track request. page: {} pk: {}.".format(page, pk))
+        return HttpResponse()
+
     product = None
     try:
         product = get_model('apparel', 'Product').objects.get(pk=pk)
