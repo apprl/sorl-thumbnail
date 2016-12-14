@@ -1,13 +1,12 @@
-
-from redis import StrictRedis
+import logging
 import pickle
 import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
+from redis import StrictRedis
 
-import logging
 log = logging.getLogger(__name__)
 
 STATS_TTL = 365 * 25 * 60 * 60
@@ -199,7 +198,7 @@ def warm_cache_by_one_year(year):
 
 
 def warm_cache_by_one_month(year, month):
-    import stats_admin # we need to import it locally to handle circular dependency
+    from apparelrow.dashboard.stats import stats_admin
     stats_admin.admin_clicks(year, month)
     stats_admin.ppc_all_stores_stats(year, month)
 

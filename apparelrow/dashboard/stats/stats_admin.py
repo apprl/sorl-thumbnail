@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
-from datetime import datetime
-
+import logging
 from collections import defaultdict
+from datetime import datetime
+from decimal import Decimal
+
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 
 from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Sale, UserEarning, UE
-from apparelrow.dashboard.stats_cache import flush_stats_cache_by_month, stats_cache, mrange
+from apparelrow.dashboard.stats.stats_cache import flush_stats_cache_by_month, stats_cache, mrange
 from apparelrow.statistics.models import ProductStat
 
-import logging
 log = logging.getLogger(__name__)
 
 

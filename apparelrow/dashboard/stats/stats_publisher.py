@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
 
 from apparelrow.apparel.utils import currency_exchange
 from apparelrow.dashboard.models import UserEarning, UE, Sale, Payment
-from apparelrow.dashboard.stats_cache import stats_cache, mrange, flush_stats_cache, all_time
+from apparelrow.dashboard.stats.stats_admin import ppo_vendors, ppc_vendors
+from apparelrow.dashboard.stats.stats_cache import stats_cache, mrange, flush_stats_cache, all_time
 from apparelrow.profile.models import User
 from apparelrow.statistics.models import ProductStat
-from apparelrow.dashboard.stats_admin import ppo_vendors, ppc_vendors
-from datetime import datetime
 
 log = logging.getLogger(__name__)
 

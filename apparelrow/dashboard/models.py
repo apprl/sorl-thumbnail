@@ -1,25 +1,24 @@
 import datetime
 import decimal
+import logging
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.core.mail import mail_admins
 from django.db import models, transaction
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from django.utils.translation import get_language, ugettext_lazy as _
-from django.contrib.auth import get_user_model
-from jsonfield import JSONField
 from django.utils.functional import cached_property
-from django.core.mail import mail_admins
+from django.utils.translation import get_language, ugettext_lazy as _
+from jsonfield import JSONField
 
+from apparelrow.apparel.base_62_converter import dehydrate
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
-from apparelrow.apparel.base_62_converter import dehydrate
-from apparelrow.dashboard import stats_cache
+from apparelrow.dashboard.stats import stats_cache
 from apparelrow.profile.models import User, PaymentDetail
-
-import logging
 
 logger = logging.getLogger( __name__ )
 MAX_NETWORK_LEVELS = 10

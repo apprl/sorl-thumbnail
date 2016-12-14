@@ -1,25 +1,24 @@
 import operator
 import re
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404, HttpResponseForbidden
-from django.forms import ModelForm
-from django.utils import timezone
-from django.contrib.sites.models import Site
 from django.contrib import messages
+from django.contrib.sites.models import Site
+from django.forms import ModelForm
+from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404, HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-
-from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
-from apparelrow.dashboard.stats_cache import all_time
-from apparelrow.dashboard.tasks import send_email_task
-from apparelrow.dashboard.utils import *
-from apparelrow.dashboard import stats_admin, stats_publisher
-from apparelrow.apparel.utils import get_location
+from django.utils import timezone
 from django.utils.translation import get_language
-from apparelrow.profile.tasks import mail_managers_task
 from django.views.generic import TemplateView
 
-import logging
+from apparelrow.apparel.utils import get_location
+from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
+from apparelrow.dashboard.stats import stats_admin, stats_publisher
+from apparelrow.dashboard.stats.stats_cache import all_time
+from apparelrow.dashboard.tasks import send_email_task
+from apparelrow.dashboard.utils import *
+from apparelrow.profile.tasks import mail_managers_task
+
 log = logging.getLogger(__name__)
 
 TOP_PRODUCTS_LIMIT = 100
