@@ -252,8 +252,8 @@ class CategoryMappingAdmin(admin.ModelAdmin):
     readonly_fields = ('vendor', 'category', 'created', 'modified', 'products_counter')
     search_fields = ('category',)
     list_editable = ('mapped_category',)
-    list_per_page = 50
-    raw_id_fields = ('mapped_category', 'vendor')
+    list_per_page = 10
+    raw_id_fields = ('vendor')
 
     def category_ancestors(self, category):
         result = []
