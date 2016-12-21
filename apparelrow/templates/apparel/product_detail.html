@@ -54,6 +54,21 @@
 
             {% if request.user.is_authenticated and request.user.is_partner and object.default_vendor %}
             <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn auto">{% trans "Get product link" %}</a>
+
+            <p class="earning-box">
+                {% if request.user.is_partner and object.default_vendor and product_earning %}
+                    You will earn
+                    {% if not request.user.partner_group.has_cpc_all_stores %}approx. {% endif %}
+                    <span class="currency">{{ currency }}</span> {{ product_earning }}
+                    {% if object.default_vendor.vendor.is_cpo %}
+                        per generated sale of this item.
+                    {% elif object.default_vendor.vendor.is_cpc %}
+                        per click to this item.
+                    {% endif %}
+                {% else %}
+                    Settings for earnings are missing.
+                {% endif %}
+            </p>
             {% endif %}
         </div>
 
@@ -147,22 +162,6 @@
                                 {% endif %}
                             </div>
                             {% endcache %}
-
-                                 <p class="earning-box">
-                                    {% if request.user.is_partner and object.default_vendor and product_earning %}
-                                        You will earn
-                                        {% if not request.user.partner_group.has_cpc_all_stores %}approx. {% endif %}
-                                        <span class="currency">{{ currency }}</span> {{ product_earning }}
-                                        {% if object.default_vendor.vendor.is_cpo %}
-                                            per generated sale of this item.
-                                        {% elif object.default_vendor.vendor.is_cpc %}
-                                            per click to this item.
-                                        {% endif %}
-                                    {% else %}
-                                        Settings for earnings are missing.
-                                    {% endif %}
-                                </p>
-                                <br>
 
                             {% include 'apparel/fragments/share.html' %}
                         </section>
