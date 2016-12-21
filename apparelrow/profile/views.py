@@ -816,6 +816,19 @@ class PublisherSettingsNotificationView(TemplateView):
             instance = context["details_form"].save(commit=False)
             instance.user = request.user
             instance.save()
+
+            # Send email to managers if bank details have changed
+            if context["details_form"].changed_data:
+                subject = u"%s changed their bank details" % (instance.user.name)
+                message = u"%s (%s) changed bank details: %s" % (
+                    u"%s" % instance.user.name,
+                    request.build_absolute_uri(reverse('profile-likes', args=[instance.user.slug])),
+                    u''.join([u"\n* %s: %s" % (
+                        unicode(context["details_form"].fields[x].label),
+                        context["details_form"].cleaned_data[x]) for x in context["details_form"].changed_data])
+                )
+
+                mail_managers_task.delay(subject, message)
         else:
             context.update({"form_errors": context["details_form"].errors})
         return render(request, self.template_name, context)
