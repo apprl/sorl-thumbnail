@@ -21,7 +21,8 @@ from django.test import TestCase, RequestFactory
 from apparelrow.apparel.models import Shop, ShopEmbed
 from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.apparel.models import Product, ProductLike
-from apparelrow.apparel.utils import get_availability_text, get_location_warning_text, compress_source_link_if_needed
+from apparelrow.apparel.utils import get_availability_text, get_location_warning_text, compress_source_link_if_needed, \
+    generate_sid
 from apparelrow.apparel.utils import shuffle_user_list
 from apparelrow.apparel.views.admin import AdminPostsView
 from apparelrow.profile.models import User
@@ -958,6 +959,24 @@ class TestShortLinks(TestCase):
         short_link = ShortDomainLinkFactory.create(url=url, user=self.user, vendor=vendor)
         original_link = get_model('apparel', 'ShortDomainLink').objects.get_original_url_for_link(short_link.link())
         self.assertEqual(original_link, key)
+
+
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
+class TestGenerateSid(TestCase):
+
+    def test_generate_sid(self):
+        sid = generate_sid(666, 777, source_link='http://foo.com')
+        self.assertEqual(sid, '777-666-Default/http%3A//foo.com')
+
+    def test_generate_sid_with_already_eascaped_link_should_not_do_it_again(self):
+        escaped_link = 'http://bl%C3'
+        sid = generate_sid(666, 777, source_link=escaped_link)
+        self.assertEqual(sid, '777-666-Default/http%3A//bl%C3')
+
+    def test_generate_sid_long_source_links_should_be_compressed(self):
+        long_link = 'http://' + 'x'*200
+        sid = generate_sid(666, 777, source_link=long_link)
+        self.assertIn(settings.LINKS_COMPRESSION_PREFIX, sid)
 
 
 

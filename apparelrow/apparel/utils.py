@@ -211,6 +211,9 @@ def generate_sid(product_id, target_user_id=0, page='Default', source_link=None)
 
     sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
     if source_link:
+        # If the source link has already been encoded, we don't want to do it again
+        # To make sure this doesn't happen, we unquote it first. For most links, this won't make a difference
+        source_link = urllib.unquote(source_link)
         sid += u"/%s" % urllib.quote(compress_source_link_if_needed(source_link))
     return sid
 
