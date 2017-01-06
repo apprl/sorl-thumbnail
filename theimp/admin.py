@@ -253,7 +253,7 @@ class CategoryMappingAdmin(admin.ModelAdmin):
     search_fields = ('category',)
     list_editable = ('mapped_category',)
     list_per_page = 10
-    raw_id_fields = ('vendor')
+    raw_id_fields = ('vendor',)
 
     def category_ancestors(self, category):
         result = []
