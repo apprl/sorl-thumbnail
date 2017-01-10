@@ -211,10 +211,7 @@ def generate_sid(product_id, target_user_id=0, page='Default', source_link=None)
 
     sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
     if source_link:
-        # If the source link has already been encoded, we don't want to do it again
-        # To make sure this doesn't happen, we unquote it first. For most links, this won't make a difference
-        source_link = urllib.unquote(source_link)
-        sid += u"/%s" % urllib.quote(compress_source_link_if_needed(source_link))
+        sid += u"/%s" % urllib.quote(compress_source_link_if_needed(source_link).encode('utf-8'))
     return sid
 
 
@@ -239,7 +236,7 @@ def parse_sid(sid):
                 if len(page.split('/', 1)) > 1:
                     page, source_link = page.split('/', 1)
                     source_link = decompress_source_link_if_needed(source_link)
-                    source_link = urllib.unquote(source_link)
+                    source_link = urllib.unquote(source_link.encode('utf-8'))
             else:
                 try:
                     product_id = int(rest)
@@ -257,7 +254,8 @@ def parse_sid(sid):
 # long urls into their sids, we store the urls and replace the url with a shorter digest of the link
 
 def compressed_link_key(link):
-    return hashlib.md5(link.encode("utf-8")).hexdigest()
+    return hashlib.md5(link.encode('utf-8')).hexdigest()
+
 
 
 def compress_source_link_if_needed(link, max_len=settings.LINKS_COMPRESSION_MAX_LEN):

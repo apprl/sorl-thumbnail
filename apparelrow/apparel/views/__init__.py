@@ -1296,8 +1296,8 @@ def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
 
-    url = urllib.unquote(request.GET.get('key', ''))
-    key = extract_encoded_url_string(url)
+    url = request.GET.get('key', '')
+    key = smart_unicode(urllib.unquote(extract_encoded_url_string(url).encode('utf-8')))
 
     logger.info("Request to lookup product for %s sent, trying to extract PK from request." % key)
     try:
@@ -1378,6 +1378,7 @@ def product_lookup(request):
 
             product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
                                                                                 user=request.user, vendor=vendor)
+            logger.info(u"Short link: %s" % product_short_link)
             product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
             product_short_link_str = request.build_absolute_uri(product_short_link_str)
             _, cut, _, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, vendor)
