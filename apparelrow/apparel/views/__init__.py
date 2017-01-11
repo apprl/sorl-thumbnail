@@ -1296,8 +1296,10 @@ def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
 
-    url = request.GET.get('key', '')
-    key = smart_unicode(urllib.unquote(extract_encoded_url_string(url).encode('utf-8')))
+    # try to get it into unicode
+    url = extract_encoded_url_string(request.GET.get('key', ''))
+    # unquote the string, however urrlib doesn't deal with unicode so convert it to utf-8 and back
+    key = extract_encoded_url_string(urllib.unquote(url.encode('utf-8')))
 
     logger.info("Request to lookup product for %s sent, trying to extract PK from request." % key)
     try:

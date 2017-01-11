@@ -961,25 +961,6 @@ class TestShortLinks(TestCase):
         self.assertEqual(original_link, key)
 
 
-@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
-class TestGenerateSid(TestCase):
-
-    def test_generate_sid(self):
-        sid = generate_sid(666, 777, source_link='http://foo.com')
-        self.assertEqual(sid, '777-666-Default/http%3A//foo.com')
-
-    def test_generate_sid_with_already_eascaped_link_should_not_do_it_again(self):
-        escaped_link = 'http://bl%C3'
-        sid = generate_sid(666, 777, source_link=escaped_link)
-        self.assertEqual(sid, '777-666-Default/http%3A//bl%C3')
-
-    def test_generate_sid_long_source_links_should_be_compressed(self):
-        long_link = 'http://' + 'x'*200
-        sid = generate_sid(666, 777, source_link=long_link)
-        self.assertIn(settings.LINKS_COMPRESSION_PREFIX, sid)
-
-
-
 class TestOnBoarding(TestCase):
     def setUp(self):
         self.group = get_model('dashboard', 'Group').objects.create(name='mygroup')
@@ -1648,7 +1629,7 @@ def _get_all_thumbnail_keys(key):
     thumbnail_keys = default.kvstore._get(key, identity='thumbnails')
     return thumbnail_keys or []
     #if thumbnail_keys:
-        # Delete all thumbnail keys from store and delete the
+
         # thumbnail ImageFiles.
     #    for key in thumbnail_keys:
     #        thumbnail = default.kvstore._get(key)

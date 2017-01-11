@@ -17,7 +17,7 @@ from django.core.paginator import Paginator, InvalidPage, PageNotAnInteger, Empt
 from django.db import connections, models
 from django.db.models.loading import get_model
 from django.utils import translation
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_str, smart_unicode
 from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
@@ -236,7 +236,7 @@ def parse_sid(sid):
                 if len(page.split('/', 1)) > 1:
                     page, source_link = page.split('/', 1)
                     source_link = decompress_source_link_if_needed(source_link)
-                    source_link = urllib.unquote(source_link.encode('utf-8'))
+                    source_link = smart_unicode(urllib.unquote(source_link.encode('utf-8')))
             else:
                 try:
                     product_id = int(rest)
