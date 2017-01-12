@@ -2,16 +2,15 @@ import datetime
 import logging
 import uuid
 import json
+import hmac
+import hashlib
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse, resolve
 from django.db.models import get_model
-from django.http import HttpResponseRedirect
 from django.utils import timezone, translation
-from localeurl import utils
 from apparelrow.apparel.utils import user_is_bot, save_location, has_user_location
 from apparelrow.statistics.utils import get_country_by_ip
+from advertiser.models import Store
 
 
 REFERRAL_COOKIE_NAME = 'aid_cookie'
@@ -142,3 +141,26 @@ class InternalReferralMiddleware(object):
             response.set_signed_cookie(REFERRAL_COOKIE_NAME, cookie_data, expires=expires_datetime, httponly=True)
 
         return response
+
+class IntercomMiddleware(object):
+    def process_request(self, request):
+        request.intercom = { 'show': False }
+
+        if request.user.is_authenticated():
+            is_partner = request.user.is_partner
+            is_store = Store.objects.filter(user__pk=request.user.pk).exists()
+
+            if is_partner or is_store:
+                request.intercom = {
+                    'show': True,
+                    'app_id': settings.INTERCOM_APP_ID,
+                    'user_id': request.user.pk,
+                    'name': request.user.name,
+                    'email': request.user.email,
+                    'date_joined': request.user.date_joined,
+                    'is_partner': is_partner,
+                    'is_store': is_store,
+                    'user_hash': hmac.new(settings.INTERCOM_SECRET_KEY, str(request.user.pk), digestmod=hashlib.sha256).hexdigest(),
+                }
+
+        return None

@@ -232,6 +232,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'apparelrow.apparel.middleware.IntercomMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -623,6 +624,9 @@ MAILCHIMP_API_URL = 'http://us4.api.mailchimp.com/1.3/'
 MAILCHIMP_MEMBER_LIST = '18083c690f'
 MAILCHIMP_NEWSLETTER_LIST = '6fa805a815'
 MAILCHIMP_PUBLISHER_LIST = '9497b26019'
+
+INTERCOM_APP_ID = 't7k9uni1'
+INTERCOM_SECRET_KEY = 'pvWgTfkGmxxvfHzeboaDb1UHLLzWswW9vNpF15kD'
 
 # CACHE CONFIGURATION (The default one is never used.)
 CACHES = {
