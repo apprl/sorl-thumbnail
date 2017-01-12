@@ -693,6 +693,7 @@ APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 NGINX_SHOP_RESET_KEY = "shopembed-reset-%s"
 NGINX_PRODUCTWIDGET_RESET_KEY = "productwidget-reset-%s"
+PRODUCTSTAT_IP_QUARANTINE_KEY = "productstat-ip-quarantine"
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/rss-feed/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR = 'images/brand-avatar.png'

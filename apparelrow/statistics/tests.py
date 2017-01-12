@@ -12,7 +12,7 @@ from django.conf import settings
 from apparelrow.statistics.tasks import product_buy_click
 from factories import *
 from apparelrow.statistics.models import ProductStat
-from apparelrow.statistics.utils import check_vendor_has_reached_limit, extract_short_link_from_url
+from apparelrow.statistics.utils import check_vendor_has_reached_limit, extract_short_link_from_url, is_ip_banned
 from apparelrow.dashboard.utils import parse_date
 
 
@@ -40,7 +40,7 @@ class TestProductStat(TestCase):
                                                      vendor=cpc_vendor)
         self._login()
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="NO")
+    @override_settings(GEOIP_DEBUG=True, GEOIP_RETURN_LOCATION="NO")
     def test_click_is_not_valid(self):
         """
         Tests that when a click ip does not match the market of the cpc store, the click is not valid
@@ -333,6 +333,12 @@ class TestProductStat(TestCase):
         self.assertEqual(updated_product_stat_3.referer, "")
 
     def test_product_buy_click(self):
+        """
+        Disclaimer: This test is not yet done. It originated from reports of certain domain deeplinks not working and getting
+        improperly populated by affiliate network. https://www.pivotaltracker.com/story/show/135521791
+        :return:
+        """
+
         # product_buy_click(product_id, referer, client_referer, ip, user_agent, user_id, page, cookie_already_exists)
         # _, _, _, source_link = parse_sid(result['sid'])
         # TypeError: 'NoneType' object has no attribute '__getitem__'
@@ -363,3 +369,23 @@ class TestProductStat(TestCase):
         product_buy_click(u'0',
                           u'http://www.cafe.se/vinterns-snyggaste-jacka-10-shearlingjackor-du-kan-kopa-redan-idag/',
                           full_link, '193.61.179.9', 'Mozilla/5.0 (Safari/601.6.17)', str(666), u'Ext-Link', False)
+
+    def test_is_ip_banned(self):
+        """
+        This test only works if there is a valid cache backend. Dummy cache which is not storing any values will make it fail.
+        :return:
+        """
+        from django.core.cache import get_cache
+        cache = get_cache("default")
+        cache.delete(settings.PRODUCTSTAT_IP_QUARANTINE_KEY)
+        banned_ips = ["1.2.3.4", "5.6.7.8"]
+        cache.set(settings.PRODUCTSTAT_IP_QUARANTINE_KEY, banned_ips, 60*5)
+        cached_ips = cache.get(settings.PRODUCTSTAT_IP_QUARANTINE_KEY)
+        self.assertEquals(banned_ips, cached_ips)
+
+        testing_ips = [("123.234.123.123", False), ("1.2.3.4", True), ("11.21.31.41", False), ("5.6.7.9", False),
+                       ("5.6.7.8", True)]
+
+        for ip, result in testing_ips:
+            self.assertEquals(is_ip_banned(ip), result, "The ip {} does not give the correct result.".format(ip))
+        cache.delete(settings.PRODUCTSTAT_IP_QUARANTINE_KEY)
