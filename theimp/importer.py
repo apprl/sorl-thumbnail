@@ -63,6 +63,10 @@ class Importer(object):
                         logger.exception('Could not import product with id %s' % (product_id,))
                         continue
 
+            # This part is handling the removal of products that has not been updated for presently 96 hours. This was
+            # originally 24 hours, but since that process ran serially it hit a ceiling in capability quite fast and
+            # led to a lot of products disappearing. Since then we migrated to handling this is parallell, but are still
+            # not able to run through all products every day so we have to extend the grace period for non-updated products.
             yesterday = timezone.now() - datetime.timedelta(hours=96)
             for product_id in self.site_product_model.objects.filter(vendors=vendor.vendor_id, availability=True, modified__lte=yesterday).values_list('id', flat=True):
                 logger.debug('Setting availability to false for product with id %s due to the item has not been imported since %s or later [%s]' % (product_id,yesterday,vendor))
@@ -81,7 +85,14 @@ class Importer(object):
         item = ProductItem(product)
 
         # Get corresponding apparel.Product object
-        site_product = self._find_site_product(item)
+        if not product.product:
+            site_product = self._find_site_product(item)
+            # Code for updating the product FK
+            product.product = site_product
+            product.save()
+        else:
+            site_product = product.product
+
         if is_valid:
             if site_product:
                 updated = self.update_product(product, item, site_product)
@@ -94,6 +105,7 @@ class Importer(object):
                     site_product.save(update_fields=["modified"])
             else:
                 site_product = self.add_product(product, item)
+                product.product = site_product
         else:
             if site_product:
                 logger.info('Hiding product %s' % site_product)
