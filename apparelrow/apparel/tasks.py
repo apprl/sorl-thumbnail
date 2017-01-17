@@ -330,7 +330,7 @@ def build_static_look_image(look_id):
         except:
             logger.warning('No thumbnail found for %s '%look.image)
         # TODO: better solution?
-        if thumbnail.url.startswith('http'):
+        if hasattr(thumbnail, "url") and thumbnail.url.startswith('http'):
             background = Image.open(StringIO(requests.get(thumbnail.url).content))
         else:
             background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
