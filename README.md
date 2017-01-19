@@ -77,7 +77,6 @@ brew install redis
 brew install postgres
 brew install memcached
 brew install libmemcached
-brew install lessc
 brew install nvm
 brew install libjpeg
 brew cask install java

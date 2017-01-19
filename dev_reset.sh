@@ -36,7 +36,7 @@ do
     sleep 2
 done
 
-pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d apparel ./devops/dev_db_backups/latest_dev_backup.sql
+pg_restore --verbose --no-acl --no-owner -h localhost -U postgres -d apparel ./devops/dev_db_backups/latest_apprl_dev_backup.sql
 
 echo "Migrate database"
 ./manage.py migrate
