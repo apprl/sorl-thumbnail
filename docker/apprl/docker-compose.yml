@@ -1,0 +1,27 @@
+version: '2'
+services:
+#  web:
+#    build: .
+#    depends_on:
+#      - db
+#      - redis
+#      - memcached
+#      - solr
+  redis:
+    image: redis:3.0.7
+    ports:
+      - "6379:6379"
+  db:
+    image: postgres:9.4.10
+    ports:
+      - "5432:5432"
+  memcached:
+    image: memcached:1.4.34
+    ports:
+      - "11211:11211"
+  solr:
+    image: manisnesan/solr-4.8.0
+    ports:
+      - "8983:8983"
+    volumes:
+      - ../../etc/solr-schema.xml:/opt/solr-4.8.0/example/solr/collection1/conf/schema.xml
