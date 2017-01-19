@@ -24,4 +24,4 @@ services:
     ports:
       - "8983:8983"
     volumes:
-      - ../../etc/solr-schema.xml:/opt/solr-4.8.0/example/solr/collection1/conf/schema.xml
+      - ../../../etc/solr-schema.xml:/opt/solr-4.8.0/example/solr/collection1/conf/schema.xml

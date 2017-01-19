@@ -14,15 +14,10 @@ fi
 
 pip install -r etc/requirements.dev.pip &
 
-project_path=./docker/apprl
+project_path=./devops/docker/apprl
 
 docker-compose -f $project_path/docker-compose.yml down
 docker-compose -f $project_path/docker-compose.yml up --force-recreate -d
-
-#until [ "`docker inspect -f {{.State.Running}} apprl_db_1`"=="true" ]; do
-#    echo "Check container apprl_db_1 is running"
-#    sleep 2;
-#done;
 
 if [[ $(nc -z -w5 localhost 5432) -ne 0 ]]
 then
@@ -31,10 +26,8 @@ then
 fi
 
 
-# echo "Sync s3 files is running, run tail sync_s3_files.log for status"
-# If you need to clear your media uncomment following line
-# rm -rf assets/media/
-# aws s3 sync s3://fileservername assets/media/. &>sync_s3_files.log &
+echo "Get development database backup from s3"
+aws s3 sync s3://apprl-vagrant/dev_db_backups/ devops/dev_db_backups/.
 
 echo "Restore database apprl_db_backup.sql"
 until createdb apparel -hlocalhost -Upostgres
@@ -43,7 +36,7 @@ do
     sleep 2
 done
 
-pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d apparel apprl_db_backup.sql
+pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d apparel ./devops/dev_db_backups/latest_dev_backup.sql
 
 echo "Migrate database"
 ./manage.py migrate

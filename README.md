@@ -81,7 +81,11 @@ brew install lessc
 brew install nvm
 brew install libjpeg
 brew cask install java
+# You will need awscli to run the dev_reset.sh as the development database is located on s3.
+brew install awscli
 ```
+
+After installing awscli run ```awscli configure```
 
 Now you should be all set to continue with the setup.
 
