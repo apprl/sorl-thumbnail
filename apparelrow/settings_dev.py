@@ -250,6 +250,11 @@ LOGGING = {
             'propagate': True,
             'handlers': ['console'],
         },
+        'pysolr': {
+            'level': 'WARNING', # pysolr is verbvose by default
+            'propagate': True,
+            'handlers': ['console'],
+        },
         '': {
             'level': 'INFO',
             'propagate': True,
