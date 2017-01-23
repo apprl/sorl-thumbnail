@@ -245,13 +245,8 @@ LOGGING = {
             'propagate': True,
             'handlers': ['console'],
         },
-        'theimp': {
-            'level': 'INFO',
-            'propagate': True,
-            'handlers': ['console'],
-        },
         'pysolr': {
-            'level': 'WARNING', # pysolr is verbvose by default
+            'level': 'WARNING', # pysolr is too verbose by default
             'propagate': True,
             'handlers': ['console'],
         },
