@@ -1,10 +1,20 @@
 #! /bin/bash
 
 green=$'\e[1;32m'
+red=$'\e[1;31m'
 end=$'\e[0m'
 
 function echo_green {
     printf "%s\n" "${green}$1${end}"
+}
+
+function echo_red {
+    printf "%s\n" "${red}$1${end}"
+}
+
+function die {
+    echo_red "$1"
+    exit 1
 }
 
 echo "This command will remove all data in all your running docker containers!"
@@ -26,28 +36,22 @@ project_path=./devops/docker/apprl
 docker-compose -f $project_path/docker-compose.yml down
 docker-compose -f $project_path/docker-compose.yml up --force-recreate -d
 
-if [[ $(nc -z -w5 localhost 5432) -ne 0 ]]
-then
-    echo "Could not connect to database"
-    exit 1
-fi
-
-
 echo_green "Get development database backup from s3"
-aws s3 sync s3://apprl-vagrant/dev_db_backups/ devops/dev_db_backups/.
+aws s3 sync s3://apprl-vagrant/dev_db_backups/ devops/dev_db_backups/. || die "Check your AWS credentials"
 
-echo_green "Creating database, we'll get errors until postgres is initialized"
-until createdb apparel -hlocalhost -Upostgres
+nc -z -w5 localhost 5432 || die "Could not connect to database"
+
+echo_green "Creating database"
+until createdb clooset -hlocalhost -Upostgres 2> /dev/null
 do
-    sleep 1
+    sleep 0.5
 done
 
 # We have two database dumps:
 # latest_small_dev_backup.sql
 # latest_dev_backup.sql - same as small dump, but contains productstats, products etc.
-
-echo_green "Restore database apprl_db_backup.sql"
-pg_restore --clean --if-exists --verbose --no-acl --no-owner -h localhost -U postgres -d apparel ./devops/dev_db_backups/latest_small_dev_backup.sql
+echo_green "Restoring database"
+pg_restore --clean --if-exists --no-acl --no-owner -h localhost -U postgres -d clooset ./devops/dev_db_backups/clooset_latest_small_dev_backup.sql
 
 
 echo_green "Install requirements"
