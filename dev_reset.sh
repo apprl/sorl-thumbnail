@@ -30,6 +30,11 @@ then
     exit 1
 fi
 
+if [ "$VIRTUAL_ENV" = "" ]; then
+    die "You need to activate a virtualenv before you run dev_reset"
+fi
+
+echo ""
 echo_green "Setting up docker"
 
 project_path=./devops/docker/apprl
