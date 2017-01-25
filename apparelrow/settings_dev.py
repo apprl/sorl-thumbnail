@@ -96,9 +96,10 @@ CELERY_REDIS_DB = 0
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 CELERY_ALWAYS_EAGER = True
 CELERY_TIMEZONE = 'Europe/Stockholm'
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# EMAIL_FILE_PATH = os.path.join(SERVER_APP_ROOT, 'var', 'logs')
-EMAIL_DEBUG = False
+
+# just write out the email to the console instead of sending it
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 import djcelery
 
 djcelery.setup_loader()
