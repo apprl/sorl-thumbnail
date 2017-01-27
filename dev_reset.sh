@@ -47,7 +47,7 @@ aws s3 sync s3://apprl-vagrant/dev_db_backups/ devops/dev_db_backups/. || die "C
 nc -z -w5 localhost 5432 || die "Could not connect to database"
 
 echo_green "Creating database"
-until createdb clooset -hlocalhost -Upostgres 2> /dev/null
+until createdb apparel -hlocalhost -Upostgres 2> /dev/null
 do
     sleep 0.5
 done
@@ -56,11 +56,11 @@ done
 # latest_small_dev_backup.sql
 # latest_dev_backup.sql - same as small dump, but contains productstats, products etc.
 echo_green "Restoring database"
-pg_restore --clean --if-exists --no-acl --no-owner -h localhost -U postgres -d clooset ./devops/dev_db_backups/clooset_latest_small_dev_backup.sql
+pg_restore --clean --if-exists --no-acl --no-owner -h localhost -U postgres -d apparel ./devops/dev_db_backups/latest_small_dev_backup.sql
 
 
 echo_green "Install requirements"
-pip install -r etc/requirements.dev.pip &
+pip install -r etc/requirements.dev.pip
 
 echo_green "Migrate database"
 ./manage.py migrate
