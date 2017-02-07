@@ -20,6 +20,7 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models.loading import get_model
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView, ListView, View, DetailView, FormView
+from django.views.decorators.csrf import csrf_protect
 
 import requests
 from apparelrow.apparel.models import Look
@@ -1249,3 +1250,19 @@ def login_as_user(request, user_id):
 @login_required
 def notifications(request):
     return render(request, 'profile/notifications_list.html')
+
+@csrf_protect
+def password_reset(request, **kwargs):
+    from django.contrib.auth.views import password_reset as orig_password_reset
+
+    if request.method == "POST":
+        email = request.POST.get('email', None)
+
+        try:
+            user = get_user_model().objects.get(email=email, is_active=False)
+            send_confirmation_email(request, user)
+            return HttpResponseRedirect(reverse('auth_register_complete'))
+        except get_user_model().DoesNotExist:
+            pass
+
+    return orig_password_reset(request, **kwargs)
