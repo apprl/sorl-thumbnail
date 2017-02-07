@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import TemplateView, RedirectView
+from django.views.generic import RedirectView
 from apparelrow.apparel.search import SearchBaseTemplate
 
 from apparelrow.apparel.views.admin import AdminPostsView, PPCAllStoresView
@@ -198,6 +198,7 @@ urlpatterns = patterns('',
     url(r'^look/(?P<pk>\d+)/?$', LookView.as_view(), name='look'),
 
     url(r'^looks/$', 'apparelrow.apparel.views.look_list', {'gender': 'A'}, name='look-list'),
+    url(r'^looks2/$', 'apparelrow.apparel.views.look_list_popularity', {'gender': 'A'}, name='look-list'),
     url(r'^looks/men/$', 'apparelrow.apparel.views.look_list', {'gender': 'M'}, name='look-list-men'),
     url(r'^looks/women/$', 'apparelrow.apparel.views.look_list', {'gender': 'W'}, name='look-list-women'),
     url(r'^looks/search/$', 'apparelrow.apparel.views.look_list', {'search': True}, name='search-look-list'),

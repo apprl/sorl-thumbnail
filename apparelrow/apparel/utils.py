@@ -9,7 +9,7 @@ import uuid
 import logging
 import decimal
 import random
-import redis
+from math import log
 
 from django.conf import settings
 from django.core.cache import cache
@@ -405,12 +405,12 @@ def get_paged_result(queryset, per_page, page_num):
     """
     Handles pagination, this should be done with the built in Pagination class
     inside a class based view. Todo: migrate and remove this functionality
-    :param queryset: 
-    :param per_page: 
-    :param page_num: 
+    :param queryset:
+    :param per_page:
+    :param page_num:
     :return:
     """
-    
+
     paginator = Paginator(queryset, per_page)
     paginator._count = 10000
     try:
@@ -485,8 +485,8 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
             right = range(paginator.num_pages - on_ends + 1, paginator.num_pages + 1)
 
     return {
-            'left': left, 
-            'mid': mid, 
+            'left': left,
+            'mid': mid,
             'right': right
             }
 
@@ -561,7 +561,7 @@ def get_location(request):
         return request.user.location
     else:
         return request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, "ALL")
-    
+
 def get_location_text(location):
     for key, text in settings.LOCATION_MAPPING_SIMPLE_TEXT:
         if key == location:
@@ -642,3 +642,21 @@ def get_vendor_cost_per_click(vendor):
             except get_model('dashboard', 'ClickCost').DoesNotExist:
                 logger.warning("ClickCost not defined for vendor %s" % vendor)
     return click_cost
+
+
+def get_popularity(score, date, start_timestamp=0):
+    """
+    Python implementation of Reddits ranking algorithm
+    Stolen from: https://medium.com/hacking-and-gonzo/how-reddit-ranking-algorithms-work-ef111e33d0d9
+    """
+    LOG_NUM = 10
+    TIME_RANGE = 864000
+
+    time_delta = date - datetime.datetime(1970, 1, 1)
+    seconds_since_epoch = time_delta.days * 86400 + time_delta.seconds + (float(time_delta.microseconds) / 1000000)
+
+    order = log(max(abs(score), 1), LOG_NUM)
+    sign = 1 if score > 0 else -1 if score < 0 else 0
+    seconds = seconds_since_epoch - start_timestamp
+    return round(sign * order + seconds / TIME_RANGE, 7)
+

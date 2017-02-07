@@ -878,11 +878,12 @@ def look_like(request, slug, action):
         process_like_look_created.delay(look.user, request.user, look_like)
 
     look_popularity.delay(look)
+    look_popularity2.delay(look)
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), content_type='application/json')
 
 
-def look_list(request, search=None, contains=None, gender=None):
+def look_list(request, search=None, contains=None, gender=None, popularity_field='popularity'):
     """
     This view can list looks in four ways:
 
@@ -930,7 +931,7 @@ def look_list(request, search=None, contains=None, gender=None):
         queryset = queryset.filter(components__product__slug=contains).distinct()
         show_header = False
     else:
-        queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
+        queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-%s' % popularity_field, 'created')
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page', 1))
 
@@ -948,6 +949,9 @@ def look_list(request, search=None, contains=None, gender=None):
         'gender': gender,
         'show_header': show_header,
     })
+
+def look_list_popularity(request, search=None, contains=None, gender=None, popularity_field='popularity2'):
+    return look_list(request, search, contains, gender, popularity_field)
 
 
 class LookDetailView(DetailView):
