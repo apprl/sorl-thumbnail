@@ -40,7 +40,7 @@ echo_green "Creating $COPY_INSTANCE from latest prod snapshot: $LATEST_PROD_SNAP
 aws rds restore-db-instance-from-db-snapshot \
     --db-instance-identifier $COPY_INSTANCE \
     --db-snapshot-identifier $LATEST_PROD_SNAPSHOT \
-    --db-instance-class db.t2.micro\
+    --db-instance-class db.t2.small \
     --db-subnet-group-name apprldbgroup \
 
 echo_green "Waiting for new DB instance to be available"
@@ -59,3 +59,4 @@ wait-for-status $COPY_INSTANCE available
 
 endpoint=$(aws rds describe-db-instances --db-instance-identifier=$instance | jq -r '.DBInstances[0].Endpoint.Address')
 echo_green "New instance is ready for use: $endpoint"
+echo_green "Remember, you have to been on our AWS VPN & cleanup when you're done - : $endpoint"
