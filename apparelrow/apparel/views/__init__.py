@@ -656,7 +656,7 @@ def product_track(request, pk, page='Default', sid=0):
         return HttpResponse()
 
     if not client_referer:
-        logger.warn("No client referer in product track request. page: {} pk: {}.".format(page, pk))
+        logger.warn(u"No client referer in product track request. page: {} pk: {}.".format(page, pk))
         client_referer = ""
 
     product = None
