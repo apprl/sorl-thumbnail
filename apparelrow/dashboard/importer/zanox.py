@@ -73,42 +73,63 @@ class Importer(BaseImporter):
 
         return Sale.PENDING
 
+    def get_headers(self, base_url):
+        signature, timestamp, nonce = self.get_signature('GET', base_url)
+        return {
+            'Date': timestamp,
+            'Nonce': nonce,
+            'Authorization': 'ZXWS %s:%s' % (self.connect_id, signature)
+        }
+
     def get_data(self, start_date, end_date, data=None):
         logger.info("Zanox - Start importing from Affiliate Network")
         for start_date, end_date in self.generate_subdates(start_date, end_date, 1):
-            signature, timestamp, nonce = self.get_signature('GET', '/reports/sales/date/%s' % (end_date.strftime('%Y-%m-%d')))
-            url = 'http://api.zanox.com/json/2011-03-01/reports/sales/date/%s' % (end_date.strftime('%Y-%m-%d'))
-            headers = {'Date': timestamp,
-                       'Nonce': nonce,
-                       'Authorization': 'ZXWS %s:%s' % (self.connect_id, signature)}
-            try:
-                response = requests.get(url, headers=headers)
-                logger.debug("Zanox - Request sent successfully with status code %s"%(response.status_code))
 
-                if 'saleItems' in response.json():
-                    for row in response.json()['saleItems']['saleItem']:
-                        data_row = {}
-                        data_row['original_sale_id'] = row['@id']
-                        data_row['affiliate'] = self.name
-                        _, data_row['vendor'] = self.map_vendor(row['program']['$'])
-                        data_row['original_commission'] = row['commission']
-                        data_row['original_currency'] = row['currency']
-                        data_row['original_amount'] = row['amount']
-                        if 'gpps' in row:
-                            sid = row['gpps']['gpp']['$']
-                        else:
-                            sid = ''
-                        data_row['user_id'], data_row['product_id'], data_row['placement'], data_row['source_link'] = self.map_placement_and_user(sid)
-                        data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
-                        data_row['status'] = self.map_status(row['reviewState'])
+            page = 0
+            items_per_page = 50  # 50 is max for zonox api
+            has_more_pages = True
 
-                        data_row = self.validate(data_row)
-                        if not data_row:
-                            continue
+            while has_more_pages:
+                base_url = '/reports/sales/date/' + end_date.strftime('%Y-%m-%d')
+                url = 'http://api.zanox.com/json/2011-03-01{}?items={}&page={}'.format(
+                    base_url,
+                    items_per_page,
+                    page
+                )
+                try:
+                    response = requests.get(url, headers=self.get_headers(base_url))
+                    response.raise_for_status()
+                    logger.info("Zanox - Request sent successfully to url {} with status code {}".format(url, response.status_code))
+                except RequestException as e:
+                    logger.warning("Zanox - Connection error %s" % e)
+                    return
 
+                data = response.json()
+                for row in data.get('saleItems', [])['saleItem']:
+                    data_row = {}
+                    data_row['original_sale_id'] = row['@id']
+                    data_row['affiliate'] = self.name
+                    _, data_row ['vendor'] = self.map_vendor(row['program']['$'])
+                    data_row['original_commission'] = row['commission']
+                    data_row['original_currency'] = row['currency']
+                    data_row['original_amount'] = row['amount']
+                    if 'gpps' in row:
+                        sid = row['gpps']['gpp']['$']
+                    else:
+                        sid = ''
+                    data_row['user_id'], data_row ['product_id'], data_row ['placement'], data_row ['source_link'] = self.map_placement_and_user(sid)
+                    data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
+                    data_row['status'] = self.map_status(row['reviewState'])
+
+                    data_row = self.validate(data_row )
+                    if not data_row:
+                        continue
+                    else:
                         yield data_row
 
-            except RequestException as e:
-                logger.warning("Zanox - Connection error %s " % e)
-            # Be kind to zanox servers
-            time.sleep(1)
+                time.sleep(0.5)  # be nice to their servers
+
+                # should we keep going?
+                has_more_pages = (data.get('total', 0) > (page+1)*items_per_page)
+                if has_more_pages:
+                    page = page + 1
