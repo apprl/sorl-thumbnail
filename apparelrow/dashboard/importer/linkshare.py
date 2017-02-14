@@ -71,7 +71,6 @@ class Importer(BaseImporter):
         data_row['affiliate'] = self.name
         _, data_row['vendor'] = self.map_vendor(row['Advertiser Name'])
         data_row['original_commission'] = D(row['Total Commission'].replace(',', ''))
-        self.grand_total += data_row['original_commission']
         data_row['original_amount'] = D(row['Sales'].replace(',', ''))
         data_row['original_currency'] = 'GBP' if not 'Currency' in row else row['Currency']
         data_row['user_id'], data_row['product_id'], data_row['placement'], data_row['source_link'] = self.map_placement_and_user(row['Member ID (U1)'])
