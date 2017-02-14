@@ -7,18 +7,14 @@
 <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
 <script>
   $(document).ready(function() {
-    $('.month-select').change(function() {
+    $('.month-select, .year-select, .vendor-select').change(function() {
         var month = $('.month-select').find(':selected').data('month');
         var year = $('.year-select').find(':selected').data('year');
-        window.location.href = '{% url "admin-posts" %}' + year + '/' + month + '/';
+        var vendor = $('.vendor-select').find(':selected').data('vendor');
+        window.location.href = '{% url "admin-posts" %}' + year + '/' + month + '/' + vendor + '/';
+    });
 
-    });
-    $('.year-select').change(function() {
-        var month = $('.month-select').find(':selected').data('month');
-        var year = $('.year-select').find(':selected').data('year');
-        window.location.href = '{% url "admin-posts" %}' + year + '/' + month + '/';
-    });
-    new Tablesort($('table#posts-table').get(0));
+    //new Tablesort($('table#posts-table').get(0));
     /* new Tablesort($('table#all-earnings').get(0));
     new Tablesort($('table#top-products').get(0));
     new Tablesort($('table#top-products-more').get(0));
@@ -54,6 +50,19 @@
                         </select>
                     </div>
                 </li>
+
+                <li>
+                    <div class="select">
+                        <span><i class="fa fa-caret-down"></i></span>
+                        <select class="vendor-select">
+                            <option data-vendor="all" {% if "all" == vendor %} selected{%endif %}>All vendors</option>
+
+                            {% for item_vendor in vendor_choices %}
+                            <option data-vendor="{{ item_vendor.pk }}" {% if item_vendor.pk == vendor %} selected{%endif %}>{{ item_vendor.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </li>
             </ul>
     </section>
 
@@ -63,10 +72,26 @@
             <table id="posts-table" class="sortable table table-condensed">
                 <thead>
                     <tr>
-                        <th class="col-md-2 center">{% trans "User ID" %}</th>
-                        <th class="col-md-5 text-left">{% trans "URL" %}</th>
-                        <th class="col-md-3 center">{% trans "Date/time" %}</th>
-                        <th class="col-md-2 center">{% trans "Number of clicks" %}</th>
+                        <th class="col-md-2 center">
+                            <a href="?sort_by=user_id&order={% if sort_by == 'user_id' and order == 'desc' %}asc{% else %}desc{% endif %}">
+                                {% trans "User ID" %} {% if sort_by == 'user_id' %}<i class="fa fa-caret-{% if order == 'asc' %}up{% else %}down{% endif %}"></i>{% endif %}
+                            </a>
+                        </th>
+                        <th class="col-md-5 text-left">
+                            <a href="?sort_by=referer&order={% if sort_by == 'referer' and order == 'desc' %}asc{% else %}desc{% endif %}">
+                                {% trans "URL" %} {% if sort_by == 'referer' %}<i class="fa fa-caret-{% if order == 'asc' %}up{% else %}down{% endif %}"></i>{% endif %}
+                            </a>
+                        </th>
+                        <th class="col-md-3 center">
+                            <a href="?sort_by=created_date&order={% if sort_by == 'created_date' and order == 'desc' %}asc{% else %}desc{% endif %}">
+                                {% trans "Date/time" %} {% if sort_by == 'created_date' %}<i class="fa fa-caret-{% if order == 'asc' %}up{% else %}down{% endif %}"></i>{% endif %}
+                            </a>
+                        </th>
+                        <th class="col-md-2 center">
+                            <a href="?sort_by=posts&order={% if sort_by == 'posts' and order == 'desc' %}asc{% else %}desc{% endif %}">
+                                {% trans "Number of clicks" %} {% if sort_by == 'posts' %}<i class="fa fa-caret-{% if order == 'asc' %}up{% else %}down{% endif %}"></i>{% endif %}
+                            </a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>

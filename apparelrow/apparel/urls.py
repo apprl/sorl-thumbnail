@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import TemplateView, RedirectView
+from django.views.generic import RedirectView
 from apparelrow.apparel.search import SearchBaseTemplate
 
 from apparelrow.apparel.views.admin import AdminPostsView, PPCAllStoresView
@@ -236,6 +236,6 @@ urlpatterns = patterns('',
     url(r'^admin/dashboard/ppc_as/$', PPCAllStoresView.as_view(), name='admin-ppc-as'),
     url(r'^admin/dashboard/ppc_as/(?P<year>\d{4})/(?P<month>\d{1,2})/$', PPCAllStoresView.as_view(), name='admin-ppc-as'),
     url(r'^admin/dashboard/posts/$', AdminPostsView.as_view(), name='admin-posts'),
-    url(r'^admin/dashboard/posts/(?P<year>\d{4})/(?P<month>\d{1,2})/$', AdminPostsView.as_view(), name='admin-posts'),
+    url(r'^admin/dashboard/posts/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<vendor>[\d]+|all)/$', AdminPostsView.as_view(), name='admin-posts'),
     url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard_'),
 )
