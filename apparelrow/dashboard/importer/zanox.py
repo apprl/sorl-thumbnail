@@ -105,27 +105,28 @@ class Importer(BaseImporter):
                     return
 
                 data = response.json()
-                for row in data.get('saleItems', [])['saleItem']:
-                    data_row = {}
-                    data_row['original_sale_id'] = row['@id']
-                    data_row['affiliate'] = self.name
-                    _, data_row ['vendor'] = self.map_vendor(row['program']['$'])
-                    data_row['original_commission'] = row['commission']
-                    data_row['original_currency'] = row['currency']
-                    data_row['original_amount'] = row['amount']
-                    if 'gpps' in row:
-                        sid = row['gpps']['gpp']['$']
-                    else:
-                        sid = ''
-                    data_row['user_id'], data_row ['product_id'], data_row ['placement'], data_row ['source_link'] = self.map_placement_and_user(sid)
-                    data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
-                    data_row['status'] = self.map_status(row['reviewState'])
+                if 'saleItems' in data:
+                    for row in data['saleItems']['saleItem']:
+                        data_row = {}
+                        data_row['original_sale_id'] = row['@id']
+                        data_row['affiliate'] = self.name
+                        _, data_row ['vendor'] = self.map_vendor(row['program']['$'])
+                        data_row['original_commission'] = row['commission']
+                        data_row['original_currency'] = row['currency']
+                        data_row['original_amount'] = row['amount']
+                        if 'gpps' in row:
+                            sid = row['gpps']['gpp']['$']
+                        else:
+                            sid = ''
+                        data_row['user_id'], data_row ['product_id'], data_row ['placement'], data_row ['source_link'] = self.map_placement_and_user(sid)
+                        data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
+                        data_row['status'] = self.map_status(row['reviewState'])
 
-                    data_row = self.validate(data_row )
-                    if not data_row:
-                        continue
-                    else:
-                        yield data_row
+                        data_row = self.validate(data_row )
+                        if not data_row:
+                            continue
+                        else:
+                            yield data_row
 
                 time.sleep(0.5)  # be nice to their servers
 
