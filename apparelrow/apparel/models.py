@@ -556,7 +556,7 @@ class CompressedLink(models.Model):
 class DomainDeepLinking(models.Model):
     vendor = models.ForeignKey(Vendor)
     domain = models.CharField(max_length=100, blank=False, null=False, help_text='Should not contain http:// or https:// but can contain path, example: "nelly.com/se"')
-    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} or {ulp} together with {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?stoe_id=somestore&custom={sid}&url={url}')
+    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} or {ulp} together with {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?store_id=somestore&custom={sid}&url={url}')
 
 
 class ShortDomainLinkManager(models.Manager):
