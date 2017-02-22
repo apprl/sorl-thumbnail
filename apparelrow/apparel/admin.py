@@ -151,7 +151,7 @@ admin.site.register(ShortProductLink, ShortProductLinkAdmin)
 
 class ShortDomainLinkAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
-    list_display = ('url', 'user', 'vendor', 'created')
+    list_display = ('link', 'url', 'user', 'vendor', 'created')
 
 admin.site.register(ShortDomainLink, ShortDomainLinkAdmin)
 

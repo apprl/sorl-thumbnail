@@ -542,6 +542,10 @@ class ShortStoreLink(models.Model):
         return dehydrate(self.pk + SHORT_CONSTANT)
 
 
+# This model is for compressing and storing urls that are sent to affiliate networks as sid parameters
+# Tradedoubler and maybe others don't allow for maybe more than 32 chars in the sid so we need to compress the url
+# before we pass them the sid
+
 class CompressedLink(models.Model):
 
     key = models.CharField(primary_key=True, max_length=32)
@@ -552,6 +556,9 @@ class CompressedLink(models.Model):
         return u'%s: %s' % (self.key, self.link)
 
 
+
+# This model is used to transform store / vendor urls so that they will pass through their associated affiliate
+# network click handlers. See product_lookup_by_domain()
 
 class DomainDeepLinking(models.Model):
     vendor = models.ForeignKey(Vendor)
@@ -587,6 +594,9 @@ class ShortDomainLinkManager(models.Manager):
             source_link = "LINK-NOT-FOUND"
         return source_link
 
+
+# These links are published on users blogs etc, they have format pd/xxxxx
+# it is an alias for a longer link
 
 class ShortDomainLink(models.Model):
     url = models.CharField(max_length=1024, blank=False, null=False)
