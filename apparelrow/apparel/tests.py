@@ -1336,7 +1336,7 @@ class TestAdminPostsView(TestCase):
         view = AdminPostsView(template_name='hello.html')
         view.request = request
 
-        context_data = view.get_context_data(month=03, year=2015)
+        context_data = view.get_context_data(request, month=03, year=2015)
 
         # Check response
         self.assertEqual(context_data['month'], 3)
