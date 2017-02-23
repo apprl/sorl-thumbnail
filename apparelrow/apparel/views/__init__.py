@@ -1208,9 +1208,9 @@ def product_lookup_by_domain(request, domain, key):
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
         sid = generate_sid(0, user_id, 'Ext-Link', url)
-        url = urllib.quote(url.encode('utf-8'))
+        url = urllib.quote(url.encode('utf-8'), safe='')
         if 'click.linksynergy.com' in instance.template: # for some reason Linkshare double quotes their urls
-            url = urllib.quote(url)
+            url = urllib.quote(url, safe='')
         return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
     return None, None
 
