@@ -184,10 +184,12 @@ App.Views.LookComponentCollage = App.Views.LookComponent.extend({
             this.hammertime.add(new Hammer.Rotate({ threshold: 0 })).recognizeWith([this.hammertime.get('pan'), this.hammertime.get('pinch')]);
 
             this.hammertime.on("panstart panmove", _.bind(function(event) {
+                event.preventDefault();
                 this.transform.translate = {'x': event.deltaX, 'y': event.deltaY};
                 this.applyTransform();
             }, this));
             this.hammertime.on("panend",_.bind(function(event) {
+                event.preventDefault();
                 this.set_position(this.$el.position().left + (this.recoup ? this.recoup.left : 0), this.$el.position().top + (this.recoup ? this.recoup.top : 0));
                 this.transform.translate = {'x': 0, 'y': 0};
                 this.applyTransform();

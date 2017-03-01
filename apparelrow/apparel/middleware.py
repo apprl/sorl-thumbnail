@@ -142,6 +142,7 @@ class InternalReferralMiddleware(object):
 
         return response
 
+
 class IntercomMiddleware(object):
     def process_request(self, request):
         request.intercom = { 'show': False }

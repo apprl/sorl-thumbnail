@@ -218,7 +218,7 @@ class Location(models.Model):
 
 #
 # Category
-#   
+#
 
 class Category(MPTTModel):
     name          = models.CharField(max_length=100, db_index=True)
@@ -542,6 +542,10 @@ class ShortStoreLink(models.Model):
         return dehydrate(self.pk + SHORT_CONSTANT)
 
 
+# This model is for compressing and storing urls that are sent to affiliate networks as sid parameters
+# Tradedoubler and maybe others don't allow for maybe more than 32 chars in the sid so we need to compress the url
+# before we pass them the sid
+
 class CompressedLink(models.Model):
 
     key = models.CharField(primary_key=True, max_length=32)
@@ -553,10 +557,13 @@ class CompressedLink(models.Model):
 
 
 
+# This model is used to transform store / vendor urls so that they will pass through their associated affiliate
+# network click handlers. See product_lookup_by_domain()
+
 class DomainDeepLinking(models.Model):
     vendor = models.ForeignKey(Vendor)
     domain = models.CharField(max_length=100, blank=False, null=False, help_text='Should not contain http:// or https:// but can contain path, example: "nelly.com/se"')
-    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} or {ulp} together with {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?stoe_id=somestore&custom={sid}&url={url}')
+    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} or {ulp} together with {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?store_id=somestore&custom={sid}&url={url}')
 
 
 class ShortDomainLinkManager(models.Manager):
@@ -587,6 +594,9 @@ class ShortDomainLinkManager(models.Manager):
             source_link = "LINK-NOT-FOUND"
         return source_link
 
+
+# These links are published on users blogs etc, they have format pd/xxxxx
+# it is an alias for a longer link
 
 class ShortDomainLink(models.Model):
     url = models.CharField(max_length=1024, blank=False, null=False)
@@ -993,6 +1003,7 @@ class Look(models.Model):
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=False, blank=False, default='U')
     popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
+    popularity2 = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
     width       = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0] - 2)
     height      = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1] - 2)
     published   = models.BooleanField(default=False)

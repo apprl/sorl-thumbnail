@@ -814,6 +814,7 @@ CELERY_ROUTES = ({
                      'apparelrow.apparel.tasks.empty_embed_look_cache': {'queue': 'standard'},
                      'apparelrow.apparel.tasks.empty_embed_productwidget_cache': {'queue': 'standard'},
                      'apparelrow.apparel.tasks.look_popularity': {'queue': 'background'},
+                     'apparelrow.apparel.tasks.look_popularity2': {'queue': 'background'},
                      'apparelrow.apparel.tasks.product_popularity': {'queue': 'background'},
                      'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
                      'apparelrow.profile.tasks.mail_managers_task': {'queue': 'standard'},

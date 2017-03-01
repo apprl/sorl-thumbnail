@@ -171,6 +171,26 @@
             top: -6px !important;
         }
     }
+    @media (max-width: 640px) {
+        .close {
+            width: 44px !important;
+            height: 44px !important;
+            display: block;
+            position: absolute;
+            top: -16px !important;
+            right: -16px !important;
+            border-radius: 100%;
+            background-color: #eee;
+            &:before {
+                font-family: 'FontAwesome';
+                content: '\f00d';
+                position: absolute;
+                top: 13px;
+                right: 15px;
+                font-size: 18px;
+            }
+        }
+    }
     &.bottom > .arrow, .arrow {
         width: 12px;
         height: 12px;

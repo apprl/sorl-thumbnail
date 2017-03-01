@@ -112,7 +112,7 @@ class User(AbstractUser):
     partner_group = models.ForeignKey('dashboard.Group', verbose_name=_('Commission group'), null=True, blank=True)
 
     # referral partner
-    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Referral partner user'))
+    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('A user that is a referral partner can earn money by inviting other publishers to APPRL'))
     referral_partner_code = models.CharField(max_length=16, blank=True, null=True)
     referral_partner_parent = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     referral_partner_parent_date = models.DateTimeField(null=True, blank=True)

@@ -20,6 +20,7 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models.loading import get_model
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView, ListView, View, DetailView, FormView
+from django.views.decorators.csrf import csrf_protect
 
 import requests
 from apparelrow.apparel.models import Look
@@ -816,6 +817,19 @@ class PublisherSettingsNotificationView(TemplateView):
             instance = context["details_form"].save(commit=False)
             instance.user = request.user
             instance.save()
+
+            # Send email to managers if bank details have changed
+            if context["details_form"].changed_data:
+                subject = u"%s changed their bank details" % (instance.user.name)
+                message = u"%s (%s) changed bank details: %s" % (
+                    u"%s" % instance.user.name,
+                    request.build_absolute_uri(reverse('profile-likes', args=[instance.user.slug])),
+                    u''.join([u"\n* %s: %s" % (
+                        unicode(context["details_form"].fields[x].label),
+                        context["details_form"].cleaned_data[x]) for x in context["details_form"].changed_data])
+                )
+
+                mail_managers_task.delay(subject, message)
         else:
             context.update({"form_errors": context["details_form"].errors})
         return render(request, self.template_name, context)
@@ -1236,3 +1250,19 @@ def login_as_user(request, user_id):
 @login_required
 def notifications(request):
     return render(request, 'profile/notifications_list.html')
+
+@csrf_protect
+def password_reset(request, **kwargs):
+    from django.contrib.auth.views import password_reset as orig_password_reset
+
+    if request.method == "POST":
+        email = request.POST.get('email', None)
+
+        try:
+            user = get_user_model().objects.get(email=email, is_active=False)
+            send_confirmation_email(request, user)
+            return HttpResponseRedirect(reverse('auth_register_complete'))
+        except get_user_model().DoesNotExist:
+            pass
+
+    return orig_password_reset(request, **kwargs)
