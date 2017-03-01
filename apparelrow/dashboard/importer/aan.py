@@ -6,7 +6,7 @@ from django.db.models.loading import get_model
 from apparelrow.dashboard.models import Sale
 from apparelrow.dashboard.importer.base import BaseImporter
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("affiliate_networks")
 
 class Importer(BaseImporter):
 
@@ -31,7 +31,12 @@ class Importer(BaseImporter):
             data_row = {}
             data_row['original_sale_id'] = '%s-%s' % (transaction.pk, transaction.order_id)
             data_row['affiliate'] = self.name
-            store = Store.objects.get(identifier=transaction.store_id)
+            store = None
+            try:
+                store = Store.objects.get(identifier=transaction.store_id)
+            except:
+                logger.error("Transaction: {} - Failed to find store matching advertiser.Store with id: {}".format(transaction.id, transaction.store_id))
+                continue
             data_row['vendor'] = store.vendor
             data_row['original_commission'] = transaction.commission
             data_row['original_currency'] = transaction.currency
