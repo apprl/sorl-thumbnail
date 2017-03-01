@@ -65,6 +65,9 @@ pip install -r etc/requirements.dev.pip
 echo_green "Migrate database"
 ./manage.py migrate
 
+echo_green "Collect static"
+./manage.py collectstatic --noinput
+
 echo_green "Import data from shirtonomy"
 cd spiderpig
 scrapy crawl shirtonomy
@@ -73,8 +76,8 @@ cd -
 echo_green "Reindex data to make sure all is up-to-date"
 ./manage.py rebuild_index --clean
 
-# echo "Run tests"
-# ./manage.py test
+#echo_green "Run tests"
+#./manage.py test
 
 # If pillow for some reason does not work try this.
 # brew install libjpeg && pip install --no-cache-dir -I pillow==1.7.8
