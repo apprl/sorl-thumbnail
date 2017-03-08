@@ -15,6 +15,8 @@ from apparelrow.statistics.models import ProductStat
 from apparelrow.statistics.utils import check_vendor_has_reached_limit, extract_short_link_from_url, is_ip_banned
 from apparelrow.dashboard.utils import parse_date
 
+import logging
+log = logging.getLogger(__name__)
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestProductStat(TestCase):
@@ -105,7 +107,7 @@ class TestProductStat(TestCase):
         for index, product in enumerate(products):
             VendorProductFactory.create(product=product,vendor=vendor_all)
         for product in products:
-            print "Testing product %s for default vendor, Vendor [%s]" % (product,product.default_vendor.vendor.name)
+            log.info("Testing product %s for default vendor, Vendor [%s]" % (product,product.default_vendor.vendor.name))
             self.assertIsNotNone(product.default_vendor)
 
         user = get_user_model().objects.get(username='normal_user')

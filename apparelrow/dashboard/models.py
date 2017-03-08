@@ -275,7 +275,8 @@ class StoreCommission(models.Model):
                                               'If the number is 0 then it will not be used. '
                                               'If the said format X/Y/Z is not used at all just the plain text will be displayed. '
                                               'It could be written as 0 if it is a PPC (Pay per click) store.'))
-    link = models.CharField(max_length=255, null=True, blank=True, help_text=_('Only our own store links works, should be copied excactly as they appear in short store link admin list without a user id.'))
+    # Deprecated - remove at will, but make sure you cleanup references to it
+    link = models.CharField(max_length=255, null=True, editable=False, blank=True, help_text=_('Only our own store links works, should be copied excactly as they appear in short store link admin list without a user id.'))
 
     def get_standard_from(self, commission, *args):
         """
