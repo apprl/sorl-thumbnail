@@ -20,37 +20,51 @@ logger = logging.getLogger('affiliate_networks')
 class Importer(BaseImporter):
 
     name = 'Linkshare'
-    # TODO: Not sure where the magic 61 days came from, verify this
-    confirm_after_days = 61
+    CONFIRM_AFTER_DAYS = 61
+
+    US_NETWORK = 1
+    UK_NETWORK = 3
 
     def get_data(self, start_date, end_date, data=None):
         logger.info("Linkshare - Start importing from Affiliate Network")
-        url = 'https://ran-reporting.rakutenmarketing.com/en/reports/apprl-api/filters?start_date={}&end_date={}&include_summary=N&network=3&tz=GMT&date_type=transaction&token=ZW5jcnlwdGVkYToyOntzOjU6IlRva2VuIjtzOjY0OiIwODI3MjgzZWY4ODEyNGE2ZWU0ZWYzNmI4OGE1OGRkMDMwMzMyZDBlNmZiYjliMjA3YTI3MDIwNDgxYTM4MTdhIjtzOjg6IlVzZXJUeXBlIjtzOjk6IlB1Ymxpc2hlciI7fQ%3D%3D'.format(
-            start_date.strftime('%Y-%m-%d'),
-            end_date.strftime('%Y-%m-%d')
-        )
-        if not data:
-            try:
-                res = requests.get(url)
-                res.raise_for_status()
-                logger.debug("Linkshare - Request sent successfully with status code %s" % res.status_code)
-                data = res.text.encode('utf-8').splitlines()
-            except RequestException as e:
-                logger.warning("Linkshare - Connection error %s. Reply: %s." % (e, res.content))
-                return
-        reader = csv.DictReader(data, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        for row in reader:
-            data_row = self.import_row(row)
-            data_row = self.validate(data_row)
-            if not data_row:
+
+        for network in [self.US_NETWORK, self.UK_NETWORK]:
+            data = self.make_network_request(network, start_date, end_date)
+            if not data:
                 continue
-            else:
-                yield data_row
+            reader = csv.DictReader(data, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+            for row in reader:
+                data_row = self.import_row(row)
+                data_row = self.validate(data_row)
+                if not data_row:
+                    continue
+                else:
+                    yield data_row
+
+    def make_network_request(self, network, start_date, end_date):
+        # Make a request to the api to get the report for the subnetwork.
+        logger.info("Linkshare - Importing from Network %d" % network)
+        try:
+            url = self.get_api_url(network, start_date, end_date)
+            res = requests.get(url)
+            logger.debug("Linkshare - Request sent successfully with status code %s" % res.status_code)
+            return res.text.encode('utf-8').splitlines()
+        except RequestException as e:
+            logger.warning("Linkshare - Connection error %s" % e)
+
+    def get_api_url(self, network, start_date, end_date):
+        token = 'ZW5jcnlwdGVkYToyOntzOjU6IlRva2VuIjtzOjY0OiIwODI3MjgzZWY4ODEyNGE2ZWU0ZWYzNmI4OGE1OGRkMDMwMzMyZDBlNmZiYjliMjA3YTI3MDIwNDgxYTM4MTdhIjtzOjg6IlVzZXJUeXBlIjtzOjk6IlB1Ymxpc2hlciI7fQ%3D%3D'
+        base_url = 'https://ran-reporting.rakutenmarketing.com/en/reports/apprl-api/filters?network={}&start_date={}&end_date={}&include_summary=N&tz=GMT&date_type=transaction&token={}'
+        return base_url.format(
+            network,
+            start_date.strftime('%Y-%m-%d'),
+            end_date.strftime('%Y-%m-%d'),
+            token
+        )
 
     def import_row(self, row):
         # Each sale / order in Linkshare is associated with one ore more transactions
         # We assume a transaction never changes but their total will equal the total Sale value
-
         data_row = {}
         logger.info('Importing transaction %s, order: %s' % (row['Transaction ID'], row['Order ID']))
         try:
@@ -81,7 +95,7 @@ class Importer(BaseImporter):
         data_row['log_info'][row['Transaction ID']] = {
             'original_commission': data_row['original_commission'],
             'original_amount': data_row['original_amount'],
-            'original_currency': data_row['original_currency'],
+            'original_currency': data_row['original_currency']
         }
 
     def update_total_from_log(self, data_row):
@@ -92,7 +106,7 @@ class Importer(BaseImporter):
         data_row['status'] = Sale.PENDING
         # Confirm sale when enough time has passed
         # TODO: Isn't there a better way to do this?
-        if data_row['sale_date'] < datetime.datetime.now() - datetime.timedelta(days=self.confirm_after_days):
+        if data_row['sale_date'] < datetime.datetime.now() - datetime.timedelta(days=self.CONFIRM_AFTER_DAYS):
             data_row['status'] = Sale.CONFIRMED
         if data_row['original_amount'] <= decimal.Decimal('0.0'):
             data_row['status'] = Sale.DECLINED
