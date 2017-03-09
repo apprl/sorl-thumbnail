@@ -852,7 +852,7 @@ class VendorProduct(models.Model):
 
         earning_total = decimal.Decimal(0)
 
-        if user.is_authenticated() and user.is_partner:
+        if hasattr(user, "is_partner") and user.is_partner:
             earning_cut = self.get_earning_cut_for_product(user)
             if user.partner_group and user.partner_group.has_cpc_all_stores:
                 try:
