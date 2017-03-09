@@ -2496,6 +2496,7 @@ class TestAggregatedDataModules(TransactionTestCase):
         self.user.save()
 
     def test_get_aggregated_products_and_publishers(self):
+
         year = 2015
         month = 1
         order_day = datetime.date(year, month ,15)
@@ -2535,7 +2536,7 @@ class TestAggregatedDataModules(TransactionTestCase):
         # Generate earnings CPO
         for index in range(1, 11):
             SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=click_day,
-                               sale_date=click_day, pk=index+2)
+                               sale_date=click_day, pk=index+1000)
         self.assertEqual(Sale.objects.filter(user_id=self.user.id).count(), 11)
         self.assertEqual(Sale.objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
 
