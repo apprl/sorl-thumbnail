@@ -902,7 +902,7 @@ class TestShortLinks(TestCase):
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.aldoshoes.com", key)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.aldoshoes.com/ca/en/women/c/100?foo=1&bar=2"))
-        url = urllib.quote(urllib.quote(key, safe=''), safe='') # we quote it twice - special case for linkshare
+        url = urllib.quote(key, safe='')
         self.assertEqual(link, "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1&"
                                "type=10&tmpid=12919&u1=%s&RD_PARM1=%s" % (sid,url))
         self.assertEqual(vendor, link_vendor)
