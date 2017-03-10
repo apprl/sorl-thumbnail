@@ -41,7 +41,7 @@ from apparelrow.apparel.search import ApparelSearch, more_like_this_product, mor
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list, get_location, get_external_store_commission, \
     get_availability_text, get_location_warning_text, generate_sid, get_vendor_cost_per_click
-from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
+from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, look_popularity2, build_static_look_image
 from apparelrow.activity_feed.views import user_feed
 from apparelrow.dashboard.views import SignupForm
 from apparelrow.dashboard.utils import parse_rules_exception
