@@ -96,6 +96,7 @@ class Importer(BaseImporter):
                     items_per_page,
                     page
                 )
+                #f = open('debug/%s_%s.json' % (end_date, page), 'w')
                 try:
                     response = requests.get(url, headers=self.get_headers(base_url))
                     response.raise_for_status()
@@ -103,6 +104,7 @@ class Importer(BaseImporter):
                 except RequestException as e:
                     logger.warning("Zanox - Connection error %s" % e)
                     return
+                #f.write(response.content)
 
                 data = response.json()
                 if 'saleItems' in data:
@@ -119,10 +121,10 @@ class Importer(BaseImporter):
                         else:
                             sid = ''
                         data_row['user_id'], data_row ['product_id'], data_row ['placement'], data_row ['source_link'] = self.map_placement_and_user(sid)
-                        data_row['sale_date'] = dateutil.parser.parse(row['clickDate'])
+                        data_row['sale_date'] = dateutil.parser.parse(row['trackingDate'])
                         data_row['status'] = self.map_status(row['reviewState'])
 
-                        data_row = self.validate(data_row )
+                        data_row = self.validate(data_row)
                         if not data_row:
                             continue
                         else:
