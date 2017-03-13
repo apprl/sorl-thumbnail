@@ -171,7 +171,7 @@ class DomainDeepLinkingAdminForm(ModelForm):
 
 class DomainDeepLinkingAdmin(admin.ModelAdmin):
     form = DomainDeepLinkingAdminForm
-    list_display = ('vendor', 'domain', 'template')
+    list_display = ('vendor', 'domain', 'template', 'quote_url', 'quote_sid', 'quote_ulp')
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size':'200'})},
     }

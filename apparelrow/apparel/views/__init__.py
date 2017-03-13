@@ -1208,7 +1208,12 @@ def product_lookup_by_domain(request, domain, key):
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
         sid = generate_sid(0, user_id, 'Ext-Link', url)
-        url = urllib.quote(url.encode('utf-8'), safe='')
+        if instance.quote_url:
+            url = urllib.quote(url.encode('utf-8'), safe='')
+        if instance.quote_sid:
+            sid = urllib.quote(sid.encode('utf-8'), safe='')
+        if instance.quote_ulp:
+            ulp = urllib.quote(ulp.encode('utf-8'), safe='')
         return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
     return None, None
 
