@@ -20,6 +20,9 @@ settings.py
 # generated sitemap
 /apparelrow/sitemaps/sitemap*
 
+# devops database backup folder
+devops/dev_db_backups/
+
 # django-static
 /apparelrow/media/js/apparel.*.js
 /apparelrow/media/js/browse.*.js

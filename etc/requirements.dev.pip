@@ -1,0 +1,5 @@
+-r requirements.pip
+model_mommy==1.3.1
+Scrapy==1.0.2
+scrapy-sentry==0.7.0
+freezegun==0.3.8

@@ -50,3 +50,4 @@ solrq==0.0.4
 parse==1.6.6
 progressbar==2.3
 django-elasticache==0.0.4
+service-identity==16.0.0
