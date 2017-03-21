@@ -8,7 +8,8 @@ import hashlib
 from scrapy import signals
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
-from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop, Image, BytesIO
+from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop, Image
+from io import BytesIO
 from django.utils import timezone
 from django.core.cache import get_cache
 from theimp.models import Product, Vendor
