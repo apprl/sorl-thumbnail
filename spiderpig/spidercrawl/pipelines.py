@@ -9,7 +9,6 @@ from scrapy import signals
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop, Image
-from io import BytesIO
 from django.utils import timezone
 from django.core.cache import get_cache
 from theimp.models import Product, Vendor
@@ -17,6 +16,10 @@ from theimp.parser import Parser
 from theimp.utils import get_product_hash, compare_scraped_and_saved
 from theimp.tasks import parse_theimp_product
 import logging
+try:
+    from cStringIO import StringIO as BytesIO
+except ImportError:
+    from io import BytesIO
 
 ASYNC_PARSING = False
 
