@@ -236,7 +236,7 @@ def parse_sid(sid):
                 if len(page.split('/', 1)) > 1:
                     page, source_link = page.split('/', 1)
                     source_link = decompress_source_link_if_needed(source_link)
-                    source_link = smart_unicode(urllib.unquote(source_link.encode('utf-8')))
+                    source_link = smart_unicode(urllib.unquote((source_link or u'').encode('utf-8')))
             else:
                 try:
                     product_id = int(rest)

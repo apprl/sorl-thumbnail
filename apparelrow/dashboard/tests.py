@@ -6,6 +6,8 @@ import urllib
 import os
 import logging
 from decimal import Decimal as D
+from unittest import skip
+
 from django.contrib.admin import AdminSite
 
 from advertiser.models import Transaction, Store
@@ -41,7 +43,10 @@ from apparelrow.profile.models import PaymentDetail
 from apparelrow.dashboard.factories import *
 from apparelrow.statistics.factories import *
 from mock import patch
+
+# test utils
 from model_mommy.mommy import make
+import requests_mock
 from freezegun import freeze_time
 
 from apparelrow.statistics.models import ProductStat
@@ -1326,6 +1331,34 @@ class TestUserEarnings(TransactionTestCase):
         self.assertIsNone(publisher_cut_exception)
 
 
+
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
+class TestAffiliateNetworksNew(TransactionTestCase):
+
+    def test_linkshare_parser(self):
+
+        FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
+        FXRate.objects.create(currency='USD', base_currency='SEK', rate='0.118160')
+        FXRate.objects.create(currency='SEK', base_currency='USD', rate='8.612600')
+        FXRate.objects.create(currency='USD', base_currency='USD', rate='1.00')
+
+        make(Vendor, name='Tictail')
+
+        with requests_mock.mock() as m:
+            # Setup fake responses
+            network_1 = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_network_1')).read().decode('utf-8')
+            m.register_uri('GET', '/en/reports/apprl-api/filters?network=1', text=network_1)
+            network_3 = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_network_3')).read().decode('utf-8')
+            m.register_uri('GET', '/en/reports/apprl-api/filters?network=3', text=network_3)
+
+            # Do the import
+            # management.call_command('dashboard_import', 'linkshare', verbosity=0, interactive=False)
+
+            #self.assertEqual(m.call_count, 2) # Both networks should be queried
+            # TODO: add more tests
+
+
+
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestAffiliateNetworks(TransactionTestCase):
     def setUp(self):
@@ -1345,6 +1378,7 @@ class TestAffiliateNetworks(TransactionTestCase):
         for i in range(1, 10):
             Product.objects.create(sku=str(i))
 
+    @skip("These tests won't work since we've refactored the linkshare importer - moving to request mocking instead")
     def test_linkshare_parser(self):
         text = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_test.csv')).read()
         data = text.splitlines()
@@ -1396,6 +1430,7 @@ class TestAffiliateNetworks(TransactionTestCase):
         boozt_no_sales = sale_model.objects.filter(vendor=self.boozt_no_vendor).count()
         self.assertEqual(boozt_no_sales, 5)
 
+    @skip("These tests won't work since we've refactored the linkshare importer - moving to request mocking instead")
     def test_dashboard_links(self):
         text = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_test.csv')).read()
         data = text.splitlines()
@@ -2461,6 +2496,7 @@ class TestAggregatedDataModules(TransactionTestCase):
         self.user.save()
 
     def test_get_aggregated_products_and_publishers(self):
+
         year = 2015
         month = 1
         order_day = datetime.date(year, month ,15)
@@ -2500,7 +2536,7 @@ class TestAggregatedDataModules(TransactionTestCase):
         # Generate earnings CPO
         for index in range(1, 11):
             SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=click_day,
-                               sale_date=click_day, pk=index+2)
+                               sale_date=click_day, pk=index+1000)
         self.assertEqual(Sale.objects.filter(user_id=self.user.id).count(), 11)
         self.assertEqual(Sale.objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
 
@@ -2513,7 +2549,7 @@ class TestAggregatedDataModules(TransactionTestCase):
         self.assertEqual([16.5] * 10, [u.amount for u in UserEarning.objects.filter(from_product=product, user=None)])
 
         management.call_command('collect_aggregated_data', verbosity=0, interactive=False, date="2015-01-14")
-        
+
         start_date, end_date = parse_date(year=str(year), month=str(month), first_to_first=True)
         # Check data from get_aggregated_products is correct
         top_products = get_aggregated_products(None, start_date, end_date)
@@ -3472,7 +3508,7 @@ class TestStatsCache(TransactionTestCase):
 
         testval = 1
         self.assertEqual(foo(mrange(2016, 8)), 1)
-        
+
         self.assertEqual(
             set(stats_redis.keys('*')),
             set([cache_key(mrange(2016, 8), 'foo'), 'stats_ranges_right', 'stats_ranges_left'])

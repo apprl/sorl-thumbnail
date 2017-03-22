@@ -64,3 +64,6 @@ bootstrap/bootstrap-3.0.0-rc1/less/bootstrap.css
 config.codekit
 
 /static
+
+/spiderpig/spidercrawl/local.py
+/spiderpig/spidercrawl/spiders/shirtonomy.py

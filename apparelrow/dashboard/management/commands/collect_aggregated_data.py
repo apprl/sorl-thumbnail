@@ -366,6 +366,10 @@ def generate_aggregated_clicks_from_product(start_date, end_date, **kwargs):
             product = get_model('apparel', 'Product').objects.get(slug=row['product'])
         except get_model('apparel', 'Product').DoesNotExist:
             logger.warning("Product %s does not exist" % row['product'])
+        except get_model('apparel', 'Product').MultipleObjectsReturned:
+            logger.warning("Multiple products found with slug %s, taking the first. This needs to be fixed asap!" % row['product'])
+            product = get_model('apparel', 'Product').objects.filter(slug=row['product'])[0]
+
 
         # Try fetch vendor if it exists
         try:
