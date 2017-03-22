@@ -1,6 +1,6 @@
 Django==1.6.8
 gunicorn==18.0
-Pillow==1.7.8
+Pillow==2.1
 psycopg2==2.5.1
 git+git://github.com/hanssonlarsson/sorl-thumbnail.git#egg=sorl-thumbnail
 PyYAML==3.10
