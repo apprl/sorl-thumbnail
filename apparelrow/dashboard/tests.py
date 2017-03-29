@@ -3206,7 +3206,6 @@ class TestStatsAdmin(TransactionTestCase):
         if order_value and not store.vendor.is_cpo:
             raise Exception("Don't pass an order value with a non-cpo vendor")
 
-
         month = self.test_month
         if date_out_of_range:
             month += 1
@@ -3491,6 +3490,81 @@ class TestStatsAdmin(TransactionTestCase):
         self.assertEqual(stats_admin.ppc_all_stores_publishers_income(tr), 100+200+5)
         self.assertEqual(stats_admin.ppc_all_stores_publishers_cost(tr), 3+3+5+3)
         self.assertEqual(stats_admin.ppc_all_stores_publishers_result(tr), 305-14)
+
+
+    def test_vendor_user_grouped_stats(self):
+
+        # Create users
+
+        publisher = self.create_users(ppc_as=False, create_referral_partner=False)
+        ppc_as_publisher = self.create_users(ppc_as=True, create_referral_partner=False)
+
+        # Create stores / vendors. We only create AAN vendors because it allows us to control commission_percentage
+
+        cpo_store = make(Store, vendor__is_cpo=True, vendor__is_cpc=False, vendor__name='cpo_v', commission_percentage='0.2')
+        cpc_store = make(Store, vendor__is_cpc=True, vendor__is_cpo=False, vendor__name='cpc_v')
+        make(ClickCost, vendor=cpc_store.vendor, amount=5)
+        make(Cut, vendor=cpo_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1)
+        make(Cut, vendor=cpc_store.vendor, group=ppc_as_publisher.partner_group, cut=0, cpc_amount=3, referral_cut=0.1)
+        make(Cut, vendor=cpo_store.vendor, group=publisher.partner_group, cut=0.3, referral_cut=0.1)
+        make(Cut, vendor=cpc_store.vendor, group=publisher.partner_group, cut=0.1, referral_cut=0.1)
+
+        # Create clicks, both valid and invalid
+
+        self.click(cpo_store, ppc_as_publisher, order_value=500)   # with 20% commission = 100. 3 to ppc_as publisher
+        self.click(cpo_store, ppc_as_publisher, order_value=500)   # with 20% commission = 100. 3 to ppc_as publisher
+        self.click(cpo_store, None, order_value=600)   # with 20% commission = 120 - all goes to Apprl
+        self.click(cpo_store, ppc_as_publisher, order_value=200, invalidate_click=True)   # click shouldn't count, but order goes through
+        self.click(cpo_store, ppc_as_publisher)    # no cpo conversion
+        self.click(cpo_store, publisher, order_value=100)
+
+        self.click(cpc_store, ppc_as_publisher)
+        self.click(cpc_store, ppc_as_publisher)
+        self.click(cpc_store, ppc_as_publisher, invalidate_click=True)   # shouldn't count
+        self.click(cpc_store, ppc_as_publisher, date_out_of_range=True)   # this one shouldn't count in stats since it's out of range
+        self.click(cpc_store, None)
+        self.click(cpc_store, publisher)
+
+        # Collect clicks, generate sales & user earnings.
+
+        self.collect_clicks()
+
+        # Test it!
+
+        tr = mrange(self.test_year, self.test_month)
+
+        self.assertEqual(
+            stats_admin.clicks_by_vendor_grouped_by_user(tr, cpo_store.vendor),
+            {
+                0: 1,
+                ppc_as_publisher.id: 3,
+                publisher.id: 1
+            }
+        )
+
+        self.assertEqual(
+            stats_admin.clicks_by_vendor_grouped_by_user(tr, cpc_store.vendor),
+            {
+                0: 1,
+                ppc_as_publisher.id: 2,
+                publisher.id: 1
+            }
+        )
+
+        self.assertEqual(
+            stats_admin.sales_by_vendor_grouped_by_user(tr, cpo_store.vendor),
+            {
+                0: {'commission': 120, 'amount': 600, 'num_sales': 1},
+                ppc_as_publisher.id: {'commission': 240, 'amount': 1200, 'num_sales': 3},
+                publisher.id: {'commission': 20, 'amount': 100, 'num_sales': 1},
+            }
+        )
+
+        self.assertEqual(stats_admin.sales_by_vendor_grouped_by_user(tr, cpc_store.vendor), {
+            0: {'commission': 5, 'amount': 5},
+            publisher.id: {'commission': 5, 'amount': 5},
+            ppc_as_publisher.id: {'commission': 10, 'amount': 10}
+        })
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
