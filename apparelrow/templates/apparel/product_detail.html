@@ -153,10 +153,14 @@
                                         You will earn
                                         {% if not request.user.partner_group.has_cpc_all_stores %}approx. {% endif %}
                                         <span class="currency">{{ currency }}</span> {{ product_earning }}
-                                        {% if object.default_vendor.vendor.is_cpo %}
-                                            per generated sale of this item.
-                                        {% elif object.default_vendor.vendor.is_cpc %}
+                                        {% if request.user.partner_group.has_cpc_all_stores %}
                                             per click to this item.
+                                        {% else %}
+                                            {% if object.default_vendor.vendor.is_cpo %}
+                                                per generated sale of this item.
+                                            {% elif object.default_vendor.vendor.is_cpc %}
+                                                per click to this item.
+                                            {% endif %}
                                         {% endif %}
                                     {% else %}
                                         Settings for earnings are missing.
