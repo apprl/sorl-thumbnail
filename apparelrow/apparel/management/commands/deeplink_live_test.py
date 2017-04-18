@@ -134,7 +134,7 @@ class Command(BaseCommand):
 
         for link in urls_pool:
             try:
-                request = requests.get(link)
+                request = requests.get(link, timeout=1.0)
                 hostname = urlparse(request.url).hostname
                 url = '/backend/product/lookup/?key=%s&domain=%s' % (link, hostname)
                 lookup_request = rf.get(url)
