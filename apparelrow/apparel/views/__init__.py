@@ -41,7 +41,7 @@ from apparelrow.apparel.search import ApparelSearch, more_like_this_product, mor
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list, get_location, get_external_store_commission, \
     get_availability_text, get_location_warning_text, generate_sid, get_vendor_cost_per_click
-from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
+from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, look_popularity2, build_static_look_image
 from apparelrow.activity_feed.views import user_feed
 from apparelrow.dashboard.views import SignupForm
 from apparelrow.dashboard.utils import parse_rules_exception
@@ -1208,7 +1208,12 @@ def product_lookup_by_domain(request, domain, key):
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
         sid = generate_sid(0, user_id, 'Ext-Link', url)
-        url = urllib.quote(url.encode('utf-8'), safe='')
+        if instance.quote_url:
+            url = urllib.quote(url.encode('utf-8'), safe='')
+        if instance.quote_sid:
+            sid = urllib.quote(sid.encode('utf-8'), safe='')
+        if instance.quote_ulp:
+            ulp = urllib.quote(ulp.encode('utf-8'), safe='')
         return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
     return None, None
 

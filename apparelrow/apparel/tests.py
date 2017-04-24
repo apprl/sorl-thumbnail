@@ -875,7 +875,7 @@ class TestShortLinks(TestCase):
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.henrykole.se/", key)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.henrykole.se/shoes.html"))
-        url = urllib.quote(key, safe='')
+        url = key
         self.assertEqual(link, "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, url))
         self.assertEqual(vendor, link_vendor)
 
@@ -888,7 +888,7 @@ class TestShortLinks(TestCase):
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.oki-ni.com", key)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.oki-ni.com/en/outerwear/coats"))
-        url = urllib.quote(key, safe='')
+        url = key
         self.assertEqual(link, "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref=%s&p=%s" % (sid, url))
         self.assertEqual(vendor, link_vendor)
 
@@ -897,12 +897,12 @@ class TestShortLinks(TestCase):
         template = "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1" \
                    "&type=10&tmpid=12919&u1={sid}&RD_PARM1={url}"
         key = "http://www.aldoshoes.com/ca/en/women/c/100?foo=1&bar=2"
-        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.aldoshoes.com")
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.aldoshoes.com", quote_url=True)
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.aldoshoes.com", key)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.aldoshoes.com/ca/en/women/c/100?foo=1&bar=2"))
-        url = urllib.quote(urllib.quote(key, safe=''), safe='') # we quote it twice - special case for linkshare
+        url = urllib.quote(key, safe='')
         self.assertEqual(link, "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1&"
                                "type=10&tmpid=12919&u1=%s&RD_PARM1=%s" % (sid,url))
         self.assertEqual(vendor, link_vendor)
@@ -916,7 +916,7 @@ class TestShortLinks(TestCase):
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "nelly.com", key)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://nelly.com/se/skor-kvinna/"))
-        url = urllib.quote(key, safe='')
+        url = key
         self.assertEqual(link, "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi=%s&url=%s" % (sid, url))
         self.assertEqual(vendor, link_vendor)
 

@@ -565,6 +565,10 @@ class DomainDeepLinking(models.Model):
     domain = models.CharField(max_length=100, blank=False, null=False, help_text='Should not contain http:// or https:// but can contain path, example: "nelly.com/se"')
     template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} or {ulp} together with {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?store_id=somestore&custom={sid}&url={url}')
 
+    quote_url = models.BooleanField(default=False, help_text=u'Some networks require url-escaping (linkshare) some do not work with it (CJ)')
+    quote_sid = models.BooleanField(default=False)
+    quote_ulp = models.BooleanField(default=False)
+
 
 class ShortDomainLinkManager(models.Manager):
     def get_short_domain_for_link(self, short_link):
@@ -852,7 +856,7 @@ class VendorProduct(models.Model):
 
         earning_total = decimal.Decimal(0)
 
-        if user.is_partner:
+        if hasattr(user, "is_partner") and user.is_partner:
             earning_cut = self.get_earning_cut_for_product(user)
             if user.partner_group and user.partner_group.has_cpc_all_stores:
                 try:
