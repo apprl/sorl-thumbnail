@@ -65,7 +65,7 @@ def dev_aws_1():
     env.settings = "dev-aws"
     env.internal_ip = "10.0.0.213"
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-basic-v2-block','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.restart = ['gunicorn','nginx']
     env.hostname="dev-aws1"
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
@@ -78,7 +78,7 @@ def dev_aws_2():
     env.settings = 'dev-aws'
     env.internal_ip = '10.0.0.214'
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-basic-v2-block','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.restart = ['gunicorn','nginx']
     env.hostname="dev-aws2"
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
