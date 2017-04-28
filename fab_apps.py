@@ -16,6 +16,11 @@ templates = {
         "remote_path": "/etc/nginx/sites-available/%(project_name)s.include.conf",
         #"reload_command": ["supervisorctl nginx restart"],
     },
+    "nginx-basic-v2-block": {
+        "local_path": "etc/v2/blockips.conf",
+        "remote_path": "/etc/nginx/blockips.conf",
+        # "reload_command": ["supervisorctl nginx restart"],
+    },
     # Make sure theres a symlink
     "nginx-application": {
         "local_path": "etc/v2/%(settings)s/apprl.nginx.conf.%(settings)s",
