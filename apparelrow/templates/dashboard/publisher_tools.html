@@ -35,7 +35,7 @@
                             <a class="btn btn-primary" href="{% url 'dashboard-referral' %}">
                                 {% trans "Get Started" %}
                             </a>
-                            <span class="empty"></span>
+                            <!--span class="empty"></span-->
                         </article>
                     </div>
                 </li>
@@ -44,14 +44,14 @@
                 <!-- Product List Widget -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'create-product-widget' 'multiple' %}"><img src="{% static 'images/tools/product_list-thumb.jpg' %}" /></a>
+                        <a href="{% url 'create-product-widget' 'multiple' %}"><img src="{% static 'images/tools/product_list_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Product List" %}</h2>
                             <p>{% trans "List products next to your posts, images and videos." %}</p>
                             <a class="btn btn-primary" href="{% url 'create-product-widget' 'multiple' %}">
                                 {% trans "Create Product List" %}
                             </a>
-                            <span class="empty"></span>
+                            <!--span class="empty"></span-->
                             <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_product_list">
                                 {% trans "Info" %}
                             </a>
@@ -69,7 +69,7 @@
                             <a class="btn btn-primary" href="{% url 'create-product-widget' 'single' %}">
                                 {% trans "Create Single Product" %}
                             </a>
-                            <span class="empty"></span>
+                            <!--span class="empty"></span-->
                             <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_single_product">
                                 {% trans "Info" %}
                             </a>
@@ -114,7 +114,7 @@
                 <!-- Tagged Photos -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static 'images/tools/tagged_photo-thumb.jpg' %}" /></a>
+                        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static 'images/tools/tagged_photo_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Tagged Photos" %}</h2>
                             <p>{% trans "Let your audience shop your curated photos." %}</p>
@@ -131,7 +131,7 @@
                 <!-- Product Links -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/product_link-thumb.jpg' %}" /></a>
+                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/product_link_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Product Links" %}</h2>
                             <p>{% trans "Get short links for products with just a click." %}</p>
@@ -148,7 +148,7 @@
                 <!-- Chrome Extension -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a target="_blank" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm"><img src="{% static 'images/tools/chrome_extension-thumb.jpg' %}" /></a>
+                        <a target="_blank" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm"><img src="{% static 'images/tools/chrome_extension_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "APPRL for Chrome" %}</h2>
                             <p>{% trans "Get links and like products directly from retailers' sites." %}</p>
