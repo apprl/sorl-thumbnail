@@ -5,9 +5,9 @@
 {% block modal_title %}{% trans "How payments work" %}{% endblock %}
 {% block extra_modal_classes %}text-left{% endblock %}
 {% block modal_content %}
-<p><b>{% trans "Your commission" %} - </b>{% trans "As soon as a sale that you have generated has been carried through, your commission is added to “Your commission”. Before the amount can be payed to you, the store needs to confirm the sale. This is normally done within 30 days to account for any returned items." %}</p>
-<p><b>{% trans "Confirmed commission" %} - </b>{% trans "Once a sale has been confirmed it becomes “Confirmed commission” - this is what is being paid to you each month. The last day of each month a payment will be made to you with all the confirmed commission that you have earned the previous month." %}</p>
-<p><b>{% trans "Pending payment" %} - </b>{% trans "The minimum payment amount is 50 EUR. If your confirmed commission is less than that, the amount will be transferred to the next month. “Pending payment” is the amount of your next payment." %}</p>
-<p>{% trans "For a payment to be made, you have to enter your account details under your settings." %}</p>
-<p>{% trans "Let us know any questions on" %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a>.</p>
+<p><b>{% trans "Pending earnings" %} - </b>{% trans "The money you earn from the traffic you generate is updated once every 24 hours." %}</p>
+<p><b>{% trans "Confirmed earnings" %} - </b>{% trans "After 40 days, these earnings are added to confirmed earnings. This period of time exists so that the retailers we work will have time to pay for the traffic delivered to them, and for us to make sure that all clicks generated are legitimate." %}</p>
+<p><b>{% trans "Pending payment" %} - </b>{% trans "At the beginning of each month all your confirmed earnings transfers to “Pending payment” - provided that they are more than €100. The sum under pending payment represents your next payout." %}</p>
+<p>{% trans "For a payment to be made, you have to enter your account details under " %}<a href="http://apprl.com/profile/settings/publisher/">{% trans "your settings" %}</a>.</p>
+<p>{% trans "If you have any questions, don't hesitate to contact us at " %} <a href="mailto:publisher@apprl.com">publisher@apprl.com</a>.</p>
 {% endblock %}

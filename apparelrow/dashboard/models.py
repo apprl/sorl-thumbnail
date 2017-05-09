@@ -35,6 +35,8 @@ class Sale(models.Model):
     CONFIRMED = '3'
     READY = '4' # not used
     PAID = '5' # not used
+
+    # Linkshare specific field
     PRODUCT_ADDED = '0'
     PRODUCT_DECLINED = '1'
     STATUS_CHOICES = (
@@ -98,6 +100,8 @@ class Sale(models.Model):
     sale_date = models.DateTimeField(_('Time of sale'), default=timezone.now, null=True, blank=True, db_index=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
     modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
+
+    # Linkshare specific field
     log_info = JSONField(_('Log info'), null=True, blank=True,
                  help_text='Includes information about the products contained in the sale and their status.')
     source_link = models.CharField(max_length=512, null=True, blank=True)

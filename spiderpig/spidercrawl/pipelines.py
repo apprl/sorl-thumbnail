@@ -8,7 +8,7 @@ import hashlib
 from scrapy import signals
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
-from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop
+from scrapy.contrib.pipeline.images import ImagesPipeline, NoimagesDrop, Image
 from django.utils import timezone
 from django.core.cache import get_cache
 from theimp.models import Product, Vendor
@@ -16,6 +16,10 @@ from theimp.parser import Parser
 from theimp.utils import get_product_hash, compare_scraped_and_saved
 from theimp.tasks import parse_theimp_product
 import logging
+try:
+    from cStringIO import StringIO as BytesIO
+except ImportError:
+    from io import BytesIO
 
 ASYNC_PARSING = False
 
@@ -53,6 +57,27 @@ class CustomImagesPipeline(ImagesPipeline):
 
     #def change_key(self, key, meta):
         #return key.replace('full', request.meta.get('vendor'))
+    def convert_image(self, image, size=None):
+        if image.format == 'PNG' and image.mode == 'RGBA':
+            background = Image.new('RGBA', image.size, (255, 255, 255))
+            background.paste(image, image)
+            image = background.convert('RGB')
+        elif image.mode == 'P':
+            image = image.convert("RGBA", palette=Image.ADAPTIVE)
+            background = Image.new('RGBA', image.size, (255, 255, 255))
+            background.paste(image, image)
+            image = background.convert('RGB')
+        elif image.mode != 'RGB':
+            image = image.convert('RGB')
+
+        if size:
+            image = image.copy()
+            image.thumbnail(size, Image.ANTIALIAS)
+
+        buf = BytesIO()
+        image.save(buf, 'JPEG')
+        return image, buf
+
 
     def file_key(self, url):
         media_guid = hashlib.sha1(url).hexdigest()
