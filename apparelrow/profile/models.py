@@ -554,8 +554,10 @@ def post_save_user_create(signal, instance, **kwargs):
 
         site_object = Site.objects.get_current()
         mail_url = 'http://%s%s' % (site_object.domain, instance.get_absolute_url())
-
-        mail_managers_task.delay(mail_subject, 'URL: %s' % (mail_url,))
+        if instance.is_brand:
+            log.info(u"{} - {}".format(mail_subject, mail_url))
+        else:
+            mail_managers_task.delay(mail_subject, 'URL: %s' % (mail_url,))
 
 
 @receiver(user_logged_in, sender=User, dispatch_uid='update_language_on_login')
