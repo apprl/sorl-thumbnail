@@ -8,10 +8,12 @@ from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
+from django.db import connection
 
 from apparelrow.apparel.models import Vendor
 from apparelrow.dashboard.models import Sale, UserEarning, UE
 from apparelrow.dashboard.stats.stats_cache import flush_stats_cache_by_month, stats_cache, mrange
+from apparelrow.profile.models import User
 from apparelrow.statistics.models import ProductStat
 
 log = logging.getLogger(__name__)
@@ -250,7 +252,7 @@ def ppo_sales_apprl(time_range):
 def commission_cr_total(time_range):
     clicks = ppo_clicks_total(time_range)
     if clicks:
-        return Decimal(ppo_sales_total(time_range)) / clicks
+        return Decimal(100) * Decimal(ppo_sales_total(time_range)) / clicks
     else:
         return 0
 
@@ -259,7 +261,7 @@ def commission_cr_total(time_range):
 def commission_cr_publisher(time_range):
     clicks = ppo_clicks_publisher(time_range)
     if clicks:
-        return Decimal(ppo_sales_publisher(time_range)) / clicks
+        return Decimal(100) * Decimal(ppo_sales_publisher(time_range)) / clicks
     else:
         return 0
 
@@ -268,7 +270,7 @@ def commission_cr_publisher(time_range):
 def commission_cr_apprl(time_range):
     clicks = ppo_clicks_apprl(time_range)
     if clicks:
-        return Decimal(ppo_sales_apprl(time_range)) / clicks
+        return Decimal(100) * Decimal(ppo_sales_apprl(time_range)) / clicks
     else:
         return 0
 
@@ -431,6 +433,90 @@ def ppc_all_stores_publishers_by_vendor(time_range):
         cost = res['total'] or 0
         stats[vendor.name] = {'income': income, 'cost': cost, 'result': income - cost, 'ppo': vendor.is_cpo, 'ppc': vendor.is_cpc}
     return stats
+
+####################################################
+# Grouped by vendor / user functions
+####################################################
+
+def clicks_by_vendor_grouped_by_user(time_range, vendor):
+    query = """
+    SELECT ps.user_id, count(*) as num_clicks
+    FROM statistics_productstat ps
+    WHERE ps.vendor = '%s'
+    AND created BETWEEN '%s' AND '%s'
+    AND is_valid = True
+    GROUP BY ps.user_id;
+    """ % (vendor.name, time_range[0], time_range[1])
+    cursor = connection.cursor()
+    cursor.execute(query)
+    return dict(cursor.fetchall())
+
+def sales_by_vendor_grouped_by_user(time_range, vendor):
+    query = """
+    SELECT user_id,
+    SUM(converted_amount) AS sales_amount_eur,
+    SUM(converted_commission) as converted_commission_eur,
+    COUNT(*) AS num_sales
+    FROM dashboard_sale
+    WHERE status >= '1' AND affiliate != 'cpc_all_stores' AND vendor_id=%d AND
+    sale_date BETWEEN '%s' AND '%s'
+    GROUP BY user_id;
+""" % (vendor.id, time_range[0], time_range[1])
+    cursor = connection.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if vendor.is_cpo:
+        return {r[0]: {'amount': r[1], 'commission': r[2], 'num_sales': r[3]} for r in data}
+    else:
+        # If it is a cpc vendor - the num sales will not be useful because they don't map to actual orders
+        return {r[0]: {'amount': r[1], 'commission': r[2]} for r in data}
+
+
+# The following functions were used to generate stats for Gustav
+# I keep them here because they can be useful for somebody
+
+def net_a_porter_since_beginning_of_year():
+    import xlwt  # install if you need to run this
+    wb = xlwt.Workbook()
+    vendor = Vendor.objects.get(id=60) # net a porter
+    time_range = yrange(2017)
+    add_excel_clicks(wb, time_range, vendor)
+    add_excel_sales(wb, time_range, vendor)
+    wb.save(file('net_a_porter.xls', "wb"))
+
+
+def add_excel_clicks(wb, time_range, vendor):
+    ws = wb.add_sheet('Clicks')
+    headers = ['User', 'Clicks']
+    write_excel_row(ws, 0, *headers)
+    clicks = clicks_by_vendor_grouped_by_user(time_range, vendor)
+    for row, user_id in enumerate(clicks.keys()):
+        if user_id:
+            name = User.objects.get(id=user_id).name
+        else:
+            name = 'Apprl'
+        write_excel_row(ws, row + 1, *[name, clicks[user_id]])
+
+def add_excel_sales(wb, time_range, vendor):
+    ws = wb.add_sheet('Sales')
+    headers = ['User', 'Commission EUR', 'Amount EUR', 'Num sales']
+    write_excel_row(ws, 0, *headers)
+    sales = sales_by_vendor_grouped_by_user(time_range, vendor)
+    for row, user_id in enumerate(sales.keys()):
+        if user_id:
+            name = User.objects.get(id=user_id).name
+        else:
+            name = 'Apprl'
+        write_excel_row(ws, row + 1, *[name,
+                                       sales[user_id]['commission'],
+                                       sales[user_id]['amount'],
+                                       sales[user_id].get('num_sales')
+                                       ])
+
+
+def write_excel_row(ws, row, *items):
+    for (col, item) in enumerate(items):
+        ws.write(row, col, item)
 
 ####################################################
 # Misc internal utils

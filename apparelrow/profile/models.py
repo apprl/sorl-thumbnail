@@ -112,7 +112,7 @@ class User(AbstractUser):
     partner_group = models.ForeignKey('dashboard.Group', verbose_name=_('Commission group'), null=True, blank=True)
 
     # referral partner
-    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Referral partner user'))
+    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('A user that is a referral partner can earn money by inviting other publishers to APPRL'))
     referral_partner_code = models.CharField(max_length=16, blank=True, null=True)
     referral_partner_parent = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     referral_partner_parent_date = models.DateTimeField(null=True, blank=True)
@@ -557,8 +557,10 @@ def post_save_user_create(signal, instance, **kwargs):
 
         site_object = Site.objects.get_current()
         mail_url = 'http://%s%s' % (site_object.domain, instance.get_absolute_url())
-
-        mail_managers_task.delay(mail_subject, 'URL: %s' % (mail_url,))
+        if instance.is_brand:
+            log.info(u"{} - {}".format(mail_subject, mail_url))
+        else:
+            mail_managers_task.delay(mail_subject, 'URL: %s' % (mail_url,))
 
 
 @receiver(user_logged_in, sender=User, dispatch_uid='update_language_on_login')

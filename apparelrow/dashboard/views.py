@@ -1,6 +1,7 @@
 import operator
 import re
 
+import simplejson
 from django.contrib import messages
 from django.contrib.sites.models import Site
 from django.forms import ModelForm
@@ -452,6 +453,8 @@ def clicks_detail(request):
             return HttpResponse(json_data)
     else:
         return HttpResponseForbidden()
+    # If therese nothing just return empty list
+    return HttpResponse(simplejson.dumps([]))
 #
 # PUBLISHER DASHBOARD
 #

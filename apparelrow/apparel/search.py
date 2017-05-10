@@ -561,12 +561,15 @@ def rebuild_user_index(url=None):
     for index, user in enumerate(valid_users.iterator()):
         pbar.update(index)
         document, boost = get_profile_document(user)
+
+        if not document:
+            continue
         user_buffer.append(document)
         if len(user_buffer) == 100:
             connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
             user_buffer.clear()
 
-        user_count = user_count + 1
+        user_count += 1
     pbar.finish()
 
     connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
@@ -582,8 +585,13 @@ def get_profile_document(instance):
     document['django_id'] = instance.pk
     document['name'] = instance.display_name_live
     document['gender'] = instance.gender
-    document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
 
+    # document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
+    try:
+        document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
+    except Exception, msg:
+        logger.warn(u"Unable to index user: {}, [{}]".format(instance, msg))
+        document['template'] = ""
     return document, boost
 
 def decode_manufacturer_facet(data):

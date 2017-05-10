@@ -20,7 +20,8 @@ def prod_settings():
     env.memcached_url = 'apparel-cache.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.memcached_url_nginx = 'nginx.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
-    env.redis_url = "ip-10-0-1-166.eu-west-1.compute.internal"
+    env.redis_url = "redis.apprl.com"
+    #env.redis_url = "ip-10-0-1-166.eu-west-1.compute.internal"
     env.solr_url =  "ip-10-0-1-38.eu-west-1.compute.internal"
     env.s3_url = "s.apprl.com"
     env.gateway = 'deploy@bastion'

@@ -1,3 +1,4 @@
+from django.utils.text import capfirst
 from django.views.generic.base import TemplateResponseMixin
 import re
 import math
@@ -419,7 +420,8 @@ class EmbedProductWidgetView(TemplateView):
                         "language": product_widget_embed.language,
                         "width": str(product_widget_embed.width),
                         "embed_id": context["embed_product_widget_id"], # Redundant
-                        "components": components})
+                        "components": components,
+                        "widget_type_link": "Ext-Productlist-{}".format(capfirst(product_widget_embed.product_widget.widget_type))})
         return context
 
     def get(self, request, *args, **kwargs):

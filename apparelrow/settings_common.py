@@ -232,6 +232,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'apparelrow.apparel.middleware.IntercomMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -624,6 +625,9 @@ MAILCHIMP_MEMBER_LIST = '18083c690f'
 MAILCHIMP_NEWSLETTER_LIST = '6fa805a815'
 MAILCHIMP_PUBLISHER_LIST = '9497b26019'
 
+INTERCOM_APP_ID = 't7k9uni1'
+INTERCOM_SECRET_KEY = 'pvWgTfkGmxxvfHzeboaDb1UHLLzWswW9vNpF15kD'
+
 # CACHE CONFIGURATION (The default one is never used.)
 CACHES = {
     'default': {
@@ -693,6 +697,7 @@ APPAREL_MANUFACTURERS_PAGE_SIZE = 500
 APPAREL_BASE_CURRENCY = 'SEK'
 NGINX_SHOP_RESET_KEY = "shopembed-reset-%s"
 NGINX_PRODUCTWIDGET_RESET_KEY = "productwidget-reset-%s"
+PRODUCTSTAT_IP_QUARANTINE_KEY = "productstat-ip-quarantine"
 APPAREL_RATES_CACHE_KEY = 'currency_rates_base_%s' % (APPAREL_BASE_CURRENCY,)
 APPAREL_FXRATES_URL = 'http://themoneyconverter.com/rss-feed/SEK/rss.xml'
 APPAREL_DEFAULT_AVATAR = 'images/brand-avatar.png'
@@ -809,6 +814,7 @@ CELERY_ROUTES = ({
                      'apparelrow.apparel.tasks.empty_embed_look_cache': {'queue': 'standard'},
                      'apparelrow.apparel.tasks.empty_embed_productwidget_cache': {'queue': 'standard'},
                      'apparelrow.apparel.tasks.look_popularity': {'queue': 'background'},
+                     'apparelrow.apparel.tasks.look_popularity2': {'queue': 'background'},
                      'apparelrow.apparel.tasks.product_popularity': {'queue': 'background'},
                      'apparelrow.apparel.tasks.build_static_look_image': {'queue': 'standard'},
                      'apparelrow.profile.tasks.mail_managers_task': {'queue': 'standard'},
