@@ -22,7 +22,7 @@ class StoreHistoryInline(admin.TabularInline):
     can_delete = False
 
 class StoreAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'user')
+    list_display = ('identifier', 'user', 'cookie_days')
     inlines = (StoreHistoryInline,)
     raw_id_fields = ('user',)
 
