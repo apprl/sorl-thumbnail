@@ -1,6 +1,7 @@
 from unittest import skip
 from django.contrib.sites.models import Site
 import re
+import logging
 
 from django.conf import settings
 from django.core import mail
@@ -16,8 +17,8 @@ from apparelrow.apparel.models import Look
 from apparelrow.profile.forms import RegisterForm
 from apparelrow.profile.notifications import retrieve_full_url, retrieve_static_url
 
-import logging
 log = logging.getLogger(__name__)
+
 
 def reverse_locale(*args, **kwargs):
     return locale_url(reverse(*args, **kwargs), 'en')

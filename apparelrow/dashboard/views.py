@@ -1,27 +1,25 @@
 import operator
 import re
-import decimal
-import json
 
 import simplejson
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404, HttpResponseForbidden
-from django.forms import ModelForm
-from django.utils import timezone
-from django.contrib.sites.models import Site
 from django.contrib import messages
+from django.contrib.sites.models import Site
+from django.forms import ModelForm
+from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404, HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-
-from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
-from apparelrow.dashboard.tasks import send_email_task
-from apparelrow.dashboard.utils import *
-from apparelrow.dashboard import stats_admin
-from apparelrow.apparel.utils import get_location
+from django.utils import timezone
 from django.utils.translation import get_language
-from apparelrow.profile.tasks import mail_managers_task
 from django.views.generic import TemplateView
 
-import logging
+from apparelrow.apparel.utils import get_location
+from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
+from apparelrow.dashboard.stats import stats_admin, stats_publisher
+from apparelrow.dashboard.stats.stats_cache import all_time
+from apparelrow.dashboard.tasks import send_email_task
+from apparelrow.dashboard.utils import *
+from apparelrow.profile.tasks import mail_managers_task
+
 log = logging.getLogger(__name__)
 
 TOP_PRODUCTS_LIMIT = 100
@@ -469,6 +467,11 @@ class DashboardView(TemplateView):
         year = None if not 'year' in self.kwargs else self.kwargs['year']
 
         if request.user.is_authenticated() and request.user.is_partner:
+
+            if 'stats' in request.GET:
+                # quick hack to get the cli stats to web
+                return HttpResponse('<html><pre>%s</pre></html>' % stats_publisher.publisher_stats_as_str(request.user.id))
+
             start_date, end_date = parse_date(month, year)
             year = start_date.year
             if month != "0":
@@ -484,7 +487,10 @@ class DashboardView(TemplateView):
             is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
 
             # Total summary for user
-            pending_earnings, confirmed_earnings, pending_payment, total_earned = get_top_summary(request.user)
+            pending_earnings = stats_publisher.pending_earnings(request.user.id)
+            confirmed_earnings = stats_publisher.confirmed_earnings(request.user.id)
+            pending_payment = stats_publisher.pending_payments(request.user.id)
+            total_earned = stats_publisher.total_earnings(all_time, request.user.id)
 
             # Get aggregated data per day
             values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
@@ -495,6 +501,7 @@ class DashboardView(TemplateView):
             data_per_day = aggregated_data_per_day(start_date, end_date, 'publisher', values, query_args)
 
             # Summary earning
+            # TODO: move this to new stats intead of going through AggregatedData
             month_earnings, network_earnings, referral_earnings, ppc_earnings = summarize_earnings(data_per_day.values())
 
             total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings

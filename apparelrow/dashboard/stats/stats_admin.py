@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from decimal import Decimal
+import logging
+from collections import defaultdict
 from datetime import datetime
+from decimal import Decimal
+
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.db import connection
 
 from apparelrow.apparel.models import Vendor
-from apparelrow.dashboard.models import Sale, UserEarning
-from apparelrow.dashboard.stats_cache import flush_stats_cache_by_month, stats_cache, mrange, yrange
+from apparelrow.dashboard.models import Sale, UserEarning, UE
+from apparelrow.dashboard.stats.stats_cache import flush_stats_cache_by_month, stats_cache, mrange
 from apparelrow.profile.models import User
 from apparelrow.statistics.models import ProductStat
 
-import logging
 log = logging.getLogger(__name__)
 
 
@@ -48,8 +50,8 @@ def earnings_publisher(time_range):
         user_id__gt=0,
     ).exclude(
         user_earning_type__in=(
-            'referral_signup_commission',   # we don't count them here, we calculated them separately in referral earnings
-            'referral_sale_commission'
+            UE.REFERRAL_SIGNUP_COMMISSION,
+            UE.REFERRAL_SALE_COMMISSION
         ),
     ).aggregate(
         total=Sum('amount')
@@ -78,8 +80,8 @@ def referral_earnings_publisher(time_range):
         date__range=time_range,
         status__gte=Sale.PENDING,
         user_earning_type__in=(
-            'referral_signup_commission',
-            'referral_sale_commission'
+            UE.REFERRAL_SIGNUP_COMMISSION,
+            UE.REFERRAL_SALE_COMMISSION
         )
     ).aggregate(
         total=Sum('amount')
@@ -386,7 +388,6 @@ def ppc_all_stores_publishers_cost(time_range):
     result = Sale.objects.filter(
         sale_date__range=time_range,
         status__gte=Sale.PENDING,
-        user_id__in=ppc_all_stores_users(),
         is_promo=False,
         affiliate='cpc_all_stores',
     ).aggregate(
@@ -425,7 +426,6 @@ def ppc_all_stores_publishers_by_vendor(time_range):
             sale_date__range=time_range,
             status__gte=Sale.PENDING,
             is_promo=False,
-            user_id__in=ppc_as_users,
             affiliate='cpc_all_stores'
         ).aggregate(
             total=Sum('converted_commission')
@@ -641,6 +641,26 @@ def print_admin_dashboard(year, month, flush_cache=True):
     print ""
     print "PPC all stores publishers - only looking att PPO vendors"
     print "Total {} = Income {} - Cost {}".format(ppc_stats[0], ppc_stats[1], ppc_stats[2])
+
+
+def print_non_paid_publishers():
+    d = datetime.now() - relativedelta(months=3)
+    earnings_per_user = defaultdict(int)
+    print 'All users that have earnings marked as PAID_READY earlier than %s' % d
+    total = 0
+    for earning in UserEarning.objects.filter(
+        status__gte=Sale.CONFIRMED,
+        paid=Sale.PAID_READY,
+        user__id__gt=0,
+        date__lt=d).iterator():
+        u = '%s (%d)' % (earning.user, earning.user_id)
+        earnings_per_user[u] += earning.amount
+        total += earning.amount
+    print '\n'.join('%s: %s' % u for u in sorted(earnings_per_user.items(), key=lambda v: -v[1]))
+    print '======================'
+    print 'Total: %s' % total
+
+
 
 
 def print_sanity_check(year, month):

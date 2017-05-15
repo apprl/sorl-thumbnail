@@ -1,23 +1,22 @@
-import optparse
-import datetime
-import logging
-from django.db.models.loading import get_model
-from django.contrib.auth import get_user_model
-import decimal
 import calendar
-from django.db.models import Count
-from progressbar import ProgressBar, Percentage, Bar
-
-from apparelrow.dashboard import stats_cache
-from apparelrow.dashboard.models import Sale, UserEarning, AggregatedData
-from apparelrow.dashboard.views import get_clicks_from_sale
-from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_dict, get_user_thumbnail_and_link, \
-    get_user_attrs, get_day_range, check_user_has_cpc_all_stores
+import datetime
+import decimal
+import logging
+import optparse
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.staticfiles.storage import staticfiles_storage
-
 from django.core.management.base import BaseCommand
+from django.db.models import Count
+from django.db.models.loading import get_model
+from progressbar import ProgressBar, Percentage, Bar
+
+from apparelrow.dashboard.models import Sale, UserEarning, AggregatedData
+from apparelrow.dashboard.stats import stats_cache
+from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_dict, get_user_thumbnail_and_link, \
+    get_user_attrs, get_day_range, check_user_has_cpc_all_stores
+from apparelrow.dashboard.views import get_clicks_from_sale
 
 logger = logging.getLogger('dashboard')
 

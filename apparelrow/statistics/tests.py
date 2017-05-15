@@ -1,6 +1,8 @@
 import datetime
 import decimal
 import calendar
+import logging
+
 from dateutil.relativedelta import *
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -15,8 +17,8 @@ from apparelrow.statistics.models import ProductStat
 from apparelrow.statistics.utils import check_vendor_has_reached_limit, extract_short_link_from_url, is_ip_banned
 from apparelrow.dashboard.utils import parse_date
 
-import logging
 log = logging.getLogger(__name__)
+
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestProductStat(TestCase):
@@ -320,7 +322,7 @@ class TestProductStat(TestCase):
 
         product_stat_3 = ProductStatFactory.create(ip="5.6.7.8", referer="")
 
-        management.call_command('update_stats_referer', verbosity=0, interactive=False)
+        management.call_command('update_stats_referer', verbosity=0, interactive=False, skip_progress=True)
 
         # Referer link
         updated_product_stat_1 = ProductStat.objects.get(id=product_stat_1.id)

@@ -1,25 +1,24 @@
 import datetime
 import decimal
+import logging
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.core.mail import mail_admins
 from django.db import models, transaction
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from django.utils.translation import get_language, ugettext_lazy as _
-from django.contrib.auth import get_user_model
-from jsonfield import JSONField
 from django.utils.functional import cached_property
-from django.core.mail import mail_admins
+from django.utils.translation import get_language, ugettext_lazy as _
+from jsonfield import JSONField
 
+from apparelrow.apparel.base_62_converter import dehydrate
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import currency_exchange
-from apparelrow.apparel.base_62_converter import dehydrate
-from apparelrow.dashboard import stats_cache
-from apparelrow.profile.models import User
-
-import logging
+from apparelrow.dashboard.stats import stats_cache
+from apparelrow.profile.models import User, PaymentDetail
 
 logger = logging.getLogger( __name__ )
 MAX_NETWORK_LEVELS = 10
@@ -121,26 +120,68 @@ class Sale(models.Model):
         ordering = ['-sale_date']
 
 
+
 class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     details = models.ForeignKey('profile.PaymentDetail', on_delete=models.CASCADE)
     amount = models.DecimalField(default='0.0', max_digits=10, decimal_places=2, help_text=_('Sale amount'))
+     # Currency is not used right now
     currency = models.CharField(default='EUR', max_length=3, help_text=_('Currency as three-letter ISO code'))
     paid = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
-    created = models.DateTimeField(_('Time created'), default=timezone.now, null=True, blank=True)
-    modified = models.DateTimeField(_('Time modified'), default=timezone.now, null=True, blank=True)
+    created = models.DateTimeField(_('Time created'), auto_now_add=True, null=True, blank=True)
+    modified = models.DateTimeField(_('Time modified'), auto_now=True, null=True, blank=True)
+    # Deprecated. We used to store a list of earnings as a json string but wasn't robust so now we have a
+    # FK from UserEarning to payments instead.
+    # TODO: remove when you're sure you don't need this incomplete information anymore
     earnings = models.CharField(max_length=1000, null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        self.modified = timezone.now()
-        super(Payment, self).save(*args, **kwargs)
+    def mark_as_paid(self):
+        logger.info('Marking payment as paid %s' % self)
+        earnings = self.userearning_set.all()
+        assert not self.cancelled
+        with transaction.atomic():
+            for earning in earnings:
+                earning.paid = Sale.PAID_COMPLETE
+                earning.save()
+            self.paid = True
+            self.save()
+        return earnings
+
+    def cancel(self):
+        logger.info('Cancelling payment %s' % self)
+        assert not self.cancelled
+        assert not self.paid
+        earnings = self.userearning_set.all()
+        with transaction.atomic():
+            for earning in earnings:
+                earning.payment = None
+                earning.paid = Sale.PAID_PENDING
+                earning.save()
+            self.cancelled = True
+            self.save()
+        return earnings
 
     def __unicode__(self):
         return u'%s %s' % (self.user, self.amount)
 
-    class Meta:
-        ordering = ('-created',)
+
+# Create a payment from a bunch of earnings, perform sanity check before doing so
+def create_payment(user, earnings):
+    with transaction.atomic():
+        amount = sum(e.amount for e in earnings)
+        assert amount >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT
+        details, created = PaymentDetail.objects.get_or_create(user=user)
+        payment = Payment.objects.create(user=user, details=details, amount=amount)
+        for earning in earnings:
+            assert not earning.payment
+            assert earning.paid == Sale.PAID_PENDING
+            assert earning.user == user
+            earning.payment = payment
+            earning.paid = Sale.PAID_READY
+            earning.save()
+        logger.info("Created payment %s that includes the following UserEarnings %s" % (payment.id, [e.id for e in earnings]))
+        return payment
 
 
 class Group(models.Model):
@@ -346,6 +387,7 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
 
         instance.referral_partner_parent_date = timezone.now() + datetime.timedelta(days=180)
 
+        # Create a promo Sale which gives the new publisher a boost so it is easier to reach settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT.
         data = {
             'affiliate': 'referral_promo',
             'original_sale_id': 'referral_promo_%s' % (instance.pk,),
@@ -363,7 +405,6 @@ def pre_save_update_referral_code(sender, instance, *args, **kwargs):
             'original_currency': 'EUR',
             'status': Sale.CONFIRMED,
         }
-
         sale, created = Sale.objects.get_or_create(original_sale_id=data['original_sale_id'], defaults=data)
 
 AGGREGATED_DATA_TYPES = (
@@ -417,18 +458,35 @@ class AggregatedData(models.Model):
         network sale: {network_sales}, network click: {network_click_earnings}, total_network
         """.format(**vars(self))
 
+
+class UE:
+    APPRL_COMMISSION = 'apprl_commission'
+
+    REFERRAL_SALE_COMMISSION = 'referral_sale_commission'
+    REFERRAL_SIGNUP_COMMISSION = 'referral_signup_commission'
+
+    PUBLISHER_SALE_COMMISSION = 'publisher_sale_commission'
+    PUBLISHER_NETWORK_TRIBUTE = 'publisher_network_tribute'
+
+    PUBLISHER_SALE_CLICK_COMMISSION = 'publisher_sale_click_commission'
+    PUBLISHER_NETWORK_CLICK_TRIBUTE = 'publisher_network_click_tribute'
+
+    PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES = 'publisher_network_click_tribute_all_stores'
+    PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES = 'publisher_sale_click_commission_all_stores'
+
+
 USER_EARNING_TYPES = (
-    ('apprl_commission', 'APPRL Earnings'),
-    ('referral_sale_commission', 'Referral Sale Earnings'),
-    ('referral_signup_commission', 'Referral Signup Earnings'),
-    ('publisher_sale_commission', 'Publisher Sale Earnings'),
-    ('publisher_network_tribute', 'Network Earnings'),
+    (UE.APPRL_COMMISSION, 'APPRL Earnings'),
+    (UE.REFERRAL_SALE_COMMISSION, 'Referral Sale Earnings'),
+    (UE.REFERRAL_SIGNUP_COMMISSION, 'Referral Signup Earnings'),
+    (UE.PUBLISHER_SALE_COMMISSION, 'Publisher Sale Earnings'),
+    (UE.PUBLISHER_NETWORK_TRIBUTE, 'Network Earnings'),
 
-    ('publisher_network_click_tribute', 'Network Earnings per Clicks'),
-    ('publisher_sale_click_commission', 'Earnings per Clicks'),
+    (UE.PUBLISHER_NETWORK_CLICK_TRIBUTE, 'Network Earnings per Clicks'),
+    (UE.PUBLISHER_SALE_CLICK_COMMISSION, 'Earnings per Clicks'),
 
-    ('publisher_network_click_tribute_all_stores', 'Network Earnings per Clicks'),
-    ('publisher_sale_click_commission_all_stores', 'Earnings per Clicks'),
+    (UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES, 'Network Earnings per Clicks'),
+    (UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES, 'Earnings per Clicks'),
 )
 
 @receiver(pre_save, sender=AggregatedData, dispatch_uid='aggregated_data_pre_save')
@@ -465,6 +523,7 @@ def aggregated_data_pre_save(sender, instance, *args, **kwargs):
 class UserEarning(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='earning_user', null=True, on_delete=models.PROTECT)
     user_earning_type = models.CharField(max_length=100, choices=USER_EARNING_TYPES)
+    # TODO: should the sale really be allowed to be null?
     sale = models.ForeignKey('dashboard.Sale', null=True, blank=True, on_delete=models.PROTECT)
     from_product = models.ForeignKey('apparel.Product', null=True, blank=True, on_delete=models.PROTECT)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT)
@@ -472,6 +531,7 @@ class UserEarning(models.Model):
     date = models.DateTimeField(_('Created'), default=timezone.now, null=True, blank=True)
     status = models.CharField(max_length=1, default=Sale.INCOMPLETE, choices=Sale.STATUS_CHOICES, db_index=True)
     paid = models.CharField(max_length=1, default=Sale.PAID_PENDING, choices=Sale.PAID_STATUS_CHOICES)
+    payment = models.ForeignKey('Payment', null=True)
 
     def __unicode__(self):
         return u'%s %s %s' % (self.user, self.user_earning_type, self.amount)
@@ -528,7 +588,7 @@ def create_earnings(instance):
     else:
         user = User.objects.get(id=instance.user_id)
         UserEarning.objects.\
-            create(user=user, user_earning_type='referral_signup_commission', sale=instance,
+            create(user=user, user_earning_type=UE.REFERRAL_SIGNUP_COMMISSION, sale=instance,
                    amount=settings.APPAREL_DASHBOARD_INITIAL_PROMO_COMMISSION, date=instance.sale_date,
                    status=instance.status)
         mail_admins('Referral Signup bonus created',
@@ -568,6 +628,7 @@ def create_referral_earning(sale):
     else:
         logger.warning('User %s should have assigned a comission group'%user)
 
+
 def create_user_earnings(sale):
     """
     Create user earnings associated excluding referral sales. More specifically, those earnings types are apprl
@@ -584,8 +645,7 @@ def create_user_earnings(sale):
     if not len(sale_product) == 0:
         product = sale_product[0]
 
-    earning_type = 'publisher_sale_commission' if sale.type == Sale.COST_PER_ORDER \
-        else 'publisher_sale_click_commission'
+    earning_type = UE.PUBLISHER_SALE_COMMISSION if sale.type == Sale.COST_PER_ORDER else UE.PUBLISHER_SALE_CLICK_COMMISSION
 
     if sale.user_id:
         try:
@@ -617,7 +677,7 @@ def create_user_earnings(sale):
             # network owner, if applies) will get 100% of this earning
             if sale.affiliate == "cpc_all_stores":
                 cut = 1
-                earning_type = "publisher_sale_click_commission_all_stores"
+                earning_type = UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES
                 is_cpc_all_stores = True
 
             if cut is not None:
@@ -628,11 +688,11 @@ def create_user_earnings(sale):
                     # Create earning(s) for the publisher network owner(s)
                     if user.owner_network and not user.owner_network.id == user.id:
                         publisher_commission = create_earnings_publisher_network(user, publisher_commission, sale,
-                                                                                 product,MAX_NETWORK_LEVELS,
+                                                                                 product, MAX_NETWORK_LEVELS,
                                                                                  is_cpc_all_stores)
 
                     # Create apprl commission
-                    UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
+                    UserEarning.objects.create(user_earning_type=UE.APPRL_COMMISSION, sale=sale,
                                                                          from_product=product, from_user=user,
                                                                          amount=apprl_commission, date=sale.sale_date,
                                                                          status=sale.status)
@@ -640,7 +700,7 @@ def create_user_earnings(sale):
                     # Create user earning for the publisher associated to the sale
                     # We create the earning even if publisher_commission i 0 (because the cut is 0) such as with
                     # cpc_all_stores because we think this makes the system more understandable
-                    UserEarning.objects.create( user=user,
+                    UserEarning.objects.create(user=user,
                                                                           user_earning_type=earning_type, sale=sale,
                                                                           from_product=product,
                                                                           amount=publisher_commission,
@@ -653,7 +713,7 @@ def create_user_earnings(sale):
             logger.warning('User %s should have assigned a comission group' % user)
     else:
         # Sale was generated from APPRL.com, so in this case only an earning for APPRL is created
-        UserEarning.objects.create(user_earning_type='apprl_commission', sale=sale,
+        UserEarning.objects.create(user_earning_type=UE.APPRL_COMMISSION, sale=sale,
                                                                      from_product=product, amount=total_commission,
                                                                      date=sale.sale_date, status=sale.status)
 
@@ -698,10 +758,10 @@ def create_earnings_publisher_network(user, publisher_commission, sale, product,
             owner_earning = create_earnings_publisher_network(owner, owner_earning, sale, product, counter,
                                                               cpc_all_stores)
 
-        earning_type = 'publisher_network_tribute' if sale.type == Sale.COST_PER_ORDER\
-            else 'publisher_network_click_tribute'
+        earning_type = UE.PUBLISHER_NETWORK_TRIBUTE if sale.type == Sale.COST_PER_ORDER\
+            else UE.PUBLISHER_NETWORK_CLICK_TRIBUTE
         if cpc_all_stores:
-            earning_type = "publisher_network_click_tribute_all_stores"
+            earning_type = UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES
 
         UserEarning.objects.create( user=owner, user_earning_type=earning_type, sale=sale,
                                                               from_product=product, from_user=user, amount=owner_earning,

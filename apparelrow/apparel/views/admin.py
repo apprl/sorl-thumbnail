@@ -1,27 +1,22 @@
 # -*- coding: utf-8 -*-
+import calendar
 import datetime
 import decimal
-import calendar
 
-from django.shortcuts import render
+from dateutil.relativedelta import relativedelta
 from django.db.models import Sum, Count, Min
-from django.http import Http404, HttpResponseNotFound, HttpResponse
+from django.http import Http404, HttpResponseNotFound
+from django.shortcuts import render
+from django.views.generic import TemplateView
+
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page
-from apparelrow.apparel.browse import get_pagination_as_dict
 from apparelrow.dashboard.models import Sale
-from apparelrow.dashboard.stats_admin import ppc_all_stores_stats
-from apparelrow.dashboard.views import parse_date
+from apparelrow.dashboard.stats.stats_admin import ppc_all_stores_stats
 from apparelrow.dashboard.utils import enumerate_months
+from apparelrow.dashboard.views import parse_date
 from apparelrow.importer.models import VendorFeed
 from apparelrow.statistics.models import ProductStat
-from dateutil.relativedelta import relativedelta
-from django.views.generic import TemplateView
-from django.template import loader
-from django.template import RequestContext
-
-
-
 
 ZERO_DECIMAL = decimal.Decimal('0.00')
 BROWSE_PAGE_SIZE = 30

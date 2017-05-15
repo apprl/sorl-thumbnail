@@ -462,6 +462,9 @@ class User(AbstractUser):
     def has_partner_group_ownership(self):
         return get_model('dashboard', 'Group').objects.filter(owner=self).exists()
 
+    def has_ppc_all_stores(self):
+        return self.partner_group and self.partner_group.has_cpc_all_stores
+
     def is_referral_parent_valid(self):
         if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():
             return True

@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.conf import settings
 
 from apparelrow.dashboard.models import Sale, Payment, Cut, Group, Signup, StoreCommission, UserEarning, ClickCost, \
@@ -41,21 +41,32 @@ class PaymentAdmin(admin.ModelAdmin):
     readonly_fields = ('details', 'user', 'amount', 'currency', 'paid', 'cancelled', 'modified', 'created', 'earnings')
     actions = ('mark_as_paid',)
 
-    #def user_link(self, obj):
-        #change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
-        #return '<a href="%s">%s</a>' % (change_url, obj.user)
-    #user_link.short_description = 'User'
-    #user_link.allow_tags = True
-
     def mark_as_paid(self, request, queryset):
-        for payment in queryset.filter(cancelled=False):
-            UserEarning.objects.filter(user=payment.user, paid=Sale.PAID_READY).update(paid=Sale.PAID_COMPLETE)
-            payment.paid = True
-            payment.save()
-
+        cancelled_payments = []
+        for payment in queryset.all():
+            if not payment.cancelled:
+                payment.mark_as_paid()
+            else:
+                cancelled_payments.append(payment)
+        if cancelled_payments:
+            if len(cancelled_payments) == 1:
+                msg = u"Couldn't mark payment %s as paid, it was already cancelled" % cancelled_payments[0]
+            else:
+                msg = u"Couldn't mark payments (%s) as paid - they were cancelled" % u','.join(unicode(p) for p in cancelled_payments)
+            self.message_user(request, msg, level=messages.ERROR)
         return HttpResponseRedirect(request.get_full_path())
 
     mark_as_paid.short_description = 'Mark payment as paid'
+
+    # We don't want to our admin users to be able to delete Payments
+    def get_actions(self, request):
+        actions = super(PaymentAdmin, self).get_actions(request)
+        del actions['delete_selected']
+        return actions
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
     def custom_user(self, obj):
         return u'%s' % (obj.user.display_name,)
