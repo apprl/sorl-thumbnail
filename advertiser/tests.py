@@ -389,6 +389,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         self.client.login(username='user1', password='user1')
 
         # Display list
+        print reverse('advertiser-store-admin')
         response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('transactions', response.context)
@@ -398,7 +399,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
         """
         """
         self.client.login(username='user2', password='user2')
-
+        print reverse('advertiser-store-admin')
         response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 404)
 
@@ -406,6 +407,7 @@ class AdvertiserFlowTest(TransactionTestCase, AdvertiserMixin):
     def test_admin_view_no_user(self):
         """
         """
+        print reverse('advertiser-store-admin')
         response = self.client.get(reverse('advertiser-store-admin'))
         self.assertEqual(response.status_code, 302)
 

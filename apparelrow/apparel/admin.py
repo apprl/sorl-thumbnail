@@ -20,9 +20,8 @@ from mptt.admin import MPTTModelAdmin
 #
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('image', 'product_name', 'category', 'gender', 'manufacturer', 'sku', 'published',)
+    list_display = ('image', 'product_name', 'category', 'gender', 'manufacturer', 'sku', 'published', 'availability')
     list_filter = ['category', 'gender', 'vendors', 'published']
-    list_editable = ['category', 'gender', 'published']
     list_display_links = ['product_name']
     actions = ['publish', 'hide', 'change_category', 'change_options']
     search_fields = ['product_name']
@@ -152,7 +151,7 @@ admin.site.register(ShortProductLink, ShortProductLinkAdmin)
 
 class ShortDomainLinkAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
-    list_display = ('url', 'user', 'vendor', 'created')
+    list_display = ('link', 'url', 'user', 'vendor', 'created')
 
 admin.site.register(ShortDomainLink, ShortDomainLinkAdmin)
 
@@ -172,7 +171,7 @@ class DomainDeepLinkingAdminForm(ModelForm):
 
 class DomainDeepLinkingAdmin(admin.ModelAdmin):
     form = DomainDeepLinkingAdminForm
-    list_display = ('vendor', 'domain', 'template')
+    list_display = ('vendor', 'domain', 'template', 'quote_url', 'quote_sid', 'quote_ulp')
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size':'200'})},
     }
@@ -456,11 +455,22 @@ admin.site.register(Option, OptionAdmin)
 #
 
 class VendorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'provider')
+    def locations(vendor):
+        return u', '.join(vendor.location_codes_list())
+
+    list_display = ('name', 'provider', locations)
     raw_id_fields = ['user']
     readonly_fields = ('is_limit_reached',)
 
+    list_filter = ['locations__code']
+
 admin.site.register(Vendor, VendorAdmin)
+
+#
+# LOCATION
+#
+
+admin.site.register(Location)
 
 #
 # VENDOR PRODUCT

@@ -35,6 +35,12 @@
             });
         });
 
+        $(document).on('click', 'a', function(e) {
+            if($(this).hasClass('hotspot')) {
+                return false;
+            }
+        });
+
         $(document).on('click', function(e) {
             popover_elements.popover('hide');
         });

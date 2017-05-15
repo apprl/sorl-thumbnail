@@ -1,3 +1,4 @@
+import hashlib
 from urlparse import parse_qs, urlsplit, urlunsplit
 import json
 import datetime
@@ -8,6 +9,7 @@ import uuid
 import logging
 import decimal
 import random
+from math import log
 
 from django.conf import settings
 from django.core.cache import cache
@@ -15,7 +17,7 @@ from django.core.paginator import Paginator, InvalidPage, PageNotAnInteger, Empt
 from django.db import connections, models
 from django.db.models.loading import get_model
 from django.utils import translation
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_str, smart_unicode
 from django.utils.http import urlencode
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
@@ -209,7 +211,7 @@ def generate_sid(product_id, target_user_id=0, page='Default', source_link=None)
 
     sid = smart_str(u'{target_user_id}-{product_id}-{page}'.format(target_user_id=target_user_id, product_id=product_id, page=page))
     if source_link:
-        sid += "/%s" % source_link
+        sid += u"/%s" % urllib.quote(compress_source_link_if_needed(source_link).encode('utf-8'))
     return sid
 
 
@@ -233,6 +235,8 @@ def parse_sid(sid):
                 page = sid_array[1]
                 if len(page.split('/', 1)) > 1:
                     page, source_link = page.split('/', 1)
+                    source_link = decompress_source_link_if_needed(source_link)
+                    source_link = smart_unicode(urllib.unquote((source_link or u'').encode('utf-8')))
             else:
                 try:
                     product_id = int(rest)
@@ -244,6 +248,38 @@ def parse_sid(sid):
             except ValueError:
                 pass
     return target_user_id, product_id, page, source_link
+
+
+# Some affiliate (Tradedoubler) networks don't allow very long sids as parameters. To make sure we can fit
+# long urls into their sids, we store the urls and replace the url with a shorter digest of the link
+
+def compressed_link_key(link):
+    return hashlib.md5(link.encode('utf-8')).hexdigest()
+
+
+
+def compress_source_link_if_needed(link, max_len=settings.LINKS_COMPRESSION_MAX_LEN):
+    if not link or len(link) <= max_len or not settings.ENABLE_LINKS_COMPRESSION:
+        return link
+    else:
+        from apparelrow.apparel.models import CompressedLink
+        cl, _ = CompressedLink.objects.get_or_create(key=compressed_link_key(link), link=link)
+        return settings.LINKS_COMPRESSION_PREFIX + cl.key
+
+
+def decompress_source_link_if_needed(link):
+    from apparelrow.apparel.models import CompressedLink
+    if not link or not link.startswith(settings.LINKS_COMPRESSION_PREFIX) or not settings.ENABLE_LINKS_COMPRESSION:
+        return link
+    else:
+        key = link.replace(settings.LINKS_COMPRESSION_PREFIX, '')
+        try:
+            cl = CompressedLink.objects.get(key=key)
+            return cl.link
+        except CompressedLink.DoesNotExist:
+            logging.error(u"Tried to decompress a long source link but didn't find it. Key: %s" % key)
+            return None
+
 
 def vendor_buy_url(product_id, vendor, target_user_id=0, page='Default', source_link=''):
     """
@@ -369,12 +405,12 @@ def get_paged_result(queryset, per_page, page_num):
     """
     Handles pagination, this should be done with the built in Pagination class
     inside a class based view. Todo: migrate and remove this functionality
-    :param queryset: 
-    :param per_page: 
-    :param page_num: 
+    :param queryset:
+    :param per_page:
+    :param page_num:
     :return:
     """
-    
+
     paginator = Paginator(queryset, per_page)
     paginator._count = 10000
     try:
@@ -449,8 +485,8 @@ def get_pagination(paginator, page_num, on_ends=2, on_each_side=3):
             right = range(paginator.num_pages - on_ends + 1, paginator.num_pages + 1)
 
     return {
-            'left': left, 
-            'mid': mid, 
+            'left': left,
+            'mid': mid,
             'right': right
             }
 
@@ -525,7 +561,7 @@ def get_location(request):
         return request.user.location
     else:
         return request.COOKIES.get(settings.APPAREL_LOCATION_COOKIE, "ALL")
-    
+
 def get_location_text(location):
     for key, text in settings.LOCATION_MAPPING_SIMPLE_TEXT:
         if key == location:
@@ -606,3 +642,21 @@ def get_vendor_cost_per_click(vendor):
             except get_model('dashboard', 'ClickCost').DoesNotExist:
                 logger.warning("ClickCost not defined for vendor %s" % vendor)
     return click_cost
+
+
+def get_popularity(score, date, start_timestamp=0):
+    """
+    Python implementation of Reddits ranking algorithm
+    Stolen from: https://medium.com/hacking-and-gonzo/how-reddit-ranking-algorithms-work-ef111e33d0d9
+    """
+    LOG_NUM = 10
+    TIME_RANGE = 864000
+
+    time_delta = date - datetime.datetime(1970, 1, 1)
+    seconds_since_epoch = time_delta.days * 86400 + time_delta.seconds + (float(time_delta.microseconds) / 1000000)
+
+    order = log(max(abs(score), 1), LOG_NUM)
+    sign = 1 if score > 0 else -1 if score < 0 else 0
+    seconds = seconds_since_epoch - start_timestamp
+    return round(sign * order + seconds / TIME_RANGE, 7)
+

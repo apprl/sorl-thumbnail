@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load i18n dashboard_extras %}
+{% load static from staticfiles %}
+
+{% block extra-scripts %}
+    <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.month-select').change(function() {
+                var month = $('.month-select').find(':selected').data('month');
+                var year = $('.year-select').find(':selected').data('year');
+                window.location.href = '{% url "admin-ppc-as" %}' + year + '/' + month + '/';
+
+            });
+            $('.year-select').change(function() {
+                var month = $('.month-select').find(':selected').data('month');
+                var year = $('.year-select').find(':selected').data('year');
+                window.location.href = '{% url "admin-ppc-as" %}' + year + '/' + month + '/';
+            });
+            new Tablesort($('table').get(0));
+        });
+    </script>
+{% endblock extra-scripts %}
+
+{% block body-classes %}admin-dashboard-ppc-as{% endblock body-classes %}
+{% block body %}
+
+    {% if flush_cache %}
+        {% include 'apparel/admin/header.html' with title="PPC All Stores (flush cache)" %}
+    {% else %}
+        {% include 'apparel/admin/header.html' with title="PPC All Stores" %}
+    {% endif %}
+
+
+    <section class="container">
+        <ul class="list-horizontal center">
+            <li>Show statistics for: </li>
+            <li>
+                <div class="select">
+                    <span><i class="fa fa-caret-down"></i></span>
+                    <select class="month-select">
+                        {% for item_month in month_choices %}
+                            <option data-month="{{ item_month.0 }}"{% if item_month.0 == month %} selected{%endif %}>{{ item_month.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </li>
+            <li>
+                <div class="select">
+                    <span><i class="fa fa-caret-down"></i></span>
+                    <select class="year-select">
+                        {% for item_year in year_choices %}
+                            <option data-year="{{ item_year }}" {% if item_year == year %} selected{%endif %}>{{ item_year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <dl class="dl-horizontal">
+                <dt>Total income</dt>
+                <dd>€ {{ stats.total.income }}</dd>
+                <dt>Total cost</dt>
+                <dd>€ {{ stats.total.cost }}</dd>
+                <dt>Total result</dt>
+                <dd>€ {{ stats.total.result }}</dd>
+            </dl>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Vendor</th>
+                        <th>PPO / PPC</th>
+                        <th>Income</th>
+                        <th>Cost</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vendor, vendor_stats in stats.by_vendor.iteritems %}
+                        {% if vendor_stats.result %}
+                            <tr>
+                                <td>{{ vendor }}</td>
+                                <td>
+                                    {% if vendor_stats.ppo %}PPO{% endif %}
+                                    {% if vendor_stats.ppc %}PPC{% endif %}
+                                </td>
+                                <td>€ {{ vendor_stats.income }}</td>
+                                <td>€ {{ vendor_stats.cost }}</td>
+                                <td>€ {{ vendor_stats.result }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}

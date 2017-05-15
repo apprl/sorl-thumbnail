@@ -1,0 +1,79 @@
+{% extends 'dialog_base_transparent_header.html' %}
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block modal_id %}modal_tool_single_product{% endblock %}
+{% block modal_title %}&nbsp;{% endblock %}
+{% comment %}
+{% block extra_modal_classes %}modal_pub_tools{% endblock %}
+{% endcomment %}
+{% block modal_content %}
+
+<div class="modal-header">
+    <h2>{% trans "Single Product" %}</h2>
+    <a class="hidden-xs btn btn-primary" href="{% url 'look-editor' 'collage' %}">
+        {% trans "Create Single Product" %}
+    </a>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span></span></button>
+</div>
+
+<div class="modal-content">
+    <div class="modal-body">
+        <div class="apprl-modal-tools-content">
+            <div class="slider-container">
+                <div class = 'iosSlider'>
+                    <div class = 'slider'>
+                        <div class='item'><img src="{% static 'images/tools/single_product_1.jpg' %}" /></div>
+                    </div>
+                    <div class="hidden-xs tools_prevButton"><i class="fa fa-angle-left fa-3x"></i></div>
+                    <div class="hidden-xs tools_nextButton"><i class="fa fa-angle-right fa-3x"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-description">
+            <a class="center hidden-sm hidden-md hidden-lg btn btn-primary" href="{% url 'create-product-widget' 'single' %}">
+                {% trans "Create Single Product" %}
+            </a>
+
+            <h4>{% trans "Description" %}</h4>
+            <p>
+                {% blocktrans %}
+                    The Single product list is perfect to display a list of products on a limited area, for example for one column of your site.
+                {% endblocktrans %}
+             </p>
+
+            <h4>{% trans "Key Features" %}</h4>
+            <ul>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Easy to use: Use our editor to select the products you want to include in your "Single product list" from your mobile, tablet or laptop.
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Put it on your site: Click "Embed on your blog/site", copy the embed code and paste it in your blogging tool/CMS (Note: you need to insert the code as text in HTML mode).
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Help your readers: Once the "Single product list" is on your site your readers can click the products and get directly to the products in the online store selling them.
+                    {% endblocktrans %}
+                </li>
+                <li>
+                    {% blocktrans %}
+                        &mdash; Earn money: You earn money on all sales or clicks generated from your lists, both on your site and on apprl.com.
+                    {% endblocktrans %}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a class="btn btn-primary" href="{% url 'create-product-widget' 'single' %}">
+            {% trans "Create Single Product" %}
+        </a>
+    </div>
+</div>
+
+{% endblock %}

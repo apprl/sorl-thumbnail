@@ -19,22 +19,23 @@ jQuery(document).ready(function() {
     var isPhoto = ($('#photo-markers').length) ? true : false;
 
     // Hide hotspots and only show them on mouseenter if !mobile
-    if (!is_mobile()) {
-        var active = false;
-        jQuery(document).on('click touchstart', '.photo-hotspots', function() {
-            if (active === false) {
-              jQuery('.hotspot', this).stop(true, true).fadeIn(300);
-              setTimeout(function(){active=true}, 400);
-            }
-        }).on('click touchstart', '.photo-hotspots', function() {
-            if (active === true) {
-                setTimeout(function(){active=false}, 400);
-                jQuery('.hotspot', this).stop(true, true).fadeOut(300);
-            }
-        });
-    } else {
+    if (is_mobile()) {
         jQuery('body').addClass('is-mobile');
     }
+
+    jQuery(document).on('click touchstart', '.photo-hotspots', function(evt) {
+        // Don't follow links on hotspot clicks
+        if($(evt.target).hasClass('hotspot')) {
+            evt.preventDefault();
+
+        // Workaround for when you have another element active (.photo-hotspots)
+        // in iOS requiring two clicks on the buy link.
+        } else if($(evt.target).hasClass('btn-buy-external')) {
+            evt.preventDefault();
+            var $btn = $(evt.target);
+            window.open($btn.attr('href'), $btn.attr('target'));
+        }
+    });
 
     var parentHost = getParameterByName('host');
 

@@ -11,6 +11,7 @@ from celery.schedules import crontab
 
 from urlparse import urlparse
 import redis
+
 from apparelrow.statistics.utils import extract_short_link_from_url
 import logging
 

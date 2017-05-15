@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.forms.models import BaseInlineFormSet
 
-from apparelrow.importer.models import VendorFeed, ImportLog, ImportLogMessage, Mapping
+from apparelrow.importer.models import VendorFeed, ImportLog, ImportLogMessage, Mapping, FXRate
 
 
 # FIXME: 
@@ -53,6 +53,10 @@ class ImportLogMessageAdmin(admin.ModelAdmin):
     list_display = ('status', 'message', 'datetime')
     list_filter = ('status',)
 
+class FXRateAdmin(admin.ModelAdmin):
+    list_display = ('base_currency', 'currency', 'rate')
+
+admin.site.register(FXRate, FXRateAdmin)
 admin.site.register(VendorFeed, VendorFeedAdmin)
 admin.site.register(ImportLog, ImportLogAdmin)
 admin.site.register(ImportLogMessage, ImportLogMessageAdmin)

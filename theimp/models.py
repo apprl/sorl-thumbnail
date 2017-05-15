@@ -20,7 +20,7 @@ class BaseModel(models.Model):
 
 
 class Product(BaseModel):
-    key = models.CharField(max_length=512)
+    key = models.CharField(max_length=512, db_index=True)
     vendor = models.ForeignKey('theimp.Vendor', null=False, blank=False)
     json = models.TextField()
 
@@ -34,6 +34,7 @@ class Product(BaseModel):
     imported_date = models.DateTimeField(null=True, blank=True)
 
     is_released = models.BooleanField(default=False, null=False, blank=False)
+    product = models.ForeignKey("apparel.Product", null=True, blank=True)
 
     def __unicode__(self):
         return 'Product(key=%s)' % (self.key,)

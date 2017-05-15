@@ -226,29 +226,35 @@ def product_delete(instance, **kwargs):
     from sorl.thumbnail import default
     from theimp.models import Product as ImpProduct
     sorl_image = None
-    try:
-        logger.info(u"Trying to remove image and thumbnails for {}".format(instance))
-        sorl_image = SorlImageFile(instance.product_image)
+    image_name = instance.product_image.name
+    # Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
+    # using this image is already removed.
+    uses = Product.objects.filter(product_image=image_name).count()
+    if uses > 0:
+        logger.info(u"Product {} shared image with other products [{}], will not remove {}.".format(instance.pk, uses,image_name))
+    else:
         try:
-            default.kvstore.delete_thumbnails(sorl_image)
-            default.kvstore.delete(sorl_image)
+            logger.info(u"Trying to remove image and thumbnails for {}".format(instance))
+            sorl_image = SorlImageFile(instance.product_image)
+            try:
+                default.kvstore.delete_thumbnails(sorl_image)
+                default.kvstore.delete(sorl_image)
+            except:
+                logger.warn(u"Failed to remove thumbnails for product {}.".format(instance.pk))
         except:
-            logger.warn("Failed to remove thumbnails for product {}.".format(instance.pk))
-    except:
-        logger.warn("Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
-    finally:
-        image_name = instance.product_image.name
-        if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
-           sorl_image.delete()
+            logger.warn(u"Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
+        finally:
+            if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
+               sorl_image.delete()
 
-    logger.info("Trying to clean up theimp.Product: {}".format(instance.product_key))
+    logger.info(u"Trying to clean up theimp.Product: {}".format(instance.product_key))
     try:
         if ImpProduct.objects.filter(key=instance.product_key).exists():
             product = ImpProduct.objects.get(key=instance.product_key)
-            logger.info("Cleaning out Imp product: {}".format(product.id))
+            logger.info(u"Cleaning out Imp product: {}".format(product.id))
             product.delete()
     except:
-        logger.warn("Unable to clean out Imp product corresponding to: {}".format(instance.product_key))
+        logger.warn(u"Unable to clean out Imp product corresponding to: {}".format(instance.product_key))
 
 
     connection = Solr(settings.SOLR_URL)
@@ -375,9 +381,9 @@ def get_product_document(instance, rebuild=False):
         # Facets
         vendor_markets = None
         if instance.default_vendor:
-            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(instance.default_vendor.vendor.name,None)
+            vendor_markets = instance.default_vendor.vendor.location_codes_list()
         document['color'] = color_ids
-        document['market'] =  vendor_markets if vendor_markets else settings.VENDOR_LOCATION_MAPPING.get("default")
+        document['market'] = vendor_markets if vendor_markets else settings.DEFAULT_VENDOR_LOCATION
         document['price'] = '%s,%s' % (price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['category'] = category_ids
         document['manufacturer_id'] = instance.manufacturer_id
@@ -555,12 +561,15 @@ def rebuild_user_index(url=None):
     for index, user in enumerate(valid_users.iterator()):
         pbar.update(index)
         document, boost = get_profile_document(user)
+
+        if not document:
+            continue
         user_buffer.append(document)
         if len(user_buffer) == 100:
             connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
             user_buffer.clear()
 
-        user_count = user_count + 1
+        user_count += 1
     pbar.finish()
 
     connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
@@ -576,8 +585,13 @@ def get_profile_document(instance):
     document['django_id'] = instance.pk
     document['name'] = instance.display_name_live
     document['gender'] = instance.gender
-    document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
 
+    # document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
+    try:
+        document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
+    except Exception, msg:
+        logger.warn(u"Unable to index user: {}, [{}]".format(instance, msg))
+        document['template'] = ""
     return document, boost
 
 def decode_manufacturer_facet(data):

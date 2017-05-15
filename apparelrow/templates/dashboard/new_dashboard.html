@@ -226,7 +226,7 @@
     </section>
 
     <section class="container center">
-        <p>{% blocktrans %}Earnings: <strong>{{ currency }} {{ total_commission }}{% endblocktrans %}</strong></p>
+        <p>{% blocktrans %}Total Earnings: <strong>{{ currency }} {{ total_commission }}{% endblocktrans %}</strong></p>
         </ul>
         {% if show_cpo_earning %}
         <ul class="list-horizontal">
@@ -309,7 +309,6 @@
         </div>
     {% endif %}
 
-    {% if not is_owner %}
     <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
             <h2>{% trans "Top Links" %} {{ month_display }} {{ year }}</h2>
@@ -356,7 +355,6 @@
             </table>
         </div>
     </div>
-    {% endif %}
 
     <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
@@ -488,7 +486,7 @@
 </script>
 
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
-{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products is_admin=False currency=currency month=month_display year=year is_owner=is_owner only  %}
+{% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products TOP_PRODUCTS_LIMIT=TOP_PRODUCTS_LIMIT is_admin=False currency=currency month=month_display year=year is_owner=is_owner only  %}
 {% include 'dashboard/fragments/dialog_new_top_publishers.html' with request=request csrf_token=csrf_token next=next top_publishers=top_publishers is_admin=False currency=currency month=month_display year=year is_owner=is_owner only %}
 {% include 'dashboard/modal_more_info.html' %}
 {% endblock body %}

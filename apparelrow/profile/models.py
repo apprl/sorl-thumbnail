@@ -112,7 +112,7 @@ class User(AbstractUser):
     partner_group = models.ForeignKey('dashboard.Group', verbose_name=_('Commission group'), null=True, blank=True)
 
     # referral partner
-    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Referral partner user'))
+    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('A user that is a referral partner can earn money by inviting other publishers to APPRL'))
     referral_partner_code = models.CharField(max_length=16, blank=True, null=True)
     referral_partner_parent = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     referral_partner_parent_date = models.DateTimeField(null=True, blank=True)
@@ -361,6 +361,7 @@ class User(AbstractUser):
         if self.image:
             image = self._get_avatar_image(size="50x50", format="PNG")
             if image:
+                default.engine = old_engine
                 return image
             else:
                 image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_CIRCULAR)
@@ -381,6 +382,7 @@ class User(AbstractUser):
         if self.image:
             image = self._get_avatar_image(size='125x125', format="PNG")
             if image:
+                default.engine = old_engine
                 return image
             else:
                 image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_MEDIUM_CIRCULAR)
@@ -401,6 +403,7 @@ class User(AbstractUser):
         if self.image:
             image = self._get_avatar_image(size='208x208', format="PNG")
             if image:
+                default.engine = old_engine
                 return image
             else:
                 image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)

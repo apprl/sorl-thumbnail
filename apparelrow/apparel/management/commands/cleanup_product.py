@@ -97,7 +97,7 @@ class Command(BaseCommand):
             if vendor_exists:
                 for name, check in checks:
                     if check(product):
-                        print "Product: {}:{} has more than one entry in {}".format(product.id, product, name)
+                        print u"Product: {}:{} has more than one entry in {}".format(product.id, product, name)
                         delete = False
                         break
             if not delete:

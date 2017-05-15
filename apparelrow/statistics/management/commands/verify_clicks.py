@@ -3,6 +3,7 @@ from django.db.models import get_model
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from progressbar import ProgressBar, Percentage, Bar
+from apparelrow.apparel.models import Vendor
 from apparelrow.statistics.utils import get_country_by_ip_string
 
 
@@ -89,9 +90,8 @@ class Command(BaseCommand):
                 # This violates the DRY principle as this code is already present in def product_buy_click in statistics/tasks.py
                 # Todo: Refactor this
 
-                vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(click.vendor, [])
-                if not vendor_markets or len(vendor_markets) == 0:
-                    vendor_markets = settings.VENDOR_LOCATION_MAPPING.get("default")
+                vendor = Vendor.objects.get(name=click.vendor)
+                vendor_markets = vendor.location_codes_list(use_default_location_if_none=True)
 
                 if country in vendor_markets:
                     # This runs pretty smoothly now but if the set increases its better to do batch updates on id.

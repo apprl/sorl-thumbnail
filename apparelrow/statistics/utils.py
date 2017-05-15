@@ -3,9 +3,10 @@ from requests import Timeout
 from django.conf import settings
 import logging
 from django.db.models import get_model
-
+from django.core.cache import get_cache
 
 log = logging.getLogger("apparelrow")
+cache = get_cache("default")
 
 def get_client_referer(request, default=None):
     referer = request.META.get('HTTP_REFERER')
@@ -23,6 +24,13 @@ def get_client_ip(request):
 
     return ip
 
+
+def is_ip_banned(ip):
+    try:
+        return bool(ip in cache.get(settings.PRODUCTSTAT_IP_QUARANTINE_KEY, []))
+    except Exception, msg:
+        log.warn(u"Unable to check ip {} against quarantine due to {}".format(ip, msg))
+        return False
 
 def get_user_agent(request):
     return request.META.get('HTTP_USER_AGENT', '')

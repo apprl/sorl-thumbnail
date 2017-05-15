@@ -1,5 +1,6 @@
 {% spaceless %}
-<ul class="product-list list-unstyled row {% if not show_product_brand and is_embed_shop %}hide-captions{% endif %}">
+<!--div id="product-list-wrapper" -->
+    <ul class="product-list list-unstyled row {% if not show_product_brand and is_embed_shop %}hide-captions{% endif %}">
     {% for html, product in current_page.html %}
         <li class="col-product-item">
             {{ html|safe }}
@@ -11,6 +12,7 @@
         </li>
     {% endfor %}
 </ul>
+<!--/div-->
 <div class="pagination">
     {% include 'apparel/fragments/pagination.html' with request=request current_page=current_page is_shop=True only %}
 </div>
