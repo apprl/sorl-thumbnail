@@ -16,16 +16,12 @@ TEMPLATE_DEBUG = DEBUG
 
 FORCE_SCRIPT_NAME = ''
 
+
 ADMINS = (
-    # ('Joel Bohman', 'joelboh@gmail.com'),
-    ('Klas Wikblad', 'klas@apprl.com'),
-    ('Emily Benitez', 'emily@apprl.com'),
+    ('Slack', 'r5b5o2v1k8b2j9w4@apprl.slack.com'),
 )
 
-MANAGERS = ADMINS + (
-    ('Martin', 'martin@apprl.com'),
-    ('Gustav', 'gustav@apprl.com'),
-)
+MANAGERS = ADMINS
 
 ALLOWED_HOSTS = ['.apprl.com','.apparelrow.com']
 
