@@ -12,7 +12,7 @@
     <link rel="canonical" href="{{ product_full_url }}">
     <meta property="og:title" content="{{ object.manufacturer }} - {{ object.product_name }}"/>
     <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:product"/>
-    {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
+    {% thumbnail object.product_image "720" upscale=False crop="noop" as im %}
     <meta property="og:image" content="{{ im.url }}"/>
     {% endthumbnail %}
     <meta property="og:url" content="{{ product_full_url }}"/>
@@ -87,7 +87,7 @@
 
                     <div class="product-image">
                         {% if object.product_image %}
-                            {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
+                            {% thumbnail object.product_image "720" upscale=False crop="noop" as im %}
                                 <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}">
                             {% endthumbnail %}
                         {% else %}
