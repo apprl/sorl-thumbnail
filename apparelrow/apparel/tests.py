@@ -7,7 +7,7 @@ from django.http import SimpleCookie
 from pysolr import Solr
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.views import get_vendor_cost_per_click, product_lookup_by_domain, extract_encoded_url_string
-from apparelrow.apparel.search import product_save, get_available_brands
+from apparelrow.apparel.search import get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
     extract_asos_nelly_product_url, on_boarding_follow_users, get_most_popular_user_list
 
@@ -20,7 +20,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
 from django.utils.translation import activate
 from django.test import TestCase, RequestFactory
-from apparelrow.apparel.models import Shop, ShopEmbed
+from apparelrow.apparel.models import Shop, ShopEmbed, product_save
 from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.apparel.models import Product, ProductLike
 from apparelrow.apparel.utils import get_availability_text, get_location_warning_text, compress_source_link_if_needed, \
@@ -1451,9 +1451,9 @@ class TestThumbnailClean(TestCase):
         key = sorl_image.key
 
         thumbnail_keys = _get_all_thumbnail_keys(key)
-        self.assertEquals(len(thumbnail_keys), 3)
+        self.assertEquals(len(thumbnail_keys), 4)
         thumbnail_list = _get_all_thumbnail_objects(key)
-        self.assertEquals(len(thumbnail_list), 3)
+        self.assertEquals(len(thumbnail_list), len(thumbnail_keys))
 
         save_entries = []
         for thumb in thumbnail_keys:

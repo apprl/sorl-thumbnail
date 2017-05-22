@@ -1,33 +1,28 @@
-import json
-import decimal
-import logging
-from django.views.generic import TemplateView
-from progressbar import ProgressBar, Percentage, Bar
-import re
-import collections
 import HTMLParser
+import collections
+import decimal
+import json
+import logging
+import re
 
 from django.conf import settings
-from django.shortcuts import render
-from django.core.paginator import Paginator
-from django.core.paginator import InvalidPage
-from django.core.paginator import EmptyPage
-from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
+from django.core.paginator import EmptyPage
+from django.core.paginator import InvalidPage
+from django.core.paginator import Paginator
+from django.db.models.loading import get_model
 from django.http import Http404
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.db.models.loading import get_model
 from django.utils import translation
-
-from apparelrow.apparel.models import Product, ProductLike, Look, ShopProduct
-from apparelrow.apparel.utils import select_from_multi_gender, get_location, get_gender_url
-from apparelrow.apparel.tasks import product_popularity
+from django.views.generic import TemplateView
+from progressbar import ProgressBar, Percentage, Bar
+from pysolr import Solr, SolrError, Results
 from sorl.thumbnail import get_thumbnail
 
-from pysolr import Solr, SolrError, Results
+from apparelrow.apparel.tasks import product_popularity
+from apparelrow.apparel.utils import select_from_multi_gender, get_location, get_gender_url
 
 logger = logging.getLogger('apparelrow')
 
@@ -181,100 +176,6 @@ def clean_index(app_label=None, module_name=None, url=None):
 #
 
 # Todo: Move this method to the corresponding models.py that contain the Product method its attached to.
-@receiver(post_save, sender=Product, dispatch_uid='product_save')
-def product_save(instance, **kwargs):
-    if not hasattr(instance, 'id'):
-        return
-
-    # If this post save signal is a result of only a date update we do not have to update the search index either
-    #if kwargs and "imported_date" in kwargs.keys():
-    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'modified' in kwargs['update_fields']:
-        logger.info(kwargs.get('update_fields', None))
-        return
-
-    # If this post save signal is from a product popularity update we do not
-    # need to update the product in our search index.
-    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'popularity' in kwargs['update_fields']:
-        return
-
-    if 'solr' in kwargs and kwargs['solr']:
-        connection = kwargs['solr']
-    else:
-        connection = Solr(settings.SOLR_URL)
-
-    document, boost = get_product_document(instance)
-
-    if document is not None and document['published']:
-        if 'commit' in kwargs and kwargs['commit']:
-            connection.add([document], commit=True, boost=boost)
-        else:
-            connection.add([document], commit=False, boost=boost, commitWithin=False)
-    elif document is not None and not document['published']:
-        result = ApparelSearch('id:apparel.product.%s AND published:true' % (instance.id,), connection=connection)
-        if len(result) == 1:
-            connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.id))
-
-@receiver(post_delete, sender=Product, dispatch_uid='product_delete')
-def product_delete(instance, **kwargs):
-    """
-    Removes the product from the SOLR index and also deletes any lingering thumbnails
-    :param instance:
-    :param kwargs:
-    :return:
-    """
-    from sorl.thumbnail.images import ImageFile as SorlImageFile, deserialize_image_file
-    from sorl.thumbnail import default
-    from theimp.models import Product as ImpProduct
-    sorl_image = None
-    image_name = instance.product_image.name
-    # Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
-    # using this image is already removed.
-    uses = Product.objects.filter(product_image=image_name).count()
-    if uses > 0:
-        logger.info(u"Product {} shared image with other products [{}], will not remove {}.".format(instance.pk, uses,image_name))
-    else:
-        try:
-            logger.info(u"Trying to remove image and thumbnails for {}".format(instance))
-            sorl_image = SorlImageFile(instance.product_image)
-            try:
-                default.kvstore.delete_thumbnails(sorl_image)
-                default.kvstore.delete(sorl_image)
-            except:
-                logger.warn(u"Failed to remove thumbnails for product {}.".format(instance.pk))
-        except:
-            logger.warn(u"Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
-        finally:
-            if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
-               sorl_image.delete()
-
-    logger.info(u"Trying to clean up theimp.Product: {}".format(instance.product_key))
-    try:
-        if ImpProduct.objects.filter(key=instance.product_key).exists():
-            product = ImpProduct.objects.get(key=instance.product_key)
-            logger.info(u"Cleaning out Imp product: {}".format(product.id))
-            product.delete()
-    except:
-        logger.warn(u"Unable to clean out Imp product corresponding to: {}".format(instance.product_key))
-
-
-    connection = Solr(settings.SOLR_URL)
-    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
-
-@receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
-def product_like_save(instance, **kwargs):
-    product_save(instance.product)
-
-@receiver(post_delete, sender=ProductLike, dispatch_uid='product_like_delete')
-def product_like_delete(instance, **kwargs):
-    product_save(instance.product)
-
-@receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save')
-def shop_product_save(instance, **kwargs):
-    product_save(instance.product)
-
-@receiver(post_delete, sender=ShopProduct, dispatch_uid='shop_product_delete')
-def shop_product_delete(instance, **kwargs):
-    product_save(instance.product)
 
 
 def rebuild_product_index(url=None, vendor_id=None):
@@ -468,22 +369,6 @@ def get_product_document(instance, rebuild=False):
 # LookIndex
 #
 
-@receiver(post_save, sender=Look, dispatch_uid='look_save')
-def look_save(instance, **kwargs):
-    if 'solr' in kwargs and kwargs['solr']:
-        connection = kwargs['solr']
-    else:
-        connection = Solr(settings.SOLR_URL)
-
-    if not instance.user.is_hidden:
-        document, boost = get_look_document(instance)
-        connection.add([document], commit=False, boost=boost, commitWithin=False)
-
-@receiver(post_delete, sender=Look, dispatch_uid='look_delete')
-def look_delete(instance, **kwargs):
-    connection = Solr(settings.SOLR_URL)
-    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
-
 
 def rebuild_look_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
@@ -532,23 +417,6 @@ def get_look_document(instance):
 #
 # Profile index (brands not counted)
 #
-
-@receiver(post_save, sender=get_user_model(), dispatch_uid='search_index_user_save')
-def search_index_user_save(instance, **kwargs):
-    boost = {}
-    if 'solr' in kwargs and kwargs['solr']:
-        connection = kwargs['solr']
-    else:
-        connection = Solr(settings.SOLR_URL)
-
-    if not instance.is_brand and not instance.is_hidden:
-        document, boost = get_profile_document(instance)
-        connection.add([document], commit=False, boost=boost, commitWithin=False)
-
-@receiver(post_delete, sender=get_user_model(), dispatch_uid='search_index_user_delete')
-def search_index_user_delete(instance, **kwargs):
-    connection = Solr(settings.SOLR_URL)
-    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
 def rebuild_user_index(url=None):
     connection = Solr(url or settings.SOLR_URL)

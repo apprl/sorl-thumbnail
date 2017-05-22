@@ -27,6 +27,12 @@ from apparelrow.apparel.utils import get_paged_result
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 from apparelrow.profile.tasks import mail_managers_task
 from django.utils import timezone
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from pysolr import Solr
+from apparelrow.apparel.search import get_profile_document
 import logging
 
 log = logging.getLogger("apparelrow")
@@ -570,6 +576,22 @@ def update_profile_language(sender, user, request, **kwargs):
         user.language = language
         user.save()
 
+@receiver(post_save, sender=get_user_model(), dispatch_uid='search_index_user_save')
+def search_index_user_save(instance, **kwargs):
+    boost = {}
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(settings.SOLR_URL)
+
+    if not instance.is_brand and not instance.is_hidden:
+        document, boost = get_profile_document(instance)
+        connection.add([document], commit=False, boost=boost, commitWithin=False)
+
+@receiver(post_delete, sender=get_user_model(), dispatch_uid='search_index_user_delete')
+def search_index_user_delete(instance, **kwargs):
+    connection = Solr(settings.SOLR_URL)
+    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
 #
 # FOLLOWS

@@ -14,7 +14,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
-from django.db.models.signals import post_save, pre_delete, pre_save
+from django.db.models.signals import post_save, pre_delete, pre_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -29,6 +29,9 @@ from apparelrow.apparel.base_62_converter import saturate, dehydrate
 from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache, empty_embed_productwidget_cache
 
 from apparelrow.profile.notifications import process_sale_alert
+
+from pysolr import Solr
+from apparelrow.apparel.search import logger, get_product_document, ApparelSearch, get_look_document
 
 import requests
 
@@ -436,6 +439,88 @@ def product_update_activity_post_save(sender, instance, **kwargs):
     get_model('activity_feed', 'activity').objects.filter(content_type=content_type, object_id=instance.pk).update(is_available=instance.availability)
     #get_model('activity_feed', 'activity').objects.update_activity(instance)
 
+
+@receiver(post_save, sender=Product, dispatch_uid='product_save')
+def product_save(instance, **kwargs):
+    if not hasattr(instance, 'id'):
+        return
+
+    # If this post save signal is a result of only a date update we do not have to update the search index either
+    #if kwargs and "imported_date" in kwargs.keys():
+    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'modified' in kwargs['update_fields']:
+        logger.info(kwargs.get('update_fields', None))
+        return
+
+    # If this post save signal is from a product popularity update we do not
+    # need to update the product in our search index.
+    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'popularity' in kwargs['update_fields']:
+        return
+
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(settings.SOLR_URL)
+
+    document, boost = get_product_document(instance)
+
+    if document is not None and document['published']:
+        if 'commit' in kwargs and kwargs['commit']:
+            connection.add([document], commit=True, boost=boost)
+        else:
+            connection.add([document], commit=False, boost=boost, commitWithin=False)
+    elif document is not None and not document['published']:
+        result = ApparelSearch('id:apparel.product.%s AND published:true' % (instance.id,), connection=connection)
+        if len(result) == 1:
+            connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.id))
+
+
+@receiver(post_delete, sender=Product, dispatch_uid='product_delete')
+def product_delete(instance, **kwargs):
+    """
+    Removes the product from the SOLR index and also deletes any lingering thumbnails
+    :param instance:
+    :param kwargs:
+    :return:
+    """
+    from sorl.thumbnail.images import ImageFile as SorlImageFile
+    from sorl.thumbnail import default
+    from theimp.models import Product as ImpProduct
+    sorl_image = None
+    image_name = instance.product_image.name
+    # Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
+    # using this image is already removed.
+    uses = Product.objects.filter(product_image=image_name).count()
+    if uses > 0:
+        logger.info(u"Product {} shared image with other products [{}], will not remove {}.".format(instance.pk, uses,image_name))
+    else:
+        try:
+            logger.info(u"Trying to remove image and thumbnails for {}".format(instance))
+            sorl_image = SorlImageFile(instance.product_image)
+            try:
+                default.kvstore.delete_thumbnails(sorl_image)
+                default.kvstore.delete(sorl_image)
+            except:
+                logger.warn(u"Failed to remove thumbnails for product {}.".format(instance.pk))
+        except:
+            logger.warn(u"Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
+        finally:
+            if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
+               sorl_image.delete()
+
+    logger.info(u"Trying to clean up theimp.Product: {}".format(instance.product_key))
+    try:
+        if ImpProduct.objects.filter(key=instance.product_key).exists():
+            product = ImpProduct.objects.get(key=instance.product_key)
+            logger.info(u"Cleaning out Imp product: {}".format(product.id))
+            product.delete()
+    except:
+        logger.warn(u"Unable to clean out Imp product corresponding to: {}".format(instance.product_key))
+
+
+    connection = Solr(settings.SOLR_URL)
+    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
+
+
 #@receiver(post_save, sender=Product, dispatch_uid='product_save_key_check')
 #def product_save_key_check(sender, instance, created, **kwargs):
 #    if created:
@@ -465,6 +550,7 @@ class ProductLike(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=ProductLike)
 models.signals.post_delete.connect(invalidate_model_handler, sender=ProductLike)
 
+
 @receiver(post_save, sender=ProductLike, dispatch_uid='product_like_post_save')
 def product_like_post_save(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
@@ -485,6 +571,7 @@ def product_like_post_save(sender, instance, **kwargs):
             get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every ten minutes
             empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=300) # Schedules the job 5 minutes into the future
 
+
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
@@ -493,6 +580,15 @@ def product_like_pre_delete(sender, instance, **kwargs):
 
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
+
+@receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
+def product_like_save(instance, **kwargs):
+    product_save(instance.product)
+
+
+@receiver(post_delete, sender=ProductLike, dispatch_uid='product_like_delete')
+def product_like_delete(instance, **kwargs):
+    product_save(instance.product)
 
 #
 # ShortStoreLink and ShortProductLink
@@ -1249,6 +1345,16 @@ def shop_product_save(instance, **kwargs):
             empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=120)
         else:
             logger.debug("Key: %s still active, will wait for shop reset." % key)
+
+@receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save')
+def shop_product_save(instance, **kwargs):
+    product_save(instance.product)
+
+@receiver(post_delete, sender=ShopProduct, dispatch_uid='shop_product_delete')
+def shop_product_delete(instance, **kwargs):
+    product_save(instance.product)
+
+
 #
 # Shop
 #
@@ -1334,6 +1440,24 @@ def look_pre_delete(sender, instance, **kwargs):
 
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'create', instance)
 
+@receiver(post_save, sender=Look, dispatch_uid='look_save')
+def look_save(instance, **kwargs):
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(settings.SOLR_URL)
+
+    if not instance.user.is_hidden:
+        document, boost = get_look_document(instance)
+        connection.add([document], commit=False, boost=boost, commitWithin=False)
+
+
+@receiver(post_delete, sender=Look, dispatch_uid='look_delete')
+def look_delete(instance, **kwargs):
+    connection = Solr(settings.SOLR_URL)
+    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
+
+
 #
 # LookEmbed
 #
@@ -1395,7 +1519,6 @@ def look_like_pre_delete(sender, instance, **kwargs):
         return
 
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_look', instance.look)
-
 
 
 class ComponentLink(models.Model):
