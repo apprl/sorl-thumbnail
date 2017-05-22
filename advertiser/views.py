@@ -150,7 +150,7 @@ def pixel(request):
             defaults.update({'order_id': order_id, 'store_id': store_id, 'pk': transaction.pk})
             email_body = render_to_string('advertiser/email_success.txt',
                                           {'defaults': defaults, 'request': request})
-            mail_superusers('Advertiser Pixel Info: new purchase on %s' % (store_id,), email_body)
+            # mail_superusers('Advertiser Pixel Info: new purchase on %s' % (store_id,), email_body)
 
     # Insert optional product data
     product_sku = request.GET.get('sku')
