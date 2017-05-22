@@ -8,18 +8,17 @@
 
     <h1>{% trans "Invite & Earn" %}</h1>
 
-    <h2>{% trans "Earn money by inviting publishers and bloggers." %}</h2>
-    <p>{% blocktrans %}
-        As one of our top members you are given the opportunity to earn money by inviting other bloggers/publishers to join Apprl.
-        Moreover, every blogger you invite gets €50 on their Apprl account to start with!{% endblocktrans %}
+    <h2>{% trans "Invite bloggers to join APPRL and earn more money for you both." %}</h2>
+    <p>
+        {% trans "This offer is valid for an unlimited number of bloggers." %}
     </p>
 
     <p>
-    <strong>{% trans "This is how it works" %}</strong>
+    <strong>{% trans "How it works" %}</strong>
     <ol>
-        <li>1. {% trans "Send invites to bloggers using the form or link below" %}</li>
-        <li>2. {% trans "Every blogger that joins Apprl via your invite will instantly get €50 on their Apprl account" %}</li>
-        <li>3. {% blocktrans %}For 6 months you will earn money every time your invited friend earns money. APPRL will pay you 15%% of the amount your friend earns (this money comes from APPRL and is not taken from your friend!){% endblocktrans %}</li>
+        <li>1. {% trans "Invite a blogger by using your personal invitation link or the form below." %}</li>
+        <li>2. {% trans "Once invited bloggers are approved to join APPRL they will receive a welcome gift of €50 in their APPRL account." %}</li>
+        <li>3. {% trans "You will receive a reward of 15% of what they earn for 6 months, which APPRL will pay you separate from the invited blogger's earnings." %}</li>
     </ol>
     </p>
 
@@ -44,9 +43,9 @@
     <div class="row referral-row">
         <div class="col-md-8 col-md-offset-2">
             <div class="referral-link-container">
-                <h4>{% trans "Or invite by sharing your invitation link" %}</h4>
+                <h4>{% trans "Your personal invitation link" %}</h4>
                 <input onFocus="this.select()" onMouseUp="return false" type="text" class="center" value="{{ request.user.get_referral_domain_url }}">
-                <p>{% trans "You also can copy and share this link in a direct message, in an e-mail, text message or any other way if you want to make it more personal." %}</p>
+                <p>{% trans "Copy and share this link in a direct message, an e-mail, text message or any other way to make your invitation more personal." %}</p>
             </div>
         </div>
     </div>
