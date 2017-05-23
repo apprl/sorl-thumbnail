@@ -3,7 +3,6 @@ import decimal
 import logging
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import mail_admins
 from django.db import models, transaction
@@ -371,7 +370,7 @@ class StoreCommission(models.Model):
 # Model signals
 #
 
-@receiver(pre_save, sender=get_user_model(), dispatch_uid='pre_save_update_referral_code')
+@receiver(pre_save, sender=User, dispatch_uid='pre_save_update_referral_code')
 def pre_save_update_referral_code(sender, instance, *args, **kwargs):
     if instance.is_partner and instance.referral_partner and instance.pk:
         instance.referral_partner_code = dehydrate(1000000 + instance.pk)

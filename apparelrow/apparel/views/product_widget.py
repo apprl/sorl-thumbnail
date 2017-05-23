@@ -111,7 +111,7 @@ def get_liked_product_ids(product_widget):
     if language in settings.LANGUAGE_TO_CURRENCY:
         currency = settings.LANGUAGE_TO_CURRENCY.get(language)
 
-    query_arguments = {'rows': 10, 'start': 0}
+    query_arguments = {'rows': 30, 'start': 0}
     class Request:
         pass
     request = Request()
@@ -128,7 +128,7 @@ def get_liked_product_ids(product_widget):
     query_string = '*:*'
 
     search = ApparelSearch(query_string, **query_arguments)
-    paged_result, pagination = get_pagination_page(search, 10, 1)
+    paged_result, pagination = get_pagination_page(search, 30, 1)
 
     return [product.id for product in paged_result.object_list if product]
 

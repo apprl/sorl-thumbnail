@@ -28,32 +28,33 @@
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
                         {# need url function for referral page here #}
-                        <a href="{% url 'dashboard-referral' %}"><img src="{% static 'images/tools/referral.jpg' %}" /></a>
+                        <a href="{% url 'dashboard-referral' %}"><img src="{% static 'images/tools/referral_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Invite & Earn" %}</h2>
                             <p>{% trans "Earn money by inviting publishers and bloggers." %}</p>
                             <a class="btn btn-primary" href="{% url 'dashboard-referral' %}">
                                 {% trans "Get Started" %}
                             </a>
-                            <span class="empty"></span>
+                            <!--span class="empty"></span-->
                         </article>
                     </div>
                 </li>
                 {% endif %}
+
                 <!-- Product List Widget -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'create-product-widget' 'multiple' %}"><img src="{% static 'images/tools/product-list.jpg' %}" /></a>
+                        <a href="{% url 'create-product-widget' 'multiple' %}"><img src="{% static 'images/tools/product_list_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Product List" %}</h2>
                             <p>{% trans "List products next to your posts, images and videos." %}</p>
                             <a class="btn btn-primary" href="{% url 'create-product-widget' 'multiple' %}">
                                 {% trans "Create Product List" %}
                             </a>
-                            <span class="empty"></span>
-                            <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_text_link">
+                            <!--span class="empty"></span-->
+                            <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_product_list">
                                 {% trans "Info" %}
-                            </a>-->
+                            </a>
                         </article>
                     </div>
                 </li>
@@ -61,24 +62,25 @@
                 <!-- Single Product Widget -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'create-product-widget' 'single' %}"><img src="{% static 'images/tools/single-product.jpg' %}" /></a>
+                        <a href="{% url 'create-product-widget' 'single' %}"><img src="{% static 'images/tools/single_product_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Single Product" %}</h2>
                             <p>{% trans "Let your fans scroll through a selection of products." %}</p>
                             <a class="btn btn-primary" href="{% url 'create-product-widget' 'single' %}">
                                 {% trans "Create Single Product" %}
                             </a>
-                            <span class="empty"></span>
-                            <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_single_widget">
+                            <!--span class="empty"></span-->
+                            <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_single_product">
                                 {% trans "Info" %}
-                            </a>-->
+                            </a>
                         </article>
                     </div>
                 </li>
+
                 <!-- Shop -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'create-shop' %}"><img src="{% static 'images/tools/shop.jpg' %}" /></a>
+                        <a href="{% url 'create-shop' %}"><img src="{% static 'images/tools/shop_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Shop" %}</h2>
                             <p>{% trans "Create a shop for your site in just a few minutes." %}</p>
@@ -95,7 +97,7 @@
                 <!-- Collage -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'look-editor' 'collage' %}"><img src="{% static 'images/tools/collage.jpg' %}" /></a>
+                        <a href="{% url 'look-editor' 'collage' %}"><img src="{% static 'images/tools/collage_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Collage" %}</h2>
                             <p>{% trans "Share interactive mood boards with your audience." %}</p>
@@ -112,7 +114,7 @@
                 <!-- Tagged Photos -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static 'images/tools/tagged-photo.jpg' %}" /></a>
+                        <a href="{% url 'look-editor' 'photo' %}"><img src="{% static 'images/tools/tagged_photo_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Tagged Photos" %}</h2>
                             <p>{% trans "Let your audience shop your curated photos." %}</p>
@@ -129,7 +131,7 @@
                 <!-- Product Links -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/product-link.jpg' %}" /></a>
+                        <a href="{% url 'shop' %}"><img src="{% static 'images/tools/product_link_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "Product Links" %}</h2>
                             <p>{% trans "Get short links for products with just a click." %}</p>
@@ -146,7 +148,7 @@
                 <!-- Chrome Extension -->
                 <li class="col-discover-item">
                     <div class="panel publisher-panel">
-                        <a target="_blank" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm"><img src="{% static 'images/tools/chrome-extension.jpg' %}" /></a>
+                        <a target="_blank" href="https://chrome.google.com/webstore/detail/apprl/igpamghchoipgalgboobhfnohlgbpalm"><img src="{% static 'images/tools/chrome_extension_thumb.jpg' %}" /></a>
                         <article>
                             <h2>{% trans "APPRL for Chrome" %}</h2>
                             <p>{% trans "Get links and like products directly from retailers' sites." %}</p>
@@ -169,11 +171,10 @@
 {% include 'dashboard/fragments/dialog_tool_tagged_photo.html' with request=request csrf_token=csrf_token next=next only %}
 {% include 'dashboard/fragments/dialog_tool_text_link.html' with request=request csrf_token=csrf_token next=next only %}
 {% include 'dashboard/fragments/dialog_tool_chrome_ext.html' with request=request csrf_token=csrf_token next=next only %}
+{% include 'dashboard/fragments/dialog_tool_product_list.html' with request=request csrf_token=csrf_token next=next only %}
+{% include 'dashboard/fragments/dialog_tool_single_product.html' with request=request csrf_token=csrf_token next=next only %}
 
 <script type="text/javascript">
-    /*$('.modal').on('shown.bs.modal', function (e) {
-        resizeSliderContainer(this);
-    });*/
     $('.modal').on('shown.bs.modal', function () {
         var modalSlider = $(this).find('.iosSlider')
         modalSlider.iosSlider('destroy');

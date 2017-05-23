@@ -471,12 +471,14 @@ function doFilter(callback, url, page) {
 function renderPage(products) {
     var $html = $(products.html);
     var $list = $html.filter('.product-list');
+    /*var $list = $html.filter('#product-list-wrapper');*/
     var $pagination = $html.filter('.pagination');
 
     currencyConversion($list.find('.price, .discount-price'));
     updateEmbeddedProducts($list);
 
     $('#product-list > .product-list').append($list.html());
+    /*$('#product-list > #product-list-wrapper').html($list.html());*/
     $('.pagination').html($pagination.html());
 
     $('#product-list').trigger('post_browse_render');
