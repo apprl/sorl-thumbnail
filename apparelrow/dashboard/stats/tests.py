@@ -48,7 +48,7 @@ class TestStats(TransactionTestCase):
                 publisher.save()
         return publisher
 
-    def click(self, store, publisher, order_value=0, invalidate_click=False, date_out_of_range=False):
+    def click(self, store, publisher, order_value=0, invalidate_click=False, date_out_of_range=False, source_link=None):
         """
         Simulates a user click on a link created by publisher
         Gives unique order ids and saves the click date so we can run import on that later
@@ -64,7 +64,7 @@ class TestStats(TransactionTestCase):
 
         with freeze_time(click_date):
             self.click_dates.add(click_date)
-            make(ProductStat, vendor=store.vendor.name, user_id=publisher.id if publisher else 0, is_valid=(not invalidate_click))
+            make(ProductStat, vendor=store.vendor.name, user_id=publisher.id if publisher else 0, is_valid=(not invalidate_click), source_link=source_link)
             if order_value and store.vendor.is_cpo:
                 page = '%s-Shop' % ((publisher.pk,) if publisher else 0)
                 response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'),
@@ -407,11 +407,11 @@ class TestStatsPublisher(TestStats):
         make(Cut, vendor=cpc_store.vendor, group=publisher.partner_group, cut=0, cpc_amount=40, referral_cut=0.1)
         make(ClickCost, vendor=cpc_store.vendor, amount=5)
 
-        # Create clicks, both valid and invalid
+        # Create clicks
 
-        self.click(cpc_store, publisher)    # 40 to ppc_as publisher. vendor pays 5
-        self.click(cpc_store, publisher)    # 40 to ppc_as publisher. vendor pays 5
-        self.click(cpo_store, publisher)    # 40 to ppc_as publisher. vendor pays 5
+        self.click(cpc_store, publisher, source_link='http://link1')    # 40 to ppc_as publisher. vendor pays 5
+        self.click(cpc_store, publisher, source_link='http://link2')    # 40 to ppc_as publisher. vendor pays 5
+        self.click(cpo_store, publisher, source_link='http://link3')    # 40 to ppc_as publisher. vendor pays 20% commission - all of it goes to apprl
 
         self.collect_clicks()
 

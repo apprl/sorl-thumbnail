@@ -170,12 +170,13 @@ def create_payment(user, earnings):
     with transaction.atomic():
         amount = sum(e.amount for e in earnings)
         assert amount >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT
-        details, created = PaymentDetail.objects.get_or_create(user=user)
-        payment = Payment.objects.create(user=user, details=details, amount=amount)
         for earning in earnings:
             assert not earning.payment
             assert earning.paid == Sale.PAID_PENDING
             assert earning.user == user
+        details, created = PaymentDetail.objects.get_or_create(user=user)
+        payment = Payment.objects.create(user=user, details=details, amount=amount)
+        for earning in earnings:
             earning.payment = payment
             earning.paid = Sale.PAID_READY
             earning.save()
@@ -452,7 +453,7 @@ class AggregatedData(models.Model):
 
     def __unicode__(self):
         return """
-        type: {data_type}, from: {aggregated_from_slug}, user: {user_username}, created: {created},
+        type: {data_type}, from slug: {aggregated_from_slug}, from link: {aggregated_from_link}, user: {user_username}, created: {created},
         sale earn: {sale_earnings}, click_earn: {click_earnings}, sale plus click: {sale_plus_click_earnings},
         network sale: {network_sales}, network click: {network_click_earnings}, total_network
         """.format(**vars(self))
