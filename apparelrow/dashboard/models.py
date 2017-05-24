@@ -3,7 +3,6 @@ import decimal
 import logging
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import mail_admins
 from django.db import models, transaction
@@ -171,12 +170,13 @@ def create_payment(user, earnings):
     with transaction.atomic():
         amount = sum(e.amount for e in earnings)
         assert amount >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT
-        details, created = PaymentDetail.objects.get_or_create(user=user)
-        payment = Payment.objects.create(user=user, details=details, amount=amount)
         for earning in earnings:
             assert not earning.payment
             assert earning.paid == Sale.PAID_PENDING
             assert earning.user == user
+        details, created = PaymentDetail.objects.get_or_create(user=user)
+        payment = Payment.objects.create(user=user, details=details, amount=amount)
+        for earning in earnings:
             earning.payment = payment
             earning.paid = Sale.PAID_READY
             earning.save()
@@ -371,7 +371,7 @@ class StoreCommission(models.Model):
 # Model signals
 #
 
-@receiver(pre_save, sender=get_user_model(), dispatch_uid='pre_save_update_referral_code')
+@receiver(pre_save, sender=User, dispatch_uid='pre_save_update_referral_code')
 def pre_save_update_referral_code(sender, instance, *args, **kwargs):
     if instance.is_partner and instance.referral_partner and instance.pk:
         instance.referral_partner_code = dehydrate(1000000 + instance.pk)
@@ -453,7 +453,7 @@ class AggregatedData(models.Model):
 
     def __unicode__(self):
         return """
-        type: {data_type}, from: {aggregated_from_slug}, user: {user_username}, created: {created},
+        type: {data_type}, from slug: {aggregated_from_slug}, from link: {aggregated_from_link}, user: {user_username}, created: {created},
         sale earn: {sale_earnings}, click_earn: {click_earnings}, sale plus click: {sale_plus_click_earnings},
         network sale: {network_sales}, network click: {network_click_earnings}, total_network
         """.format(**vars(self))

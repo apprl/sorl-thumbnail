@@ -27,8 +27,9 @@ class Command(BaseCommand):
         for user, earnings in earnings_per_user.items():
             # Cancel any previous payments that haven't been paid out yet to this user and add them
             # to list of earnings that will be added to new payment
-            for p in Payment.objects.filter(user=user, paid=False):
-                earnings.extend(p.cancel())
+            for old_non_paid_payment in Payment.objects.filter(user=user, paid=False):
+                previous_earnings = old_non_paid_payment.cancel()
+                earnings.extend(previous_earnings)
 
             # Only create new payment if user has reached minimum payout
             if sum(e.amount for e in earnings) >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT:
