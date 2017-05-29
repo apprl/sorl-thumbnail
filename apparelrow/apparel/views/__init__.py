@@ -1923,7 +1923,7 @@ def facebook_friends_widget(request):
 
 def extract_domain_with_suffix(domain):
     try:
-        tld_ext = tldextract.TLDExtract(cache_file=False)
+        tld_ext = tldextract.TLDExtract(cache_file=settings.TLDEXTRACT_CACHE)
         extracted = tld_ext(domain)
         return "%s.%s" % (extracted.domain, extracted.suffix)
     except Exception, msg:
