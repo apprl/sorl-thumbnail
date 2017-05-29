@@ -354,19 +354,26 @@ def shop_widget(request, shop_id=None):
     if content['height'] < 400 or content['height'] == '':
         content['height'] = 400
 
-    shop_embed = ShopEmbed(
-        shop=shop,
-        user=shop.user,
-        width=content['width'],
-        width_type=content['width_type'],
-        height=content['height'],
-        language=content['language'],
-        show_product_brand=show_product_brand,
-        show_filters=show_filters,
-        show_filters_collapsed=show_filters_collapsed
-    )
+    shop_fields = {
+        'shop': shop,
+        'user': shop.user,
+        'width': content['width'],
+        'width_type': content['width_type'],
+        'height': content['height'],
+        'language': content['language'],
+        'show_product_brand': show_product_brand,
+        'show_filters': show_filters,
+        'show_filters_collapsed': show_filters_collapsed
+    }
 
-    shop_embed.save()
+    shop_embed = ShopEmbed.objects.filter(shop=shop).last()
+
+    if shop_embed is not None:
+        ShopEmbed.objects.filter(pk=shop_embed.pk).update(**shop_fields)
+        shop_embed = ShopEmbed.objects.get(pk=shop_embed.pk) # Refetch the new one
+    else:
+        shop_embed = ShopEmbed.objects.create(**shop_fields)
+
     content['object'] = shop_embed
     response = render(request, 'apparel/fragments/shop_widget.html', content)
 

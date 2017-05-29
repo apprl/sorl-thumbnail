@@ -27,6 +27,14 @@ from apparelrow.apparel.utils import get_paged_result
 from apparelrow.profile.utils import slugify_unique, send_welcome_mail
 from apparelrow.profile.tasks import mail_managers_task
 from django.utils import timezone
+from django.conf import settings
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from pysolr import Solr
+from apparelrow.apparel.search import get_profile_document
+import logging
+
+log = logging.getLogger("apparelrow")
 
 EVENT_CHOICES = (
     ('A', _('All')),
@@ -109,7 +117,7 @@ class User(AbstractUser):
     partner_group = models.ForeignKey('dashboard.Group', verbose_name=_('Commission group'), null=True, blank=True)
 
     # referral partner
-    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('Referral partner user'))
+    referral_partner = models.BooleanField(default=False, blank=False, null=False, help_text=_('A user that is a referral partner can earn money by inviting other publishers to APPRL'))
     referral_partner_code = models.CharField(max_length=16, blank=True, null=True)
     referral_partner_parent = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     referral_partner_parent_date = models.DateTimeField(null=True, blank=True)
@@ -271,57 +279,76 @@ class User(AbstractUser):
 
         return self.username
 
+    def _get_avatar_image(self, size="40x40", format=None):
+        try:
+            extras = {"crop": "center"}
+            if format:
+                extras.update({"format": format})
+            return get_thumbnail(self.image, size, **extras).url
+        except IOError, msg:
+            log.warn(u"User {} has a missing profile picture {} [{}].".format(self.id, self.image.name, msg))
+            return None
+
+    def _get_default_profile(self, brand_avatar, default_avatar):
+        if self.is_brand:
+            return staticfiles_storage.url(brand_avatar)
+        else:
+            return staticfiles_storage.url(default_avatar)
+
+    #############################################################################################################
+    # The entire handling of profile images would need a revamp, a lot of violations of the DRY principle here. #
+    #          First goal now is to make sure it does not crash and send the exception into the web layer       #
+    #############################################################################################################
     @cached_property
     def avatar_small(self):
         if self.image:
-            return get_thumbnail(self.image, '40x40', crop='center').url
+            thumbnail = self._get_avatar_image()
+            if thumbnail:
+                return thumbnail
         elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
 
-        if self.is_brand:
-            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
-
-        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
+        return self._get_default_profile(settings.APPAREL_DEFAULT_BRAND_AVATAR, settings.APPAREL_DEFAULT_AVATAR)
 
     @cached_property
     def avatar(self):
         if self.image:
-            return get_thumbnail(self.image, '50x50', crop='center').url
+            thumbnail = self._get_avatar_image(size="50x50")
+            if thumbnail:
+                return thumbnail
         elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_user_id
 
-        if self.is_brand:
-            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR)
-
-        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR)
+        return self._get_default_profile(settings.APPAREL_DEFAULT_BRAND_AVATAR, settings.APPAREL_DEFAULT_AVATAR)
 
     @cached_property
     def avatar_medium(self):
         if self.image:
+            thumbnail = self._get_avatar_image(size="125")
+            if thumbnail:
+                return thumbnail
             return get_thumbnail(self.image, '125').url
         elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
 
-        if self.is_brand:
-            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM)
-
-        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_MEDIUM)
+        return self._get_default_profile(settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM, settings.APPAREL_DEFAULT_AVATAR_MEDIUM)
 
     @cached_property
     def avatar_large(self):
         if self.image:
-            return get_thumbnail(self.image, '208').url
+            thumbnail = self._get_avatar_image(size="208")
+            if thumbnail:
+                return thumbnail
         elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
-        if self.is_brand:
-            return staticfiles_storage.url(settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE)
-
-        return staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE)
+        return self._get_default_profile(settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE, settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
     def avatar_large_absolute_uri(self, request):
         if self.image:
-            return request.build_absolute_uri(get_thumbnail(self.image, '208').url)
+            thumbnail  = self._get_avatar_image(size="208")
+            if thumbnail:
+                return request.build_absolute_uri(thumbnail)
         elif self.facebook_user_id:
             return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
@@ -337,8 +364,15 @@ class User(AbstractUser):
         default.engine = CustomCircularEngine()
         image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_CIRCULAR)
         if self.image:
-            image = get_thumbnail(self.image, '50x50', format="PNG").url
+            image = self._get_avatar_image(size="50x50", format="PNG")
+            if image:
+                default.engine = old_engine
+                return image
+            else:
+                image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_CIRCULAR)
+            #image = get_thumbnail(self.image, '50x50', format="PNG").url
         elif self.facebook_user_id:
+            # No exception handling for facebook users yet
             image_path = 'http://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
             image = get_thumbnail(image_path, '50x50', format="PNG").url
         default.engine = old_engine
@@ -351,8 +385,15 @@ class User(AbstractUser):
         default.engine = CustomCircularEngine()
         image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_MEDIUM_CIRCULAR)
         if self.image:
-            image = get_thumbnail(self.image, '125x125', format="PNG").url
+            image = self._get_avatar_image(size='125x125', format="PNG")
+            if image:
+                default.engine = old_engine
+                return image
+            else:
+                image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_MEDIUM_CIRCULAR)
+            #image = get_thumbnail(self.image, '125x125', format="PNG").url
         if self.facebook_user_id:
+            # No exception handling for facebook users yet
             image_path = 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
             image = get_thumbnail(image_path, '125x125', format="PNG").url
         default.engine = old_engine
@@ -365,8 +406,15 @@ class User(AbstractUser):
         default.engine = CustomCircularEngine()
         image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
         if self.image:
-            image = get_thumbnail(self.image, '208x208', format="PNG").url
+            image = self._get_avatar_image(size='208x208', format="PNG")
+            if image:
+                default.engine = old_engine
+                return image
+            else:
+                image = staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE_CIRCULAR)
+            #image = get_thumbnail(self.image, '208x208', format="PNG").url
         elif self.facebook_user_id:
+            # No exception handling for facebook users yet
             image_path = 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
             image = get_thumbnail(image_path, '208x208', format="PNG").url
         default.engine = old_engine
@@ -431,6 +479,9 @@ class User(AbstractUser):
 
     def has_partner_group_ownership(self):
         return get_model('dashboard', 'Group').objects.filter(owner=self).exists()
+
+    def has_ppc_all_stores(self):
+        return self.partner_group and self.partner_group.has_cpc_all_stores
 
     def is_referral_parent_valid(self):
         if self.referral_partner_parent and self.referral_partner_parent_date and self.referral_partner_parent_date > timezone.now():
@@ -521,14 +572,6 @@ def post_save_user_create(signal, instance, **kwargs):
             instance.slug = slugify_unique(instance.display_name_live, instance.__class__)
             instance.save()
 
-        mail_subject = 'New user signup: %s' % (instance.display_name_live,)
-        if not instance.facebook_user_id:
-            mail_subject = 'New email user signup: %s' % (instance.display_name_live,)
-
-        site_object = Site.objects.get_current()
-        mail_url = 'http://%s%s' % (site_object.domain, instance.get_absolute_url())
-
-        mail_managers_task.delay(mail_subject, 'URL: %s' % (mail_url,))
 
 
 @receiver(user_logged_in, sender=User, dispatch_uid='update_language_on_login')
@@ -538,6 +581,22 @@ def update_profile_language(sender, user, request, **kwargs):
         user.language = language
         user.save()
 
+@receiver(post_save, sender=User, dispatch_uid='search_index_user_save')
+def search_index_user_save(instance, **kwargs):
+    boost = {}
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(settings.SOLR_URL)
+
+    if not instance.is_brand and not instance.is_hidden:
+        document, boost = get_profile_document(instance)
+        connection.add([document], commit=False, boost=boost, commitWithin=False)
+
+@receiver(post_delete, sender=User, dispatch_uid='search_index_user_delete')
+def search_index_user_delete(instance, **kwargs):
+    connection = Solr(settings.SOLR_URL)
+    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
 
 #
 # FOLLOWS

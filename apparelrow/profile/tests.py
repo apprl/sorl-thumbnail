@@ -1,6 +1,7 @@
 from unittest import skip
 from django.contrib.sites.models import Site
 import re
+import logging
 
 from django.conf import settings
 from django.core import mail
@@ -15,6 +16,8 @@ from localeurl.utils import locale_url
 from apparelrow.apparel.models import Look
 from apparelrow.profile.forms import RegisterForm
 from apparelrow.profile.notifications import retrieve_full_url, retrieve_static_url
+
+log = logging.getLogger(__name__)
 
 
 def reverse_locale(*args, **kwargs):
@@ -38,7 +41,7 @@ class TestProfile(TransactionTestCase):
         mailbox = mail.outbox
         self.assertEqual(len(mailbox), 2)
         welcome_mail_body = mailbox[1].body
-        print "Sent mail check passed"
+        log.info("Sent mail check passed")
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         # Sometimes an additional \r gets included in the url forcing a 404
         activation_url = activation_url.replace("\r","")
@@ -46,7 +49,7 @@ class TestProfile(TransactionTestCase):
         self.assertEqual(response.status_code,302)
         user = get_user_model().objects.get(email='test@xvid.se')
         self.assertTrue(user.is_active)
-        print "Verified user is active"
+        log.info("Verified user is active")
 
     def test_signup_email_already_registered(self):
         get_user_model().objects.create(name="Blogger Test", username="usertest", slug="user_test",
@@ -70,38 +73,38 @@ class TestUtilities(TestCase):
     @override_settings(STATIC_URL="http://s-staging.apprl.com/")
     def test_retrieve_full_url(self):
         from django.conf import settings
-        print "Test generating full url"
+        log.info("Test generating full url")
         url = retrieve_full_url("someimage.png")
         self.assertEqual(settings.STATIC_URL,self.temp_static_url)
         self.assertEqual("http://s-staging.apprl.com/someimage.png",url)
-        print "Test passed"
+        log.info("Test passed")
 
     @override_settings(STATIC_URL="/static/")
     def test_retrieve_full_url_local(self):
         from django.conf import settings
-        print "Test generating full url local"
+        log.info("Test generating full url local")
         url = retrieve_full_url("someimage.png")
         self.assertEqual(settings.STATIC_URL, "/static/")
         self.assertEqual("/static/someimage.png",url)
-        print "Test passed"
+        log.info("Test passed")
 
     @override_settings(STATIC_URL="http://s-staging.apprl.com/")
     def test_retrieve_static_url(self):
         from django.conf import settings
-        print "Test full static url"
+        log.info("Test full static url")
         url = retrieve_static_url("someimage.png")
         self.assertEqual(settings.STATIC_URL, self.temp_static_url)
         self.assertEqual("http://s-staging.apprl.com/static/email/someimage.png",url)
-        print "Test retrieve static url"
+        log.info("Test retrieve static url")
 
     @override_settings(STATIC_URL="/static/")
     def test_retrieve_static_url_local(self):
         from django.conf import settings
-        print "Test full static url local"
+        log.info("Test full static url local")
         self.assertEqual(settings.STATIC_URL, "/static/")
         url = retrieve_static_url("someimage.png")
         self.assertEqual("/static/email/someimage.png",url)
-        print "Test retrieve static url"
+        log.info("Test retrieve static url")
 
     @override_settings(STATIC_URL="http://s-staging.apprl.com/")
     def test_retrieve_look_full_url(self):
@@ -111,13 +114,13 @@ class TestUtilities(TestCase):
         look.slug = "yekshamesh"
         #self.assertEqual("/en/look/yekshamesh/",reverse("look-detail",{"slug":look.get_absolute_url()})
         self.assertEqual("/looks/yekshamesh/",look.get_absolute_url())
-        print "Test full url"
+        log.info("Test full url")
         domain = Site.objects.get_current().domain
         url = retrieve_full_url(look.get_absolute_url())
         self.assertEqual(settings.STATIC_URL, self.temp_static_url)
         url = 'http://%s%s' % (domain, look.get_absolute_url())
         self.assertEqual("http://example.com/looks/yekshamesh/",url)
-        print "Test retrieve static url look suceeded"
+        log.info("Test retrieve static url look suceeded")
 
 @skip("Not doing this just yet")
 class TestOnBoardingUsers(TransactionTestCase):

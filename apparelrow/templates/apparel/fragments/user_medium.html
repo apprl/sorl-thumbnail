@@ -20,7 +20,7 @@
     <div class="panel-body">
         <ul class="list-unstyled row">
             {% for x in profile.profile_content %}
-            {% thumbnail x.1 "192x192" crop="center" format="PNG" as im %}
+            {% thumbnail x.1 "192x192" crop="center" as im %}
             <li class="col-xs-6"><a href="{{ x.0 }}"><img class="img-responsive" src="{{ im.url}}"></a></li>
             {% empty %}
             <li class="col-xs-6"><a href="{{ profile.get_absolute_url }}"><img class="img-responsive" src="{% static 'images/brand-avatar-large.png' %}"></a></li>

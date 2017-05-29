@@ -1,26 +1,28 @@
 import operator
 import re
-import decimal
-import json
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
-from django.forms import ModelForm
-from django.utils import timezone
-from django.contrib.sites.models import Site
+import simplejson
 from django.contrib import messages
+from django.contrib.sites.models import Site
+from django.forms import ModelForm
+from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404, HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-
-from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
-from apparelrow.dashboard.tasks import send_email_task
-from apparelrow.dashboard.utils import *
-from apparelrow.apparel.utils import get_location
+from django.utils import timezone
 from django.utils.translation import get_language
-from apparelrow.profile.tasks import mail_managers_task
 from django.views.generic import TemplateView
 
-import logging
+from apparelrow.apparel.utils import get_location
+from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
+from apparelrow.dashboard.stats import stats_admin, stats_publisher
+from apparelrow.dashboard.stats.stats_cache import all_time
+from apparelrow.dashboard.tasks import send_email_task
+from apparelrow.dashboard.utils import *
+from apparelrow.profile.tasks import mail_managers_task
+
 log = logging.getLogger(__name__)
+
+TOP_PRODUCTS_LIMIT = 100
 
 def map_placement(placement):
     link = _('Unknown')
@@ -449,7 +451,10 @@ def clicks_detail(request):
             data = get_clicks_list(vendor, query_date, currency, click_cost, user_id, is_store)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
-
+    else:
+        return HttpResponseForbidden()
+    # If therese nothing just return empty list
+    return HttpResponse(simplejson.dumps([]))
 #
 # PUBLISHER DASHBOARD
 #
@@ -462,6 +467,11 @@ class DashboardView(TemplateView):
         year = None if not 'year' in self.kwargs else self.kwargs['year']
 
         if request.user.is_authenticated() and request.user.is_partner:
+
+            if 'stats' in request.GET:
+                # quick hack to get the cli stats to web
+                return HttpResponse('<html><pre>%s</pre></html>' % stats_publisher.publisher_stats_as_str(request.user.id))
+
             start_date, end_date = parse_date(month, year)
             year = start_date.year
             if month != "0":
@@ -477,7 +487,10 @@ class DashboardView(TemplateView):
             is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
 
             # Total summary for user
-            pending_earnings, confirmed_earnings, pending_payment, total_earned = get_top_summary(request.user)
+            pending_earnings = stats_publisher.pending_earnings(request.user.id)
+            confirmed_earnings = stats_publisher.confirmed_earnings(request.user.id)
+            pending_payment = stats_publisher.pending_payments(request.user.id)
+            total_earned = stats_publisher.total_earnings(all_time, request.user.id)
 
             # Get aggregated data per day
             values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
@@ -488,6 +501,7 @@ class DashboardView(TemplateView):
             data_per_day = aggregated_data_per_day(start_date, end_date, 'publisher', values, query_args)
 
             # Summary earning
+            # TODO: move this to new stats intead of going through AggregatedData
             month_earnings, network_earnings, referral_earnings, ppc_earnings = summarize_earnings(data_per_day.values())
 
             total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings
@@ -510,14 +524,14 @@ class DashboardView(TemplateView):
                                             sum_data['network_click_earnings__sum']
 
             # Aggregate publishers per month
-            top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query)
+            top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query, include_all_network_influencers=True)
 
             # Aggregate products per month
-            top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query)
+            top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
             month_commission = sum_data['sale_earnings__sum']
             show_cpo_earning = True
-            if request.user.partner_group.has_cpc_all_stores and not month_commission or not month_commission > 0:
+            if request.user.partner_group.has_cpc_all_stores and not month_commission:
                 show_cpo_earning = False
 
             network_earning = 0
@@ -535,6 +549,7 @@ class DashboardView(TemplateView):
                             'network_commission': network_earning,
                             'top_publishers': top_publishers,
                             'top_products': top_products,
+                            'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT,
                             'ppc_clicks': paid_clicks,
                             'month_clicks': non_paid_clicks,
                             'referral_commission': referral_earnings,
@@ -551,7 +566,16 @@ class DashboardView(TemplateView):
 class AdminDashboardView(TemplateView):
     template_name = "dashboard/new_admin.html"
 
-    def get_admin_top_summary(self, start_date, end_date):
+    def get_admin_top_summary(self, year, month):
+        top_stats = stats_admin.admin_top_stats(year, month, self.flush_cache)
+        top_stats = [r[1:] for r in top_stats] # get rid of headers
+
+        clicks_stats = stats_admin.admin_clicks(year, month, self.flush_cache)
+        clicks_stats = [r[1:] for r in clicks_stats] # get rid of headers
+        return top_stats, clicks_stats
+
+
+    def get_admin_top_summary_old(self, start_date, end_date):
         """
             Returns matrix with Summary for the given period for Admin Dashboard
         """
@@ -653,7 +677,7 @@ class AdminDashboardView(TemplateView):
         """
         Returns list of lists ready for display from the given matrix with Summary data
         """
-        headings = ['Earnings', 'Referral Earnings', 'Commission', 'PPC earnings', 'PPC clicks', 'Commission clicks', 'Commission sales',
+        headings = ['Earnings', 'Referral Earnings', 'PPO commission', 'PPC earnings', 'PPC clicks', 'PPO clicks', 'PPO sales',
                     'Commission CR']
         if is_bottom_summary:
             headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
@@ -662,7 +686,7 @@ class AdminDashboardView(TemplateView):
             temp_list = []
             heading = row[0]
             temp_list.append(heading)
-            if heading in ('PPC clicks', 'Commission clicks', 'Valid Clicks', 'Invalid clicks'):
+            if heading in ('PPC clicks', 'PPO clicks', 'Valid Clicks', 'Invalid clicks', 'PPO sales'):
                 for value, percentage in map(None, row[1][0], row[1][1]):
                     if not percentage:
                         percentage = "-"
@@ -684,6 +708,9 @@ class AdminDashboardView(TemplateView):
             month = None if not 'month' in self.kwargs else self.kwargs['month']
             year = None if not 'year' in self.kwargs else self.kwargs['year']
 
+            self.use_old_stats = 'use_old_stats' in self.request.GET
+            self.flush_cache = 'flush_cache' in self.request.GET
+
             start_date, end_date = parse_date(month, year)
             year = start_date.year
             month = start_date.month if month != "0" else "0"
@@ -699,18 +726,28 @@ class AdminDashboardView(TemplateView):
             query_args = {'created__range': (start_date_query, end_date_query), 'data_type' : 'aggregated_from_total'}
             data_per_day = aggregated_data_per_day(start_date, end_date, 'admin', values, query_args)
 
-            # Top Publishers
-            top_publishers = get_aggregated_publishers(None, start_date_query, end_date_query, is_admin=True)
-            # Top Products
-            top_products = get_aggregated_products(None, start_date_query, end_date_query)
+            # Top Publishers (influencers)
+            top_publishers = get_admin_aggregated_publishers(start_date_query, end_date_query)
+
+            # Top Products (links)
+            top_products = get_aggregated_products(None, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
             # Get summary for current period
-            monthly_array, clicks_array = self.get_admin_top_summary(start_date_query, end_date_query)
+            if self.use_old_stats:
+                monthly_array, clicks_array = self.get_admin_top_summary_old(start_date_query, end_date_query)
+            else:
+                monthly_array, clicks_array = self.get_admin_top_summary(start_date.year, start_date.month)
+
             previous_start_date, previous_end_date = get_previous_period(start_date_query, end_date_query)
 
             # Get summary for previous period
-            previous_monthly_array, previous_clicks_array = \
-                self.get_admin_top_summary(previous_start_date, previous_end_date)
+
+            if self.use_old_stats:
+                previous_monthly_array, previous_clicks_array = \
+                    self.get_admin_top_summary_old(previous_start_date, previous_end_date)
+            else:
+                previous_monthly_array, previous_clicks_array = \
+                    self.get_admin_top_summary(previous_start_date.year, previous_end_date.month)
 
             # Get difference between current period and previous previous
             relative_summary = get_relative_change_summary(previous_monthly_array, monthly_array)
@@ -718,10 +755,18 @@ class AdminDashboardView(TemplateView):
             relative_summary_clicks = get_relative_change_summary(previous_clicks_array, clicks_array)
             clicks_array = self.get_admin_top_summary_display(zip(clicks_array, relative_summary_clicks), True)
 
+            admin_title = 'Admin Dashboard'
+            if self.flush_cache:
+                admin_title += ' (flush cache)'
+            elif self.use_old_stats:
+                admin_title += ' (old)'
+
             context_data = {'year_choices': year_choices, 'month_choices': month_choices, 'year': year, 'month': month,
                             'month_display': month_display, 'data_per_day': data_per_day, 'currency': currency,
-                            'top_publishers': top_publishers, 'top_products': top_products,
-                            'monthly_array': monthly_array, 'clicks_array': clicks_array }
+                            'top_publishers': top_publishers, 'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT,
+                            'top_products': top_products,
+                            'monthly_array': monthly_array, 'clicks_array': clicks_array,
+                            'admin_title': admin_title}
             return render(request, 'dashboard/new_admin.html', context_data)
         return HttpResponseNotFound()
 

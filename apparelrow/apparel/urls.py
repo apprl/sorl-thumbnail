@@ -1,9 +1,9 @@
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import TemplateView, RedirectView
+from django.views.generic import RedirectView
 from apparelrow.apparel.search import SearchBaseTemplate
 
-from apparelrow.apparel.views.admin import AdminPostsView
+from apparelrow.apparel.views.admin import AdminPostsView, PPCAllStoresView
 from apparelrow.apparel.views.products import ProductList
 from apparelrow.apparel.views.images import TemporaryImageView
 from apparelrow.apparel.views.looks import LookView
@@ -82,7 +82,8 @@ urlpatterns = patterns('',
     # About pages
     url(r'^about/$', 'apparelrow.apparel.views.about', name='about'),
     url(r'^contact/$', 'apparelrow.apparel.views.contact', name='contact'),
-    url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
+    url(r'^jobs/$', RedirectView.as_view(permanent=False, url="http://jobs.apprl.com"), name='jobs'),
+    #url(r'^jobs/$', 'apparelrow.apparel.views.jobs', name='jobs'),
     url(r'^founders/$', 'apparelrow.apparel.views.founders', name='founders'),
 
     # Temporary url for new home page (work in progress)
@@ -198,6 +199,7 @@ urlpatterns = patterns('',
     url(r'^look/(?P<pk>\d+)/?$', LookView.as_view(), name='look'),
 
     url(r'^looks/$', 'apparelrow.apparel.views.look_list', {'gender': 'A'}, name='look-list'),
+    url(r'^looks2/$', 'apparelrow.apparel.views.look_list_popularity', {'gender': 'A'}, name='look-list-2'),
     url(r'^looks/men/$', 'apparelrow.apparel.views.look_list', {'gender': 'M'}, name='look-list-men'),
     url(r'^looks/women/$', 'apparelrow.apparel.views.look_list', {'gender': 'W'}, name='look-list-women'),
     url(r'^looks/search/$', 'apparelrow.apparel.views.look_list', {'search': True}, name='search-look-list'),
@@ -233,8 +235,9 @@ urlpatterns = patterns('',
 
     url(r'^admin/dashboard/kpi/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard'),
     url(r'^admin/dashboard/stores/$', 'apparelrow.apparel.views.admin.stores', name='admin-stores'),
-    url(r'^admin/dashboard/adstores/$', 'apparelrow.apparel.views.admin.ad_stores', name='admin-ad-stores'),
+    url(r'^admin/dashboard/ppc_as/$', PPCAllStoresView.as_view(), name='admin-ppc-as'),
+    url(r'^admin/dashboard/ppc_as/(?P<year>\d{4})/(?P<month>\d{1,2})/$', PPCAllStoresView.as_view(), name='admin-ppc-as'),
     url(r'^admin/dashboard/posts/$', AdminPostsView.as_view(), name='admin-posts'),
-    url(r'^admin/dashboard/posts/(?P<year>\d{4})/(?P<month>\d{1,2})/$', AdminPostsView.as_view(), name='admin-posts'),
+    url(r'^admin/dashboard/posts/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<vendor>[\d]+|all)/$', AdminPostsView.as_view(), name='admin-posts'),
     url(r'^admin/kpi/dashboard/$', 'apparelrow.apparel.views.admin.kpi_dashboard', name='admin-kpi-dashboard_'),
 )

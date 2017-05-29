@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load cache i18n humanize thumbnail apparel_extras buy_extras %}
+{% load cache i18n humanize thumbnail apparel_extras buy_extras static %}
 
 {% block extra-title %}{% cache CACHE_TIMEOUT product_detail_title object.id LANGUAGE_CODE %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {% if object.color_list_locale %}{% for color in object.color_list_locale %}{{ color }}{% if not forloop.last %}{% if forloop.revcounter == 2 %} & {% else %}, {% endif %}{% endif %}{% endfor %} |{% endif %} {{ object.categories|join:' | ' }} | {% trans object.get_gender_display %} | {% endcache %}{% endblock %}
 
@@ -12,7 +12,7 @@
     <link rel="canonical" href="{{ product_full_url }}">
     <meta property="og:title" content="{{ object.manufacturer }} - {{ object.product_name }}"/>
     <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:product"/>
-    {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
+    {% thumbnail object.product_image "720" upscale=False crop="noop" as im %}
     <meta property="og:image" content="{{ im.url }}"/>
     {% endthumbnail %}
     <meta property="og:url" content="{{ product_full_url }}"/>
@@ -54,6 +54,21 @@
 
             {% if request.user.is_authenticated and request.user.is_partner and object.default_vendor %}
             <a data-slug="{{ object.slug }}" data-toggle="modal" data-target="#modal_like_product" class="btn auto">{% trans "Get product link" %}</a>
+
+            <p class="earning-box">
+                {% if request.user.is_partner and object.default_vendor and product_earning %}
+                    You will earn
+                    {% if not request.user.partner_group.has_cpc_all_stores %}approx. {% endif %}
+                    <span class="currency">{{ currency }}</span> {{ product_earning }}
+                    {% if object.default_vendor.vendor.is_cpo %}
+                        per generated sale of this item.
+                    {% elif object.default_vendor.vendor.is_cpc %}
+                        per click to this item.
+                    {% endif %}
+                {% else %}
+                    Settings for earnings are missing.
+                {% endif %}
+            </p>
             {% endif %}
         </div>
 
@@ -86,9 +101,13 @@
                     <hr>
 
                     <div class="product-image">
-                        {% thumbnail object.product_image "720" upscale=False crop="noop" format="PNG" as im %}
-                        <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}">
-                        {% endthumbnail %}
+                        {% if object.product_image %}
+                            {% thumbnail object.product_image "720" upscale=False crop="noop" as im %}
+                                <img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" title="{{ object }}">
+                            {% endthumbnail %}
+                        {% else %}
+                            <img itemprop="image" src="{% static "images/image_not_available.jpg" %}" width="328" height="432" title="{{ object }}">
+                        {% endif %}
                     </div>
                 </section>
             </div>
@@ -108,7 +127,7 @@
                                 <p class="seller" itemprop="seller" itemscope itemtype="http://data-vocabulary.org/Organization">
                                     {% if object.default_vendor %}
                                         {% if object.default_vendor.availability == 0 %}
-                                        <a target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span></a>
+                                        <a rel="nofollow" target="_blank" href="{{ object.default_vendor.vendor.homepage }}">{% trans "Was available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span></a>
                                         {% else %}
                                         <a rel="nofollow" target="_blank" class="btn-buy" href="{% buy_url object.id object.default_vendor referral_sid 'Product' %}" data-sid="{% get_sid object.id referral_sid 'Product' %}" data-slug="{{ object.slug }}" data-vendor="{{ object.default_vendor.vendor }}" data-price="{{ object.default_vendor.lowest_price_in_sek|floatformat:0 }}">{% trans "Available at " %}<span itemprop="name">{{ object.default_vendor.vendor }}</span> &raquo;</a>
                                         {% endif %}
@@ -149,10 +168,14 @@
                                         You will earn
                                         {% if not request.user.partner_group.has_cpc_all_stores %}approx. {% endif %}
                                         <span class="currency">{{ currency }}</span> {{ product_earning }}
-                                        {% if object.default_vendor.vendor.is_cpo %}
-                                            per generated sale of this item.
-                                        {% elif object.default_vendor.vendor.is_cpc %}
+                                        {% if request.user.partner_group.has_cpc_all_stores %}
                                             per click to this item.
+                                        {% else %}
+                                            {% if object.default_vendor.vendor.is_cpo %}
+                                                per generated sale of this item.
+                                            {% elif object.default_vendor.vendor.is_cpc %}
+                                                per click to this item.
+                                            {% endif %}
                                         {% endif %}
                                     {% else %}
                                         Settings for earnings are missing.

@@ -18,7 +18,7 @@ So, before changing anything here, do take this into consideration and talk to t
 <div class="thumbnail product-medium" id="product-{{ object.id }}" data-id="{{ object.id }}">
     <div class="product-image-container">
         <a href="{{ object.get_absolute_url|chlocale:LANGUAGE_CODE }}">
-            {% thumbnail object.product_image "280x320" keep_size=True crop=False format='PNG' as im %}
+            {% thumbnail object.product_image "280x320" keep_size=True crop=False as im %}
             <img class="product-image" src="{{ im.url }}" alt="{{ object.alt_text }}" width="{{ im.width }}" height="{{ im.height }}">
             {% endthumbnail %}
         </a>

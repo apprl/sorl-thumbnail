@@ -1,26 +1,22 @@
 # -*- coding: utf-8 -*-
+import calendar
 import datetime
 import decimal
-import calendar
 
-from django.shortcuts import render
+from dateutil.relativedelta import relativedelta
 from django.db.models import Sum, Count, Min
-from django.http import Http404, HttpResponseNotFound, HttpResponse
+from django.http import Http404, HttpResponseNotFound
+from django.shortcuts import render
+from django.views.generic import TemplateView
+
 from apparelrow.apparel.models import Vendor
 from apparelrow.apparel.utils import get_pagination_page
-from apparelrow.apparel.browse import get_pagination_as_dict
 from apparelrow.dashboard.models import Sale
-from apparelrow.dashboard.views import parse_date
+from apparelrow.dashboard.stats.stats_admin import ppc_all_stores_stats
 from apparelrow.dashboard.utils import enumerate_months
+from apparelrow.dashboard.views import parse_date
 from apparelrow.importer.models import VendorFeed
 from apparelrow.statistics.models import ProductStat
-from dateutil.relativedelta import relativedelta
-from django.views.generic import TemplateView
-from django.template import loader
-from django.template import RequestContext
-
-
-
 
 ZERO_DECIMAL = decimal.Decimal('0.00')
 BROWSE_PAGE_SIZE = 30
@@ -69,17 +65,40 @@ def get_date_interval(date, is_month=False, is_year=False, previous=False):
 
 
 
-#def get_date_interval(is_month, date, last=False):
-    #if not is_month:
-        #if last:
-            #return week_magic(date - datetime.timedelta(days=7))
+class PPCAllStoresView(TemplateView):
 
-        #return week_magic(date)
+    template_name = 'apparel/admin/ppc_as.html'
 
-    #if last:
-        #return month_magic(date - relativedelta(months=1))
+    def get_context_data(self, **kwargs):
+        context = super(PPCAllStoresView, self).get_context_data(**kwargs)
+        month = None if not 'month' in kwargs else kwargs['month']
+        year = None if not 'year' in kwargs else kwargs['year']
+        start_date, end_date = parse_date(month, year)
+        year = start_date.year
+        if month != "0":
+            month = start_date.month
 
-    #return month_magic(date)
+        flush_cache = 'flush_cache' in self.request.GET
+
+        month_display, month_choices, year_choices = enumerate_months(self.request.user, month)
+        stats = ppc_all_stores_stats(year, month, flush_cache)
+
+        context.update({
+            'stats': stats,
+            'month': month,
+            'year': year,
+            'month_display': month_display,
+            'month_choices': month_choices,
+            'year_choices': year_choices,
+            'flush_cache': flush_cache
+        })
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated() and request.user.is_superuser:
+            context = self.get_context_data(**kwargs)
+            return render(request, self.template_name, context)
+        return HttpResponseNotFound()
 
 
 def kpi_dashboard(request):
@@ -264,17 +283,23 @@ def stores(request, user_id=None):
     raise Http404
 
 
-def ad_stores(request):
-    return stores(request, user_id=24981)
-
-
 class AdminPostsView(TemplateView):
     template_name = 'apparel/admin/posts.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, request, **kwargs):
         context = super(AdminPostsView, self).get_context_data(**kwargs)
         month = None if not 'month' in kwargs else kwargs['month']
         year = None if not 'year' in kwargs else kwargs['year']
+        vendor = "all" if not 'vendor' in kwargs else kwargs['vendor']
+
+        sort_by = request.GET.get('sort_by', None)
+        order = request.GET.get('order', None)
+
+        if sort_by not in ['user_id', 'referer', 'created_date', 'posts']:
+            sort_by = 'posts'
+
+        if order not in ['asc', 'desc']:
+            order = 'desc'
 
         start_date, end_date = parse_date(month, year)
 
@@ -285,9 +310,19 @@ class AdminPostsView(TemplateView):
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
         month_display, month_choices, year_choices = enumerate_months(self.request.user, month)
+        vendor_choices = Vendor.objects.values('name', 'pk')
 
-        product_stats = ProductStat.objects.filter(created__range=(start_date_query, end_date_query)).\
-            exclude(user_id=0).values('referer', 'user_id').annotate(posts=Count('referer'), created_date=Min('created')).order_by('-posts')
+        query = ProductStat.objects.filter(
+            created__range=(start_date_query, end_date_query)
+            ).exclude(user_id=0)
+
+        if vendor != "all":
+            vendor = int(vendor)
+            vendor_name = Vendor.objects.get(pk=vendor).name
+            query = query.filter(vendor=vendor_name)
+
+        query = query.values('referer', 'user_id').annotate(posts=Count('referer'), created_date=Min('created'))
+        product_stats = query.order_by("%s%s" % ("-" if order == "desc" else "", sort_by))
 
         paged_result, pagination = get_pagination_page(product_stats, BROWSE_PAGE_SIZE, self.request.GET.get('page', 1))
 
@@ -296,14 +331,19 @@ class AdminPostsView(TemplateView):
             'next': self.request.get_full_path(),
             'month': month,
             'year': year,
+            'vendor': vendor,
             'month_display': month_display,
             'month_choices': month_choices,
             'year_choices': year_choices,
+            'vendor_choices': vendor_choices,
+            'sort_by': sort_by,
+            'order': order,
         })
         return context
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated() and request.user.is_superuser:
-            context = self.get_context_data(**kwargs)
+            context = self.get_context_data(request=request, **kwargs)
+
             return render(request, self.template_name, context)
         return HttpResponseNotFound()

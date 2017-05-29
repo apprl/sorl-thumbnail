@@ -12,7 +12,7 @@ class Store(models.Model):
     identifier = models.CharField(max_length=64, null=False, blank=False, unique=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, default=None, blank=True, null=True, on_delete=models.SET_NULL, related_name='advertiser_store')
     balance = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
-    commission_percentage = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2)
+    commission_percentage = models.DecimalField(null=False, blank=False, default='0.0', max_digits=12, decimal_places=2) # only applies to cpo vendors
     cookie_days = models.PositiveIntegerField(null=False, blank=False, default=30)
     vendor = models.ForeignKey('apparel.Vendor', null=False, blank=False, related_name='store')
 
@@ -173,7 +173,7 @@ class Cookie(models.Model):
     old_cookie_id = models.CharField(max_length=32, null=True, blank=True)
 
     # User data
-    custom = models.CharField(max_length=128, null=True, blank=True)
+    custom = models.CharField(max_length=256, null=True, blank=True)
 
     # Date
     created = models.DateTimeField(default=timezone.now, null=False, blank=False)

@@ -1,33 +1,28 @@
-import json
-import decimal
-import logging
-from django.views.generic import TemplateView
-from progressbar import ProgressBar, Percentage, Bar
-import re
-import collections
 import HTMLParser
+import collections
+import decimal
+import json
+import logging
+import re
 
 from django.conf import settings
-from django.shortcuts import render
-from django.core.paginator import Paginator
-from django.core.paginator import InvalidPage
-from django.core.paginator import EmptyPage
-from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
+from django.core.paginator import EmptyPage
+from django.core.paginator import InvalidPage
+from django.core.paginator import Paginator
+from django.db.models.loading import get_model
 from django.http import Http404
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.db.models.loading import get_model
 from django.utils import translation
-
-from apparelrow.apparel.models import Product, ProductLike, Look, ShopProduct
-from apparelrow.apparel.utils import select_from_multi_gender, get_location, get_gender_url
-from apparelrow.apparel.tasks import product_popularity
+from django.views.generic import TemplateView
+from progressbar import ProgressBar, Percentage, Bar
+from pysolr import Solr, SolrError, Results
 from sorl.thumbnail import get_thumbnail
 
-from pysolr import Solr, SolrError, Results
+from apparelrow.apparel.tasks import product_popularity
+from apparelrow.apparel.utils import select_from_multi_gender, get_location, get_gender_url
 
 logger = logging.getLogger('apparelrow')
 
@@ -181,59 +176,6 @@ def clean_index(app_label=None, module_name=None, url=None):
 #
 
 # Todo: Move this method to the corresponding models.py that contain the Product method its attached to.
-@receiver(post_save, sender=Product, dispatch_uid='product_save')
-def product_save(instance, **kwargs):
-    if not hasattr(instance, 'id'):
-        return
-
-    # If this post save signal is a result of only a date update we do not have to update the search index either
-    #if kwargs and "imported_date" in kwargs.keys():
-    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'modified' in kwargs['update_fields']:
-        logger.info(kwargs.get('update_fields', None))
-        return
-
-    # If this post save signal is from a product popularity update we do not
-    # need to update the product in our search index.
-    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'popularity' in kwargs['update_fields']:
-        return
-
-    if 'solr' in kwargs and kwargs['solr']:
-        connection = kwargs['solr']
-    else:
-        connection = Solr(settings.SOLR_URL)
-
-    document, boost = get_product_document(instance)
-
-    if document is not None and document['published']:
-        if 'commit' in kwargs and kwargs['commit']:
-            connection.add([document], commit=True, boost=boost)
-        else:
-            connection.add([document], commit=False, boost=boost, commitWithin=False)
-    elif document is not None and not document['published']:
-        result = ApparelSearch('id:apparel.product.%s AND published:true' % (instance.id,), connection=connection)
-        if len(result) == 1:
-            connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.id))
-
-@receiver(post_delete, sender=Product, dispatch_uid='product_delete')
-def product_delete(instance, **kwargs):
-    connection = Solr(settings.SOLR_URL)
-    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
-
-@receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
-def product_like_save(instance, **kwargs):
-    product_save(instance.product)
-
-@receiver(post_delete, sender=ProductLike, dispatch_uid='product_like_delete')
-def product_like_delete(instance, **kwargs):
-    product_save(instance.product)
-
-@receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save')
-def shop_product_save(instance, **kwargs):
-    product_save(instance.product)
-
-@receiver(post_delete, sender=ShopProduct, dispatch_uid='shop_product_delete')
-def shop_product_delete(instance, **kwargs):
-    product_save(instance.product)
 
 
 def rebuild_product_index(url=None, vendor_id=None):
@@ -340,9 +282,9 @@ def get_product_document(instance, rebuild=False):
         # Facets
         vendor_markets = None
         if instance.default_vendor:
-            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(instance.default_vendor.vendor.name,None)
+            vendor_markets = instance.default_vendor.vendor.location_codes_list()
         document['color'] = color_ids
-        document['market'] =  vendor_markets if vendor_markets else settings.VENDOR_LOCATION_MAPPING.get("default")
+        document['market'] = vendor_markets if vendor_markets else settings.DEFAULT_VENDOR_LOCATION
         document['price'] = '%s,%s' % (price.quantize(decimal.Decimal('1.00'), rounding=decimal.ROUND_HALF_UP), currency)
         document['category'] = category_ids
         document['manufacturer_id'] = instance.manufacturer_id
@@ -427,22 +369,6 @@ def get_product_document(instance, rebuild=False):
 # LookIndex
 #
 
-@receiver(post_save, sender=Look, dispatch_uid='look_save')
-def look_save(instance, **kwargs):
-    if 'solr' in kwargs and kwargs['solr']:
-        connection = kwargs['solr']
-    else:
-        connection = Solr(settings.SOLR_URL)
-
-    if not instance.user.is_hidden:
-        document, boost = get_look_document(instance)
-        connection.add([document], commit=False, boost=boost, commitWithin=False)
-
-@receiver(post_delete, sender=Look, dispatch_uid='look_delete')
-def look_delete(instance, **kwargs):
-    connection = Solr(settings.SOLR_URL)
-    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
-
 
 def rebuild_look_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
@@ -492,23 +418,6 @@ def get_look_document(instance):
 # Profile index (brands not counted)
 #
 
-@receiver(post_save, sender=get_user_model(), dispatch_uid='search_index_user_save')
-def search_index_user_save(instance, **kwargs):
-    boost = {}
-    if 'solr' in kwargs and kwargs['solr']:
-        connection = kwargs['solr']
-    else:
-        connection = Solr(settings.SOLR_URL)
-
-    if not instance.is_brand and not instance.is_hidden:
-        document, boost = get_profile_document(instance)
-        connection.add([document], commit=False, boost=boost, commitWithin=False)
-
-@receiver(post_delete, sender=get_user_model(), dispatch_uid='search_index_user_delete')
-def search_index_user_delete(instance, **kwargs):
-    connection = Solr(settings.SOLR_URL)
-    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
-
 def rebuild_user_index(url=None):
     connection = Solr(url or settings.SOLR_URL)
     user_count = 0
@@ -520,12 +429,15 @@ def rebuild_user_index(url=None):
     for index, user in enumerate(valid_users.iterator()):
         pbar.update(index)
         document, boost = get_profile_document(user)
+
+        if not document:
+            continue
         user_buffer.append(document)
         if len(user_buffer) == 100:
             connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
             user_buffer.clear()
 
-        user_count = user_count + 1
+        user_count += 1
     pbar.finish()
 
     connection.add(list(user_buffer), commit=False, boost=boost, commitWithin=False)
@@ -541,8 +453,13 @@ def get_profile_document(instance):
     document['django_id'] = instance.pk
     document['name'] = instance.display_name_live
     document['gender'] = instance.gender
-    document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
 
+    # document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
+    try:
+        document['template'] = render_to_string('apparel/fragments/profile_search_content.html', {'object': instance})
+    except Exception, msg:
+        logger.warn(u"Unable to index user: {}, [{}]".format(instance, msg))
+        document['template'] = ""
     return document, boost
 
 def decode_manufacturer_facet(data):

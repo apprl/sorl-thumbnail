@@ -1,6 +1,8 @@
 import datetime
 import decimal
 import calendar
+import logging
+
 from dateutil.relativedelta import *
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -8,10 +10,14 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.core import management, mail
 from django.conf import settings
+
+from apparelrow.statistics.tasks import product_buy_click
 from factories import *
 from apparelrow.statistics.models import ProductStat
-from apparelrow.statistics.utils import check_vendor_has_reached_limit
+from apparelrow.statistics.utils import check_vendor_has_reached_limit, extract_short_link_from_url, is_ip_banned
 from apparelrow.dashboard.utils import parse_date
+
+log = logging.getLogger(__name__)
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -32,12 +38,13 @@ class TestProductStat(TestCase):
         normal_user.save()
 
         cpc_vendor = get_model('apparel', 'Vendor').objects.get(pk=2)
+        cpc_vendor.locations.create(code='SE')
 
         get_model('dashboard', 'Cut').objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=group,
                                                      vendor=cpc_vendor)
         self._login()
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="NO",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True, GEOIP_RETURN_LOCATION="NO")
     def test_click_is_not_valid(self):
         """
         Tests that when a click ip does not match the market of the cpc store, the click is not valid
@@ -49,6 +56,8 @@ class TestProductStat(TestCase):
         response = self.client.post(reverse('product-track', args=[product.pk, 'Ext-Link', user.pk]), follow=True,
                                     REMOTE_ADDR="190.104.96.3")
 
+        total_clicks = get_model('statistics', 'ProductStat').objects.count()
+        self.assertEqual(total_clicks, 1)
         valid_clicks = get_model('statistics', 'ProductStat').objects.filter(is_valid=True).count()
         self.assertEqual(valid_clicks, 0)
         str_date = datetime.date.today().strftime('%Y-%m-%d')
@@ -56,25 +65,8 @@ class TestProductStat(TestCase):
         self.assertEqual(get_model('dashboard', 'Sale').objects.count(), 0)
         self.assertEqual(get_model('dashboard', 'UserEarning').objects.count(), 0)
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="NO",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "default":["ALL","SE","NO","US"],})
-    def test_locality_clicks_are_valid(self):
-        """
-        Tests that when a click ip does  match the market of the cpc store, the click is valid and it will be included
-        in earnings
-        """
-        user = get_user_model().objects.get(username='normal_user')
-        product = get_model('apparel', 'Product').objects.get(slug='brand-cpc-product')
-        clickcost = get_model('dashboard', 'ClickCost').objects.get(pk=1)
-        for i in range(10):
-            response = self.client.post(reverse('product-track', args=[product.pk, 'Ext-Link', user.pk]), follow=True,
-                                    REMOTE_ADDR="192.1.1.1.")
 
-        valid_clicks = get_model('statistics', 'ProductStat').objects.filter(is_valid=True).count()
-        self.assertEqual(valid_clicks, 0)
-        total_clicks = get_model('statistics', 'ProductStat').objects.count()
-        self.assertEqual(total_clicks, 10)
-
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"CPC Vendor":["SE"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
     def test_click_is_valid(self):
         """
         Tests that when a click ip does  match the market of the cpc store, the click is valid and it will be included
@@ -104,7 +96,7 @@ class TestProductStat(TestCase):
         earning_apprl = get_model('dashboard', 'UserEarning').objects.get(user=None)
         self.assertEqual(earning_apprl.amount, clickcost.amount * (1 - decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT)))
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE",VENDOR_LOCATION_MAPPING={"default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
     def test_unique_clicks_per_day(self):
         """
         Tests that only one click could be made to the same product from the same browser, once a day
@@ -117,7 +109,7 @@ class TestProductStat(TestCase):
         for index, product in enumerate(products):
             VendorProductFactory.create(product=product,vendor=vendor_all)
         for product in products:
-            print "Testing product %s for default vendor, Vendor [%s]" % (product,product.default_vendor.vendor.name)
+            log.info("Testing product %s for default vendor, Vendor [%s]" % (product,product.default_vendor.vendor.name))
             self.assertIsNotNone(product.default_vendor)
 
         user = get_user_model().objects.get(username='normal_user')
@@ -232,11 +224,12 @@ class TestProductStat(TestCase):
         short_url_locale_5 = u'http://staging.apprl.com/sv/s/4C96/'
         self.assertEquals("4C96", extract_short_link_from_url(short_url_locale_5))
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="DK",VENDOR_LOCATION_MAPPING={"PPC Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="DK",DEFAULT_VENDOR_LOCATION=["ALL","SE","NO","US"])
     def test_valid_clicks_location(self):
 
-        # Vendor Market: ["SE"]
+        # Vendor Market: ["DK"]
         vendor = VendorFactory.create(name="PPC Vendor DK", is_cpc=True, is_cpo=False)
+        vendor.locations.create(code='DK')
         product = ProductFactory.create(slug="product")
         VendorProductFactory.create(vendor=vendor, product=product)
 
@@ -259,11 +252,12 @@ class TestProductStat(TestCase):
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=True).count(), 0)
         self.assertEqual(get_model('statistics', 'ProductStat').objects.filter(product=other_product.slug, is_valid=False).count(), clicks)
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="ALL",VENDOR_LOCATION_MAPPING={"PPC Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="ALL",DEFAULT_VENDOR_LOCATION=["ALL","SE","NO","US"])
     def test_clicks_from_unmapped_location(self):
 
-        # Vendor Market: ["SE"]
+        # Vendor Market: ["DK"]
         vendor = VendorFactory.create(name="PPC Vendor DK", is_cpc=True, is_cpo=False)
+        vendor.locations.create(code='DK')
         product = ProductFactory.create(slug="product")
         VendorProductFactory.create(vendor=vendor, product=product)
 
@@ -328,7 +322,7 @@ class TestProductStat(TestCase):
 
         product_stat_3 = ProductStatFactory.create(ip="5.6.7.8", referer="")
 
-        management.call_command('update_stats_referer', verbosity=0, interactive=False)
+        management.call_command('update_stats_referer', verbosity=0, interactive=False, skip_progress=True)
 
         # Referer link
         updated_product_stat_1 = ProductStat.objects.get(id=product_stat_1.id)
@@ -341,3 +335,61 @@ class TestProductStat(TestCase):
         # Blank referer link
         updated_product_stat_3 = ProductStat.objects.get(id=product_stat_3.id)
         self.assertEqual(updated_product_stat_3.referer, "")
+
+    def test_product_buy_click(self):
+        """
+        Disclaimer: This test is not yet done. It originated from reports of certain domain deeplinks not working and getting
+        improperly populated by affiliate network. https://www.pivotaltracker.com/story/show/135521791
+        :return:
+        """
+
+        # product_buy_click(product_id, referer, client_referer, ip, user_agent, user_id, page, cookie_already_exists)
+        # _, _, _, source_link = parse_sid(result['sid'])
+        # TypeError: 'NoneType' object has no attribute '__getitem__'
+        # TODO: Resolve why this is happening, this test just makes sure it prevents the crasch when this occurs.
+        original_url = "http://www.cafe.se/vinterns-snyggaste-jacka-10-shearlingjackor-du-kan-kopa-redan-idag/"
+        vendor_name = "Jerkstore"
+        vendor = VendorFactory.create(name=vendor_name)
+        domain_deep_link = DomainDeepLinkingFactory.create(vendor=vendor, domain="www.jerkstore.com")
+        self.assertEquals(domain_deep_link.template, "http://apprl.com/a/link/?store_id=jerkstore&custom={sid}&url={url}")
+        domain_link = ShortDomainLinkFactory.create(url=original_url, vendor=vendor)
+        user = domain_link.user
+        link = domain_link.link()
+        self.assertIsNotNone( link )
+        full_link = reverse('domain-short-link', args=[link])
+        self.assertTrue( full_link.startswith("/pd/") )
+        self.assertFalse(ProductStat.objects.count())
+        for i in range(5):
+            product_buy_click(u'0', u'http://www.cafe.se/vinterns-snyggaste-jacka-10-shearlingjackor-du-kan-kopa-redan-idag/',
+                          full_link, '193.61.179.9', 'Mozilla/5.0 (Safari/601.6.17)', str(user.pk), u'Ext-Link', False)
+        self.assertEquals(ProductStat.objects.filter(user_id=user.pk).count(), 5)
+
+        short_link = extract_short_link_from_url(full_link)
+        _, returned_vendor_name, _ = ShortDomainLink.objects.get_short_domain_for_link(short_link)
+        self.assertTrue(returned_vendor_name == domain_link.vendor.name)
+        source_link = ShortDomainLink.objects.get_original_url_for_link(short_link)
+
+        self.assertEquals(source_link, "LINK-NOT-FOUND")
+        product_buy_click(u'0',
+                          u'http://www.cafe.se/vinterns-snyggaste-jacka-10-shearlingjackor-du-kan-kopa-redan-idag/',
+                          full_link, '193.61.179.9', 'Mozilla/5.0 (Safari/601.6.17)', str(666), u'Ext-Link', False)
+
+    def test_is_ip_banned(self):
+        """
+        This test only works if there is a valid cache backend. Dummy cache which is not storing any values will make it fail.
+        :return:
+        """
+        from django.core.cache import get_cache
+        cache = get_cache("default")
+        cache.delete(settings.PRODUCTSTAT_IP_QUARANTINE_KEY)
+        banned_ips = ["1.2.3.4", "5.6.7.8"]
+        cache.set(settings.PRODUCTSTAT_IP_QUARANTINE_KEY, banned_ips, 60*5)
+        cached_ips = cache.get(settings.PRODUCTSTAT_IP_QUARANTINE_KEY)
+        self.assertEquals(banned_ips, cached_ips)
+
+        testing_ips = [("123.234.123.123", False), ("1.2.3.4", True), ("11.21.31.41", False), ("5.6.7.9", False),
+                       ("5.6.7.8", True)]
+
+        for ip, result in testing_ips:
+            self.assertEquals(is_ip_banned(ip), result, "The ip {} does not give the correct result.".format(ip))
+        cache.delete(settings.PRODUCTSTAT_IP_QUARANTINE_KEY)

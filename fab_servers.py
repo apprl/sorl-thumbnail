@@ -18,7 +18,10 @@ def prod_settings():
     env.db_pass = 'gUp8Swub'
     env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
     env.memcached_url = 'apparel-cache.uhyk4j.cfg.euw1.cache.amazonaws.com'
-    env.redis_url = "ip-10-0-1-166.eu-west-1.compute.internal"
+    env.memcached_url_nginx = 'nginx.uhyk4j.cfg.euw1.cache.amazonaws.com'
+    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
+    env.redis_url = "redis.apprl.com"
+    #env.redis_url = "ip-10-0-1-166.eu-west-1.compute.internal"
     env.solr_url =  "ip-10-0-1-38.eu-west-1.compute.internal"
     env.s3_url = "s.apprl.com"
     env.gateway = 'deploy@bastion'
@@ -55,8 +58,8 @@ def prod_web_aws_2():
     prod_settings()
     env.internal_ip = '10.0.0.211'
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-    env.restart = ['gunicorn','nginx']
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-basic-v2-block' ,'nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.restart = ['gunicorn']
     env.hostname="web-aws2"
     env.collectstatic = False
     env.sentry_url = 'https://2288cb94cf934fcdae0c14a483c3316f:1d37dd4c7153493e828b1e546e656c77@sentry.apprl.com/2'
@@ -68,8 +71,8 @@ def prod_web_aws_3():
     env.collectstatic = False
     env.internal_ip = '10.0.0.18'
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-    env.restart = ['gunicorn','nginx']
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-basic-v2-block','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.restart = ['gunicorn']
     env.hostname="web-aws3"
     env.sentry_url = 'https://2288cb94cf934fcdae0c14a483c3316f:1d37dd4c7153493e828b1e546e656c77@sentry.apprl.com/2'
 
@@ -79,8 +82,8 @@ def prod_web_aws_4():
     prod_settings()
     env.internal_ip = '10.0.0.168'
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-    env.restart = ['gunicorn','nginx']
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-basic-v2-block','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.restart = ['gunicorn']
     env.hostname="web-aws4"
     env.collectstatic = False
     env.sentry_url = 'https://2288cb94cf934fcdae0c14a483c3316f:1d37dd4c7153493e828b1e546e656c77@sentry.apprl.com/2'
@@ -93,8 +96,8 @@ def prod_admin_aws():
     env.internal_ip = '10.0.0.161'
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
     env.installed_apps = ['supervisor-gunicorn-admin','gunicorn-admin','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
-    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
-    env.restart = ['gunicorn_admin','nginx']
+    #env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
+    env.restart = ['gunicorn_admin']
     env.hostname = 'admin'
     env.collectstatic = False
     env.sentry_url = 'https://2288cb94cf934fcdae0c14a483c3316f:1d37dd4c7153493e828b1e546e656c77@sentry.apprl.com/2'
@@ -107,7 +110,7 @@ def prod_scraper():
     env.settings = "scrapy-aws"
     env.hosts = ['%(user)s@10.0.1.165' % env]
     #env.celery_processes = '1'
-    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
+    #env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.celery_processes_background = '1'
     env.installed_apps = ['']
     env.run_user = env.user
@@ -122,7 +125,7 @@ def prod_importer():
     env.collectstatic = False
     env.settings = "importer-aws"
     env.hosts = ['%(user)s@10.0.1.166' % env]
-    env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
+    #env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
     #env.celery_processes = '1'
     #env.celery_processes_background = '1'
     env.installed_apps = ['']

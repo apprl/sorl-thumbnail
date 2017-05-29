@@ -1,4 +1,5 @@
 from django import forms
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
@@ -10,6 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 from advertiser.models import Store, StoreHistory, StoreInvoice, Product, Transaction, Cookie
 from advertiser.utils import calculate_balance, get_transactions
 
+import csv
+
 
 class StoreHistoryInline(admin.TabularInline):
     model = StoreHistory
@@ -19,7 +22,7 @@ class StoreHistoryInline(admin.TabularInline):
     can_delete = False
 
 class StoreAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'user')
+    list_display = ('identifier', 'user', 'cookie_days')
     inlines = (StoreHistoryInline,)
     raw_id_fields = ('user',)
 
@@ -47,12 +50,41 @@ def mark_as_paid(modeladmin, request, queryset):
 mark_as_paid.short_description = 'Mark selected invoices as paid'
 
 
+def action_view_transactions(modeladmin, request, queryset):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="transactions.csv"'
+    writer = csv.writer(response)
+    writer.writerow([
+        'Store',
+        'Created',
+        'Invoice id',
+        'Order id',
+        'Currency',
+        'Order Value',
+        'Commission',
+        'Status'])
+    for si in queryset.all():
+        for t in si.transactions.all():
+            writer.writerow([
+                str(t.store_id),
+                str(t.invoice_id),
+                str(t.created),
+                str(t.order_id),
+                t.currency,
+                str(t.original_order_value),
+                str(t.original_commission),
+                t.status
+            ])
+    return HttpResponse(response)
+
+action_view_transactions.short_description = "View Transactions"
+
 class StoreInvoiceAdmin(admin.ModelAdmin):
     form = StoreInvoiceAdminForm
     list_display = ('store', 'created', 'is_paid', 'total', 'count')
     list_filter = ('is_paid', 'store')
     readonly_fields = ('is_paid', 'created', 'modified')
-    actions = [mark_as_paid]
+    actions = [mark_as_paid, action_view_transactions]
 
     def get_readonly_fields(self, request, obj = None):
         if obj:

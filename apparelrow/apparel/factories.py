@@ -4,12 +4,14 @@ __author__ = 'klaswikblad'
 import factory
 from factory import lazy_attribute
 from django.db.models import signals, get_model
-from apparelrow.apparel import models
-from apparelrow.statistics import models as stat_models
 import factory.django
 from faker import Faker
 import datetime as dt
 from random import randint
+
+from apparelrow.apparel import models
+from apparelrow.dashboard.models import Group
+from apparelrow.statistics import models as stat_models
 
 class BrandFactory(factory.django.DjangoModelFactory):
 
@@ -35,16 +37,22 @@ class ProductFactory(factory.django.DjangoModelFactory):
     manufacturer = factory.SubFactory(BrandFactory)
     #product_image = factory.django.ImageField(from_path="static/products/",from_file=u'full/21/210ad55035c97924a7186312a4def89bd5e5884a.jpg',color='blue')
 
+class GroupFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Group
+    name = "Regular"
+
+
 class UserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = get_model('profile','User')
-
     first_name = Faker().name().split(" ")[0]
     last_name = Faker().name().split(" ")[1]
     username = factory.Sequence(lambda n: 'username%s' % n)
     email = factory.LazyAttribute(lambda o: '%s@example.org' % o.username)
     last_login = lazy_attribute(lambda o: o.date_joined + dt.timedelta(days=4))
+    partner_group = factory.SubFactory(GroupFactory)
     password = factory.PostGenerationMethodCall('set_password', "password")
 
     @lazy_attribute

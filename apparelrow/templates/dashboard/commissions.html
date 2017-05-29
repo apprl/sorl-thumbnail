@@ -18,7 +18,7 @@
         <tr>
             <th>{% trans "Store" %}</th>
             <th>{% trans "Your earning" %}</th>
-            <th>{% trans "Link to store" %}</th>
+            <!--<th>{% trans "Link to store" %}</th>-->
         </tr>
     </thead>
     <tbody>
@@ -35,13 +35,13 @@
                     {% trans " per sale" %}
                 {% endif %}
             </td>
-            <td>
+            <!--<td>
                 {% if store.link %}
                 <a class="btn btn-outline inverted" data-store="{{ store.store_pk }}" data-target="#modal_store_link">
                     {{store.vendor_name}}
                 </a>
                 {% endif %}
-            </td>
+            </td>-->
         </tr>
         {% empty %}
         <tr>

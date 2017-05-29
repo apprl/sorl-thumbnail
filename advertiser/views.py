@@ -150,7 +150,7 @@ def pixel(request):
             defaults.update({'order_id': order_id, 'store_id': store_id, 'pk': transaction.pk})
             email_body = render_to_string('advertiser/email_success.txt',
                                           {'defaults': defaults, 'request': request})
-            mail_superusers('Advertiser Pixel Info: new purchase on %s' % (store_id,), email_body)
+            # mail_superusers('Advertiser Pixel Info: new purchase on %s' % (store_id,), email_body)
 
     # Insert optional product data
     product_sku = request.GET.get('sku')
@@ -446,7 +446,6 @@ def store_admin(request, year=None, month=None):
                                                             'vendor': store.vendor,
                                                             'currency': currency,
                                                             'accepted_commission': accepted_commission,
-                                                            'commission_to_be_invoiced': commission_to_be_invoiced,
                                                             'data_per_month': data_per_month,
                                                             'year_choices': year_choices,
                                                             'month_choices': month_choices,

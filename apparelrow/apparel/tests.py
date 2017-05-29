@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
+import urllib
+
 from django.http import SimpleCookie
 from pysolr import Solr
 import simplejson
 from sorl.thumbnail import get_thumbnail
-from apparelrow.apparel.views import get_vendor_cost_per_click, product_lookup_by_domain
-from apparelrow.apparel.search import product_save, get_available_brands
+from apparelrow.apparel.views import get_vendor_cost_per_click, product_lookup_by_domain, extract_encoded_url_string
+from apparelrow.apparel.search import get_available_brands
 from apparelrow.apparel.views import product_lookup_asos_nelly, product_lookup_by_solr, embed_wildcard_solr_query, \
     extract_asos_nelly_product_url, on_boarding_follow_users, get_most_popular_user_list
 
@@ -18,16 +21,20 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, TransactionTestCase
 from django.utils.translation import activate
 from django.test import TestCase, RequestFactory
-from apparelrow.apparel.models import Shop, ShopEmbed
+from apparelrow.apparel.models import Shop, ShopEmbed, product_save
 from apparelrow.apparel.models import get_store_link_from_short_link
 from apparelrow.apparel.models import Product, ProductLike
-from apparelrow.apparel.utils import get_availability_text, get_location_warning_text
+from apparelrow.apparel.utils import get_availability_text, get_location_warning_text, compress_source_link_if_needed, \
+    generate_sid
 from apparelrow.apparel.utils import shuffle_user_list
 from apparelrow.apparel.views.admin import AdminPostsView
 from apparelrow.profile.models import User
 from apparelrow.dashboard.models import Group
 from django.test import Client
 from factories import *
+import os
+
+log = logging.getLogger(__name__)
 
 """ CHROME EXTENSION """
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -120,6 +127,10 @@ class TestChromeExtension(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
+        url = '/backend/product/lookup/?key=http%3A%2F%2Fnelly.com%2Fse%2Fklader-for-kvinnor%2Fklader%2Ffestklanningar%2F%23hits%3D144%26sort%3DLastArrival%26priceTo%3D299&domain=nelly.com%2Fse%2Fklader-for-kvinnor%2Fklader%2Ffestklanningar%2F&is_product=0'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
     """def test_product_lookups(self):
         product0 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/white-twill")
         product1 = ProductFactory.create(product_key="http://shirtonomy.se/skjortor/sky-twill")
@@ -138,6 +149,25 @@ class TestChromeExtension(TestCase):
             print product
         #print product.default_vendor
     """
+
+    def test_product_lookup_unicode(self):
+        self._login()
+
+        vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
+        get_model('apparel', 'DomainDeepLinking').objects.create(
+            vendor=vendor,
+            domain='stayhard.se',
+            template='http://stayhard.se/my-template'
+        )
+        url = "https://stayhard.se/06421636/tiger-of-sweden/guerin-01z-silver?ReturnPath=/manchettknappar-slipsn\xe5lar&utm_source=adtraction&utm_medium=affiliate&utm_campaign=gen&utm_term=1119456860"
+        encoded_str = extract_encoded_url_string(url)
+        self.assertTrue(u"slipsnålar" in encoded_str)
+
+        response = self.client.get(
+            '/backend/product/lookup/?key=https%3A%2F%2Fstayhard.se%2F06421636%2Ftiger-of-sweden%2Fguerin-01z-silver%3FReturnPath%3D%2Fmanchettknappar-slipsn%25E5lar%26utm_source%3Dadtraction%26utm_medium%3Daffiliate%26utm_campaign%3Dgen%26utm_term%3D1119456860&domain=stayhard.se')
+        self.assertEquals(response.status_code, 200)
+        #"".decode("iso-8859-1")
+
 
     def test_product_lookup_by_domain(self):
         self._login()
@@ -163,11 +193,11 @@ class TestChromeExtension(TestCase):
         product_key = 'http://example.com/example?someproduct=12345'
         product_id = product_lookup_by_solr(None, product_key)
         if product_id:
-            print "Found already existing product in SOLR database, removing."
+            log.info("Found already existing product in SOLR database, removing.")
             connection = Solr(settings.SOLR_URL)
             product_solr_id = "apparel.product.%s" % product_id
             connection.delete(id=product_solr_id, commit=True, waitFlush=True)
-            print "%s has been removed from index." % product_solr_id
+            log.info("%s has been removed from index." % product_solr_id)
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         category = get_model('apparel', 'Category').objects.create(name='Category')
         manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
@@ -199,8 +229,8 @@ class TestChromeExtension(TestCase):
             product_key=product_key
         )"""
 
-        print "Creating product %s,%s" % (product.id,product)
-        print "Product key is %s" % (product.product_key)
+        log.info("Creating product %s,%s" % (product.id,product))
+        log.info("Product key is %s" % (product.product_key))
         #print "Creating Domain Deeplinking %s, domain %s" % (ddl,ddl.domain)
         self.assertIsNotNone( product.id )
         response = self.client.get('/backend/product/lookup/?key=%s' % product_key)
@@ -762,9 +792,9 @@ class TestEmbeddingShops(TestCase):
         data.get("components")[1]["product"]["id"] = self.product2.id
         self.assertTrue(data.get("components")[0]["product"]["id"])
         self.assertTrue(data.get("components")[1]["product"]["id"])
-        print "Trying to call url %s " % reverse('create_shop')
+        log.info("Trying to call url %s " % reverse('create_shop'))
         response = self.client.post(reverse('create_shop'),data=json.dumps(data),content_type='application/json',)
-        print response.status_code
+        log.info(response.status_code)
         self.assertTrue(response.status_code in [201])
         content = json.loads(response.content)
         self.assertEqual(content.get("published"), True)
@@ -778,17 +808,17 @@ class TestEmbeddingShops(TestCase):
         self.assertEqual(content.get("user"), "normal_user")
         self.assertEqual(content.get("url"), "/shop/create/api/1")
         self.assertEqual(content.get("id"), 1)
-        print "Calling shop widget %s" % reverse('shop-widget',args=(content.get("id"),))
+        log.info("Calling shop widget %s" % reverse('shop-widget',args=(content.get("id"),)))
         response = self.client.post(reverse('shop-widget',args=(content.get("id"),)))
-        print response.status_code
+        log.info(response.status_code)
         self.assertTrue(response.status_code in [200])
         url = reverse('embed-shop',args=(content.get("id"),))
-        print "Calling %s to be embedded into the cache." % url
+        log.info("Calling %s to be embedded into the cache." % url)
         self.client.get(url)
         from django.core.cache import get_cache
         cache = get_cache('nginx')
         nginx_key = reverse('embed-shop', args=[1])
-        print "Checking cache key for: %s" % nginx_key
+        log.info("Checking cache key for: %s" % nginx_key)
         self.assertIsNotNone(cache.get(nginx_key,None))
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
@@ -814,7 +844,7 @@ class TestShortLinks(TestCase):
         # Make the call directly to product-track, since the client doesn't follow the redirect made
         # from template in jQuery
         url = reverse('product-track', kwargs={'pk': 0, 'page': 'Ext-Store', 'sid': self.user.id})
-        print "requesting url: %s" % url
+        log.info("requesting url: %s" % url)
         response = self.client.post(url, {'referer': referer}, **{'HTTP_REFERER': referer})
         self.assertEqual(response.status_code, 200)
 
@@ -845,8 +875,9 @@ class TestShortLinks(TestCase):
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.henrykole.se/", key)
-        sid = "%s-0-Ext-Link/http://www.henrykole.se/shoes.html" % self.user.id
-        self.assertEqual(link, "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, key))
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.henrykole.se/shoes.html"))
+        url = key
+        self.assertEqual(link, "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, url))
         self.assertEqual(vendor, link_vendor)
 
     def test_short_domain_link_affiliate_window(self):
@@ -857,22 +888,24 @@ class TestShortLinks(TestCase):
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.oki-ni.com", key)
-        sid = "%s-0-Ext-Link/http://www.oki-ni.com/en/outerwear/coats" % self.user.id
-        self.assertEqual(link, "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref=%s&p=%s" % (sid, key))
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.oki-ni.com/en/outerwear/coats"))
+        url = key
+        self.assertEqual(link, "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref=%s&p=%s" % (sid, url))
         self.assertEqual(vendor, link_vendor)
 
     def test_short_domain_link_linkshare(self):
         vendor = VendorFactory.create(name="ALDO", provider="linkshare")
         template = "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1" \
                    "&type=10&tmpid=12919&u1={sid}&RD_PARM1={url}"
-        key = "http://www.aldoshoes.com/ca/en/women/c/100"
-        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.aldoshoes.com")
+        key = "http://www.aldoshoes.com/ca/en/women/c/100?foo=1&bar=2"
+        DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.aldoshoes.com", quote_url=True)
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.aldoshoes.com", key)
-        sid = "%s-0-Ext-Link/http://www.aldoshoes.com/ca/en/women/c/100" % self.user.id
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.aldoshoes.com/ca/en/women/c/100?foo=1&bar=2"))
+        url = urllib.quote(key, safe='')
         self.assertEqual(link, "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1&"
-                               "type=10&tmpid=12919&u1=%s&RD_PARM1=%s" % (sid,key))
+                               "type=10&tmpid=12919&u1=%s&RD_PARM1=%s" % (sid,url))
         self.assertEqual(vendor, link_vendor)
 
     def test_short_domain_link_tradedoubler(self):
@@ -883,9 +916,9 @@ class TestShortLinks(TestCase):
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "nelly.com", key)
-        sid = "%s-0-Ext-Link/http://nelly.com/se/skor-kvinna/" % self.user.id
-
-        self.assertEqual(link, "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi=%s&url=%s" % (sid, key))
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://nelly.com/se/skor-kvinna/"))
+        url = key
+        self.assertEqual(link, "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi=%s&url=%s" % (sid, url))
         self.assertEqual(vendor, link_vendor)
 
     def test_short_domain_link_zanox(self):
@@ -896,8 +929,8 @@ class TestShortLinks(TestCase):
         request = self.factory.get('/index/')
         request.user = self.user
         link, link_vendor = product_lookup_by_domain(request, "www.houseofdagmar.se", key)
-        ulp = "/product-category/sweaters/"
-        sid = "%s-0-Ext-Link/http://www.houseofdagmar.se/product-category/sweaters/" % self.user.id
+        ulp = urllib.quote("/product-category/sweaters/")
+        sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.houseofdagmar.se/product-category/sweaters/"))
         self.assertEqual(link, "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[%s]]&zpar0=[[%s]]" % (ulp, sid))
         self.assertEqual(vendor, link_vendor)
 
@@ -1304,7 +1337,7 @@ class TestAdminPostsView(TestCase):
         view = AdminPostsView(template_name='hello.html')
         view.request = request
 
-        context_data = view.get_context_data(month=03, year=2015)
+        context_data = view.get_context_data(request, month=03, year=2015)
 
         # Check response
         self.assertEqual(context_data['month'], 3)
@@ -1326,19 +1359,21 @@ class TestAdminPostsView(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-@override_settings(VENDOR_LOCATION_MAPPING={"Vendor SE":["SE"], "Vendor DK":["DK"], "default":["ALL","SE","NO","US"],})
+@override_settings(DEFAULT_VENDOR_LOCATION=["ALL","SE","NO","US"])
 class TestSearch(TransactionTestCase):
 
     def setUp(self):
         vendor_se = VendorFactory.create(name="Vendor SE")
+        vendor_se.locations.create(code='SE')
         vendor_dk = VendorFactory.create(name="Vendor DK")
+        vendor_dk.locations.create(code='DK')
         self.manufacturer = BrandFactory.create(name="007", pk=999999999)
         self.product_key = 'http://example.com/example?someproduct=12345'
-        product_id = _send_product_to_solr(product_key=self.product_key, vendor_name=vendor_se,
+        product_id = _send_product_to_solr(product_key=self.product_key, vendor=vendor_se,
                                            product_name="ProductName12345", brand=self.manufacturer)
 
         self.product_dk_key = 'http://example.dk/example?someproduct=123453'
-        product_id = _send_product_to_solr(product_key=self.product_dk_key, vendor_name=vendor_dk,
+        product_id = _send_product_to_solr(product_key=self.product_dk_key, vendor=vendor_dk,
                                            product_name="ProductName6789", brand=self.manufacturer)
 
     def tearDown(self):
@@ -1419,13 +1454,324 @@ class TestBackendAuth(TestCase):
         self.assertEquals(user.last_name, resp_json.get("last_name"))
         #self.assertEquals(user.last_name, resp_json.get("last_name"))
 
-def _send_product_to_solr(product_key, vendor_name=None, product_name=None, brand=None):
+
+class TestThumbnailClean(TestCase):
+
+    def test_cleaning_thumbnails(self):
+        from sorl.thumbnail.images import ImageFile, deserialize_image_file
+        from sorl.thumbnail import default
+        from sorl.thumbnail.models import KVStore
+        from theimp.factories import ProductFactory as ImpProductFactory
+        from theimp.models import Product as ImpProduct
+        django_image_file = _create_dummy_image()
+        pk_key = lambda x: "||".join(["sorl-thumbnail","image", x])
+        thumbnails_key = lambda x: "||".join(["sorl-thumbnail","thumbnails", x])
+
+        args_vendor = {}
+        args_vendor['name'] = "Jerkstore"
+        vendor = VendorFactory.create(**args_vendor)
+        category = CategoryFactory.create()
+        manufacturer = BrandFactory.create()
+        product_name = 'Product'
+        product = ProductFactory.create(
+            product_name=product_name,
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            product_key="http://someurl.com/brand/product1",
+            availability=True,
+            product_image=django_image_file
+        )
+
+        # Must enter a FieldFile object to ImageFile, not Image or it will not work.
+        file_exists = os.path.isfile( product.product_image.file.name )
+        self.assertTrue(file_exists)
+        # Created the image itself, thumbnail connection object and then entries for the thumbnails themselves 1 + 1 + 3
+        # Every time a product is created, three thumbnails are created.
+        self.assertTrue(KVStore.objects.all().count(), 1 + 1 + 3)
+        sorl_image = ImageFile(product.product_image)
+        log.info("Sorl image: {}".format(sorl_image.name))
+        key = sorl_image.key
+
+        thumbnail_keys = _get_all_thumbnail_keys(key)
+        self.assertEquals(len(thumbnail_keys), 4)
+        thumbnail_list = _get_all_thumbnail_objects(key)
+        self.assertEquals(len(thumbnail_list), len(thumbnail_keys))
+
+        save_entries = []
+        for thumb in thumbnail_keys:
+            # Verify that files exists
+            kvstore = KVStore.objects.get(key=pk_key(thumb))
+            save_entries.append(kvstore)
+            #print "{}/{}".format(kvstore.key, kvstore.value)
+            image_file = deserialize_image_file(kvstore.value)
+            log.info("This thumbnail file name: {}".format(image_file.name))
+            self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
+
+        default.kvstore.delete_thumbnails(sorl_image)
+
+        for kvstore in save_entries:
+            # Verify that files are gone exists
+            self.assertFalse(KVStore.objects.filter(key=pk_key(kvstore.key)).exists())
+            image_file = deserialize_image_file(kvstore.value)
+            self.assertFalse(os.path.isfile(os.path.join(image_file.storage.base_location, image_file.name )))
+
+        self.assertEquals(len(_get_all_thumbnail_keys(key)), 0)
+
+        thumbnail = get_thumbnail(product.product_image, "10x10")
+        log.info("Thumbnail: {}".format(thumbnail.name))
+        self.assertEquals(len(_get_all_thumbnail_keys(key)), 1)
+        log.info("Finished this round of testing thumbnails")
+
+        self.assertTrue(thumbnail.exists())
+        self.assertTrue(os.path.isfile(os.path.join(thumbnail.storage.base_location, thumbnail.name)))
+        filename = thumbnail.name
+        base_location = thumbnail.storage.base_location
+        thumbnail.delete()
+        self.assertFalse(os.path.isfile(os.path.join(base_location, filename)))
+
+        self.assertTrue(sorl_image.exists())
+        self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
+        filename = sorl_image.name
+        base_location = thumbnail.storage.base_location
+        default.kvstore.delete(sorl_image)
+        sorl_image.delete()
+        self.assertFalse(sorl_image.exists())
+        self.assertFalse(os.path.isfile(os.path.join(base_location, filename)))
+
+        #image_field = Image.open(product_image.file)
+        #print "Key found for {} is {}".format(image.filename, sorl_image.key)
+        #print "Sorl image exists: {}".format(sorl_image.exists())
+        #file_exists = os.path.isfile(product_image.file.name)
+        #unison_exists = bool(sorl_image.exists() and file_exists)
+        #print "File unison exists: {}".format(unison_exists)
+        django_image_file_2 = _create_dummy_image()
+        args_vendor = {}
+        args_vendor['name'] = "Jerkstore"
+        vendor = VendorFactory.create(**args_vendor)
+        category = CategoryFactory.create()
+        manufacturer = BrandFactory.create()
+        product_name = 'Product2'
+        product_key = "http://someurlother.com/brand/product1"
+        product_2 = ProductFactory.create(
+            product_name=product_name,
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            product_key=product_key,
+            availability=True,
+            product_image=django_image_file_2
+        )
+
+        imp_product = ImpProductFactory.create(
+            key = product_key
+        )
+
+        self.assertTrue(ImpProduct.objects.filter(key=product_key).exists())
+        self.assertTrue(ImpProduct.objects.filter(pk=imp_product.id).exists())
+        # Check if files exists, thumbs exists
+        self.assertTrue(os.path.isfile( product_2.product_image.file.name ))
+        sorl_image = ImageFile(product_2.product_image)
+        self.assertTrue(sorl_image.exists())
+        self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
+        log.info("This is an image: {}".format(product_2.product_image))
+        log.info("This is an filename image: {}".format(product_2.product_image.name))
+        self.assertEquals(Product.objects.filter(product_image=product_2.product_image.name).count(), 1)
+
+        key = sorl_image.key
+        full_filename = os.path.join(sorl_image.storage.base_location, sorl_image.name)
+
+        save_entries = []
+        for image_file in _get_all_thumbnail_objects(key):
+            # Verify that files exists
+            save_entries.append(image_file)
+            log.info("This thumbnail file name: {}".format(image_file.name))
+            self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
+
+        log.info("Deleting {}.".format(product_2))
+        # This also deletes the corresponding theimp product
+        product_2.delete()
+        self.assertFalse(ImpProduct.objects.filter(key=product_key).exists())
+        self.assertFalse(ImpProduct.objects.filter(pk=imp_product.id).exists())
+        # Check if file exists through other interface, should be gone
+        self.assertFalse(os.path.isfile(full_filename))
+        # Check if file exists, should be gone
+        self.assertFalse(sorl_image.exists())
+
+        for thumb_file in save_entries:
+            # Verify that files are gone exists
+            file_path = os.path.join(thumb_file.storage.base_location, thumb_file.name )
+            log.info("Verify file is gone {}".format(file_path))
+            self.assertFalse(thumb_file.exists())
+            self.assertFalse(os.path.isfile(file_path))
+
+
+
+class TestThumbnailClean(TestCase):
+
+    def test_cleaning_thumbnails(self):
+        from sorl.thumbnail.images import ImageFile, deserialize_image_file
+        from sorl.thumbnail import default
+        from sorl.thumbnail.models import KVStore
+        from theimp.factories import ProductFactory as ImpProductFactory
+        from theimp.models import Product as ImpProduct
+        django_image_file = _create_dummy_image()
+        pk_key = lambda x: "||".join(["sorl-thumbnail","image", x])
+        thumbnails_key = lambda x: "||".join(["sorl-thumbnail","thumbnails", x])
+
+        args_vendor = {}
+        args_vendor['name'] = "Jerkstore"
+        vendor = VendorFactory.create(**args_vendor)
+        category = CategoryFactory.create()
+        manufacturer = BrandFactory.create()
+        product_name = 'Product'
+        product = ProductFactory.create(
+            product_name=product_name,
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            product_key="http://someurl.com/brand/product1",
+            availability=True,
+            product_image=django_image_file
+        )
+
+        # Must enter a FieldFile object to ImageFile, not Image or it will not work.
+        file_exists = os.path.isfile( product.product_image.file.name )
+        self.assertTrue(file_exists)
+        # Created the image itself, thumbnail connection object and then entries for the thumbnails themselves 1 + 1 + 3
+        # Every time a product is created, three thumbnails are created.
+        self.assertTrue(KVStore.objects.all().count(), 1 + 1 + 3)
+        sorl_image = ImageFile(product.product_image)
+        log.info("Sorl image: {}".format(sorl_image.name))
+        key = sorl_image.key
+
+        thumbnail_keys = _get_all_thumbnail_keys(key)
+        self.assertEquals(len(thumbnail_keys), 4)
+        thumbnail_list = _get_all_thumbnail_objects(key)
+        self.assertEquals(len(thumbnail_list), len(thumbnail_keys))
+
+        save_entries = []
+        for thumb in thumbnail_keys:
+            # Verify that files exists
+            kvstore = KVStore.objects.get(key=pk_key(thumb))
+            save_entries.append(kvstore)
+            #print "{}/{}".format(kvstore.key, kvstore.value)
+            image_file = deserialize_image_file(kvstore.value)
+            log.info("This thumbnail file name: {}".format(image_file.name))
+            self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
+
+        default.kvstore.delete_thumbnails(sorl_image)
+
+        for kvstore in save_entries:
+            # Verify that files are gone exists
+            self.assertFalse(KVStore.objects.filter(key=pk_key(kvstore.key)).exists())
+            image_file = deserialize_image_file(kvstore.value)
+            self.assertFalse(os.path.isfile(os.path.join(image_file.storage.base_location, image_file.name )))
+
+        self.assertEquals(len(_get_all_thumbnail_keys(key)), 0)
+
+        thumbnail = get_thumbnail(product.product_image, "10x10")
+        log.info("Thumbnail: {}".format(thumbnail.name))
+        self.assertEquals(len(_get_all_thumbnail_keys(key)), 1)
+        log.info("Finished this round of testing thumbnails")
+
+        self.assertTrue(thumbnail.exists())
+        self.assertTrue(os.path.isfile(os.path.join(thumbnail.storage.base_location, thumbnail.name)))
+        filename = thumbnail.name
+        base_location = thumbnail.storage.base_location
+        thumbnail.delete()
+        self.assertFalse(os.path.isfile(os.path.join(base_location, filename)))
+
+        self.assertTrue(sorl_image.exists())
+        self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
+        filename = sorl_image.name
+        base_location = thumbnail.storage.base_location
+        default.kvstore.delete(sorl_image)
+        sorl_image.delete()
+        self.assertFalse(sorl_image.exists())
+        self.assertFalse(os.path.isfile(os.path.join(base_location, filename)))
+
+        #image_field = Image.open(product_image.file)
+        #print "Key found for {} is {}".format(image.filename, sorl_image.key)
+        #print "Sorl image exists: {}".format(sorl_image.exists())
+        #file_exists = os.path.isfile(product_image.file.name)
+        #unison_exists = bool(sorl_image.exists() and file_exists)
+        #print "File unison exists: {}".format(unison_exists)
+        django_image_file_2 = _create_dummy_image()
+        args_vendor = {}
+        args_vendor['name'] = "Jerkstore"
+        vendor = VendorFactory.create(**args_vendor)
+        category = CategoryFactory.create()
+        manufacturer = BrandFactory.create()
+        product_name = 'Product2'
+        product_key = "http://someurlother.com/brand/product1"
+        product_2 = ProductFactory.create(
+            product_name=product_name,
+            category=category,
+            manufacturer=manufacturer,
+            gender='M',
+            published=True,
+            product_key=product_key,
+            availability=True,
+            product_image=django_image_file_2
+        )
+
+        imp_product = ImpProductFactory.create(
+            key = product_key
+        )
+
+        self.assertTrue(ImpProduct.objects.filter(key=product_key).exists())
+        self.assertTrue(ImpProduct.objects.filter(pk=imp_product.id).exists())
+        # Check if files exists, thumbs exists
+        self.assertTrue(os.path.isfile( product_2.product_image.file.name ))
+        sorl_image = ImageFile(product_2.product_image)
+        self.assertTrue(sorl_image.exists())
+        self.assertTrue(os.path.isfile(os.path.join(sorl_image.storage.base_location, sorl_image.name)))
+        log.info("This is an image: {}".format(product_2.product_image))
+        log.info("This is an filename image: {}".format(product_2.product_image.name))
+        self.assertEquals(Product.objects.filter(product_image=product_2.product_image.name).count(), 1)
+
+        key = sorl_image.key
+        full_filename = os.path.join(sorl_image.storage.base_location, sorl_image.name)
+
+        save_entries = []
+        for image_file in _get_all_thumbnail_objects(key):
+            # Verify that files exists
+            save_entries.append(image_file)
+            log.info("This thumbnail file name: {}".format(image_file.name))
+            self.assertTrue(os.path.isfile( os.path.join(image_file.storage.base_location, image_file.name )))
+
+        log.info("Deleting {}.".format(product_2))
+        # This also deletes the corresponding theimp product
+        product_2.delete()
+        self.assertFalse(ImpProduct.objects.filter(key=product_key).exists())
+        self.assertFalse(ImpProduct.objects.filter(pk=imp_product.id).exists())
+        # Check if file exists through other interface, should be gone
+        self.assertFalse(os.path.isfile(full_filename))
+        # Check if file exists, should be gone
+        self.assertFalse(sorl_image.exists())
+
+        for thumb_file in save_entries:
+            # Verify that files are gone exists
+            file_path = os.path.join(thumb_file.storage.base_location, thumb_file.name )
+            log.info("Verify file is gone {}".format(file_path))
+            self.assertFalse(thumb_file.exists())
+            self.assertFalse(os.path.isfile(file_path))
+
+
+def _send_product_to_solr(product_key, vendor=None, vendor_name=None, product_name=None, brand=None):
     django_image_file = _create_dummy_image()
     _cleanout_product(product_key)
     args_vendor = {}
-    if vendor_name:
-        args_vendor['name'] = vendor_name
-    vendor = VendorFactory.create(**args_vendor)
+    # if vendor has been supplied, use that
+    # otherwise create a default vendor with vendor_name if that has been supplied
+    if not vendor:
+        if vendor_name:
+            args_vendor['name'] = vendor_name
+        vendor = VendorFactory.create(**args_vendor)
     category = CategoryFactory.create()
     manufacturer = BrandFactory.create() if not brand else brand
     product_name = 'Product' if not product_name else product_name
@@ -1455,16 +1801,16 @@ def _cleanout_products(product_keys):
 def _cleanout_product(product_key):
     product_id = product_lookup_by_solr(None, product_key)
     if product_id:
-        print "Found already existing product in SOLR database, removing."
+        log.info("Found already existing product in SOLR database, removing.")
         connection = Solr(settings.SOLR_URL)
         product_solr_id = "apparel.product.%s" % product_id
         connection.delete(id=product_solr_id, commit=True, waitFlush=True)
-        print "%s has been removed from index." % product_solr_id
+        log.info("%s has been removed from index." % product_solr_id)
     else:
-        print "No previous products found"
+        log.info("No previous products found")
 
 
-def _create_dummy_image():
+def _create_dummy_image(filename=None):
     from PIL import Image
     from StringIO import StringIO
     from django.core.files.base import ContentFile
@@ -1474,3 +1820,28 @@ def _create_dummy_image():
     image_file.seek(0)
 
     return ContentFile(image_file.read(), 'test.png')
+
+def _get_all_thumbnail_keys(key):
+    """
+    Returns the keys to the
+    :param key:
+    :return:
+    """
+    from sorl.thumbnail import default
+    thumbnail_keys = default.kvstore._get(key, identity='thumbnails')
+    return thumbnail_keys or []
+    #if thumbnail_keys:
+
+        # thumbnail ImageFiles.
+    #    for key in thumbnail_keys:
+    #        thumbnail = default.kvstore._get(key)
+    #        if thumbnail:
+    #            print "Deleting entry & file: {}".format(thumbnail.name)
+                #default.kvstore.delete(thumbnail)
+                #thumbnail.delete() # delete the actual file
+        # Delete the thumbnails key from store
+        #default.kvstore._delete(image_file.key, identity='thumbnails')
+
+def _get_all_thumbnail_objects(key):
+    from sorl.thumbnail import default
+    return [ default.kvstore._get(thumb_key) for thumb_key in _get_all_thumbnail_keys(key)]

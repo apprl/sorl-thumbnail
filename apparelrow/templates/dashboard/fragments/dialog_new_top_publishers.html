@@ -66,8 +66,8 @@
                         <td class="col-md-2 center" data-sort="{{ publisher.total_clicks }}">
                             {{ publisher.total_clicks }}
                         </td>
-                        <td class="col-md-2 center" data-sort="{% if is_admin %}{{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }}{% else %}{{ publisher.total_earnings }}{% endif %}">
-                            {{ currency }} {% if is_admin %} {{ publisher.total_earnings|decimal_add:publisher.total_network_earnings }} {% else %} {{ publisher.total_earnings }} {% endif %}
+                        <td class="col-md-2 center" data-sort="{% if is_admin %}{{ publisher.total_earnings_inc_network }}{% else %}{{ publisher.total_earnings }}{% endif %}">
+                            {{ currency }} {% if is_admin %} {{ publisher.total_earnings_inc_network }} {% else %} {{ publisher.total_earnings }} {% endif %}
                         </td>
                         {% if is_owner or is_admin %}
                         <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">

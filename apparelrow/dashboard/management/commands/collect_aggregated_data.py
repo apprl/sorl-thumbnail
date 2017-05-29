@@ -1,22 +1,22 @@
-import optparse
-import datetime
-import logging
-from django.db.models.loading import get_model
-from django.contrib.auth import get_user_model
-import decimal
 import calendar
+import datetime
+import decimal
+import logging
+import optparse
+
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.core.management.base import BaseCommand
 from django.db.models import Count
+from django.db.models.loading import get_model
 from progressbar import ProgressBar, Percentage, Bar
 
 from apparelrow.dashboard.models import Sale, UserEarning, AggregatedData
-from apparelrow.dashboard.views import get_clicks_from_sale
+from apparelrow.dashboard.stats import stats_cache
 from apparelrow.dashboard.utils import get_product_thumbnail_and_link, get_user_dict, get_user_thumbnail_and_link, \
     get_user_attrs, get_day_range, check_user_has_cpc_all_stores
-
-from django.conf import settings
-from django.contrib.staticfiles.storage import staticfiles_storage
-
-from django.core.management.base import BaseCommand
+from apparelrow.dashboard.views import get_clicks_from_sale
 
 logger = logging.getLogger('dashboard')
 
@@ -365,6 +365,10 @@ def generate_aggregated_clicks_from_product(start_date, end_date, **kwargs):
             product = get_model('apparel', 'Product').objects.get(slug=row['product'])
         except get_model('apparel', 'Product').DoesNotExist:
             logger.warning("Product %s does not exist" % row['product'])
+        except get_model('apparel', 'Product').MultipleObjectsReturned:
+            logger.warning("Multiple products found with slug %s, taking the first. This needs to be fixed asap!" % row['product'])
+            product = get_model('apparel', 'Product').objects.filter(slug=row['product'])[0]
+
 
         # Try fetch vendor if it exists
         try:
@@ -527,6 +531,9 @@ class Command(BaseCommand):
         """
         start_date, end_date = get_date_range(options.get('date'))
         logger.debug("Start collect agreggated data between %s and %s" % (start_date, end_date))
+
+        stats_cache.warm_cache_by_one_month(start_date.year, start_date.month)
+
         user_id = options.get('user_id')
         kwargs = {}
         if user_id:
@@ -569,7 +576,6 @@ class Command(BaseCommand):
         if pbar:
             pbar.finish()
 
-        print "Generating aggregated clicks... "
         logger.debug("Generating aggregated clicks... ")
         generate_aggregated_clicks_from_publisher(start_date, end_date, **kwargs)
         generate_aggregated_clicks_from_product(start_date, end_date, **kwargs)

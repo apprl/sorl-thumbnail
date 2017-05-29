@@ -55,9 +55,14 @@
             'create_look': {% if user.is_authenticated and user.fb_share_create_look %}true{% else %}false{% endif %}
         };
         var facebook_scope = '{{ FACEBOOK_SCOPE }}';
-        var facebook_login_uri = 'https://m.facebook.com/dialog/oauth?client_id={{ FACEBOOK_APP_ID }}&response_type=code&redirect_uri={{ FACEBOOK_REDIRECT_URI }}&scope={{ FACEBOOK_SCOPE }}';
         window.fbAsyncInit = function() {
-            FB.init({appId: {{ FACEBOOK_APP_ID }}, status: true, cookie: true, xfbml: true, channelUrl: '//{{ CURRENT_DOMAIN }}/channel.html'});
+            FB.init({
+                appId: {{ FACEBOOK_APP_ID }},
+                version: 'v2.8',  // Available until at least October 2018 - https://developers.facebook.com/docs/apps/changelog
+                status: true,
+                cookie: true,
+                xfbml: true,
+            });
             FB.getLoginStatus(function(response) {
                 if(!response.authResponse) {
                     $('.facepile-container').html('').addClass('ar-facepile');
@@ -65,7 +70,7 @@
                     {% block facebook_code %}{% endblock %}
                 }
             });
-        }
+        };
         window.login_function = function(callback) {
             FB.login(function(response) {
                 if(response.authResponse) {
@@ -115,13 +120,13 @@
 
     <div id="fb-root"></div>
     <script type="text/javascript">
-        (function(d){
-        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-        if (d.getElementById(id)) {return;}
-            js = d.createElement('script'); js.id = id; js.async = true;
-            js.src = "//connect.facebook.net/en_US/all.js";
-            ref.parentNode.insertBefore(js, ref);
-        }(document));
+        (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
     </script>
     {% block header-navigation %}
     {# Header #}
@@ -145,7 +150,7 @@
                         <li class="visible-xs visible-sm"><a href="{% url 'auth_login' %}">{% trans "Log In" %}</a></li>
                         {% endif %}
                         {% if request.user.is_authenticated %}
-                        <li class="visible-xs visible-sm"><a class="link-create" href="{% url 'publisher-tools' %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %} <i class="fa fa-caret-right"></i></a></li>
+                        <li class="visible-xs visible-sm"><a class="link-create" href="{% if request.user.is_partner %}{% url 'publisher-tools' %}{% else %}{% url 'look-create' %}{% endif %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %} <i class="fa fa-caret-right"></i></a></li>
                         <li class="visible-xs visible-sm dropdown {% selected_url request "/profile/settings" "/profile/"|add:request.user.slug %}">
                             <a class="dropdown-toggle dropdown-avatar" data-toggle="dropdown" href="{{ request.user.url_likes }}"><img class="profile-icon" src="{{ request.user.avatar_small }}"><u>{% trans 'You' %} <b class="caret"></b> </u></a>
                             <ul class="dropdown-menu">
@@ -195,14 +200,7 @@
                     </ul>
 
                     {% if request.user.is_authenticated %}
-                    <a class="btn btn-outline btn-create hidden-xs visible-md visible-lg"
-                    {% if request.user.is_partner %}
-                    href="{% url 'publisher-tools' %}">
-                    {% trans "Create & Earn" %}
-                    {% else %}
-                    href="{% url 'look-create' %}">
-                    {% trans "Create" %}
-                    {% endif %}</a>
+                    <a class="btn btn-outline btn-create hidden-xs visible-md visible-lg" href="{% if request.user.is_partner %}{% url 'publisher-tools' %}{% else %}{% url 'look-create' %}{% endif %}">{% if request.user.is_partner %}{% trans "Create & Earn" %}{% else %}{% trans "Create" %}{% endif %}</a>
                     {% endif %}
 
                     <ul class="secondary-nav">
@@ -330,8 +328,9 @@
                 <div class="col-md-4">
                     <h5>APPRL Fashion AB</h5>
                     <address>
-                        Kammakargatan 41<br>
-                        111 24 Stockholm<br>
+                        c/o A House<br>
+                        Östermalmsgatan 26A<br>
+                        114 26 Stockholm<br>
                         Sweden
                     </address>
                     {% comment %}
@@ -462,5 +461,21 @@
 {% endblock %}
 {% endcomment %}
 
+
+{% if request.intercom.show %}
+<script>
+    window.intercomSettings = {
+        app_id: "{{ request.intercom.app_id|escapejs }}",
+        user_id: {{ request.intercom.user_id|escapejs }},
+        name: "{{ request.intercom.name|escapejs }}",
+        email: "{{ request.intercom.email|escapejs }}",
+        created_at: {{ request.intercom.date_joined|date:"U" }},
+        is_partner: {{ request.intercom.is_partner|yesno:"true,false" }},
+        is_store: {{ request.intercom.store|yesno:"true,false" }},
+        user_hash: "{{ request.intercom.user_hash }}"
+    };
+    </script>
+    <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/t7k9uni1';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+{% endif %}
 </body>
 </html>

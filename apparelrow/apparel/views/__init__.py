@@ -13,7 +13,7 @@ import simplejson
 import tldextract
 
 from django.conf import settings
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.http.response import HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
@@ -29,7 +29,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView, TemplateView, View
 from django.utils import translation, timezone
-from django.utils.encoding import smart_unicode, smart_str
+from django.utils.encoding import smart_unicode, smart_str, DjangoUnicodeDecodeError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.decorators import method_decorator
 
@@ -43,7 +43,7 @@ from apparelrow.apparel.search import ApparelSearch, more_like_this_product, mor
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list, get_location, get_external_store_commission, \
     get_availability_text, get_location_warning_text, generate_sid, get_vendor_cost_per_click
-from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, build_static_look_image
+from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, look_popularity2, build_static_look_image
 from apparelrow.activity_feed.views import user_feed
 from apparelrow.dashboard.views import SignupForm
 from apparelrow.dashboard.utils import parse_rules_exception
@@ -319,6 +319,14 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'apparel/product_detail.html'
 
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object(**kwargs)
+        except Http404:
+            return redirect(reverse("shop"))
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         product = self.object
@@ -335,13 +343,18 @@ class ProductDetailView(DetailView):
         likes = product.likes.filter(active=True, user__is_hidden=False).order_by('modified').select_related('user')
         regular_likes = likes.filter(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
         partner_likes = likes.exclude(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
-        # Full image url
+
+        # Full image url. Todo: Not used anymore so should be removed /Klas.
+        missing_image = False
         try:
             product_full_image = request.build_absolute_uri(
                 get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
         except IOError:
-            logging.error('Product id %s does not have a valid image on disk' % (product.pk,))
-            raise Http404
+            logging.warn('Product id %s does not have a valid image on disk' % (product.pk,))
+            # If the image is missing then the template handles this and shows an "Image not available" instead.
+            product.product_image = None
+            #raise Http404
+
         # Full brand url
         product_brand_full_url = ''
         if product.manufacturer and product.manufacturer.user:
@@ -366,10 +379,9 @@ class ProductDetailView(DetailView):
         # Cost per click
         default_vendor = product.default_vendor
 
-        # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
         vendor_markets = None
         if default_vendor and request.user and request.user.is_authenticated():
-            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
+            vendor_markets = default_vendor.vendor.location_codes_list()
 
             # Calculate cost per click and earning cut
             product_earning, currency = product.default_vendor.get_product_earning(request.user)
@@ -388,7 +400,7 @@ class ProductDetailView(DetailView):
             'object_url': request.build_absolute_uri(),
             'more_like_this': more_like_this_product(mlt_body, product.gender, get_location(request), 9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
-            'product_full_image': product_full_image,
+            #'product_full_image': product_full_image,
             'product_brand_full_url': product_brand_full_url,
             'likes': regular_likes,
             'partner_likes': partner_likes,
@@ -459,10 +471,11 @@ def product_detail(request, slug):
 
     default_vendor = product.default_vendor
 
-    # Vendor market if VENDOR_LOCATION_MAPPING exists, otherwise the vendor is available for every location by default
+    # Vendor market if locations exists, otherwise the vendor is available for every location by default
+    product_earning = currency = ""
     vendor_markets = None
     if default_vendor:
-        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(default_vendor.vendor.name, None)
+        vendor_markets = default_vendor.vendor.location_codes_list()
 
         # Calculate cost per click and earning cut
         product_earning, currency = product.default_vendor.get_product_earning(request.user)
@@ -503,7 +516,7 @@ def get_warnings_for_location(request, slug):
         # Vendor market
         vendor_markets = None
         if product.default_vendor:
-            vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
+            vendor_markets = product.default_vendor.vendor.location_codes_list()
 
         warning_text = get_location_warning_text(vendor_markets, request.user, "product")
         return HttpResponse(warning_text)
@@ -524,7 +537,7 @@ def product_generate_short_link(request, slug):
     # Vendor market
     vendor_markets = None
     if product.default_vendor:
-        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(product.default_vendor.vendor.name, None)
+        vendor_markets = product.default_vendor.vendor.location_codes_list()
 
     warning_text = get_location_warning_text(vendor_markets, request.user, "product")
 
@@ -643,6 +656,10 @@ def product_track(request, pk, page='Default', sid=0):
     client_referer = get_client_referer(request)
     if posted_referer == client_referer and 'redirect' in client_referer:
         return HttpResponse()
+
+    if not client_referer:
+        logger.warn(u"No client referer in product track request. page: {} pk: {}.".format(page, pk))
+        client_referer = ""
 
     product = None
     try:
@@ -863,11 +880,12 @@ def look_like(request, slug, action):
         process_like_look_created.delay(look.user, request.user, look_like)
 
     look_popularity.delay(look)
+    look_popularity2.delay(look)
 
     return HttpResponse(json.dumps(dict(success=True, error_message=None)), content_type='application/json')
 
 
-def look_list(request, search=None, contains=None, gender=None):
+def look_list(request, search=None, contains=None, gender=None, popularity_field='popularity'):
     """
     This view can list looks in four ways:
 
@@ -915,7 +933,7 @@ def look_list(request, search=None, contains=None, gender=None):
         queryset = queryset.filter(components__product__slug=contains).distinct()
         show_header = False
     else:
-        queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-popularity', 'created')
+        queryset = queryset.filter(gender__in=gender_list.get(gender)).order_by('-%s' % popularity_field, 'created')
 
     paged_result = get_paged_result(queryset, LOOK_PAGE_SIZE, request.GET.get('page', 1))
 
@@ -933,6 +951,9 @@ def look_list(request, search=None, contains=None, gender=None):
         'gender': gender,
         'show_header': show_header,
     })
+
+def look_list_popularity(request, search=None, contains=None, gender=None, popularity_field='popularity2'):
+    return look_list(request, search, contains, gender, popularity_field)
 
 
 class LookDetailView(DetailView):
@@ -1189,7 +1210,7 @@ class BackendAuthJsonView(View):
 def product_lookup_by_domain(request, domain, key):
     model = get_model('apparel', 'DomainDeepLinking')
     domain = extract_domain_with_suffix(domain)
-    logger.info("Lookup by domain, will try and find a match for domain [%s]" % domain)
+    logger.info(u"Lookup by domain, will try and find a match for domain [%s]" % domain)
     # domain:          example.com
     # Deeplink.domain: example.com/se
     results = model.objects.filter(domain__icontains=domain)
@@ -1206,13 +1227,18 @@ def product_lookup_by_domain(request, domain, key):
         instance = results[0]
 
     if instance and instance.template:
-        logger.info("Domain [%s / %s] was a match for %s." % (instance.domain, instance.vendor, domain))
+        logger.info(u"Domain [%s / %s] was a match for %s." % (instance.domain, instance.vendor, domain))
         user_id = request.user.pk
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
-
         sid = generate_sid(0, user_id, 'Ext-Link', url)
+        if instance.quote_url:
+            url = urllib.quote(url.encode('utf-8'), safe='')
+        if instance.quote_sid:
+            sid = urllib.quote(sid.encode('utf-8'), safe='')
+        if instance.quote_ulp:
+            ulp = urllib.quote(ulp.encode('utf-8'), safe='')
         return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
     return None, None
 
@@ -1300,16 +1326,15 @@ def product_lookup_asos_nelly(url, is_nelly_product=False):
     #return json_data.get('site_product', None)
 
 #@csrf_exempt
-def product_lookup_internal(request):
-    apprl_user_id = request.POST.get("user_id", None)
-    if apprl_user_id:
-        user = User.objects.get(pk=apprl_user_id)
-        if not user.is_publisher:
-            raise Http404
-        else:
-            request.user = user
-
-    return product_lookup(request)
+#def product_lookup_internal(request):
+#    apprl_user_id = request.POST.get("user_id", None)
+#   if apprl_user_id:
+#        user = User.objects.get(pk=apprl_user_id)
+#        if not user.is_publisher:
+#            raise Http404
+#        else:
+#            request.user = user
+#    return product_lookup(request)
 
 @csrf_exempt
 def product_lookup(request):
@@ -1328,12 +1353,16 @@ def product_lookup(request):
     elif not request.user.is_authenticated():
         raise HttpResponseNotAllowed
 
+    # try to get it into unicode
     sent_key = request.GET.get('key', '') or request.POST.get('key', '')
-    key = smart_unicode(urllib.unquote(smart_str(sent_key)))
+    url = extract_encoded_url_string(sent_key)
+    # unquote the string, however urrlib doesn't deal with unicode so convert it to utf-8 and back
+    key = extract_encoded_url_string(urllib.unquote(url.encode('utf-8')))
+
     logger.info("Request to lookup product for %s sent, trying to extract PK from request." % key)
     try:
         sent_pk = request.GET.get('pk', '') or request.POST.get('pk', '')
-        product_pk = long(smart_unicode(urllib.unquote(smart_str(sent_pk))))
+        product_pk = long(extract_encoded_url_string(sent_pk))
     except ValueError:
         product_pk = None
         logger.info("No clean Product pk extracted.")
@@ -1376,6 +1405,9 @@ def product_lookup(request):
     if request.user and request.user.partner_group and request.user.partner_group.has_cpc_all_stores:
         approx_text = ""
 
+    vendor = None
+    sent_domain = request.GET.get('domain', '') or request.POST.get('domain', '')
+    domain = smart_unicode(urllib.unquote(smart_str(sent_domain))) or key
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
@@ -1386,22 +1418,21 @@ def product_lookup(request):
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product,
                                                                            active=True).exists()
         product_name = product.get_product_name_to_display
-        domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
 
         # Todo: Not sure why this is done, we lookup a vendor through the domain submitted by the chrome extension. A vendor is
         # already available since we have a product object but a product object could potentially have multiple vendors, so
         # it may be a reason for it. However, if unable to match the domain in the DomainDeepLinking templates then we have
         # vendor = None. The link we extract is not used in any case, so definitely not sure about the whole process.
         # Suggestion would be to drop this lookup entirely and just use the product.default_vendor below. /Klas
-        _, vendor = product_lookup_by_domain(request, domain, original_key)
+
+        # Removed this 20160912 and are taking the vendor from product instead. /Klas
+        #_, vendor = product_lookup_by_domain(request, domain, original_key)
+        vendor = product.default_vendor.vendor
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
             help_text = "sale" if vendor.is_cpo else "click"
             product_earning = "You will earn %s%s %s per generated %s of this item." % (approx_text, currency, earning, help_text)
     else:
-        domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
-        if not domain:
-            domain = key
         logger.info(u"No product found for key, falling back to domain deep linking.")
         product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
         logger.info(u"No product found for key, falling back to domain deep linking.")
@@ -1409,6 +1440,7 @@ def product_lookup(request):
 
             product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
                                                                                 user=request.user, vendor=vendor)
+            logger.info(u"Short link: %s" % product_short_link)
             product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
             product_short_link_str = request.build_absolute_uri(product_short_link_str)
             _, cut, _, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, vendor)
@@ -1452,7 +1484,7 @@ def product_lookup(request):
                                               (approx_text, cost_per_click.currency, (earning_cut * cost_per_click.amount))
     vendor_markets = None
     if vendor:
-        vendor_markets = settings.VENDOR_LOCATION_MAPPING.get(vendor.name, None)
+        vendor_markets = vendor.location_codes_list()
     warning_text = get_location_warning_text(vendor_markets, request.user, "chrome-ext")
 
     return JSONResponse({
@@ -1903,5 +1935,15 @@ def extract_domain_with_suffix(domain):
 def extract_apparel_product_with_url(key):
     return get_model('apparel', 'Product').objects.filter(published=True, product_key__icontains=key)
 
+
 def embed_wildcard_solr_query(qs_string):
     return "%s*%s*" % (qs_string[:qs_string.index(':')+1],qs_string[qs_string.index(':')+1:])
+
+
+def extract_encoded_url_string(url):
+    try:
+        key = smart_unicode(smart_str(url))
+    except DjangoUnicodeDecodeError:
+        key_string = url.decode("iso-8859-1")
+        key = smart_unicode(smart_str(key_string))
+    return key

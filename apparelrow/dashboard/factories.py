@@ -8,30 +8,23 @@ from advertiser.models import Store
 from apparelrow.apparel.models import Vendor, ShortDomainLink
 from apparelrow.dashboard.models import ClickCost, Sale, Group, Cut, AggregatedData
 from apparelrow.profile.models import User
+from apparelrow.statistics import models as stat_models
+from apparelrow.statistics.factories import UserFactory
 
+class ProductStatFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = stat_models.ProductStat
+    action = 'BuyReferral'
+    price = 900
+    user_id = 1
+    page = 'Product'
 
 class GroupFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Group
 
     name = "Regular"
-
-
-class UserFactory(factory.django.DjangoModelFactory):
-
-    class Meta:
-        model = User
-    first_name = Faker().name().split(" ")[0]
-    last_name = Faker().name().split(" ")[1]
-    username = factory.Sequence(lambda n: 'username%s' % n)
-    email = factory.LazyAttribute(lambda o: '%s@example.org' % o.username)
-    last_login = lazy_attribute(lambda o: o.date_joined + dt.timedelta(days=4))
-    is_partner = True
-    partner_group = factory.SubFactory(GroupFactory)
-
-    @lazy_attribute
-    def date_joined(self):
-        return dt.datetime.now() - dt.timedelta(days=randint(5, 50))
 
 
 class VendorFactory(factory.django.DjangoModelFactory):

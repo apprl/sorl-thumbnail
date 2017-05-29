@@ -14,7 +14,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.forms import ValidationError
-from django.db.models.signals import post_save, pre_delete, pre_save
+from django.db.models.signals import post_save, pre_delete, pre_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -29,6 +29,9 @@ from apparelrow.apparel.base_62_converter import saturate, dehydrate
 from apparelrow.apparel.tasks import build_static_look_image, empty_embed_look_cache, empty_embed_shop_cache, empty_embed_productwidget_cache
 
 from apparelrow.profile.notifications import process_sale_alert
+
+from pysolr import Solr
+from apparelrow.apparel.search import logger, get_product_document, ApparelSearch, get_look_document
 
 import requests
 
@@ -176,18 +179,49 @@ class Vendor(models.Model):
     is_limit_reached = models.BooleanField(default=False, help_text=_('Limit has been exceeded for the current month '
                                                       'and email has been sent to the admin group'), db_index=True)
 
+    locations = models.ManyToManyField('apparel.Location', help_text="If you change this for a vendor, tell engineers about it - search index needs to be rebuilt.")
+
     class Meta:
         ordering = ['name']
         verbose_name = 'Vendor'
         verbose_name_plural = 'Vendors'
 
+    def location_codes_list(self, use_default_location_if_none=False):
+        codes = [location.code for location in self.locations.all()]
+        if not codes and use_default_location_if_none:
+            codes = settings.DEFAULT_VENDOR_LOCATION
+        return codes
+
     def __unicode__(self):
         return u"%s" % self.name
+
+    def clean(self):
+        if self.is_cpc and self.is_cpo:
+            raise ValidationError("Vendor can't be both cpo and cpc")
+
+
+#
+# Location
+#
+# This model defines different markets that Vendors can belong to
+# It used to be hardcoded in the setting - VENDOR_LOCATION_MAPPING but we wanted to make it user configurable
+
+location_choices = ((l[0], '%s - %s' % l) for l in settings.LOCATION_MAPPING_SIMPLE_TEXT)
+
+
+class Location(models.Model):
+    code = models.CharField(primary_key=True, max_length=3, choices=location_choices)
+
+    class Meta:
+        ordering = ['code']
+
+    def __unicode__(self):
+        return u"%s" % self.code
 
 
 #
 # Category
-#   
+#
 
 class Category(MPTTModel):
     name          = models.CharField(max_length=100, db_index=True)
@@ -405,6 +439,88 @@ def product_update_activity_post_save(sender, instance, **kwargs):
     get_model('activity_feed', 'activity').objects.filter(content_type=content_type, object_id=instance.pk).update(is_available=instance.availability)
     #get_model('activity_feed', 'activity').objects.update_activity(instance)
 
+
+@receiver(post_save, sender=Product, dispatch_uid='product_save')
+def product_save(instance, **kwargs):
+    if not hasattr(instance, 'id'):
+        return
+
+    # If this post save signal is a result of only a date update we do not have to update the search index either
+    #if kwargs and "imported_date" in kwargs.keys():
+    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'modified' in kwargs['update_fields']:
+        logger.info(kwargs.get('update_fields', None))
+        return
+
+    # If this post save signal is from a product popularity update we do not
+    # need to update the product in our search index.
+    if 'update_fields' in kwargs and kwargs['update_fields'] and len(kwargs['update_fields']) == 1 and 'popularity' in kwargs['update_fields']:
+        return
+
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(settings.SOLR_URL)
+
+    document, boost = get_product_document(instance)
+
+    if document is not None and document['published']:
+        if 'commit' in kwargs and kwargs['commit']:
+            connection.add([document], commit=True, boost=boost)
+        else:
+            connection.add([document], commit=False, boost=boost, commitWithin=False)
+    elif document is not None and not document['published']:
+        result = ApparelSearch('id:apparel.product.%s AND published:true' % (instance.id,), connection=connection)
+        if len(result) == 1:
+            connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.id))
+
+
+@receiver(post_delete, sender=Product, dispatch_uid='product_delete')
+def product_delete(instance, **kwargs):
+    """
+    Removes the product from the SOLR index and also deletes any lingering thumbnails
+    :param instance:
+    :param kwargs:
+    :return:
+    """
+    from sorl.thumbnail.images import ImageFile as SorlImageFile
+    from sorl.thumbnail import default
+    from theimp.models import Product as ImpProduct
+    sorl_image = None
+    image_name = instance.product_image.name
+    # Check if the image is used somewhere else, if it is do not remove it. This method is post_delete so object
+    # using this image is already removed.
+    uses = Product.objects.filter(product_image=image_name).count()
+    if uses > 0:
+        logger.info(u"Product {} shared image with other products [{}], will not remove {}.".format(instance.pk, uses,image_name))
+    else:
+        try:
+            logger.info(u"Trying to remove image and thumbnails for {}".format(instance))
+            sorl_image = SorlImageFile(instance.product_image)
+            try:
+                default.kvstore.delete_thumbnails(sorl_image)
+                default.kvstore.delete(sorl_image)
+            except:
+                logger.warn(u"Failed to remove thumbnails for product {}.".format(instance.pk))
+        except:
+            logger.warn(u"Failed to remove image, could not load the sorl image wrapper for product {}.".format(instance.pk))
+        finally:
+            if sorl_image and sorl_image.exists() and not "image_not_available" in image_name:
+               sorl_image.delete()
+
+    logger.info(u"Trying to clean up theimp.Product: {}".format(instance.product_key))
+    try:
+        if ImpProduct.objects.filter(key=instance.product_key).exists():
+            product = ImpProduct.objects.get(key=instance.product_key)
+            logger.info(u"Cleaning out Imp product: {}".format(product.id))
+            product.delete()
+    except:
+        logger.warn(u"Unable to clean out Imp product corresponding to: {}".format(instance.product_key))
+
+
+    connection = Solr(settings.SOLR_URL)
+    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
+
+
 #@receiver(post_save, sender=Product, dispatch_uid='product_save_key_check')
 #def product_save_key_check(sender, instance, created, **kwargs):
 #    if created:
@@ -434,6 +550,7 @@ class ProductLike(models.Model):
 models.signals.post_save.connect(invalidate_model_handler, sender=ProductLike)
 models.signals.post_delete.connect(invalidate_model_handler, sender=ProductLike)
 
+
 @receiver(post_save, sender=ProductLike, dispatch_uid='product_like_post_save')
 def product_like_post_save(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
@@ -454,6 +571,7 @@ def product_like_post_save(sender, instance, **kwargs):
             get_cache('nginx').set(key, "True", 60*10) # Preventing the shop to be reset more often than every ten minutes
             empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=300) # Schedules the job 5 minutes into the future
 
+
 @receiver(pre_delete, sender=ProductLike, dispatch_uid='product_like_pre_delete')
 def product_like_pre_delete(sender, instance, **kwargs):
     if not hasattr(instance, 'user'):
@@ -462,6 +580,15 @@ def product_like_pre_delete(sender, instance, **kwargs):
 
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_product', instance.product)
 
+
+@receiver(post_save, sender=ProductLike, dispatch_uid='product_like_save')
+def product_like_save(instance, **kwargs):
+    product_save(instance.product)
+
+
+@receiver(post_delete, sender=ProductLike, dispatch_uid='product_like_delete')
+def product_like_delete(instance, **kwargs):
+    product_save(instance.product)
 
 #
 # ShortStoreLink and ShortProductLink
@@ -511,31 +638,65 @@ class ShortStoreLink(models.Model):
         return dehydrate(self.pk + SHORT_CONSTANT)
 
 
+# This model is for compressing and storing urls that are sent to affiliate networks as sid parameters
+# Tradedoubler and maybe others don't allow for maybe more than 32 chars in the sid so we need to compress the url
+# before we pass them the sid
+
+class CompressedLink(models.Model):
+
+    key = models.CharField(primary_key=True, max_length=32)
+    link = models.CharField(max_length=1024, blank=False, null=False)
+    created = models.DateField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.key, self.link)
+
+
+
+# This model is used to transform store / vendor urls so that they will pass through their associated affiliate
+# network click handlers. See product_lookup_by_domain()
+
 class DomainDeepLinking(models.Model):
     vendor = models.ForeignKey(Vendor)
     domain = models.CharField(max_length=100, blank=False, null=False, help_text='Should not contain http:// or https:// but can contain path, example: "nelly.com/se"')
-    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} or {ulp} together with {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?stoe_id=somestore&custom={sid}&url={url}')
+    template = models.CharField(max_length=512, blank=False, null=False, help_text='Use {url} or {ulp} together with {sid} in the URL where you want it to appear<br><br>example: http://apprl.com/a/link/?store_id=somestore&custom={sid}&url={url}')
+
+    quote_url = models.BooleanField(default=False, help_text=u'Some networks require url-escaping (linkshare) some do not work with it (CJ)')
+    quote_sid = models.BooleanField(default=False)
+    quote_ulp = models.BooleanField(default=False)
 
 
 class ShortDomainLinkManager(models.Manager):
     def get_short_domain_for_link(self, short_link):
-        instance = ShortDomainLink.objects.get(pk=(saturate(short_link) - SHORT_CONSTANT))
+        instance = ShortDomainLink.objects.get(pk=self.decode_id(short_link))
 
         return instance.url, instance.vendor.name, instance.user.pk
+
+    @staticmethod
+    def decode_id(short_link):
+        return saturate(short_link) - SHORT_CONSTANT
 
     def get_original_url_for_link(self, short_link):
         url, vendor_name, _ = self.get_short_domain_for_link(short_link)
         vendor = get_model('apparel', 'Vendor').objects.get(name=vendor_name)
         domain_deep_link = get_model('apparel', 'DomainDeepLinking').objects.filter(vendor=vendor)
         source_link = ''
-        if len(domain_deep_link) > 0:
-            template = domain_deep_link[0].template
-            result = parse(template, url)
-            _, _, _, source_link = parse_sid(result['sid'])
-        else:
-            logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
+        try:
+            if len(domain_deep_link) > 0:
+                template = domain_deep_link[0].template
+                result = parse(template, url)
+                _, _, _, source_link = parse_sid(result['sid'])
+            else:
+                logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
+        except TypeError, msg:
+            logger.warn("Unable to match shortlink {} -> {} and vendor {}, decompressed id {}. [{}]".
+                     format(short_link, url, vendor_name, self.decode_id(short_link), msg))
+            source_link = "LINK-NOT-FOUND"
         return source_link
 
+
+# These links are published on users blogs etc, they have format pd/xxxxx
+# it is an alias for a longer link
 
 class ShortDomainLink(models.Model):
     url = models.CharField(max_length=1024, blank=False, null=False)
@@ -550,6 +711,9 @@ class ShortDomainLink(models.Model):
 
     class Meta:
         unique_together = ('url', 'user')
+
+    def __unicode__(self):
+        return u'{} : {}'.format(self.link(), self.url)
 
 
 class ShortProductLinkManager(models.Manager):
@@ -788,7 +952,7 @@ class VendorProduct(models.Model):
 
         earning_total = decimal.Decimal(0)
 
-        if user.is_partner:
+        if hasattr(user, "is_partner") and user.is_partner:
             earning_cut = self.get_earning_cut_for_product(user)
             if user.partner_group and user.partner_group.has_cpc_all_stores:
                 try:
@@ -939,6 +1103,7 @@ class Look(models.Model):
     component   = models.CharField(_('What compontent to show'), max_length=1, choices=LOOK_COMPONENT_TYPES, blank=True)
     gender      = models.CharField(_('Gender'), max_length=1, choices=PRODUCT_GENDERS, null=False, blank=False, default='U')
     popularity  = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
+    popularity2 = models.DecimalField(default=0, max_digits=20, decimal_places=8, db_index=True)
     width       = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[0] - 2)
     height      = models.IntegerField(blank=False, null=False, default=settings.APPAREL_LOOK_SIZE[1] - 2)
     published   = models.BooleanField(default=False)
@@ -960,8 +1125,20 @@ class Look(models.Model):
         """
         look = Look.objects.get(pk=look_id)
 
-        # Build temporary static look image
-        look.static_image = 'static/images/white.png'
+        # Build temporary static look image (Surrounding try/catch is a Hotfix)
+        try:
+            from PIL import Image
+            from StringIO import StringIO
+            from django.core.files.base import ContentFile
+            from django.contrib.staticfiles import finders
+            image = Image.open(finders.find('images/white.png'))
+            look.static_image = ContentFile(image)
+        except Exception, msg:
+            # Todo: This should be removed once the solution above can be verified. This will always crash due to IOError
+            # if checked
+            log.warn("Effort trying to fix code crashing thumbnail code when image does not exist failed:{}".format(msg))
+            look.static_image = "static/images/white.png"
+
         look.save(update_fields=['static_image', 'modified'])
 
         # Build static look image in background
@@ -1168,6 +1345,16 @@ def shop_product_save(instance, **kwargs):
             empty_embed_shop_cache.apply_async(args=[shop_embed.id], countdown=120)
         else:
             logger.debug("Key: %s still active, will wait for shop reset." % key)
+
+@receiver(post_save, sender=ShopProduct, dispatch_uid='shop_product_save')
+def shop_product_save(instance, **kwargs):
+    product_save(instance.product)
+
+@receiver(post_delete, sender=ShopProduct, dispatch_uid='shop_product_delete')
+def shop_product_delete(instance, **kwargs):
+    product_save(instance.product)
+
+
 #
 # Shop
 #
@@ -1253,6 +1440,24 @@ def look_pre_delete(sender, instance, **kwargs):
 
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'create', instance)
 
+@receiver(post_save, sender=Look, dispatch_uid='look_save')
+def look_save(instance, **kwargs):
+    if 'solr' in kwargs and kwargs['solr']:
+        connection = kwargs['solr']
+    else:
+        connection = Solr(settings.SOLR_URL)
+
+    if not instance.user.is_hidden:
+        document, boost = get_look_document(instance)
+        connection.add([document], commit=False, boost=boost, commitWithin=False)
+
+
+@receiver(post_delete, sender=Look, dispatch_uid='look_delete')
+def look_delete(instance, **kwargs):
+    connection = Solr(settings.SOLR_URL)
+    connection.delete(id='%s.%s.%s' % (instance._meta.app_label, instance._meta.module_name, instance.pk))
+
+
 #
 # LookEmbed
 #
@@ -1314,7 +1519,6 @@ def look_like_pre_delete(sender, instance, **kwargs):
         return
 
     get_model('activity_feed', 'activity').objects.pull_activity(instance.user, 'like_look', instance.look)
-
 
 
 class ComponentLink(models.Model):
@@ -1597,4 +1801,3 @@ django.contrib.comments.signals.comment_was_posted.connect(invalidate_model_hand
 # Search
 #
 
-import apparelrow.apparel.search

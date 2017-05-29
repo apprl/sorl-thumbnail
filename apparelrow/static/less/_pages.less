@@ -110,13 +110,15 @@
         display: none !important;
     }
     .brand-line {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        z-index: 20;
-        background-color: @primaryColor;
+        @media (min-width: @screen-md) {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 20;
+            background-color: @primaryColor;
+        }
     }
     .publisher-welcome {
         h1 {
@@ -1116,4 +1118,8 @@
 .pull-left-cell {
     width: 100%;
     text-align: left;
+}
+
+#all-earnings td .btn {
+    margin-bottom: 0;
 }

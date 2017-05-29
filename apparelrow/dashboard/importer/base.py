@@ -89,6 +89,8 @@ class BaseImporter:
 
             data['cut'] = cut
             data['commission'] = cut * decimal.Decimal(data['commission'])
+            # exchange rate hedge.
+            # not sure if this is a good way to do it
             if data['currency'] != data['original_currency']:
                 data['commission'] = data['commission'] * decimal.Decimal('0.95')
 
@@ -96,6 +98,9 @@ class BaseImporter:
 
     def create_referral_sale(self, data, user, referral_cut):
         if user and user.is_referral_parent_valid():
+            if user.partner_group and user.partner_group.has_cpc_all_stores and data.get('affiliate') != 'cpc_all_stores':
+                # We only want to give referal bonuses for cpc_all_stores sales to cpc_all_stores_users referal_parents
+                return
             data['is_referral_sale'] = True
             data['referral_user'] = user.referral_partner_parent
             data['user_id'] = user.id

@@ -20,6 +20,7 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models.loading import get_model
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView, ListView, View, DetailView, FormView
+from django.views.decorators.csrf import csrf_protect
 
 import requests
 from apparelrow.apparel.models import Look
@@ -816,6 +817,19 @@ class PublisherSettingsNotificationView(TemplateView):
             instance = context["details_form"].save(commit=False)
             instance.user = request.user
             instance.save()
+
+            # Send email to managers if bank details have changed
+            if context["details_form"].changed_data:
+                subject = u"%s changed their bank details" % (instance.user.name)
+                message = u"%s (%s) changed bank details: %s" % (
+                    u"%s" % instance.user.name,
+                    request.build_absolute_uri(reverse('profile-likes', args=[instance.user.slug])),
+                    u''.join([u"\n* %s: %s" % (
+                        unicode(context["details_form"].fields[x].label),
+                        context["details_form"].cleaned_data[x]) for x in context["details_form"].changed_data])
+                )
+
+                mail_managers_task.delay(subject, message)
         else:
             context.update({"form_errors": context["details_form"].errors})
         return render(request, self.template_name, context)
@@ -906,6 +920,7 @@ class RegisterView(TemplateView):
 def register(request):
     return render(request, 'registration/registration.html')
 
+
 class RegisterEmailFormView(FormView):
     # work in progress
     template_name = 'registration/registration_email.html'
@@ -915,12 +930,14 @@ class RegisterEmailFormView(FormView):
     def get_success_url(self):
         return reverse('auth_register_complete')
 
-    def get_initial(self):
+    def get_form_kwargs(self):
+        kwargs = super(RegisterEmailFormView, self).get_form_kwargs()
         if "register_email" in self.request.session:
-            self.initial.update({"email": self.request.session.pop("register_email"),
-                    "password1": self.request.session.get("register_password"),
-                    "password2": self.request.session.pop("register_password")})
-        return self.initial.copy()
+            kwargs["initial"].update({"email": self.request.session.pop("register_email"),
+             "password1": self.request.session.get("register_password"),
+             "password2": self.request.session.pop("register_password")})
+
+        return kwargs
 
     def form_valid(self, form):
         instance = form.save(commit=False)
@@ -1027,7 +1044,10 @@ class RegisterActivateView(View):
             reset_facebook_user(request)
 
             mail_subject = 'New email user activation: %s' % (user.display_name_live,)
-            mail_managers_task.delay(mail_subject, 'URL: %s' % (request.build_absolute_uri(user.get_absolute_url()),))
+            if user.is_brand:
+                log.info(u"{}".format(mail_subject))
+            else:
+                mail_managers_task.delay(mail_subject, 'URL: %s' % (request.build_absolute_uri(user.get_absolute_url()),))
 
             response = HttpResponseRedirect(reverse('login-flow-%s' % (user.login_flow)))
             response.set_cookie(settings.APPAREL_GENDER_COOKIE, value=user.gender, max_age=365 * 24 * 60 * 60)
@@ -1233,3 +1253,19 @@ def login_as_user(request, user_id):
 @login_required
 def notifications(request):
     return render(request, 'profile/notifications_list.html')
+
+@csrf_protect
+def password_reset(request, **kwargs):
+    from django.contrib.auth.views import password_reset as orig_password_reset
+
+    if request.method == "POST":
+        email = request.POST.get('email', None)
+
+        try:
+            user = get_user_model().objects.get(email=email, is_active=False)
+            send_confirmation_email(request, user)
+            return HttpResponseRedirect(reverse('auth_register_complete'))
+        except get_user_model().DoesNotExist:
+            pass
+
+    return orig_password_reset(request, **kwargs)

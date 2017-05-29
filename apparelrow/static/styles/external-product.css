@@ -132,3 +132,12 @@
 .apprl-product .caption li {
   display: inline-block;
 }
+
+.discount-price {
+   color: #f64747  !important;
+}
+.discounted {
+   margin-left: 10px !important;
+   text-decoration: line-through !important;
+   color: #666 !important;
+}

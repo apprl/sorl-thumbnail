@@ -18,6 +18,9 @@ def dev_settings():
     env.db_pass = '0p1a7IUmE6NU'
     env.db_url = 'apprldbinstance.cirbmil58ncc.us-east-1.rds.amazonaws.com'
     env.memcached_url = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
+    env.memcached_url_importer = env.memcached_url
+    env.memcached_url_nginx = "importer.naojmu.cfg.use1.cache.amazonaws.com"
+    #env.memcached_url_conf = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
     env.redis_url = "ip-10-0-1-249.ec2.internal"
     env.solr_url = "ip-10-0-1-247.ec2.internal"
     env.s3_url = "s-staging.apprl.com"
@@ -62,7 +65,7 @@ def dev_aws_1():
     env.settings = "dev-aws"
     env.internal_ip = "10.0.0.213"
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-basic-v2-block','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.restart = ['gunicorn','nginx']
     env.hostname="dev-aws1"
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
@@ -75,7 +78,7 @@ def dev_aws_2():
     env.settings = 'dev-aws'
     env.internal_ip = '10.0.0.214'
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
-    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
+    env.installed_apps = ['supervisor-gunicorn','gunicorn','nginx-basic-v2','nginx-basic-v2-block','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
     env.restart = ['gunicorn','nginx']
     env.hostname="dev-aws2"
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
@@ -90,7 +93,6 @@ def dev_admin():
     env.hosts = ['%(user)s@%(internal_ip)s' % env]
     env.installed_apps = ['supervisor-gunicorn-admin','gunicorn-admin','nginx-basic-v2','nginx-application','supervisor-nginx',] # Empty means everything. Depends on what else is already on the server at the time.
                             # Mostly involves shared servers when for example memacached is already installed.
-    env.memcached_url_importer = "importer.naojmu.cfg.use1.cache.amazonaws.com"
     env.restart = ['gunicorn_admin','nginx']
     env.hostname="dev-admin"
     env.sentry_url = "https://860283083f7f4a9a8c36e6a6c41a93a9:8366888ded5e46b495d114e5b0f64803@sentry.apprl.com/3"
@@ -113,7 +115,7 @@ def dev_scraper():
     env.hosts = ['%(user)s@ip-10-0-1-248.ec2.internal' % env]
     env.celery_processes = '1'
     env.celery_processes_background = '1'
-    env.memcached_url_importer = "importer.naojmu.cfg.use1.cache.amazonaws.com"
+    #env.memcached_url = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
     env.installed_apps = ['']
     env.run_user = env.user
     env.restart = ['scrapyd']
@@ -127,7 +129,7 @@ def dev_importer():
     dev_settings()
     env.settings = "dev-importer-aws"
     env.hosts = ['%(user)s@ip-10-0-1-249.ec2.internal' % env]
-    env.memcached_url_importer = "importer.naojmu.cfg.use1.cache.amazonaws.com"
+    #env.memcached_url_nginx = "importer.naojmu.cfg.use1.cache.amazonaws.com"
     env.celery_processes = '0'
     env.celery_processes_background = '0'
     env.installed_apps = ['']

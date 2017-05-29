@@ -21,7 +21,7 @@ class Command(BaseCommand):
             action='store',
             dest='offset',
             help='Select the amount of days to go back',
-            default=550,
+            default=540,
         ),
         make_option('--y',
             action='store_true',
@@ -36,6 +36,10 @@ class Command(BaseCommand):
 
         purge_date = datetime.date.today() - timedelta(days=offset)
         total_products = ImpProduct.objects.filter(modified__lt=purge_date).count()
+
+        if not total_products > 0:
+            print "No products to purge!"
+            return
 
         input_verified = options.get("input")
 

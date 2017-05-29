@@ -6,15 +6,12 @@ import os.path
 import string
 import decimal
 import time
-import itertools
 
 from django.conf import settings
 from django.core.cache import get_cache
-from django.core.management import call_command
 from django.core.files import storage
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
 from django.db.models import Q
@@ -30,11 +27,11 @@ from sorl.thumbnail import get_thumbnail, delete as sorl_delete
 
 from mailsnake import MailSnake
 from mailsnake.exceptions import MailSnakeException
-from celery.task import task, periodic_task, PeriodicTask
+from celery.task import task, periodic_task
 from celery.schedules import crontab
 import requests
 
-from apparelrow.apparel.utils import send_google_analytics_event
+from apparelrow.apparel.utils import send_google_analytics_event, get_popularity
 
 logger = logging.getLogger('apparel.tasks')
 
@@ -101,6 +98,16 @@ def look_popularity(look):
     look.save(update_fields=['popularity'])
 
     return look.popularity
+
+@task(name='apparelrow.apparel.tasks.look_popularity2', max_retries=5, ignore_result=True)
+def look_popularity2(look):
+    oldest_look_timestamp = 1134028003
+    LookLike = get_model('apparel', 'LookLike')
+    like_count = LookLike.objects.filters(look=look, active=True).count()
+    look.popularity2 = get_popularity(like_count, look.created, oldest_look_timestamp)
+    look.save(update_fields=['popularity2'])
+    return look.popularity2
+
 
 
 @task(name='apparelrow.apparel.tasks.product_popularity', max_retries=5, ignore_result=True)
@@ -330,7 +337,7 @@ def build_static_look_image(look_id):
         except:
             logger.warning('No thumbnail found for %s '%look.image)
         # TODO: better solution?
-        if thumbnail.url.startswith('http'):
+        if hasattr(thumbnail, "url") and thumbnail.url.startswith('http'):
             background = Image.open(StringIO(requests.get(thumbnail.url).content))
         else:
             background = Image.open(os.path.join(settings.MEDIA_ROOT, thumbnail.name))
