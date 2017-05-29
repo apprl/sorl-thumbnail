@@ -1351,7 +1351,7 @@ def product_lookup(request):
             raise Http404
 
     elif not request.user.is_authenticated():
-        raise HttpResponseNotAllowed
+        raise Http404
 
     # try to get it into unicode
     sent_key = request.GET.get('key', '') or request.POST.get('key', '')
