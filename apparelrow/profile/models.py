@@ -466,6 +466,9 @@ class User(AbstractUser):
         if self.is_partner and self.partner_group is None:
             raise ValidationError(_(u'Partner group must be set to be able to set partner status'))
 
+    def is_publisher(self):
+        return self.is_partner
+
     def __unicode__(self):
         return self.display_name
 

@@ -48,7 +48,7 @@ from apparelrow.activity_feed.views import user_feed
 from apparelrow.dashboard.views import SignupForm
 from apparelrow.dashboard.utils import parse_rules_exception
 from apparelrow.profile.forms import RegisterFormSimple
-from apparelrow.profile.models import Follow
+from apparelrow.profile.models import Follow, User
 from apparelrow.profile.utils import get_facebook_user
 from apparelrow.profile.notifications import process_like_look_created
 from apparelrow.profile.models import NotificationEvent
@@ -1299,19 +1299,46 @@ def product_lookup_asos_nelly(url, is_nelly_product=False):
     #json_data = json.loads(products[0].json)
     #return json_data.get('site_product', None)
 
+#@csrf_exempt
+def product_lookup_internal(request):
+    apprl_user_id = request.POST.get("user_id", None)
+    if apprl_user_id:
+        user = User.objects.get(pk=apprl_user_id)
+        if not user.is_publisher:
+            raise Http404
+        else:
+            request.user = user
 
+    return product_lookup(request)
+
+@csrf_exempt
 def product_lookup(request):
-    if not request.user.is_authenticated():
-        raise Http404
-    key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
+    apprl_user_id = request.POST.get("user_id", None)
+
+    if apprl_user_id:
+        try:
+            user = User.objects.get(pk=apprl_user_id)
+            if not user.is_publisher():
+                raise Http404
+            else:
+                request.user = user
+        except User.DoesNotExist:
+            raise Http404
+
+    elif not request.user.is_authenticated():
+        raise HttpResponseNotAllowed
+
+    sent_key = request.GET.get('key', '') or request.POST.get('key', '')
+    key = smart_unicode(urllib.unquote(smart_str(sent_key)))
     logger.info("Request to lookup product for %s sent, trying to extract PK from request." % key)
     try:
-        product_pk = long(smart_unicode(urllib.unquote(smart_str(request.GET.get('pk', '')))))
+        sent_pk = request.GET.get('pk', '') or request.POST.get('pk', '')
+        product_pk = long(smart_unicode(urllib.unquote(smart_str(sent_pk))))
     except ValueError:
         product_pk = None
         logger.info("No clean Product pk extracted.")
 
-    is_nelly_product = request.GET.get('is_product', False)
+    is_nelly_product = bool(request.GET.get('is_product', False) or request.POST.get('is_product', False))
 
     original_key = key
     if key and not product_pk:
@@ -1319,11 +1346,12 @@ def product_lookup(request):
         if not product_pk:
             logger.info("Failed to extract product from solr, will change the protocol and try again.")
             if key.startswith('https'):
-                key = key.replace('https', 'http')
+                key = key.replace('https', 'http', 1)
             elif key.startswith('http'):
-                temp = list(key)
-                temp.insert(4, 's')
-                key = ''.join(temp)
+                key = key.replace("http", "https",1 )
+                #temp = list(key)
+                #temp.insert(4, 's')
+                #key = ''.join(temp)
             product_pk = product_lookup_by_solr(request, key)
             if not product_pk:
                 logger.info(u"Failed to extract product from solr for %s" % key)
@@ -1372,6 +1400,8 @@ def product_lookup(request):
             product_earning = "You will earn %s%s %s per generated %s of this item." % (approx_text, currency, earning, help_text)
     else:
         domain = smart_unicode(urllib.unquote(smart_str(request.GET.get('domain', ''))))
+        if not domain:
+            domain = key
         logger.info(u"No product found for key, falling back to domain deep linking.")
         product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
         logger.info(u"No product found for key, falling back to domain deep linking.")
