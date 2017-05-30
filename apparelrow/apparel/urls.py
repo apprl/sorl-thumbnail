@@ -182,6 +182,7 @@ urlpatterns = patterns('',
     url(r'^backend/authenticated/$', 'apparelrow.apparel.views.authenticated_backend', name='backend-authenticated'),
     url(r'^backend/authentication/$', BackendAuthJsonView.as_view(), name='backend-authentication'),
     url(r'^backend/product/lookup/$', 'apparelrow.apparel.views.product_lookup', name='backend-product-lookup'),
+    url(r'^backend/product/lookup/multi/$', 'apparelrow.apparel.views.product_lookup_multi', name='backend-product-lookup-multi'),
     url(r'^backend/product/earning/$', 'apparelrow.apparel.views.backend_product_earnings',
         name='backend-product-earnings'),
 

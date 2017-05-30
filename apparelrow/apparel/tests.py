@@ -191,13 +191,16 @@ class TestChromeExtension(TestCase):
     def test_product_lookup_by_url(self):
         self._login()
         product_key = 'http://example.com/example?someproduct=12345'
-        product_id = product_lookup_by_solr(None, product_key)
-        if product_id:
+        product_id = product_lookup_by_solr(product_key)
+
+        while product_id:
+            product_id = product_lookup_by_solr(product_key)
             log.info("Found already existing product in SOLR database, removing.")
             connection = Solr(settings.SOLR_URL)
             product_solr_id = "apparel.product.%s" % product_id
             connection.delete(id=product_solr_id, commit=True, waitFlush=True)
             log.info("%s has been removed from index." % product_solr_id)
+
         vendor = get_model('apparel', 'Vendor').objects.create(name='Vendor')
         category = get_model('apparel', 'Category').objects.create(name='Category')
         manufacturer = get_model('apparel', 'Brand').objects.create(name='Brand')
@@ -874,7 +877,7 @@ class TestShortLinks(TestCase):
         DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.henrykole.se/")
         request = self.factory.get('/index/')
         request.user = self.user
-        link, link_vendor = product_lookup_by_domain(request, "www.henrykole.se/", key)
+        link, link_vendor = product_lookup_by_domain("www.henrykole.se/", key, request.user.pk)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.henrykole.se/shoes.html"))
         url = key
         self.assertEqual(link, "http://apprl.com/a/link/?store_id=henrykole&custom=%s&url=%s" % (sid, url))
@@ -887,7 +890,7 @@ class TestShortLinks(TestCase):
         DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.oki-ni.com")
         request = self.factory.get('/index/')
         request.user = self.user
-        link, link_vendor = product_lookup_by_domain(request, "www.oki-ni.com", key)
+        link, link_vendor = product_lookup_by_domain("www.oki-ni.com", key, request.user.pk)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.oki-ni.com/en/outerwear/coats"))
         url = key
         self.assertEqual(link, "http://www.awin1.com/cread.php?awinmid=2083&awinaffid=115076&clickref=%s&p=%s" % (sid, url))
@@ -901,7 +904,7 @@ class TestShortLinks(TestCase):
         DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.aldoshoes.com", quote_url=True)
         request = self.factory.get('/index/')
         request.user = self.user
-        link, link_vendor = product_lookup_by_domain(request, "www.aldoshoes.com", key)
+        link, link_vendor = product_lookup_by_domain("www.aldoshoes.com", key, request.user.pk)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.aldoshoes.com/ca/en/women/c/100?foo=1&bar=2"))
         url = urllib.quote(key, safe='')
         self.assertEqual(link, "http://click.linksynergy.com/fs-bin/click?id=oaQeNCJweO0&subid=&offerid=349203.1&"
@@ -915,7 +918,7 @@ class TestShortLinks(TestCase):
         DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="http://nelly.com")
         request = self.factory.get('/index/')
         request.user = self.user
-        link, link_vendor = product_lookup_by_domain(request, "nelly.com", key)
+        link, link_vendor = product_lookup_by_domain("nelly.com", key, request.user.pk)
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://nelly.com/se/skor-kvinna/"))
         url = key
         self.assertEqual(link, "http://clk.tradedoubler.com/click?p=17833&a=1853028&g=17114610&epi=%s&url=%s" % (sid, url))
@@ -928,7 +931,7 @@ class TestShortLinks(TestCase):
         DomainDeepLinkingFactory.create(template=template, vendor=vendor, domain="www.houseofdagmar.se")
         request = self.factory.get('/index/')
         request.user = self.user
-        link, link_vendor = product_lookup_by_domain(request, "www.houseofdagmar.se", key)
+        link, link_vendor = product_lookup_by_domain("www.houseofdagmar.se", key, request.user.pk)
         ulp = urllib.quote("/product-category/sweaters/")
         sid = "%s-0-Ext-Link/%s" % (self.user.id, compress_source_link_if_needed("http://www.houseofdagmar.se/product-category/sweaters/"))
         self.assertEqual(link, "http://ad.zanox.com/ppc/?30939055C58755144&ulp=[[%s]]&zpar0=[[%s]]" % (ulp, sid))
@@ -1799,8 +1802,9 @@ def _cleanout_products(product_keys):
 
 
 def _cleanout_product(product_key):
-    product_id = product_lookup_by_solr(None, product_key)
-    if product_id:
+    product_id = product_lookup_by_solr(product_key)
+    while product_id:
+        product_id = product_lookup_by_solr(product_key)
         log.info("Found already existing product in SOLR database, removing.")
         connection = Solr(settings.SOLR_URL)
         product_solr_id = "apparel.product.%s" % product_id

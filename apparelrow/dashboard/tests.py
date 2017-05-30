@@ -146,7 +146,7 @@ class TestDashboard(TransactionTestCase):
         self.assertEqual(instance.store, False)
         self.assertEqual(instance.referral_user, referral_user)
 
-        self.assertEqual(len(mail.outbox), 3)
+        self.assertEqual(len(mail.outbox), 1)
 
     #@unittest.skip("Review this test")
     def test_publisher_signup_from_referral_link_already_authenticated(self):
@@ -169,7 +169,7 @@ class TestDashboard(TransactionTestCase):
         self.assertEqual(instance.store, False)
         self.assertEqual(instance.referral_user, referral_user)
 
-        self.assertEqual(len(mail.outbox), 3)
+        self.assertEqual(len(mail.outbox), 1)
 
     #@unittest.skip("Review this test")
     def test_signup_from_referral_link(self):
@@ -195,7 +195,7 @@ class TestDashboard(TransactionTestCase):
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertIsNotNone(registered_user)
 
-        welcome_mail_body = mail.outbox[2].body
+        welcome_mail_body = mail.outbox[0].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         # Sometimes a trailing \r is caugt
         activation_url = activation_url.strip()
@@ -265,7 +265,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
         self.assertEquals(response.status_code,302)
-        welcome_mail_body = mail.outbox[2].body
+        welcome_mail_body = mail.outbox[0].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         response = self.client.get(activation_url)
 
@@ -292,7 +292,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
-        welcome_mail_body = mail.outbox[2].body
+        welcome_mail_body = mail.outbox[0].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         activation_url = activation_url.strip()
         response = self.client.get(activation_url)
@@ -339,7 +339,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
         self.assertEquals(response.status_code,302)
-        welcome_mail_body = mail.outbox[2].body
+        welcome_mail_body = mail.outbox[0].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         activation_url = activation_url.strip()
         response = self.client.get(activation_url)

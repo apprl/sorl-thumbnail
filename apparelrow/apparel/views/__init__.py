@@ -32,7 +32,7 @@ from django.utils import translation, timezone
 from django.utils.encoding import smart_unicode, smart_str, DjangoUnicodeDecodeError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.decorators import method_decorator
-
+from simplejson import JSONDecodeError
 
 from apparelrow.apparel.middleware import REFERRAL_COOKIE_NAME
 from apparelrow.apparel.decorators import seamless_request_handling
@@ -1207,7 +1207,8 @@ class BackendAuthJsonView(View):
     def dispatch(self, request, *args, **kwargs):
         return super(BackendAuthJsonView, self).dispatch(request, *args, **kwargs)
 
-def product_lookup_by_domain(request, domain, key):
+
+def product_lookup_by_domain(domain, key, user_id):
     model = get_model('apparel', 'DomainDeepLinking')
     domain = extract_domain_with_suffix(domain)
     logger.info(u"Lookup by domain, will try and find a match for domain [%s]" % domain)
@@ -1216,8 +1217,8 @@ def product_lookup_by_domain(request, domain, key):
     results = model.objects.filter(domain__icontains=domain)
     instance = None
     if not results:
-        logger.info("No domain found for %s, returning 404" % domain)
-        raise Http404
+        logger.info("No domain found for %s" % domain)
+        return None, None
 
     if len(results) > 1:
         for item in results:
@@ -1228,7 +1229,6 @@ def product_lookup_by_domain(request, domain, key):
 
     if instance and instance.template:
         logger.info(u"Domain [%s / %s] was a match for %s." % (instance.domain, instance.vendor, domain))
-        user_id = request.user.pk
         key_split = urlparse.urlsplit(key)
         ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
         url = key
@@ -1240,10 +1240,11 @@ def product_lookup_by_domain(request, domain, key):
         if instance.quote_ulp:
             ulp = urllib.quote(ulp.encode('utf-8'), safe='')
         return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
-    return None, None
+    else:
+        return None, None
 
 
-def product_lookup_by_solr(request, key, fragment=False, vendor_id=None):
+def product_lookup_by_solr(key, fragment=False, vendor_id=None):
     logger.info("Trying to lookup %s from SOLR." % key)
 
     # Lookup if it is contained if parameter fragment is True
@@ -1317,7 +1318,7 @@ def product_lookup_asos_nelly(url, is_nelly_product=False):
     key, vendor_id = extract_asos_nelly_product_url(url, is_nelly_product)
     # key = urllib.quote_plus(key)
     if key:
-        product_pk = product_lookup_by_solr(None, key, True, vendor_id)
+        product_pk = product_lookup_by_solr(key, True, vendor_id)
         if product_pk:
             return product_pk
 
@@ -1325,70 +1326,43 @@ def product_lookup_asos_nelly(url, is_nelly_product=False):
     #json_data = json.loads(products[0].json)
     #return json_data.get('site_product', None)
 
-#@csrf_exempt
-#def product_lookup_internal(request):
-#    apprl_user_id = request.POST.get("user_id", None)
-#   if apprl_user_id:
-#        user = User.objects.get(pk=apprl_user_id)
-#        if not user.is_publisher:
-#            raise Http404
-#        else:
-#            request.user = user
-#    return product_lookup(request)
 
 @csrf_exempt
-def product_lookup(request):
-    apprl_user_id = request.POST.get("user_id", None)
+def product_lookup_multi(request):
+    if request.method == "GET":
+        raise HttpResponseNotAllowed("Only POST allowed.", permitted_methods=["POST"])
 
-    if apprl_user_id:
-        try:
-            user = User.objects.get(pk=apprl_user_id)
-            if not user.is_publisher():
-                raise Http404
-            else:
-                request.user = user
-        except User.DoesNotExist:
+    user_id = request.POST.get("user_id", None)
+    if user_id:
+        user = User.objects.get(pk=user_id)
+        if not user.is_publisher:
             raise Http404
 
-    elif not request.user.is_authenticated():
+    translated_links = []
+    try:
+        links = simplejson.loads(request.POST.get("links"))
+        for link in links:
+            product_short_link_str, vendor = get_short_domain_deeplink(link, link, user_id)
+            if product_short_link_str is not None:
+                translated_links.append(request.build_absolute_uri(product_short_link_str))
+            else:
+                translated_links.append(None)
+    except JSONDecodeError, msg:
+        logger.warn(u"Product lookup (wp)service: Unable to decode the links: {}. [{}]".format(msg, request.POST.get("links")))
+    except Exception, msg:
+        logger.warn(u"Product lookup (wp)service: Unknown error: {}.".format(msg))
+
+    return JSONResponse({"links": translated_links})
+
+
+def product_lookup(request):
+    if not request.user.is_authenticated():
         raise Http404
 
-    # try to get it into unicode
-    sent_key = request.GET.get('key', '') or request.POST.get('key', '')
-    url = extract_encoded_url_string(sent_key)
-    # unquote the string, however urrlib doesn't deal with unicode so convert it to utf-8 and back
-    key = extract_encoded_url_string(urllib.unquote(url.encode('utf-8')))
-
-    logger.info("Request to lookup product for %s sent, trying to extract PK from request." % key)
-    try:
-        sent_pk = request.GET.get('pk', '') or request.POST.get('pk', '')
-        product_pk = long(extract_encoded_url_string(sent_pk))
-    except ValueError:
-        product_pk = None
-        logger.info("No clean Product pk extracted.")
-
-    is_nelly_product = bool(request.GET.get('is_product', False) or request.POST.get('is_product', False))
-
+    key, domain, product_pk, is_nelly_product = extract_product_lookup_parameters(request.GET.copy(), request.POST.copy())
     original_key = key
     if key and not product_pk:
-        product_pk = product_lookup_by_solr(request, key)
-        if not product_pk:
-            logger.info("Failed to extract product from solr, will change the protocol and try again.")
-            if key.startswith('https'):
-                key = key.replace('https', 'http', 1)
-            elif key.startswith('http'):
-                key = key.replace("http", "https",1 )
-                #temp = list(key)
-                #temp.insert(4, 's')
-                #key = ''.join(temp)
-            product_pk = product_lookup_by_solr(request, key)
-            if not product_pk:
-                logger.info(u"Failed to extract product from solr for %s" % key)
-                product_pk = product_lookup_asos_nelly(original_key, is_nelly_product)
-            else:
-                logger.info(u"Successfully found product in SOLR for key %s" % key)
-        else:
-            logger.info("Successfully found product in SOLR for key %s" % key)
+        product_pk = lookup_product_pk(key, is_nelly_product)
     # TODO: must go through theimp database right now to fetch site product by real url
     # key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
     #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
@@ -1406,8 +1380,7 @@ def product_lookup(request):
         approx_text = ""
 
     vendor = None
-    sent_domain = request.GET.get('domain', '') or request.POST.get('domain', '')
-    domain = smart_unicode(urllib.unquote(smart_str(sent_domain))) or key
+
     if product_pk:
         product = get_object_or_404(Product, pk=product_pk, published=True)
         product_link = request.build_absolute_uri(product.get_absolute_url())
@@ -1418,15 +1391,6 @@ def product_lookup(request):
         product_liked = get_model('apparel', 'ProductLike').objects.filter(user=request.user, product=product,
                                                                            active=True).exists()
         product_name = product.get_product_name_to_display
-
-        # Todo: Not sure why this is done, we lookup a vendor through the domain submitted by the chrome extension. A vendor is
-        # already available since we have a product object but a product object could potentially have multiple vendors, so
-        # it may be a reason for it. However, if unable to match the domain in the DomainDeepLinking templates then we have
-        # vendor = None. The link we extract is not used in any case, so definitely not sure about the whole process.
-        # Suggestion would be to drop this lookup entirely and just use the product.default_vendor below. /Klas
-
-        # Removed this 20160912 and are taking the vendor from product instead. /Klas
-        #_, vendor = product_lookup_by_domain(request, domain, original_key)
         vendor = product.default_vendor.vendor
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
@@ -1434,54 +1398,17 @@ def product_lookup(request):
             product_earning = "You will earn %s%s %s per generated %s of this item." % (approx_text, currency, earning, help_text)
     else:
         logger.info(u"No product found for key, falling back to domain deep linking.")
-        product_short_link_str, vendor = product_lookup_by_domain(request, domain, original_key)
-        logger.info(u"No product found for key, falling back to domain deep linking.")
+        product_short_link_str, vendor = get_short_domain_deeplink(domain, original_key, request.user.id)
         if product_short_link_str is not None:
-
-            product_short_link, created = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
-                                                                                user=request.user, vendor=vendor)
-            logger.info(u"Short link: %s" % product_short_link)
-            product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
             product_short_link_str = request.build_absolute_uri(product_short_link_str)
             _, cut, _, publisher_cut = get_cuts_for_user_and_vendor(request.user.id, vendor)
+
             if request.user.partner_group and request.user.partner_group.has_cpc_all_stores:
-                try:
-                    cut_obj = get_model('dashboard', 'Cut').objects.get(group=request.user.partner_group, vendor=vendor)
-                    # For Publishers who earns CPC for all stores, cut is 100% unless exceptions are defined
-                    normal_cut = 1
-                    earning_amount = cut_obj.locale_cpc_amount
-                    # Get exceptions and if they are defined, replace current cuts
-                    if cut_obj.rules_exceptions:
-                        cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut_obj.rules_exceptions, request.user.id)
-                        if cut_exception:
-                            normal_cut = cut_exception
-                        if publisher_cut_exception is not None and request.user.owner_network:
-                            publisher_cut = publisher_cut_exception
-                    publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
-                    product_earning = u"You will earn %s%s %.2f per generated click when linking to " \
-                                              "this retailer" % \
-                                              (approx_text, cut_obj.locale_cpc_currency, publisher_earning)
-                except get_model('dashboard', 'Cut').DoesNotExist:
-                    logger.warning("Cut for commission group %s and vendor %s does not exist." %
-                                   (request.user.partner_group, vendor.name))
-                except get_model('dashboard', 'Cut').MultipleObjectsReturned:
-                    logger.warning("Multiple cuts for commission group %s and vendor %s exist. Please make sure there "
-                                   "is only one instance of this Cut." % (request.user.partner_group, vendor.name))
+                product_earning = get_product_earning_group(vendor, request.user, publisher_cut, approx_text)
             else:
-                earning_cut = cut * publisher_cut
-                if vendor and earning_cut:
-                    if vendor.is_cpo:
-                        store_commission = get_vendor_commission(vendor)
-                        if store_commission:
-                            earning_cut = earning_cut * store_commission
-                            product_earning = u"You will earn %s%.2f %% of the total sale value from this store." % \
-                                              (approx_text, earning_cut * 100)
-                    elif vendor.is_cpc:
-                        cost_per_click = get_vendor_cost_per_click(vendor)
-                        if cost_per_click:
-                            product_earning = u"You will earn %s%s %.2f per generated click when linking to " \
-                                              "this retailer" % \
-                                              (approx_text, cost_per_click.currency, (earning_cut * cost_per_click.amount))
+                product_earning = get_product_earning_standalone(vendor, cut, publisher_cut, approx_text)
+        else:
+            raise Http404
     vendor_markets = None
     if vendor:
         vendor_markets = vendor.location_codes_list()
@@ -1947,3 +1874,120 @@ def extract_encoded_url_string(url):
         key_string = url.decode("iso-8859-1")
         key = smart_unicode(smart_str(key_string))
     return key
+
+
+def extract_product_lookup_parameters(GET, POST):
+    """
+    Takes a request and returns the parameters key, pk, and domain in either GET or POST if available.
+    :param request:
+    :return:
+    """
+    # try to get it into unicode
+    sent_key = GET.get('key', '') or POST.get('key', '')
+    url = extract_encoded_url_string(sent_key)
+    # unquote the string, however urrlib doesn't deal with unicode so convert it to utf-8 and back
+    key = extract_encoded_url_string(urllib.unquote(url.encode('utf-8')))
+
+    sent_domain = GET.get('domain', '') or POST.get('domain', '')
+    domain = smart_unicode(urllib.unquote(smart_str(sent_domain))) or key
+    is_nelly_product = bool(GET.get('is_product', False) or POST.get('is_product', False))
+
+    logger.info("Request to lookup product for %s sent, trying to extract PK from request." % key)
+    try:
+        sent_pk = GET.get('pk', '') or POST.get('pk', '')
+        product_pk = long(extract_encoded_url_string(sent_pk))
+    except ValueError:
+        product_pk = None
+        logger.info("No clean Product pk extracted.")
+    return key, domain, product_pk, is_nelly_product
+
+
+def switch_http_protocol(key):
+    logger.info("Failed to extract product from solr, will change the protocol and try again.")
+    if key.startswith('https'):
+        key = key.replace('https', 'http', 1)
+    elif key.startswith('http'):
+        key = key.replace("http", "https", 1)
+    return key
+
+
+def lookup_product_pk(key, is_nelly_product):
+    product_pk = product_lookup_by_solr(key)
+    if not product_pk:
+        product_pk = product_lookup_by_solr(switch_http_protocol(key))
+        if not product_pk:
+            logger.info(u"Failed to extract product from solr for %s" % key)
+            product_pk = product_lookup_asos_nelly(key, is_nelly_product)
+        else:
+            logger.info(u"Successfully found product in SOLR for key %s" % key)
+    else:
+        logger.info("Successfully found product in SOLR for key %s" % key)
+
+    return product_pk
+
+
+def get_short_domain_deeplink(domain, original_key, user_id):
+    """
+    :param domain:
+    :param original_key:
+    :param user_id:
+    :return:
+    """
+    product_short_link_str, vendor = product_lookup_by_domain(domain, original_key, user_id)
+    if product_short_link_str is not None:
+        product_short_link, _ = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
+                                                                            user_id=user_id, vendor=vendor)
+        logger.info(u"Short link: %s" % product_short_link)
+        product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
+    return product_short_link_str, vendor
+
+
+def get_product_earning_standalone(vendor, cut, publisher_cut, approx_text):
+    earning_cut = cut * publisher_cut
+    product_earning = None
+    if vendor and earning_cut:
+        if vendor.is_cpo:
+            store_commission = get_vendor_commission(vendor)
+            if store_commission:
+                earning_cut = earning_cut * store_commission
+                product_earning = u"You will earn %s%.2f %% of the total sale value from this store." % \
+                                  (approx_text, earning_cut * 100)
+        elif vendor.is_cpc:
+            cost_per_click = get_vendor_cost_per_click(vendor)
+            if cost_per_click:
+                product_earning = u"You will earn %s%s %.2f per generated click when linking to " \
+                                  "this retailer" % \
+                                  (approx_text, cost_per_click.currency, (earning_cut * cost_per_click.amount))
+    return product_earning
+
+
+def get_product_earning_group(vendor, user, publisher_cut, approx_text):
+    """
+
+    """
+    product_earning = ""
+    try:
+        cut_obj = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor)
+        # For Publishers who earns CPC for all stores, cut is 100% unless exceptions are defined
+        normal_cut = 1
+        earning_amount = cut_obj.locale_cpc_amount
+        # Get exceptions and if they are defined, replace current cuts
+        if cut_obj.rules_exceptions:
+            cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut_obj.rules_exceptions,
+                                                                                       user.id)
+            if cut_exception:
+                normal_cut = cut_exception
+            if publisher_cut_exception is not None and user.owner_network:
+                publisher_cut = publisher_cut_exception
+        publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
+        product_earning = u"You will earn %s%s %.2f per generated click when linking to " \
+                          "this retailer" % \
+                          (approx_text, cut_obj.locale_cpc_currency, publisher_earning)
+    except get_model('dashboard', 'Cut').DoesNotExist:
+        logger.warning("Cut for commission group %s and vendor %s does not exist." %
+                       (user.partner_group, vendor.name))
+    except get_model('dashboard', 'Cut').MultipleObjectsReturned:
+        logger.warning("Multiple cuts for commission group %s and vendor %s exist. Please make sure there "
+                       "is only one instance of this Cut." % (user.partner_group, vendor.name))
+
+    return product_earning
