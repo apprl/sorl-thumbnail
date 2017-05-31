@@ -39,8 +39,8 @@ class TestProfile(TransactionTestCase):
         self.assertFalse(user.is_active)
 
         mailbox = mail.outbox
-        self.assertEqual(len(mailbox), 2)
-        welcome_mail_body = mailbox[1].body
+        self.assertEqual(len(mailbox), 1)
+        welcome_mail_body = mailbox[0].body
         log.info("Sent mail check passed")
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         # Sometimes an additional \r gets included in the url forcing a 404
