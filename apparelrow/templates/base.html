@@ -23,6 +23,13 @@
     <link rel="image_src" href="{% static "images/share-image.jpg" %}">
 
     {% compressed_css 'bootstrap' %}
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ GOOGLE_TAG_MANAGER_CONTAINER_ID }}');</script>
+    <!-- End Google Tag Manager -->
     {% block extra-styles %}
     {% endblock %}
     {% comment  %}
@@ -86,38 +93,12 @@
     </script>
     {% block extra-scripts %}
     {% endblock %}
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', '{{ GOOGLE_ANALYTICS_UNIVERSAL_ACCOUNT }}', {'cookieDomain': '{{ GOOGLE_ANALYTICS_UNIVERSAL_DOMAIN }}'});
-        ga('send', 'pageview');
-
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', '{{ GOOGLE_ANALYTICS_ACCOUNT }}']);
-        _gaq.push(['_setDomainName', '{{ GOOGLE_ANALYTICS_DOMAIN }}']);
-        _gaq.push(['_setSiteSpeedSampleRate', 10]);
-        _gaq.push(['_trackPageview']);
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
 </head>
 <body class="{% if request.user.is_authenticated %}authenticated {% endif %}{% block body-classes %}{% endblock %}">
-    <!-- Google Tag Manager -->
-    <noscript><iframe src="//www.googletagmanager.com/ns.html?id={{ GOOGLE_TAG_MANAGER_CONTAINER_ID }}"
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ GOOGLE_TAG_MANAGER_CONTAINER_ID }}"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','{{ GOOGLE_TAG_MANAGER_CONTAINER_ID }}');</script>
-    <!-- End Google Tag Manager -->
-
+    <!-- End Google Tag Manager (noscript) -->
     <div id="fb-root"></div>
     <script type="text/javascript">
         (function(d, s, id){
@@ -463,7 +444,14 @@
 
 
 {% if request.intercom.show %}
+
 <script>
+    dataLayer.push({
+      'userId' : '{{ request.intercom.user_id|escapejs }}',
+      'isPartner' : {{ request.intercom.is_partner|yesno:"true,false" }},
+      'isStore' : {{ request.intercom.store|yesno:"true,false" }}
+    });
+
     window.intercomSettings = {
         app_id: "{{ request.intercom.app_id|escapejs }}",
         user_id: {{ request.intercom.user_id|escapejs }},
