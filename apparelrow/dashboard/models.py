@@ -172,7 +172,7 @@ def create_payment(user, earnings):
         assert amount >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT
         for earning in earnings:
             assert not earning.payment
-            assert earning.paid == Sale.PAID_PENDING
+            assert earning.paid in [Sale.PAID_PENDING, Sale.PAID_READY]
             assert earning.user == user
         details, created = PaymentDetail.objects.get_or_create(user=user)
         payment = Payment.objects.create(user=user, details=details, amount=amount)
