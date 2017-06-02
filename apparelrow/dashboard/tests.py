@@ -2051,15 +2051,6 @@ class TestPayments(TransactionTestCase):
         self.assertFalse(payment.cancelled)
         self.assertFalse(payment.paid)
 
-        # If we run dashboard_payment again before any new earnings have been generated for publisher,
-        # just leave the payment as is
-        management.call_command('dashboard_payment', verbosity=0, interactive=False)
-        self.assertEqual(Payment.objects.count(), 1)
-        payment = Payment.objects.get()
-        self.assertEqual(payment.userearning_set.get().paid, Sale.PAID_READY)
-        self.assertFalse(payment.cancelled)
-        self.assertFalse(payment.paid)
-
         # Crate a new earning and run command. Now that we have another earning, cancel previous payment and create
         # a new that contains both old & new earnings
         make(UserEarning, user=publisher, amount=100, status=Sale.CONFIRMED)
@@ -2079,6 +2070,37 @@ class TestPayments(TransactionTestCase):
                              (200, Sale.PAID_READY),
                              (100, Sale.PAID_READY),
                          })
+        self.assertEqual(second_payment.userearning_set.count(), 2)
+
+    def test_create_new_payment_before_last_was_paid_should_work_with_old_userearnings(self):
+        publisher = make(get_user_model())
+
+        make(UserEarning, user=publisher, amount=200, status=Sale.CONFIRMED)
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+        ue = UserEarning.objects.first()
+        self.assertEqual(ue.paid, Sale.PAID_READY)
+        ue.sale = None
+        ue.save()
+
+        # Crate a new earning and run command. Now that we have another earning, cancel previous payment and create
+        # a new that contains both old & new earnings
+        make(UserEarning, user=publisher, amount=100, status=Sale.CONFIRMED)
+        management.call_command('dashboard_payment', verbosity=0, interactive=False)
+        self.assertEqual(Payment.objects.count(), 2)
+        first_payment = Payment.objects.first()
+
+        self.assertEqual(first_payment.userearning_set.count(), 0)
+        self.assertTrue(first_payment.cancelled)
+
+        second_payment = Payment.objects.last()
+        self.assertFalse(second_payment.cancelled)
+        self.assertEqual(second_payment.amount, 300)
+        self.assertEqual({
+            p for p in second_payment.userearning_set.all().values_list('amount', 'paid')
+        }, {
+            (200, Sale.PAID_READY),
+            (100, Sale.PAID_READY),
+        })
         self.assertEqual(second_payment.userearning_set.count(), 2)
 
     def test_mark_as_paid(self):

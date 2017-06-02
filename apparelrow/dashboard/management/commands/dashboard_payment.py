@@ -18,20 +18,18 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
+
+        # Cancel any previous payments that haven't been paid out yet
+        for old_non_paid_payment in Payment.objects.filter(paid=False, cancelled=False):
+            old_non_paid_payment.cancel()
+
         earnings_per_user = defaultdict(list)
 
-        # Get all publisher earnings that are confirmed and paid pending and group them by user
-        for earning in UserEarning.objects.filter(status__gte=Sale.CONFIRMED, paid=Sale.PAID_PENDING, user_id__gt=0):
+        # Get all publisher earnings that are confirmed and haven't been paid out yet
+        for earning in UserEarning.objects.filter(status__gte=Sale.CONFIRMED, paid__lt=Sale.PAID_COMPLETE, user_id__gt=0):
             earnings_per_user[earning.user].append(earning)
 
         for user, earnings in earnings_per_user.items():
-            # Cancel any previous payments that haven't been paid out yet to this user and add them
-            # to list of earnings that will be added to new payment
-            for old_non_paid_payment in Payment.objects.filter(user=user, paid=False):
-            for old_non_paid_payment in Payment.objects.filter(user=user, paid=False, cancelled=False):
-                previous_earnings = old_non_paid_payment.cancel()
-                earnings.extend(previous_earnings)
-
             # Only create new payment if user has reached minimum payout
             if sum(e.amount for e in earnings) >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT:
                 payment = create_payment(user, earnings)
