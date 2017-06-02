@@ -20,15 +20,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # Cancel any previous payments that haven't been paid out yet
+        logger.info('Cancelling previous payments')
         for old_non_paid_payment in Payment.objects.filter(paid=False, cancelled=False):
             old_non_paid_payment.cancel()
 
         earnings_per_user = defaultdict(list)
 
-        # Get all publisher earnings that are confirmed and haven't been paid out yet
+        logger.info('Collecting all user confirmed earnings and grouping them by user, this can take a while')
         for earning in UserEarning.objects.filter(status__gte=Sale.CONFIRMED, paid__lt=Sale.PAID_COMPLETE, user_id__gt=0):
             earnings_per_user[earning.user].append(earning)
 
+        logger.info('Creating payments')
         for user, earnings in earnings_per_user.items():
             # Only create new payment if user has reached minimum payout
             if sum(e.amount for e in earnings) >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT:
