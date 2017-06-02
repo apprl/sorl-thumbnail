@@ -151,8 +151,8 @@ class Payment(models.Model):
         logger.info('Cancelling payment %s' % self)
         assert not self.cancelled
         assert not self.paid
-        earnings = self.userearning_set.all()
         with transaction.atomic():
+            earnings = self.userearning_set.all()
             for earning in earnings:
                 earning.payment = None
                 earning.paid = Sale.PAID_PENDING
@@ -167,13 +167,13 @@ class Payment(models.Model):
 
 # Create a payment from a bunch of earnings, perform sanity check before doing so
 def create_payment(user, earnings):
+    amount = sum(e.amount for e in earnings)
+    assert amount >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT
+    for earning in earnings:
+        assert not earning.payment
+        assert earning.paid in [Sale.PAID_PENDING, Sale.PAID_READY]
+        assert earning.user == user
     with transaction.atomic():
-        amount = sum(e.amount for e in earnings)
-        assert amount >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT
-        for earning in earnings:
-            assert not earning.payment
-            assert earning.paid in [Sale.PAID_PENDING, Sale.PAID_READY]
-            assert earning.user == user
         details, created = PaymentDetail.objects.get_or_create(user=user)
         payment = Payment.objects.create(user=user, details=details, amount=amount)
         for earning in earnings:
