@@ -168,7 +168,8 @@ def pending_payments(user_id):
     payments = Payment.objects.filter(cancelled=False, paid=False, user_id=user_id)
     if payments:
         if len(payments) > 1:
-            raise Exception("A user shouldn't have more than one pending payment")
+            log.warn("A user shouldn't have more than one pending payment. User: %d" % user_id)
+            return sum(p.amount for p in payments)
         else:
             return payments[0].amount
     else:
