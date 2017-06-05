@@ -7,9 +7,8 @@ from django.conf import settings
 from django.core.mail import mail_managers
 
 
-
-def get_transactions(store):
-    Transaction = get_model('advertiser', 'Transaction')
+def get_unpaid_accepted_transactions(store):
+    from advertiser.models import Transaction
     transactions = Transaction.objects.filter(status=Transaction.ACCEPTED,
                                               store_id=store.identifier,
                                               is_paid=False,
@@ -19,8 +18,7 @@ def get_transactions(store):
 
 
 def calculate_balance(store_id):
-    Transaction = get_model('advertiser', 'Transaction')
-    Store = get_model('advertiser', 'Store')
+    from advertiser.models import Transaction, Store
     try:
         balance = Transaction.objects.filter(store_id=store_id,
                                              status=Transaction.ACCEPTED,

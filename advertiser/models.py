@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from advertiser.utils import calculate_balance, get_transactions
+from advertiser.utils import calculate_balance, get_unpaid_accepted_transactions
 
 
 class Store(models.Model):
@@ -56,7 +56,6 @@ class StoreInvoice(models.Model):
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
-
         super(StoreInvoice, self).save(*args, **kwargs)
 
     def get_total(self):
@@ -72,9 +71,9 @@ class StoreInvoice(models.Model):
 @receiver(post_save, sender=StoreInvoice, dispatch_uid='store_invoice_post_save')
 def store_invoice_post_save(sender, instance, created, **kwargs):
     if created:
-        for transaction in get_transactions(instance.store):
-            transaction.invoice = instance
-            transaction.save()
+        now = timezone.now()
+        # NOTE: make sure this stays in sync with what Transaction.save does because this doesn't call that method
+        get_unpaid_accepted_transactions(instance.store).update(invoice=instance, modified=now)
 
 
 class Product(models.Model):
@@ -138,11 +137,12 @@ class Transaction(models.Model):
         ordering = ['-created']
 
     def save(self, *args, **kwargs):
+        # If you update this, make sure it doesn't conflict with the update that we do in
+        # store_invoice_post_save, where we do a mass-update because of performance reasons
         self.modified = timezone.now()
         self.currency = self.currency.upper()
         if not self.status_date and (self.status == Transaction.ACCEPTED or self.status == Transaction.REJECTED):
             self.status_date = timezone.now()
-
         super(Transaction, self).save(*args, **kwargs)
 
     def accept(self):
