@@ -49,6 +49,7 @@ def map_placement(placement):
         link = _('Product page')
     elif placement == 'Ext-Banner':
         link = _('Banner on your site')
+    return link
 
 
 class SignupForm(ModelForm):
