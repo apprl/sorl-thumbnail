@@ -76,7 +76,7 @@ class ProductStat(models.Model):
     page = models.CharField(max_length=50, null=True, blank=True)
     created = models.DateTimeField(_('Time created'), default=timezone.now, null=False, blank=False, db_index=True)
     referer = models.TextField(null=True, blank=True)
-    source_link = models.CharField(max_length=512, null=True, blank=True)
+    source_link = models.CharField(max_length=512, null=True, blank=True)  # NOTE: concatination issues here???
     user_agent = models.TextField(null=True, blank=True)
     ip = models.GenericIPAddressField()
     is_valid = models.BooleanField(default=True)
@@ -89,7 +89,7 @@ class ProductStat(models.Model):
         super(ProductStat, self).save(force_insert, force_update, using, update_fields)
 
     def __unicode__(self):
-        return u'action: %s product: %s vendor: %s user_id: %s' % (self.action, self.product, self.vendor, self.user_id)
+        return u'action: %s product: %s source_link: %s vendor: %s user_id: %s created: %s' % (self.action, self.product, self.source_link, self.vendor, self.user_id, self.created)
 
 
 @receiver(post_save, sender=ProductStat, dispatch_uid='productstat_post_save')

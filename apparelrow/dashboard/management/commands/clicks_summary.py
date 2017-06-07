@@ -1,10 +1,12 @@
-import optparse
 import datetime
 import logging
-from advertiser.models import Transaction
-from django.db.models.loading import get_model
+import optparse
 
 from django.core.management.base import BaseCommand
+from django.db.models.loading import get_model
+
+from advertiser.models import Transaction, Store
+from apparelrow.dashboard.models import Sale
 
 logger = logging.getLogger('dashboard')
 
@@ -29,14 +31,15 @@ class Command(BaseCommand):
     affiliates = ['costperclick', 'allstorescpc']
 
     def update(self, row):
-        instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
+        instance, created = Store.objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
         try:
-            store = get_model('advertiser', 'Store').objects.get(vendor=row['vendor'])
+            store = Store.objects.get(vendor=row['vendor'])
             store_id = store.identifier
         except get_model('advertiser', 'Store').DoesNotExist:
             store_id = None
 
         # Creates transaction only for those sales who are CPC, but not for those who are not CPC for all vendors
+        # We create this transaction so that we can invoice the store
         if store_id and row['affiliate'] == "cost_per_click":
             defaults = {
                 'ip_address': '127.0.0.1',
@@ -53,7 +56,7 @@ class Command(BaseCommand):
             transaction, _ = Transaction.objects.get_or_create(store_id=store_id,
                                                                order_id=row['original_sale_id'], defaults=defaults)
 
-        if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
+        if not created and instance.paid == Sale.PAID_PENDING:
             for field in row.keys():
                 setattr(instance, field, row.get(field))
             instance.save()
