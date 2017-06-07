@@ -15,7 +15,7 @@ from django.views.generic import TemplateView
 from apparelrow.apparel.utils import get_location
 from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
 from apparelrow.dashboard.stats import stats_admin, stats_publisher
-from apparelrow.dashboard.stats.stats_cache import all_time
+from apparelrow.dashboard.stats.stats_cache import all_time, mrange, flush_stats_cache_by_month
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
 from apparelrow.profile.tasks import mail_managers_task
@@ -477,6 +477,10 @@ class DashboardView(TemplateView):
             if month != "0":
                 month = start_date.month
 
+            flush_cache = 'flush_cache' in self.request.GET
+            if flush_cache:
+                flush_stats_cache_by_month(year, month)  # improve this so it only flushes cache for this publisher
+
             start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
             end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
             month_display, month_choices, year_choices = enumerate_months(request.user, month)
@@ -534,6 +538,8 @@ class DashboardView(TemplateView):
             if request.user.partner_group.has_cpc_all_stores and not month_commission:
                 show_cpo_earning = False
 
+            month_stats = self.month_stats(year, month, request.user.id)
+
             network_earning = 0
             if sum_data['network_sale_earnings__sum'] is not None:
                 network_earning = sum_data['network_sale_earnings__sum'] + sum_data['network_click_earnings__sum']
@@ -541,6 +547,7 @@ class DashboardView(TemplateView):
                             'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
                             'pending_payment': pending_payment, 'total_earned': total_earned,
                             'data_per_day': data_per_day, 'currency': currency,
+                            'month_stats': month_stats,
                             'month_commission': month_commission,
                             'month_sales': sum_data['sales__sum'], 'total_earnings': total_earnings, 'year': year,
                             'month': month, 'month_display': month_display,
@@ -559,6 +566,20 @@ class DashboardView(TemplateView):
             return render(request, 'dashboard/new_dashboard.html', context_data)
         return HttpResponseRedirect(reverse('dashboard'))
 
+    def month_stats(self, year, month, user_id):
+        tr = mrange(year, month)
+        return {
+            'total_earnings': stats_publisher.total_earnings(tr, user_id),
+            'ppo_earnings': stats_publisher.ppo_earnings(tr, user_id),
+            'ppo_sales': stats_publisher.ppo_sales(tr, user_id),
+            'ppo_clicks': stats_publisher.ppo_clicks(tr, user_id),
+            'ppo_conversion_rate': stats_publisher.ppo_conversion_rate(tr, user_id),
+            'referral_earnings': stats_publisher.referral_earnings(tr, user_id),
+            'referral_sales': stats_publisher.referral_sales(tr, user_id),
+            'ppc_earnings': stats_publisher.ppc_earnings(tr, user_id),
+            'ppc_clicks': stats_publisher.ppc_clicks(tr, user_id),
+            'network_commission': stats_publisher.network_earnings(tr, user_id),
+        }
 
 #
 # ADMIN DASHBOARD

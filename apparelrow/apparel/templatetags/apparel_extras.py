@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
+
+import locale
 import logging
 import json
 import decimal
+import re
 from pprint import pformat
 
 from django.template import Library, Variable, TemplateSyntaxError, Node, VariableDoesNotExist
@@ -458,3 +462,64 @@ def get_selected_by(value):
     if value:
         selected_by = len(value) + 1
     return selected_by
+
+
+@register.simple_tag
+def amount_with_currency(amount, currency='EUR'):
+    formatted = '%s %s %s' % (
+        currency_prefix(currency),
+        amount,
+        currency_suffix(currency)
+    )
+
+    return formatted.strip()
+
+@register.filter
+def format_money(amount):
+    """
+    Format the price for display, can be used with `amount_with_currency` like so:
+    {% amount_with_currency object.price|format_money %}
+
+    The regex cleans up non-numeric letters at the start and end of the number because
+    that's handled by `amount_with_currency`
+
+    NOTE - We temporarily switch locale. I'm not sure if this is the best way to solve this.
+    If we don't restore old locale we get weird test failures in unrelated parts of the system
+    """
+    previous_locale = locale.getlocale()
+    locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
+    amount = re.sub(r'(^[^\d]+|[^\d]+$)', '', locale.currency(amount, grouping=True))
+    locale.setlocale(locale.LC_ALL, previous_locale)
+
+    return amount
+
+# NOTE: I brought these over from clooset, we need them in apprl otherwise we'll end up with big diffs in our templates.
+# They should be generalised
+@register.filter
+def currency_as_symbol(currency):
+    if currency == 'EUR':
+        return u'€'
+    else:
+        return currency
+
+@register.filter
+def is_prefix_currency(currency):
+    return currency == 'EUR'
+
+@register.filter
+def is_suffix_currency(currency):
+    return currency != 'EUR'
+
+@register.filter
+def currency_prefix(currency):
+    if currency == 'EUR':
+        return u'€'
+    else:
+        return ''
+
+@register.filter
+def currency_suffix(currency):
+    if currency == 'EUR':
+        return ''
+    else:
+        return currency
