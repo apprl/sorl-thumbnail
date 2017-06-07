@@ -12,17 +12,20 @@ from django.utils import timezone
 from django.utils.translation import get_language
 from django.views.generic import TemplateView
 
+from apparelrow.apparel.models import Vendor, Product
 from apparelrow.apparel.utils import get_location
-from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData
+from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData, Group, Cut, ClickCost, StoreCommission, \
+    UserEarning
 from apparelrow.dashboard.stats import stats_admin, stats_publisher
 from apparelrow.dashboard.stats.stats_cache import all_time, mrange, flush_stats_cache_by_month
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
 from apparelrow.profile.tasks import mail_managers_task
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 TOP_PRODUCTS_LIMIT = 100
+
 
 def map_placement(placement):
     link = _('Unknown')
@@ -49,7 +52,6 @@ def map_placement(placement):
 
 
 class SignupForm(ModelForm):
-
     def __init__(self, *args, **kwargs):
         is_store_form = False
         if 'is_store_form' in kwargs:
@@ -67,11 +69,12 @@ class SignupForm(ModelForm):
         model = Signup
         fields = ('name', 'email', 'blog', 'traffic')
 
+
 def dashboard_group_admin(request, pk):
     if request.user.is_authenticated() and (request.user.is_superuser or request.user.pk == int(pk)):
         group = None
         try:
-            group = get_model('dashboard', 'Group').objects.get(owner=pk)
+            group = Group.objects.get(owner=pk)
         except:
             raise Http404
 
@@ -131,8 +134,10 @@ def dashboard_group_admin(request, pk):
 
     raise Http404
 
+
 def dashboard_info(request):
     return render(request, 'dashboard/info.html')
+
 
 #
 # Referral
@@ -158,10 +163,11 @@ class ReferralView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReferralView, self).get_context_data(**kwargs)
-        context["referrals"] = get_user_model().objects.filter(referral_partner_parent=self.request.user, is_partner=True)
+        context["referrals"] = get_user_model().objects.filter(referral_partner_parent=self.request.user,
+                                                               is_partner=True)
         return context
 
-    def get(self,request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
 
         if request.user.is_authenticated() and all([request.user.is_partner, request.user.referral_partner]):
             context = self.get_context_data(**kwargs)
@@ -194,6 +200,7 @@ class ReferralView(TemplateView):
         messages.add_message(request, messages.SUCCESS, u'Sent mail to %s' % (', '.join(emails),))
         return render(request, self.template_name)
 
+
 @DeprecationWarning
 def referral(request):
     if request.user.is_authenticated() and request.user.is_partner and request.user.referral_partner:
@@ -201,6 +208,7 @@ def referral(request):
         return render(request, 'dashboard/referral.html', {'referrals': referrals})
 
     return HttpResponseRedirect(reverse('index-publisher'))
+
 
 @DeprecationWarning
 def referral_mail(request):
@@ -245,10 +253,10 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
 
     # Retrieve cut object
     try:
-        cut = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor_obj)
-    except get_model('dashboard', 'Cut').DoesNotExist:
-            log.warning("Cut for commission group %s and vendor %s does not exist." %
-                           (user.partner_group, vendor_obj.name))
+        cut = Cut.objects.get(group=user.partner_group, vendor=vendor_obj)
+    except Cut.DoesNotExist:
+        logger.warning("Cut for commission group %s and vendor %s does not exist." %
+                       (user.partner_group, vendor_obj.name))
 
     type_code = CPC_CODE
     if cut:
@@ -261,17 +269,19 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
             currency = cut.locale_cpc_currency
             # Get exceptions and if they are defined, replace current cuts
             if cut.rules_exceptions:
-                cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions, user.id)
+                cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut.rules_exceptions,
+                                                                                           user.id)
                 if cut_exception:
                     normal_cut = cut_exception
                 if publisher_cut_exception is not None and user.owner_network:
                     publisher_cut = publisher_cut_exception
             publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
-            amount_float = decimal.Decimal(publisher_earning.quantize(decimal.Decimal('.01'), rounding=decimal.ROUND_HALF_UP))
+            amount_float = decimal.Decimal(
+                publisher_earning.quantize(decimal.Decimal('.01'), rounding=decimal.ROUND_HALF_UP))
             amount = "%.2f" % (amount_float)
         else:
             if vendor_obj.is_cpc:
-                click_cost = get_model('dashboard', 'ClickCost').objects.get(vendor=vendor_obj)
+                click_cost = ClickCost.objects.get(vendor=vendor_obj)
                 earning_amount = click_cost.locale_price
                 currency = click_cost.locale_currency
                 earning_type = "is_cpc"
@@ -292,14 +302,15 @@ def get_store_earnings(user, vendor_obj, publisher_cut, normal_cut, standard_fro
 
     return amount, amount_float, currency, earning_type, type_code
 
+
 def commissions(request):
     if not request.user.is_authenticated() or not request.user.is_partner:
-        log.error('Unauthorized user trying to access store commission page. Returning 404.')
+        logger.error('Unauthorized user trying to access store commission page. Returning 404.')
         raise Http404
 
     if not request.user.partner_group:
-        log.error('User %s is partner but has no partner group. Disallowing viewing of store commissions page.'
-                  % request.user)
+        logger.error('User %s is partner but has no partner group. Disallowing viewing of store commissions page.'
+                     % request.user)
         raise Http404
 
     cookie_value = get_location(request)
@@ -309,8 +320,8 @@ def commissions(request):
     for vendor in vendors:
         try:
             temp = {}
-            vendor_obj = get_model('apparel', 'Vendor').objects.get(name=vendor)
-            store = get_model('dashboard', 'StoreCommission').objects.get(vendor=vendor_obj)
+            vendor_obj = Vendor.objects.get(name=vendor)
+            store = StoreCommission.objects.get(vendor=vendor_obj)
 
             cuts_for_user_vendor = get_cuts_for_user_and_vendor(user_id, store.vendor)
             standard_from = 0 if not store else store.get_standard_from(store.commission, *cuts_for_user_vendor)
@@ -326,10 +337,10 @@ def commissions(request):
                 get_store_earnings(request.user, vendor_obj, publisher_cut, normal_cut, standard_from, store)
 
             stores[vendor] = temp
-        except get_model('dashboard', 'ClickCost').DoesNotExist:
-            log.warning("ClickCost for vendor %s does not exist" % vendor)
-        except get_model('dashboard', 'StoreCommission').DoesNotExist:
-            log.warning("StoreCommission for vendor %s does not exist" % vendor)
+        except ClickCost.DoesNotExist:
+            logger.warning("ClickCost for vendor %s does not exist" % vendor)
+        except StoreCommission.DoesNotExist:
+            logger.warning("StoreCommission for vendor %s does not exist" % vendor)
     stores = [x for x in sorted(stores.values(), key=lambda x: (x['type_code'], -x['amount_float'], x['vendor_name']))]
 
     sort_index = 0
@@ -339,16 +350,18 @@ def commissions(request):
 
     return render(request, 'dashboard/commissions.html', {'stores': stores})
 
+
 def commissions_popup(request, pk):
     if not request.user.is_authenticated() or not request.user.is_partner:
         raise Http404
 
-    store = get_object_or_404(get_model('dashboard', 'StoreCommission'), pk=pk)
+    store = get_object_or_404(StoreCommission, pk=pk)
     link = None
     if store.link:
         link = '{}{}/'.format(store.link, request.user.pk)
 
     return render(request, 'dashboard/commissions_popup.html', {'link': link, 'name': store.vendor.name})
+
 
 #
 # Publisher / Store signup
@@ -360,31 +373,6 @@ def index_complete(request, view):
 
     return render(request, 'dashboard/publisher_complete.html', {'analytics_identifier': analytics_identifier})
 
-@DeprecationWarning
-def retailer(request):
-    return render(request, 'apparel/retailers.html')
-
-@DeprecationWarning
-def retailer_form(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST, is_store_form=True)
-        if form.is_valid():
-            # Save name and blog URL on session, for Google Analytics
-            request.session['index_complete_info'] = u"%s %s" % (form.cleaned_data['name'], form.cleaned_data['blog'])
-            instance = form.save(commit=False)
-            instance.store = True
-            instance.save()
-
-            mail_managers_task.delay('New store signup: %s' % (form.cleaned_data['name'],),
-                    'Name: %s\nEmail: %s\nURL: %s' % (form.cleaned_data['name'],
-                                                      form.cleaned_data['email'],
-                                                      form.cleaned_data['blog']))
-
-            return HttpResponseRedirect(reverse('index-store-complete'))
-    else:
-        form = SignupForm(is_store_form=True)
-
-    return render(request, 'apparel/retailer_contact.html', {'form': form})
 
 
 def index(request):
@@ -446,15 +434,19 @@ def clicks_detail(request):
             amount_for_clicks = "0"
 
         if num_clicks > 0:
-            click_cost = decimal.Decimal(amount_for_clicks)/int(num_clicks)
+            click_cost = decimal.Decimal(amount_for_clicks) / int(num_clicks)
             query_date = datetime.datetime.fromtimestamp(int(request.GET['date']))
             data = get_clicks_list(vendor, query_date, currency, click_cost, user_id, is_store)
             json_data = json.dumps(data)
             return HttpResponse(json_data)
+        else:
+            return HttpResponse(simplejson.dumps([]))
     else:
         return HttpResponseForbidden()
     # If therese nothing just return empty list
     return HttpResponse(simplejson.dumps([]))
+
+
 #
 # PUBLISHER DASHBOARD
 #
@@ -589,12 +581,11 @@ class AdminDashboardView(TemplateView):
 
     def get_admin_top_summary(self, year, month):
         top_stats = stats_admin.admin_top_stats(year, month, self.flush_cache)
-        top_stats = [r[1:] for r in top_stats] # get rid of headers
+        top_stats = [r[1:] for r in top_stats]  # get rid of headers
 
         clicks_stats = stats_admin.admin_clicks(year, month, self.flush_cache)
-        clicks_stats = [r[1:] for r in clicks_stats] # get rid of headers
+        clicks_stats = [r[1:] for r in clicks_stats]  # get rid of headers
         return top_stats, clicks_stats
-
 
     def get_admin_top_summary_old(self, start_date, end_date):
         """
@@ -613,12 +604,14 @@ class AdminDashboardView(TemplateView):
 
         if total_query.exists():
             total_data = total_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                      sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
-                      total_clicks=Sum('total_clicks'), referral_earnings=Sum('referral_earnings'),
-                      network_sale_earnings=Sum('network_sale_earnings'),
-                      network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
+                                               sale_clicks=Sum('sale_plus_click_earnings'),
+                                               paid_clicks=Sum('paid_clicks'),
+                                               total_clicks=Sum('total_clicks'),
+                                               referral_earnings=Sum('referral_earnings'),
+                                               network_sale_earnings=Sum('network_sale_earnings'),
+                                               network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
             total_earnings = total_data['sale_clicks'] + total_data['referral_earnings'] + \
-                         total_data['network_sale_earnings'] + total_data['network_click_earnings']
+                             total_data['network_sale_earnings'] + total_data['network_click_earnings']
             total_commission = total_data['sale_earnings'] + total_data['network_sale_earnings']
             total_ppc = total_data['click_earnings'] + total_data['network_click_earnings']
             total_top[0] = total_earnings
@@ -629,14 +622,15 @@ class AdminDashboardView(TemplateView):
             cpo_clicks = total_data['total_clicks'] - total_data['paid_clicks']
             total_top[5] = cpo_clicks
             total_top[6] = total_data['sales']
-            total_top[7] = get_raw_conversion_rate(total_data['sales'], total_data['total_clicks'] - total_data['paid_clicks'])
+            total_top[7] = get_raw_conversion_rate(total_data['sales'],
+                                                   total_data['total_clicks'] - total_data['paid_clicks'])
 
             # Calculate average earning per click
             if total_data['total_clicks'] > 0:
                 clicks_total[0] = total_earnings / decimal.Decimal(total_data['total_clicks'])
             if total_data['paid_clicks'] > 0:
                 clicks_ppc[0] = total_ppc / decimal.Decimal(total_data['paid_clicks'])
-            if cpo_clicks >0:
+            if cpo_clicks > 0:
                 clicks_ppo[0] = total_commission / decimal.Decimal(cpo_clicks)
 
             clicks_total[1] = total_data['total_clicks']
@@ -650,13 +644,14 @@ class AdminDashboardView(TemplateView):
             clicks_ppo[2] = invalid_clicks[2]
 
         # Get APPRL summary
-        apprl_query = AggregatedData.objects.\
-                    filter(created__range=(start_date, end_date), user_id=0, data_type='aggregated_from_total')
+        apprl_query = AggregatedData.objects. \
+            filter(created__range=(start_date, end_date), user_id=0, data_type='aggregated_from_total')
 
         if apprl_query.exists():
             apprl_data = apprl_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                      sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
-                      total_clicks=Sum('total_clicks'), sales=Sum('sales'))
+                                               sale_clicks=Sum('sale_plus_click_earnings'),
+                                               paid_clicks=Sum('paid_clicks'),
+                                               total_clicks=Sum('total_clicks'), sales=Sum('sales'))
             apprl_top[0] = apprl_data['sale_clicks']
             apprl_top[1] = 0.0  # APPRL does not get cut from referral earnings
             apprl_top[2] = apprl_data['sale_earnings']
@@ -664,20 +659,25 @@ class AdminDashboardView(TemplateView):
             apprl_top[4] = apprl_data['paid_clicks']
             apprl_top[5] = apprl_data['total_clicks'] - apprl_data['paid_clicks']
             apprl_top[6] = apprl_data['sales']
-            apprl_top[7] = get_raw_conversion_rate(apprl_data['sales'], apprl_data['total_clicks'] - apprl_data['paid_clicks'])
+            apprl_top[7] = get_raw_conversion_rate(apprl_data['sales'],
+                                                   apprl_data['total_clicks'] - apprl_data['paid_clicks'])
 
         # Get publisher summary
-        publisher_query = AggregatedData.objects.\
+        publisher_query = AggregatedData.objects. \
             filter(created__range=(start_date, end_date), user_id__gt=0, data_type='aggregated_from_total')
         if publisher_query.exists():
-            publisher_data = publisher_query.aggregate(sale_earnings=Sum('sale_earnings'), click_earnings=Sum('click_earnings'),
-                      sale_clicks=Sum('sale_plus_click_earnings'), paid_clicks=Sum('paid_clicks'),
-                      total_clicks=Sum('total_clicks'), referral_earnings=Sum('referral_earnings'),
-                      network_sale_earnings=Sum('network_sale_earnings'),
-                      network_click_earnings=Sum('network_click_earnings'), sales=Sum('sales'))
-            publisher_total = publisher_data['sale_clicks'] + total_data['referral_earnings']\
-                          + total_data['network_sale_earnings'] + total_data['network_click_earnings']
-            publisher_commission = publisher_data['sale_earnings'] + total_data['referral_earnings']\
+            publisher_data = publisher_query.aggregate(sale_earnings=Sum('sale_earnings'),
+                                                       click_earnings=Sum('click_earnings'),
+                                                       sale_clicks=Sum('sale_plus_click_earnings'),
+                                                       paid_clicks=Sum('paid_clicks'),
+                                                       total_clicks=Sum('total_clicks'),
+                                                       referral_earnings=Sum('referral_earnings'),
+                                                       network_sale_earnings=Sum('network_sale_earnings'),
+                                                       network_click_earnings=Sum('network_click_earnings'),
+                                                       sales=Sum('sales'))
+            publisher_total = publisher_data['sale_clicks'] + total_data['referral_earnings'] \
+                              + total_data['network_sale_earnings'] + total_data['network_click_earnings']
+            publisher_commission = publisher_data['sale_earnings'] + total_data['referral_earnings'] \
                                    + total_data['network_sale_earnings']
             publisher_ppc = publisher_data['click_earnings'] + publisher_data['network_click_earnings']
             publisher_top[0] = publisher_total
@@ -698,7 +698,8 @@ class AdminDashboardView(TemplateView):
         """
         Returns list of lists ready for display from the given matrix with Summary data
         """
-        headings = ['Earnings', 'Referral Earnings', 'PPO commission', 'PPC earnings', 'PPC clicks', 'PPO clicks', 'PPO sales',
+        headings = ['Earnings', 'Referral Earnings', 'PPO commission', 'PPC earnings', 'PPC clicks', 'PPO clicks',
+                    'PPO sales',
                     'Commission CR']
         if is_bottom_summary:
             headings = ['Average EPC', 'Valid Clicks', 'Invalid clicks', 'Commission sales']
@@ -743,8 +744,8 @@ class AdminDashboardView(TemplateView):
 
             # Aggregate data per day
             values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
-                       'paid_clicks', 'network_sale_earnings', 'network_click_earnings', 'user_id')
-            query_args = {'created__range': (start_date_query, end_date_query), 'data_type' : 'aggregated_from_total'}
+                      'paid_clicks', 'network_sale_earnings', 'network_click_earnings', 'user_id')
+            query_args = {'created__range': (start_date_query, end_date_query), 'data_type': 'aggregated_from_total'}
             data_per_day = aggregated_data_per_day(start_date, end_date, 'admin', values, query_args)
 
             # Top Publishers (influencers)
@@ -1708,235 +1709,12 @@ class RetailerFormView(TemplateView):
             return HttpResponseRedirect(reverse('index-store-complete'))
         return render(request, self.template_name, {'form': form})
 
+
 class RetailerPublicFormView(RetailerFormView):
     template_name = 'apparel/retailers.html'
-
-
-@DeprecationWarning
-def retailer(request):
-    return render(request, 'apparel/retailers.html')
-
-
-@DeprecationWarning
-def publisher_tools(request):
-    return render(request, 'dashboard/publisher_tools.html')
 
 
 class PublisherToolsView(TemplateView):
     template_name='dashboard/publisher_tools.html'
 
 
-def products(request, year=None, month=None):
-    if request.user.is_authenticated() and request.user.is_partner:
-        start_date, end_date = parse_date(month, year)
-
-        year = start_date.year
-        if month != "0":
-            month = start_date.month
-
-        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
-        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
-
-        # Enumerate months
-        dt1 = request.user.date_joined.date()
-        dt2 = datetime.date.today()
-        years_choices = range(dt1.year, dt2.year+1)
-
-        months_choices = [(0, _('All year'))]
-        for i in range(1,13):
-            months_choices.append((i, datetime.date(2008, i, 1).strftime('%B')))
-
-        # Total sales counts
-        sales_total = decimal.Decimal('0')
-        sales_pending = get_model('dashboard', 'UserEarning').objects\
-            .filter(user=request.user, status=Sale.PENDING, paid=Sale.PAID_PENDING).aggregate(total=Sum('amount'))['total']
-        if sales_pending:
-            sales_total += sales_pending
-        else:
-            sales_pending = decimal.Decimal('0')
-        sales_confirmed = get_model('dashboard', 'UserEarning').objects\
-            .filter(user=request.user, status=Sale.CONFIRMED, paid=Sale.PAID_PENDING).aggregate(total=Sum('amount'))['total']
-        if sales_confirmed:
-            sales_total += sales_confirmed
-        else:
-            sales_confirmed = decimal.Decimal('0')
-
-        # Pending payment
-        pending_payment = 0
-        payments = Payment.objects.filter(cancelled=False, paid=False, user=request.user).order_by('-created')
-        if payments:
-            pending_payment = payments[0].amount
-
-        total_earned = 0
-        payments = Payment.objects.filter(paid=True, user=request.user)
-        for pay in payments:
-            total_earned += pay.amount
-
-        # Sales and most sold products
-        sales, most_sold_products = get_sales(start_date_query, end_date_query, user_id=request.user.pk, limit=None)
-
-        top_publishers = None
-        network_publishers = []
-
-        is_owner = get_user_model().objects.filter(owner_network=request.user).exists()
-        if is_owner:
-            top_publishers, network_publishers = get_publishers(start_date_query, end_date_query, user_id=request.user.pk, limit=None)
-
-        network_total_products = merge_top_products(most_sold_products, network_publishers, limit=None)
-
-        # Sales count
-        sales_count = 0
-        referral_sales_count = 0
-        tribute_sales_count = 0
-
-        # Sales and commission per day
-        data_per_day = {}
-        for day in range(1, (end_date - start_date).days + 2):
-            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
-
-        # Clicks per day
-        clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
-                                                               .filter(user_id=request.user.pk) \
-                                                               .values_list('created', flat=True)
-        for click in clicks:
-            data_per_day[click.date()][1] += 1
-
-        # Conversion rate
-        conversion_rate = 0
-        month_clicks = sum([x[1] for x in data_per_day.values()])
-        if month_clicks > 0:
-            conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(month_clicks)
-            conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
-
-        # Enable sales listing after 2013-06-01 00:00:00
-        is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
-
-        return render(request, 'dashboard/products.html', {'data_per_day': data_per_day,
-                                                            'total_sales': sales_total,
-                                                            'sales_pending': sales_pending,
-                                                            'total_confirmed': sales_confirmed,
-                                                            'pending_payment': pending_payment,
-                                                            'month_commission': ('%.2f' % sum([x[0] for x in data_per_day.values()])),
-                                                            'month_clicks': month_clicks,
-                                                            'month_sales': sales_count,
-                                                            'month_conversion_rate': conversion_rate,
-                                                            'years_choices': years_choices,
-                                                            'months_choices': months_choices,
-                                                            'year': year,
-                                                            'month': month,
-                                                            'sales': sales,
-                                                            'total_earned': total_earned,
-                                                            'is_after_june': is_after_june,
-                                                            'most_sold_products': network_total_products,
-                                                            'referral_sales': referral_sales_count,
-                                                            'network_sales': tribute_sales_count,
-                                                            'network_commission': ('%.2f' % sum([x[3] for x in data_per_day.values()])),
-                                                            'referral_commission': ('%.2f' % sum([x[2] for x in data_per_day.values()])),
-                                                            'currency': 'EUR'})
-    return HttpResponseRedirect(reverse('index-publisher'))
-
-
-def publishers(request, year=None, month=None):
-    if request.user.is_authenticated() and request.user.is_partner:
-        start_date, end_date = parse_date(month, year)
-        year = start_date.year
-        if month != "0":
-            month = start_date.month
-
-        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
-        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
-
-
-        # Enumerate months
-        dt1 = request.user.date_joined.date()
-        dt2 = datetime.date.today()
-        years_choices = range(dt1.year, dt2.year+1)
-
-        months_choices = [(0, _('All year'))]
-        for i in range(1,13):
-            months_choices.append((i, datetime.date(2008, i, 1).strftime('%B')))
-
-        # Total sales counts
-        sales_total = decimal.Decimal('0')
-        sales_pending = get_model('dashboard', 'UserEarning').objects.filter(user=request.user, status=Sale.PENDING, paid=Sale.PAID_PENDING).aggregate(total=Sum('amount'))['total']
-        if sales_pending:
-            sales_total += sales_pending
-        else:
-            sales_pending = decimal.Decimal('0')
-        sales_confirmed = get_model('dashboard', 'UserEarning').objects.filter(user=request.user, status=Sale.CONFIRMED, paid=Sale.PAID_PENDING).aggregate(total=Sum('amount'))['total']
-        if sales_confirmed:
-            sales_total += sales_confirmed
-        else:
-            sales_confirmed = decimal.Decimal('0')
-
-        # Pending payment
-        pending_payment = 0
-        payments = Payment.objects.filter(cancelled=False, paid=False, user=request.user).order_by('-created')
-        if payments:
-            pending_payment = payments[0].amount
-
-        total_earned = 0
-        payments = Payment.objects.filter(paid=True, user=request.user)
-        for pay in payments:
-            total_earned += pay.amount
-
-        # Sales and most sold products
-        sales, most_sold_products = get_sales(start_date_query, end_date_query, user_id=request.user.pk, limit=None)
-
-        top_publishers = None
-
-        is_owner = get_user_model().objects.filter(owner_network=request.user).exists()
-        if is_owner:
-            top_publishers, net_product = get_publishers(start_date_query, end_date_query, user_id=request.user.pk, limit=None)
-
-        # Sales count
-        sales_count = 0
-        referral_sales_count = 0
-        tribute_sales_count = 0
-
-        # Sales and commission per day
-        data_per_day = {}
-        for day in range(1, (end_date - start_date).days + 2):
-            data_per_day[start_date+datetime.timedelta(day)] = [0, 0, 0, 0]
-
-        # Clicks per day
-        clicks = get_model('statistics', 'ProductStat').objects.filter(created__range=(start_date_query, end_date_query)) \
-                                                               .filter(user_id=request.user.pk) \
-                                                               .values_list('created', flat=True)
-        for click in clicks:
-            data_per_day[click.date()][1] += 1
-
-        # Conversion rate
-        conversion_rate = 0
-        month_clicks = sum([x[1] for x in data_per_day.values()])
-        if month_clicks > 0:
-            conversion_rate = decimal.Decimal(sales_count) / decimal.Decimal(month_clicks)
-            conversion_rate = str(conversion_rate.quantize(decimal.Decimal('0.0001')) * 100)
-
-        # Enable sales listing after 2013-06-01 00:00:00
-        is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
-
-        return render(request, 'dashboard/publishers_network.html', {'data_per_day': data_per_day,
-                                                            'total_sales': sales_total,
-                                                            'sales_pending': sales_pending,
-                                                            'total_confirmed': sales_confirmed,
-                                                            'pending_payment': pending_payment,
-                                                            'month_commission': ('%.2f' % sum([x[0] for x in data_per_day.values()])),
-                                                            'month_clicks': month_clicks,
-                                                            'month_sales': sales_count,
-                                                            'month_conversion_rate': conversion_rate,
-                                                            'years_choices': years_choices,
-                                                            'months_choices': months_choices,
-                                                            'year': year,
-                                                            'month': month,
-                                                            'sales': sales,
-                                                            'is_owner': is_owner,
-                                                            'total_earned': total_earned,
-                                                            'is_after_june': is_after_june,
-                                                            'top_publishers': top_publishers,
-                                                            'referral_sales': referral_sales_count,
-                                                            'network_sales': tribute_sales_count,
-                                                            'network_commission': ('%.2f' % sum([x[3] for x in data_per_day.values()])),
-                                                            'referral_commission': ('%.2f' % sum([x[2] for x in data_per_day.values()])),
-                                                            'currency': 'EUR'})
-    return HttpResponseRedirect(reverse('index-publisher'))
