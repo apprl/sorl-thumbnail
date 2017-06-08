@@ -459,105 +459,75 @@ class DashboardView(TemplateView):
         month = None if not 'month' in self.kwargs else self.kwargs['month']
         year = None if not 'year' in self.kwargs else self.kwargs['year']
 
-        if request.user.is_authenticated() and request.user.is_partner:
+        if not (request.user.is_authenticated() and request.user.is_partner):
+            raise Http404()
 
-            if 'stats' in request.GET:
-                # quick hack to get the cli stats to web
-                return HttpResponse('<html><pre>%s</pre></html>' % stats_publisher.publisher_stats_as_str(request.user.id))
+        if 'stats' in request.GET:
+            # quick hack to get the cli stats to web
+            return HttpResponse('<html><pre>%s</pre></html>' % stats_publisher.publisher_stats_as_str(request.user.id))
 
-            start_date, end_date = parse_date(month, year)
-            year = start_date.year
-            if month != "0":
-                month = start_date.month
+        start_date, end_date = parse_date(month, year)
+        year = start_date.year
+        if month != "0":
+            month = start_date.month
 
-            flush_cache = 'flush_cache' in self.request.GET
-            if flush_cache:
-                flush_stats_cache_by_month(year, month)  # improve this so it only flushes cache for this publisher
+        flush_cache = 'flush_cache' in self.request.GET
+        if flush_cache:
+            flush_stats_cache_by_month(year, month)  # improve this so it only flushes cache for this publisher
 
-            start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
-            end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
-            month_display, month_choices, year_choices = enumerate_months(request.user, month)
+        start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
+        end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
+        month_display, month_choices, year_choices = enumerate_months(request.user, month)
 
-            # Determine if the user is the owner of a publisher network
-            is_owner = get_user_model().objects.filter(owner_network=request.user).exists()
-            # Enable sales listing after 2013-06-01 00:00:00
-            is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
+        # Determine if the user is the owner of a publisher network
+        is_owner = get_user_model().objects.filter(owner_network=request.user).exists()
+        # Enable sales listing after 2013-06-01 00:00:00
+        is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
 
-            # Total summary for user
-            pending_earnings = stats_publisher.pending_earnings(request.user.id)
-            confirmed_earnings = stats_publisher.confirmed_earnings(request.user.id)
-            pending_payment = stats_publisher.pending_payments(request.user.id)
-            total_earned = stats_publisher.total_earnings(all_time, request.user.id)
+        # Total summary for user
+        pending_earnings = stats_publisher.pending_earnings(request.user.id)
+        confirmed_earnings = stats_publisher.confirmed_earnings(request.user.id)
+        pending_payment = stats_publisher.pending_payments(request.user.id)
+        total_earned = stats_publisher.total_earnings(all_time, request.user.id)
 
-            # Get aggregated data per day
-            values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
-                      'network_sale_earnings', 'network_click_earnings')
-            query_args = {'user_id': request.user.id, 'created__range': (start_date_query, end_date_query),
-                          'data_type': 'aggregated_from_total'}
+        # Get aggregated data per day
+        values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
+                  'network_sale_earnings', 'network_click_earnings')
+        query_args = {'user_id': request.user.id, 'created__range': (start_date_query, end_date_query),
+                      'data_type': 'aggregated_from_total'}
 
-            data_per_day = aggregated_data_per_day(start_date, end_date, 'publisher', values, query_args)
+        data_per_day = aggregated_data_per_day(start_date, end_date, 'publisher', values, query_args)
 
-            # Summary earning
-            # TODO: move this to new stats intead of going through AggregatedData
-            month_earnings, network_earnings, referral_earnings, ppc_earnings = summarize_earnings(data_per_day.values())
+        # Aggregate publishers per month
+        top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query,
+                                                   include_all_network_influencers=True)
 
-            total_earnings = month_earnings + network_earnings + referral_earnings + ppc_earnings
+        # Aggregate products per month
+        top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
-            # Aggregated sum per month
-            sum_data = aggregated_data_per_month(request.user.id, start_date_query, end_date_query)
+        month_stats = self.month_stats(year, month, request.user.id)
 
-            non_paid_clicks = 0
-            paid_clicks = 0
-            if 'total_clicks__sum' in sum_data and 'paid_clicks__sum' in sum_data and sum_data['total_clicks__sum'] \
-                    and sum_data['paid_clicks__sum']:
-                paid_clicks = sum_data['paid_clicks__sum']
-                non_paid_clicks = sum_data['total_clicks__sum'] - sum_data['paid_clicks__sum']
+        show_cpo_earning = True
+        if request.user.partner_group.has_cpc_all_stores and not month_stats['ppo_earnings']:
+            show_cpo_earning = False
 
-            total_aggregated_earnings = 0
-            if sum_data['sale_earnings__sum'] is not None:
-                total_aggregated_earnings = sum_data['sale_earnings__sum'] + sum_data['click_earnings__sum'] \
-                                            + sum_data['referral_earnings__sum'] + \
-                                            sum_data['network_sale_earnings__sum'] + \
-                                            sum_data['network_click_earnings__sum']
-
-            # Aggregate publishers per month
-            top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query, include_all_network_influencers=True)
-
-            # Aggregate products per month
-            top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
-
-            month_commission = sum_data['sale_earnings__sum']
-            show_cpo_earning = True
-            if request.user.partner_group.has_cpc_all_stores and not month_commission:
-                show_cpo_earning = False
-
-            month_stats = self.month_stats(year, month, request.user.id)
-
-            network_earning = 0
-            if sum_data['network_sale_earnings__sum'] is not None:
-                network_earning = sum_data['network_sale_earnings__sum'] + sum_data['network_click_earnings__sum']
-            context_data = {'year_choices': year_choices, 'month_choices': month_choices,
-                            'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
-                            'pending_payment': pending_payment, 'total_earned': total_earned,
-                            'data_per_day': data_per_day, 'currency': currency,
-                            'month_stats': month_stats,
-                            'month_commission': month_commission,
-                            'month_sales': sum_data['sales__sum'], 'total_earnings': total_earnings, 'year': year,
-                            'month': month, 'month_display': month_display,
-                            'total_commission': ('%.2f' % total_aggregated_earnings),
-                            'is_owner': is_owner, 'is_after_june': is_after_june,
-                            'network_commission': network_earning,
-                            'top_publishers': top_publishers,
-                            'top_products': top_products,
-                            'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT,
-                            'ppc_clicks': paid_clicks,
-                            'month_clicks': non_paid_clicks,
-                            'referral_commission': referral_earnings,
-                            'ppc_earnings': ppc_earnings,
-                            'show_cpo_earning': show_cpo_earning
-                            }
-            return render(request, 'dashboard/new_dashboard.html', context_data)
-        return HttpResponseRedirect(reverse('dashboard'))
+        network_earning = 0
+        context_data = {'year_choices': year_choices, 'month_choices': month_choices,
+                        'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
+                        'pending_payment': pending_payment, 'total_earned': total_earned,
+                        'data_per_day': data_per_day, 'currency': currency,
+                        'month_stats': month_stats,
+                        'year': year,
+                        'month': month, 'month_display': month_display,
+                        'is_owner': is_owner, 'is_after_june': is_after_june,
+                        'network_commission': network_earning,
+                        'top_publishers': top_publishers,
+                        'top_products': top_products,
+                        'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT,
+                        'show_cpo_earning': show_cpo_earning,
+                        'show_aggregated_data': True, # request.GET.get('show_aggregated_data')
+                        }
+        return render(request, 'dashboard/new_dashboard.html', context_data)
 
     def month_stats(self, year, month, user_id):
         tr = mrange(year, month)
