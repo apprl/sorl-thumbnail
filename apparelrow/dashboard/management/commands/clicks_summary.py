@@ -1,11 +1,11 @@
+import optparse
 import datetime
 import logging
-import optparse
-
-from django.core.management.base import BaseCommand
+from advertiser.models import Transaction, Store
 from django.db.models.loading import get_model
 
-from advertiser.models import Transaction, Store
+from django.core.management.base import BaseCommand
+
 from apparelrow.dashboard.models import Sale
 
 logger = logging.getLogger('dashboard')
@@ -31,15 +31,14 @@ class Command(BaseCommand):
     affiliates = ['costperclick', 'allstorescpc']
 
     def update(self, row):
-        instance, created = Store.objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
+        instance, created = Sale.objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
         try:
             store = Store.objects.get(vendor=row['vendor'])
             store_id = store.identifier
-        except get_model('advertiser', 'Store').DoesNotExist:
+        except Store.DoesNotExist:
             store_id = None
 
         # Creates transaction only for those sales who are CPC, but not for those who are not CPC for all vendors
-        # We create this transaction so that we can invoice the store
         if store_id and row['affiliate'] == "cost_per_click":
             defaults = {
                 'ip_address': '127.0.0.1',
