@@ -478,7 +478,9 @@ class DashboardView(TemplateView):
         if request.user.partner_group.has_cpc_all_stores and not month_stats['ppo_earnings']:
             show_cpo_earning = False
 
-        network_earning = 0
+        # It doesn't make sense to show earnings to publishers that are ppc all stores
+        show_latest_earnings = not request.user.has_ppc_all_stores()
+
         context_data = {'year_choices': year_choices, 'month_choices': month_choices,
                         'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
                         'pending_payment': pending_payment, 'total_earned': total_earned,
@@ -487,9 +489,9 @@ class DashboardView(TemplateView):
                         'year': year,
                         'month': month, 'month_display': month_display,
                         'is_owner': is_owner, 'is_after_june': is_after_june,
-                        'network_commission': network_earning,
                         'top_publishers': top_publishers,
                         'top_products': top_products,
+                        'show_latest_earnings': show_latest_earnings,
                         'TOP_PRODUCTS_LIMIT': TOP_PRODUCTS_LIMIT,
                         'show_cpo_earning': show_cpo_earning,
                         'show_aggregated_data': True, # request.GET.get('show_aggregated_data')
