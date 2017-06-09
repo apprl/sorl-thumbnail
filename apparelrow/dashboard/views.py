@@ -452,10 +452,7 @@ class DashboardView(TemplateView):
         is_after_june = False if (year <= 2013 and month <= 5) and not request.GET.get('override') else True
 
         # Total summary for user
-        pending_earnings = stats_publisher.pending_earnings(request.user.id)
-        confirmed_earnings = stats_publisher.confirmed_earnings(request.user.id)
-        pending_payment = stats_publisher.pending_payments(request.user.id)
-        total_earned = stats_publisher.total_earnings(all_time, request.user.id)
+        payment_stats = self.payments_stats(request.user.id)
 
         # Get aggregated data per day
         values = ('created', 'sale_earnings', 'referral_earnings', 'click_earnings', 'total_clicks',
@@ -479,13 +476,12 @@ class DashboardView(TemplateView):
             show_cpo_earning = False
 
         # It doesn't make sense to show earnings to publishers that are ppc all stores
-        show_latest_earnings = not request.user.has_ppc_all_stores()
+        show_latest_earnings = not request.user.has_ppc_all_stores
 
         context_data = {'year_choices': year_choices, 'month_choices': month_choices,
-                        'pending_earnings': pending_earnings, 'confirmed_earnings': confirmed_earnings,
-                        'pending_payment': pending_payment, 'total_earned': total_earned,
                         'data_per_day': data_per_day, 'currency': currency,
                         'month_stats': month_stats,
+                        'payment_stats': payment_stats,
                         'year': year,
                         'month': month, 'month_display': month_display,
                         'is_owner': is_owner, 'is_after_june': is_after_june,
@@ -497,6 +493,14 @@ class DashboardView(TemplateView):
                         'show_aggregated_data': True, # request.GET.get('show_aggregated_data')
                         }
         return render(request, 'dashboard/new_dashboard.html', context_data)
+
+    def payments_stats(self, user_id):
+        return {
+            'pending_earnings': stats_publisher.pending_earnings(user_id),
+            'confirmed_earnings': stats_publisher.confirmed_earnings(user_id),
+            'pending_payment': stats_publisher.pending_payments(user_id),
+            'total_paid': stats_publisher.total_paid(user_id)
+        }
 
     def month_stats(self, year, month, user_id):
         tr = mrange(year, month)

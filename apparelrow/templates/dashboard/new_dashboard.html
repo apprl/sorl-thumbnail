@@ -191,11 +191,11 @@
 
     <section class="container overview">
         <div class="row figures">
-            <div class="col-sm-4 pending-earnings">{% trans "Pending earnings" %}<span class="number">{{ currency|currency_as_symbol }} {% if pending_earnings %}{{ pending_earnings|floatdot }}{% else %}0.00{% endif %}</span></div>
-            <div class="col-sm-4 confirmed-earnings">{% trans "Confirmed earnings" %}<span class="number">{{ currency|currency_as_symbol }} {% if confirmed_earnings %}{{ confirmed_earnings|floatdot }}{% else %}0.00{% endif %}</span></div>
-            <div class="col-sm-4 pending-payment">{% trans "Pending payment" %}<span class="number">{{ currency|currency_as_symbol }} {% if pending_payment %}{{ pending_payment|floatdot }}{% else %}0.00{% endif %}</span></div>
+            <div class="col-sm-4 pending-earnings">{% trans "Pending earnings" %}<span class="number">{{ currency|currency_as_symbol }} {{ payment_stats.pending_earnings }}</span></div>
+            <div class="col-sm-4 confirmed-earnings">{% trans "Confirmed earnings" %}<span class="number">{{ currency|currency_as_symbol }} {{ payment_stats.confirmed_earnings }}</span></div>
+            <div class="col-sm-4 pending-payment">{% trans "Pending payment" %}<span class="number">{{ currency|currency_as_symbol }} {{ payment_stats.pending_payments }}</span></div>
         </div>
-        <p>{% trans "In total, " %}<strong>{{ currency|currency_as_symbol }} {{ total_earned|floatdot }}</strong> {% trans "has been paid out to you." %}</p>
+        <p>{% trans "In total, " %}<strong>{{ currency|currency_as_symbol }} {{ payment_stats.total_paid }}</strong> {% trans "has been paid out to you." %}</p>
         <a class="info" data-toggle="modal" href="#modal_publisher_info"><i class="fa fa-sticky-note-o"></i>{% trans "How payments work" %}</a>
     </section>
 
