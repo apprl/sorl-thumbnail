@@ -472,11 +472,11 @@ class DashboardView(TemplateView):
         month_stats = self.month_stats(year, month, request.user.id)
 
         show_cpo_earning = True
-        if request.user.partner_group.has_cpc_all_stores and not month_stats['ppo_earnings']:
+        if request.user.has_ppc_all_stores() and not month_stats['ppo_earnings']:
             show_cpo_earning = False
 
         # It doesn't make sense to show earnings to publishers that are ppc all stores
-        show_latest_earnings = not request.user.has_ppc_all_stores
+        show_latest_earnings = not request.user.has_ppc_all_stores()
 
         context_data = {'year_choices': year_choices, 'month_choices': month_choices,
                         'data_per_day': data_per_day, 'currency': currency,
@@ -498,7 +498,7 @@ class DashboardView(TemplateView):
         return {
             'pending_earnings': stats_publisher.pending_earnings(user_id),
             'confirmed_earnings': stats_publisher.confirmed_earnings(user_id),
-            'pending_payment': stats_publisher.pending_payments(user_id),
+            'pending_payments': stats_publisher.pending_payments(user_id),
             'total_paid': stats_publisher.total_paid(user_id)
         }
 

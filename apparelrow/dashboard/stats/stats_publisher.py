@@ -216,7 +216,7 @@ def pending_payments(user_id):
 
 def total_paid(user_id):
     total = 0
-    payments = Payment.objects.filter(paid=True, user_id=user_id)   # TODO: this should check cancelled condition, change after db migrations
+    payments = Payment.objects.filter(paid=True, user_id=user_id, cancelled=False)
     for pay in payments:
         rate = 1 if pay.currency == 'EUR' else currency_exchange('EUR', pay.currency)
         total += pay.amount * rate
