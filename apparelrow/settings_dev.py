@@ -21,18 +21,20 @@ DATABASES = {
          'HOST': 'localhost',
          }
 }
-if os.environ.get('db_host'):
-    print 'Using custom db_host: ' + os.environ['db_host']
+
+if os.environ.get('prod_copy'):
+    print 'Using custom prod_copy host %s' % os.environ['prod_copy']
     DATABASES = {
-        'default':
-            {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': os.environ.get('db_name', 'apparel'),
-                'USER': os.environ.get('db_user', 'apparel'),
-                'PASSWORD': os.environ.get('db_password', 'Frikyrk4'),
-                'HOST': os.environ['db_host']
-            }
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': os.environ['prod_copy'],
+            'NAME': 'apparel',
+            'USER': 'apparel',
+            'PASSWORD': 'Frikyrk4',
+            'OPTIONS': {'connect_timeout': 2}  # in case we forget to turn on vpn :)
+        }
     }
+
 CONN_MAX_AGE = 600
 # CACHE CONFIGURATION
 CACHES = {
