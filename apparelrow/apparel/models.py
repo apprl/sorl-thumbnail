@@ -77,6 +77,13 @@ class Brand(models.Model):
     def __unicode__(self):
         return u'%s' % self.name
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # Some brands had leading spaces in their names which caused the facetting code in browse_products
+        # to freak out because it was doing a facet.prefix  search
+        if self.name:
+            self.name = self.name.strip()
+        super(Brand, self).save(force_insert, force_update, using, update_fields)
+
     def to_dict(self):
         return {
             'apparel_id': self.id,
