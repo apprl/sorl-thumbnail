@@ -10010,7 +10010,8 @@ textarea:focus {
   #modal_tool_collage .modal-dialog,
   #modal_tool_tagged_photo .modal-dialog,
   #modal_tool_text_link .modal-dialog,
-  #modal_tool_chrome_ext .modal-dialog {
+  #modal_tool_chrome_ext .modal-dialog,
+  #modal_tool_safari_ext .modal-dialog {
     width: 1117px;
   }
 }
@@ -10019,7 +10020,8 @@ textarea:focus {
   #modal_tool_collage .modal-dialog,
   #modal_tool_tagged_photo .modal-dialog,
   #modal_tool_text_link .modal-dialog,
-  #modal_tool_chrome_ext .modal-dialog {
+  #modal_tool_chrome_ext .modal-dialog,
+  #modal_tool_safari_ext .modal-dialog {
     width: 95%;
     padding-left: 2.5%;
     padding-right: 2.5%;
