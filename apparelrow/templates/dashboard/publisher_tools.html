@@ -161,6 +161,23 @@
                         </article>
                     </div>
                 </li>
+
+                <!-- Safari Extension -->
+                <li class="col-discover-item">
+                    <div class="panel publisher-panel">
+                        <a target="_blank" href="https://safari-extensions.apple.com/details/?id=com.apprl.linkgenerator-FM7BYSCZYC"><img src="{% static 'images/tools/safari_extension_thumb.jpg' %}" /></a>
+                        <article>
+                            <h2>{% trans "APPRL for Safari" %}</h2>
+                            <p>{% trans "Get links directly from retailers' sites." %}</p>
+                            <a class="btn btn-primary" href="https://safari-extensions.apple.com/details/?id=com.apprl.linkgenerator-FM7BYSCZYC">
+                                {% trans "Download" %}
+                            </a>
+                            <a class="btn btn-default" data-toggle="modal" data-target="#modal_tool_safari_ext">
+                                {% trans "Info" %}
+                            </a>
+                        </article>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -171,6 +188,7 @@
 {% include 'dashboard/fragments/dialog_tool_tagged_photo.html' with request=request csrf_token=csrf_token next=next only %}
 {% include 'dashboard/fragments/dialog_tool_text_link.html' with request=request csrf_token=csrf_token next=next only %}
 {% include 'dashboard/fragments/dialog_tool_chrome_ext.html' with request=request csrf_token=csrf_token next=next only %}
+{% include 'dashboard/fragments/dialog_tool_safari_ext.html' with request=request csrf_token=csrf_token next=next only %}
 {% include 'dashboard/fragments/dialog_tool_product_list.html' with request=request csrf_token=csrf_token next=next only %}
 {% include 'dashboard/fragments/dialog_tool_single_product.html' with request=request csrf_token=csrf_token next=next only %}
 
