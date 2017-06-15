@@ -98,6 +98,9 @@ class Brand(models.Model):
     class Exporter:
         export_fields = ['__all__']
 
+    def __unicode__(self):
+        return u'id: %d name: %s' % (self.id, self.name)
+
 @receiver(post_save, sender=Brand, dispatch_uid='brand_create_user')
 def brand_create_user(sender, instance, **kwargs):
     if 'created' in kwargs and kwargs['created']:
