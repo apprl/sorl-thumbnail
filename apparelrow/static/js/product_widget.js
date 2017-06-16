@@ -148,6 +148,8 @@ jQuery(document).ready(function() {
         index = 0;
         $ul.css('left', 0);
         var containermargin = parseInt($container.css('marginLeft').substr(0, $container.css('marginLeft').length -2));
+        $slideprevious.css({left: Math.max(10, containermargin-$slideprevious.width() - 10)});
+        $slidenext.css({right: Math.max(10, containermargin-$slideprevious.width() - 10)});
         // Set width of list
         $ul.width($items.length * itemwidth);
         $lazyImgs = loadImgs($lazyImgs)
