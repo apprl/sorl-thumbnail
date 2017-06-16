@@ -4,13 +4,6 @@
 
 /* Fonts ---------- */
 @font-face {
-    font-family: 'Neuzeit Regular';
-    src: url('http://s.apprl.com/fonts/Neuzeit-Regular.eot');
-    src: url('http://s.apprl.com/fonts/Neuzeit-Regular.woff') format('woff'),
-         url('http://s.apprl.com/fonts/Neuzeit-Regular.woff2') format('woff2'),
-         url('http://s.apprl.com/fonts/Neuzeit-Regular.ttf') format('truetype');
-}
-@font-face {
     font-family: 'Neuzeit Bold';
     src: url('http://s.apprl.com/fonts/Neuzeit-Bold.eot');
     src: url('http://s.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'),
@@ -25,7 +18,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: white;
-    font-family: 'Neuzeit Regular', sans-serif;
+    font-family: 'Neuzeit Bold', Helvetica, sans-serif;
     color: black;
     letter-spacing: .01rem;
     font-size: 12px;
@@ -37,7 +30,6 @@
     }
     a {
         color: black;
-        -webkit-transition: all .25s cubic-bezier(.4, 0, .2, 1);
         transition: all .25s cubic-bezier(.4, 0, .2, 1);
         text-decoration: none;
     }
@@ -49,15 +41,18 @@
     h4 {
         font-size: 14px;
         margin: 0 auto;
-        font-family: "Neuzeit Bold", sans-serif;
         font-weight: normal;
     }
     .slidecontainer {
+        width: 100vw;
+        height: 100vh;
         overflow: hidden;
         position: relative;
         margin: 0 auto;
     }
-    ul.productcontainer {
+    .productcontainer {
+        width: 100vw;
+        height: 100vh;
         margin: 0px;
         padding: 0px;
         overflow: hidden;
@@ -65,18 +60,27 @@
         top: 0px;
         left: 0px;
         list-style: none;
+
+        li.product {
+            float: left;
+            padding: 0px 10px;
+            box-sizing: border-box;
+        }
+        li img {
+            width: 100%;
+            height:100%;
+            vertical-align: middle;
+            opacity: 1;
+            transition: opacity 0.5s;
+            border: 0;
+
+            &[data-src] {
+                opacity: 0
+        }
     }
-    ul li.product {
-        float: left;
-        padding: 0px 10px;
-        box-sizing: border-box;
-    }
-    ul li img {
-        width: 100%;
-        height:100%;
-        vertical-align: middle;
     }
     .navigation {
+        width: 100%;
         display: block;
     }
     .navigation-el {
@@ -88,23 +92,44 @@
         width: 44px;
         transition: background-color .2s ease-in-out;
         text-align: center;
-        i {
-            transition: color .2s ease-in-out;
-            font-size: 32px;
-            line-height: 44px;
+        top: 50%;
+        margin-top: -30px;
+        right: 30px;
+
+        &::before {
+            content: "";
+            border: solid #000;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 4px;
+            -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -5px;
+            margin-left: -6px;
+            transition: border-color 0.2s ease-in-out;
         }
+
         &:hover {
-            background-color: black;
-            i {
-                color: white;
+            background-color: #000;
+
+            &::before {
+                border-color: #fff
             }
         }
-        &.previous i {
-            padding-right: 2px;
+
+        &.previous  {
+            left: 30px;
+
+            &::before {
+                -ms-transform: rotate(135deg);
+                transform: rotate(135deg);
+                margin-left: -3px;
+            }
         }
-        &.next i {
-            padding-left: 2px;
-        }
+
         @media (min-width: 992px) {
             width: 36px;
             height: 36px;
@@ -129,17 +154,29 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        li {
+        .price {
+            color: #666;
             display: inline-block;
+
+            &.discount-price {
+                color: #f64747;
+            }
+
+            &.discounted {
+                margin-left: 5px;
+                text-decoration: line-through;
+                color: #888;
+            }
         }
     }
 }
 
-.discount-price {
-   color: #f64747  !important;
-}
-.discounted {
-   margin-left: 10px !important;
-   text-decoration: line-through !important;
-   color: #666 !important;
+.visually-hidden {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    padding:0 !important;
+    border:0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
 }
