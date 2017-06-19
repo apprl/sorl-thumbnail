@@ -616,7 +616,7 @@ SERVER_EMAIL = 'Apprl <no-reply@apprl.com>'
 #EMAIL_USE_TLS       = True
 
 MAILCHIMP_API_KEY = '320bdd6a4c1815a8f093f1c29e1fc08f-us4'
-MAILCHIMP_API_URL = 'http://us4.api.mailchimp.com/1.3/'
+MAILCHIMP_API_URL = 'https://us4.api.mailchimp.com/1.3/'
 MAILCHIMP_MEMBER_LIST = '18083c690f'
 MAILCHIMP_NEWSLETTER_LIST = '6fa805a815'
 MAILCHIMP_PUBLISHER_LIST = '9497b26019'
@@ -753,7 +753,7 @@ THUMBNAIL_BACKEND = 'apparelrow.apparel.sorl_extension.NamedThumbnailBackend'
 THUMBNAIL_PREFIX = 'cache/'
 THUMBNAIL_DEBUG = False
 THUMBNAIL_DUMMY = False
-THUMBNAIL_DUMMY_SOURCE = "http://dummyimage.com/%(width)sx%(height)s"
+THUMBNAIL_DUMMY_SOURCE = "https://dummyimage.com/%(width)sx%(height)s"
 
 # FEED
 FEED_REDIS_DB = 1
