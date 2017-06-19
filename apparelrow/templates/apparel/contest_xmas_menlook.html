@@ -17,7 +17,7 @@
 
             <div class="row">
                 <div class="col-contest-image">
-                    
+
                 </div>
                 <div class="col-contest-text">
                     {% if is_closed %}
@@ -31,7 +31,7 @@
                     <p><strong>{% trans "To participate:" %}</strong></p>
                     <ol>
                         <li>
-                            <p>Follow <a href="http://apprl.com/profile/menlook/">Menlook on APPRL</a>:</p>
+                            <p>Follow <a href="https://apprl.com/profile/menlook/">Menlook on APPRL</a>:</p>
                             {% if request.user.is_authenticated and request.user != profile %}
                                 {% if request.user|is_following_profile:profile %}
                                 <a class="{% if classes %}{{ classes }}{% else %}btn btn-default btn-sm{% endif %} btn-unfollow" href="#" data-follow-url="{% follow_tag profile %}" data-unfollow-url="{% unfollow_tag profile %}" data-profile-type="{% if profile.is_brand %}brand{% else %}member{% endif %}" data-profile-id="{{ profile.id }}" data-unfollow-text="{% trans 'Following' %}" data-unfollow-hover="{% trans 'Stop following' %}" data-follow-text="{% trans '+ Follow Menlook' %}">{% trans "Following" %}</a>
@@ -45,7 +45,7 @@
                             {% endif %}
                         </li>
                         <li>
-                            <p>Like the items you want to include in your wishlist, <a href="http://apprl.com/shop/men/?store=71">find all Menlook items HERE</a>.</p>
+                            <p>Like the items you want to include in your wishlist, <a href="https://apprl.com/shop/men/?store=71">find all Menlook items HERE</a>.</p>
                         </li>
                         <li>
                             <p>Create a collage with your wishlist, consisting of 5 items from Menlook.</p>
