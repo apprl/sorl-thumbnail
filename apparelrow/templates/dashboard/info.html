@@ -64,7 +64,7 @@
             <h2>{% trans "Earn money on store links" %}</h2>
             <p>{% trans "You can also link directly to the home page of our partner stores, for example asos.com or net-a-porter.com and earn money the same way as when linking directly to products: When someone buys something from a store you have linked to within 30-45 days you earn commission." %}</p>
             {% url 'dashboard-commissions' as store_url %}
-            <p>{% blocktrans with host=request.META.HTTP_HOST %}To get store links go to "Stores" under the "For Publishers"-page (<a href="http://{{ host }}{{ store_url }}">http://{{ host }}{{ store_url }}</a>). Here you can also see how much commission you earn from the different stores.{% endblocktrans %}</p>
+            <p>{% blocktrans with host=request.META.HTTP_HOST %}To get store links go to "Stores" under the "For Publishers"-page (<a href="https://{{ host }}{{ store_url }}">https://{{ host }}{{ store_url }}</a>). Here you can also see how much commission you earn from the different stores.{% endblocktrans %}</p>
             <img class="display" src="{% static "images/dashboard_store_link_"|add:LANGUAGE_CODE|add:".png" %}">
         </section>
 

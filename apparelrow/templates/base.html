@@ -35,7 +35,7 @@
     {% comment  %}
     <script type="text/javascript">var addToHomeConfig = {returningVisitor: true, touchIcon: true, expire: 20160};</script>
     {% endcomment  %}
-    <script src="//cdn.optimizely.com/js/180383028.js"></script>
+    <script src="https://cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
 
@@ -105,7 +105,7 @@
          var js, fjs = d.getElementsByTagName(s)[0];
          if (d.getElementById(id)) {return;}
          js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
     </script>
@@ -152,7 +152,7 @@
                             <a class="notifications" href="{% url 'notifications-page' %}">
                                 <span class="icon">
                                     <?xml version="1.0" encoding="utf-8" standalone="no"?>
-                                    <svg width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <svg width="9px" height="16px" viewBox="0 0 9 16" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
                                         <g stroke="none" stroke-width="1" fill="none">
                                             <g fill="#ffffff">
                                                 <path d="M5.56425,5.4157037 L7.61271429,0.231407407 L1.854,0.231407407 L0.297321429,7.78607407 L3.17667857,7.78607407 L1.25228571,15.7685926 L8.70235714,5.4157037 L5.56425,5.4157037 L5.56425,5.4157037 Z"></path>
@@ -287,10 +287,10 @@
                             <h5>{% trans 'Follow Us' %}</h5>
                             <ul>
                                 <li><a target="_blank" href="http://blog.apprl.com">{% trans 'Blog' %}</a></li>
-                                <li><a target="_blank" href="http://www.facebook.com/apprl">Facebook</a></li>
-                                <li><a target="_blank" href="http://instagram.com/get_apprl">Instagram</a></li>
+                                <li><a target="_blank" href="https://www.facebook.com/apprl">Facebook</a></li>
+                                <li><a target="_blank" href="https://instagram.com/get_apprl">Instagram</a></li>
                                 <li><a target="_blank" href="https://twitter.com/get_apprl">Twitter</a></li>
-                                <li><a target="_blank" href="http://pinterest.com/apprl/">Pinterest</a></li>
+                                <li><a target="_blank" href="https://pinterest.com/apprl/">Pinterest</a></li>
                                 <li><a target="_blank" href="https://www.linkedin.com/company/apprl">LinkedIn</a></li>
                             </ul>
                         </div>
@@ -471,7 +471,7 @@
 
 {% comment %}
 {% block pinterest-scripts %}
-<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+<script type="text/javascript" src="https://assets.pinterest.com/js/pinit.js"></script>
 {% endblock %}
 {% endcomment %}
 
