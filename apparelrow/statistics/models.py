@@ -83,6 +83,7 @@ class ProductStat(models.Model):
 
     class Meta:
         ordering = ['-created']
+        index_together = [['created', 'user_id']]
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.source_link = decompress_source_link_if_needed(self.source_link)

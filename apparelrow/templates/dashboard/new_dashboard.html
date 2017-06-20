@@ -319,8 +319,6 @@
                         <th class="col-md-1">{% trans "Link" %}</th>
                         <th class="col-md-5 hidden-xs"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Earnings" %}</th>
-                        {% if is_owner %}<th class="col-md-2 center">{% trans "Network earnings" %}</th>{% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -339,12 +337,6 @@
                         <td class="col-md-2 center" data-sort="{{ product.total_clicks }}" >
                             {{ product.total_clicks }}
                         </td>
-                        <td class="col-md-2 center" data-sort="{{ product.total_earnings }}" >
-                            {{ currency }} {{ product.total_earnings }}
-                        </td>
-                        {% if is_owner %}<td class="col-md-2 center" data-sort="{{ product.total_network_earnings }}" >
-                            {{ currency }} {{ product.total_network_earnings }}
-                        </td>{% endif %}
                     </tr>
                     {% empty %}
                     <tr>

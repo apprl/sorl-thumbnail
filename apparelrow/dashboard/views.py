@@ -527,7 +527,8 @@ class DashboardView(TemplateView):
             top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query, include_all_network_influencers=True)
 
             # Aggregate products per month
-            top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
+            # top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
+            top_products = get_top_clicked_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
             month_commission = sum_data['sale_earnings__sum']
             show_cpo_earning = True
