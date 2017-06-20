@@ -9,7 +9,7 @@
 
     {% cache CACHE_TIMEOUT product_popup object.id LANGUAGE_CODE %}
     <div class="col-xs-12 col-sm-8">
-        <h2 class="product-title">{{ object.manufacturer }} - {{ object.product_name }}</h2>
+        <h2 class="product-title">{{ object.manufacturer.name }} - {{ object.product_name }}</h2>
         <p class="bodycopy description hidden-xs">{{ object.description }}</p>
         <div class="product-vendors group">
             <div class="product-vendor">
