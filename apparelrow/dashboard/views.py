@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import get_language
+from django.views.decorators.http import condition
 from django.views.generic import TemplateView
 
 from apparelrow.apparel.utils import get_location
@@ -455,12 +456,25 @@ def clicks_detail(request):
         return HttpResponseForbidden()
     # If therese nothing just return empty list
     return HttpResponse(simplejson.dumps([]))
+
 #
 # PUBLISHER DASHBOARD
 #
+
+
+def latest_click(request, *args, **kwargs):
+    if request.user.is_authenticated():
+        from apparelrow.statistics.models import ProductStat
+        uid = request.user.id
+        latest_created = ProductStat.objects.filter(user_id=uid).latest("created").created
+        return latest_created
+    return datetime.datetime.now()
+
+
 class DashboardView(TemplateView):
     template_name = "dashboard/new_dashboard.html"
 
+    @conditional(last_modified_func=latest_click)  # returns last modified to browser cache
     def get(self, request, *args, **kwargs):
         currency = 'EUR'
         month = None if not 'month' in self.kwargs else self.kwargs['month']
@@ -527,7 +541,6 @@ class DashboardView(TemplateView):
             top_publishers = get_aggregated_publishers(request.user.id, start_date_query, end_date_query, include_all_network_influencers=True)
 
             # Aggregate products per month
-            # top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
             top_products = get_top_clicked_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
             month_commission = sum_data['sale_earnings__sum']

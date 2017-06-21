@@ -14,8 +14,6 @@
                         <th class="col-md-1 product-image center">{% trans "Link" %}</th>
                         <th class="col-md-5 hidden-xs center"></th>
                         <th class="col-md-2 center">{% trans "Clicks" %}</th>
-                        <th class="col-md-2 center">{% trans "Earnings" %}</th>
-                        {% if is_owner %}<th class="col-md-2 center">{% trans "Network earnings" %}</th>{% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -34,26 +32,20 @@
                         <td data-sort="{{ product.total_clicks }}" class="col-md-2 center" >
                             {{ product.total_clicks }}
                         </td>
-                        <td class="col-md-2 center" data-sort="{{ product.total_earnings }}" >
-                            {{ currency }} {{ product.total_earnings }}
-                        </td>
-                        {% if is_owner %}<td class="col-md-2 center" data-sort="{{ product.total_network_earnings }}" >
-                            {{ currency }} {{ product.total_network_earnings }}
-                        </td>{% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
                 {% if top_products|length == TOP_PRODUCTS_LIMIT %}
                 <tfoot>
                     <tr>
-                        <td colspan="4">{% blocktrans %}Only showing top {{ TOP_PRODUCTS_LIMIT }} links.{% endblocktrans %}</td>
+                        <td colspan="3">{% blocktrans %}Only showing top {{ TOP_PRODUCTS_LIMIT }} links.{% endblocktrans %}</td>
                     </tr>
                 </tfoot>
                 {% endif %}
                 {% if not top_products %}
                 <tfoot>
                     <tr>
-                        <td colspan="4">{% trans "No sales yet." %}</td>
+                        <td colspan="3">{% trans "No sales yet." %}</td>
                     </tr>
                 </tfoot>
                 {% endif %}

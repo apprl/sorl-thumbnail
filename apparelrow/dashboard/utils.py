@@ -930,3 +930,13 @@ def check_user_has_cpc_all_stores(user):
     Check if user exists, belongs to a partner group and publisher gets paid per click for all stores
     """
     return hasattr(user, 'partner_group') and hasattr(user.partner_group, 'has_cpc_all_stores') and user.partner_group.has_cpc_all_stores
+
+
+def conditional(**kwargs):
+    """
+    A wrapper around :func:`django.views.decorators.http.condition` that
+    works for methods (i.e. class-based views).
+    """
+    from django.views.decorators.http import condition
+    from django.utils.decorators import method_decorator
+    return method_decorator(condition(**kwargs))

@@ -7,6 +7,7 @@ import hashlib
 
 from django.conf import settings
 from django.db.models import get_model
+from django.middleware.cache import UpdateCacheMiddleware
 from django.utils import timezone, translation
 from apparelrow.apparel.utils import user_is_bot, save_location, has_user_location
 from apparelrow.statistics.utils import get_country_by_ip
