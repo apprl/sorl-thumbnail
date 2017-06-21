@@ -2,6 +2,7 @@
 
 import logging
 from datetime import datetime
+from decimal import Decimal as D
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
@@ -13,7 +14,7 @@ from apparelrow.dashboard.stats.stats_cache import stats_cache, mrange, flush_st
 from apparelrow.profile.models import User
 from apparelrow.statistics.models import ProductStat
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 @stats_cache
@@ -59,6 +60,15 @@ def ppo_clicks(time_range, user_id):
         vendor__in=ppo_vendors(),
         is_valid=True
     ).count()
+
+
+@stats_cache
+def ppo_conversion_rate(time_range, user_id):
+    clicks = ppo_clicks(time_range, user_id)
+    if clicks:
+        return D(100) * D(ppo_sales(time_range, user_id)) / clicks
+    else:
+        return 0
 
 
 ####################################################
@@ -139,6 +149,34 @@ def other_earnings(time_range, user_id):
 
 
 ####################################################
+# Referral earnings
+####################################################
+
+
+@stats_cache
+def referral_earnings(time_range, user_id):
+    result = referral_earnings_query(time_range, user_id).aggregate(total=Sum('amount'))
+    return result['total'] or 0
+
+
+@stats_cache
+def referral_sales(time_range, user_id):
+    return referral_earnings_query(time_range, user_id).count()
+
+
+def referral_earnings_query(time_range, user_id):
+    return UserEarning.objects.filter(
+        user_id=user_id,
+        date__range=time_range,
+        status__gte=Sale.PENDING,
+        user_earning_type__in=(
+            UE.REFERRAL_SIGNUP_COMMISSION,
+            UE.REFERRAL_SALE_COMMISSION
+        )
+    )
+
+
+####################################################
 # Payments
 ####################################################
 
@@ -178,12 +216,11 @@ def pending_payments(user_id):
 
 def total_paid(user_id):
     total = 0
-    payments = Payment.objects.filter(paid=True, user_id=user_id)   # TODO: this should check cancelled condition, change after db migrations
+    payments = Payment.objects.filter(paid=True, user_id=user_id, cancelled=False)
     for pay in payments:
         rate = 1 if pay.currency == 'EUR' else currency_exchange('EUR', pay.currency)
         total += pay.amount * rate
     return total
-
 
 def total_paid_via_user_earnings(user_id):
     result = UserEarning.objects.filter(

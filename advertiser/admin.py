@@ -9,7 +9,7 @@ from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 
 from advertiser.models import Store, StoreHistory, StoreInvoice, Product, Transaction, Cookie
-from advertiser.utils import calculate_balance, get_transactions
+from advertiser.utils import calculate_balance, get_unpaid_accepted_transactions
 
 import csv
 
@@ -34,7 +34,7 @@ class StoreInvoiceAdminForm(forms.ModelForm):
         cleaned_data = super(StoreInvoiceAdminForm, self).clean()
         if 'store' in cleaned_data:
             store = cleaned_data['store']
-            if not get_transactions(store):
+            if not get_unpaid_accepted_transactions(store):
                 raise ValidationError('No accepted transactions found that are unpaid.')
 
         return cleaned_data

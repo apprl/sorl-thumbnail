@@ -3,11 +3,6 @@
 */
 /* Fonts ---------- */
 @font-face {
-  font-family: 'Neuzeit Regular';
-  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.eot');
-  src: url('http://s.apprl.com/fonts/Neuzeit-Regular.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Regular.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Regular.ttf') format('truetype');
-}
-@font-face {
   font-family: 'Neuzeit Bold';
   src: url('http://s.apprl.com/fonts/Neuzeit-Bold.eot');
   src: url('http://s.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('http://s.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('http://s.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
@@ -19,7 +14,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: white;
-  font-family: 'Neuzeit Regular', sans-serif;
+  font-family: 'Neuzeit Bold', Helvetica, sans-serif;
   color: black;
   letter-spacing: .01rem;
   font-size: 12px;
@@ -33,10 +28,11 @@
   box-sizing: border-box;
 }
 .apprl-product a {
+  display: block;
   color: black;
-  -webkit-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
+  text-align: center;
 }
 .apprl-product ul {
   padding: 0;
@@ -46,15 +42,18 @@
 .apprl-product h4 {
   font-size: 14px;
   margin: 0 auto;
-  font-family: "Neuzeit Bold", sans-serif;
   font-weight: normal;
 }
 .apprl-product .slidecontainer {
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   position: relative;
   margin: 0 auto;
 }
-.apprl-product ul.productcontainer {
+.apprl-product .productcontainer {
+  width: 100vw;
+  height: 100vh;
   margin: 0px;
   padding: 0px;
   overflow: hidden;
@@ -63,17 +62,24 @@
   left: 0px;
   list-style: none;
 }
-.apprl-product ul li.product {
+.apprl-product .productcontainer li.product {
   float: left;
   padding: 0px 10px;
   box-sizing: border-box;
 }
-.apprl-product ul li img {
+.apprl-product .productcontainer li img {
   width: 100%;
   height: 100%;
   vertical-align: middle;
+  opacity: 1;
+  transition: opacity 0.5s;
+  border: 0;
+}
+.apprl-product .productcontainer li img[data-src] {
+  opacity: 0;
 }
 .apprl-product .navigation {
+  width: 100%;
   display: block;
 }
 .apprl-product .navigation-el {
@@ -85,23 +91,38 @@
   width: 44px;
   transition: background-color 0.2s ease-in-out;
   text-align: center;
+  top: 50%;
+  margin-top: -30px;
+  right: 30px;
 }
-.apprl-product .navigation-el i {
-  transition: color 0.2s ease-in-out;
-  font-size: 32px;
-  line-height: 44px;
+.apprl-product .navigation-el::before {
+  content: "";
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 4px;
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -5px;
+  margin-left: -6px;
+  transition: border-color 0.2s ease-in-out;
 }
 .apprl-product .navigation-el:hover {
-  background-color: black;
+  background-color: #000;
 }
-.apprl-product .navigation-el:hover i {
-  color: white;
+.apprl-product .navigation-el:hover::before {
+  border-color: #fff;
 }
-.apprl-product .navigation-el.previous i {
-  padding-right: 2px;
+.apprl-product .navigation-el.previous {
+  left: 30px;
 }
-.apprl-product .navigation-el.next i {
-  padding-left: 2px;
+.apprl-product .navigation-el.previous::before {
+  -ms-transform: rotate(135deg);
+  transform: rotate(135deg);
+  margin-left: -3px;
 }
 @media (min-width: 992px) {
   .apprl-product .navigation-el {
@@ -129,15 +150,24 @@
 .apprl-product .caption a:hover {
   color: #333;
 }
-.apprl-product .caption li {
+.apprl-product .caption .price {
+  color: #666;
   display: inline-block;
 }
-
-.discount-price {
-   color: #f64747  !important;
+.apprl-product .caption .price.discount-price {
+  color: #f64747;
 }
-.discounted {
-   margin-left: 10px !important;
-   text-decoration: line-through !important;
-   color: #666 !important;
+.apprl-product .caption .price.discounted {
+  margin-left: 5px;
+  text-decoration: line-through;
+  color: #888;
+}
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
 }

@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
-{% load i18n l10n cache dashboard_extras %}
-{% load static from staticfiles %}
+{% load i18n l10n cache dashboard_extras apparel_extras %}
+{% load static %}
 
 {% block extra-title %}{% trans "Dashboard" %} | {% endblock %}
 {% block extra-scripts %}
     <script type="text/javascript" src="{% static "js/vendor/tablesort.min.js" %}"></script>
-    <script type='text/javascript' src='http://www.google.com/jsapi'></script>
+    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
     <script type='text/javascript'>
         google.load('visualization', '1', {packages: ['corechart']});
         google.setOnLoadCallback(drawChart);
         function drawChart () {
             var data = new google.visualization.DataTable();
             data.addColumn('date', 'X');
-            data.addColumn('number', '{% trans "Commission Earnings" %} ({{ currency }})');
-            data.addColumn('number', '{% trans "Referral earnings" %} ({{ currency }})')
-            data.addColumn('number', '{% trans "Click earnings" %} ({{ currency }})');
+            data.addColumn('number', '{% trans "Commission Earnings" %} ({{ currency|currency_as_symbol }})');
+            data.addColumn('number', '{% trans "Referral earnings" %} ({{ currency|currency_as_symbol }})')
+            data.addColumn('number', '{% trans "Click earnings" %} ({{ currency|currency_as_symbol }})');
             data.addColumn('number', '{% trans "Clicks" %}');
-            data.addColumn('number', '{% trans "Network earnings" %} ({{ currency }})');
+            data.addColumn('number', '{% trans "Network earnings" %} ({{ currency|currency_as_symbol }})');
             data.addRows([
             {% for sale_date, data in data_per_day.items %}
                 {% if forloop.last %}
@@ -128,7 +128,7 @@
                         0: {
                             minValue: 0,
                             maxValue: (left.min == 0 && left.max == 0) ? 1 : null,
-                            title: '{% trans "Earnings" %} ({{ currency }})',
+                            title: '{% trans "Earnings" %} ({{ currency|currency_as_symbol }})',
                             textStyle: {color: '#3366cc'},
                             titleTextStyle: {color: '#3366cc'}
                         },
@@ -173,7 +173,7 @@
                 html += "<tr>" +
                         "<td class='pull-left-cell' data-sort=\"" + json_detail[i].product_name + "\"><a href=\""+json_detail[i].product_url+"\">" + json_detail[i].product_name + "</a></td>" +
                         "<td data-sort=\""+ json_detail[i].clicks +"\" class='center'>"  + json_detail[i].clicks + "</td>" +
-                        "<td data-sort=\"" + json_detail[i].product_earning+ "\" class='center'>" + currency + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
+                        "<td data-sort=\"" + json_detail[i].product_earning+ "\" class='center'>" + currencyAsSymbol(currency) + " " + json_detail[i].product_earning.toFixed(2) + "</td>" +
                         "<tr>";
             }
             $("#content-clicks").html(html);
@@ -191,11 +191,11 @@
 
     <section class="container overview">
         <div class="row figures">
-            <div class="col-sm-4 pending-earnings">{% trans "Pending earnings" %}<span class="number">{{ currency }} {% if pending_earnings %}{{ pending_earnings|floatdot }}{% else %}0.00{% endif %}</span></div>
-            <div class="col-sm-4 confirmed-earnings">{% trans "Confirmed earnings" %}<span class="number">{{ currency }} {% if confirmed_earnings %}{{ confirmed_earnings|floatdot }}{% else %}0.00{% endif %}</span></div>
-            <div class="col-sm-4 pending-payment">{% trans "Pending payment" %}<span class="number">{{ currency }} {% if pending_payment %}{{ pending_payment|floatdot }}{% else %}0.00{% endif %}</span></div>
+            <div class="col-sm-4 pending-earnings">{% trans "Pending earnings" %}<span class="number">{{ currency|currency_as_symbol }} {{ payment_stats.pending_earnings }}</span></div>
+            <div class="col-sm-4 confirmed-earnings">{% trans "Confirmed earnings" %}<span class="number">{{ currency|currency_as_symbol }} {{ payment_stats.confirmed_earnings }}</span></div>
+            <div class="col-sm-4 pending-payment">{% trans "Pending payment" %}<span class="number">{{ currency|currency_as_symbol }} {{ payment_stats.pending_payments }}</span></div>
         </div>
-        <p>{% trans "In total, " %}<strong>{{ currency }} {{ total_earned|floatdot }}</strong> {% trans "has been paid out to you." %}</p>
+        <p>{% trans "In total, " %}<strong>{{ currency|currency_as_symbol }} {{ payment_stats.total_paid }}</strong> {% trans "has been paid out to you." %}</p>
         <a class="info" data-toggle="modal" href="#modal_publisher_info"><i class="fa fa-sticky-note-o"></i>{% trans "How payments work" %}</a>
     </section>
 
@@ -226,28 +226,29 @@
     </section>
 
     <section class="container center">
-        <p>{% blocktrans %}Total Earnings: <strong>{{ currency }} {{ total_commission }}{% endblocktrans %}</strong></p>
+        <p>{% blocktrans %}Earnings:{% endblocktrans %} <strong>{{ currency|currency_as_symbol }} {{ month_stats.total_earnings }}</strong></p>
         </ul>
         {% if show_cpo_earning %}
         <ul class="list-horizontal">
-            <li>{% blocktrans %}Commission earnings:{% endblocktrans %} <strong>{{ currency }} {% if month_commission %}{{ month_commission }}{% else %}0.00{% endif %}</strong></li>
-            <li>{% blocktrans %}Sales:<strong>{% endblocktrans %} {% if month_sales %}{{ month_sales }}{% else %}0{% endif %}</strong></li>
-            <li>{% blocktrans %}Clicks: <strong>{{ month_clicks }}{% endblocktrans %}</strong></li>
+            <li>{% blocktrans %}Commission earnings:{% endblocktrans %} <strong>{{ currency|currency_as_symbol }} {{ month_stats.ppo_earnings }}</strong></li>
+            <li>{% blocktrans %}Sales:{% endblocktrans %} <strong>{{ month_stats.ppo_sales }}</strong></li>
+            <li>{% blocktrans %}Clicks:{% endblocktrans %} <strong>{{ month_stats.ppo_clicks }}</strong></li>
+            <li>{% blocktrans %}Conversion rate:{% endblocktrans %} <strong>{{ month_stats.ppo_conversion_rate }} %</strong></li>
         </ul>
         {% endif %}
         {% if request.user.referral_partner %}
         <ul class="list-horizontal">
-            <li>{% blocktrans %}Referral earnings: <strong>{{ currency }} {{ referral_commission }}{% endblocktrans %}</strong></li>
-            <li>{% blocktrans %}Referrals:<strong>{% endblocktrans %} {% if referral_sales %}{{referral_sales}}{% else %}0{% endif %}</strong></li>
+            <li>{% blocktrans %}Referral earnings:{% endblocktrans %} <strong>{{ currency|currency_as_symbol }} {{ month_stats.referral_earnings }}</strong></li>
+            <li>{% blocktrans %}Referrals:{% endblocktrans %} <strong>{{ month_stats.referral_sales }}</strong></li>
         </ul>
         {% endif %}
         <ul class="list-horizontal">
-            <li>{% blocktrans %}Click earnings: <strong>{{ currency }} {{ ppc_earnings }}{% endblocktrans %}</strong></li>
-            <li>{% blocktrans %}Clicks: <strong>{{ ppc_clicks }}{% endblocktrans %}</strong></li>
+            <li>{% blocktrans %}Click earnings:{% endblocktrans %} <strong>{{ currency|currency_as_symbol }} {{ month_stats.ppc_earnings }}</strong></li>
+            <li>{% blocktrans %}Clicks:{% endblocktrans %} <strong>{{ month_stats.ppc_clicks }}</strong></li>
         </ul>
         {% if is_owner %}
         <ul class="list-horizontal">
-            <li>{% blocktrans %}Network earnings: <strong>{{ currency }} {{ network_commission }}{% endblocktrans %}</strong></li>
+            <li>{% blocktrans %}Network earnings:{% endblocktrans %} <strong>{{ currency|currency_as_symbol }} {{ month_stats.network_commission }}</strong></li>
         </ul>
         {% endif %}
     </section>
@@ -292,10 +293,10 @@
                                 {{ publisher.total_clicks }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_earnings }}">
-                                {{ currency }} {{ publisher.total_earnings }}
+                                {{ currency|currency_as_symbol }} {{ publisher.total_earnings }}
                             </td>
                             <td class="col-md-2 center" data-sort="{{ publisher.total_network_earnings }}">
-                                {{ currency }} {{ publisher.total_network_earnings }}
+                                {{ currency|currency_as_symbol }} {{ publisher.total_network_earnings }}
                             </td>
                         </tr>
                         {% empty %}
@@ -348,6 +349,9 @@
         </div>
     </div>
 
+  {% endif %} {# if is_after_june #}
+  {% if show_latest_earnings %}
+
     <div class="row top-buffer">
         <div class="col-lg-12 table-responsive">
             <h2 class="sales-header">{% trans "Your earnings" %} {{ month_display }} {{ year }}</h2>
@@ -377,15 +381,15 @@
                 </table>
         </div>
     </div>
-    {% endif %}
 
 <script>
     var EARNINGS_URL = "{% url 'detail-earnings' %}";
 
     function fetchEarnings(month, year, user_id, currency, callback) {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year)
-                + '&user_id=' + encodeURIComponent(user_id) + "&limit=50", true);
+        var url = EARNINGS_URL + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year)
+                + '&user_id=' + encodeURIComponent(user_id) + "&limit=50";
+        xhr.open('GET', url, true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
               var parsed = {};
@@ -443,10 +447,10 @@
                                 'data-clicks="' + this.clicks + '">' +
                                 'See details</a></td>');
                     } else {
-                        row.append('<td data-sort="' + this.sale_amount + '" >' + currency +"  " + this.sale_amount + '</td>');
+                        row.append('<td data-sort="' + this.sale_amount + '" >' + currencyAsSymbol(currency) +"  " + this.sale_amount + '</td>');
                     }
                     // Earning
-                    row.append('<td data-sort="' + this.amount + '">' + currency +"  " + this.amount + '</td>');
+                    row.append('<td data-sort="' + this.amount + '">' + currencyAsSymbol(currency) +"  " + this.amount + '</td>');
                     table.append(row);
                 }
             });
@@ -476,6 +480,7 @@
         });
     });
 </script>
+  {% endif %} {# if show_latest_earnings #}
 
 {% include 'dashboard/fragments/dialog_detail_clicks.html' with request=request csrf_token=csrf_token only  %}
 {% include 'dashboard/fragments/dialog_new_top_products.html' with request=request csrf_token=csrf_token next=next top_products=top_products TOP_PRODUCTS_LIMIT=TOP_PRODUCTS_LIMIT is_admin=False currency=currency month=month_display year=year is_owner=is_owner only  %}

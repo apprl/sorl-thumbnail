@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load cache i18n humanize thumbnail apparel_extras buy_extras static %}
 
-{% block extra-title %}{% cache CACHE_TIMEOUT product_detail_title object.id LANGUAGE_CODE %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer }} | {% if object.color_list_locale %}{% for color in object.color_list_locale %}{{ color }}{% if not forloop.last %}{% if forloop.revcounter == 2 %} & {% else %}, {% endif %}{% endif %}{% endfor %} |{% endif %} {{ object.categories|join:' | ' }} | {% trans object.get_gender_display %} | {% endcache %}{% endblock %}
+{% block extra-title %}{% cache CACHE_TIMEOUT product_detail_title object.id LANGUAGE_CODE %}{{ object.product_name }} {% trans "by" %} {{ object.manufacturer.name }} | {% if object.color_list_locale %}{% for color in object.color_list_locale %}{{ color }}{% if not forloop.last %}{% if forloop.revcounter == 2 %} & {% else %}, {% endif %}{% endif %}{% endfor %} |{% endif %} {{ object.categories|join:' | ' }} | {% trans object.get_gender_display %} | {% endcache %}{% endblock %}
 
 {% block meta_description %}{{ object.description }}{% endblock %}
 
@@ -10,7 +10,7 @@
 {% block extra-styles %}
     {% cache CACHE_TIMEOUT product_detail_metaextra object.id LANGUAGE_CODE %}
     <link rel="canonical" href="{{ product_full_url }}">
-    <meta property="og:title" content="{{ object.manufacturer }} - {{ object.product_name }}"/>
+    <meta property="og:title" content="{{ object.manufacturer.name }} - {{ object.product_name }}"/>
     <meta property="og:type" content="{{ FACEBOOK_OG_TYPE }}:product"/>
     {% thumbnail object.product_image "720" upscale=False crop="noop" as im %}
     <meta property="og:image" content="{{ im.url }}"/>
@@ -38,10 +38,9 @@
 
         <div class="body-header center">
             <hgroup>
-                {% if object.manufacturer.user %}
-                <h1><a itemprop="brand" href="{{ object.manufacturer.user.get_absolute_url }}">{{ object.manufacturer }}</a></h1>
+                {% if object.manufacturer.user %} <h1><a itemprop="brand" href="{{ object.manufacturer.user.get_absolute_url }}">{{ object.manufacturer.name }}</a></h1>
                 {% else %}
-                <h1 itemprop="brand">{{ object.manufacturer }}</h1>
+                <h1 itemprop="brand">{{ object.manufacturer.name }}</h1>
                 {% endif %}
                 {% if object.product_name %}<h3 itemprop="name">{{ object.product_name }}</h3>{% endif %}
             </hgroup>
@@ -94,7 +93,7 @@
                             {% else %}
                             <a itemprop="url" href="{% gender_url object.gender 'shop' %}?manufacturer={{ object.manufacturer.id }}">
                             {% endif %}
-                                <span itemprop="name">{{ object.manufacturer }}</span>
+                                <span itemprop="name">{{ object.manufacturer.name }}</span>
                             </a>
                         </li>
                     </ol>

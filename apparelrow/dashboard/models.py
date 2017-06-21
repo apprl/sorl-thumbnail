@@ -69,6 +69,7 @@ class Sale(models.Model):
 
     user_id = models.PositiveIntegerField(null=True, blank=True, db_index=True)
     product_id = models.PositiveIntegerField(null=True, blank=True)
+    source_link = models.CharField(max_length=512, null=True, blank=True)
     placement = models.CharField(max_length=32, null=True, blank=True)
 
     status = models.CharField(max_length=1, default=INCOMPLETE, choices=STATUS_CHOICES, db_index=True)
@@ -102,7 +103,6 @@ class Sale(models.Model):
     # Linkshare specific field
     log_info = JSONField(_('Log info'), null=True, blank=True,
                  help_text='Includes information about the products contained in the sale and their status.')
-    source_link = models.CharField(max_length=512, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
@@ -427,7 +427,9 @@ class AggregatedData(models.Model):
     user_image = models.CharField(max_length=200)
 
     # totals
+    # cpo
     sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
+    # cpc / ppc_all_stores
     click_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     referral_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
     network_sale_earnings = models.DecimalField(default=decimal.Decimal(0), max_digits=10, decimal_places=2)
@@ -534,7 +536,7 @@ class UserEarning(models.Model):
     payment = models.ForeignKey('Payment', null=True)
 
     def __unicode__(self):
-        return u'%s %s %s' % (self.user, self.user_earning_type, self.amount)
+        return u'%s %s %s %s' % (self.user, self.user_earning_type, self.amount, self.date)
 
 @receiver(post_save, sender=Sale, dispatch_uid='sale_post_save')
 def sale_post_save(sender, instance, created, **kwargs):

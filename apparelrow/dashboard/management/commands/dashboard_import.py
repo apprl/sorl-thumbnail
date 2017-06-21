@@ -1,9 +1,10 @@
-import logging
 import datetime
+import logging
 import optparse
 
-from django.db.models.loading import get_model
 from django.core.management.base import BaseCommand
+
+from apparelrow.dashboard.models import Sale
 
 logger = logging.getLogger('affiliate_networks')
 
@@ -28,14 +29,16 @@ class Command(BaseCommand):
 
     def update(self, row):
         # Creates a sale only if the vendor supports Cost per order
-        if row['vendor'] and row['vendor'].is_cpo:
-            instance, created = get_model('dashboard', 'Sale').objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
 
-            if not created and instance.paid == get_model('dashboard', 'Sale').PAID_PENDING:
+        if row['vendor'] and row['vendor'].is_cpo:
+            instance, created = Sale.objects.get_or_create(affiliate=row['affiliate'], original_sale_id=row['original_sale_id'], defaults=row)
+
+            # If we have an existing pending Sale - update it. This will cause its UserEarnings to be recreated
+            # by the Sale save signal
+            if not created and instance.paid == Sale.PAID_PENDING:
                 for field in row.keys():
                     setattr(instance, field, row.get(field))
-
-            instance.save()
+                instance.save()
 
             return instance
 

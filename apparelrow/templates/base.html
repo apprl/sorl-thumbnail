@@ -413,6 +413,39 @@
     }
     return array.join('');
   };
+
+  function intcomma(number) {
+    // Implementation of django.contrib.humanize.intcomma
+    orig = number.toString();
+    new_str = orig.replace(/^(-?\d+)(\d{3})/g, "$1,$2");
+
+    if(orig === new_str) {
+      return new_str;
+    } else {
+      return intcomma(new_str);
+    }
+  }
+
+  var formatCurrency = function(amount, currency) {
+    // Turn 100 into 100.00 or 5 000 into 5000.00
+    amount = parseFloat(amount.replace(/\s+/g, '')).toFixed(2).toString();
+    amount = intcomma(amount);
+
+    if(currency === 'EUR') {
+        return '€ ' + amount;
+    } else {
+       return amount + ' ' + currency;
+    }
+  }
+
+  function currencyAsSymbol(currency) {
+      if (currency == 'EUR') {
+          return '€ ';
+      } else {
+          return currency;
+      }
+  }
+
   function currencyConversion(elements) {
     elements.each(function(index, element) {
       var $element = jQuery(element);
