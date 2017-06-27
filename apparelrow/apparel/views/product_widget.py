@@ -39,7 +39,9 @@ from apparelrow.apparel.views.shop import set_query_arguments
 
 from sorl.thumbnail import get_thumbnail
 from apparelrow.apparel.utils import JSONResponse, set_query_parameter, select_from_multi_gender, currency_exchange
+import logging
 
+log = logging.getLogger(__name__)
 
 BROWSE_PAGE_SIZE = 30
 
@@ -432,6 +434,7 @@ class EmbedProductWidgetView(TemplateView):
         response = self.render_to_response(context)
 
         # Must render the content otherwise the html ending up in memcached gets weird django tags in the beginning and the end
+        log.info("Hitting the app server for embedded product_widget %s " % (nginx_key))
         response.render()
         translation.deactivate()
         get_cache('nginx').set(nginx_key, response.content, 600)
