@@ -421,19 +421,9 @@ def clicks_detail(request):
 #
 
 
-def latest_click(request, *args, **kwargs):
-    if request.user.is_authenticated():
-        from apparelrow.statistics.models import ProductStat
-        uid = request.user.id
-        latest_created = ProductStat.objects.filter(user_id=uid).latest("created").created
-        return latest_created
-    return datetime.datetime.now()
-
-
 class DashboardView(TemplateView):
     template_name = "dashboard/new_dashboard.html"
 
-    @conditional(last_modified_func=latest_click)  # returns last modified to browser cache
     def get(self, request, *args, **kwargs):
         currency = 'EUR'
         month = None if not 'month' in self.kwargs else self.kwargs['month']
