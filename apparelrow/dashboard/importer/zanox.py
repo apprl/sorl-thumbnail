@@ -106,8 +106,6 @@ class Importer(BaseImporter):
                     logger.warning("Zanox - Connection error %s" % e)
                     return
                 #f.write(response.content)
-                import ipdb;
-                ipdb.set_trace()
                 data = response.json()
                 if 'saleItems' in data:
 

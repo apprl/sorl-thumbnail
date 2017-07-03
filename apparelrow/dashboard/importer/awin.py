@@ -31,17 +31,14 @@ class Importer(BaseImporter):
 
     def get_data(self, start_date, end_date, data=None):
         # Awin API supports only 31 days
-
+        logger.info("Awin - Start importing from Affiliate Network")
         for start_date, end_date in self.generate_subdates(start_date, end_date, 1):
-            # start_date_f = start_date .isoformat()
-            # end_date_f = end_date.isoformat()
-            print start_date
+
             url = 'https://api.awin.com/publishers/115076/transactions/?startDate={}T00%3A00%3A00&' \
                   'endDate={}T01%3A59%3A59&timezone=UTC'.format(
                 start_date,
                 end_date
             )
-
             try:
                 response = requests.get(url,
                                         headers={'Authorization': 'Bearer d910c415-9306-444f-9feb-52bdcc4e2b20'})
@@ -52,31 +49,31 @@ class Importer(BaseImporter):
             except RequestException as e:
                 logger.warning("Awin - Connection error %s" % e)
                 return
+
             report = json.loads(response.content)
             # report = test_parse() # hardcoded data until getting real data from Awin
             for row in report:
                 data_row = {}
                 data_row['original_sale_id'] = row['id']
                 data_row['affiliate'] = self.name
-                # _, data_row ['vendor'] = self.map_vendor(row['advertiserId'])
                 data_row['original_commission'] = row['commissionAmount']['amount']
                 data_row['original_currency'] = row['commissionAmount']['currency']
 
                 data_row['original_amount'] = row['saleAmount']['amount']
                 data_row['user_id'] = row['publisherId']
-                # data_row ['product_id'] =
-                # data_row ['placement'] =
                 data_row['source_link'] = row['publisherUrl']
 
                 data_row['sale_date'] = dateutil.parser.parse(row['transactionDate'])
+                # _, data_row ['vendor'] = self.map_vendor(row['advertiserId'])
+                # data_row ['product_id'] =
+                # data_row ['placement'] =
 
                 status = row['commissionStatus']
                 if status == 'deleted':
                     continue
+                    
                 data_row['status'] = self.map_status(status)
-
                 data_row = self.validate(data_row)
-                # print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
 
                 # for k, v in data_row.items():
                 #    print'report row data - {} : {}'.format(k, v)
