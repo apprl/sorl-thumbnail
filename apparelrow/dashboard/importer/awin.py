@@ -156,6 +156,11 @@ REPORT RESPONSE EXAMPLE
   }
 '''
 
+'''
+in zanox.py _, data_row ['vendor'] = self.map_vendor(row['program']['$']) 
+why do we use map_vendor when we can access vendor by row['program']['$'] ? 
+'''
+
 
 def test_parse():
     # hardcoded json object, since awin do not provide us with data yet 3-07-2017
