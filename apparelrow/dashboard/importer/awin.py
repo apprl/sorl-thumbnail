@@ -158,10 +158,16 @@ REPORT RESPONSE EXAMPLE
 
 
 def test_parse():
-    request_data = '{ "advertiserId": 1001, "advertiserName": "Example Advertiser", "publisherId": 45628, "publisherName": "Example Publisher", "region": "GB", "currency": "GBP", "impressions": 0,\
-    "clicks": 0, "pendingNo": 0, "pendingValue": 0, "pendingComm": 0, "confirmedNo": 0, "confirmedValue": 0, "confirmedComm": 0, "bonusNo": 1, "bonusValue": 0, "bonusComm": 2500, "totalNo": 1,\
-    "totalValue": 0, "totalComm": 2500, "declinedNo": 0, "declinedValue": 0, "declinedComm": 0	}'
+    # hardcoded json object, since awin do not provide us with data yet 3-07-2017
+
+    request_data = '{ "advertiserId": 1001, "advertiserName": "Example Advertiser", "publisherId": 45628, ' \
+                   '"publisherName": "Example Publisher", "region": "GB", "currency": "GBP", "impressions": 0,\
+                   "clicks": 0, "pendingNo": 0, "pendingValue": 0, "pendingComm": 0, "confirmedNo": 0, "confirmedValue": 0, ' \
+                   '"confirmedComm": 0, "bonusNo": 1, "bonusValue": 0, "bonusComm": 2500, "totalNo": 1,\
+                   "totalValue": 0, "totalComm": 2500, "declinedNo": 0, "declinedValue": 0, "declinedComm": 0	}'
     report = json.loads(request_data)
+
+
     for r in report:
         print('report row data: %s' % r)
 
