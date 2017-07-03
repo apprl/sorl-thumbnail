@@ -8,7 +8,6 @@ from apparelrow.dashboard.models import Sale
 
 logger = logging.getLogger('affiliate_networks')
 
-
 class Command(BaseCommand):
     args = ''
     help = 'Import dashboard data'

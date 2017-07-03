@@ -71,7 +71,7 @@ class Importer(BaseImporter):
                 status = row['commissionStatus']
                 if status == 'deleted':
                     continue
-                    
+
                 data_row['status'] = self.map_status(status)
                 data_row = self.validate(data_row)
 
