@@ -1,0 +1,4 @@
+#!/Users/dadoun/projects/apprl/apparelrow/bin/python2.7
+
+from scrapy.cmdline import execute
+execute()
