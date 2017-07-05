@@ -12,6 +12,12 @@ settings.py
 /apparelrow/media/styles/widget.css
 /apparelrow/media/styles/beta.css
 
+apparelrow/lib
+apparelrow/bin
+apparelrow/djcelery
+apparelrow/include
+apparelrow/scrapy
+
 # added by SE
 /apparelrow/bootstrap/bootstrap-3.3.0/docs/dist/css/bootstrap.css
 /apparelrow/bootstrap/bootstrap-3.3.0/docs/dist/css/bootstrap.css.map
