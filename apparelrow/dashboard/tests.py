@@ -1371,10 +1371,12 @@ class TestAffiliateNetworksNew(TransactionTestCase):
         url = 'https://api.awin.com/publishers/115076/transactions/?startDate=2017-04-05T00%3A00%3A00&' \
               'endDate=2017-05-03T23%3A59%3A59&timezone=UTC&accessToken=d910c415-9306-444f-9feb-52bdcc4e2b20'
         with requests_mock.mock() as m:
-            m.register_uri('GET', url, status_code=200)
+            test = m.register_uri('GET', url, status_code=200)
             #resp = m.get(url)
 
             management.call_command('dashboard_import', 'awin', data=request_data, verbosity=0, interactive=False)
+            self.assertEqual(test, request_data)
+
 
     def test_linkshare_parser(self):
         FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
