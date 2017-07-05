@@ -3,6 +3,7 @@
 import logging
 from datetime import datetime
 from decimal import Decimal as D
+from decimal import *
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
@@ -66,7 +67,8 @@ def ppo_clicks(time_range, user_id):
 def ppo_conversion_rate(time_range, user_id):
     clicks = ppo_clicks(time_range, user_id)
     if clicks:
-        return D(100) * D(ppo_sales(time_range, user_id)) / clicks
+        getcontext().prec = 4
+        return D(100) * D(ppo_sales(time_range, user_id) / clicks)
     else:
         return 0
 
