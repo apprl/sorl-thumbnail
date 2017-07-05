@@ -8,6 +8,7 @@ from apparelrow.dashboard.models import Sale
 
 logger = logging.getLogger('affiliate_networks')
 
+
 class Command(BaseCommand):
     args = ''
     help = 'Import dashboard data'
@@ -24,7 +25,7 @@ class Command(BaseCommand):
         ),
     )
 
-    affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox', 'aan','awin']
+    affiliates = ['affiliatewindow', 'cj', 'linkshare', 'tradedoubler', 'zanox', 'aan']
 
     def update(self, row):
         # Creates a sale only if the vendor supports Cost per order
