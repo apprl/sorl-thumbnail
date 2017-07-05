@@ -83,6 +83,7 @@ class Importer(BaseImporter):
 
     def get_data(self, start_date, end_date, data=None):
         logger.info("Zanox - Start importing from Affiliate Network")
+
         for start_date, end_date in self.generate_subdates(start_date, end_date, 1):
 
             page = 0
@@ -105,9 +106,9 @@ class Importer(BaseImporter):
                     logger.warning("Zanox - Connection error %s" % e)
                     return
                 #f.write(response.content)
-
                 data = response.json()
                 if 'saleItems' in data:
+
                     for row in data['saleItems']['saleItem']:
                         data_row = {}
                         data_row['original_sale_id'] = row['@id']

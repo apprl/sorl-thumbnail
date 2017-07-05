@@ -45,6 +45,7 @@ log = logging.getLogger(__name__)
 def reverse(*args, **kwargs):
     return locale_url(_reverse(*args, **kwargs), 'en')
 
+
 def get_current_month_range():
     year = datetime.date.today().year
     month = datetime.date.today().month
@@ -54,7 +55,6 @@ def get_current_month_range():
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestDashboard(TransactionTestCase):
-
     def setUp(self):
         FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
         FXRate.objects.create(currency='EUR', base_currency='SEK', rate='0.118160')
@@ -89,7 +89,7 @@ class TestDashboard(TransactionTestCase):
         self.assertFalse(normal_user.referral_partner_code)
         self.assertEqual(normal_user.get_referral_url(), None)
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -110,7 +110,7 @@ class TestDashboard(TransactionTestCase):
         value = signing.get_cookie_signer(salt=cookie_key).unsign(signed_cookie_value, max_age=None)
         self.assertEqual(str(value), str(referral_user.pk))
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_referral_link_disabled(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -127,7 +127,7 @@ class TestDashboard(TransactionTestCase):
         self.assertRedirects(response, reverse('publisher-contact'))
         self.assertNotIn(settings.APPAREL_DASHBOARD_REFERRAL_COOKIE_NAME, response.client.cookies.keys())
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_publisher_signup_from_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -137,7 +137,8 @@ class TestDashboard(TransactionTestCase):
         normal_user = get_user_model().objects.create_user('normal_user', 'normal@xvid.se', 'normal')
 
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        response = self.client.post(reverse('publisher-contact'), {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
+        response = self.client.post(reverse('publisher-contact'),
+                                    {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
 
         instance = Signup.objects.get()
         self.assertEqual(instance.name, 'test')
@@ -148,7 +149,7 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(len(mail.outbox), 1)
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_publisher_signup_from_referral_link_already_authenticated(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -160,7 +161,8 @@ class TestDashboard(TransactionTestCase):
         self.assertTrue(is_logged_in)
 
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        response = self.client.post(reverse('publisher-contact'), {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
+        response = self.client.post(reverse('publisher-contact'),
+                                    {'name': 'test', 'email': 'test@test.com', 'blog': 'blog'})
 
         instance = Signup.objects.get()
         self.assertEqual(instance.name, 'test')
@@ -171,7 +173,7 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(len(mail.outbox), 1)
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_signup_from_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -191,7 +193,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
-        self.assertEquals(response.status_code,302)
+        self.assertEquals(response.status_code, 302)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertIsNotNone(registered_user)
 
@@ -207,7 +209,8 @@ class TestDashboard(TransactionTestCase):
             log.info("Available activation codes in database:")
             for user in get_user_model().objects.all():
                 log.info("Code: %s" % user.confirmation_key)
-        self.assertTrue(response.status_code in [200,201],"User activation for %s has failed, responsecode: %s" % (registered_user,response.status_code))
+        self.assertTrue(response.status_code in [200, 201],
+                        "User activation for %s has failed, responsecode: %s" % (registered_user, response.status_code))
         # We should now be marked with a parent user (from referral URL)
         registered_user = get_user_model().objects.get(email='test@xvid.se')
         self.assertEqual(registered_user.referral_partner_parent, referral_user)
@@ -226,7 +229,7 @@ class TestDashboard(TransactionTestCase):
         self.assertEqual(sale.commission, decimal.Decimal(50))
         self.assertEqual(sale.currency, 'EUR')
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_signup_from_own_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -243,7 +246,7 @@ class TestDashboard(TransactionTestCase):
         self.assertIsNone(referral_user.referral_partner_parent)
         self.assertIsNone(referral_user.referral_partner_parent_date)
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_signup_from_invalid_referral_link(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -264,7 +267,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
-        self.assertEquals(response.status_code,302)
+        self.assertEquals(response.status_code, 302)
         welcome_mail_body = mail.outbox[0].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         response = self.client.get(activation_url)
@@ -276,7 +279,7 @@ class TestDashboard(TransactionTestCase):
         # Invalid referral link should not result in a promo sale of 50 EUR
         self.assertEqual(Sale.objects.count(), 0)
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_visit_two_referral_links(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -321,7 +324,7 @@ class TestDashboard(TransactionTestCase):
 
         self.assertEqual(Sale.objects.count(), 1)
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_referral_sale(self):
         referral_user = get_user_model().objects.create_user('referral_user', 'referral@xvid.se', 'referral')
         referral_user.referral_partner = True
@@ -330,7 +333,7 @@ class TestDashboard(TransactionTestCase):
 
         # Visit referral URL, register by email and activate account
         response = self.client.get(referral_user.get_referral_url(), follow=True)
-        self.assertTrue(response.status_code in [200,201])
+        self.assertTrue(response.status_code in [200, 201])
         response = self.client.post(reverse('auth_register_email'), {'first_name': 'test',
                                                                      'last_name': 'svensson',
                                                                      'username': 'test',
@@ -338,7 +341,7 @@ class TestDashboard(TransactionTestCase):
                                                                      'password1': 'test',
                                                                      'password2': 'test',
                                                                      'gender': 'M'})
-        self.assertEquals(response.status_code,302)
+        self.assertEquals(response.status_code, 302)
         welcome_mail_body = mail.outbox[0].body
         activation_url = re.search(r'http:\/\/testserver(.+)', welcome_mail_body).group(1)
         activation_url = activation_url.strip()
@@ -353,21 +356,23 @@ class TestDashboard(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (registered_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
 
-        self.assertEqual(Sale.objects.count(), 2) # referral sale and referral signup
+        self.assertEqual(Sale.objects.count(), 2)  # referral sale and referral signup
 
         # Verify it
         referral_signup_sale = Sale.objects.get(is_referral_sale=False)
@@ -377,31 +382,30 @@ class TestDashboard(TransactionTestCase):
         self.assertTrue(referral_user_sale.is_referral_sale)
 
         # This test
-        #self.assertEqual(referral_user_sale.referral_user, referral_user)
-        #self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        # self.assertEqual(referral_user_sale.referral_user, referral_user)
+        # self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
         # Repeat the import of the sale transaction
-        #management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
+        # management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
 
-        #self.assertEqual(Sale.objects.count(), 1)
+        # self.assertEqual(Sale.objects.count(), 1)
 
         # Verify it
-        #referral_user_sale = Sale.objects.get(is_promo=False, is_referral_sale=True)
-        #self.assertTrue(referral_user_sale.is_referral_sale)
-        #self.assertEqual(referral_user_sale.referral_user, referral_user)
-        #self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        # referral_user_sale = Sale.objects.get(is_promo=False, is_referral_sale=True)
+        # self.assertTrue(referral_user_sale.is_referral_sale)
+        # self.assertEqual(referral_user_sale.referral_user, referral_user)
+        # self.assertEqual(referral_user_sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestDashboardCuts(TransactionTestCase):
-
     def setUp(self):
         FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
         FXRate.objects.create(currency='EUR', base_currency='SEK', rate='0.118160')
         FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
         FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
 
-    def _create_partner_user(self,username='user'):
+    def _create_partner_user(self, username='user'):
         user = get_user_model().objects.create_user(username, 'user@xvid.se', 'user')
         user.is_partner = True
         user.save()
@@ -423,9 +427,11 @@ class TestDashboardCuts(TransactionTestCase):
         store = Store.objects.create(identifier=store_id, user=store_user, commission_percentage='0.2', vendor=vendor)
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id=order_id, order_value=order_value, currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id=order_id, order_value=order_value, currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         return vendor, Transaction.objects.get(store_id=store_id, order_id=order_id)
@@ -443,7 +449,8 @@ class TestDashboardCuts(TransactionTestCase):
         sale = Sale.objects.get()
         self.assertEqual(sale.type, Sale.COST_PER_ORDER)
         self.assertIsNotNone(sale)
-        self.assertEqual(sale.commission, decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(sale.commission,
+                         decimal.Decimal(100) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
 
     def test_non_default_cut(self):
         user = self._create_partner_user()
@@ -509,7 +516,8 @@ class TestDashboardCuts(TransactionTestCase):
         self.assertTrue(vendor.is_cpo)
 
         group = Group.objects.create(name='mygroup')
-        cut = Cut.objects.create(group=group, vendor=vendor, cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, referral_cut=0.2)
+        cut = Cut.objects.create(group=group, vendor=vendor, cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT,
+                                 referral_cut=0.2)
 
         user.partner_group = group
         user.save()
@@ -519,7 +527,8 @@ class TestDashboardCuts(TransactionTestCase):
         self.assertEqual(Sale.objects.count(), 1)
         sale = Sale.objects.get()
         self.assertEqual(sale.type, Sale.COST_PER_ORDER)
-        self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(sale.commission,
+                         decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         self.assertEqual(sale.status, Sale.PENDING)
         self.assertEqual(sale.paid, Sale.PAID_PENDING)
 
@@ -532,7 +541,8 @@ class TestDashboardCuts(TransactionTestCase):
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
         self.assertEqual(Sale.objects.count(), 1)
         sale = Sale.objects.get()
-        self.assertEqual(sale.commission, decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        self.assertEqual(sale.commission,
+                         decimal.Decimal(200) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         self.assertEqual(sale.status, Sale.CONFIRMED)
         self.assertEqual(sale.paid, Sale.PAID_PENDING)
 
@@ -546,7 +556,7 @@ class TestDashboardCuts(TransactionTestCase):
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
         self.assertEqual(Sale.objects.count(), 1)
         sale = Sale.objects.get()
-        #self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        # self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         self.assertEqual(sale.status, Sale.CONFIRMED)
         self.assertEqual(sale.paid, Sale.PAID_PENDING)
 
@@ -565,7 +575,7 @@ class TestDashboardCuts(TransactionTestCase):
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
         self.assertEqual(Sale.objects.count(), 1)
         sale = Sale.objects.get()
-        #self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
+        # self.assertEqual(sale.commission, decimal.Decimal(400) * decimal.Decimal(settings.APPAREL_DASHBOARD_CUT_DEFAULT))
         for earning in sale.userearning_set.all():
             self.assertEqual(earning.status, Sale.CONFIRMED)
             if earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
@@ -583,26 +593,26 @@ class TestDashboardCuts(TransactionTestCase):
         partner_user.save()
         user.partner_group = group
         user.save()
-        vendor = Vendor.objects.create(name="TestVendor",homepage="http://www.example.com",provider="aaa")
+        vendor = Vendor.objects.create(name="TestVendor", homepage="http://www.example.com", provider="aaa")
         self.assertTrue(vendor.is_cpo)
 
         cut = Cut.objects.create(vendor=vendor, group=group, cut=0.9)
-        store_commission = StoreCommission.objects.create(vendor=vendor,commission="6/10/0")
+        store_commission = StoreCommission.objects.create(vendor=vendor, commission="6/10/0")
 
-        user_remote, normal_cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id,vendor)
-        self.assertEquals(user,user_remote)
+        user_remote, normal_cut, referral_cut, publisher_cut = get_cuts_for_user_and_vendor(user.id, vendor)
+        self.assertEquals(user, user_remote)
         self.assertEquals(normal_cut, Decimal('0.9'))
-        self.assertEquals(referral_cut,Decimal('0.15'))
-        self.assertEquals(publisher_cut,Decimal('0.9'))
+        self.assertEquals(referral_cut, Decimal('0.15'))
+        self.assertEquals(publisher_cut, Decimal('0.9'))
 
-        store_commission.calculated_commissions(store_commission.commission, *get_cuts_for_user_and_vendor(user.id,vendor))
+        store_commission.calculated_commissions(store_commission.commission,
+                                                *get_cuts_for_user_and_vendor(user.id, vendor))
 
         self.assertEquals(store_commission.commission, "5-8%")
 
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestDashboardUtils(TransactionTestCase):
-
     def test_cuts(self):
         temp_user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
 
@@ -635,7 +645,6 @@ class TestDashboardUtils(TransactionTestCase):
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestUserEarnings(TransactionTestCase):
-
     def test_user_earnings_publisher_network(self):
         """ Tests UserEarnings that are generated when the user belongs to a Publisher Network and the Publisher Network
             owner doesn't belong to a Publisher Network
@@ -655,18 +664,20 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
         cut = Cut.objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
 
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -689,7 +700,7 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 54.000)
 
-        #Update a sales transaction
+        # Update a sales transaction
         for earning in earnings:
             self.assertEqual(earning.status, Sale.PENDING)
 
@@ -714,18 +725,20 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
         cut = Cut.objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
 
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -746,7 +759,7 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 60.000)
 
-        #Update a sales transaction
+        # Update a sales transaction
         for earning in earnings:
             self.assertEqual(earning.status, Sale.PENDING)
 
@@ -764,7 +777,8 @@ class TestUserEarnings(TransactionTestCase):
             owner belongs to a Publisher Network recursively
         """
 
-        super_master_owner = get_user_model().objects.create_user('super_master_owner', 'super_master_owner@xvid.se', 'super_master_owner')
+        super_master_owner = get_user_model().objects.create_user('super_master_owner', 'super_master_owner@xvid.se',
+                                                                  'super_master_owner')
         super_master_owner.owner_network_cut = 0.5
         super_master_owner.save()
 
@@ -789,18 +803,20 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
         cut = Cut.objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
 
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -827,7 +843,7 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 30.000)
 
-        #Update a sales transaction
+        # Update a sales transaction
         for earning in earnings:
             self.assertEqual(earning.status, Sale.PENDING)
 
@@ -849,16 +865,18 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -925,16 +943,18 @@ class TestUserEarnings(TransactionTestCase):
         referral_cut = Cut.objects.create(group=referral_group, vendor=vendor, cut=0.7)
         cut = Cut.objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -961,7 +981,7 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 60.000)
 
-        #Update sales status
+        # Update sales status
         sale = Sale.objects.get(user_id=temp_user.id, vendor=vendor)
         self.assertEqual(earning.status, Sale.PENDING)
 
@@ -979,15 +999,17 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = ''
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -1025,9 +1047,9 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
         rules = [{"sid": temp_user.id, "cut": 1, "tribute": 0}]
         cut = Cut.objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2, rules_exceptions=rules)
@@ -1035,9 +1057,11 @@ class TestUserEarnings(TransactionTestCase):
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -1060,7 +1084,7 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 100.000)
 
-        #Update a sales transaction
+        # Update a sales transaction
         for earning in earnings:
             self.assertEqual(earning.status, Sale.PENDING)
 
@@ -1099,19 +1123,23 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
-        rules = [{"sid": temp_user.id, "cut": 0.90, "tribute": 0.50}, {"sid": owner_user.id, "cut": 0.90, "tribute": 0.5}, {"sid": master_owner.id, "cut": 0.90, "tribute": 1}]
+        rules = [{"sid": temp_user.id, "cut": 0.90, "tribute": 0.50},
+                 {"sid": owner_user.id, "cut": 0.90, "tribute": 0.5},
+                 {"sid": master_owner.id, "cut": 0.90, "tribute": 1}]
         cut = Cut.objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2, rules_exceptions=rules)
 
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -1136,7 +1164,7 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION and earning.user == temp_user:
                 self.assertEqual(earning.amount, 45.000)
 
-        #Update a sales transaction
+        # Update a sales transaction
         for earning in earnings:
             self.assertEqual(earning.status, Sale.PENDING)
 
@@ -1165,18 +1193,20 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
         cut = Cut.objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
 
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -1199,14 +1229,12 @@ class TestUserEarnings(TransactionTestCase):
         for earning in earnings:
             self.assertEqual(earning.status, Sale.PENDING)
 
-
         # If we update the Sale transaction when it is still pending, we should get new
         # UserEarnings
         sale = Sale.objects.get(user_id=temp_user.id, vendor=vendor)
         self.assertEqual(sale.status, Sale.PENDING)
         sale.converted_commission = 200
         sale.save()
-
 
         # the new user earnings should have new amounts since the Sale commision changed
         for earning in sale.userearning_set.all():
@@ -1215,10 +1243,8 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 120.000)
 
-
         sale.status = Sale.CONFIRMED
         sale.save()
-
 
         # If we update the Sale transaction when it is confirmed, we should not get new earnings
         sale = Sale.objects.get(user_id=temp_user.id, vendor=vendor)
@@ -1233,7 +1259,6 @@ class TestUserEarnings(TransactionTestCase):
                 self.assertEqual(earning.amount, 120.000)
 
             self.assertEqual(earning.status, Sale.CONFIRMED)
-
 
     def test_user_earnings_same_owner_hierarchy(self):
         """ Tests UserEarnings that are generated when the user belongs to a Publisher Network and the Publisher Network
@@ -1255,18 +1280,20 @@ class TestUserEarnings(TransactionTestCase):
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         vendor = Vendor.objects.create(name='mystore')
         store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=vendor)
+                                     user=store_user,
+                                     commission_percentage='0.2',
+                                     vendor=vendor)
 
         cut = Cut.objects.create(group=group, vendor=vendor, cut=0.6, referral_cut=0.2)
 
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (temp_user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='500', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -1289,7 +1316,7 @@ class TestUserEarnings(TransactionTestCase):
             elif earning.user_earning_type == UE.PUBLISHER_SALE_COMMISSION:
                 self.assertEqual(earning.amount, 54.000)
 
-        #Update a sales transaction
+        # Update a sales transaction
         for earning in earnings:
             self.assertEqual(earning.status, Sale.PENDING)
 
@@ -1319,12 +1346,39 @@ class TestUserEarnings(TransactionTestCase):
         self.assertIsNone(publisher_cut_exception)
 
 
-
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestAffiliateNetworksNew(TransactionTestCase):
+    def test_awin_parser(self):
+        request_data = '[{"id": 259630312, "url": "http://www.publisher.com", "advertiserId": 7052,' \
+                       ' "publisherId": 189069,  "siteName": "Publisher",  "commissionStatus": "pending",' \
+                       '"commissionAmount": {"amount": 5.59,    "currency": "GBP"  },' \
+                       '"saleAmount": {"amount": 55.96,"currency": "GBP"  },' \
+                       '"clickRefs": {"clickRef": "12345", "clickRef2": "22222",' \
+                       ' "clickRef3": "33333","clickRef4": "44444",' \
+                       '"clickRef5": "55555", "clickRef6": "66666"},' \
+                       '"clickDate": "2017-01-23T12:18:00", "transactionDate": "2017-02-20T22:04:00",  ' \
+                       '"validationDate": null, "type": "Commission group transaction",  "declineReason": null,  ' \
+                       '"voucherCodeUsed": false, "lapseTime": 2454307, "amended": false,  "amendReason": null, ' \
+                       ' "oldSaleAmount": null, "oldCommissionAmount": null,  "clickDevice": "Windows", ' \
+                       ' "transactionDevice": "Windows",  "publisherUrl": "http://www.publisher.com/search?query=dvds",  ' \
+                       '"advertiserCountry": "GB", "orderRef": "111222333444",' \
+                       '"customParameters": [{"key": "1", "value": "555666"}, {"key": "2", "value": "example entry"},' \
+                       '{"key": "3", "value": "LLLMMMNNN"}], "transactionParts":' \
+                       '[{"commissionGroupId": 12345, "amount": 44.76}, {"commissionGroupId": 654321, "amount": 11.20}],' \
+                       '"paidToPublisher": false, "paymentId": 0, "transactionQueryId": 0, "originalSaleAmount": null}]'
+
+
+        url = 'https://api.awin.com/publishers/115076/transactions/?startDate=2017-04-05T00%3A00%3A00&' \
+              'endDate=2017-05-03T23%3A59%3A59&timezone=UTC&accessToken=d910c415-9306-444f-9feb-52bdcc4e2b20'
+        with requests_mock.mock() as m:
+            test = m.register_uri('GET', url, status_code=200)
+            #resp = m.get(url)
+
+            management.call_command('dashboard_import', 'awin', data=request_data, verbosity=0, interactive=False)
+            self.assertEqual(test, request_data)
+
 
     def test_linkshare_parser(self):
-
         FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
         FXRate.objects.create(currency='USD', base_currency='SEK', rate='0.118160')
         FXRate.objects.create(currency='SEK', base_currency='USD', rate='8.612600')
@@ -1334,16 +1388,19 @@ class TestAffiliateNetworksNew(TransactionTestCase):
 
         with requests_mock.mock() as m:
             # Setup fake responses
-            network_1 = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_network_1')).read().decode('utf-8')
+            network_1 = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_network_1')).read().decode(
+                'utf-8')
             m.register_uri('GET', '/en/reports/apprl-api/filters?network=1', text=network_1)
-            network_3 = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_network_3')).read().decode('utf-8')
+            network_3 = open(os.path.join(settings.PROJECT_ROOT, 'test_files/linkshare_network_3')).read().decode(
+                'utf-8')
             m.register_uri('GET', '/en/reports/apprl-api/filters?network=3', text=network_3)
 
             # Do the import
             # management.call_command('dashboard_import', 'linkshare', verbosity=0, interactive=False)
 
-            #self.assertEqual(m.call_count, 2) # Both networks should be queried
+            # self.assertEqual(m.call_count, 2) # Both networks should be queried
             # TODO: add more tests
+
 
 
 
@@ -1450,9 +1507,9 @@ class TestSalesPerClick(TransactionTestCase):
         self.other_vendor = Vendor.objects.create(name='Other vendor', is_cpc=True)
 
         Cut.objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
-                                                     vendor=self.vendor)
+                           vendor=self.vendor)
         Cut.objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
-                                                     vendor=self.other_vendor)
+                           vendor=self.other_vendor)
 
         category = Category.objects.create(name='Category')
         manufacturer = Brand.objects.create(name='Brand')
@@ -1496,8 +1553,8 @@ class TestSalesPerClick(TransactionTestCase):
 
         for i in range(0, 100):
             ProductStat.objects.create(product=self.product.product_name, page="BuyReferral",
-                                                                  user_id=self.user.id, vendor=self.vendor.name,
-                                                                  ip=ip, created=yesterday)
+                                       user_id=self.user.id, vendor=self.vendor.name,
+                                       ip=ip, created=yesterday)
         management.call_command('clicks_summary', verbosity=0, interactive=False)
         self.assertEqual(Sale.objects.count(), 1)
         self.assertEqual(Sale.objects.get().amount, 100)
@@ -1522,8 +1579,8 @@ class TestSalesPerClick(TransactionTestCase):
         # Generate random ProductStat data
         for i in range(0, 100):
             ProductStat.objects.create(product=self.product2.product_name, page="BuyReferral",
-                                                                  user_id=self.user.id, vendor=self.other_vendor.name,
-                                                                  ip=ip, created=yesterday)
+                                       user_id=self.user.id, vendor=self.other_vendor.name,
+                                       ip=ip, created=yesterday)
         management.call_command('clicks_summary', verbosity=0, interactive=False)
         self.assertEqual(Sale.objects.count(), 1)
 
@@ -1549,17 +1606,17 @@ class TestSalesPerClick(TransactionTestCase):
         # Generated 100 clicks yesterday
         for i in range(0, 100):
             ProductStat.objects.create(product=self.product2.product_name, page="BuyReferral",
-                                                                  user_id=self.user.id, vendor=self.vendor.name,
-                                                                  ip=ip, created=yesterday)
+                                       user_id=self.user.id, vendor=self.vendor.name,
+                                       ip=ip, created=yesterday)
         # Generated 2000 clicks today
         for i in range(0, 2000):
             ProductStat.objects.create(product=self.product2.product_name, page="BuyReferral",
-                                                                  user_id=self.user.id, vendor=self.vendor.name,
-                                                                  ip=ip)
+                                       user_id=self.user.id, vendor=self.vendor.name,
+                                       ip=ip)
         management.call_command('clicks_summary', verbosity=0, interactive=False)
         self.assertEqual(get_total_clicks_per_vendor(self.vendor), 100)
 
-    #@unittest.skip("Review this test")
+    # @unittest.skip("Review this test")
     def test_detail_clicks_amount(self):
         ''' Test that detailed data for clicks per day is being generated correctly
         '''
@@ -1567,12 +1624,12 @@ class TestSalesPerClick(TransactionTestCase):
         ip = "192.128.2.3"
         for i in range(0, 52):
             ProductStat.objects.create(product=self.product.slug, page="BuyReferral",
-                                                                  user_id=self.user.id, vendor=self.vendor.name,
-                                                                  ip=ip, created=yesterday)
+                                       user_id=self.user.id, vendor=self.vendor.name,
+                                       ip=ip, created=yesterday)
         for i in range(0, 48):
             ProductStat.objects.create(product=self.product3.slug, page="BuyReferral",
-                                                                  user_id=self.user.id, vendor=self.vendor.name,
-                                                                  ip=ip, created=yesterday)
+                                       user_id=self.user.id, vendor=self.vendor.name,
+                                       ip=ip, created=yesterday)
         management.call_command('clicks_summary', verbosity=0, interactive=False)
 
         self.assertEqual(Sale.objects.count(), 1)
@@ -1584,7 +1641,7 @@ class TestSalesPerClick(TransactionTestCase):
         dict_data = {'user_id': self.user.id, 'vendor': self.vendor.name, 'clicks': 100, 'amount': user_earning.amount,
                      'date': calendar.timegm(yesterday.timetuple())}
         response = self.client.get(reverse('clicks-detail'), dict_data,
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         response_dict = json.loads(response.content)
         sum_clicks = 0
@@ -1602,8 +1659,8 @@ class TestSalesPerClick(TransactionTestCase):
 
         for i in range(0, 100):
             ProductStat.objects.create(product=self.product.product_name, page="BuyReferral",
-                                                                  user_id=0, vendor=self.vendor.name,
-                                                                  ip=ip, created=yesterday)
+                                       user_id=0, vendor=self.vendor.name,
+                                       ip=ip, created=yesterday)
         management.call_command('clicks_summary', verbosity=0, interactive=False)
         self.assertEqual(Sale.objects.count(), 1)
 
@@ -1619,7 +1676,6 @@ class TestSalesPerClick(TransactionTestCase):
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestSalesPerClickAllStores(TransactionTestCase):
-
     def setUp(self):
         group = GroupFactory.create(name='Metro Mode', has_cpc_all_stores=True)
         self.user = UserFactory.create(username="normal_user", email="normal@xvid.se", name="normal", is_partner=True,
@@ -1659,7 +1715,8 @@ class TestSalesPerClickAllStores(TransactionTestCase):
 
         self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION).count(), 1)
         self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.APPRL_COMMISSION).count(), 2)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES).count(), 1)
+        self.assertEqual(
+            UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES).count(), 1)
 
         sale_cpc = Sale.objects.get(affiliate="cost_per_click")
         sale_cpc_all = Sale.objects.get(affiliate="cpc_all_stores")
@@ -1754,8 +1811,10 @@ class TestSalesPerClickAllStores(TransactionTestCase):
         self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION).count(), 1)
         self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_NETWORK_CLICK_TRIBUTE).count(), 1)
         self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.APPRL_COMMISSION).count(), 2)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES).count(), 1)
-        self.assertEqual(UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES).count(), 1)
+        self.assertEqual(
+            UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_SALE_CLICK_COMMISSION_ALL_STORES).count(), 1)
+        self.assertEqual(
+            UserEarning.objects.filter(user_earning_type=UE.PUBLISHER_NETWORK_CLICK_TRIBUTE_ALL_STORES).count(), 1)
 
         sale_cpc = Sale.objects.get(affiliate="cost_per_click")
         sale_cpc_all = Sale.objects.get(affiliate="cpc_all_stores")
@@ -1877,7 +1936,8 @@ class TestSalesPerClickAllStores(TransactionTestCase):
 
         # Error will be log, so the error must be fixed. It will create user earnings once error is fixed but it is
         # recommended to run clicks_summary for the regarding date again
-        mock_logger.warning('Cut for vendor %s and commission group for user %s does not exist' % (self.vendor.id, self.user.id))
+        mock_logger.warning(
+            'Cut for vendor %s and commission group for user %s does not exist' % (self.vendor.id, self.user.id))
 
         # Run job that aggregates data
         management.call_command('collect_aggregated_data', verbosity=0, interactive=False)
@@ -1923,7 +1983,8 @@ class TestSalesPerClickAllStores(TransactionTestCase):
 
         clicks = 4
         for i in range(clicks):
-            product_stat = ProductStatFactory.create(ip="1.2.3.4", vendor=cpo_vendor.name, product=self.product_cpo.slug,
+            product_stat = ProductStatFactory.create(ip="1.2.3.4", vendor=cpo_vendor.name,
+                                                     product=self.product_cpo.slug,
                                                      user_id=self.user.id, created=yesterday)
             self.assertTrue(product_stat.is_valid)
 
@@ -1979,9 +2040,9 @@ class TestSalesPerClickAllStores(TransactionTestCase):
                 self.assertEqual(row.total_clicks, 4)
                 self.assertEqual(row.paid_clicks, 4)
 
+
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestPayments(TransactionTestCase):
-
     def test_create_payments(self):
         publisher_1 = make(get_user_model())
         publisher_2 = make(get_user_model())
@@ -1990,7 +2051,7 @@ class TestPayments(TransactionTestCase):
 
         make(UserEarning, user=publisher_1, amount=200, status=Sale.CONFIRMED)
         make(UserEarning, user=publisher_1, amount=100, status=Sale.CONFIRMED)
-        make(UserEarning, user=publisher_1, amount=50, status=Sale.PENDING)       # this won't count since it isn't confirmed
+        make(UserEarning, user=publisher_1, amount=50, status=Sale.PENDING)  # this won't count since it isn't confirmed
 
         make(UserEarning, user=publisher_2, amount=120, status=Sale.CONFIRMED)
 
@@ -2004,7 +2065,7 @@ class TestPayments(TransactionTestCase):
         self.assertEqual(payment_1.amount, 300)
         self.assertEqual({
             p for p in payment_1.userearning_set.all().values_list('user', 'amount', 'paid')
-        },{
+        }, {
             (publisher_1.pk, 100, Sale.PAID_READY),
             (publisher_1.pk, 200, Sale.PAID_READY)
         })
@@ -2026,12 +2087,14 @@ class TestPayments(TransactionTestCase):
         publisher = make(get_user_model())
 
         # create a single earning that won't reach limit
-        make(UserEarning, user=publisher, amount=(settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT / 2.0), status=Sale.CONFIRMED)
+        make(UserEarning, user=publisher, amount=(settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT / 2.0),
+             status=Sale.CONFIRMED)
         management.call_command('dashboard_payment', verbosity=0, interactive=False)
         self.assertEqual(Payment.objects.count(), 0)
 
         # create another, this should let us reach the limit
-        make(UserEarning, user=publisher, amount=(settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT / 2.0), status=Sale.CONFIRMED)
+        make(UserEarning, user=publisher, amount=(settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT / 2.0),
+             status=Sale.CONFIRMED)
 
         management.call_command('dashboard_payment', verbosity=0, interactive=False)
         self.assertEqual(Payment.objects.count(), 1)
@@ -2065,11 +2128,11 @@ class TestPayments(TransactionTestCase):
         self.assertFalse(second_payment.cancelled)
         self.assertEqual(second_payment.amount, 300)
         self.assertEqual({
-                             p for p in second_payment.userearning_set.all().values_list('amount', 'paid')
-                             }, {
-                             (200, Sale.PAID_READY),
-                             (100, Sale.PAID_READY),
-                         })
+            p for p in second_payment.userearning_set.all().values_list('amount', 'paid')
+        }, {
+            (200, Sale.PAID_READY),
+            (100, Sale.PAID_READY),
+        })
         self.assertEqual(second_payment.userearning_set.count(), 2)
 
     def test_create_new_payment_before_last_was_paid_should_work_with_old_userearnings(self):
@@ -2137,12 +2200,12 @@ class TestPayments(TransactionTestCase):
         # payment = Payment.objects.get()
         self.assertFalse(payment.paid)
         self.assertTrue(payment.cancelled)
-        self.assertEqual(payment.userearning_set.count(), 0)    # any earnings have been removed from payment
+        self.assertEqual(payment.userearning_set.count(), 0)  # any earnings have been removed from payment
 
         earning = UserEarning.objects.get()
-        self.assertIsNone(earning.payment)   # UserEarning is still around, but has no associated payment
-        self.assertEqual(earning.paid, Sale.PAID_PENDING)   # paid is reverted to pending
-        self.assertEqual(earning.status, Sale.CONFIRMED)    # status is left as is
+        self.assertIsNone(earning.payment)  # UserEarning is still around, but has no associated payment
+        self.assertEqual(earning.paid, Sale.PAID_PENDING)  # paid is reverted to pending
+        self.assertEqual(earning.status, Sale.CONFIRMED)  # status is left as is
 
         # not allowed since it is cancelled
         with self.assertRaises(AssertionError):
@@ -2161,17 +2224,17 @@ class TestAggregatedData(TransactionTestCase):
         self.vendor_cpc = Vendor.objects.create(name='mystorecpc', is_cpc=True, is_cpo=False)
         self.group = Group.objects.create(name='mygroup')
         self.cut = Cut.objects.create(group=self.group, vendor=self.vendor, cut=0.6,
-                                                                referral_cut=0.2)
+                                      referral_cut=0.2)
         store_user = get_user_model().objects.create_user('store', 'store@xvid.se', 'store')
         self.store = Store.objects.create(identifier='mystore',
-                                                                user=store_user,
-                                                                commission_percentage='0.2',
-                                                                vendor=self.vendor)
+                                          user=store_user,
+                                          commission_percentage='0.2',
+                                          vendor=self.vendor)
 
         store_user_cpc = get_user_model().objects.create_user('storecpc', 'storecpc@xvid.se', 'store')
         self.storecpc = Store.objects.create(identifier='mystorecpc',
-                                                                user=store_user_cpc,
-                                                                vendor=self.vendor_cpc)
+                                             user=store_user_cpc,
+                                             vendor=self.vendor_cpc)
 
         self.user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
         self.user.partner_group = self.group
@@ -2197,9 +2260,11 @@ class TestAggregatedData(TransactionTestCase):
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (self.user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
         # Import the sale transaction
@@ -2239,12 +2304,14 @@ class TestAggregatedData(TransactionTestCase):
         store_id = 'mystore'
         url = 'http://www.mystore.com/myproduct/'
         custom = '%s-Shop' % (self.user.pk,)
-        response = self.client.get('%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
+        response = self.client.get(
+            '%s?store_id=%s&url=%s&custom=%s' % (reverse('advertiser-link'), store_id, url, custom))
         self.assertEqual(response.status_code, 302)
-        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
+        response = self.client.get('%s?%s' % (reverse('advertiser-pixel'), urllib.urlencode(
+            dict(store_id='mystore', order_id='1234', order_value='5000', currency='EUR'))))
         self.assertEqual(response.status_code, 200)
 
-         # Import the sale transaction
+        # Import the sale transaction
         management.call_command('dashboard_import', 'aan', verbosity=0, interactive=False)
         self.assertEqual(Sale.objects.count(), 1)
         self.assertEqual(UserEarning.objects.count(), 3)
@@ -2309,7 +2376,7 @@ class TestAggregatedData(TransactionTestCase):
         )
         self.assertGreater(len(product.product_name), 100)
         AggregatedData.objects.create(aggregated_from_name=product.product_name,
-                                                                aggregated_from_slug=product.slug)
+                                      aggregated_from_slug=product.slug)
 
         self.assertEqual(AggregatedData.objects.count(), 1)
         aggregated_data = AggregatedData.objects.latest("created")
@@ -2317,15 +2384,15 @@ class TestAggregatedData(TransactionTestCase):
 
     def test_fields_none_or_too_long(self):
         long_string = ""
-        for i in range(0,205):
+        for i in range(0, 205):
             long_string += "a"
         self.assertGreater(len(long_string), 200)
 
-        AggregatedDataFactory.create(aggregated_from_name=None,aggregated_from_slug=None,
-                                     aggregated_from_link=None,aggregated_from_image=None)
+        AggregatedDataFactory.create(aggregated_from_name=None, aggregated_from_slug=None,
+                                     aggregated_from_link=None, aggregated_from_image=None)
 
-        AggregatedDataFactory.create(aggregated_from_name=long_string,aggregated_from_slug=long_string,
-                                     aggregated_from_link=long_string,aggregated_from_image=long_string)
+        AggregatedDataFactory.create(aggregated_from_name=long_string, aggregated_from_slug=long_string,
+                                     aggregated_from_link=long_string, aggregated_from_image=long_string)
 
         self.assertEqual(AggregatedData.objects.count(), 2)
         aggregated_data = AggregatedData.objects.latest("created")
@@ -2347,31 +2414,31 @@ class TestAggregatedDataModules(TransactionTestCase):
     def test_get_aggregated_products_and_publishers(self):
         year = 2015
         month = 1
-        order_day = datetime.date(year, month ,15)
-        click_day = order_day+relativedelta(days=-1)
+        order_day = datetime.date(year, month, 15)
+        click_day = order_day + relativedelta(days=-1)
 
         # Generate Earnings and click data with product information
         vendor = VendorFactory.create(name="Vendor Aggregated CPO")
         product = ProductFactory.create(slug="product-number-1", product_name="Product 1")
         VendorProductFactory.create(vendor=vendor, product=product)
         Cut.objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
-                                                     vendor=vendor)
+                           vendor=vendor)
 
         vendor_cpc = VendorFactory.create(name="Vendor Aggregated CPC", is_cpo=False, is_cpc=True)
         product_cpc = ProductFactory.create(slug="product-number-2", product_name="Product 2")
         VendorProductFactory.create(vendor=vendor_cpc, product=product_cpc)
         cut_obj = Cut.objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
-                                                     vendor=vendor_cpc)
+                                     vendor=vendor_cpc)
         click_cost = ClickCost.objects.create(vendor=vendor_cpc, amount=1.00, currency="EUR")
 
         # Generate clicks for CPO
         for index in range(200):
-            ProductStatFactory.create(vendor=vendor.name, is_valid=True, ip= "1.22.3.4", product=product.slug,
+            ProductStatFactory.create(vendor=vendor.name, is_valid=True, ip="1.22.3.4", product=product.slug,
                                       created=click_day, user_id=self.user.id)
 
         # Generate clicks for CPC
         for index in range(100):
-            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.22.3.4", product=product_cpc.slug,
+            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip="1.22.3.4", product=product_cpc.slug,
                                       created=click_day, user_id=self.user.id)
 
         self.assertEqual(ProductStat.objects.filter(user_id=self.user.id).count(), 300)
@@ -2384,16 +2451,17 @@ class TestAggregatedDataModules(TransactionTestCase):
         # Generate earnings CPO
         for index in range(1, 11):
             SaleFactory.create(user_id=self.user.id, vendor=vendor, product_id=product.id, created=click_day,
-                               sale_date=click_day, pk=index+1000)
+                               sale_date=click_day, pk=index + 1000)
         self.assertEqual(Sale.objects.filter(user_id=self.user.id).count(), 11)
         self.assertEqual(Sale.objects.filter(user_id=self.user.id, affiliate="cost_per_click").count(), 1)
 
         # We should have 22 user earnings from 11 sales (10 cpo + 1 cpc), half to user and half to apprl
-        self.assertEqual(UserEarning.objects.filter(user=self.user).count(), 11) # to user
-        self.assertEqual(UserEarning.objects.filter(user=None).count(), 11)   # to apprl
+        self.assertEqual(UserEarning.objects.filter(user=self.user).count(), 11)  # to user
+        self.assertEqual(UserEarning.objects.filter(user=None).count(), 11)  # to apprl
 
         # 67 % of 10 x 50 commission sales to user to user based on cut, rest to apprl
-        self.assertEqual([33.5] * 10, [u.amount for u in UserEarning.objects.filter(from_product=product, user=self.user)])
+        self.assertEqual([33.5] * 10,
+                         [u.amount for u in UserEarning.objects.filter(from_product=product, user=self.user)])
         self.assertEqual([16.5] * 10, [u.amount for u in UserEarning.objects.filter(from_product=product, user=None)])
 
         management.call_command('collect_aggregated_data', verbosity=0, interactive=False, date="2015-01-14")
@@ -2403,19 +2471,19 @@ class TestAggregatedDataModules(TransactionTestCase):
         top_products = get_aggregated_products(None, start_date, end_date)
         self.assertEqual(len(top_products), 2)
 
-        cpo_commission = 50 * 10 * decimal.Decimal(cut_obj.cut) # EUR - the 50 comes from Sales factory defaults
+        cpo_commission = 50 * 10 * decimal.Decimal(cut_obj.cut)  # EUR - the 50 comes from Sales factory defaults
         self.assertEqual(top_products[0]['total_earnings'], cpo_commission)
         self.assertEqual(top_products[0]['total_network_earnings'], 0)
         self.assertEqual(top_products[0]['total_clicks'], 200)
 
-        cpc_commission = 100 * 1 * decimal.Decimal(cut_obj.cut) # EUR
+        cpc_commission = 100 * 1 * decimal.Decimal(cut_obj.cut)  # EUR
         self.assertEqual(top_products[1]['total_earnings'], cpc_commission)
         self.assertEqual(top_products[1]['total_network_earnings'], 0)
         self.assertEqual(top_products[1]['total_clicks'], 100)
 
         # Check data from get_aggregated_publishers is correct
         top_publishers = get_admin_aggregated_publishers(start_date, end_date)
-        publisher_commission = (cpo_commission  + cpc_commission)
+        publisher_commission = (cpo_commission + cpc_commission)
         self.assertEqual(len(top_publishers), 1)
         self.assertEqual(top_publishers[0]['user_id'], self.user.id)
         self.assertEqual(top_publishers[0]['total_earnings'], publisher_commission)
@@ -2423,7 +2491,7 @@ class TestAggregatedDataModules(TransactionTestCase):
         self.assertEqual(top_publishers[0]['total_network_earnings'], 0)
 
         top_publishers = get_admin_aggregated_publishers(start_date, end_date)
-        publisher_commission = (cpo_commission  + cpc_commission)
+        publisher_commission = (cpo_commission + cpc_commission)
         self.assertEqual(len(top_publishers), 1)
         self.assertEqual(top_publishers[0]['user_id'], self.user.id)
         self.assertEqual(top_publishers[0]['total_earnings'], publisher_commission)
@@ -2447,9 +2515,7 @@ class TestAggregatedDataModules(TransactionTestCase):
         self.assertEqual(len(top_publishers), 0)
 
 
-
 class TestAdminDashboard(TestCase):
-
     def test_massive_earnings_admin_dashboard(self):
         user = UserFactory.create()
         vendor = VendorFactory.create()
@@ -2463,7 +2529,6 @@ class TestAdminDashboard(TestCase):
 
 
 class TestUtils(TransactionTestCase):
-
     def setUp(self):
         self.group = Group.objects.create(name='group_name')
 
@@ -2478,10 +2543,10 @@ class TestUtils(TransactionTestCase):
 
         ClickCost.objects.create(vendor=self.vendor_cpc, amount=1.00, currency="EUR")
         Cut.objects.create(cut=settings.APPAREL_DASHBOARD_CUT_DEFAULT, group=self.group,
-                                                     vendor=self.vendor_cpc)
+                           vendor=self.vendor_cpc)
         self.short_link = ShortLinkFactory(user=self.user)
         # this is used to test the link compression. We add a few unicode chars to make it can handle those too
-        self.long_source_link = u'http://' + u'x'*(settings.LINKS_COMPRESSION_MAX_LEN+10) + u'/öäå'
+        self.long_source_link = u'http://' + u'x' * (settings.LINKS_COMPRESSION_MAX_LEN + 10) + u'/öäå'
 
     def test_generate_sid_no_data(self):
         product_id = None
@@ -2511,7 +2576,6 @@ class TestUtils(TransactionTestCase):
         sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=source_link)
         self.assertEqual(sid, "%s-%s-%s/%s" % (target_user_id, product_id, page, source_link))
 
-
     def test_generate_sid_with_long_source_link(self):
         product_id = 20
         target_user_id = self.user.id
@@ -2519,7 +2583,8 @@ class TestUtils(TransactionTestCase):
         sid = generate_sid(product_id, target_user_id=target_user_id, page=page, source_link=self.long_source_link)
         compressed_link = compress_source_link_if_needed(self.long_source_link)
         self.assertEqual(sid, u"%s-%s-%s/%s" % (target_user_id, product_id, page, compressed_link))
-        self.assertEqual(self.long_source_link, CompressedLink.objects.get(key=compressed_link_key(self.long_source_link)).link)
+        self.assertEqual(self.long_source_link,
+                         CompressedLink.objects.get(key=compressed_link_key(self.long_source_link)).link)
 
     def test_parse_sid(self):
         sid = "12-21-Ext-Store/http://apprl.com/p/AJSJ"
@@ -2583,8 +2648,8 @@ class TestUtils(TransactionTestCase):
         month = None
 
         today = datetime.datetime.today()
-        first_date = today.replace(day = 1).date()
-        last_date = today.replace(day = calendar.monthrange(today.year, today.month)[1]).date()
+        first_date = today.replace(day=1).date()
+        last_date = today.replace(day=calendar.monthrange(today.year, today.month)[1]).date()
 
         start_date, end_date = parse_date(month, year)
 
@@ -2610,7 +2675,6 @@ class TestUtils(TransactionTestCase):
         self.assertEquals(start_date, datetime.date(2015, 04, 01))
         self.assertEquals(stop_date, datetime.date(2015, 04, 30))
 
-
         start_date, stop_date = parse_date(today.month, today.year, first_to_first=True)
         self.assertEquals(start_date, datetime.date(2015, 04, 01))
         self.assertEquals(stop_date, datetime.date(2015, 05, 01))
@@ -2621,24 +2685,24 @@ class TestUtils(TransactionTestCase):
         """ Test months choices, year choices and display text for month passed as input are correct.
         """
         june = 06
-        year_list = [row for row in range(self.user.date_joined.year, datetime.date.today().year+1)]
+        year_list = [row for row in range(self.user.date_joined.year, datetime.date.today().year + 1)]
 
         month_display, month_choices, year_choices = enumerate_months(self.user, june)
         self.assertEqual(month_display, "June")
         self.assertEqual(year_choices, year_list)
-        self.assertEqual(len(month_choices), 13) # 12 months  All Year option
+        self.assertEqual(len(month_choices), 13)  # 12 months  All Year option
 
     def test_enumerate_months_is_admin(self):
         """ Test months choices, year choices and display text for month passed as input are correct when
         logged as an admin. It should return a list of years since 2011 until the current year.
         """
         june = 06
-        year_list = [row for row in range(2011, datetime.date.today().year+1)]
+        year_list = [row for row in range(2011, datetime.date.today().year + 1)]
 
         month_display, month_choices, year_choices = enumerate_months(self.user, june, is_admin=True)
         self.assertEqual(month_display, "June")
         self.assertEqual(year_choices, year_list)
-        self.assertEqual(len(month_choices), 13) # 12 months  All Year option
+        self.assertEqual(len(month_choices), 13)  # 12 months  All Year option
 
     def test_get_previous_month(self):
         year = "2015"
@@ -2719,7 +2783,7 @@ class TestUtils(TransactionTestCase):
         percentage_delta = get_relative_change(previous_value, current_value)
         self.assertEqual(percentage_delta, None)
 
-    @override_settings(GEOIP_DEBUG=True,GEOIP_RETURN_LOCATION="SE")
+    @override_settings(GEOIP_DEBUG=True, GEOIP_RETURN_LOCATION="SE")
     def test_invalid_clicks(self):
 
         se = Location.objects.create(code='SE')
@@ -2729,16 +2793,16 @@ class TestUtils(TransactionTestCase):
         vendor_cpo.locations.add(se)
 
         for index in range(152):
-            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=False, ip= "1.2.3.4")
+            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=False, ip="1.2.3.4")
 
         for index in range(27):
-            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip= "1.2.3.4")
+            ProductStatFactory.create(vendor=vendor_cpc.name, is_valid=True, ip="1.2.3.4")
 
         for index in range(248):
-            ProductStatFactory.create(vendor=vendor_cpo.name, is_valid=False, ip= "1.2.3.4")
+            ProductStatFactory.create(vendor=vendor_cpo.name, is_valid=False, ip="1.2.3.4")
 
         for index in range(35):
-            ProductStatFactory.create(vendor=vendor_cpo.name, is_valid=True, ip= "1.2.3.4")
+            ProductStatFactory.create(vendor=vendor_cpo.name, is_valid=True, ip="1.2.3.4")
 
         start_date, end_date = get_day_range(datetime.datetime.today())
         invalid_clicks = get_invalid_clicks(start_date, end_date)
@@ -2789,12 +2853,12 @@ class TestUtils(TransactionTestCase):
         is_cpc_all = check_user_has_cpc_all_stores(user)
         self.assertTrue(is_cpc_all)
 
+
 class MockRequest(object):
     pass
 
 
 class TestReferralBonus(TransactionTestCase):
-
     def setUp(self):
         self.user = get_user_model().objects.create_user('test_user', 'testuser@xvid.se', 'Test User')
         self.user.is_partner = True
@@ -2804,11 +2868,11 @@ class TestReferralBonus(TransactionTestCase):
         self.request_obj = MockRequest()
 
         self.referral_bonus_dict = {'is_promo': True, 'user_id': self.user.pk, 'affiliate': 'referral_promo',
-                                'cut': '1.0', 'status': Sale.CONFIRMED, 'exchange_rate': '1.0',
-                                'original_sale_id': 'referral_promo_%s' % self.user.pk, 'original_amount': '0.0',
-                                'original_commission': '0.0', 'original_currency': 'EUR', 'amount': '0.0',
-                                'type': Sale.COST_PER_ORDER, 'commission': '0.0',  'currency': 'EUR',
-                                'paid': Sale.PAID_PENDING, 'converted_amount': '0.0', 'converted_commission': '0.0'}
+                                    'cut': '1.0', 'status': Sale.CONFIRMED, 'exchange_rate': '1.0',
+                                    'original_sale_id': 'referral_promo_%s' % self.user.pk, 'original_amount': '0.0',
+                                    'original_commission': '0.0', 'original_currency': 'EUR', 'amount': '0.0',
+                                    'type': Sale.COST_PER_ORDER, 'commission': '0.0', 'currency': 'EUR',
+                                    'paid': Sale.PAID_PENDING, 'converted_amount': '0.0', 'converted_commission': '0.0'}
 
     def test_referral_bonus_from_admin(self):
         """ Test a referral bonus can be created for a user from Django admin and only one time
@@ -2842,7 +2906,7 @@ class TestReferralBonus(TransactionTestCase):
     def test_referral_bonus_from_admin_user_does_not_exist(self):
         """ Test form for create a referral bonus from Django admin is not valid if User with user_id does not exist
         """
-        no_user_dict =  self.referral_bonus_dict
+        no_user_dict = self.referral_bonus_dict
         no_user_dict['user_id'] = 9999
 
         sale_admin_form = SaleAdminFormCustom(data=no_user_dict)
@@ -2851,7 +2915,7 @@ class TestReferralBonus(TransactionTestCase):
     def test_save_not_referral_bonus_from_admin(self):
         """ Test more than one sale with exactly the same parameters and with is_promo=False can be created
         """
-        no_referral_bonus =  self.referral_bonus_dict
+        no_referral_bonus = self.referral_bonus_dict
         no_referral_bonus['is_promo'] = False
 
         sale_admin_form = SaleAdminFormCustom(data=no_referral_bonus)
@@ -2891,7 +2955,8 @@ class TestStoreCommission(TransactionTestCase):
         _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
 
         ClickCost.objects.create(vendor=vendor, amount=1.5, currency="SEK")
-        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut,
+                                                                                     normal_cut, standard_from, store)
 
         self.assertAlmostEqual(amount, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
         self.assertAlmostEqual(amount_float, decimal.Decimal(1.5) * publisher_cut * normal_cut, 2)
@@ -2902,7 +2967,8 @@ class TestStoreCommission(TransactionTestCase):
     def get_store_earnings_cpc_all_stores_rules_exceptions(self):
         rules = [{"sid": self.user.id, "cut": 0.5, "tribute": 0.5}]
         vendor = VendorFactory.create(is_cpc=True)
-        cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="SEK", cut=0.6, rules_exceptions=rules)
+        cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="SEK",
+                                cut=0.6, rules_exceptions=rules)
         self.group.has_cpc_all_stores = True
         self.group.save()
 
@@ -2911,7 +2977,8 @@ class TestStoreCommission(TransactionTestCase):
         _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
 
         ClickCost.objects.create(vendor=vendor, amount=1.5, currency="SEK")
-        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut,
+                                                                                     normal_cut, standard_from, store)
 
         self.assertAlmostEqual(decimal.Decimal(amount), cut.locale_cpc_amount * decimal.Decimal(0.5), 2)
         self.assertAlmostEqual(amount_float, cut.locale_cpc_amount * decimal.Decimal(0.5), 2)
@@ -2923,7 +2990,7 @@ class TestStoreCommission(TransactionTestCase):
         rules = [{"sid": self.user.id, "cut": 0.5, "tribute": 0.5}]
         vendor = VendorFactory.create(is_cpc=True)
         cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="EUR",
-                          cut=0.6, rules_exceptions=rules)
+                                cut=0.6, rules_exceptions=rules)
         self.group.has_cpc_all_stores = True
         self.group.save()
 
@@ -2936,9 +3003,11 @@ class TestStoreCommission(TransactionTestCase):
         _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
 
         ClickCost.objects.create(vendor=vendor, amount=1.5, currency="SEK")
-        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut,
+                                                                                     normal_cut, standard_from, store)
 
-        self.assertAlmostEqual(decimal.Decimal(amount), cut.locale_cpc_amount * decimal.Decimal(0.5) * decimal.Decimal(0.5), 2)
+        self.assertAlmostEqual(decimal.Decimal(amount),
+                               cut.locale_cpc_amount * decimal.Decimal(0.5) * decimal.Decimal(0.5), 2)
         self.assertAlmostEqual(amount_float, cut.locale_cpc_amount * decimal.Decimal(0.5) * decimal.Decimal(0.5), 2)
         self.assertEqual(currency, cut.locale_cpc_currency)
         self.assertEqual(earning_type, "is_cpc")
@@ -2947,7 +3016,7 @@ class TestStoreCommission(TransactionTestCase):
     def get_store_earnings_cpc_all_stores_with_owner(self):
         vendor = VendorFactory.create(is_cpc=True)
         cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="EUR",
-                          cut=0.6)
+                                cut=0.6)
         self.group.has_cpc_all_stores = True
         self.group.save()
 
@@ -2960,7 +3029,8 @@ class TestStoreCommission(TransactionTestCase):
         _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
 
         ClickCost.objects.create(vendor=vendor, amount=1.5, currency="SEK")
-        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut,
+                                                                                     normal_cut, standard_from, store)
 
         self.assertAlmostEqual(decimal.Decimal(amount), cut.locale_cpc_amount * decimal.Decimal(0.9), 2)
         self.assertAlmostEqual(amount_float, cut.locale_cpc_amount * decimal.Decimal(0.9), 2)
@@ -2971,7 +3041,7 @@ class TestStoreCommission(TransactionTestCase):
     def get_store_earnings_cpc_all_stores(self):
         vendor = VendorFactory.create(is_cpc=True)
         cut = CutFactory.create(group=self.group, vendor=vendor, cpc_amount=decimal.Decimal(3.00), cpc_currency="EUR",
-                          cut=0.6)
+                                cut=0.6)
         self.group.has_cpc_all_stores = True
         self.group.save()
 
@@ -2980,12 +3050,11 @@ class TestStoreCommission(TransactionTestCase):
         _, normal_cut, _, publisher_cut = get_cuts_for_user_and_vendor(self.user.id, vendor)
 
         ClickCost.objects.create(vendor=vendor, amount=1.5, currency="SEK")
-        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut, normal_cut, standard_from, store)
+        amount, amount_float, currency, earning_type, type_code = get_store_earnings(self.user, vendor, publisher_cut,
+                                                                                     normal_cut, standard_from, store)
 
         self.assertAlmostEqual(decimal.Decimal(amount), cut.locale_cpc_amount, 2)
         self.assertAlmostEqual(amount_float, cut.locale_cpc_amount, 2)
         self.assertEqual(currency, cut.locale_cpc_currency)
         self.assertEqual(earning_type, "is_cpc")
         self.assertEqual(type_code, 0)
-
-
