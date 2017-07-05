@@ -12,6 +12,7 @@ settings.py
 /apparelrow/media/styles/widget.css
 /apparelrow/media/styles/beta.css
 
+apparelrow/pip-selfcheck.json
 apparelrow/lib
 apparelrow/bin
 apparelrow/djcelery
