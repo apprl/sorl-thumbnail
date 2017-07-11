@@ -43,7 +43,8 @@ class FacebookProfileBackend(ModelBackend):
         """
         if fb_uid and fb_graphtoken:
             graph = facebook.GraphAPI(fb_graphtoken)
-            me = graph.get_object('me')
+            me = graph.get_object('me', fields='first_name, last_name, email, name, gender')
+            #me = graph.get_object('me')
 
             defaults = {'username': fb_uid}
             if me:
