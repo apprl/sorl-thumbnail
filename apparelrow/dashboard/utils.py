@@ -715,6 +715,8 @@ def get_top_clicked_products(user_id, start_date, end_date, limit=5):
     Return summary per product for the given period.
     Note that this method uses __range function which is non inclusive when using Date.
     """
+    # import ipdb; ipdb.set_trace()
+
     filter_dict = dict()
     filter_dict['created__range'] = (start_date, end_date)
     network_influencers = get_user_model().objects.filter(owner_network__id=user_id).values_list('id', flat=True)
@@ -727,7 +729,7 @@ def get_top_clicked_products(user_id, start_date, end_date, limit=5):
     from apparelrow.statistics.models import ProductStat
     top_clicked_product_links = ProductStat.objects.values('source_link', 'product').filter(
         **filter_dict).annotate(
-        total_clicks=Count('source_link')).order_by('total_clicks')[:limit]
+        total_clicks=Count('source_link')).order_by('-total_clicks')[:limit]
 
     # Make list of source links and add default image
     top_source_links = [
@@ -929,13 +931,3 @@ def check_user_has_cpc_all_stores(user):
     Check if user exists, belongs to a partner group and publisher gets paid per click for all stores
     """
     return hasattr(user, 'partner_group') and hasattr(user.partner_group, 'has_cpc_all_stores') and user.partner_group.has_cpc_all_stores
-
-
-def conditional(**kwargs):
-    """
-    A wrapper around :func:`django.views.decorators.http.condition` that
-    works for methods (i.e. class-based views).
-    """
-    from django.views.decorators.http import condition
-    from django.utils.decorators import method_decorator
-    return method_decorator(condition(**kwargs))
