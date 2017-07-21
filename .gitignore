@@ -11,11 +11,7 @@ settings.py
 /apparelrow/media/styles/screen.css
 /apparelrow/media/styles/widget.css
 /apparelrow/media/styles/beta.css
-<<<<<<< HEAD
 
-=======
->>>>>>> 2f6b94dba293f456fc1bd91d0c9f7355057b383c
-apparelrow/pip-selfcheck.json
 apparelrow/lib
 apparelrow/bin
 apparelrow/djcelery
