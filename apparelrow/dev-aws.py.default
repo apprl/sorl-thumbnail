@@ -103,4 +103,7 @@ if EMAIL_DEBUG:
 
 ALLOWED_HOSTS = ['dev-aws.apprl.com','staging.apprl.com','{{ hostname }}.apprl.com','{{ internal_ip }}', '.apparelrow.com']
 
-GEOIP_URL = 'http://staging-geoip.apprl.com/ip/%s'
+GEOIP_URL = 'http://staging-geoip.apprl.com/ip/%s
+
+AWS_S3_CUSTOM_DOMAIN = 's-staging.apprl.com'  # cloudfront'
+AWS_S3_REGION_NAME = 'us-east-1'

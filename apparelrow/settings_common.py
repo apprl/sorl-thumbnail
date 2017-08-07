@@ -190,7 +190,15 @@ AWS_HEADERS = {
     'Cache-Control': 'max-age=86400, public',
 }
 AWS_QUERYSTRING_AUTH = False
-AWS_S3_SECURE_URLS = False
+
+#AWS_S3_SECURE_URLS = False
+AWS_S3_SECURE_URLS = True
+AWS_PRELOAD_METADATA = False
+AWS_S3_REGION_NAME = "eu-west-1"
+AWS_S3_URL_PROTOCOL = "https:"
+AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'  # cloudfront
+
+
 # TODO: use if django-storages is upgraded
 #AWS_PRELOAD_METADATA = True
 STATICFILES_STORAGE = 'apparelrow.storage.CachedStaticS3BotoStorage'
