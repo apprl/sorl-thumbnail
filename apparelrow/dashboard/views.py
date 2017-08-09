@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import get_language
+from django.views.decorators.http import condition
 from django.views.generic import TemplateView
 
 from apparelrow.apparel.models import Vendor, Product
@@ -418,6 +419,8 @@ def clicks_detail(request):
 #
 # PUBLISHER DASHBOARD
 #
+
+
 class DashboardView(TemplateView):
     template_name = "dashboard/new_dashboard.html"
 
@@ -467,7 +470,7 @@ class DashboardView(TemplateView):
                                                    include_all_network_influencers=True)
 
         # Aggregate products per month
-        top_products = get_aggregated_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
+        top_products = get_top_clicked_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
         month_stats = self.month_stats(year, month, request.user.id)
 

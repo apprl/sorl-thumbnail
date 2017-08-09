@@ -276,8 +276,8 @@ def process_comment_product_comment(recipient, sender, comment, **kwargs):
             elif notification_setting == 'F':
                 if is_following(comment_obj.user, sender):
                     notify_users.add(comment_obj.user)
-
-    title = u'%s %s' % (content_object.manufacturer, content_object.product_name)
+    brand_name = content_object.manufacturer and content_object.manufacturer.name or ''
+    title = u'%s %s' % (brand_name, content_object.product_name)
     if notify_users and sender:
         notify_by_mail(list(notify_users), 'comment_product_comment', sender, {
             'object_title': title,
@@ -365,8 +365,9 @@ def process_comment_product_wardrobe(recipient, sender, comment, **kwargs):
                     notify_users.add(product_like.user)
 
     if notify_users and sender:
+        brand_name = content_object.manufacturer and content_object.manufacturer.name or ''
         notify_by_mail(list(notify_users), 'comment_product_wardrobe', sender, {
-            'object_title': u'%s %s' % (content_object.manufacturer, content_object.product_name),
+            'object_title': u'%s %s' % (brand_name, content_object.product_name),
             'object_link': content_object.get_absolute_url(),
             'comment': comment.comment
         })

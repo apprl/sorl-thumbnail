@@ -374,7 +374,7 @@ PIPELINE_JS = {
     },
     'product_widget': {
         'source_filenames': ('js/product_widget.js',
-                             'js/vendor/hammer.min.js'),
+                             'js/vendor/hammer.js'),
         'output_filename': 'js/compiled/product_widget.js',
     },
     'main': {
@@ -485,7 +485,7 @@ PIPELINE_JS = {
             'js/vendor/jquery.iframe-transport.js',
             'js/vendor/jquery.fileupload.js',
             'js/jquery/jquery.ui.rotatable.js',
-            'js/vendor/hammer.min.js',
+            'js/vendor/hammer.js',
             'js/app/main.js',
 
             'js/app/base/models/WidgetModelBase.js',
@@ -537,7 +537,7 @@ PIPELINE_JS = {
                              'js/vendor/jquery.iframe-transport.js',
                              'js/vendor/jquery.fileupload.js',
                              'js/jquery/jquery.ui.rotatable.js',
-                             'js/vendor/hammer.min.js',
+                             'js/vendor/hammer.js',
                              'js/app/main.js',
                              'js/app/base/models/WidgetModelBase.js',
                              'js/app/base/models/product_filter.js',

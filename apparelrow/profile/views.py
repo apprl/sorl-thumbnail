@@ -1182,8 +1182,9 @@ def facebook_login(request):
     if request.POST:
         access_token = request.POST.get('access_token', '')
         uid = request.POST.get('uid', '')
-
+        log.info(u"Found and extracted {} and {}".format(access_token, uid))
         user = auth.authenticate(fb_uid=uid, fb_graphtoken=access_token, request=request)
+        log.info(u"User: {}".format(user))
         if user and user.is_active:
             auth.login(request, user)
             reset_facebook_user(request)

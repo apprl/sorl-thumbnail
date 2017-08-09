@@ -2,6 +2,7 @@ import decimal
 import datetime
 import calendar
 import json
+from operator import itemgetter
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -707,6 +708,55 @@ def get_aggregated_products(user_id, start_date, end_date, limit=9999):
                                                                            '-total_clicks')[:limit]
 
     return top_products
+
+
+def get_top_clicked_products(user_id, start_date, end_date, limit=5):
+    """
+    Return summary per product for the given period.
+    Note that this method uses __range function which is non inclusive when using Date.
+    """
+    # import ipdb; ipdb.set_trace()
+
+    filter_dict = dict()
+    filter_dict['created__range'] = (start_date, end_date)
+    network_influencers = get_user_model().objects.filter(owner_network__id=user_id).values_list('id', flat=True)
+    if network_influencers:
+        filter_dict['user_id__in'] = list(network_influencers) + [user_id]
+    else:
+        filter_dict['user_id'] = user_id
+    filter_dict['is_valid'] = True
+
+    from apparelrow.statistics.models import ProductStat
+    top_clicked_product_links = ProductStat.objects.values('source_link', 'product').filter(
+        **filter_dict).annotate(
+        total_clicks=Count('source_link')).order_by('-total_clicks')[:limit]
+
+    # Make list of source links and add default image
+    top_source_links = [
+        {'aggregated_from_link': p['source_link'],
+         'aggregated_from_name': p['source_link'],
+         'aggregated_from_image': staticfiles_storage.url(settings.APPAREL_DEFAULT_LINK_ICON),
+         'total_clicks': p['total_clicks']}
+        for p in top_clicked_product_links if len(p['source_link'].strip())]
+
+    # Make list of product links and complete the product with name, url and image url
+    product_links = {product_link['product']: product_link['total_clicks'] for product_link in top_clicked_product_links
+                     if not len(product_link['source_link'].strip())}
+    from apparelrow.apparel.models import Product
+    top_products_with_image = Product.objects.values('slug', 'product_image', 'product_name', 'product_key').filter(slug__in=product_links)
+    top_product_links = [
+        {'aggregated_from_link': p['product_key'],
+         'aggregated_from_name': p['product_name'],
+         'aggregated_from_image': get_thumbnail(ImageField().to_python(p['product_image']), '50', crop='noop').url,
+         'total_clicks': product_links[p['slug']]}
+        for p in top_products_with_image]
+
+    top_links = top_source_links + top_product_links
+
+    # Sort by total_clicks
+    top_clicked_products = sorted(top_links, key=itemgetter('total_clicks'), reverse=True)
+
+    return top_clicked_products
 
 
 def get_user_earnings_dashboard(user, start_date, end_date):

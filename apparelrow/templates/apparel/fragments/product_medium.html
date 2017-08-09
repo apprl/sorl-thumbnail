@@ -30,7 +30,7 @@ So, before changing anything here, do take this into consideration and talk to t
         </div>
     </div>
     <div class="caption">
-        <h5><a href="{{ object.get_absolute_url|chlocale:LANGUAGE_CODE }}">{{ object.manufacturer }}</a></h5>
+        <h5><a href="{{ object.get_absolute_url|chlocale:LANGUAGE_CODE }}">{{ object.manufacturer.name }}</a></h5>
         <ul class="list-inline">
             {% if object.availability and object.default_vendor and object.default_vendor.availability != 0 %}
             {% if object.default_vendor.original_discount_price %}

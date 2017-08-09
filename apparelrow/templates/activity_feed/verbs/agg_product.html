@@ -28,7 +28,7 @@
             </a>
             <div class="hover">
                 <a class="btn btn-primary btn-block" href="{{ object.user.get_absolute_url }}{% if object.gender == 'W' %}?gender=W{% elif object.gender == 'M' %}?gender=M{% endif %}">
-                    {% blocktrans with brand=object.activity_object.manufacturer %}See the latest from {{brand}}{% endblocktrans %}
+                    {% blocktrans with brand=object.activity_object.manufacturer %}See the latest from {{brand.name}}{% endblocktrans %}
                 </a>
             </div>
         </div>

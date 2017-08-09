@@ -23,6 +23,14 @@
     <link rel="image_src" href="{% static "images/share-image.jpg" %}">
 
     {% compressed_css 'bootstrap' %}
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event' : 'userIdSet',
+        'userId' : '{{ request.user.id }}',
+        'isPublisher' : {{ request.intercom.is_partner|yesno:"true,false" }}
+      });
+    </script>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -35,7 +43,6 @@
     {% comment  %}
     <script type="text/javascript">var addToHomeConfig = {returningVisitor: true, touchIcon: true, expire: 20160};</script>
     {% endcomment  %}
-    <script src="https://cdn.optimizely.com/js/180383028.js"></script>
     {% block pre-extra-scripts %}{% endblock %}
     {% compressed_js 'main' %}
 
@@ -479,12 +486,6 @@
 {% if request.intercom.show %}
 
 <script>
-    dataLayer.push({
-      'userId' : '{{ request.intercom.user_id|escapejs }}',
-      'isPartner' : {{ request.intercom.is_partner|yesno:"true,false" }},
-      'isStore' : {{ request.intercom.store|yesno:"true,false" }}
-    });
-
     window.intercomSettings = {
         app_id: "{{ request.intercom.app_id|escapejs }}",
         user_id: {{ request.intercom.user_id|escapejs }},
