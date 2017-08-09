@@ -24,6 +24,7 @@ def dev_settings():
     env.redis_url = "ip-10-0-1-249.ec2.internal"
     env.solr_url = "ip-10-0-1-247.ec2.internal"
     env.s3_url = "s-staging.apprl.com"
+    env.cloudfront_url = "s-staging.apprl.com"
     env.gateway = 'deploy@dev-bastion'
     env.aws_key_id = 'AKIAJ2AF5IHPHTQH4QUA'
     env.aws_key = '0xyH+ANAXckDhEHxOntnlLKAh/ONC4g6KB3hpHKX'
