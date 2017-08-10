@@ -1,0 +1,47 @@
+upstream gunicorn {
+    server 127.0.0.1:8090;
+}
+
+server {
+    server_name dev-aws.apprl.com %(hostname)s.apprl.com %(internal_ip)s staging-content.apparelrow.com;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    error_page 500 502 503 504 404 /502.html;
+    location = /502.html {
+         root $deploy_dir/www/;
+    }
+
+
+    # Proxy /admin requests to home page, no admin server here!
+    location ~ "^/([a-zA-Z]{2})/admin" {
+    #    auth_basic_user_file $deploy_dir/etc/htpasswd_web;
+    #    auth_basic "Apprl Production v2";
+        return 307 $scheme://dev-admin.apprl.com$request_uri;
+    }
+    include sites-available/%(project_name)s.include.conf;
+}
+
+#server {
+#    listen 443;
+#
+#    ssl on;
+#    ssl_certificate /etc/ssl/apprl.com.crt;
+#    ssl_certificate_key /etc/ssl/apprl.com.key;
+#
+#    server_name apprl.com;
+#
+#
+#    client_max_body_size 5M;
+#
+#    location /a/conversion {
+#        proxy_pass http://gunicorn;
+#        proxy_set_header Host $host;
+#        proxy_set_header X-Real-IP $remote_addr;
+#        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#    }
+#
+#    location / {
+#        rewrite ^ http://$server_name$request_uri? permanent;
+#    }
+#}
