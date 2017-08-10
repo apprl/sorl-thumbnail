@@ -306,7 +306,7 @@ class User(AbstractUser):
             if thumbnail:
                 return thumbnail
         elif self.facebook_user_id:
-            return 'http://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
+            return 'https://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
 
         return self._get_default_profile(settings.APPAREL_DEFAULT_BRAND_AVATAR, settings.APPAREL_DEFAULT_AVATAR)
 
@@ -317,7 +317,7 @@ class User(AbstractUser):
             if thumbnail:
                 return thumbnail
         elif self.facebook_user_id:
-            return 'http://graph.facebook.com/%s/picture?type=square' % self.facebook_user_id
+            return 'https://graph.facebook.com/%s/picture?type=square' % self.facebook_user_id
 
         return self._get_default_profile(settings.APPAREL_DEFAULT_BRAND_AVATAR, settings.APPAREL_DEFAULT_AVATAR)
 
@@ -329,7 +329,7 @@ class User(AbstractUser):
                 return thumbnail
             return get_thumbnail(self.image, '125').url
         elif self.facebook_user_id:
-            return 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
+            return 'https://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
 
         return self._get_default_profile(settings.APPAREL_DEFAULT_BRAND_AVATAR_MEDIUM, settings.APPAREL_DEFAULT_AVATAR_MEDIUM)
 
@@ -340,7 +340,7 @@ class User(AbstractUser):
             if thumbnail:
                 return thumbnail
         elif self.facebook_user_id:
-            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
+            return 'https://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
         return self._get_default_profile(settings.APPAREL_DEFAULT_BRAND_AVATAR_LARGE, settings.APPAREL_DEFAULT_AVATAR_LARGE)
 
@@ -350,7 +350,7 @@ class User(AbstractUser):
             if thumbnail:
                 return request.build_absolute_uri(thumbnail)
         elif self.facebook_user_id:
-            return 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
+            return 'https://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
 
         if self.is_brand:
             return request.build_absolute_uri(staticfiles_storage.url(settings.APPAREL_DEFAULT_AVATAR_LARGE))
@@ -373,7 +373,7 @@ class User(AbstractUser):
             #image = get_thumbnail(self.image, '50x50', format="PNG").url
         elif self.facebook_user_id:
             # No exception handling for facebook users yet
-            image_path = 'http://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
+            image_path = 'https://graph.facebook.com/%s/picture?width=40&height=40' % self.facebook_user_id
             image = get_thumbnail(image_path, '50x50', format="PNG").url
         default.engine = old_engine
         return image
@@ -394,7 +394,7 @@ class User(AbstractUser):
             #image = get_thumbnail(self.image, '125x125', format="PNG").url
         if self.facebook_user_id:
             # No exception handling for facebook users yet
-            image_path = 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
+            image_path = 'https://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
             image = get_thumbnail(image_path, '125x125', format="PNG").url
         default.engine = old_engine
         return image
@@ -415,7 +415,7 @@ class User(AbstractUser):
             #image = get_thumbnail(self.image, '208x208', format="PNG").url
         elif self.facebook_user_id:
             # No exception handling for facebook users yet
-            image_path = 'http://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
+            image_path = 'https://graph.facebook.com/%s/picture?width=208' % self.facebook_user_id
             image = get_thumbnail(image_path, '208x208', format="PNG").url
         default.engine = old_engine
         return image
@@ -428,7 +428,7 @@ class User(AbstractUser):
         if self.image:
             image = get_thumbnail(self.image, '208x208', format="PNG").url
         elif self.facebook_user_id:
-            image_path = 'http://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
+            image_path = 'https://graph.facebook.com/%s/picture?type=normal' % self.facebook_user_id
             image = get_thumbnail(image_path, '208x208', format="PNG").url
         default.engine = old_engine
         return request.build_absolute_uri(image)

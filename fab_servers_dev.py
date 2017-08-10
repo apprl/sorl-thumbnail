@@ -16,6 +16,7 @@ def dev_settings():
     env.db_name = 'apparel'
     env.db_user = 'apparel'
     env.db_pass = '0p1a7IUmE6NU'
+    env.domain = 'staging.apprl.com'
     env.db_url = 'apprldbinstance.cirbmil58ncc.us-east-1.rds.amazonaws.com'
     env.memcached_url = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
     env.memcached_url_importer = env.memcached_url

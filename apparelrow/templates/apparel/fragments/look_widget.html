@@ -2,14 +2,14 @@
 <script id="embed-{{ identifier }}">(function(d, i, n, w, h, o, o2) {
     var ss = d.getElementsByTagName('script'), st = d.getElementById('embed-'+ i);
     var s = d.createElement('script');
-    s.src = '//'+ o2 +'js/apprlembed.js';
+    s.src = o2 +'js/apprlembed.js';
     s.addEventListener('load', function() {
         new ApprlEmbed(st, i, n, w, h, o);
     }); st.parentNode.insertBefore(s, st);
 })(document, '{{ identifier }}', '{{ object.slug }}', '{{ width }}{{ width_type }}', '{{ height }}', '{{ request.get_host }}','{{ STATIC_URL }}');</script>
 <div style="width: {{ width }}{{ width_type }}; margin: 0px auto;">
   <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;overflow:hidden;">
-    <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look"
+    <a href="https://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look"
        target="_blank" title="Follow me on APPRL" style="text-decoration:none;color:#000000;float:right;font-size:12px;">
         + follow {{ object.user.display_name }} on APPRL
     </a>

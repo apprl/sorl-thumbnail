@@ -598,7 +598,7 @@ def process_sale_alert(sender, product, original_currency, original_price, disco
             merge_vars['BRANDNAME'] = product.manufacturer.name
             merge_vars['PRODUCTNAME'] = product.product_name
             merge_vars['PRODUCTLINK'] = retrieve_url(product.get_absolute_url())
-            merge_vars['BUYLINK'] = "http://%s/redirect/%s/Product/0/" % (domain, product.pk)
+            merge_vars['BUYLINK'] = "https://%s/redirect/%s/Product/0/" % (domain, product.pk)
             merge_vars['OLDPRICE'] = locale_original_price
             merge_vars['NEWPRICE'] = locale_discount_price
             merge_vars['CURRENCY'] = currency
@@ -792,7 +792,7 @@ def send_look_like_summaries(period="D"):
             merge_vars['PERIOD'] = "this week"
 
         for look in users_to_notify[user]:
-            look_url_link = 'http://%s%s' % (domain, look.get_absolute_url())
+            look_url_link = 'https://%s%s' % (domain, look.get_absolute_url())
             look_detail = { "LOOKURL" : look_url_link,
                             "LOOKNAME" : look.title,
                             "LOOKPHOTOURL" : look.static_image.url,
