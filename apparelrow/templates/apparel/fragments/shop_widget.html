@@ -2,7 +2,7 @@
 <div style="width: {{ object.width }}{{ object.width_type }};"><iframe src="//{{ request.get_host }}/embed/shop/{{ object.pk }}/" width="{{ object.width }}{{ object.width_type }}" scrolling="yes" height="{{ object.height }}px" frameborder="0"></iframe></div>
 <div style="width: {{ width }}{{ width_type }};">
   <p style="margin:5px;font-family:'Helvetica Neue','Helvetica',arial,sans-serif;overflow:hidden;">
-      <a href="http://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look"
+      <a href="https://{{ request.get_host }}{{ object.user.get_absolute_url }}?aid={{ object.user.pk }}&alink=Ext-Look"
          target="_blank" title="Get the latest styles from {{ object.user.display_name }} on APPRL" style="text-decoration:none;color:#000000;float:right;font-size:12px;">
           + follow {{ object.user.display_name }} on APPRL
       </a>
