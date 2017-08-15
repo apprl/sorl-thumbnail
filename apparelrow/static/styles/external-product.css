@@ -64,12 +64,12 @@
 }
 .apprl-product .productcontainer li.product {
   float: left;
-  padding: 0px 10px;
   box-sizing: border-box;
 }
 .apprl-product .productcontainer li img {
   width: 100%;
   height: 100%;
+  max-width: 100%;
   vertical-align: middle;
   opacity: 1;
   transition: opacity 0.5s;
@@ -87,13 +87,13 @@
   position: absolute;
   display: block;
   z-index: 10;
-  height: 44px;
-  width: 44px;
+  height: 30px;
+  width: 30px;
   transition: background-color 0.2s ease-in-out;
   text-align: center;
   top: 50%;
   margin-top: -30px;
-  right: 30px;
+  right: 10px;
 }
 .apprl-product .navigation-el::before {
   content: "";
@@ -117,7 +117,7 @@
   border-color: #fff;
 }
 .apprl-product .navigation-el.previous {
-  left: 30px;
+  left: 10px;
 }
 .apprl-product .navigation-el.previous::before {
   -ms-transform: rotate(135deg);
