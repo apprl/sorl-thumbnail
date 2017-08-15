@@ -93,7 +93,7 @@
   text-align: center;
   top: 50%;
   margin-top: -30px;
-  right: 0;
+  right: 10px;
 }
 .apprl-product .navigation-el::before {
   content: "";
@@ -117,7 +117,7 @@
   border-color: #fff;
 }
 .apprl-product .navigation-el.previous {
-  left: 0;
+  left: 10px;
 }
 .apprl-product .navigation-el.previous::before {
   -ms-transform: rotate(135deg);

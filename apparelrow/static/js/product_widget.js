@@ -31,7 +31,7 @@ jQuery(document).ready(function() {
     var visibleChildren;
     var doSlide = false;
     var $container = $('.slidecontainer');
-    var navigationWidth = 60;
+    var navigationWidth = 80;
     var $slideNext = $('.next');
     var $slidePrevious = $('.previous');
     var itemWidth = 0;
