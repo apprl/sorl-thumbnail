@@ -67,6 +67,7 @@
   box-sizing: border-box;
 }
 .apprl-product .productcontainer li img {
+  display: inline-block;
   width: 100%;
   height: 100%;
   max-width: 100%;
