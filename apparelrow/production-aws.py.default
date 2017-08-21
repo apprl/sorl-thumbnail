@@ -24,8 +24,7 @@ DATABASES = {
 CONN_MAX_AGE = 600
 
 # Storage
-STATIC_URL = 'http://{{ s3_url }}/'
-AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = '{{ s3_url }}'
+STATIC_URL = 'https://{{ cloudfront_url }}/'
 AWS_ACCESS_KEY_ID = '{{ aws_key_id }}'
 AWS_SECRET_ACCESS_KEY = '{{ aws_key }}'
 
