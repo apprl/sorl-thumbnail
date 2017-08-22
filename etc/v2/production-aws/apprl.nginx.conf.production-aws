@@ -61,7 +61,21 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
-    include sites-available/%(project_name)s.include.conf;
+    # Proxy all other requests to our WSGI server
+    location / {
+
+        # Added for https
+        #if ($http_x_forwarded_proto = 'http') {
+        #    return 307 https://%(domain)s$request_uri;
+        #}
+
+        proxy_pass http://gunicorn;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+#    include sites-available/%(project_name)s.include.conf;
 #    location / {
 #        rewrite ^ http://$server_name$request_uri? permanent;
 #    }
