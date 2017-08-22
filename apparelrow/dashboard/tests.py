@@ -1319,6 +1319,95 @@ class TestUserEarnings(TransactionTestCase):
         self.assertIsNone(publisher_cut_exception)
 
 
+@override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
+class TestAffiliateNetworksAWIN(TransactionTestCase):
+    def setUp(self):
+        FXRate.objects.create(currency='SEK', base_currency='SEK', rate='1.00')
+        FXRate.objects.create(currency='EUR', base_currency='SEK', rate='0.118160')
+        FXRate.objects.create(currency='SEK', base_currency='EUR', rate='8.612600')
+        FXRate.objects.create(currency='EUR', base_currency='EUR', rate='1.00')
+
+        self.user = get_user_model().objects.create_user('user', 'user@xvid.se', 'user')
+        self.user.location = 'SE'
+        self.user.save()
+        url = 'https://www.wakakuu.com/se/catalog/product/view/id/112036/s/toteme-klanning-lexa/category/238/'
+        compressed_link = '52608387d0089127e7b1bd6ac44f127e'
+        self.source_link = CompressedLink.objects.create(key=compressed_link, link=url)
+        self.wakakuu_se = Vendor.objects.create(name='Wakakuu')
+        self.wakakuu_no = Vendor.objects.create(name='Wakakuu NO')
+        self.chanel = Vendor.objects.create(name='chanel')
+        self.boozt_se_vendor = Vendor.objects.create(name='Boozt se')
+        self.boozt_no_vendor = Vendor.objects.create(name='Boozt no')
+
+        for i in range(1, 10):
+            Product.objects.create(sku=str(i))
+
+    @patch('apparelrow.dashboard.importer.awin.Importer.make_api_request')
+    def test_awin_parser_real_data(self, mock_make_api_request):
+        transactions = 'transactions'
+        expected_data = '[{"id":299191515,"url":"http://www.apprl.com","advertiserId":8996,' \
+                        '"publisherId":115076,"commissionSharingPublisherId":null,"siteName":"http://www.apprl.com",' \
+                        '"commissionStatus":"approved","commissionAmount":{"amount":10.95,"currency":"SEK"},' \
+                        '"saleAmount": {"amount":88.60,"currency":"SEK"},' \
+                        '"clickRefs":{"clickRef2":"34174-0-Ext-Link/compressed-link-52608387d0089127e7b1bd6ac44f127e"},' \
+                        '"clickDate":"2017-07-15T16:56:00","transactionDate":"2017-07-16T13:37:00","validationDate":null,' \
+                        '"type":"Commission group transaction","declineReason":null,"voucherCodeUsed":false,"voucherCode":null,' \
+                        '"lapseTime":74451,"amended":false,"amendReason":null,"oldSaleAmount":null,"oldCommissionAmount":null,' \
+                        '"clickDevice":"iPhone","transactionDevice":"iPhone","publisherUrl":"http://apprl.com/sv/pd/4O7L/",' \
+                        '"advertiserCountry":"NO","orderRef":null,"customParameters":null,"transactionParts":[{"commissionGroupId":132053,' \
+                        '"amount":799.60}],"paidToPublisher":false,"paymentId":0,"transactionQueryId":0,"originalSaleAmount":null},' \
+                        '{"id":299191514,"url":"http://www.apprl.com","advertiserId":8951,"publisherId":115076,' \
+                        '"commissionSharingPublisherId":null,"siteName":"http://www.apprl.com","commissionStatus":"pending", ' \
+                        '"commissionAmount":{"amount":95.95,"currency":"SEK"},"saleAmount":{"amount":799.60,"currency":"SEK"},' \
+                        '"clickRefs":{"clickRef2":"34174-0-Ext-Link/compressed-link-52608387d0089127e7b1bd6ac44f127e"},' \
+                        '"clickDate":"2017-07-15T16:56:00","transactionDate":"2017-07-16T13:37:00","validationDate":null,' \
+                        '"type":"Commission group transaction","declineReason":null,"voucherCodeUsed":false,"voucherCode":null,' \
+                        '"lapseTime":74451,"amended":false,"amendReason":null,"oldSaleAmount":null,"oldCommissionAmount":null,' \
+                        '"clickDevice":"iPhone","transactionDevice":"iPhone","publisherUrl":"http://apprl.com/sv/pd/4O7L/",' \
+                        '"advertiserCountry":"SE","orderRef":null,"customParameters":null,' \
+                        '"transactionParts":[{"commissionGroupId":132053,"amount":799.60}],"paidToPublisher":false,"paymentId":0,' \
+                        '"transactionQueryId":0,"originalSaleAmount":null}]'
+
+        expected_aggregated_data = '[{"advertiserId":8951, "advertiserName":"Wakakuu SE", "publisherId":115076, ' \
+                                   '"publisherName":"APPRL", "region":"SE", "currency":"SEK", "impressions":0,"clicks":1125, ' \
+                                   '"pendingNo":0,  "pendingValue":0.0, "pendingComm":0.0, "confirmedNo":0, "confirmedValue":0.0,' \
+                                   ' "confirmedComm":0.0, "bonusNo":0, "bonusValue":0.0, "bonusComm":0.0, "totalNo":0, "totalValue":0.0, ' \
+                                   '"totalComm":0.0, "declinedNo":0, "declinedValue":0.0, "declinedComm":0.0},' \
+                                   ' {"advertiserId":8996, "advertiserName":"Wakakuu NO", "publisherId":115076, ' \
+                                   '"publisherName":"APPRL", "region":"NO", "currency":"EUR", "impressions":0,"clicks":1125, ' \
+                                   '"pendingNo":0,  "pendingValue":0.0, "pendingComm":0.0, "confirmedNo":1, "confirmedValue":0.0, ' \
+                                   '"confirmedComm":0.0, "bonusNo":0, "bonusValue":0.0, "bonusComm":0.0, "totalNo":0, ' \
+                                   '"totalValue":0.0, "totalComm":0.0, "declinedNo":0, "declinedValue":0.0, "declinedComm":0.0}]'
+
+        mock_make_api_request.side_effect = lambda \
+            value: expected_data if transactions in value else expected_aggregated_data
+
+        management.call_command('dashboard_import', 'awin', days=1, verbosity=0, interactive=False)
+
+        sale_model = Sale
+        # Test Wakakuu SE
+        wakakuu_se_sale_count = sale_model.objects.filter(original_sale_id='299191514').count()
+        self.assertEqual(wakakuu_se_sale_count, 1)
+        wakakuu_se_sale_vendor = sale_model.objects.filter(vendor=self.wakakuu_se).count()
+        self.assertEqual(wakakuu_se_sale_vendor, 1)
+        wakakuu_se_sale = Sale.objects.filter(original_sale_id='299191514').get()
+        self.assertEqual(wakakuu_se_sale.original_amount, decimal.Decimal('799.60'))
+        self.assertAlmostEqual(wakakuu_se_sale.original_commission, decimal.Decimal('95.95'))
+        self.assertEqual(wakakuu_se_sale.status, sale_model.PENDING)
+
+        # Test Wakakuu NO
+        wakakuu_no_sale_count = sale_model.objects.filter(original_sale_id='299191515').count()
+        self.assertEqual(wakakuu_no_sale_count, 1)
+        wakakuu_no_sale_vendor = sale_model.objects.filter(vendor=self.wakakuu_no).count()
+        self.assertEqual(wakakuu_no_sale_vendor, 1)
+        wakakuu_no_sale = Sale.objects.filter(original_sale_id='299191515').get()
+        self.assertEqual(wakakuu_no_sale.original_amount, decimal.Decimal('88.60'))
+        self.assertAlmostEqual(wakakuu_no_sale.original_commission, decimal.Decimal('10.95'))
+        self.assertEqual(wakakuu_no_sale.status, sale_model.CONFIRMED)
+
+        # Test transactions that does not exist
+        not_in_transaction_sale_vendor = sale_model.objects.filter(vendor=self.boozt_se_vendor).count()
+        self.assertEqual(not_in_transaction_sale_vendor, 0)
 
 @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True, CELERY_ALWAYS_EAGER=True, BROKER_BACKEND='memory')
 class TestAffiliateNetworksNew(TransactionTestCase):
