@@ -9,12 +9,6 @@ server {
 }
 
 server {
-    server_name api.apprl.se;
-
-    return 307 $scheme://api.apprl.com$request_uri;
-}
-
-server {
     server_name *.apprl.se;
 
     return 301 $scheme://apprl.com$request_uri;
@@ -29,7 +23,7 @@ server {
 
 server {
     server_name apprl.com aws.apprl.com %(hostname)s.apprl.com %(internal_ip)s content.apparelrow.com;
-    access_log off;
+    access_log on;
 
     error_page 500 502 503 504 404 /502.html;
     location = /502.html {
@@ -44,22 +38,6 @@ server {
         return 307 $scheme://admin.apprl.com$request_uri;
     }
     include sites-available/%(project_name)s.include.conf;
-}
-
-server {
-    server_name api.apprl.com;
-
-    location / {
-        root %(path)s/releases/current/www/root/api;
-        index index.html;
-    }
-
-    location ~ "^/([a-zA-Z]{2})/products" {
-        proxy_pass http://gunicorn;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
 }
 
 server {
@@ -83,7 +61,8 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
-    location / {
-        rewrite ^ http://$server_name$request_uri? permanent;
-    }
+    include sites-available/%(project_name)s.include.conf;
+#    location / {
+#        rewrite ^ http://$server_name$request_uri? permanent;
+#    }
 }
