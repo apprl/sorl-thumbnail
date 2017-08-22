@@ -3,11 +3,10 @@
 */
 /* Fonts ---------- */
 @font-face {
-    font-family: 'Neuzeit Bold';
-    src: url('https://s.apprl.com/fonts/Neuzeit-Bold.eot');
-    src: url('https://s.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('https://s.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('https://s.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
+  font-family: 'Neuzeit Bold';
+  src: url('https://s.apprl.com/fonts/Neuzeit-Bold.eot');
+  src: url('https://s.apprl.com/fonts/Neuzeit-Bold.woff') format('woff'), url('https://s.apprl.com/fonts/Neuzeit-Bold.woff2') format('woff2'), url('https://s.apprl.com/fonts/Neuzeit-Bold.ttf') format('truetype');
 }
-
 /* Product ---------- */
 .apprl-product {
   text-rendering: optimizeLegibility;
@@ -21,7 +20,6 @@
   font-size: 12px;
   margin: 0;
 }
-
 .apprl-product *,
 .apprl-product *:before,
 .apprl-product *:after {
@@ -29,7 +27,6 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-
 .apprl-product a {
   display: block;
   color: black;
@@ -37,19 +34,16 @@
   text-decoration: none;
   text-align: center;
 }
-
 .apprl-product ul {
   padding: 0;
   margin: 0;
   list-style: none;
 }
-
 .apprl-product h4 {
   font-size: 14px;
   margin: 0 auto;
   font-weight: normal;
 }
-
 .apprl-product .slidecontainer {
   width: 100vw;
   height: 100vh;
@@ -70,12 +64,12 @@
 }
 .apprl-product .productcontainer li.product {
   float: left;
-  padding: 0px 10px;
   box-sizing: border-box;
 }
 .apprl-product .productcontainer li img {
   width: 100%;
   height: 100%;
+  max-width: 100%;
   vertical-align: middle;
   opacity: 1;
   transition: opacity 0.5s;
@@ -93,13 +87,13 @@
   position: absolute;
   display: block;
   z-index: 10;
-  height: 44px;
-  width: 44px;
+  height: 30px;
+  width: 30px;
   transition: background-color 0.2s ease-in-out;
   text-align: center;
   top: 50%;
   margin-top: -30px;
-  right: 30px;
+  right: 0;
 }
 .apprl-product .navigation-el::before {
   content: "";
@@ -120,10 +114,10 @@
   background-color: #000;
 }
 .apprl-product .navigation-el:hover::before {
-  border-color: #fff;
+  border-color: #ffffff;
 }
 .apprl-product .navigation-el.previous {
-  left: 30px;
+  left: 0;
 }
 .apprl-product .navigation-el.previous::before {
   -ms-transform: rotate(135deg);
