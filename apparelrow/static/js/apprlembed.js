@@ -4,7 +4,7 @@
 
 var ApprlEmbed = ApprlEmbed || function(p, id, n, w, h, o, t) {
 	var self = this;
-	var host = 'http://'+window.location.host;
+	var host = window.location.origin;
     var iframeSrc;
     t = t == undefined ? 'look' : t;
     if(t == 'look') {
@@ -46,7 +46,7 @@ var ApprlEmbed = ApprlEmbed || function(p, id, n, w, h, o, t) {
 
 	window.addEventListener('resize', self.onResize);
     window.addEventListener('message', function(e) {
-        if(e.origin == 'http://' + o) {
+        if(e.origin.indexOf(o) != -1) {
             self.setHeight(e.data);
         }
     });

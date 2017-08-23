@@ -17,6 +17,7 @@ def prod_settings():
     env.db_user = 'apparel'
     env.db_pass = 'gUp8Swub'
     env.db_url = 'appareldbinstance.cnzaoxvvyal7.eu-west-1.rds.amazonaws.com'
+    env.domain = 'apprl.com'
     env.memcached_url = 'apparel-cache.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.memcached_url_nginx = 'nginx.uhyk4j.cfg.euw1.cache.amazonaws.com'
     env.memcached_url_importer = 'importer.uhyk4j.cfg.euw1.cache.amazonaws.com'
@@ -24,7 +25,8 @@ def prod_settings():
     #env.redis_url = "ip-10-0-1-166.eu-west-1.compute.internal"
     env.solr_url =  "ip-10-0-1-38.eu-west-1.compute.internal"
     env.s3_url = "s.apprl.com"
-    env.gateway = 'deploy@bastion'
+    env.cloudfront_url = "s.apprl.com"
+    env.gateway = 'deploy@vpn-production.apprl.com'
     env.aws_key_id = 'AKIAJWFWCTRXKCOCRPTQ'
     env.aws_key = 'rCUAw8IwyysB3u3pgDi5nKLsqJyGe2pchBc1on1a'
     env.collectstatic = False

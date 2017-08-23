@@ -16,6 +16,7 @@ def dev_settings():
     env.db_name = 'apparel'
     env.db_user = 'apparel'
     env.db_pass = '0p1a7IUmE6NU'
+    env.domain = 'staging.apprl.com'
     env.db_url = 'apprldbinstance.cirbmil58ncc.us-east-1.rds.amazonaws.com'
     env.memcached_url = "apprl-cache-cluster.naojmu.cfg.use1.cache.amazonaws.com"
     env.memcached_url_importer = env.memcached_url
@@ -24,6 +25,7 @@ def dev_settings():
     env.redis_url = "ip-10-0-1-249.ec2.internal"
     env.solr_url = "ip-10-0-1-247.ec2.internal"
     env.s3_url = "s-staging.apprl.com"
+    env.cloudfront_url = "s-staging.apprl.com"
     env.gateway = 'deploy@dev-bastion'
     env.aws_key_id = 'AKIAJ2AF5IHPHTQH4QUA'
     env.aws_key = '0xyH+ANAXckDhEHxOntnlLKAh/ONC4g6KB3hpHKX'

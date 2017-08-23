@@ -15,7 +15,7 @@
                         var result = $('#result').html('');
                         $.each(data.products, function(index, product) {
                             result.append(
-                                $('<a>').attr({'target': '_blank', 'href': 'http://apprl.com/products/' + product.slug + '/'}).append(
+                                $('<a>').attr({'target': '_blank', 'href': 'https://apprl.com/products/' + product.slug + '/'}).append(
                                     $('<img>').attr({'src': product.image_medium, title: product.brand_name, alt: product.brand_name})
                                 )
                             );
@@ -40,7 +40,7 @@
                         colors.append($('<li>').text(color));
                     });
                 };
-                $.ajax({url: 'http://apprl.com/backend/colors', dataType: 'jsonp', success: dispalyColors});
+                $.ajax({url: '//apprl.com/backend/colors', dataType: 'jsonp', success: dispalyColors});
 
                 // Create category modal
                 var createElement = function(category) {
@@ -68,7 +68,7 @@
                         }
                     });
                 };
-                $.ajax({url: 'http://apprl.com/backend/categories', dataType: 'jsonp', success: displayCategories});
+                $.ajax({url: '//apprl.com/backend/categories', dataType: 'jsonp', success: displayCategories});
             });
         </script>
     </head>
@@ -78,7 +78,7 @@
             <h3>Parameters</h3>
             <dl class="dl-horizontal">
                 <dt>sid</dt>
-                <dd>To earn money on your links you need an SID, which you get by becoming an APPRL Publisher. Apply here: <a target="_blank" href="http://apprl.com/publisher/">http://apprl.com/publisher/</a>. <strong>OPTIONAL but RECOMMENDED</strong></dd>
+                <dd>To earn money on your links you need an SID, which you get by becoming an APPRL Publisher. Apply here: <a target="_blank" href="https://apprl.com/publisher/">https://apprl.com/publisher/</a>. <strong>OPTIONAL but RECOMMENDED</strong></dd>
                 <dt>page</dt>
                 <dd>Between 1 and last page number. <strong>OPTIONAL</strong></dd>
                 <dt>limit</dt>
@@ -88,22 +88,22 @@
                 <dt>color_name</dt>
                 <dd>One or many color names in text, seperated with comma, case insensitive (<a data-toggle="modal" href="#colorModal">show color names</a>). <strong>OPTIONAL</strong></dd>
                 <dt>brand</dt>
-                <dd>One brand name in text, case insensitive (<a target="_blank" href="http://apprl.com/brands/">see all our brands here</a>). <strong>OPTIONAL</strong></dd>
+                <dd>One brand name in text, case insensitive (<a target="_blank" href="https://apprl.com/brands/">see all our brands here</a>). <strong>OPTIONAL</strong></dd>
                 <dt>gender</dt>
                 <dd>Either 'M' for man or 'W' for woman. <strong>OPTIONAL</strong></dd>
             </dl>
             <p>Use /sv/ to return data in Swedish and SEK currency<br>
             Use /en/ to return data in English and EUR currency</p>
-            <p>Example: <strong>http://api.apprl.com/en/products/?sid=250&limit=30&category_name=shoes&gender=M</strong></p>
+            <p>Example: <strong>https://api.apprl.com/en/products/?sid=250&limit=30&category_name=shoes&gender=M</strong></p>
             <h3>Return data</h3>
             <pre>
-{"next_page": "http://api.apprl.com/en/products/?page=2",
+{"next_page": "https://api.apprl.com/en/products/?page=2",
  "products": [
     {"id": "2523471",
-     "image_medium": "http://s.apprl.com/cache/a1398d8dfb17f50037566dccc261c543/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
-     "image_look": "http://s.apprl.com/cache/4bd5aa14559ecf1c54e6d9ebecabc96f/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
-     "image_small": "http://s.apprl.com/cache/45405f7fa1045805090d739670fa007b/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
-     "url": "http://api.apprl.com/en/redirect/2523471/Ext-Site/0/",
+     "image_medium": "https://s.apprl.com/cache/a1398d8dfb17f50037566dccc261c543/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
+     "image_look": "https://s.apprl.com/cache/4bd5aa14559ecf1c54e6d9ebecabc96f/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
+     "image_small": "https://s.apprl.com/cache/45405f7fa1045805090d739670fa007b/hummel/slimmer-stadil-blue-furry-sneakers__p132431.jpg",
+     "url": "https://api.apprl.com/en/redirect/2523471/Ext-Site/0/",
      "product_name": "Slimmer Stadil Blue Furry Sneakers",
      "brand_name": "Hummel",
      "slug": "hummel-slimmer-stadil-blue-furry-sneakers",
@@ -119,7 +119,7 @@
             <form class="form" role="form">
                 <div class="form-group">
                     <label class="sr-only" for="api_endpoint">Email address</label>
-                    <input type="text" class="form-control" id="api_endpoint" placeholder="API URL" value="http://api.apprl.com/en/products/">
+                    <input type="text" class="form-control" id="api_endpoint" placeholder="API URL" value="https://api.apprl.com/en/products/">
                 </div>
             </form>
 

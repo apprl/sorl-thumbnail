@@ -60,8 +60,8 @@ def get_facebook_user(request):
                     facebook_access_token=fb_user['access_token'],
                     facebook_access_token_expire=datetime.datetime.fromtimestamp(expires)
                 )
-        except Exception as e:
-            logging.warning('Could not fetch facebook user: %s' % (str(e),))
+        except Exception, msg:
+            logging.warning('Could not fetch facebook user: %s' % (msg))
             return None
 
     return FacebookAccessor(fb_user) if fb_user else None

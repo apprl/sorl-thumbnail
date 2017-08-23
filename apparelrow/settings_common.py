@@ -162,7 +162,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_root')
 
 # URL that handles the static files like app media.
 # Example: "http://media.lawrence.com"
-STATIC_URL = 'http://s.apprl.com/'
+STATIC_URL = 'https://s.apprl.com/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
@@ -184,13 +184,21 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 # AWS_SECRET_ACCESS_KEY = 'VLxYKMZ09WoYL20YoKjD/d/4CJvQS+HKiWGGhJQU'
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
-AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'
+AWS_STORAGE_BUCKET_NAME = AWS_BUCKET_NAME = 's.apprl.com'
 AWS_HEADERS = {
     'Expires': 'Sat, Nov 01 2016 20:00:00 GMT',
     'Cache-Control': 'max-age=86400, public',
 }
 AWS_QUERYSTRING_AUTH = False
-AWS_S3_SECURE_URLS = False
+
+#AWS_S3_SECURE_URLS = False
+AWS_S3_SECURE_URLS = True
+AWS_PRELOAD_METADATA = False
+AWS_S3_REGION_NAME = "eu-west-1"
+AWS_S3_URL_PROTOCOL = "https:"
+AWS_S3_CUSTOM_DOMAIN = 's.apprl.com'  # cloudfront
+
+
 # TODO: use if django-storages is upgraded
 #AWS_PRELOAD_METADATA = True
 STATICFILES_STORAGE = 'apparelrow.storage.CachedStaticS3BotoStorage'
@@ -616,7 +624,7 @@ SERVER_EMAIL = 'Apprl <no-reply@apprl.com>'
 #EMAIL_USE_TLS       = True
 
 MAILCHIMP_API_KEY = '320bdd6a4c1815a8f093f1c29e1fc08f-us4'
-MAILCHIMP_API_URL = 'http://us4.api.mailchimp.com/1.3/'
+MAILCHIMP_API_URL = 'https://us4.api.mailchimp.com/1.3/'
 MAILCHIMP_MEMBER_LIST = '18083c690f'
 MAILCHIMP_NEWSLETTER_LIST = '6fa805a815'
 MAILCHIMP_PUBLISHER_LIST = '9497b26019'
@@ -753,7 +761,7 @@ THUMBNAIL_BACKEND = 'apparelrow.apparel.sorl_extension.NamedThumbnailBackend'
 THUMBNAIL_PREFIX = 'cache/'
 THUMBNAIL_DEBUG = False
 THUMBNAIL_DUMMY = False
-THUMBNAIL_DUMMY_SOURCE = "http://dummyimage.com/%(width)sx%(height)s"
+THUMBNAIL_DUMMY_SOURCE = "https://dummyimage.com/%(width)sx%(height)s"
 
 # FEED
 FEED_REDIS_DB = 1
@@ -776,7 +784,6 @@ THEIMP_QUEUE_SITE = 'theimp.site'
 ENABLE_LINKS_COMPRESSION = True
 LINKS_COMPRESSION_MAX_LEN = 30
 LINKS_COMPRESSION_PREFIX = u'compressed-link-'
-
 
 # CELERY CONFIGURATION
 CELERY_DEFAULT_QUEUE = 'standard'
