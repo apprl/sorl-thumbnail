@@ -697,9 +697,9 @@ class ShortDomainLinkManager(models.Manager):
                 result = parse(template, url)
                 _, _, _, source_link = parse_sid(result['sid'])
             else:
-                logger.warning("DomainDeepLink for vendor %s does not exist" % vendor_name)
+                logger.warning(u"DomainDeepLink for vendor %s does not exist" % vendor_name)
         except TypeError, msg:
-            logger.warn("Unable to match shortlink {} -> {} and vendor {}, decompressed id {}. [{}]".
+            logger.warn(u"Unable to match shortlink {} -> {} and vendor {}, decompressed id {}. [{}]".
                      format(short_link, url, vendor_name, self.decode_id(short_link), msg))
             source_link = "LINK-NOT-FOUND"
         return source_link
