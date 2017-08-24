@@ -1138,8 +1138,7 @@ def csrf_failure(request, reason=None):
     """
     if reason is None: reason = '[None given]'
     logging.debug("CSRF failure: %s" % reason)
-    return render_to_response('403.html', {'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason},
-                              context_instance=RequestContext(request), status_code=403)
+    return render(request, '403.html', **{'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason, "status": 403})
 
 
 def list_colors(request):
