@@ -1138,9 +1138,10 @@ def csrf_failure(request, reason=None):
     """
     if reason is None: reason = '[None given]'
     logging.debug("CSRF failure: %s" % reason)
-    return render_to_response('403.html', {'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason},
-                              context_instance=RequestContext(request), status=403)
-
+    html_string = render_to_string('403.html',
+                                   {'is_csrf': True, 'debug': settings.DEBUG, 'reason': reason},
+                                   context_instance=RequestContext(request))
+    return HttpResponse(html_string, status=403)
 
 def list_colors(request):
     color_data = get_model('apparel', 'Option').objects.filter(option_type__name__in=['color', 'pattern']).exclude(
