@@ -18,7 +18,7 @@ from apparelrow.apparel.utils import get_location
 from apparelrow.dashboard.models import Sale, Payment, Signup, AggregatedData, Group, Cut, ClickCost, StoreCommission, \
     UserEarning
 from apparelrow.dashboard.stats import stats_admin, stats_publisher
-from apparelrow.dashboard.stats.stats_cache import all_time, mrange, flush_stats_cache_by_month
+from apparelrow.dashboard.stats.stats_cache import all_time, mrange, flush_stats_cache_by_month, flush_stats_cache_by_year, yrange
 from apparelrow.dashboard.tasks import send_email_task
 from apparelrow.dashboard.utils import *
 from apparelrow.profile.tasks import mail_managers_task
@@ -438,12 +438,18 @@ class DashboardView(TemplateView):
 
         start_date, end_date = parse_date(month, year)
         year = start_date.year
-        if month != "0":
+
+        is_month_interval = month != "0"
+
+        if is_month_interval:
             month = start_date.month
 
         flush_cache = 'flush_cache' in self.request.GET
-        if flush_cache:
+
+        if flush_cache and is_month_interval:
             flush_stats_cache_by_month(year, month)  # improve this so it only flushes cache for this publisher
+        elif flush_cache and not is_month_interval:
+            flush_stats_cache_by_year(year)
 
         start_date_query = datetime.datetime.combine(start_date, datetime.time(0, 0, 0, 0))
         end_date_query = datetime.datetime.combine(end_date, datetime.time(23, 59, 59, 999999))
@@ -472,7 +478,7 @@ class DashboardView(TemplateView):
         # Aggregate products per month
         top_products = get_top_clicked_products(request.user.id, start_date_query, end_date_query, TOP_PRODUCTS_LIMIT)
 
-        month_stats = self.month_stats(year, month, request.user.id)
+        month_stats = self.month_stats(year, month, request.user.id, is_month_interval)
 
         show_cpo_earning = True
         if request.user.has_ppc_all_stores() and not month_stats['ppo_earnings']:
@@ -505,8 +511,11 @@ class DashboardView(TemplateView):
             'total_paid': stats_publisher.total_paid(user_id)
         }
 
-    def month_stats(self, year, month, user_id):
-        tr = mrange(year, month)
+    def month_stats(self, year, month, user_id, is_month_interval=True):
+        if is_month_interval:
+            tr = mrange(year, month)
+        else:
+            tr = yrange(year)
         return {
             'total_earnings': stats_publisher.total_earnings(tr, user_id),
             'ppo_earnings': stats_publisher.ppo_earnings(tr, user_id),
