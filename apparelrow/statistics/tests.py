@@ -393,3 +393,62 @@ class TestProductStat(TestCase):
         for ip, result in testing_ips:
             self.assertEquals(is_ip_banned(ip), result, "The ip {} does not give the correct result.".format(ip))
         cache.delete(settings.PRODUCTSTAT_IP_QUARANTINE_KEY)
+
+    #@override_settings(BLOCKED_USER_AGENTS=[])
+    def test_check_contains_invalid_user_agents(self):
+        vendor = VendorFactory.create(name="jerkstore")
+        original_url = "http://www.cafe.se/vinterns-snyggaste-jacka-10-shearlingjackor-du-kan-kopa-redan-idag/"
+        domain_deep_link = DomainDeepLinkingFactory.create(vendor=vendor, domain="www.jerkstore.com")
+        self.assertEquals(domain_deep_link.template, "http://apprl.com/a/link/?store_id=jerkstore&custom={sid}&url={url}")
+        domain_link = ShortDomainLinkFactory.create(url=original_url, vendor=vendor)
+        user = domain_link.user
+        link = domain_link.link()
+        self.assertIsNotNone( link )
+        full_link = reverse('domain-short-link', args=[link])
+        self.assertEquals(domain_deep_link.template, "http://apprl.com/a/link/?store_id=jerkstore&custom={sid}&url={url}")
+        instagram_user_agents = [u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 Instagram 12.0.0.16.90 (iPhone6,2; iOS 10_3_3; da_DK; da-DK; scale=2.00; gamut=normal; 640x1136)',
+                                  u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 Instagram 12.0.0.16.90 (iPhone9,3; iOS 10_3_3; sv_SE; sv-SE; scale=2.00; gamut=wide; 750x1334)', u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B100 Instagram 11.0.0.21.20 (iPhone7,2; iOS 10_1_1; sv_SE; sv-SE; scale=2.00; gamut=normal; 750x1334)', u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 Instagram 12.0.0.16.90 (iPhone9,3; iOS 10_3_3; nb_NO; nb-NO; scale=2.34; gamut=wide; 750x1331)', u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) Mobile/14F89 Instagram 10.28.0 (iPhone7,2; iOS 10_3_2; da_DK; da-DK; scale=2.00; gamut=normal; 750x1334)',
+                                  u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Mobile/14E304 Instagram 12.0.0.16.90 (iPhone8,4; iOS 10_3_1; sv_SE; sv-SE; scale=2.00; gamut=normal; 640x1136)',
+                                  u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 Instagram 12.0.0.16.90 (iPhone9,3; iOS 10_3_3; sv_SE; sv-SE; scale=2.00; gamut=wide; 750x1334)',
+                                  u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Mobile/14D27 Instagram 12.0.0.16.90 (iPhone9,3; iOS 10_2_1; sv_SE; sv-SE; scale=2.00; gamut=wide; 750x1334)',
+                                  u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 Instagram 12.0.0.16.90 (iPhone8,1; iOS 10_3_3; sv_SE; sv-SE; scale=2.00; gamut=normal; 750x1334)',
+                                  u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_0_2 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Mobile/14A456 Instagram 12.0.0.16.90 (iPhone8,1; iOS 10_0_2; sv_SE; sv-SE; scale=2.00; gamut=normal; 750x1334)']
+
+        facebook_user_agents = [u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Mobile/14D27 [FBAN/FBIOS;FBAV/135.0.0.45.90;FBBV/66877072;FBDV/iPhone9,3;FBMD/iPhone;FBSN/iOS;FBSV/10.2.1;FBSS/2;FBCR/TELIA;FBID/phone;FBLC/sv_SE;FBOP/5;FBRV/0]',
+                                u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 [FBAN/FBIOS;FBAV/139.0.0.46.90;FBBV/70207865;FBDV/iPhone7,2;FBMD/iPhone;FBSN/iOS;FBSV/10.3.3;FBSS/2;FBCR/TELIA;FBID/phone;FBLC/sv_SE;FBOP/5;FBRV/0]',
+                                u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_0_2 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Mobile/14A456 [FBAN/FBIOS;FBAV/66.0.0.42.70;FBBV/40764466;FBRV/0;FBDV/iPhone8,1;FBMD/iPhone;FBSN/iOS;FBSV/10.0.2;FBSS/2;FBCR/Tele2;FBID/phone;FBLC/sv_SE;FBOP/5]',
+                                u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 [FBAN/FBIOS;FBAV/139.0.0.46.90;FBBV/70207865;FBDV/iPhone8,1;FBMD/iPhone;FBSN/iOS;FBSV/10.3.3;FBSS/2;FBCR/Telenor;FBID/phone;FBLC/sv_SE;FBOP/5;FBRV/0]']
+
+        twitter_user_agents = [u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.3.12 (KHTML, like Gecko) Mobile/14D27 Twitter for iPhone',
+                               u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/14D27 Twitter for iPhone',
+                               u'Mozilla/5.0 (iPad; CPU OS 10_3_1 like Mac OS X) AppleWebKit/602.3.12 (KHTML, like Gecko) Mobile/14E304 Twitter for iPhone']
+
+        random_user_agents = [u'Mozilla/5.0 (Linux; Android 6.0.1; SAMSUNG SM-G900F Build/MMB29M) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/5.4 Chrome/51.0.2704.106 Mobile Safari/537.36',
+                              u'Mozilla/5.0 (Windows NT 6.1;Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
+                              u'Mozilla/5.0 (iPad; CPU OS 9_3_5 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13G36 Safari/601.1',
+                              u'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/10.1.2 Safari/603.3.8',
+                              u'Mozilla/5.0 (Linux; Android 5.0.1; YOGA Tablet 2-1050FBuild/LRX22C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.107 Safari/537.36',
+                              u'Mozilla/5.0 (iPad; CPU OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1',
+                              u'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/10.0 Mobile/14G60 Safari/602.1']
+        user = UserFactory.create()
+        list_of_agents = [("Instagram", instagram_user_agents), ("Facebook", facebook_user_agents), ("Twitter", twitter_user_agents)]
+        for name, agents in list_of_agents:
+            ProductStat.objects.all().delete()
+            self.assertEquals(ProductStat.objects.count(), 0)
+            for user_agent in agents:
+                product_buy_click(u'0', original_url, full_link, '193.61.179.9', user_agent, user.pk, u'Ext-Link', False)
+            log.info("Checking {} links.".format(name))
+            self.assertEquals(ProductStat.objects.count(), len(agents))
+            self.assertEquals(ProductStat.objects.filter(is_valid=True).count(), 0)
+        ProductStat.objects.all().delete()
+        self.assertEquals(ProductStat.objects.count(), 0)
+
+        for user_agent in random_user_agents:
+            product_buy_click(u'0', original_url, full_link, '193.61.179.9', user_agent, user.pk, u'Ext-Link', False)
+        self.assertEquals(ProductStat.objects.count(), len(random_user_agents))
+        self.assertEquals(ProductStat.objects.filter(is_valid=True).count(), len(random_user_agents))
+
+        ProductStat.objects.all().delete()
+        product_buy_click(u'0', original_url, full_link, '193.61.179.9', None, user.pk, u'Ext-Link', False)
+        self.assertEquals(ProductStat.objects.filter(is_valid=True).count(), 0)
+        self.assertEquals(ProductStat.objects.count(), 1)

@@ -1032,3 +1032,5 @@ GINA_TRACKING = {"user_ids": [30714,30716,30733,30717,24257,30164,30719,30720,30
                  "tracking_string": "&utm_source=tailsweep_apprl&utm_medium=social&utm_campaign=conversions_2016_se"}
 
 TLDEXTRACT_CACHE = "/tmp/tldextract.cache"
+
+BLOCKED_USER_AGENTS = ["Instagram", "Twitter", "FBAN"]

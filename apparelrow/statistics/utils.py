@@ -100,3 +100,19 @@ def check_vendor_has_reached_limit(vendor, start_date, end_date):
         vendor.is_limit_reached = False
     vendor.save()
     return False
+
+
+def check_contains_invalid_user_agents(user_agent):
+    """
+    Takes a user agent string and matches it against the blocked user agents fragments. Returns True if any fragment
+    appears in the user agent supplied.
+    :param user_agent:
+    :return:
+    """
+    if not user_agent or not hasattr(user_agent, "lower"):
+        return True
+    user_agent = user_agent.lower()
+    for line in settings.BLOCKED_USER_AGENTS:
+        if line.lower() in user_agent:
+            return True
+    return False

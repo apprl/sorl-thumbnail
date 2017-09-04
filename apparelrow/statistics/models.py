@@ -10,7 +10,7 @@ from django.conf import settings
 from apparelrow.apparel.tasks import product_popularity
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.utils import decompress_source_link_if_needed
-from apparelrow.statistics.utils import get_country_by_ip_string, is_ip_banned
+from apparelrow.statistics.utils import get_country_by_ip_string, is_ip_banned, check_contains_invalid_user_agents
 
 import logging
 logger = logging.getLogger( "apparelrow" )
@@ -108,6 +108,10 @@ def productstat_post_save(sender, instance, created, **kwargs):
     if created and instance.is_valid:
         if is_ip_banned(instance.ip):
             logger.info("Clicks from this ip {} has been placed in quarantine.".format(instance.ip))
+            instance.is_valid = False
+            instance.save()
+        elif check_contains_invalid_user_agents(instance.user_agent):
+            logger.info("Clicks from this user agent {} has been placed in quarantine.".format(instance.user_agent))
             instance.is_valid = False
             instance.save()
         else:
