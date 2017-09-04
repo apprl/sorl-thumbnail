@@ -17,7 +17,7 @@ import csv
 class StoreHistoryInline(admin.TabularInline):
     model = StoreHistory
     readonly_fields = ('balance', 'created')
-    max_num = 1
+    max_num = 20
     extra = 0
     can_delete = False
 
