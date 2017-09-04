@@ -71,7 +71,14 @@ class Importer(BaseImporter):
         data_row['original_currency'] = row['commissionAmount']['currency']
         data_row['original_amount'] = row['saleAmount']['amount']
         data_row['sale_date'] = dateutil.parser.parse(row['transactionDate'])
-        sid = row['clickRefs']['clickRef2']
+
+        sid = ''
+        if row['clickRefs']:
+            if 'clickRef' in row['clickRefs']:
+                sid = row['clickRefs']['clickRef']
+            elif 'clickRef2' in row['clickRefs']:
+                sid = row['clickRefs']['clickRef2']
+
         data_row['user_id'], data_row['product_id'], data_row['placement'], data_row[
             'source_link'] = self.map_placement_and_user(sid)
         status = row['commissionStatus']
