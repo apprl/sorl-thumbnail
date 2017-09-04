@@ -660,3 +660,25 @@ def get_popularity(score, date, start_timestamp=0):
     seconds = seconds_since_epoch - start_timestamp
     return round(sign * order + seconds / TIME_RANGE, 7)
 
+
+def build_earnings_text_for_product_page(user, product, product_earning, currency):
+    if user.is_partner and product.default_vendor and product_earning \
+            and (product.default_vendor.vendor.is_cpo or product.default_vendor.vendor.is_cpc):
+
+        cpc = 'per click to this item.'
+        cpo = 'per generated sale of this item.'
+
+        earnings_data = {
+            'approx': '' if user.partner_group.has_cpc_all_stores else 'approx. ',
+            'currency': currency,
+            'product_earning': product_earning,
+            'condition': cpc
+        }
+
+        if not user.partner_group.has_cpc_all_stores and product.default_vendor.vendor.is_cpo:
+            earnings_data['condition'] = cpo
+
+        return _('You will earn {approx}{currency} {product_earning} {condition}'.format(**earnings_data))
+
+    else:
+        return _('Settings for earnings are missing.')

@@ -933,7 +933,7 @@ class VendorProduct(models.Model):
                             store_commission = None if not len(stores) > 0 else stores[0].commission_percentage
                             if not store_commission:
                                 stores = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
-                                store_commission = get_external_store_commission(stores, self)
+                                store_commission = get_external_store_commission(stores, product)
 
                             # Calculate earning cut including Store commission
                             if store_commission and store_commission > 0:
@@ -992,7 +992,7 @@ class VendorProduct(models.Model):
                     currency = cut.locale_cpc_currency
                 except get_model('dashboard', 'Cut').DoesNotExist:
                     logger.warning("Cut for commission group %s and vendor %s does not exist." %
-                                   (user.partner_group, self.vendor.name))
+                                   (user.partner_group.name, self.vendor.name))
                 except get_model('dashboard', 'Cut').MultipleObjectsReturned:
                     logger.warning("Multiple cuts for commission group %s and vendor %s exist. Please make sure there is only one instance of this Cut." % (user.partner_group, self.vendor.name))
             elif earning_cut:
