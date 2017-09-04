@@ -42,7 +42,7 @@ from apparelrow.apparel.models import get_cuts_for_user_and_vendor
 from apparelrow.apparel.search import ApparelSearch, more_like_this_product, more_alternatives, get_available_brands
 from apparelrow.apparel.utils import get_paged_result, vendor_buy_url, get_featured_activity_today, \
     select_from_multi_gender, JSONResponse, JSONPResponse, shuffle_user_list, get_location, get_external_store_commission, \
-    get_availability_text, get_location_warning_text, generate_sid, get_vendor_cost_per_click
+    get_availability_text, get_location_warning_text, generate_sid, get_vendor_cost_per_click, build_earnings_text_for_product_page
 from apparelrow.apparel.tasks import facebook_push_graph, facebook_pull_graph, look_popularity, look_popularity2, build_static_look_image
 from apparelrow.activity_feed.views import user_feed
 from apparelrow.dashboard.views import SignupForm
@@ -344,17 +344,6 @@ class ProductDetailView(DetailView):
         regular_likes = likes.filter(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
         partner_likes = likes.exclude(Q(user__blog_url__isnull=True) | Q(user__blog_url__exact=''))
 
-        # Full image url. Todo: Not used anymore so should be removed /Klas.
-        missing_image = False
-        try:
-            product_full_image = request.build_absolute_uri(
-                get_thumbnail(product.product_image, '328', upscale=False, crop='noop').url)
-        except IOError:
-            logging.warn('Product id %s does not have a valid image on disk' % (product.pk,))
-            # If the image is missing then the template handles this and shows an "Image not available" instead.
-            product.product_image = None
-            #raise Http404
-
         # Full brand url
         product_brand_full_url = ''
         if product.manufacturer and product.manufacturer.user:
@@ -392,6 +381,13 @@ class ProductDetailView(DetailView):
         availability_text = get_availability_text(vendor_markets)
         warning_text = get_location_warning_text(vendor_markets, request.user, "product")
 
+        earnings_text = build_earnings_text_for_product_page(
+            user=request.user,
+            product=product,
+            product_earning=product_earning,
+            currency=currency
+        )
+
         context.update({
             'object': product,
             'is_liked': is_liked,
@@ -400,7 +396,6 @@ class ProductDetailView(DetailView):
             'object_url': request.build_absolute_uri(),
             'more_like_this': more_like_this_product(mlt_body, product.gender, get_location(request), 9),
             'product_full_url': request.build_absolute_uri(product.get_absolute_url()),
-            #'product_full_image': product_full_image,
             'product_brand_full_url': product_brand_full_url,
             'likes': regular_likes,
             'partner_likes': partner_likes,
@@ -411,7 +406,8 @@ class ProductDetailView(DetailView):
             'currency': currency,
             'has_share_image': True,
             'availability_text': availability_text,
-            'warning_text': warning_text
+            'warning_text': warning_text,
+            'earnings_text': earnings_text
         })
         return context
 

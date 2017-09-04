@@ -19,10 +19,18 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
 
+        mail_managers('About to start generating payments', 'Another email should be sent when finished')
+
         # Cancel any previous payments that haven't been paid out yet
         logger.info('Cancelling previous payments')
         for old_non_paid_payment in Payment.objects.filter(paid=False, cancelled=False):
             old_non_paid_payment.cancel()
+
+        # This should not really happen but we do a sanity check anyway
+        assert not UserEarning.objects.filter(status__gte=Sale.CONFIRMED,
+                                              paid__lt=Sale.PAID_COMPLETE,
+                                              payment__isnull=False,
+                                              payment__cancelled=True).exists()
 
         earnings_per_user = defaultdict(list)
 
@@ -31,14 +39,16 @@ class Command(BaseCommand):
             earnings_per_user[earning.user].append(earning)
 
         logger.info('Creating payments')
+        payments = []
         for user, earnings in earnings_per_user.items():
             # Only create new payment if user has reached minimum payout
             if sum(e.amount for e in earnings) >= settings.APPAREL_DASHBOARD_MINIMUM_PAYOUT:
-                payment = create_payment(user, earnings)
-                self.email_admins_about_new_payment(payment)
+                payments.append(create_payment(user, earnings))
 
-    def email_admins_about_new_payment(self, payment):
-        subject = 'New dashboard payment'
-        url = reverse("admin:dashboard_payment_change", args=[payment.pk])
-        body = 'New dashboard payment available at %s for user %s.' % (url, payment.user)
+        self.email_admins_about_new_payments(payments)
+
+    def email_admins_about_new_payments(self, payments):
+        subject = '%s new dashboard payments' % len(payments)
+        url = reverse("admin:dashboard_payment_changelist")
+        body = 'New dashboard payments availables at %s' % url
         mail_managers(subject, body)
