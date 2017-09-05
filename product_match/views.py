@@ -28,8 +28,6 @@ from apparelrow.profile.models import User
 
 logger = logging.getLogger("apparelrow")
 
-FAVORITES_PAGE_SIZE = 30
-LOOK_PAGE_SIZE = 12
 
 # Create your views here.
 
@@ -78,7 +76,7 @@ def product_lookup_by_solr(key, fragment=False, vendor_id=None):
             key = str(SQ(product_key=key))
         except:
             key = str(SQ(product_key=key.encode('utf-8')))
-        qs = embed_wildcard_solr_query( key )
+        qs = embed_wildcard_solr_query(key)
         kwargs = {'fq': [qs], 'rows': 1, 'django_ct': "apparel.product"}
     else:
         kwargs = {'fq': ['product_key:\"%s\"' % (key,)], 'rows': 1, 'django_ct': "apparel.product"}
@@ -148,8 +146,8 @@ def product_lookup_asos_nelly(url, is_nelly_product=False):
             return product_pk
 
     return None
-    #json_data = json.loads(products[0].json)
-    #return json_data.get('site_product', None)
+    # json_data = json.loads(products[0].json)
+    # return json_data.get('site_product', None)
 
 
 @csrf_exempt
@@ -173,7 +171,8 @@ def product_lookup_multi(request):
             else:
                 translated_links.append(None)
     except JSONDecodeError, msg:
-        logger.warn(u"Product lookup (wp)service: Unable to decode the links: {}. [{}]".format(msg, request.POST.get("links")))
+        logger.warn(
+            u"Product lookup (wp)service: Unable to decode the links: {}. [{}]".format(msg, request.POST.get("links")))
     except Exception, msg:
         logger.warn(u"Product lookup (wp)service: Unknown error: {}.".format(msg))
 
@@ -184,16 +183,17 @@ def product_lookup(request):
     if not request.user.is_authenticated():
         raise Http404
 
-    key, domain, product_pk, is_nelly_product = extract_product_lookup_parameters(request.GET.copy(), request.POST.copy())
+    key, domain, product_pk, is_nelly_product = extract_product_lookup_parameters(request.GET.copy(),
+                                                                                  request.POST.copy())
     original_key = key
     if key and not product_pk:
         product_pk = lookup_product_pk(key, is_nelly_product)
     # TODO: must go through theimp database right now to fetch site product by real url
     # key = smart_unicode(urllib.unquote(smart_str(request.GET.get('key', ''))))
-    #imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
+    # imported_product = get_object_or_404(get_model('theimp', 'Product'), key__startswith=key)
 
-    #json_data = json.loads(imported_product.json)
-    #product_pk = json_data.get('site_product', None)
+    # json_data = json.loads(imported_product.json)
+    # product_pk = json_data.get('site_product', None)
     product_link = None
     product_liked = False
     product_name = None
@@ -220,7 +220,8 @@ def product_lookup(request):
         earning, currency = product.default_vendor.get_product_earning(request.user)
         if earning and currency:
             help_text = "sale" if vendor.is_cpo else "click"
-            product_earning = "You will earn %s%s %s per generated %s of this item." % (approx_text, currency, earning, help_text)
+            product_earning = "You will earn %s%s %s per generated %s of this item." % (
+            approx_text, currency, earning, help_text)
     else:
         logger.info(u"No product found for key, falling back to domain deep linking.")
         product_short_link_str, vendor = get_short_domain_deeplink(domain, original_key, request.user.id)
@@ -249,6 +250,7 @@ def product_lookup(request):
         'warning_text': warning_text.decode()
     })
 
+
 def extract_domain_with_suffix(domain):
     try:
         tld_ext = tldextract.TLDExtract(cache_file=settings.TLDEXTRACT_CACHE)
@@ -265,7 +267,7 @@ def extract_apparel_product_with_url(key):
 
 
 def embed_wildcard_solr_query(qs_string):
-    return "%s*%s*" % (qs_string[:qs_string.index(':')+1],qs_string[qs_string.index(':')+1:])
+    return "%s*%s*" % (qs_string[:qs_string.index(':') + 1], qs_string[qs_string.index(':') + 1:])
 
 
 def extract_encoded_url_string(url):
@@ -337,7 +339,7 @@ def get_short_domain_deeplink(domain, original_key, user_id):
     product_short_link_str, vendor = product_lookup_by_domain(domain, original_key, user_id)
     if product_short_link_str is not None:
         product_short_link, _ = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
-                                                                            user_id=user_id, vendor=vendor)
+                                                                      user_id=user_id, vendor=vendor)
         logger.info(u"Short link: %s" % product_short_link)
         product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
     return product_short_link_str, vendor
@@ -392,6 +394,20 @@ def get_product_earning_group(vendor, user, publisher_cut, approx_text):
                        "is only one instance of this Cut." % (user.partner_group, vendor.name))
 
     return product_earning
+
+
+def get_vendor_commission(vendor):
+    """
+    Get commission for Vendor either if it is an AAN Store or any other affiliate network
+    """
+    if get_model('advertiser', 'Store').objects.filter(vendor=vendor).exists():
+        store = get_model('advertiser', 'Store').objects.filter(vendor=vendor)[0]
+        return store.commission_percentage
+    elif get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor).exists():
+        store_commission = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
+        return get_external_store_commission(store_commission)
+    return None
+
 
 def match_product(request):
     # This method will try to primarily to match urls got by chrome or safari extension
