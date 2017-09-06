@@ -1,5 +1,5 @@
 from django.contrib import admin
-from product_match.models import Url
+from product_match.models import UrlDetail
 
 
 # Register your models here.
@@ -12,4 +12,4 @@ class UrlAdmin(admin.ModelAdmin):
     raw_id_fields = ('product',)
 
 
-admin.site.register(Url, UrlAdmin)
+admin.site.register(UrlDetail, UrlAdmin)
