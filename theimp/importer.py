@@ -10,6 +10,7 @@ from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 
+from product_match.views import match_product
 from theimp.models import Vendor, Product
 from theimp.utils import ProductItem, get_site_product_hash
 
@@ -146,7 +147,8 @@ class Importer(object):
             availability = bool(item.get_final('in_stock', False)),
             product_image = self._product_image(item)
         )
-
+        computed_url = item.get_scraped('computed_url')
+        match_product(site_product, computed_url)
         self._update_vendor_product(item, site_product)
         self._update_product_options(item, site_product)
 
@@ -179,10 +181,14 @@ class Importer(object):
             site_product.save()
             self._update_vendor_product(item, site_product)
             self._update_product_options(item, site_product)
+            computed_url = item.get_scraped('computed_url')
+            match_product(site_product, computed_url)
             return True
         else:
             #logger.info("{} - {}".format(imported_hash, previous_hash))
             logger.info("Not updating product {id}, since product is the same.".format(id=site_product.id))
+
+
         return False
 
     def hide_product(self, site_product):
