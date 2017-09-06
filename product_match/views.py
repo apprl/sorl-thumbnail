@@ -409,7 +409,7 @@ def get_vendor_commission(vendor):
     return None
 
 
-def match_product(request):
+def match_product(product_id, computed_url):
     # This method will try to primarily to match urls got by chrome or safari extension
     pass
 
