@@ -292,6 +292,7 @@ INSTALLED_APPS = (
 
     # Internal
     'theimp',
+    'product_match',
     'advertiser',
     'apparelrow.profile',  # Internal: User related module
     'apparelrow.apparel',  # Internal: Product display module
