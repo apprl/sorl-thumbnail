@@ -7,7 +7,7 @@ from product_match.models import Url
 class UrlAdmin(admin.ModelAdmin):
     ordering = ('-created',)
     readonly_fields = ('created', 'modified')
-    list_display = ('domain', 'path', 'query', 'fragmens', 'parameters')
+    list_display = ('domain', 'path', 'query', 'fragment', 'parameters')
     list_filter = ('domain', 'path')
     raw_id_fields = ('product',)
 
