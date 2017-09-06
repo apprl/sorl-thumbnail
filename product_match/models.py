@@ -1,11 +1,14 @@
 from django.db import models
+
+#import theimp
 from apparelrow.apparel.models import Product
 from django.utils.translation import get_language, ugettext_lazy as _
 
 
 # Create your models here.
 class Url(models.Model):
-    product = models.ForeignKey(Product, related_name='url_products', blank=False, null=False)
+    product = models.ForeignKey("apparel.Product", null=True, blank=True)
+    product = models.ForeignKey('theimp.Product.product', related_name='url_products', blank=False, null=False)
     url = models.CharField(max_length=512, null=True, blank=True)
     domain = models.CharField(max_length=500, null=True, blank=True)
     path = models.CharField(max_length=500, null=True, blank=True)
