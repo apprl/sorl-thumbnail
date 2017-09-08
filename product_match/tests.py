@@ -90,7 +90,7 @@ class TestLinks(TestCase):
         computed_url = 'https://www.mq.se/article/alexia_trousers?attr1_id=1347'  # spider
         ce_url = 'https://www.mq.se/article/alexia_trousers?attr1_id=1347&size=55'
 
-        domain = get_vendor_domain(ce_url)
+        domain = get_domain(ce_url)
         param = get_vendor_params(domain)
 
         matched = match_urls(ce_url, computed_url, param)
@@ -103,7 +103,7 @@ class TestLinks(TestCase):
         mommy.make(UrlVendorSpecificParams, domain='www.mq.se', param_id_name='attr1_id')
         mommy.make(UrlDetail, url=computed_url, product__product_image=product_image)
 
-        domain = get_vendor_domain(ce_url)
+        domain = get_domain(ce_url)
         param = get_vendor_params(domain)
 
         matched = match_urls_db(ce_url, param)
