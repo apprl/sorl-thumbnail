@@ -20,7 +20,7 @@ from apparelrow.apparel.utils import JSONResponse, get_location_warning_text, ge
     get_external_store_commission, generate_sid
 from apparelrow.dashboard.utils import parse_rules_exception
 from apparelrow.profile.models import User
-from product_match.models import UrlDetail, UrlVendorSpecificParams
+from product_match.models import UrlDetail
 from product_match.utils import get_domain, get_vendor_params, match_urls
 
 logger = logging.getLogger("apparelrow")
