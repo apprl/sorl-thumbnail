@@ -1,6 +1,4 @@
 from django.db import models
-
-#import theimp
 from apparelrow.apparel.models import Product
 from django.utils.translation import ugettext_lazy as _
 
