@@ -14,7 +14,9 @@ class UrlDetailAdmin(admin.ModelAdmin):
 
 admin.site.register(UrlDetail, UrlDetailAdmin)
 
+
 class UrlVendorSpecificParamsAdmin(admin.ModelAdmin):
     pass
+
 
 admin.site.register(UrlVendorSpecificParams, UrlVendorSpecificParamsAdmin)
