@@ -10,7 +10,7 @@ from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 
-from product_match.views import match_product
+from product_match.utils import match_product
 from theimp.models import Vendor, Product
 from theimp.utils import ProductItem, get_site_product_hash
 
@@ -136,19 +136,20 @@ class Importer(object):
             raise SiteImportError('invalid category mapping')
 
         site_product = self.site_product_model.objects.create(
-            product_key = item.get_scraped('key'),
-            product_name = item.get_final('name'),
-            description = item.get_final('description'),
-            category_id = category.mapped_category_id,
-            manufacturer_id = brand.mapped_brand_id,
-            sku = item.get_final('sku'),
-            static_brand = item.get_final('brand'),
-            gender = item.get_final('gender'),
-            availability = bool(item.get_final('in_stock', False)),
-            product_image = self._product_image(item)
+            product_key=item.get_scraped('key'),
+            product_name=item.get_final('name'),
+            description=item.get_final('description'),
+            category_id=category.mapped_category_id,
+            manufacturer_id=brand.mapped_brand_id,
+            sku=item.get_final('sku'),
+            static_brand=item.get_final('brand'),
+            gender=item.get_final('gender'),
+            availability=bool(item.get_final('in_stock', False)),
+            product_image=self._product_image(item)
         )
         computed_url = item.get_scraped('computed_url')
-        match_product(site_product, computed_url)
+        computed_url_parameters = item.get_scraped('params')
+        match_product(site_product, computed_url, computed_url_parameters)
         self._update_vendor_product(item, site_product)
         self._update_product_options(item, site_product)
 
@@ -181,14 +182,14 @@ class Importer(object):
             site_product.save()
             self._update_vendor_product(item, site_product)
             self._update_product_options(item, site_product)
+
             computed_url = item.get_scraped('computed_url')
-            match_product(site_product, computed_url)
+            computed_url_parameters = item.get_scraped('params')
+
+            match_product(site_product, computed_url, computed_url_parameters)
             return True
         else:
-            #logger.info("{} - {}".format(imported_hash, previous_hash))
             logger.info("Not updating product {id}, since product is the same.".format(id=site_product.id))
-
-
         return False
 
     def hide_product(self, site_product):
