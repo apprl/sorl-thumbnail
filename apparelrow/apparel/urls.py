@@ -15,7 +15,7 @@ from apparelrow.apparel.views import BrandRedirectView, PublisherView, ProductDe
 from apparelrow.dashboard.views import RetailerPublicFormView, RetailerFormView
 from apparelrow.profile.views import ProfileListLookView, ProfileListFollowersView, ProfileListFollowingView, \
     ProfileView
-from product_match.views import lookup_products
+from product_match.views import create_short_links_and_lookup_product
 urlpatterns = patterns('',
     # Index
     url(r'^$', PublisherView.as_view(), {'gender': 'none'}, name='index'),
@@ -183,7 +183,7 @@ urlpatterns = patterns('',
     url(r'^backend/authentication/$', BackendAuthJsonView.as_view(), name='backend-authentication'),
 
 
-    url(r'^backend/product/lookup/match/product/$', lookup_products,name='backend-product-lookup-match-product'),
+    url(r'^backend/product/lookup/match/product/$', create_short_links_and_lookup_product,name='backend-product-lookup-match-product'),
     url(r'^backend/product/lookup/$', 'apparelrow.apparel.views.product_lookup', name='backend-product-lookup'),
     url(r'^backend/product/lookup/multi/$', 'apparelrow.apparel.views.product_lookup_multi', name='backend-product-lookup-multi'),
     url(r'^backend/product/earning/$', 'apparelrow.apparel.views.backend_product_earnings',
