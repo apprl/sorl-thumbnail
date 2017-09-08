@@ -1,41 +1,32 @@
 # -*- coding: utf-8 -*-
 import decimal
 import logging
-import re
 import urllib
 import urlparse
 
-import simplejson
 import tldextract
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import Http404
-from django.http.response import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404
 from django.utils.encoding import smart_unicode, smart_str, DjangoUnicodeDecodeError
 from django.views.decorators.csrf import csrf_exempt
-from pysolr import Solr
-from simplejson import JSONDecodeError
-from solrq import Q as SQ
 
 from apparelrow.apparel.models import Product
 from apparelrow.apparel.models import ShortProductLink, ShortDomainLink
 from apparelrow.apparel.models import get_cuts_for_user_and_vendor
-from apparelrow.apparel.utils import JSONResponse, get_location_warning_text, generate_sid, get_vendor_cost_per_click
+from apparelrow.apparel.utils import JSONResponse, get_location_warning_text, get_vendor_cost_per_click, \
+    get_external_store_commission, generate_sid
 from apparelrow.dashboard.utils import parse_rules_exception
 from apparelrow.profile.models import User
-from product_match.models import UrlDetail
+from product_match.models import UrlDetail, UrlVendorSpecificParams
+from product_match.utils import get_domain, get_vendor_params, match_urls
 
 logger = logging.getLogger("apparelrow")
 
 
 # Create your views here.
-
-def match_product(product_id, computed_url):
-    # This method will try to primarily to match urls got by chrome or safari extension
-    pass
-
 
 def switch_url_candidate(key):
     if key is None:
@@ -67,7 +58,7 @@ def try_extract_product_pk(url_candidate):
 
     while url_candidate and not product_pk and url_combination_tries_left > 0:
         product_pk = UrlDetail.objects.filter(url=url_candidate).values_list('product_id', flat=True)
-        #product_pk.get().product_id
+        # product_pk.get().product_id
         if not product_pk:
             url_candidate = switch_url_candidate(url_candidate)
             url_combination_tries_left -= 1
@@ -75,9 +66,9 @@ def try_extract_product_pk(url_candidate):
             url_combination_tries_left = 0
 
     if not product_pk:
-        #parsed_url = urlparse.urlsplit(original_key)
-        product_pk = find_url(original_key)
-        # modified_url = parsed_url.scheme + "://" + parsed_url.netloc + parsed_url.path
+        parsed_url = urlparse.urlsplit(original_key)
+    # product_pk = find_url(original_key)
+    # modified_url = parsed_url.scheme + "://" + parsed_url.netloc + parsed_url.path
 
     return product_pk
 
@@ -179,6 +170,132 @@ def parse_not_found_product_pk(domain, original_key, request):
     return product_earning, product_short_link_str, vendor
 
 
+def get_product_earning_standalone(vendor, cut, publisher_cut, approx_text):
+    earning_cut = cut * publisher_cut
+    product_earning = None
+    if vendor and earning_cut:
+        if vendor.is_cpo:
+            store_commission = get_vendor_commission(vendor)
+            if store_commission:
+                earning_cut = earning_cut * store_commission
+                product_earning = u"You will earn %s%.2f %% of the total sale value from this store." % \
+                                  (approx_text, earning_cut * 100)
+        elif vendor.is_cpc:
+            cost_per_click = get_vendor_cost_per_click(vendor)
+            if cost_per_click:
+                product_earning = u"You will earn %s%s %.2f per generated click when linking to " \
+                                  "this retailer" % \
+                                  (approx_text, cost_per_click.currency, (earning_cut * cost_per_click.amount))
+    return product_earning
+
+
+def get_vendor_commission(vendor):
+    """
+    Get commission for Vendor either if it is an AAN Store or any other affiliate network
+    """
+    if get_model('advertiser', 'Store').objects.filter(vendor=vendor).exists():
+        store = get_model('advertiser', 'Store').objects.filter(vendor=vendor)[0]
+        return store.commission_percentage
+    elif get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor).exists():
+        store_commission = get_model('dashboard', 'StoreCommission').objects.filter(vendor=vendor)
+        return get_external_store_commission(store_commission)
+    return None
+
+
+def get_product_earning_group(vendor, user, publisher_cut, approx_text):
+    """
+
+    """
+    product_earning = ""
+    try:
+        cut_obj = get_model('dashboard', 'Cut').objects.get(group=user.partner_group, vendor=vendor)
+        # For Publishers who earns CPC for all stores, cut is 100% unless exceptions are defined
+        normal_cut = 1
+        earning_amount = cut_obj.locale_cpc_amount
+        # Get exceptions and if they are defined, replace current cuts
+        if cut_obj.rules_exceptions:
+            cut_exception, publisher_cut_exception, click_cost = parse_rules_exception(cut_obj.rules_exceptions,
+                                                                                       user.id)
+            if cut_exception:
+                normal_cut = cut_exception
+            if publisher_cut_exception is not None and user.owner_network:
+                publisher_cut = publisher_cut_exception
+        publisher_earning = decimal.Decimal(earning_amount * (normal_cut * publisher_cut))
+        product_earning = u"You will earn %s%s %.2f per generated click when linking to " \
+                          "this retailer" % \
+                          (approx_text, cut_obj.locale_cpc_currency, publisher_earning)
+    except get_model('dashboard', 'Cut').DoesNotExist:
+        logger.warning("Cut for commission group %s and vendor %s does not exist." %
+                       (user.partner_group, vendor.name))
+    except get_model('dashboard', 'Cut').MultipleObjectsReturned:
+        logger.warning("Multiple cuts for commission group %s and vendor %s exist. Please make sure there "
+                       "is only one instance of this Cut." % (user.partner_group, vendor.name))
+
+    return product_earning
+
+
+def extract_domain_with_suffix(domain):
+    try:
+        tld_ext = tldextract.TLDExtract(cache_file=settings.TLDEXTRACT_CACHE)
+        extracted = tld_ext(domain)
+        return "%s.%s" % (extracted.domain, extracted.suffix)
+    except Exception, msg:
+        logger.info("Domain supplied could not be extracted: %s [%s]" % (domain, msg))
+        return None
+
+
+def product_lookup_by_domain(domain, key, user_id):
+    model = get_model('apparel', 'DomainDeepLinking')
+    domain = extract_domain_with_suffix(domain)
+    logger.info(u"Lookup by domain, will try and find a match for domain [%s]" % domain)
+    # domain:          example.com
+    # Deeplink.domain: example.com/se
+    results = model.objects.filter(domain__icontains=domain)
+    instance = None
+    if not results:
+        logger.info("No domain found for %s" % domain)
+        return None, None
+
+    if len(results) > 1:
+        for item in results:
+            if item.domain in key:
+                instance = item
+    else:
+        instance = results[0]
+
+    if instance and instance.template:
+        logger.info(u"Domain [%s / %s] was a match for %s." % (instance.domain, instance.vendor, domain))
+        key_split = urlparse.urlsplit(key)
+        ulp = urlparse.urlunsplit(('', '', key_split.path, key_split.query, key_split.fragment))
+        url = key
+        sid = generate_sid(0, user_id, 'Ext-Link', url)
+        if instance.quote_url:
+            url = urllib.quote(url.encode('utf-8'), safe='')
+        if instance.quote_sid:
+            sid = urllib.quote(sid.encode('utf-8'), safe='')
+        if instance.quote_ulp:
+            ulp = urllib.quote(ulp.encode('utf-8'), safe='')
+        return instance.template.format(sid=sid, url=url, ulp=ulp), instance.vendor
+    else:
+        return None, None
+
+
+def get_short_domain_deeplink(domain, original_key, user_id):
+    """
+    :param domain:
+    :param original_key:
+    :param user_id:
+    :return:
+    """
+    product_short_link_str, vendor = product_lookup_by_domain(domain, original_key, user_id)
+    if product_short_link_str is not None:
+        product_short_link, _ = ShortDomainLink.objects.get_or_create(url=product_short_link_str,
+                                                                      user_id=user_id, vendor=vendor)
+        logger.info(u"Short link: %s" % product_short_link)
+        product_short_link_str = reverse('domain-short-link', args=[product_short_link.link()])
+    return product_short_link_str, vendor
+
+
 def extract_url_and_domain(request):
     get_request = request.GET.copy()
     post_request = request.POST.copy()
@@ -197,7 +314,7 @@ def get_warning_text(vendor, request):
 
 
 @csrf_exempt
-def lookup_products(request):
+def create_short_links_and_lookup_product(request):
     #    if not request.user.is_authenticated():
     #        raise Http404
     request.user = User.objects.all().latest("date_joined")
@@ -206,22 +323,22 @@ def lookup_products(request):
     product_name = None
 
     original_key, domain = extract_url_and_domain(request)
-    # url_candidate = remove_query_parameters_from_url(original_key)
+    # product_pk = try_extract_product_pk(original_key)
+    domain = get_domain(original_key)
+    param = get_vendor_params(domain)
+    product_id = match_urls(original_key, param)
 
-    product_pk = try_extract_product_pk(original_key)
 
-    if product_pk:
+    if product_id:
         product_link, product_short_link_str, product_liked, product_name, vendor, product_earning = \
-            parse_found_product_pk(request, product_pk)
-
+            parse_found_product_pk(request, product_id)
     else:
-
         product_earning, product_short_link_str, vendor = parse_not_found_product_pk(domain, original_key, request)
 
     decoded_warning_text = get_warning_text(vendor, request)
 
     return JSONResponse({
-        'product_pk': product_pk,
+        'product_pk': product_id,
         'product_link': product_link,
         'product_short_link': product_short_link_str,
         'product_liked': product_liked,
@@ -230,23 +347,3 @@ def lookup_products(request):
         'warning_text': decoded_warning_text
     })
 
-
-def find_url(original_key):
-    parsed_url = urlparse.urlsplit(original_key)
-    domain = parsed_url.netloc
-    path = parsed_url.path
-    query = parsed_url.query
-    fragment = parsed_url.fragment
-
-    query = query.lower()
-
-    if 'id' in query:
-
-        # 'https://www.mq.se/article/alexia_trousers?attr1_id=1347'
-        vendor_pid = re.search(r'id=(\w+)?', query).group(1)
-        product_id = UrlDetail.objects.get(domain=domain, path=path, parameters__contains=vendor_pid).product_id
-
-    else:
-        UrlDetail.objects.get(domain=domain, path=path).product_id
-
-    return product_id
